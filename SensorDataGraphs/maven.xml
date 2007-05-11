@@ -1,0 +1,37 @@
+<project
+  xmlns:deploy="deploy"
+  xmlns:ant="jelly:ant"
+  xmlns:j="jelly:core">
+
+  <goal name="create-dist" 
+     prereqs="copy-jars,make-run-script,copy-dlls">
+     <ant:copy todir="dist" file="../sensor_config.xml"/>
+  </goal>  
+  
+  <goal name="copy-jars" prereqs="jar:jar">
+  	<ant:mkdir dir="dist/jars"/>
+    <deploy:copy-deps todir="dist/jars"/>
+    <ant:copy todir="dist/jars" file="target/sensordatagraph-1.0.jar"/>
+  </goal>
+
+  <goal name="copy-dlls">
+    <ant:mkdir dir="dist/nativelib"/>
+    <ant:copy todir="dist/nativelib">
+      <ant:fileset file="../Win_x86_EtherAddr.dll"/>
+      <ant:fileset file="../../SensorNative/GoIO_DLL.dll"/>
+      <ant:fileset file="../../SensorNative/bin/*.dll"/>
+    </ant:copy>
+  </goal>
+
+  <goal name="make-run-script">
+    <ant:mkdir dir="dist"/>
+    <j:set var="my.run.classpath">
+        <j:forEach var="lib" items="${pom.artifacts}">jars\${lib.file.name};</j:forEach>
+    </j:set>
+    <ant:echo>${my.run.classpath}</ant:echo>
+    <j:file omitXmlDeclaration="true" name="dist/run.bat">
+		java -Djava.library.path=nativelib -cp "jars\sensordatagraph-1.0.jar;${my.run.classpath}" org.concord.examples.sensor.SensorDataGraph
+    </j:file>
+  </goal>
+
+</project>

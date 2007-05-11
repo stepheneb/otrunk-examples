@@ -1,0 +1,212 @@
+<project name="Examples" default="help" basedir="." >
+	<import file="../ProjectSets/standard-ant-targets.xml"/>
+		
+	<property name="jar-name" value="examples"/>
+	
+    <taskdef resource="genjar.properties" classpath="../thirdparty/GenJar.jar" />
+
+    <target name="help">
+		<echo message="" />
+    </target>
+	
+	<!-- depends framework -->
+	<path id="run-classpath">
+		<pathelement location="../DataGraph/lib/" />
+		<pathelement location="../Collisions/lib/" />
+	</path>
+    		
+	<path id="build-classpath">
+		<path refid="run-classpath"/>
+	</path>
+	
+	<path id="genjar-classpath">
+		<path refid="build-classpath"/>
+		<pathelement location="./lib/" />
+		<pathelement location="../Framework/lib/" />
+		<pathelement location="../Graph/lib/" />
+		<pathelement location="../Data/lib/" />
+		<pathelement location="../Multimedia/lib/" />
+		<pathelement location="../Swing/lib/" />
+		<pathelement location="../Math/lib/" />
+		<pathelement location="../Examples/lib/" />
+		<pathelement location="../FunctionGraph/lib/" />
+		<pathelement location="../OTrunk/lib/" />
+		<pathelement location="../Domain/lib/" /> 
+		<pathelement location="../thirdparty/lib/jep.jar" />
+		<pathelement location="/home/scott/.maven/repository/jdom/jars/jdom-1.0.jar"/>
+		<pathelement location="/home/scott/.maven/repository/jug/jars/jug-1.1.jar"/>
+	</path>
+			
+    <target name="DataGraphCollisions" depends="dirs">
+		<genjar jarfile="lib/datagraphcollisionsexample.jar">
+			<class name="org.concord.examples.datagraph.DataGraphCollisions" />
+			<classpath refid="genjar-classpath"/>
+			<resource>
+				<fileset dir="../Graph/lib/">
+					<include name="org/concord/graph/examples/images/**" />
+				</fileset>
+			</resource>
+			<manifest generateEntryAttributes="no">
+				  <attribute name="Main-Class" value="org.concord.examples.datagraph.DataGraphCollisions" />
+			</manifest>
+
+		</genjar>
+    </target>
+
+    <target name="SimpleDataGraph" depends="dirs">
+		<genjar jarfile="lib/simpledatagraphexample.jar">
+			<class name="org.concord.examples.datagraph.SimpleDataGraph" />
+			<classpath refid="genjar-classpath"/>
+			<resource>
+				<fileset dir="../Graph/lib/">
+					<include name="org/concord/graph/examples/images/**" />
+				</fileset>
+			</resource>
+			<manifest generateEntryAttributes="no">
+				  <attribute name="Main-Class" value="org.concord.examples.datagraph.SimpleDataGraph" />
+			</manifest>
+
+		</genjar>
+    </target>
+    	
+    <target name="GraphGrid2D" depends="dirs">
+		<genjar jarfile="lib/grid2dexample.jar">
+			<class name="org.concord.examples.graph.GridExample" />
+			<classpath refid="genjar-classpath"/>
+			<resource>
+				<fileset dir="../Graph/lib/">
+					<include name="org/concord/graph/examples/images/**" />
+				</fileset>
+			</resource>
+			<manifest generateEntryAttributes="no">
+				  <attribute name="Main-Class" value="org.concord.examples.graph.GridExample" />
+			</manifest>
+
+		</genjar>
+    </target>
+	
+	<target name="dirs">
+        <mkdir dir="lib" />
+    </target>
+
+    <target name="BarGraph" depends="dirs">
+		<genjar jarfile="lib/bargraphexample.jar">
+			<class name="org.concord.examples.bargraph.BarGraphPanel" />
+			<classpath refid="genjar-classpath"/>
+			<resource>
+				<fileset dir="../Graph/lib/">
+					<include name="org/concord/graph/examples/images/**" />
+				</fileset>
+			</resource>
+			<manifest generateEntryAttributes="no">
+				  <attribute name="Main-Class" value="org.concord.examples.bargraph.BarGraphPanel" />
+			</manifest>
+
+		</genjar>
+    </target>
+	
+	<target name="ControllableDataGraphableExample" depends="dirs">
+		<genjar jarfile="lib/controllabledatagraphexample.jar">
+			<class name="org.concord.examples.datagraph.ControllableDataGraphableExample" />
+			<classpath refid="genjar-classpath"/>
+			<resource>
+				<fileset dir="../Graph/lib/">
+					<include name="org/concord/graph/examples/images/**" />
+				</fileset>
+			</resource>
+			<manifest generateEntryAttributes="no">
+				  <attribute name="Main-Class" value="org.concord.examples.datagraph.ControllableDataGraphableExample" />
+			</manifest>
+
+		</genjar>
+    </target>
+				  	
+	<target name="DataGraphStateExample" depends="dirs">
+		<genjar jarfile="lib/datagraphstateexample.jar">
+			<!-- <class name="org.concord.examples.datagraph.ControllableDataGraphableExample" />
+			-->
+	 		<class name="org.concord.examples.datagraph.DataGraphStateExample" />
+			<class name="org.jdom.input.JAXPParserFactory" />
+			<classfilter>
+				<exclude name="org.xml.sax."/>
+			</classfilter>
+			<classpath refid="genjar-classpath"/>
+			<resource>
+				<fileset dir="../Graph/lib/">
+					<include name="org/concord/graph/examples/images/**" />
+				</fileset>
+			</resource>
+			<resource>
+				<fileset dir="src/">
+					<include name="org/concord/examples/datagraph/initial_import.xml"/>
+				</fileset>
+			</resource>
+			<manifest generateEntryAttributes="no">
+				  <attribute name="Main-Class" value="org.concord.examples.datagraph.DataGraphStateExample" />
+			</manifest>
+
+		</genjar>
+	</target>
+				  	
+	<target name="DataGraphExampleMainPanel" depends="dirs">
+		<genjar jarfile="lib/datagraphexample.jar">
+			<class name="org.concord.examples.datagraph.DataGraphExampleMainPanel" />
+			<class name="org.concord.examples.datagraph.DataGraphExample2MainPanel" />
+			<classpath refid="genjar-classpath"/>
+			<resource>
+				<fileset dir="../Graph/lib/">
+					<include name="org/concord/graph/examples/images/**" />
+				</fileset>
+			</resource>
+			<manifest generateEntryAttributes="no">
+				  <attribute name="Main-Class" value="org.concord.examples.datagraph.DataGraphExampleMainPanel" />
+			</manifest>
+
+		</genjar>
+    </target>
+	<target name="LandscapeGraph" depends="dirs">
+		<genjar jarfile="lib/landscapegraph.jar">
+			<class name="org.concord.examples.graph.landscape.LandscapeGraph" />
+			<classpath refid="genjar-classpath"/>
+			<resource>
+				<fileset dir="../Graph/lib/">
+					<include name="org/concord/graph/examples/images/**" />
+				</fileset>
+				<fileset dir="../Examples/lib/">
+					<include name="org/concord/examples/graph/landscape/images/**" />
+				</fileset>
+			</resource>
+			<manifest generateEntryAttributes="no">
+				  <attribute name="Main-Class" value="org.concord.examples.graph.landscape.LandscapeGraph" />
+			</manifest>
+
+		</genjar>
+    </target>
+	<target name="DrawingGraph" depends="dirs">
+		<genjar jarfile="lib/drawinggraph.jar">
+			<class name="org.concord.examples.graph.play.DrawingGraph" />
+			<classpath refid="genjar-classpath"/>
+			<manifest generateEntryAttributes="no">
+				  <attribute name="Main-Class" value="org.concord.examples.graph.play.DrawingGraph" />
+			</manifest>
+
+		</genjar>
+    </target>
+	<target name="BoxGraphableMainPanel" depends="dirs">
+		<genjar jarfile="lib/boxgraphexample.jar">
+			<class name="org.concord.examples.graph.box.BoxGraphableMainPanel" />
+			<classpath refid="genjar-classpath"/>
+			<resource>
+				<fileset dir="../Graph/lib/">
+					<include name="org/concord/graph/examples/images/**" />
+				</fileset>
+			</resource>
+			<manifest generateEntryAttributes="no">
+				  <attribute name="Main-Class" value="org.concord.examples.graph.box.BoxGraphableMainPanel" />
+			</manifest>
+
+		</genjar>
+    </target>
+	
+</project>
+

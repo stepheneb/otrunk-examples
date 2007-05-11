@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<otrunk id="33754150-b594-11d9-9669-0800200c9a66" >
+  <imports>
+    <import class="org.concord.otrunk.OTSystem"/>
+    <import class="org.concord.otrunk.view.OTFolderObject"/>
+    <import class="org.concord.otrunk.view.OTViewEntry"/>
+    <import class="org.concord.otrunk.view.OTViewService"/>
+    <import class="org.concord.otrunk.view.prototype.OTPrototypeViewEntry"/>
+    <import class="org.concord.otrunk.view.prototype.OTPrototypeEventController"/>
+    <import class="org.concord.otrunk.view.prototype.OTPrototypeMapEntry"/>
+    <import class="org.concord.otrunk.ui.OTButton"/>
+    <import class="org.concord.framework.otrunk.view.OTFrame"/>
+    <import class="org.concord.otrunk.ui.OTText"/>
+    <import class="org.concord.otrunk.view.document.OTCompoundDoc"/>
+    
+  </imports>
+  <objects>
+    <OTSystem>
+      <services>
+        <OTViewService>
+          <viewEntries>
+            <OTViewEntry local_id="text_edit"
+              objectClass="org.concord.otrunk.ui.OTText" 
+              viewClass="org.concord.otrunk.ui.swing.OTTextEditView"/>
+            <OTViewEntry
+              objectClass="org.concord.otrunk.ui.OTButton"
+              viewClass="org.concord.otrunk.ui.swing.OTButtonView"/>
+            <OTPrototypeViewEntry local_id="button_edit"
+            	objectClass="org.concord.otrunk.ui.OTButton"
+            	viewClass="org.concord.otrunk.view.prototype.OTPrototypeView"
+            	viewEntry="${text_edit}">
+            	<prototype>
+            		<OTText text="default" />
+            	</prototype>
+            	<controller>
+            		<OTPrototypeEventController>
+            			<mapping>
+            			   <OTPrototypeMapEntry 
+            			   		modelProperty="text" prototypeProperty="text"/>
+            			</mapping>
+            		</OTPrototypeEventController>
+            	</controller>
+            </OTPrototypeViewEntry>
+            <OTViewEntry local_id="document_view"
+              objectClass="org.concord.otrunk.view.document.OTDocument" 
+              viewClass="org.concord.otrunk.view.document.OTDocumentView"/>                         
+          </viewEntries>
+        </OTViewService>
+      </services>
+      <root>
+        <OTCompoundDoc>
+          <bodyText>
+            <object refid="${button}" viewid="${button_edit}"/>
+            <hr/>
+            <object refid="${button}"/>
+   		  </bodyText>
+   		  <documentRefs>
+   		    <OTButton local_id="button" text="Click Me"/>
+   		  </documentRefs>
+   	    </OTCompoundDoc>
+      </root>
+    </OTSystem>
+  </objects>
+</otrunk>

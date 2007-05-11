@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<otrunk id="33754150-b594-11d9-9669-0800200c9a66" >
+  <imports>
+    <import class="org.concord.otrunk.OTSystem"/>
+    <import class="org.concord.otrunk.ui.notebook.OTNotebookMeasurement"/>
+    <import class="org.concord.otrunk.ui.notebook.OTNotebook"/>
+    <import class="org.concord.otrunk.ui.notebook.OTNotebookTester"/>
+    <import class="org.concord.otrunk.view.OTFolderObject"/>
+	<import class="org.concord.otrunk.view.document.OTCompoundDoc"/>
+    <import class="org.concord.otrunk.view.OTViewEntry"/>
+    <import class="org.concord.otrunk.ui.OTImage"/>
+    <import class="org.concord.otrunk.ui.OTImageViewConfig"/>
+    <import class="org.concord.otrunk.view.OTViewService"/>
+    <import class="org.concord.framework.otrunk.view.OTFrame"/>
+    <import class="org.concord.data.state.OTUnitValue"/>
+    <import class="org.concord.data.state.OTUnitValueViewConfig"/>
+    <import class="org.concord.otrunk.ui.OTText"/>
+  </imports>
+  <objects>
+    <OTSystem>
+      <services>
+        <OTViewService>
+          <viewEntries>
+            <OTUnitValueViewConfig 
+              objectClass="org.concord.data.state.OTUnitValue" 
+              viewClass="org.concord.data.state.OTUnitValueView">
+              <precision>1</precision>
+    	   	</OTUnitValueViewConfig>
+            <OTImageViewConfig 
+              objectClass="org.concord.otrunk.ui.OTImage" 
+              viewClass="org.concord.otrunk.ui.swing.OTImageView">
+              <preferredWidth>75</preferredWidth>
+              <preferredHeight>75</preferredHeight>
+              <zoomEnabled>true</zoomEnabled>
+    	   	</OTImageViewConfig>
+            <OTViewEntry 
+              objectClass="org.concord.otrunk.ui.notebook.OTNotebook" 
+              viewClass="org.concord.otrunk.ui.notebook.OTNotebookView">
+    	   	</OTViewEntry>
+            <OTViewEntry 
+              objectClass="org.concord.otrunk.ui.OTText" 
+              viewClass="org.concord.otrunk.ui.swing.OTTextEditView">
+    	   	</OTViewEntry>
+            <OTViewEntry 
+              objectClass="org.concord.otrunk.ui.notebook.OTNotebookTester" 
+              viewClass="org.concord.otrunk.ui.notebook.OTNotebookTesterView">
+    	   	</OTViewEntry>
+			<OTViewEntry 
+			  objectClass="org.concord.otrunk.view.document.OTCompoundDoc" 
+			  viewClass="org.concord.otrunk.view.document.OTDocumentView">
+    	   	</OTViewEntry>
+			<OTViewEntry 
+              objectClass="org.concord.otrunk.ui.notebook.OTNotebookMeasurement" 
+              viewClass="org.concord.otrunk.ui.notebook.OTNotebookMeasurementView">
+    	   	</OTViewEntry>
+          </viewEntries>
+        </OTViewService>
+      </services>
+      <root>
+        <OTFolderObject name="OTNotebook Test">
+          <children>
+          	<OTUnitValue local_id="unitvalue1" name="UnitValue Test" value="20.653" unit="NONY"/>
+          	<OTNotebookMeasurement name="Measurement test">
+          		<notes>
+	 	           <OTText local_id="textbox1">
+ 		             <text>My text</text>
+ 	    	       </OTText>
+ 	    	   </notes>
+ 	    	   <unitValue>
+	  	           <OTUnitValue refid="${unitvalue1}"/>
+	  	       </unitValue>
+	  	       <image>
+		         <OTImage local_id="image1"
+        		   imageBytes="http://www.concord.org/images/logos/cc/cc-logo.gif"/>
+	  	       </image>
+           	</OTNotebookMeasurement>
+           	<OTNotebook name="Notebook test" local_id="notebook1">
+           	  <entries>
+       			<OTNotebookMeasurement>
+		          <notes>
+			 	    <OTText>
+		 		      <text>My text</text>
+		 	    	</OTText>
+		 	      </notes>
+		 	    	<unitValue>
+			  	      <OTUnitValue value="26.653" unit="cm"/>
+			  	    </unitValue>
+			  	    <image>
+				      <OTImage
+		        	  	imageBytes="http://www.concord.org/images/logos/cc/cc-logo.gif"/>
+			  	       </image>
+       				</OTNotebookMeasurement>
+       				<OTNotebookMeasurement>
+		          	  <notes>
+			 	        <OTText>
+		 		          <text>My text</text>
+		 	    	    </OTText>
+		 	    	  </notes>
+		 	    	  <unitValue>
+			  	        <OTUnitValue value="39.657" unit="cm"/>
+			  	      </unitValue>
+			  	      <image>
+				         <OTImage 
+    		    		   imageBytes="http://www.concord.org/images/logos/cc/cc-logo.gif" width="200"/>
+			  	      </image>
+       				</OTNotebookMeasurement>
+           		</entries>
+           	</OTNotebook>
+	      	<OTCompoundDoc name="Tester Doc">
+			  <bodyText>
+				<object refid="${notebook}"/>
+				<br/>
+				<object refid="${tester}"/>
+			  </bodyText>
+			  <children>
+				<OTNotebook local_id="notebook"/>
+				<OTNotebookTester local_id="tester">
+				  <notebook><object refid="${notebook}"/></notebook>
+				</OTNotebookTester>
+			  </children> 
+			</OTCompoundDoc>
+          </children>
+        </OTFolderObject>
+      </root>
+    </OTSystem>
+  </objects>
+</otrunk>

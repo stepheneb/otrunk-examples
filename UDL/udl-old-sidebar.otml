@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<otrunk id="33754150-b594-11d9-9669-0800200c9a66">
+	<imports>
+		<import class="org.concord.otrunk.OTSystem" />
+		<import class="org.concord.otrunk.view.OTFolderObject" />
+		<import class="org.concord.otrunk.view.OTViewEntry" />
+		<import class="org.concord.otrunk.view.OTViewMode" />
+		<import class="org.concord.otrunk.view.OTViewService" />
+		<import class="org.concord.framework.otrunk.view.OTFrame" />
+		<import class="org.concord.otrunk.view.document.OTCompoundDoc" />
+		<import class="org.concord.otrunk.view.document.OTDocument" />
+		<import class="org.concord.otrunk.view.document.OTTextObject" />
+		<import class="org.concord.graph.util.state.OTDrawingTool2"/>
+		<import class="org.concord.otrunk.ui.OTButton" />
+		<import class="org.concord.otrunk.ui.OTImage" />
+		<import class="org.concord.otrunk.ui.OTChoice" />
+		<import class="org.concord.otrunk.ui.OTText" />
+		<import class="org.concord.otrunk.diy.OTDIYActivity" />
+		<import class="org.concord.otrunk.diy.OTDIYSection" />
+		<import class="org.concord.otrunk.view.OTObjectEditViewConfig" />
+		<import
+			class="org.concord.otrunk.view.OTAuthorEmbedDefaultViewConfig" />
+		<import
+			class="org.concord.otrunk.view.document.OTDocumentViewConfig" />
+		<import
+			class="org.concord.otrunk.velocity.OTVelocityXHTMLViewEntry" />
+		<import
+			class="org.concord.otrunk.view.prototype.OTPrototypeViewEntry" />
+		<import
+			class="org.concord.otrunk.view.prototype.OTPrototypeEventController" />
+		<import
+			class="org.concord.otrunk.view.prototype.OTPrototypeMapEntry" />
+		<import class="org.concord.otrunk.udl.OTUDLSidebar" />
+		<import class="org.concord.otrunk.udl.OTUDLSidebarItem" />
+		<import class="org.concord.otrunk.udl.OTUDLBackpack" />
+		<import class="org.concord.otrunk.udl.OTUDLBackpackItem" />
+	</imports>
+	<objects>
+		<OTSystem>
+			<services>
+				<OTViewService currentMode="authoring">
+					<viewEntries>
+						<OTVelocityXHTMLViewEntry
+							local_id="sidebar_view"
+							objectClass="org.concord.otrunk.udl.OTUDLSidebar"
+							viewClass="org.concord.otrunk.velocity.OTVelocityXHTMLView">
+							<template>
+								<table><tr><td>
+									<h2>$model.title</h2>
+									<table><tr><td width="150">
+									<object
+										refid="$model.globalId" viewid="${sidebar_normal_view}"
+										mode="" />
+									</td></tr></table>
+								</td><td>
+									<object
+										refid="${main_text}" />
+								</td></tr></table>
+							</template>
+						</OTVelocityXHTMLViewEntry>
+						<OTDocumentViewConfig
+							local_id="compound_doc_view"
+							objectClass="org.concord.otrunk.view.document.OTCompoundDoc"
+							viewClass="org.concord.otrunk.view.document.OTDocumentView" />
+						<OTDocumentViewConfig
+							local_id="doc_view"
+							objectClass="org.concord.otrunk.view.document.OTDocument"
+							viewClass="org.concord.otrunk.view.document.OTDocumentView" />
+						<OTViewEntry
+							objectClass="org.concord.otrunk.ui.OTText"
+							viewClass="org.concord.otrunk.ui.swing.OTTextView" />
+						<OTViewEntry
+							objectClass="org.concord.otrunk.ui.OTButton"
+							viewClass="org.concord.otrunk.ui.swing.OTButtonView" />
+						<OTViewEntry
+							objectClass="org.concord.otrunk.ui.OTImage"
+							viewClass="org.concord.otrunk.ui.swing.OTImageView" />
+						<OTViewEntry local_id="choice_view"
+							objectClass="org.concord.otrunk.ui.OTChoice"
+							viewClass="org.concord.otrunk.ui.swing.OTChoiceComboBoxView" />
+              			<OTViewEntry
+              				objectClass="org.concord.graph.util.state.OTDrawingTool2" 
+              				viewClass="org.concord.datagraph.state.OTDataDrawingToolView"/>
+					</viewEntries>
+					<modes>
+						<OTViewMode name="authoring">
+							<map>
+								<entry key="${sidebar_view}">
+									<OTVelocityXHTMLViewEntry
+										objectClass="org.concord.otrunk.udl.OTUDLSidebar"
+										viewClass="org.concord.otrunk.velocity.OTVelocityXHTMLView">
+										<template>
+											<h2>Edit $model.title</h2>
+											<table><tr><td width="150">
+											<object
+												refid="$model.globalId" viewid="${sidebar_edit_view}"
+												mode="" />
+											<p />
+											</td></tr></table>
+											<a href="$model.globalId"
+												viewid="${sidebar_adddelete_view}" mode="" target="${preview_frame}">
+												Add/Delete items!
+											</a>
+											<p></p>
+											<a href="$model.globalId"
+												mode="" target="${preview_frame}">
+												<b>preview</b>
+											</a>
+										</template>
+									</OTVelocityXHTMLViewEntry>
+								</entry>
+								<entry key="${compound_doc_view}">
+									<OTObjectEditViewConfig objectClass="org.concord.otrunk.view.document.OTCompoundDoc" 
+									viewClass="org.concord.otrunk.view.document.OTCompoundDocEditView">
+										<objectsToInsert>
+											<OTTextObject name="Text Box"/>
+											<OTButton name="Button"/>
+											<OTImage name="Concord Logo" imageBytes="http://www.concord.org/images/logos/cc/cc-logo.gif"/>
+											<OTImage name="Concord Banner" imageBytes="http://www.concord.org/images/logos/cc/cc_main_banner.jpg"/>
+										</objectsToInsert>
+									</OTObjectEditViewConfig>
+								</entry>
+								<entry key="${doc_view}">
+									<OTObjectEditViewConfig objectClass="org.concord.otrunk.view.document.OTDocument" 
+									viewClass="org.concord.otrunk.view.document.OTDocumentView">
+									</OTObjectEditViewConfig>
+								</entry>
+							</map>
+						</OTViewMode>
+					</modes>
+				</OTViewService>
+			</services>
+			<library>
+				<OTFrame local_id="preview_frame" width="600"
+					height="500" />
+				<OTFrame local_id="edit_content_frame" width="500"
+					height="600" />
+				<OTFrame local_id="edit_preview_frame" width="300"
+					height="300" />
+				<OTCompoundDoc local_id="main_text">
+					<bodyText>Here is the main text of the document.<br />Blah blah blah..</bodyText>
+				</OTCompoundDoc>
+				<OTObjectEditViewConfig local_id="sidebar_normal_view"
+					objectClass="org.concord.otrunk.udl.OTUDLSidebar"
+					viewClass="org.concord.otrunk.udl.OTUDLSidebarView">
+				</OTObjectEditViewConfig>
+				<OTObjectEditViewConfig local_id="sidebar_adddelete_view"
+					objectClass="org.concord.otrunk.udl.OTUDLSidebar"
+					viewClass="org.concord.otrunk.udl.OTUDLSidebarAddDeleteView">
+					<objectsToInsert>
+						<OTUDLSidebarItem>
+							<name>New sidebar item</name>
+							<preview>
+								<OTCompoundDoc local_id="add_preview_2">
+									<bodyText>New preview</bodyText>
+								</OTCompoundDoc>
+							</preview>
+							<content>
+								<OTCompoundDoc local_id="add_content_2">
+									<bodyText>New content</bodyText>
+								</OTCompoundDoc>
+							</content>
+						</OTUDLSidebarItem>
+					</objectsToInsert>
+				</OTObjectEditViewConfig>
+				<OTVelocityXHTMLViewEntry local_id="sidebar_edit_view"
+					objectClass="org.concord.otrunk.udl.OTUDLSidebar"
+					viewClass="org.concord.otrunk.velocity.OTVelocityXHTMLView">
+					<template>
+						#foreach( $item in $model.items.vector )
+          				<tr>
+          				<td border="1"><object refid="$item.preview.globalId" mode=""/><br />
+          				<a href="$item.preview.globalId" mode="authoring" target="${edit_preview_frame}">edit</a></td>
+          				<td border="1"><object refid="$item.content.globalId" mode=""/><br />
+          				<a href="$item.content.globalId" mode="authoring" target="${edit_content_frame}">edit</a></td>
+          				<td border="0">delete</td>
+          				</tr>
+          				
+          				#end
+					</template>
+				</OTVelocityXHTMLViewEntry>
+			</library>
+			<root>
+				<OTUDLSidebar name="sidebar">
+					<title>Sidebar</title>
+					<items>
+						<OTUDLSidebarItem>
+							<preview>
+								<OTCompoundDoc local_id="preview_1">
+									<bodyText>
+									This is a fun activity in the sidebar! Click on me to view the activity and I'll pop right out.
+									</bodyText>
+								</OTCompoundDoc>
+							</preview>
+							<content>
+								<OTCompoundDoc local_id="content_1">
+									<bodyText>
+          								<h1>My Activity</h1>
+          								<h2>Step 1</h2>
+          								Do some stuff.
+          								<h2>Step 2</h2>
+          								Draw a picture:<br />
+          								<object refid="${drawing1}" />
+          								<br />
+          								<h2>Step 3</h2>
+          								Do some more stuff.<br />
+          								<object refid="${picture1}" />
+          							</bodyText>
+          							<documentRefs>
+          								<OTDrawingTool2 local_id="drawing1" />
+          								<OTImage local_id="picture1"
+											imageBytes="http://www.concord.org/images/logos/cc/cc_main_banner.jpg" />
+          							</documentRefs>
+								</OTCompoundDoc>
+							</content>
+						</OTUDLSidebarItem>
+						<OTUDLSidebarItem>
+							<preview>
+								<OTCompoundDoc local_id="preview_2">
+									<bodyText>Here's another activity. I could be fun as well... go ahead, click me too!</bodyText>
+								</OTCompoundDoc>
+							</preview>
+							<content>
+								<OTCompoundDoc local_id="content_2">
+									<bodyText>blah blah blah</bodyText>
+								</OTCompoundDoc>
+							</content>
+						</OTUDLSidebarItem>
+						<OTUDLSidebarItem>
+							<preview>
+								<OTCompoundDoc local_id="preview_3">
+									<bodyText>Golly -- I'm an activity of a different color!</bodyText>
+								</OTCompoundDoc>
+							</preview>
+							<content>
+								<OTCompoundDoc local_id="content_3">
+									<bodyText>blah blah blah</bodyText>
+								</OTCompoundDoc>
+							</content>
+							<r>255</r><g>153</g><b>102</b>
+						</OTUDLSidebarItem>
+					</items>
+				</OTUDLSidebar>
+			</root>
+		</OTSystem>
+	</objects>
+</otrunk>

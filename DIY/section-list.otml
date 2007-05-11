@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<otrunk id="33754150-b594-11d9-9669-0800200c9a66" >
+  <imports>
+    <import class="org.concord.otrunk.OTSystem"/>
+    <import class="org.concord.otrunk.view.OTFolderObject"/>
+    <import class="org.concord.otrunk.view.OTViewEntry"/>
+    <import class="org.concord.otrunk.view.OTViewMode"/>
+    <import class="org.concord.otrunk.view.OTViewService"/>    
+    <import class="org.concord.framework.otrunk.view.OTFrame"/>
+    <import class="org.concord.otrunk.view.document.OTCompoundDoc"/>
+    <import class="org.concord.otrunk.view.document.OTTextObject"/>
+    <import class="org.concord.otrunk.ui.OTButton"/>
+    <import class="org.concord.otrunk.ui.OTImage"/>
+    <import class="org.concord.otrunk.ui.OTChoice"/>
+    <import class="org.concord.otrunk.ui.OTText"/>
+    <import class="org.concord.otrunk.diy.OTDIYActivity"/>
+    <import class="org.concord.otrunk.diy.OTDIYSection"/>
+    <import class="org.concord.otrunk.view.OTObjectEditViewConfig"/>
+    <import class="org.concord.otrunk.view.OTAuthorEmbedDefaultViewConfig"/>
+    <import class="org.concord.otrunk.view.document.OTDocumentViewConfig"/>
+    <import class="org.concord.otrunk.velocity.OTVelocityXHTMLViewEntry"/>
+    <import class="org.concord.otrunk.view.prototype.OTPrototypeViewEntry"/>
+    <import class="org.concord.otrunk.view.prototype.OTPrototypeEventController"/>
+    <import class="org.concord.otrunk.view.prototype.OTPrototypeMapEntry"/>
+  </imports>
+  <objects>
+    <OTSystem>
+      <services>
+        <OTViewService currentMode="authoring">
+          <viewEntries>
+          	<OTVelocityXHTMLViewEntry local_id="activity_view"
+          		objectClass="org.concord.otrunk.diy.OTDIYActivity"
+          		viewClass="org.concord.otrunk.velocity.OTVelocityXHTMLView">
+          		<template>
+          			<h2>$model.title</h2>
+
+          			#foreach( $section in $model.sections.vector )
+          			<h3>$section.name</h3>
+          			<object refid="$section.globalId"
+          				viewid="$section.viewEntry.globalId" />
+          			#end
+          		</template>
+          	</OTVelocityXHTMLViewEntry>
+          	<OTVelocityXHTMLViewEntry local_id="document_section_view"
+          		objectClass="org.concord.otrunk.diy.OTDIYSection"
+          		viewClass="org.concord.otrunk.velocity.OTVelocityXHTMLView">
+          		<template>
+          			<object refid="$model.child.globalId" />
+          		</template>
+          	</OTVelocityXHTMLViewEntry>
+          	<OTVelocityXHTMLViewEntry local_id="choice1_section_view"
+          		objectClass="org.concord.otrunk.diy.OTDIYSection"
+          		viewClass="org.concord.otrunk.velocity.OTVelocityXHTMLView">
+          		<template>
+          			<object refid="$model.child.globalId" />
+          		</template>
+          	</OTVelocityXHTMLViewEntry>
+          	<OTDocumentViewConfig
+          		objectClass="org.concord.otrunk.view.document.OTCompoundDoc"
+          		viewClass="org.concord.otrunk.view.document.OTDocumentView" />
+          	<OTViewEntry 
+          		objectClass="org.concord.otrunk.ui.OTText"
+          		viewClass="org.concord.otrunk.ui.swing.OTTextView" />
+          	<OTViewEntry 
+          		objectClass="org.concord.otrunk.ui.OTButton"
+          		viewClass="org.concord.otrunk.ui.swing.OTButtonView" />
+          	<OTViewEntry 
+          		objectClass="org.concord.otrunk.ui.OTImage"
+          		viewClass="org.concord.otrunk.ui.swing.OTImageView" />          		
+          	<OTViewEntry local_id="choice_view"
+          		objectClass="org.concord.otrunk.ui.OTChoice"
+          		viewClass="org.concord.otrunk.ui.swing.OTChoiceComboBoxView" />
+          </viewEntries>
+          <modes>
+            <OTViewMode name="authoring">
+            	<map>
+            		<entry key="${activity_view}">
+            			<OTVelocityXHTMLViewEntry
+            				objectClass="org.concord.otrunk.diy.OTDIYActivity"
+            				viewClass="org.concord.otrunk.velocity.OTVelocityXHTMLView">
+            				<template>
+            					<!--  this should be editable  -->
+            					Authoring
+            					<h2>$model.title</h2>
+
+            					#foreach( $section in $model.sections.vector )
+            					<h3>$section.name</h3>
+            					<object refid="$section.globalId"
+            						viewid="$section.viewEntry.globalId" 
+            						mode="authoring"/>
+            					#end
+            					<br/>
+            					<a href="$model.globalId" mode="" target="${preview_frame}">preview</a>
+            				</template>
+            			</OTVelocityXHTMLViewEntry>
+            		</entry>
+            		<entry key="${document_section_view}">
+            			<OTVelocityXHTMLViewEntry
+            				objectClass="org.concord.otrunk.diy.OTDIYSection"
+            				viewClass="org.concord.otrunk.velocity.OTVelocityXHTMLView">
+            				<template>
+            					<object refid="$model.child.globalId" 
+            						viewid="${document_edit_view}"
+            						mode=""/>
+            				</template>
+            			</OTVelocityXHTMLViewEntry>
+            		</entry>
+            		<entry key="${choice1_section_view}">
+            			<OTPrototypeViewEntry 
+            				objectClass="org.concord.otrunk.diy.OTDIYSection"
+            				viewClass="org.concord.otrunk.view.prototype.OTPrototypeView"
+            				viewEntry="${choice_view}">
+            				<prototype>
+            					<OTChoice>
+            						<choices>
+            							<OTText local_id="choice1_child1" 
+            								name="Text Example" 
+            								text="Text of choice1 child1" />
+            							<OTButton name="Button Example"
+            								text="Click Me" />
+            							<OTImage name="Image Example"
+            								imageBytes="http://www.concord.org/images/logos/cc/cc-logo.gif" />
+            						</choices>
+            					</OTChoice>
+            				</prototype>
+            				<controller>
+            					<OTPrototypeEventController>
+            						<mapping>
+            							<OTPrototypeMapEntry
+            								modelProperty="child" 
+            								prototypeProperty="currentChoice" />
+            						</mapping>
+            					</OTPrototypeEventController>
+            				</controller>
+            			</OTPrototypeViewEntry>
+            		</entry>
+            	</map>
+            </OTViewMode>
+          </modes>
+        </OTViewService>
+      </services>
+      <library>
+        <OTFrame local_id="preview_frame" width="500" height="500"/>
+        <OTObjectEditViewConfig local_id="document_edit_view"
+        	objectClass="org.concord.otrunk.view.document.OTCompoundDoc"
+        	viewClass="org.concord.otrunk.view.document.OTCompoundDocEditView">
+        	<objectsToInsert>
+        		<OTImage name="Concord Logo"
+        			imageBytes="http://www.concord.org/images/logos/cc/cc-logo.gif" />
+        		<OTImage name="Concord Banner"
+        			imageBytes="http://www.concord.org/images/logos/cc/cc_main_banner.jpg" />
+        	</objectsToInsert>
+        </OTObjectEditViewConfig>
+      </library>
+      <root>
+        <OTDIYActivity name="activity">
+        	<title>my activity</title>
+        	<sections>
+        		<OTDIYSection viewEntry="${document_section_view}"
+        			name="Section 1">
+        			<child>
+        				<OTCompoundDoc local_id="section_1">
+        					<bodyText>change me</bodyText>
+        				</OTCompoundDoc>
+        			</child>
+        		</OTDIYSection>
+        		<OTDIYSection viewEntry="${document_section_view}"
+        		name="Section 2">
+        			<child>
+        				<OTCompoundDoc local_id="section_2">
+        					<bodyText>change me</bodyText>
+        				</OTCompoundDoc>
+        			</child>
+        		</OTDIYSection>
+        		<OTDIYSection viewEntry="${choice1_section_view}"
+        			name="Section 2" child="${choice1_child1}" />
+        		<OTDIYSection viewEntry="${document_section_view}"
+        			name="Section 3">
+        			<child>
+        				<OTCompoundDoc local_id="section_3">
+        					<bodyText>change me</bodyText>
+        				</OTCompoundDoc>
+        			</child>
+        		</OTDIYSection>
+        	</sections>
+        </OTDIYActivity>
+      </root>
+    </OTSystem>
+  </objects>
+</otrunk>

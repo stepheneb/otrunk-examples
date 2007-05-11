@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<otrunk id="33754150-b594-11d9-9669-0800200c9a66" >
+  <imports>
+    <import class="org.concord.otrunk.OTSystem"/>
+    <import class="org.concord.otrunk.view.OTFolderObject"/>
+    <import class="org.concord.otrunk.view.OTViewEntry"/>
+    <import class="org.concord.otrunk.view.OTViewService"/>
+    <import class="org.concord.otrunk.view.prototype.OTPrototypeViewEntry"/>
+    <import class="org.concord.otrunk.view.prototype.OTPrototypeEventController"/>
+    <import class="org.concord.otrunk.view.prototype.OTPrototypeMapEntry"/>
+    <import class="org.concord.otrunk.ui.OTChoice"/>
+    <import class="org.concord.otrunk.ui.OTText"/>
+    <import class="org.concord.otrunk.view.document.OTCompoundDoc"/>
+    
+  </imports>
+  <objects>
+    <OTSystem>
+      <services>
+        <OTViewService>
+          <viewEntries>
+            <OTViewEntry
+              objectClass="org.concord.otrunk.ui.OTText" 
+              viewClass="org.concord.otrunk.ui.swing.OTTextView"/>
+            <OTPrototypeViewEntry
+            	objectClass="org.concord.otrunk.view.OTFolderObject"
+            	viewClass="org.concord.otrunk.view.prototype.OTPrototypeView"
+            	viewEntry="${choice_view}">
+            	<prototype>
+            	    <OTChoice>
+            	      <choices> 
+            	        <OTText local_id="original_child_1" 
+            	        	name="original child 1" text="child 1 text"/>            	      	           	      
+	            		<OTText name="replacement 1" text="r1 text" />
+	            		<OTText name="replacement 2" text="r2 text" />
+	            		<OTText name="replacement 3" text="r3 text" />
+	            	  </choices>
+	            	</OTChoice>	            	
+            	</prototype>
+            	<controller>
+            		<OTPrototypeEventController>
+            			<mapping>
+            			   <OTPrototypeMapEntry 
+            			   		modelProperty="children[0]" 
+            			   		prototypeProperty="currentChoice"/>
+            			</mapping>
+            		</OTPrototypeEventController>
+            	</controller>
+            </OTPrototypeViewEntry>
+            <OTViewEntry local_id="choice_view"
+              objectClass="org.concord.otrunk.ui.OTChoice"
+              viewClass="org.concord.otrunk.ui.swing.OTChoiceComboBoxView"/>
+          </viewEntries>
+        </OTViewService>
+      </services>
+      <root>
+        <OTFolderObject>
+          <children>
+            <object refid="${original_child_1}"/>
+            <OTText name="original child 2" text="child 2 text"/>
+            <OTText name="original child 2" text="child 2 text"/>
+          </children>
+        </OTFolderObject>
+      </root>
+    </OTSystem>
+  </objects>
+</otrunk>

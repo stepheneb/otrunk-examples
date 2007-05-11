@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<otrunk id="33754150-b594-11d9-9669-0800200c9a66" >
+
+  <imports>
+    <import class="org.concord.otrunk.OTSystem"/>
+    <import class="org.concord.otrunk.view.OTViewEntry"/>
+    <import class="org.concord.otrunk.view.OTViewService"/>
+    <import class="org.concord.otrunk.view.OTFolderObject"/>
+    <import class="org.concord.otrunk.velocity.OTVelocityXHTMLViewEntry"/>
+    <import class="org.concord.otrunk.ui.OTText"/>
+  </imports>
+  
+  <objects>
+    <OTSystem>
+    
+      <services>
+        <OTViewService>
+          <viewEntries>
+            <OTVelocityXHTMLViewEntry            
+              objectClass="org.concord.otrunk.view.OTFolderObject" 
+              viewClass="org.concord.otrunk.velocity.OTVelocityXHTMLView">
+              <template>
+                Hello $model.name that is the label name.
+                <ul>
+                #foreach( $child in $model.children.vector )
+                  <li><a href="$child.globalId">$child.name</a></li>
+                #end
+                </ul>
+              </template>  
+            </OTVelocityXHTMLViewEntry>
+            <OTViewEntry
+               objectClass="org.concord.otrunk.ui.OTText"
+               viewClass="org.concord.otrunk.ui.swing.OTTextView"/>
+          </viewEntries>
+        </OTViewService>
+      </services>
+      
+      <root>
+        <OTFolderObject name="FolderObject">
+          <children>
+            <OTText name="ChildOne" text="child 1 text"/>
+            <OTText name="ChildTwo" text="child 2 text"/>
+            <OTText name="ChildThree" text="child 3 text"/>
+          </children>
+        </OTFolderObject>
+      </root>
+      
+    </OTSystem>
+  </objects>
+</otrunk>

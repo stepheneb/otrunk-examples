@@ -1,0 +1,1143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Sensor Type Ids from SensorConfig
+
+	public static int QUANTITY_UNKNOWN=             -1;
+	
+	// Required
+	public static int QUANTITY_TEMPERATURE=			0;
+	public static int QUANTITY_TEMPERATURE_WAND=    1;
+	public static int QUANTITY_LIGHT=				2;
+	public static int QUANTITY_GAS_PRESSURE= 		3;
+	public static int QUANTITY_VOLTAGE= 			4;
+	public static int QUANTITY_FORCE=				5;
+	public static int QUANTITY_VELOCITY=			6;
+	public static int QUANTITY_RELATIVE_HUMIDITY=	7;
+
+	// Recommended
+	public static int QUANTITY_ACCELERATION=		8;
+	public static int QUANTITY_PULSE_RATE=			9;
+		
+	// not required
+	public static int QUANTITY_CURRENT=				10;
+	public static int QUANTITY_POWER=				11;
+	public static int QUANTITY_ENERGY=				12;
+	
+	public static int QUANTITY_DISTANCE=			13;
+	public static int QUANTITY_SOUND_INTENSITY=		14;
+	public static int QUANTITY_COMPASS= 			15;
+	
+	public static int QUANTITY_ANGULAR_VELOCITY=	16;
+	
+	public static int QUANTITY_WIND_SPEED=			17;	
+	
+	public static int QUANTITY_CO2_GAS=             18;
+	public static int QUANTITY_OXYGEN_GAS=          19;
+
+	public static int QUANTITY_PH=                  20;
+	public static int QUANTITY_SALINITY=            21;
+	
+	public static int QUANTITY_RAW_DATA=            22;
+	public static int QUANTITY_RAW_VOLTAGE=         23;
+-->
+<otrunk id="3BE522E4-D4AC-45C2-819C-5DD74E54BA8F">
+  <imports>
+    <import class="org.concord.otrunk.OTSystem"/>
+    <import class="org.concord.otrunk.view.OTFolderObject"/>
+    <import class="org.concord.otrunk.view.OTViewEntry"/>
+    <import class="org.concord.otrunk.view.OTViewService"/>
+    <import class="org.concord.otrunk.view.document.OTCompoundDoc"/>
+    <import class="org.concord.otrunk.control.OTButton"/>
+    <import class="org.concord.sensor.state.OTDeviceConfig"/>
+    <import class="org.concord.sensor.state.OTExperimentRequest"/>
+    <import class="org.concord.sensor.state.OTInterfaceManager"/>
+    <import class="org.concord.sensor.state.OTSensorDataProxy"/>
+    <import class="org.concord.sensor.state.OTSensorRequest"/>
+    <import class="org.concord.sensor.state.OTLoggingRequest"/>
+    <import class="org.concord.sensor.state.OTSetupLogger"/>
+    <import class="org.concord.sensor.state.OTZeroSensor"/>
+    <import class="org.concord.sensor.view.OTLoggerRecordChooser"/>      
+    <import class="org.concord.sensor.view.OTLoggerImporter"/>
+    <import class="org.concord.data.state.OTDataStore"/>
+    <import class="org.concord.data.state.OTDataChannelDescription"/>
+    <import class="org.concord.datagraph.state.OTDataGraph"/>
+    <import class="org.concord.datagraph.state.OTDataCollector"/>
+    <import class="org.concord.datagraph.state.OTMultiDataGraph"/>
+    <import class="org.concord.datagraph.state.OTDataGraphable"/>
+    <import class="org.concord.datagraph.state.OTDataAxis"/>
+    <import class="org.concord.datagraph.state.OTPluginView"/>
+    <import class="org.concord.datagraph.state.OTMultiDataSetControl"/>
+    <import class="org.concord.otrunk.view.prototype.OTPrototypeViewEntry"/>
+    <import class="org.concord.otrunk.view.prototype.OTPrototypeEventController"/>
+    <import class="org.concord.otrunk.view.prototype.OTPrototypeMapEntry"/>
+    <import class="org.concord.otrunk.ui.OTChoice"/>
+  </imports>
+  <objects>
+    <OTSystem>
+      <services>
+        <OTViewService>
+          <viewEntries>
+            <OTViewEntry objectClass="org.concord.datagraph.state.OTDataGraph"
+              viewClass="org.concord.datagraph.state.OTDataGraphView"/>
+            <OTViewEntry objectClass="org.concord.data.state.OTDataField"
+              viewClass="org.concord.data.state.OTDataFieldView"/>
+            <OTViewEntry
+              objectClass="org.concord.datagraph.state.OTDataCollector"
+              viewClass="org.concord.datagraph.state.OTDataCollectorView"/>
+            <OTViewEntry
+              objectClass="org.concord.graph.util.state.OTDrawingTool"
+              viewClass="org.concord.datagraph.state.OTDataDrawingToolView"/>
+            <OTViewEntry
+              objectClass="org.concord.datagraph.state.OTMultiDataGraph"
+              viewClass="org.concord.datagraph.state.OTMultiDataGraphView"/>
+            <OTViewEntry
+              objectClass="org.concord.datagraph.state.OTMultiDataSetControl"
+              viewClass="org.concord.datagraph.state.OTMultiDataSetControlView"
+            />
+            <OTViewEntry
+              objectClass="org.concord.sensor.view.OTLoggerRecordChooser"
+              viewClass="org.concord.sensor.view.OTLoggerRecordChooserView"
+            />
+            <OTViewEntry
+              objectClass="org.concord.sensor.view.OTLoggerImporter"
+              viewClass="org.concord.sensor.view.OTLoggerImporterView"
+            />
+            <OTViewEntry
+              objectClass="org.concord.otrunk.control.OTButton"
+              viewClass="org.concord.otrunk.control.OTButtonView"
+            />
+            <OTViewEntry
+              objectClass="org.concord.otrunk.view.document.OTCompoundDoc"
+              viewClass="org.concord.otrunk.view.document.OTDocumentView"/>
+            <OTViewEntry local_id="choice_view"
+              objectClass="org.concord.otrunk.ui.OTChoice"
+              viewClass="org.concord.otrunk.ui.swing.OTChoiceComboBoxView"/>            
+          </viewEntries>
+        </OTViewService>
+        <OTInterfaceManager local_id="interface_manager">
+          <deviceConfigs>
+            <object refid="${vernier_go_link_config_1}"/>
+          </deviceConfigs>
+        </OTInterfaceManager>
+      </services>
+      <root>
+        <OTFolderObject>
+          <name>List of Data Collectors</name>
+          <children>
+            <OTCompoundDoc name="Select Device Config">
+              <bodyText>
+                <h3>Select Device Config</h3>
+                <object refid="${interface_manager}" 
+                	viewid="${device_selector}"/>
+              </bodyText>
+              <documentRefs>
+              	<OTPrototypeViewEntry local_id="device_selector"
+              		objectClass="org.concord.sensor.state.OTInterfaceManager"
+              		viewClass="org.concord.otrunk.view.prototype.OTPrototypeView"
+              		viewEntry="${choice_view}">
+              		<prototype>
+              			<OTChoice>
+              				<choices>
+              					<OTDeviceConfig name="psuedo device">
+              						<deviceId>0</deviceId>
+              						<configString>
+              							/dev/rfcomm0
+              						</configString>
+              					</OTDeviceConfig>
+              					
+              					<OTDeviceConfig name="Pasco SW500" 
+              					   configString="_auto_" deviceId="60"/>
+              					<OTDeviceConfig
+              						local_id="vernier_go_link_config_1"
+              						name="Vernier go link">
+              						<deviceId>10</deviceId>
+              						<configString>none</configString>
+              					</OTDeviceConfig>
+              					<OTDeviceConfig name="LabPro auto"
+              						deviceId="11" configString="_auto_"/>
+              					<OTDeviceConfig name="Airlink /dev/tty.IPSI-00279-Sensor-1"
+              						deviceId="61" configString="/dev/tty.IPSI-00279-Sensor-1"/>
+              					<OTDeviceConfig name="Airlink auto"
+              						deviceId="61" configString="_auto_"/>
+              					<OTDeviceConfig
+              						name="Dataharvest q advanced">
+              						<deviceId>42</deviceId>
+              						<configString>
+              							/dev/rfcomm0
+              						</configString>
+              					</OTDeviceConfig>
+              					<OTDeviceConfig name="DataHarvest EasySense Q auto"
+              						deviceId="40" configString="_auto_"/>
+              					<OTDeviceConfig name="TI CBL2" deviceId="20"
+              						configString="none" />
+              					<OTDeviceConfig name="Fourier EcoLogCOM1"
+              						deviceId="30" configString="COM1" />
+              					<OTDeviceConfig name="Fourier EcoLogCOM2"
+              						deviceId="30" configString="COM2" />
+              					<OTDeviceConfig name="Fourier EcoLogCOM3"
+              						deviceId="30" configString="COM3" />
+              					<OTDeviceConfig name="Fourier EcoLogCOM4"
+              						deviceId="30" configString="COM4" />
+              					<OTDeviceConfig name="Fourier EcoLogCOM5"
+              						deviceId="30" configString="COM5" />
+              					<OTDeviceConfig name="Fourier EcoLogCOM6"
+              						deviceId="30" configString="COM6" />
+              					<OTDeviceConfig name="Fourier EcoLogCOM7"
+              						deviceId="30" configString="COM7" />
+              					<OTDeviceConfig name="Fourier EcoLogCOM8"
+              						deviceId="30" configString="COM8" />
+              					<OTDeviceConfig name="Fourier EcoLogCOM9"
+              						deviceId="30" configString="COM9" />
+              					<OTDeviceConfig name="Fourier EcoLogCOM10"
+              						deviceId="30" configString="COM10" />
+              					<OTDeviceConfig name="Fourier EcoLog/dev/tty.usbserial-1B1"
+              						deviceId="30" configString="/dev/tty.usbserial-1B1" />
+              					<OTDeviceConfig name="Fourier EcoLog/dev/tty.usbserial-2B1"
+              						deviceId="30" configString="/dev/tty.usbserial-2B1" />
+              					<OTDeviceConfig name="Fourier EcoLog/dev/tty.usbserial-3B1"
+              						deviceId="30" configString="/dev/tty.usbserial-3B1" />
+              					<OTDeviceConfig name="Fourier EcoLog/dev/usb/tts/0"
+              						deviceId="30" configString="/dev/usb/tts/0" />
+              					<OTDeviceConfig name="Fourier EcoLog/dev/tts/USB0"
+              						deviceId="30" configString="/dev/tts/USB0" />
+              				</choices>
+              			</OTChoice>
+              		</prototype>
+              		<controller>
+              			<OTPrototypeEventController>
+              				<mapping>
+              					<OTPrototypeMapEntry
+              						modelProperty="oTDeviceConfigs[0]"
+              						prototypeProperty="currentChoice" />
+              				</mapping>
+              			</OTPrototypeEventController>
+              		</controller>
+              	</OTPrototypeViewEntry>
+
+              </documentRefs>
+            </OTCompoundDoc>
+            
+            <OTDataCollector name="Temperature">
+              <source>
+                <OTDataGraphable connectPoints="true" color="0x0000ff"
+                  drawMarks="false" name="Dataset1" xColumn="0" yColumn="1">
+                  <dataProducer>
+                    <object refid="${temperature_dp}"/>
+                  </dataProducer>
+                </OTDataGraphable>
+              </source>
+              <xDataAxis>
+                <OTDataAxis min="0" max="30" label="Time" units="s"/>
+              </xDataAxis>
+              <yDataAxis>
+                <OTDataAxis min="10" max="40" label="Temperature" units="degC"/>
+              </yDataAxis>
+            </OTDataCollector>
+            <OTDataCollector name="Light">
+              <source>
+                <OTDataGraphable connectPoints="true" color="0xff0000"
+                  drawMarks="false" name="Dataset1" xColumn="0" yColumn="1">
+                  <dataProducer>
+                    <object refid="${light_dp}"/>
+                  </dataProducer>
+                </OTDataGraphable>
+              </source>
+              <xDataAxis>
+                <OTDataAxis min="0" max="30" label="Time" units="s"/>
+              </xDataAxis>
+              <yDataAxis>
+                <OTDataAxis min="0" max="900" label="Illuminance" units="lx"/>
+              </yDataAxis>
+            </OTDataCollector>
+            <OTDataCollector name="Data Logger Test">
+              <source>
+                <OTDataGraphable connectPoints="true" color="0xff0000"
+                  drawMarks="false" name="Dataset1" xColumn="0" yColumn="1">
+                  <dataProducer>
+                    <object refid="${light_dp}"/>
+                  </dataProducer>
+                </OTDataGraphable>
+              </source>
+              <xDataAxis>
+                <OTDataAxis min="0" max="30" label="Time" units="s"/>
+              </xDataAxis>
+              <yDataAxis>
+                <OTDataAxis min="0" max="900" label="Illuminance" units="lx"/>
+              </yDataAxis>
+            </OTDataCollector>
+            <OTMultiDataGraph name="Force Zeroing" rows="1" columns="1">
+              <graphs>
+                <OTDataCollector>
+                  <source>
+                    <OTDataGraphable connectPoints="true" color="0xff0000"
+                      drawMarks="false" name="Dataset1" xColumn="0" yColumn="1">
+                      <dataProducer>
+                        <object refid="${force_3N_dp}"/>
+                      </dataProducer>
+                    </OTDataGraphable>
+                  </source>
+                  <xDataAxis>
+                    <OTDataAxis min="0" max="30" label="Time" units="s"/>
+                  </xDataAxis>
+                  <yDataAxis>
+                    <OTDataAxis min="-5" max="5" label="Force" units="N"/>
+                  </yDataAxis>
+                </OTDataCollector>
+              </graphs>
+              <pluginViews>
+                <OTPluginView location="south">
+                  <control>
+                    <OTButton text="Zero Force">
+                      <action>
+                        <object refid="${force_zero_3N_dp}"/>
+                      </action>
+                    </OTButton>
+                  </control>
+                </OTPluginView>
+              </pluginViews>
+            </OTMultiDataGraph>
+            <OTDataCollector name="Raw Data">
+              <source>
+                <OTDataGraphable connectPoints="true" color="0xff0000"
+                  drawMarks="false" name="Dataset1" xColumn="0" yColumn="1">
+                  <dataProducer>
+                    <object refid="${raw_data_dp}"/>
+                  </dataProducer>
+                </OTDataGraphable>
+              </source>
+              <xDataAxis>
+                <OTDataAxis min="0" max="30" label="Time" units="s"/>
+              </xDataAxis>
+              <yDataAxis>
+                <OTDataAxis min="-32768" max="32767" label="Raw Data" units="raw"/>
+              </yDataAxis>
+            </OTDataCollector>
+            <OTDataCollector name="Raw Voltage">
+              <source>
+                <OTDataGraphable connectPoints="true" color="0xff0000"
+                  drawMarks="false" name="Dataset1" xColumn="0" yColumn="1">
+                  <dataProducer>
+                    <object refid="${raw_voltage_dp}"/>
+                  </dataProducer>
+                </OTDataGraphable>
+              </source>
+              <xDataAxis>
+                <OTDataAxis min="0" max="30" label="Time" units="s"/>
+              </xDataAxis>
+              <yDataAxis>
+                <OTDataAxis min="-1" max="10" label="Raw Voltage" units="V"/>
+              </yDataAxis>
+            </OTDataCollector>
+            <OTDataCollector name="Gas Pressure">
+              <source>
+                <OTDataGraphable connectPoints="true" color="0xff0000"
+                  drawMarks="false" name="Dataset1" xColumn="0" yColumn="1">
+                  <dataProducer>
+                    <object refid="${pressure_dp}"/>
+                  </dataProducer>
+                </OTDataGraphable>
+              </source>
+              <xDataAxis>
+                <OTDataAxis min="0" max="30" label="Time" units="s"/>
+              </xDataAxis>
+              <yDataAxis>
+                <OTDataAxis min="95" max="105" label="Pressure" units="kPa"/>
+              </yDataAxis>
+            </OTDataCollector>
+            <OTDataCollector name="Barometer">
+              <source>
+                <OTDataGraphable connectPoints="true" color="0xff0000"
+                  drawMarks="false" name="Dataset1" xColumn="0" yColumn="1">
+                  <dataProducer>
+                    <object refid="${barometer_dp}"/>
+                  </dataProducer>
+                </OTDataGraphable>
+              </source>
+              <xDataAxis>
+                <OTDataAxis min="0" max="30" label="Time" units="s"/>
+              </xDataAxis>
+              <yDataAxis>
+                <OTDataAxis min="95" max="105" label="Pressure" units="kPa"/>
+              </yDataAxis>
+            </OTDataCollector>
+            <OTDataCollector name="Voltage">
+              <source>
+                <OTDataGraphable connectPoints="true" color="0xff0000"
+                  drawMarks="false" name="Dataset1" xColumn="0" yColumn="1">
+                  <dataProducer>
+                    <object refid="${voltage_dp}"/>
+                  </dataProducer>
+                </OTDataGraphable>
+              </source>
+              <xDataAxis>
+                <OTDataAxis min="0" max="30" label="Time" units="s"/>
+              </xDataAxis>
+              <yDataAxis>
+                <OTDataAxis min="-10" max="10" label="Voltage" units="V"/>
+              </yDataAxis>
+            </OTDataCollector>
+            <OTDataCollector name="Force 3N">
+              <source>
+                <OTDataGraphable connectPoints="true" color="0xff0000"
+                  drawMarks="false" name="Dataset1" xColumn="0" yColumn="1">
+                  <dataProducer>
+                    <object refid="${force_3N_dp}"/>
+                  </dataProducer>
+                </OTDataGraphable>
+              </source>
+              <xDataAxis>
+                <OTDataAxis min="0" max="30" label="Time" units="s"/>
+              </xDataAxis>
+              <yDataAxis>
+                <OTDataAxis min="-5" max="5" label="Force" units="N"/>
+              </yDataAxis>
+            </OTDataCollector>
+            <OTDataCollector name="Force 40N">
+              <source>
+                <OTDataGraphable connectPoints="true" color="0xff0000"
+                  drawMarks="false" name="Dataset1" xColumn="0" yColumn="1">
+                  <dataProducer>
+                    <object refid="${force_40N_dp}"/>
+                  </dataProducer>
+                </OTDataGraphable>
+              </source>
+              <xDataAxis>
+                <OTDataAxis min="0" max="30" label="Time" units="s"/>
+              </xDataAxis>
+              <yDataAxis>
+                <OTDataAxis min="-50" max="50" label="Force" units="N"/>
+              </yDataAxis>
+            </OTDataCollector>
+            <OTDataCollector name="Motion">
+              <source>
+                <OTDataGraphable connectPoints="true" color="0xff0000"
+                  drawMarks="false" name="Dataset1" xColumn="0" yColumn="1">
+                  <dataProducer>
+                    <object refid="${motion_dp}"/>
+                  </dataProducer>
+                </OTDataGraphable>
+              </source>
+              <xDataAxis>
+                <OTDataAxis min="0" max="30" label="Time" units="s"/>
+              </xDataAxis>
+              <yDataAxis>
+                <OTDataAxis min="-5" max="5" label="Distance" units="m"/>
+              </yDataAxis>
+            </OTDataCollector>
+            <OTDataCollector name="Relative Humidity">
+              <source>
+                <OTDataGraphable connectPoints="true" color="0xff0000"
+                  drawMarks="false" name="Dataset1" xColumn="0" yColumn="1">
+                  <dataProducer>
+                    <object refid="${rel_humidity_dp}"/>
+                  </dataProducer>
+                </OTDataGraphable>
+              </source>
+              <xDataAxis>
+                <OTDataAxis min="0" max="30" label="Time" units="s"/>
+              </xDataAxis>
+              <yDataAxis>
+                <OTDataAxis min="0" max="100" label="Relative Humidity"
+                  units="%RH"/>
+              </yDataAxis>
+            </OTDataCollector>
+            <OTDataCollector name="CO2 Gas">
+              <source>
+                <OTDataGraphable connectPoints="true" color="0xff0000"
+                  drawMarks="false" name="Dataset1" xColumn="0" yColumn="1">
+                  <dataProducer>
+                    <object refid="${co2_gas_dp}"/>
+                  </dataProducer>
+                </OTDataGraphable>
+              </source>
+              <xDataAxis>
+                <OTDataAxis min="0" max="30" label="Time" units="s"/>
+              </xDataAxis>
+              <yDataAxis>
+                <OTDataAxis min="0" max="100" label="CO2 Gas"
+                  units="ppm"/>
+              </yDataAxis>
+            </OTDataCollector>
+            <OTDataCollector name="PH">
+              <source>
+                <OTDataGraphable connectPoints="true" color="0xff0000"
+                  drawMarks="false" name="Dataset1" xColumn="0" yColumn="1">
+                  <dataProducer>
+                    <object refid="${ph_dp}"/>
+                  </dataProducer>
+                </OTDataGraphable>
+              </source>
+              <xDataAxis>
+                <OTDataAxis min="0" max="30" label="Time" units="s"/>
+              </xDataAxis>
+              <yDataAxis>
+                <OTDataAxis min="-7" max="7" label="PH"
+                  units="pH"/>
+              </yDataAxis>
+            </OTDataCollector>
+            <OTDataCollector name="Oxygen Gas">
+              <source>
+                <OTDataGraphable connectPoints="true" color="0xff0000"
+                  drawMarks="false" name="Dataset1" xColumn="0" yColumn="1">
+                  <dataProducer>
+                    <object refid="${oxygen_gas_dp}"/>
+                  </dataProducer>
+                </OTDataGraphable>
+              </source>
+              <xDataAxis>
+                <OTDataAxis min="0" max="30" label="Time" units="s"/>
+              </xDataAxis>
+              <yDataAxis>
+                <OTDataAxis min="0" max="400" label="Oxygen Gas"
+                  units="ppt"/>
+              </yDataAxis>
+            </OTDataCollector>
+            <OTDataCollector name="Salinity">
+              <source>
+                <OTDataGraphable connectPoints="true" color="0xff0000"
+                  drawMarks="false" name="Dataset1" xColumn="0" yColumn="1">
+                  <dataProducer>
+                    <object refid="${salinity_dp}"/>
+                  </dataProducer>
+                </OTDataGraphable>
+              </source>
+              <xDataAxis>
+                <OTDataAxis min="0" max="30" label="Time" units="s"/>
+              </xDataAxis>
+              <yDataAxis>
+                <OTDataAxis min="0" max="100" label="Salinity"
+                  units="ppt"/>
+              </yDataAxis>
+            </OTDataCollector>
+            <OTMultiDataGraph name="Multiple Graphs" rows="2" columns="1">
+              <graphs>
+                <OTDataCollector name="Rel Hum C">
+                  <source>
+                    <OTDataGraphable connectPoints="true" color="0x0000ff"
+                      drawMarks="false" name="Humidity" xColumn="0" yColumn="1">
+                      <dataProducer>
+                        <OTSensorDataProxy local_id="rel_humidity_light_dp">
+                          <name>Relative Humidity and Light</name>
+                          <request>
+                            <OTExperimentRequest period="10">
+                              <sensorRequests>
+                                <OTSensorRequest type="7" stepSize="1.0"
+                                  displayPrecision="0" port="0"
+                                  unit="percentage" requiredMax="100"
+                                  requiredMin="0"/>
+                                <OTSensorRequest type="2" stepSize="1.0"
+                                  displayPrecision="0" port="0" unit="lux"
+                                  requiredMax="800" requiredMin="100"/>
+                              </sensorRequests>
+                            </OTExperimentRequest>
+                          </request>
+                        </OTSensorDataProxy>
+                      </dataProducer>
+                      <dataStore>
+                        <OTDataStore local_id="data_set"/>
+                      </dataStore>
+                    </OTDataGraphable>
+                  </source>
+                  <xDataAxis>
+                    <OTDataAxis local_id="xaxis" min="0" max="600" label="Time"
+                      units="s"/>
+                  </xDataAxis>
+                  <yDataAxis>
+                    <OTDataAxis min="0" max="100" label="Relative Humidity"
+                      units=""/>
+                  </yDataAxis>
+                </OTDataCollector>
+                <OTDataCollector name="Light B">
+                  <source>
+                    <OTDataGraphable connectPoints="true" color="0x0000ff"
+                      drawMarks="false" name="Light" xColumn="0" yColumn="2">
+                      <dataStore refid="${data_set}"/>
+                    </OTDataGraphable>
+                  </source>
+                  <xDataAxis refid="${xaxis}"/>
+                  <yDataAxis>
+                    <OTDataAxis min="0" max="800" label="Light level" units="lx"
+                    />
+                  </yDataAxis>
+                </OTDataCollector>
+              </graphs>
+            </OTMultiDataGraph>
+            <OTMultiDataGraph name="Logging Import Test" rows="2"
+              columns="1">
+              <pluginViews>
+                <!--
+                <OTPluginView>
+                  <control>
+                    <OTButton text="Setup Logger">
+                      <action>
+                        <OTSetupLogger>
+                          <request>
+                            <OTLoggingRequest>
+                              <sensorRequests>
+                                <OTSensorRequest type="7" stepSize="1.0"
+                                  displayPrecision="0" port="0"
+                                  unit="percentage" requiredMax="100"
+                                  requiredMin="0"/>
+                                <OTSensorRequest type="2" stepSize="1.0"
+                                  displayPrecision="0" port="0" unit="lux"
+                                  requiredMax="800" requiredMin="100"/>
+                              </sensorRequests>                              
+                            </OTLoggingRequest>
+                          </request>
+                        </OTSetupLogger>
+                      </action>
+                    </OTButton>
+                  </control>
+                </OTPluginView>
+                -->
+                <OTPluginView>
+                  <control>
+                    <OTLoggerImporter>
+                      <request>
+                        <OTExperimentRequest period="10">
+                          <sensorRequests>
+                            <OTSensorRequest type="7" stepSize="1.0"
+                              displayPrecision="0" port="0"
+                              unit="percentage" requiredMax="100"
+                              requiredMin="0"/>
+                            <OTSensorRequest type="2" stepSize="1.0"
+                              displayPrecision="0" port="0" unit="lux"
+                              requiredMax="800" requiredMin="100"/>
+                          </sensorRequests>
+                        </OTExperimentRequest>
+                      </request>
+                    </OTLoggerImporter>
+                  </control>
+                </OTPluginView>
+                <OTPluginView>
+                  <control>
+                    <OTMultiDataSetControl/>
+                  </control>
+                </OTPluginView>
+              </pluginViews>
+              <graphs>
+                <OTDataCollector name="Rel Hum C" multipleGraphableEnabled="false">
+                  <prototypeGraphables>
+                    <OTDataGraphable connectPoints="true" color="0x0000ff"
+                      drawMarks="false" name="Humidity" xColumn="0" yColumn="1"/>
+                  </prototypeGraphables>
+                  <xDataAxis>
+                    <OTDataAxis local_id="xaxis_multi" min="0" max="600"
+                      label="Time" units="s"/>
+                  </xDataAxis>
+                  <yDataAxis>
+                    <OTDataAxis min="0" max="100" label="Relative Humidity"
+                      units=""/>
+                  </yDataAxis>
+                </OTDataCollector>
+                <OTDataCollector name="Light B" multipleGraphableEnabled="false">
+                  <prototypeGraphables>
+                    <OTDataGraphable connectPoints="true" color="0x0000ff"
+                      drawMarks="false" name="Light" xColumn="0" yColumn="2"/>
+                  </prototypeGraphables>
+                  <xDataAxis refid="${xaxis_multi}"/>
+                  <yDataAxis>
+                    <OTDataAxis min="0" max="800" label="Light level" units="lx"
+                    />
+                  </yDataAxis>
+                </OTDataCollector>
+              </graphs>
+            </OTMultiDataGraph>
+            <OTMultiDataGraph name="Logging Import Test2" rows="2"
+              columns="1">
+              <pluginViews>
+                <OTPluginView>
+                  <control>
+                    <OTLoggerImporter>
+                      <request refid="${temp_light_log}"/>
+                    </OTLoggerImporter>
+                  </control>
+                </OTPluginView>
+                <OTPluginView>
+                  <control>
+                    <OTMultiDataSetControl showNew="false"/>
+                  </control>
+                </OTPluginView>
+              </pluginViews>
+              <graphs>
+                <OTDataCollector name="Temperature" multipleGraphableEnabled="false">
+                  <prototypeGraphables>
+                    <OTDataGraphable connectPoints="true" color="0x0000ff"
+                      drawMarks="false" name="Temperature" xColumn="0" yColumn="1"/>
+                  </prototypeGraphables>
+                  <xDataAxis refid="${xaxis_multi_2}"/>
+                  <yDataAxis>
+                    <OTDataAxis min="0" max="35" label="Temperature" units="degC"
+                    />
+                  </yDataAxis>
+                </OTDataCollector>
+                <OTDataCollector name="Rel Hum C" multipleGraphableEnabled="false">
+                  <prototypeGraphables>
+                    <OTDataGraphable connectPoints="true" color="0x0000ff"
+                      drawMarks="false" name="Humidity" xColumn="0" yColumn="2"/>
+                  </prototypeGraphables>
+                  <xDataAxis>
+                    <!-- one hundred hours, the units for the min and max are
+                      the "data" units of the axis not the displayed units -->
+                    <OTDataAxis local_id="xaxis_multi_2" min="0" max="360000"
+                      label="Time" units="hr"/>
+                  </xDataAxis>
+                  <yDataAxis>
+                    <OTDataAxis min="0" max="100" label="Relative Humidity"
+                      units=""/>
+                  </yDataAxis>
+                </OTDataCollector>
+              </graphs>
+            </OTMultiDataGraph>
+            <OTDataCollector name="Multiple Datasets"
+              local_id="data_object_id_172" multipleGraphableEnabled="true">
+              <source>
+                <OTDataGraphable connectPoints="true" color="0x0000ff"
+                  drawMarks="false" name="Temperature" xColumn="0" yColumn="1">
+                  <dataProducer>
+                    <OTSensorDataProxy name="Temperature"
+                      local_id="dcid_172_temperature_dp">
+                      <request>
+                        <OTExperimentRequest period="0.1">
+                          <sensorRequests>
+                            <OTSensorRequest type="0" stepSize="0.1"
+                              displayPrecision="-1" port="0" unit="degC"
+                              requiredMax="40" requiredMin="30"/>
+                          </sensorRequests>
+                        </OTExperimentRequest>
+                      </request>
+                    </OTSensorDataProxy>
+                  </dataProducer>
+                  <dataStore>
+                    <OTDataStore local_id="dcid_172_popup_data_set"/>
+                  </dataStore>
+                </OTDataGraphable>
+              </source>
+              <graphables>
+                <OTDataGraphable connectPoints="true" color="0xff0000"
+                  drawMarks="false" name="Temperature 2" xColumn="0" yColumn="1">
+                  <dataProducer>
+                    <OTSensorDataProxy name="Temperature"
+                      local_id="dcid_172_temperature_dp2">
+                      <request>
+                        <OTExperimentRequest period="0.1">
+                          <sensorRequests>
+                            <OTSensorRequest type="0" stepSize="0.1"
+                              displayPrecision="-1" port="0" unit="degC"
+                              requiredMax="30" requiredMin="15"/>
+                          </sensorRequests>
+                        </OTExperimentRequest>
+                      </request>
+                    </OTSensorDataProxy>
+                  </dataProducer>
+                  <dataStore>
+                    <OTDataStore local_id="dcid_172_popup_data_set2"/>
+                  </dataStore>
+                </OTDataGraphable>
+                <OTDataGraphable connectPoints="true" color="0x00ff00"
+                  drawMarks="false" name="Temperature 3" xColumn="0" yColumn="1">
+                  <dataProducer>
+                    <OTSensorDataProxy name="Temperature"
+                      local_id="dcid_172_temperature_dp3">
+                      <request>
+                        <OTExperimentRequest period="0.1">
+                          <sensorRequests>
+                            <OTSensorRequest type="0" stepSize="0.1"
+                              displayPrecision="-1" port="0" unit="degC"
+                              requiredMax="20" requiredMin="15"/>
+                          </sensorRequests>
+                        </OTExperimentRequest>
+                      </request>
+                    </OTSensorDataProxy>
+                  </dataProducer>
+                  <dataStore>
+                    <OTDataStore local_id="dcid_172_popup_data_set3"/>
+                  </dataStore>
+                </OTDataGraphable>
+              </graphables>
+              <singleDataStore>
+                <OTDataStore local_id="dcid_172_data_set"/>
+              </singleDataStore>
+              <dataSetFolder>
+                <OTFolderObject/>
+              </dataSetFolder>
+              <xDataAxis>
+                <OTDataAxis min="0" max="60" label="Time" units="s"/>
+              </xDataAxis>
+              <yDataAxis>
+                <OTDataAxis min="10" max="50" label="Temperature" units="degC"/>
+              </yDataAxis>
+            </OTDataCollector>
+            <OTLoggerRecordChooser name="logger test"/>
+            <OTButton name="light and humidity log">
+              <action>
+                <OTSetupLogger>
+                  <request>
+                    <OTLoggingRequest period="5" recordingTime="60">
+                      <sensorRequests>
+                        <OTSensorRequest type="7" stepSize="1.0"
+                          displayPrecision="0" port="0"
+                          unit="percentage" requiredMax="100"
+                          requiredMin="0"/>
+                        <OTSensorRequest type="2" stepSize="1.0"
+                          displayPrecision="0" port="0" unit="lux"
+                          requiredMax="800" requiredMin="100"/>
+                      </sensorRequests>
+                    </OTLoggingRequest>
+                  </request>
+                </OTSetupLogger>
+              </action>
+            </OTButton>
+            <OTButton name="temp and humidity log">
+              <action>
+                <OTSetupLogger>
+                  <request>
+                    <OTLoggingRequest local_id="temp_light_log" 
+                        period="5" recordingTime="60">
+                      <sensorRequests>
+                        <OTSensorRequest type="0" stepSize="1.0"
+                          displayPrecision="-1" port="0" unit="degC"
+                          requiredMax="100" requiredMin="0"/>
+                        <OTSensorRequest type="7" stepSize="1.0"
+                          displayPrecision="0" port="1"
+                          unit="percentage" requiredMax="100"
+                          requiredMin="0"/>
+                      </sensorRequests>
+                    </OTLoggingRequest>
+                  </request>
+                </OTSetupLogger>
+              </action>
+            </OTButton>
+            <OTFolderObject name="Data Producers">
+              <children>
+                <OTSensorDataProxy name="Temperature" local_id="temperature_dp">
+                  <request>
+                    <OTExperimentRequest period="0.1">
+                      <sensorRequests>
+                        <OTSensorRequest>
+                          <type>0</type>
+                          <!-- type of sensor -->
+                          <stepSize>0.1</stepSize>
+                          <!-- requested resolution -->
+                          <displayPrecision>-2</displayPrecision>
+                          <port>0</port>
+                          <unit>degC</unit>
+                          <requiredMax>35</requiredMax>
+                          <requiredMin>15</requiredMin>
+                        </OTSensorRequest>
+                      </sensorRequests>
+                    </OTExperimentRequest>
+                  </request>
+                </OTSensorDataProxy>
+                <OTSensorDataProxy local_id="light_dp">
+                  <name>Light</name>
+                  <request>
+                    <OTExperimentRequest>
+                      <period>0.1</period>
+                      <sensorRequests>
+                        <OTSensorRequest>
+                          <type>2</type>
+                          <!-- type of sensor -->
+                          <stepSize>0.1</stepSize>
+                          <!-- requested resolution -->
+                          <displayPrecision>-2</displayPrecision>
+                          <port>0</port>
+                          <unit>Lux</unit>
+                          <requiredMax>800</requiredMax>
+                          <requiredMin>100</requiredMin>
+                        </OTSensorRequest>
+                      </sensorRequests>
+                    </OTExperimentRequest>
+                  </request>
+                </OTSensorDataProxy>
+                <OTSensorDataProxy local_id="raw_data_dp">
+                  <name>Raw Data</name>
+                  <request>
+                    <OTExperimentRequest>
+                      <period>0.1</period>
+                      <sensorRequests>
+                        <OTSensorRequest>
+                          <!-- type of sensor -->
+                          <type>22</type>
+                          <stepSize>1</stepSize>
+                          <!-- requested resolution -->
+                          <displayPrecision>0</displayPrecision>
+                          <port>0</port>
+                          <unit>raw</unit>
+                          <requiredMax>5000</requiredMax>
+                          <requiredMin>0</requiredMin>
+                        </OTSensorRequest>
+                      </sensorRequests>
+                    </OTExperimentRequest>
+                  </request>
+                </OTSensorDataProxy>
+                <OTSensorDataProxy local_id="raw_voltage_dp">
+                  <name>Raw Voltage</name>
+                  <request>
+                    <OTExperimentRequest>
+                      <period>0.1</period>
+                      <sensorRequests>
+                        <OTSensorRequest>
+                          <!-- type of sensor -->
+                          <type>23</type>
+                          <stepSize>0.01</stepSize>
+                          <!-- requested resolution -->
+                          <displayPrecision>-2</displayPrecision>
+                          <port>0</port>
+                          <unit>Pa</unit>
+                          <requiredMax>-1</requiredMax>
+                          <requiredMin>10</requiredMin>
+                        </OTSensorRequest>
+                      </sensorRequests>
+                    </OTExperimentRequest>
+                  </request>
+                </OTSensorDataProxy>
+                <OTSensorDataProxy local_id="pressure_dp">
+                  <name>Gas Pressure</name>
+                  <request>
+                    <OTExperimentRequest>
+                      <period>0.1</period>
+                      <sensorRequests>
+                        <OTSensorRequest>
+                          <!-- type of sensor -->
+                          <type>3</type>
+                          <stepSize>51</stepSize>
+                          <!-- requested resolution -->
+                          <displayPrecision>-2</displayPrecision>
+                          <port>0</port>
+                          <unit>Pa</unit>
+                          <requiredMax>104</requiredMax>
+                          <requiredMin>96</requiredMin>
+                        </OTSensorRequest>
+                      </sensorRequests>
+                    </OTExperimentRequest>
+                  </request>
+                </OTSensorDataProxy>
+                <OTSensorDataProxy local_id="barometer_dp">
+                  <name>Barometer</name>
+                  <request>
+                    <OTExperimentRequest>
+                      <period>0.1</period>
+                      <sensorRequests>
+                        <OTSensorRequest>
+                          <!-- type of sensor -->
+                          <type>3</type>
+                          <!-- step size this should be in Pa 
+                             but it looks like we've had this wrong
+                             the whole time -->
+                          <stepSize>1</stepSize>
+                          <!-- requested resolution -->
+                          <displayPrecision>-2</displayPrecision>
+                          <port>0</port>
+                          <unit>Pa</unit>
+                          <!--
+                          <requiredMax>104</requiredMax>
+                          <requiredMin>96</requiredMin>
+                          -->
+                        </OTSensorRequest>
+                      </sensorRequests>
+                    </OTExperimentRequest>
+                  </request>
+                </OTSensorDataProxy>
+                <OTSensorDataProxy local_id="voltage_dp">
+                  <name>Voltage</name>
+                  <request>
+                    <OTExperimentRequest>
+                      <period>0.1</period>
+                      <sensorRequests>
+                        <OTSensorRequest>
+                          <type>4</type>
+                          <!-- type of sensor -->
+                          <stepSize>0.1</stepSize>
+                          <!-- requested resolution -->
+                          <displayPrecision>-2</displayPrecision>
+                          <port>0</port>
+                          <unit>V</unit>
+                          <requiredMax>9</requiredMax>
+                          <requiredMin>-9</requiredMin>
+                        </OTSensorRequest>
+                      </sensorRequests>
+                    </OTExperimentRequest>
+                  </request>
+                </OTSensorDataProxy>
+                <OTSensorDataProxy local_id="force_3N_dp">
+                  <name>Force 3N</name>
+                  <request>
+                    <OTExperimentRequest>
+                      <period>0.1</period>
+                      <sensorRequests>
+                        <OTSensorRequest>
+                          <!-- type of sensor -->
+                          <type>5</type>
+                          <!-- requested resolution -->
+                          <stepSize>0.02</stepSize>
+                          <!-- requested max Newtons -->
+                          <requiredMax>4</requiredMax>
+                          <requiredMin>-4</requiredMin>
+                          <displayPrecision>-2</displayPrecision>
+                          <port>0</port>
+                          <unit>N</unit>
+                        </OTSensorRequest>
+                      </sensorRequests>
+                    </OTExperimentRequest>
+                  </request>
+                  <zeroSensor>
+                    <OTZeroSensor local_id="force_zero_3N_dp" sensorIndex="0"/>
+                  </zeroSensor>
+                </OTSensorDataProxy>
+                <OTSensorDataProxy local_id="force_40N_dp">
+                  <name>Force 40N</name>
+                  <request>
+                    <OTExperimentRequest>
+                      <period>0.1</period>
+                      <sensorRequests>
+                        <OTSensorRequest>
+                          <type>5</type>
+                          <!-- type of sensor -->
+                          <stepSize>0.1</stepSize>
+                          <!-- requested resolution -->
+                          <requiredMax>40</requiredMax>
+                          <requiredMin>-40</requiredMin>
+                          <!-- requested max Newtons -->
+                          <displayPrecision>-1</displayPrecision>
+                          <port>0</port>
+                          <unit>N</unit>
+                        </OTSensorRequest>
+                      </sensorRequests>
+                    </OTExperimentRequest>
+                  </request>
+                </OTSensorDataProxy>
+                <OTSensorDataProxy local_id="motion_dp">
+                  <name>Motion</name>
+                  <request>
+                    <OTExperimentRequest>
+                      <period>0.1</period>
+                      <sensorRequests>
+                        <OTSensorRequest>
+                          <type>13</type>
+                          <!-- type of sensor -->
+                          <stepSize>0.1</stepSize>
+                          <!-- requested resolution -->
+                          <displayPrecision>-2</displayPrecision>
+                          <port>0</port>
+                          <unit>m/s</unit>
+                          <requiredMax>4</requiredMax>
+                          <requiredMin>-4</requiredMin>
+                        </OTSensorRequest>
+                      </sensorRequests>
+                    </OTExperimentRequest>
+                  </request>
+                </OTSensorDataProxy>
+                <OTSensorDataProxy local_id="rel_humidity_dp">
+                  <name>Relative Humidity</name>
+                  <request>
+                    <OTExperimentRequest>
+                      <period>0.1</period>
+                      <sensorRequests>
+                        <OTSensorRequest>
+                          <type>7</type>
+                          <!-- type of sensor -->
+                          <stepSize>0.1</stepSize>
+                          <!-- requested resolution -->
+                          <displayPrecision>-2</displayPrecision>
+                          <port>0</port>
+                          <unit>percentage</unit>
+                          <requiredMax>90</requiredMax>
+                          <requiredMin>10</requiredMin>
+                        </OTSensorRequest>
+                      </sensorRequests>
+                    </OTExperimentRequest>
+                  </request>
+                </OTSensorDataProxy>
+                <OTSensorDataProxy local_id="co2_gas_dp">
+                  <name>CO2 Gas</name>
+                  <request>
+                    <OTExperimentRequest>
+                      <period>1</period>
+                      <sensorRequests>
+                        <OTSensorRequest>
+                          <type>18</type>
+                          <!-- type of sensor -->
+                          <stepSize>0.1</stepSize>
+                          <!-- requested resolution -->
+                          <displayPrecision>1</displayPrecision>
+                          <port>0</port>
+                          <unit>ppm</unit>
+                          <requiredMax>500</requiredMax>
+                          <requiredMin>0</requiredMin>
+                        </OTSensorRequest>
+                      </sensorRequests>
+                    </OTExperimentRequest>
+                  </request>
+                </OTSensorDataProxy>
+                <OTSensorDataProxy local_id="oxygen_gas_dp">
+                  <name>Oxygen Gas</name>
+                  <request>
+                    <OTExperimentRequest>
+                      <period>0.1</period>
+                      <sensorRequests>
+                        <OTSensorRequest>
+                          <type>19</type>
+                          <!-- type of sensor -->
+                          <stepSize>0.1</stepSize>
+                          <!-- requested resolution -->
+                          <displayPrecision>0</displayPrecision>
+                          <port>0</port>
+                          <unit>ppm</unit>
+                          <requiredMax>500</requiredMax>
+                          <requiredMin>0</requiredMin>
+                        </OTSensorRequest>
+                      </sensorRequests>
+                    </OTExperimentRequest>
+                  </request>
+                </OTSensorDataProxy>
+                <OTSensorDataProxy local_id="ph_dp">
+                  <name>PH</name>
+                  <request>
+                    <OTExperimentRequest>
+                      <period>0.1</period>
+                      <sensorRequests>
+                        <OTSensorRequest>
+                          <type>20</type>
+                          <!-- type of sensor -->
+                          <stepSize>0.1</stepSize>
+                          <!-- requested resolution -->
+                          <displayPrecision>-1</displayPrecision>
+                          <port>0</port>
+                          <unit>ppm</unit>
+                          <requiredMax>500</requiredMax>
+                          <requiredMin>0</requiredMin>
+                        </OTSensorRequest>
+                      </sensorRequests>
+                    </OTExperimentRequest>
+                  </request>
+                </OTSensorDataProxy>
+                <OTSensorDataProxy local_id="salinity_dp">
+                  <name>Salinity</name>
+                  <request>
+                    <OTExperimentRequest>
+                      <period>0.1</period>
+                      <sensorRequests>
+                        <OTSensorRequest>
+                          <type>21</type>
+                          <!-- type of sensor -->
+                          <stepSize>0.1</stepSize>
+                          <!-- requested resolution -->
+                          <displayPrecision>-1</displayPrecision>
+                          <port>0</port>
+                          <unit>ppm</unit>
+                          <requiredMax>500</requiredMax>
+                          <requiredMin>0</requiredMin>
+                        </OTSensorRequest>
+                      </sensorRequests>
+                    </OTExperimentRequest>
+                  </request>
+                </OTSensorDataProxy>
+              </children>
+            </OTFolderObject>
+          </children>
+        </OTFolderObject>
+      </root>
+    </OTSystem>
+  </objects>
+</otrunk>

@@ -1,0 +1,679 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<otrunk id="33754150-b594-11d9-9669-0800200c9a66">
+	<imports>
+		<import class="org.concord.otrunk.OTSystem" />
+		<import class="org.concord.otrunk.view.OTFolderObject" />
+		<import class="org.concord.otrunk.view.OTViewEntry" />
+		<import class="org.concord.otrunk.view.OTViewMode" />
+		<import class="org.concord.otrunk.view.OTViewService" />
+		<import class="org.concord.framework.otrunk.view.OTFrame" />
+		<import class="org.concord.otrunk.view.document.OTCompoundDoc" />
+		<import class="org.concord.otrunk.view.document.OTTextObject" />
+		<import class="org.concord.graph.util.state.OTDrawingTool2"/>
+		<import class="org.concord.otrunk.ui.OTButton" />
+		<import class="org.concord.otrunk.ui.OTImage" />
+		<import class="org.concord.otrunk.ui.OTChoice" />
+		<import class="org.concord.otrunk.ui.OTText" />
+		<import class="org.concord.otrunk.view.document.OTTextObject"/>
+		<import class="org.concord.otrunk.diy.OTDIYActivity" />
+		<import class="org.concord.otrunk.diy.OTDIYSection" />
+		<import class="org.concord.otrunk.view.OTObjectEditViewConfig" />
+		<import class="org.concord.otrunkmw.OTModelerModel"/>
+		<import
+			class="org.concord.otrunk.view.OTAuthorEmbedDefaultViewConfig" />
+		<import
+			class="org.concord.otrunk.view.document.OTDocumentViewConfig" />
+		<import
+			class="org.concord.otrunk.velocity.OTVelocityXHTMLViewEntry" />
+		<import
+			class="org.concord.otrunk.view.prototype.OTPrototypeViewEntry" />
+		<import
+			class="org.concord.otrunk.view.prototype.OTPrototypeEventController" />
+		<import
+			class="org.concord.otrunk.view.prototype.OTPrototypeMapEntry" />
+		<import class="org.concord.otrunk.udl.OTUDLBackpack" />
+		<import class="org.concord.otrunk.udl.OTUDLBackpackItem" />
+		<import class="org.concord.otrunk.udl.OTUDLSidebar" />
+		<import class="org.concord.otrunk.udl.OTUDLSidebarItem" />
+		<import class="org.concord.otrunk.udl.OTUDLActivityPage" />
+	</imports>
+	<objects>
+		<OTSystem>
+			<services>
+				<OTViewService>
+					<viewEntries>
+						<OTVelocityXHTMLViewEntry
+							local_id="page_view"
+							objectClass="org.concord.otrunk.udl.OTUDLActivityPage"
+							viewClass="org.concord.otrunk.velocity.OTVelocityXHTMLView">
+							<template>
+								<table>
+									<tr style="background: #FFFF99"><td colspan="3"><h1>Edit $model.title</h1></td></tr>
+									<tr>
+									<td width="30px"  style="background: #FFFF99"></td>
+									<td>
+								<table>
+									<tr>
+										<td rowspan="2" width="80%">
+											<object
+												refid="$model.content.globalId"
+												mode="" /><p />
+												<a href="$model.content.globalId"
+												mode="authoring" target="${preview_frame}">
+												<b>edit</b>
+											</a>
+										</td>
+										<td  style="background: #CCFFFF">
+											<object
+												refid="$model.sidebar.globalId" viewid="${sidebar_normal_view}"
+												mode="" /><p />
+												<a href="$model.content.globalId"
+												mode="authoring" target="${preview_frame}">
+												<b>edit</b>
+											</a>
+										</td>
+									</tr>
+									<tr>
+										<td align="right" style="background: #CCFFFF">
+											<a href="$model.backpack.globalId"
+												mode="" target="${backpack_frame}">
+													<object
+													refid="$model.backpack.globalId" viewid="${backpack_mini_view}"
+													mode="" />
+											</a><p />
+											<a href="$model.content.globalId"
+												mode="authoring" target="${preview_frame}">
+												<b>edit</b>
+											</a>
+										</td>
+									</tr>
+								</table>
+									</td>
+									<td width="30px" style="background: #FFFF99"></td>
+									</tr>
+									<tr style="background: #FFFF99"><td colspan="3" > </td></tr>
+								</table>
+							</template>
+						</OTVelocityXHTMLViewEntry>
+						<OTVelocityXHTMLViewEntry
+							local_id="sidebar_view"
+							objectClass="org.concord.otrunk.udl.OTUDLSidebar"
+							viewClass="org.concord.otrunk.velocity.OTVelocityXHTMLView">
+							<template>
+								<table><tr><td>
+									<h2>$model.title</h2>
+									<table><tr><td width="150">
+									<object
+										refid="$model.globalId" viewid="${sidebar_normal_view}"
+										mode="" />
+									</td></tr></table>
+								</td><td>
+									<object
+										refid="${main_text}" />
+								</td></tr></table>
+							</template>
+						</OTVelocityXHTMLViewEntry>
+						<OTVelocityXHTMLViewEntry
+							local_id="backpack_view"
+							objectClass="org.concord.otrunk.udl.OTUDLBackpack"
+							viewClass="org.concord.otrunk.velocity.OTVelocityXHTMLView">
+							<template>
+								<body style="background: #FFFF99" align="center">
+								<h2>$model.title</h2>
+								<table><tr><td></td><td>
+								<object
+									refid="$model.globalId" viewid="${backpack_normal_view}"
+									mode="" />
+								</td><td></td></tr></table>
+								</body>
+							</template>
+						</OTVelocityXHTMLViewEntry>
+						<OTVelocityXHTMLViewEntry
+							local_id="backpackitem_view"
+							objectClass="org.concord.otrunk.udl.OTUDLBackpackItem"
+							viewClass="org.concord.otrunk.velocity.OTVelocityXHTMLView">
+							<template>
+									<object
+										refid="$model.icon.globalId"
+										mode="" />
+									<hr />
+							</template>
+						</OTVelocityXHTMLViewEntry>
+						
+						<OTDocumentViewConfig
+							local_id="compound_doc_view"
+							objectClass="org.concord.otrunk.view.document.OTCompoundDoc"
+							viewClass="org.concord.otrunk.view.document.OTDocumentView" />
+						<OTViewEntry
+							objectClass="org.concord.otrunk.udl.OTUDLSidebarItem"
+							viewClass="org.concord.otrunk.udl.OTUDLSidebarItemContentView" />
+						<OTViewEntry
+							objectClass="org.concord.otrunk.ui.OTText"
+							viewClass="org.concord.otrunk.ui.swing.OTTextView" />
+						<OTViewEntry
+							objectClass="org.concord.otrunk.ui.OTButton"
+							viewClass="org.concord.otrunk.ui.swing.OTButtonView" />
+						<OTViewEntry
+							objectClass="org.concord.otrunk.ui.OTImage"
+							viewClass="org.concord.otrunk.ui.swing.OTImageView" />
+						<OTViewEntry local_id="choice_view"
+							objectClass="org.concord.otrunk.ui.OTChoice"
+							viewClass="org.concord.otrunk.ui.swing.OTChoiceComboBoxView" />
+						<OTViewEntry objectClass="org.concord.otrunk.view.document.OTTextObject" 
+							viewClass="org.concord.otrunk.view.document.OTTextObjectView"/>
+						<OTViewEntry objectClass="org.concord.otrunkmw.OTModelerModel" 
+							viewClass="org.concord.otrunkmw.OTModelerModelView"/>
+						<OTViewEntry objectClass="org.concord.graph.util.state.OTDrawingTool2" 
+              				viewClass="org.concord.datagraph.state.OTDataDrawingToolView"/>
+					</viewEntries>
+					<modes>
+						<OTViewMode name="authoring">
+							<map>
+							<entry key="${page_view}">
+							<OTVelocityXHTMLViewEntry
+							objectClass="org.concord.otrunk.udl.OTUDLActivityPage"
+							viewClass="org.concord.otrunk.velocity.OTVelocityXHTMLView">
+							<template>
+									<h2>$model.title</h2>
+									<object
+										refid="$model.sidebar.globalId" viewid="${sidebar_normal_view}"
+										mode="" />
+									</template>
+								</OTVelocityXHTMLViewEntry>
+								</entry>
+								<entry key="${sidebar_view}">
+									<OTVelocityXHTMLViewEntry
+										objectClass="org.concord.otrunk.udl.OTUDLSidebar"
+										viewClass="org.concord.otrunk.velocity.OTVelocityXHTMLView">
+										<template>
+											<h2>Edit $model.title</h2>
+											<table><tr><td width="150">
+											<object
+												refid="$model.globalId" viewid="${sidebar_edit_view}"
+												mode="" />
+											<p />
+											</td></tr></table>
+											<a href="$model.globalId"
+												viewid="${sidebar_adddelete_view}" mode="" target="${preview_frame}">
+												Add/Delete items
+											</a>
+											<p></p>
+											<a href="$model.globalId"
+												mode="" target="${preview_frame}">
+												<b>preview</b>
+											</a>
+										</template>
+									</OTVelocityXHTMLViewEntry>
+								</entry>
+								<entry key="${compound_doc_view}">
+									<OTObjectEditViewConfig objectClass="org.concord.otrunk.view.document.OTCompoundDoc" 
+									viewClass="org.concord.otrunk.view.document.OTCompoundDocEditView">
+										<objectsToInsert>
+											<OTTextObject name="Text Box"/>
+											<OTButton name="Button"/>
+											<OTImage name="Concord Logo" imageBytes="http://www.concord.org/images/logos/cc/cc-logo.gif"/>
+											<OTImage name="Concord Banner" imageBytes="http://www.concord.org/images/logos/cc/cc_main_banner.jpg"/>
+										</objectsToInsert>
+									</OTObjectEditViewConfig>
+								</entry>
+								<entry key="${backpack_view}">
+									<OTVelocityXHTMLViewEntry
+										objectClass="org.concord.otrunk.udl.OTUDLBackpack"
+										viewClass="org.concord.otrunk.velocity.OTVelocityXHTMLView">
+										<template>
+											<h2>Edit $model.title</h2>
+											<object
+												refid="$model.globalId" viewid="${backpack_edit_view}"
+												mode="" />
+											<p />
+											<a href="$model.globalId"
+												viewid="${backpack_adddelete_view}" mode="" target="${preview_frame}">
+												Add/Delete items
+											</a>
+											<p></p>
+											<a href="$model.globalId"
+												mode="" target="${preview_frame}">
+												preview
+											</a>
+										</template>
+									</OTVelocityXHTMLViewEntry>
+								</entry>
+								<entry key="${backpackitem_view}">
+									<OTVelocityXHTMLViewEntry
+										objectClass="org.concord.otrunk.udl.OTUDLBackpackItem"
+										viewClass="org.concord.otrunk.velocity.OTVelocityXHTMLView">
+										<template>
+												<object
+													refid="$icon"
+													mode="" />
+												<hr />
+										</template>
+									</OTVelocityXHTMLViewEntry>
+								</entry>
+							</map>
+						</OTViewMode>
+					</modes>
+				</OTViewService>
+			</services>
+			<library>
+				<OTFrame local_id="preview_frame" width="600"
+					height="500" />
+				<OTFrame local_id="edit_frame" width="400"
+					height="400" />
+				<OTFrame local_id="backpack_frame" width="520"
+					height="200" />
+				<OTFrame local_id="help_frame" width="300"
+					height="200" />
+				<OTImage local_id="backpack_image" name="Backpack" scalePercent="70"
+					imageBytes="http://www.concord.org/~sfentress/demo_images/Exquisite-backpack.png" />			
+				<OTImage local_id="questionmark" name="Questionmark button" width="50"
+					imageBytes="http://www.concord.org/~sfentress/demo_images/questionbutton.jpg" />
+				<OTObjectEditViewConfig local_id="backpack_normal_view"
+					objectClass="org.concord.otrunk.udl.OTUDLBackpack"
+					viewClass="org.concord.otrunk.udl.OTUDLBackpackView">
+				</OTObjectEditViewConfig>
+				<OTObjectEditViewConfig local_id="icon_view"
+					objectClass="org.concord.otrunk.ui.OTImage"
+					viewClass="org.concord.otrunk.udl.OTUDLBackpackIconView">
+				</OTObjectEditViewConfig>
+				<OTObjectEditViewConfig local_id="sidebar_normal_view"
+					objectClass="org.concord.otrunk.udl.OTUDLSidebar"
+					viewClass="org.concord.otrunk.udl.OTUDLSidebarView">
+				</OTObjectEditViewConfig>
+				<OTObjectEditViewConfig local_id="sidebar_adddelete_view"
+					objectClass="org.concord.otrunk.udl.OTUDLSidebar"
+					viewClass="org.concord.otrunk.udl.OTUDLSidebarAddDeleteView">
+					<objectsToInsert>
+						<OTUDLSidebarItem>
+							<name>New sidebar item</name>
+							<preview>
+								<OTCompoundDoc local_id="add_preview_2">
+									<bodyText>New preview</bodyText>
+								</OTCompoundDoc>
+							</preview>
+							<content>
+								<OTCompoundDoc local_id="add_content_2">
+									<bodyText>New content</bodyText>
+								</OTCompoundDoc>
+							</content>
+						</OTUDLSidebarItem>
+					</objectsToInsert>
+				</OTObjectEditViewConfig>
+				<OTVelocityXHTMLViewEntry local_id="sidebar_edit_view"
+					objectClass="org.concord.otrunk.udl.OTUDLSidebar"
+					viewClass="org.concord.otrunk.velocity.OTVelocityXHTMLView">
+					<template>
+						#foreach( $item in $model.items.vector )
+          				<tr>
+          				<td border="1"><object refid="$item.preview.globalId" mode=""/><br />
+          				<a href="$item.preview.globalId" mode="authoring" target="${edit_preview_frame}">edit</a></td>
+          				<td border="1"><object refid="$item.content.globalId" mode=""/><br />
+          				<a href="$item.content.globalId" mode="authoring" target="${edit_content_frame}">edit</a></td>
+          				<td border="0">delete</td>
+          				</tr>
+          				
+          				#end
+					</template>
+				</OTVelocityXHTMLViewEntry>
+				<OTVelocityXHTMLViewEntry local_id="backpack_mini_view"
+					objectClass="org.concord.otrunk.udl.OTUDLBackpack"
+					viewClass="org.concord.otrunk.velocity.OTVelocityXHTMLView">
+					<template>
+						<object
+							refid="${backpack_image}" />
+					</template>
+				</OTVelocityXHTMLViewEntry>
+				<OTObjectEditViewConfig local_id="backpack_adddelete_view"
+					objectClass="org.concord.otrunk.udl.OTUDLBackpack"
+					viewClass="org.concord.otrunk.udl.OTUDLBackpackAddDeleteView">
+					<objectsToInsert>
+						<OTUDLBackpackItem>
+							<name>Feather</name>
+							<otobject>
+								<OTCompoundDoc local_id="select_item_1">
+									<bodyText>A compound doc</bodyText>
+								</OTCompoundDoc>
+							</otobject>
+							<icon>
+								<OTImage name="Feather"
+								imageBytes="http://upload.wikimedia.org/wikipedia/commons/b/b7/Feather_150_transparent.png" />
+							</icon>
+						</OTUDLBackpackItem>
+						<OTUDLBackpackItem>
+							<name>Apple</name>
+							<otobject>
+								<OTCompoundDoc local_id="select_item_2">
+									<bodyText>A compound doc</bodyText>
+								</OTCompoundDoc>
+							</otobject>
+							<icon>
+								<OTImage name="Apple"
+								imageBytes="http://upload.wikimedia.org/wikipedia/commons/thumb/2/25/Apple_bitten.svg/319px-Apple_bitten.svg.png" />
+							</icon>
+						</OTUDLBackpackItem>
+					</objectsToInsert>
+				</OTObjectEditViewConfig>
+				<OTVelocityXHTMLViewEntry local_id="backpack_edit_view"
+          			objectClass="org.concord.otrunk.udl.OTUDLBackpack"
+          			viewClass="org.concord.otrunk.velocity.OTVelocityXHTMLView">
+          			<template>
+          				<table BORDER="0" FRAME="void" RULES="none">
+          				<tr><th align="left">OTObject</th><th align="left">Icon</th></tr>
+          				#foreach( $item in $model.items.vector )
+          				<tr>
+          				<td border="1"><object refid="$item.otobject.globalId"/><br />
+          				<a href="$item.otobject.globalId" mode="authoring" target="${edit_frame}">edit</a></td>
+          				<td border="1"><object refid="$item.icon.globalId" 
+          						viewid="${icon_view}"/></td>
+          				</tr>
+          				
+          				#end
+          				</table>
+          			</template>
+          			<objectsToInsert>
+						<OTUDLBackpackItem>
+							<otobject>
+								<OTCompoundDoc local_id="select_item_3">
+									<bodyText>A compound doc</bodyText>
+								</OTCompoundDoc>
+							</otobject>
+							<icon local_id="dot_icon">
+								<OTImage local_id="dot" name="Dot"
+								imageBytes="http://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Orange_pog.svg/64px-Orange_pog.svg.png" />
+							</icon>
+						</OTUDLBackpackItem>
+						<OTUDLBackpackItem>
+							<otobject>
+								<OTCompoundDoc local_id="select_item_4">
+									<bodyText>A compound doc</bodyText>
+								</OTCompoundDoc>
+							</otobject>
+							<icon>
+								<OTImage name="Flower"
+								imageBytes="http://upload.wikimedia.org/wikipedia/commons/1/1f/RedFlower.png" />
+							</icon>
+						</OTUDLBackpackItem>
+					</objectsToInsert>
+          		</OTVelocityXHTMLViewEntry>
+			</library>
+			<root>
+				<OTUDLActivityPage name="Editing activity page">
+				<content>
+					<OTCompoundDoc local_id="content">
+						<bodyText>
+							<p>
+								<object refid="${activity_intro}"/></p>
+							<p>
+								Can you help me name the clouds in my photo album?</p>
+							<p>
+								<object refid="${album}"/></p>
+							<p align="center">
+								<i>My photo album</i></p>
+							<p>
+								Name this kind of cloud <object refid="${textbox1}"/>
+								<a href="${help-typecloud}" target="${help_frame}"><object refid="${questionmark}"/></a>
+							</p>
+						</bodyText>
+						<documentRefs>
+							<OTImage local_id="activity_intro" name="Intro"
+								imageBytes="http://www.concord.org/~sfentress/demo_images/intro_image.jpg" />
+							<OTImage local_id="album" name="Album"
+								imageBytes="http://www.concord.org/~sfentress/demo_images/album.jpg" />
+							<OTTextObject local_id="textbox1">
+							</OTTextObject>
+							<OTCompoundDoc local_id="help-typecloud">
+								<bodyText>
+									<body style="background: #FFFF99">
+										<table border="0" cellpadding="12"><tr><td>
+										<font size="6">
+											Take a good look at the clouds in the picture. If you're not sure, just
+											take your best guess.
+										</font>
+										</td></tr></table>
+									</body>
+								</bodyText>
+							</OTCompoundDoc>
+						</documentRefs>
+					</OTCompoundDoc>
+				</content>
+				<title>Clouds activity page</title>
+				<sidebar>
+				<OTUDLSidebar name="sidebar">
+					<title>Sidebar</title>
+					<items>
+						<OTUDLSidebarItem>
+							<r>153</r><g>204</g><b>255</b>
+							<preview>
+								<OTCompoundDoc local_id="preview_1">
+									<bodyText>
+										<object refid="${sidebarimage1}"/>
+									</bodyText>
+									<documentRefs>
+										<OTImage local_id="sidebarimage1" name="Clouds tracking" width="130"
+											imageBytes="http://www.concord.org/~sfentress/demo_images/notebook1.jpg" />
+									</documentRefs>
+								</OTCompoundDoc>
+							</preview>
+							<content>
+								<OTCompoundDoc local_id="content_1">
+									<bodyText>
+          								<h1>Drawing Activity</h1>
+          								<h2>Step 1</h2>
+          									Look out the window. Do you see any interesting clouds?
+          									Can you name any of the clouds you see?<p />
+          									If you don't see any clouds, come back to this activity later!
+          								<h2>Step 2</h2>
+          									Draw a picture of one of the clouds you see:<br />
+          									<object refid="${drawing1}" />
+          									<p />
+          									Do you know the name of this cloud?<br />
+          									Write the name here: <object refid="${textbox2}" />
+          									<a href="${help-typeclouddraw}" target="${help_frame}"><object refid="${questionmark}"/></a>
+          							</bodyText>
+          							<documentRefs>
+          								<OTDrawingTool2 local_id="drawing1" />
+          								<OTImage local_id="picture1"
+											imageBytes="http://www.concord.org/images/logos/cc/cc_main_banner.jpg" />
+          								<OTTextObject local_id="textbox2">
+										</OTTextObject>
+										<OTCompoundDoc local_id="help-typeclouddraw">
+											<bodyText>
+												<body style="background: #FFFF99">
+													<table border="0" cellpadding="12"><tr><td>
+													<font size="6">
+														Take a good look at the cloud you drew. If you're not sure, just
+														take your best guess.
+													</font>
+													</td></tr></table>
+												</body>
+											</bodyText>
+										</OTCompoundDoc>
+          							</documentRefs>
+								</OTCompoundDoc>
+							</content>
+							<backpack><object refid="${backpack}" /></backpack>
+							<backpackItem>
+								<OTUDLBackpackItem>
+									<otobject>
+										<OTCompoundDoc local_id="add_item_1">
+											<bodyText>
+											<table width="200" cellpadding="10">
+												Congratulations on getting this item!<p />
+												You received this item when you drew a picture of a cloud.
+												Good job!
+											</table>
+											</bodyText>
+										</OTCompoundDoc>
+									</otobject>
+									<icon>
+										<OTImage local_id="backpackimage1" name="Clouds tracking" width="130"
+											imageBytes="http://www.concord.org/~sfentress/demo_images/notebook1.jpg" />
+										</icon>
+								</OTUDLBackpackItem>
+							</backpackItem>
+						</OTUDLSidebarItem>
+						<OTUDLSidebarItem>
+							<r>153</r><g>204</g><b>255</b>
+							<preview>
+								<OTCompoundDoc local_id="preview_2">
+									<bodyText><object refid="${sidebarimage2}"/></bodyText>
+									<documentRefs>
+										<OTImage name="Atoms" width="130" local_id="sidebarimage2"
+											imageBytes="http://www.concord.org/~sfentress/demo_images/256px-Sciences_exactes.svg.png" />
+									</documentRefs>
+								</OTCompoundDoc>
+							</preview>
+							<content>
+								<OTCompoundDoc local_id="content_2">
+									<bodyText>
+										<h1>Look at a cloud close-up!</h1>
+										<h2>Step 1</h2>
+											Zoom in on the cloud below.<br />
+											<object refid="${cloudzoom}" /><br />
+											What do you see? 
+											<object refid="${textbox3}" />
+											<a href="${help-zoom}" target="${help_frame}"><object refid="${questionmark}"/></a><p />
+										<h2>Step 2</h2>
+											Now try running the model below.<br />
+											<object refid="${mw_model}" />
+											What do you see? 
+											<object refid="${textbox3}" />
+											<a href="${help-model}" target="${help_frame}"><object refid="${questionmark}"/></a><p />
+									</bodyText>
+									<documentRefs>
+										<OTImage name="Cloud zoom" width="300" local_id="cloudzoom"
+											imageBytes="http://www.concord.org/~sfentress/demo_images/cloudzoom.jpg" />
+										<OTTextObject local_id="textbox3">
+										</OTTextObject>
+										<OTModelerModel local_id="mw_model" 
+          									authoredDataURL="http://www.concord.org/~sfentress/Clouds_files/Java/Drop4-EH$0.mml" />
+										<OTCompoundDoc local_id="help-zoom">
+											<bodyText>
+												<body style="background: #FFFF99">
+													<table border="0" cellpadding="12"><tr><td>
+													<font size="6">
+														What do the molecules look like when you zoom all the way in?
+													</font>
+													</td></tr></table>
+												</body>
+											</bodyText>
+										</OTCompoundDoc>
+										<OTCompoundDoc local_id="help-model">
+											<bodyText>
+												<body style="background: #FFFF99">
+													<table border="0" cellpadding="12"><tr><td>
+													<font size="6">
+														How do the molecules move when you hit the play button? Are
+														the air molecules and water molecules doing the same thing?
+													</font>
+													</td></tr></table>
+												</body>
+											</bodyText>
+										</OTCompoundDoc>
+									</documentRefs>
+								</OTCompoundDoc>
+							</content>
+							<backpack><object refid="${backpack}" /></backpack>
+							<backpackItem>
+								<OTUDLBackpackItem>
+									<otobject>
+										<OTCompoundDoc local_id="add_item_4">
+											<bodyText>
+											<table width="200" cellpadding="10">
+												Congratulations on getting this item!<p />
+												You received this item when you explored the molecules up close.
+												Good job!
+											</table>
+											</bodyText>
+										</OTCompoundDoc>
+									</otobject>
+									<icon>
+										<OTImage name="Atoms" width="130" local_id="backpackimage2"
+											imageBytes="http://www.concord.org/~sfentress/demo_images/256px-Sciences_exactes.svg.png" />
+									</icon>
+								</OTUDLBackpackItem>
+							</backpackItem>
+						</OTUDLSidebarItem>
+					</items>
+				</OTUDLSidebar>
+				</sidebar>
+				<backpack>
+				<OTUDLBackpack name="backpack" local_id="backpack">
+					<title>My Backpack</title>
+					<items>
+						<OTUDLBackpackItem>
+							<otobject>
+								<OTCompoundDoc local_id="item_1">
+									<bodyText>
+									<table width="200" cellpadding="10">
+									Congratulations on getting this item!<p />
+									You received this item when you solved the condensation mystery.
+									Good job!
+									</table>
+									</bodyText>
+								</OTCompoundDoc>
+							</otobject>
+							<icon>
+								<OTImage name="Lab equipment"
+								imageBytes="http://www.concord.org/~sfentress/demo_images/Edu_science.png" />
+							</icon>
+						</OTUDLBackpackItem>
+						<OTUDLBackpackItem>
+							<otobject>
+								<OTCompoundDoc local_id="item_2">
+									<bodyText>
+									<table width="200" cellpadding="10">
+									Congratulations on getting this item!<p />
+									You received this item when you solved the mechanics mystery.
+									Good job!
+									</table>
+									</bodyText>
+								</OTCompoundDoc>
+							</otobject>
+							<icon>
+								<OTImage name="Cog"
+								imageBytes="http://www.concord.org/~sfentress/demo_images/390px-Metallurgy_stub_icon.svg.png" />
+							</icon>
+						</OTUDLBackpackItem>
+						<OTUDLBackpackItem>
+							<otobject>
+								<OTCompoundDoc local_id="item_3">
+									<bodyText>
+									<table width="200" cellpadding="10">
+									Congratulations on getting this item!<p />
+									You received this item when you solved the energy mystery.
+									Good job!
+									</table>
+									</bodyText>
+								</OTCompoundDoc>
+							</otobject>
+							<icon>
+								<OTImage local_id="battery" name="Battery"
+								imageBytes="http://www.concord.org/~sfentress/demo_images/Crystal_Clear_app_klaptopdaemon.png" />
+							</icon>
+						</OTUDLBackpackItem>
+						<OTUDLBackpackItem>
+							<otobject>
+								<OTCompoundDoc local_id="item_4">
+									<bodyText>
+									<table width="200" cellpadding="10">
+									Congratulations on getting this item!<p />
+									You received this item when you solved the global mystery.
+									Good job!
+									</table>
+									</bodyText>
+								</OTCompoundDoc>
+							</otobject>
+							<icon>
+								<OTImage local_id="planet" name="Planet"
+								imageBytes="http://www.concord.org/~sfentress/demo_images/Crystal_Clear_app_konquest.png" />
+							</icon>
+						</OTUDLBackpackItem>
+					</items>
+				</OTUDLBackpack>
+				</backpack>
+				</OTUDLActivityPage>
+			</root>
+		</OTSystem>
+	</objects>
+</otrunk>

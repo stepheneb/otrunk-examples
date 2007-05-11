@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<otrunk>
+  <imports>
+    <import class="org.concord.otrunk.OTSystem"/>
+    <import class="org.concord.otrunk.view.OTFolderObject"/>
+    <import class="org.concord.graph.util.state.OTDrawingTool"/>
+    <import class="org.concord.graph.util.state.OTDrawingImageIcon"/>
+    <import class="org.concord.graph.util.state.OTDrawingStamp"/>
+    <import class="org.concord.otrunk.view.OTViewService"/>
+    <import class="org.concord.otrunk.view.OTViewEntry"/>
+    <import class="org.concord.portfolio.objects.PfCompoundDoc"/>
+    <import class="org.concord.data.state.OTDataFlowControl"/>
+    <import class="org.concord.vehicle.OTWorldStepper"/>
+    <import class="org.concord.vehicle.OTEmfModel"/>
+    <import class="org.concord.vehicle.OTEmfDataProducer"/>
+    <import class="org.concord.vehicle.OTEmfButton"/>    
+    <import class="org.concord.datagraph.state.OTDataCollector"/>
+    <import class="org.concord.datagraph.state.OTDataGraph"/>
+    <import class="org.concord.datagraph.state.OTDataAxis"/>
+    <import class="org.concord.datagraph.state.OTDataGraphable"/>
+    <import class="org.concord.datagraph.state.OTDataCollector"/>
+    <import class="org.concord.datagraph.state.OTMultiDataGraph"/>
+    <import class="org.concord.datagraph.state.OTDataPointLabel"/>
+    <import class="org.concord.datagraph.state.OTDataFlowingLine"/>    
+    <import class="org.concord.graph.util.state.OTDrawingShape"/>
+    <import class="org.concord.graph.util.state.OTPointTextLabel"/>
+    <import class="org.concord.vehicle.OTEmfButton"/>    
+  </imports>
+  <objects>
+    <org.concord.otrunk.OTSystem id="anon_root">
+      <services>
+        <OTViewService>
+          <viewEntries>
+            <OTViewEntry 
+              objectClass="org.concord.datagraph.state.OTDataGraph" 
+              viewClass="org.concord.datagraph.state.OTDataGraphView"/>
+            <OTViewEntry 
+              objectClass="org.concord.data.state.OTDataField" 
+              viewClass="org.concord.data.state.OTDataFieldView"/>
+            <OTViewEntry
+              objectClass="org.concord.datagraph.state.OTDataCollector" 
+              viewClass="org.concord.datagraph.state.OTDataCollectorView"/>
+            <OTViewEntry
+              objectClass="org.concord.graph.util.state.OTDrawingTool" 
+              viewClass="org.concord.datagraph.state.OTDataDrawingToolView"/>
+            <OTViewEntry
+              objectClass="org.concord.datagraph.state.OTMultiDataGraph" 
+              viewClass="org.concord.datagraph.state.OTMultiDataGraphView"/>
+            <OTViewEntry
+              objectClass="org.concord.data.state.OTDataFlowControl" 
+              viewClass="org.concord.data.state.OTDataFlowControlView"/>
+            <OTViewEntry 
+               objectClass="org.concord.portfolio.objects.PfDocument"
+               viewClass="org.concord.portfolio.views.document.PfDocumentView"/> 
+            <OTViewEntry 
+               objectClass="org.concord.vehicle.OTEmfButton"
+               viewClass="org.concord.vehicle.OTEmfButtonView"/> 
+                            
+          </viewEntries>
+        </OTViewService>
+      </services>    
+      <root>
+            <PfCompoundDoc name="EMF Test">
+              <bodyText>
+                <table width="100%" height="700"><tr>
+                <td><object refid="model_graph"/></td>
+                <td><object refid="prius_visualization"/></td>
+                </tr></table>
+                Some text before the start stop<br/>
+                <object refid="data_flow_control"/><br/>
+                Text after start stop<br/>
+                Accelerate: <object refid="accelerator_button"/><br/>                
+              </bodyText>
+              <documentRefs>
+                <OTDataFlowControl id="data_flow_control"> 
+                  <dataFlows>
+                  	<OTWorldStepper id="world_stepper">
+                  	  <emfModel>
+                    	<OTEmfModel 
+                    	   id="emf_model"
+                    	   modelSrc="MyWorld.vehicle"
+                    	   extensionName="vehicle"
+                    	   packageClassName="org.concord.vehicle.VehiclePackage"
+                    	/>
+                  	  </emfModel>
+                  	</OTWorldStepper>
+                  </dataFlows>
+                </OTDataFlowControl>
+                <OTEmfButton id="accelerator_button">
+                  <buttonText>Accelerate</buttonText>
+                  <model refid="emf_model"/>
+                  <emfURI>//@vehicles.0</emfURI>
+                  <attributeName>acceratorPedalPos</attributeName>
+                </OTEmfButton>
+                <OTDataCollector name="Wave Graph" id="model_graph">
+              <source>
+                <OTDataGraphable connectPoints="true" color="0x0000ff"
+                  drawMarks="false" name="Value 1" xColumn="0" yColumn="1">
+                  <dataProducer>
+                    <OTEmfDataProducer id="vehice_speed_dp">
+                      <model refid="emf_model"/>
+                      <emfURI>//@vehicles.0</emfURI>
+                      <attributeName>speed</attributeName>
+                      <stepper refid="world_stepper"/>
+                    </OTEmfDataProducer>
+                  </dataProducer>
+                </OTDataGraphable>
+              </source>
+              <graphables>
+                <OTDataGraphable connectPoints="true" color="0xFF0000"
+                  drawMarks="false" name="Value 1" xColumn="0" yColumn="1">
+                  <dataProducer>
+                    <OTEmfDataProducer id="engine_force_dp">
+                      <model refid="emf_model"/>
+                      <emfURI>//@vehicles.0/@powerTrain</emfURI>
+                      <attributeName>force</attributeName>
+                      <stepper refid="world_stepper"/>
+                    </OTEmfDataProducer>
+                  </dataProducer>
+                </OTDataGraphable>              
+              </graphables>
+              <xDataAxis>
+              
+                <OTDataAxis min="0" max="60" label="Time" units="s"/>
+              </xDataAxis>
+              <yDataAxis>
+                <OTDataAxis min="-1" max="15" label="sin(x)"/>
+              </yDataAxis>
+            </OTDataCollector>                
+            <OTDrawingTool id="prius_visualization"
+               preferredWidth="400" 
+               preferredHeight="305"
+            >
+              <name>Stamp Drawing</name>
+              <graphables>
+                <OTDataFlowingLine>
+                  <image1 refid="engine_1"/>
+                  <image2 refid="front_right_wheel_1"/>
+                  <dataProducer refid="engine_force_dp"/>
+                </OTDataFlowingLine>
+                <OTDrawingImageIcon id="engine_1">
+                  <x>2</x>
+                  <stamp>
+                    <object refid="engine_stamp"/>
+                  </stamp>
+                  <y>1.025</y>
+                </OTDrawingImageIcon>
+                <OTDrawingImageIcon id="front_right_wheel_1">
+                  <x>-7.65</x>
+                  <stamp>
+                    <object refid="wheel_inside"/>
+                  </stamp>
+                  <y>4.775</y>
+                </OTDrawingImageIcon>
+                <OTDrawingImageIcon id="front_left_wheel_1">
+                  <x>-11.75</x>
+                  <stamp>
+                    <object refid="wheel_outside"/>
+                  </stamp>
+                  <y>-4.225</y>
+                </OTDrawingImageIcon>
+                <OTDrawingImageIcon id="back_right_wheel_1">
+                  <x>9.25</x>
+                  <stamp>
+                    <object refid="wheel_inside"/>
+                  </stamp>
+                  <y>7.325</y>
+                </OTDrawingImageIcon>
+                <OTDrawingImageIcon id="back_left_wheel_1">
+                  <x>9.15</x>
+                  <stamp>
+                    <object refid="wheel_outside"/>
+                  </stamp>
+                  <y>-3.975</y>
+                </OTDrawingImageIcon>                
+              </graphables>
+              <stamps>
+                    <org.concord.graph.util.state.OTDrawingStamp id="engine_stamp">
+                      <description>engine</description>
+                      <src>
+                        engine.png
+                      </src>
+                    </org.concord.graph.util.state.OTDrawingStamp>
+                    <org.concord.graph.util.state.OTDrawingStamp id="wheel_inside">
+                      <description>Inside of Wheel</description>
+                      <src>
+                        wheel_inside.png
+                      </src>
+                    </org.concord.graph.util.state.OTDrawingStamp>
+                    <org.concord.graph.util.state.OTDrawingStamp id="wheel_outside">
+                      <description>Outside of Wheel</description>
+                      <src>
+                        wheel_outside.png
+                      </src>
+                    </org.concord.graph.util.state.OTDrawingStamp>
+              </stamps>
+            </OTDrawingTool>
+              </documentRefs>
+            </PfCompoundDoc>          
+      </root>
+    </org.concord.otrunk.OTSystem>
+
+  </objects>
+</otrunk>

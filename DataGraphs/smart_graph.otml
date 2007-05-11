@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<otrunk id="33754150-b594-11d9-9669-0800200c9a66" >
+  <imports>
+    <import class="org.concord.otrunk.OTSystem"/>
+    <import class="org.concord.otrunk.view.OTFolderObject"/>
+    <import class="org.concord.otrunk.view.OTViewEntry"/>
+    <import class="org.concord.otrunk.view.OTViewService"/>
+    <import class="org.concord.framework.otrunk.view.OTFrame"/>
+    <import class="org.concord.data.state.OTDataStore"/>
+    <import class="org.concord.data.state.OTDataChannelDescription"/>
+    <import class="org.concord.data.state.OTDataField"/>
+    <import class="org.concord.data.state.OTWaveGenerator"/>
+    <import class="org.concord.datagraph.state.OTDataGraph"/>
+    <import class="org.concord.datagraph.state.OTDataAxis"/>
+    <import class="org.concord.datagraph.state.OTDataGraphable"/>
+    <import class="org.concord.datagraph.state.OTDataCollector"/>
+    <import class="org.concord.datagraph.state.OTMultiDataGraph"/>
+    <import class="org.concord.datagraph.state.OTDataPointLabel"/>
+    <import class="org.concord.datagraph.state.OTDataPointRuler"/>
+    <import class="org.concord.graph.util.state.OTDrawingTool"/>
+    <import class="org.concord.graph.util.state.OTDrawingStamp"/>
+    <import class="org.concord.graph.util.state.OTDrawingImageIcon"/>
+    <import class="org.concord.graph.util.state.OTDrawingShape"/>
+    <import class="org.concord.graph.util.state.OTPointTextLabel"/>
+    <import class="org.concord.otrunk.view.document.OTCompoundDoc"/>
+    <import class="org.concord.otrunk.control.OTButton"/>
+    <import class="org.concord.datagraph.state.OTDataSmartGraph"/>
+    <import class="org.concord.datagraph.state.OTAddGraphableAction"/>
+  </imports>
+  <objects>
+    <OTSystem>
+      <services>
+        <OTViewService>
+          <viewEntries>
+            <OTViewEntry
+              objectClass="org.concord.otrunk.control.OTButton" 
+              viewClass="org.concord.otrunk.control.OTButtonView"/>
+            <OTViewEntry
+              objectClass="org.concord.otrunk.view.document.OTCompoundDoc" 
+              viewClass="org.concord.otrunk.view.document.OTDocumentView"/>
+            <OTViewEntry 
+              objectClass="org.concord.datagraph.state.OTDataGraph" 
+              viewClass="org.concord.datagraph.state.OTDataGraphView"/>
+            <OTViewEntry
+              objectClass="org.concord.otrunk.view.OTFolderObject"
+              viewClass="org.concord.otrunk.view.OTFolderObjectView"/>
+            <OTViewEntry
+              objectClass="org.concord.datagraph.state.OTDataSmartGraph"
+              viewClass="org.concord.datagraph.state.OTDataSmartGraphView"/>
+          </viewEntries>
+        </OTViewService>
+      </services>
+      <root>
+        <OTFolderObject name="graphs">
+          <children>
+ 	        <OTCompoundDoc name="Smart Graph 1">
+	          <bodyText>
+	            <p>This is the Smart Graph:</p>
+                <object refid="${add_data_button}"/><br/>
+                <object refid="${data_graph2}"/>
+              </bodyText>
+	          <documentRefs>
+	          	<OTButton text="Add data" local_id="add_data_button">
+	          	  <action><object refid="${add_data_action}"/></action>
+	          	</OTButton>
+	          	<OTAddGraphableAction local_id="add_data_action">
+	          		<dataGraph>
+		                <object refid="${data_graph2}"/>
+	          		</dataGraph>
+	          		<graphablesToAdd>
+		                <object refid="${graphable01}"/>
+	          		</graphablesToAdd>
+	          	</OTAddGraphableAction>
+	          </documentRefs>
+            </OTCompoundDoc>
+	        <OTCompoundDoc name="Smart Graph 2">
+	          <bodyText>
+	            <p>This is the Smart Graph 2:</p>
+                <object refid="${data_smart_graph2}"/>
+              </bodyText>
+	          <documentRefs>
+	          </documentRefs>
+            </OTCompoundDoc>
+            <OTDataSmartGraph name="ACTUAL Smart Graph 2" local_id="data_smart_graph2">
+            	<dataGraph>
+	                <object refid="${data_graph2}"/>
+            	</dataGraph>
+            </OTDataSmartGraph>
+            <OTDataGraph name="Predefined Data" local_id="data_graph1">
+              <graphables>
+                <OTDataGraphable local_id="graphable01"
+                  connectPoints="true" color="0xff0000" drawMarks="false"
+                  name="Dataset1" xColumn="0" yColumn="1">
+                  <dataStore>
+                    <OTDataStore local_id="datastore" numberChannels="2">
+                      <channelDescriptions>
+                        <OTDataChannelDescription precision="0" unit="s"/>
+                        <OTDataChannelDescription precision="-2"/>
+                      </channelDescriptions>
+                      <valuesString> 0 10 0.5 50 1 75 1.5 45 2 50 2.5 65 3 40 3.5 35 4 20</valuesString>
+                    </OTDataStore>
+                  </dataStore>
+                </OTDataGraphable>
+              </graphables>
+              <xDataAxis>
+                <OTDataAxis min="0" max="5" label="Time" units="s"/>
+              </xDataAxis>
+              <yDataAxis>
+                <OTDataAxis min="0" max="100" label="Value"/>
+              </yDataAxis>
+            </OTDataGraph>
+            <OTDataGraph name="Empty Graph" local_id="data_graph2">
+              <xDataAxis>
+                <OTDataAxis min="0" max="5" label="Time" units="s"/>
+              </xDataAxis>
+              <yDataAxis>
+                <OTDataAxis min="0" max="100" label="Value"/>
+              </yDataAxis>
+            </OTDataGraph>
+          </children>
+        </OTFolderObject>
+      </root>
+    </OTSystem>
+  </objects>
+</otrunk>
