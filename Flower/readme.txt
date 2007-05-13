@@ -1,3 +1,4 @@
-This is an example project show how to work with the different types of OTrunk.
+This is an example project show how to work with different ways to define
+OTClasses in OTrunk.
 
-A new line to check the updating.
+This is just the otml file.  The code is located in the Examples project.
