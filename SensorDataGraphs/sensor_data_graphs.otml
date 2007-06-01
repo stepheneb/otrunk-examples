@@ -71,6 +71,7 @@ Sensor Type Ids from SensorConfig
     <import class="org.concord.otrunk.view.prototype.OTPrototypeEventController"/>
     <import class="org.concord.otrunk.view.prototype.OTPrototypeMapEntry"/>
     <import class="org.concord.otrunk.ui.OTChoice"/>
+    <import class="org.concord.data.state.OTLinearProducerFilter"/>
   </imports>
   <objects>
     <OTSystem>
@@ -155,6 +156,12 @@ Sensor Type Ids from SensorConfig
               					</OTDeviceConfig>
               					<OTDeviceConfig name="LabPro auto"
               						deviceId="11" configString="_auto_"/>
+              					<OTDeviceConfig name="LabPro cu.KeySerial1"
+              						deviceId="11" configString="/dev/cu.KeySerial1"/>
+              					<OTDeviceConfig name="LabPro tty.KeySerial1"
+              						deviceId="11" configString="/dev/tty.KeySerial1"/>
+              					<OTDeviceConfig name="LabPro /dev/tty.USA19QW3d1P1.1"
+              						deviceId="11" configString="/dev/tty.USA19QW3d1P1.1"/>
               					<OTDeviceConfig name="Airlink /dev/tty.IPSI-00279-Sensor-1"
               						deviceId="61" configString="/dev/tty.IPSI-00279-Sensor-1"/>
               					<OTDeviceConfig name="Airlink auto"
@@ -318,6 +325,39 @@ Sensor Type Ids from SensorConfig
                   drawMarks="false" name="Dataset1" xColumn="0" yColumn="1">
                   <dataProducer>
                     <object refid="${raw_voltage_dp}"/>
+                  </dataProducer>
+                </OTDataGraphable>
+              </source>
+              <xDataAxis>
+                <OTDataAxis min="0" max="30" label="Time" units="s"/>
+              </xDataAxis>
+              <yDataAxis>
+                <OTDataAxis min="-1" max="10" label="Raw Voltage" units="V"/>
+              </yDataAxis>
+            </OTDataCollector>
+            <OTDataCollector name="Raw Voltage 2">
+              <source>
+                <OTDataGraphable connectPoints="true" color="0xff0000"
+                  drawMarks="false" name="Dataset1" xColumn="0" yColumn="1">
+                  <dataProducer>
+                    <object refid="${raw_voltage_2_dp}"/>
+                  </dataProducer>
+                </OTDataGraphable>
+              </source>
+              <xDataAxis>
+                <OTDataAxis min="0" max="30" label="Time" units="s"/>
+              </xDataAxis>
+              <yDataAxis>
+                <OTDataAxis min="-1" max="10" label="Raw Voltage" units="V"/>
+              </yDataAxis>
+            </OTDataCollector>
+            <OTDataCollector name="Filter Test Raw Voltage">
+              <source>
+                <OTDataGraphable connectPoints="true" color="0xff0000"
+                  drawMarks="false" name="Dataset1" xColumn="0" yColumn="1">
+                  <dataProducer>
+                    <OTLinearProducerFilter k0="-50" k1="100" sourceChannel="1"
+						source="${raw_voltage_dp}"/>
                   </dataProducer>
                 </OTDataGraphable>
               </source>
@@ -880,6 +920,27 @@ Sensor Type Ids from SensorConfig
                         <OTSensorRequest>
                           <!-- type of sensor -->
                           <type>23</type>
+                          <stepSize>0.01</stepSize>
+                          <!-- requested resolution -->
+                          <displayPrecision>-2</displayPrecision>
+                          <port>0</port>
+                          <unit>Pa</unit>
+                          <requiredMax>-1</requiredMax>
+                          <requiredMin>10</requiredMin>
+                        </OTSensorRequest>
+                      </sensorRequests>
+                    </OTExperimentRequest>
+                  </request>
+                </OTSensorDataProxy>
+                <OTSensorDataProxy local_id="raw_voltage_2_dp">
+                  <name>Raw Voltage</name>
+                  <request>
+                    <OTExperimentRequest>
+                      <period>0.1</period>
+                      <sensorRequests>
+                        <OTSensorRequest>
+                          <!-- type of sensor -->
+                          <type>25</type>
                           <stepSize>0.01</stepSize>
                           <!-- requested resolution -->
                           <displayPrecision>-2</displayPrecision>
