@@ -72,6 +72,7 @@ Sensor Type Ids from SensorConfig
     <import class="org.concord.otrunk.view.prototype.OTPrototypeMapEntry"/>
     <import class="org.concord.otrunk.ui.OTChoice"/>
     <import class="org.concord.data.state.OTLinearProducerFilter"/>
+    <import class="org.concord.data.state.OTIntegratingProducerFilter"/>
   </imports>
   <objects>
     <OTSystem>
@@ -359,6 +360,23 @@ Sensor Type Ids from SensorConfig
                   drawMarks="false" name="Dataset1" xColumn="0" yColumn="1">
                   <dataProducer>
                     <OTLinearProducerFilter k0="-50" k1="100" sourceChannel="1"
+						source="${raw_voltage_dp}"/>
+                  </dataProducer>
+                </OTDataGraphable>
+              </source>
+              <xDataAxis>
+                <OTDataAxis min="0" max="30" label="Time" units="s"/>
+              </xDataAxis>
+              <yDataAxis>
+                <OTDataAxis min="-1" max="10" label="Raw Voltage" units="V"/>
+              </yDataAxis>
+            </OTDataCollector>
+            <OTDataCollector name="Integrating Filter Test Raw Voltage">
+              <source>
+                <OTDataGraphable connectPoints="true" color="0xff0000"
+                  drawMarks="false" name="Dataset1" xColumn="0" yColumn="1">
+                  <dataProducer>
+                    <OTIntegratingProducerFilter sourceChannel="1"
 						source="${raw_voltage_dp}"/>
                   </dataProducer>
                 </OTDataGraphable>
