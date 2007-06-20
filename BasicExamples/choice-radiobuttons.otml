@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<otrunk id="33754150-b594-11d9-9669-0800200c9a66">
+
+  <imports>
+    <import class="org.concord.otrunk.OTSystem"/>
+    <import class="org.concord.otrunk.view.OTViewEntry"/>
+    <import class="org.concord.otrunk.view.OTViewService"/>
+    <import class="org.concord.otrunk.view.OTViewBundle" />
+    <import class="org.concord.otrunk.ui.OTText"/>
+    <import class="org.concord.otrunk.ui.OTChoice"/>
+    <import class="org.concord.otrunk.ui.OTChoiceWithFeedback" />
+
+    <import class="org.concord.otrunk.view.document.OTCompoundDoc" />
+  </imports>
+
+  <objects>
+    <OTSystem>
+      <bundles>
+        <OTViewBundle>
+          <views>
+            <OTViewEntry objectClass="org.concord.otrunk.ui.OTChoice"
+              viewClass="org.concord.otrunk.ui.swing.OTChoiceComboBoxView" local_id="choice_combo_view" />
+            <OTViewEntry objectClass="org.concord.otrunk.ui.OTChoice"
+              viewClass="org.concord.otrunk.ui.swing.OTChoiceRadioButtonView" local_id="choice_radio_view" />
+            <OTViewEntry objectClass="org.concord.otrunk.ui.OTChoiceWithFeedback"
+              viewClass="org.concord.otrunk.ui.swing.OTChoiceRadioButtonWithFeedbackView" local_id="choice_feedback_radio_view" />
+            <OTViewEntry objectClass="org.concord.otrunk.view.document.OTCompoundDoc"
+              viewClass="org.concord.otrunk.view.document.OTDocumentView"/>
+          </views>
+        </OTViewBundle>
+      </bundles>
+
+      <root>
+        <OTCompoundDoc>
+          <name>Radio Buttons Test</name>
+          <bodyText>
+            <table>
+              <tr>
+                <td colspan="3">Please select an item:</td>
+              </tr>
+              <tr>
+                <td>
+                  <object refid="${normal_choice}" viewid="${choice_combo_view}" />
+                </td>
+                <td>
+                  <object refid="${normal_choice}" viewid="${choice_radio_view}"  />
+                </td>
+                <td>
+                  <object refid="${feedback_choice}" viewid="${choice_feedback_radio_view}" />
+                </td>
+                <td>
+                  <object refid="${feedback_choice_delayed}" viewid="${choice_feedback_radio_view}" />
+                </td>
+              </tr>
+            </table>
+          </bodyText>
+          <documentRefs>
+            <OTChoice local_id="normal_choice">
+              <choices>
+                <OTText name="Choice 1" />
+                <OTText name="Choice 2" />
+                <OTText name="Choice 3" />
+              </choices>
+            </OTChoice>
+            <OTChoiceWithFeedback local_id="feedback_choice">
+              <choices>
+                <OTText name="Choice a" local_id="correct_choice_1" />
+                <OTText name="Choice b" />
+                <OTText name="Choice c" />
+              </choices>
+              <correctChoice>
+                <object refid="${correct_choice_1}" />
+              </correctChoice>
+              <immediateFeedback>
+                true
+              </immediateFeedback>
+            </OTChoiceWithFeedback>
+            <OTChoiceWithFeedback local_id="feedback_choice_delayed">
+              <choices>
+                <OTText name="Choice å" />
+                <OTText name="Choice ∫" />
+                <OTText name="Choice ©" local_id="correct_choice_2" />
+              </choices>
+              <correctChoice>
+                <object refid="${correct_choice_2}" />
+              </correctChoice>
+              <immediateFeedback>
+                false
+              </immediateFeedback>
+            </OTChoiceWithFeedback>
+          </documentRefs>
+        </OTCompoundDoc>
+      </root>
+
+    </OTSystem>
+  </objects>
+</otrunk>
