@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<otrunk id="33754150-b594-11d9-9669-0800200c9a66">
+
+  <imports>
+    <import class="org.concord.otrunk.OTSystem" />
+    <import class="org.concord.otrunk.view.OTViewBundle" />
+    <import class="org.concord.otrunk.view.OTViewEntry" />
+    <import class="org.concord.otrunk.view.OTViewService"/>
+    <import class="org.concord.otrunk.script.ui.OTScriptObject" />
+    <import class="org.concord.otrunk.script.js.OTJavascript" />
+    <import class="org.concord.otrunk.script.OTScriptEngineBundle" />
+    <import class="org.concord.otrunk.script.OTScriptEngineEntry" />
+    <import class="org.concord.otrunk.view.document.OTCompoundDoc"/>
+    <import class="org.concord.otrunk.view.document.OTTextObject"/>
+    <import class="org.concord.otrunkmw.OTModelerPage"/>
+  </imports>
+
+  <objects>
+    <OTSystem>
+      <bundles>
+        <OTViewBundle>
+          <views>
+            <OTViewEntry
+              objectClass="org.concord.otrunk.script.ui.OTScriptObject"
+              viewClass="org.concord.otrunk.script.ui.OTScriptObjectView" />
+            <OTViewEntry
+              objectClass="org.concord.otrunkmw.OTModelerPage" 
+              viewClass="org.concord.otrunkmw.OTModelerPageView"
+              local_id="mw_model_view" />
+            <OTViewEntry
+              objectClass="org.concord.otrunk.view.document.OTDocument" 
+              viewClass="org.concord.otrunk.view.document.OTDocumentView"/>
+          </views>
+        </OTViewBundle>
+        <OTScriptEngineBundle>
+          <engines>
+            <OTScriptEngineEntry
+              objectClass="org.concord.otrunk.script.js.OTJavascript"
+              engineClass="org.concord.otrunk.script.js.OTJavascriptEngine" />
+          </engines>
+        </OTScriptEngineBundle>
+      </bundles>
+
+      <root>
+        <OTCompoundDoc>
+          <bodyText>
+            Molecular Workbench Model<br/><br/>
+            <object editable="true" refid="${mw_model}" />
+            <br/><br/>
+            <object refid="${script_object}" />
+          </bodyText>
+          <documentRefs>
+            <OTModelerPage local_id="mw_model"
+              authoredDataURL="http://wise.berkeley.edu/upload/23161/water1.cml" />
+            <OTScriptObject local_id="script_object">
+              <referenceObjects>
+                <object refid="${mw_model}" />
+              </referenceObjects>
+              <script>
+                <OTJavascript src="mw-script.js"/>
+              </script>
+            </OTScriptObject>
+          </documentRefs>
+        </OTCompoundDoc>
+      </root>
+
+    </OTSystem>
+  </objects>
+</otrunk>
