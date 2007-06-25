@@ -81,7 +81,11 @@ page.addPageListener(pageListener);
 var contents = context.getContents();
 var dataSet = context.getOTObject("org.concord.otrunk.modelactivitydata.OTModelActivityData");
 var modelRuns = dataSet.getModelRuns();
-declareActivityData();
+
+function init() {
+	declareActivityData();
+	return true;
+}
 
 function declareActivityData()
 {
@@ -120,11 +124,6 @@ function save()
 	//////////////////
 	// Saving research data
 	endRun();
-	data.setValue(activityEndTime, "" + System.currentTimeMillis());
-	var out = new ByteArrayOutputStream();
-	data.save(out);
-	if (localState)
-		System.err.println(out.toString());
-	currentNode.getNodeAccess().setSavedState(modelActivityData, out.toByteArray());
+	dataSet.setEndTime(System.currentTimeMillis());
 	//////////////////
 }
