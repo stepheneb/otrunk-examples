@@ -1,2 +1,5 @@
 importClass(Packages.javax.swing.JOptionPane);
-JOptionPane.showMessageDialog(null, "Hello World");
+
+function clicked() {
+	JOptionPane.showMessageDialog(null, "Hello World");
+}
