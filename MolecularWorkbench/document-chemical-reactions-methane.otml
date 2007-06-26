@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE otrunk [
+<!ENTITY ch4 "CH<span class='sub'>4</span>">
+<!ENTITY o2 "O<span class='sub'>2</span>">
+<!ENTITY co2 "CO<span class='sub'>2</span>">
+<!ENTITY h2o "H<span class='sub'>2</span>O">
+<!ENTITY equation "&ch4;  +  2&o2;  ➡  &co2;   +  2&h2o;">
+]>
+<otrunk id="1234" >
+  <imports>
+    <import class="org.concord.otrunk.OTSystem"/>
+    <import class="org.concord.otrunk.view.OTViewEntry"/>
+    <import class="org.concord.otrunk.view.OTViewService"/>
+    <import class="org.concord.otrunk.view.document.OTCompoundDoc"/>
+    <import class="org.concord.otrunk.view.document.OTTextObject"/>
+    <import class="org.concord.otrunkmw.OTModelerPage"/>
+    <import class="org.concord.otrunk.ui.OTChoiceWithFeedback" />
+    <import class="org.concord.otrunk.ui.OTText"/>
+    <import class="org.concord.otrunk.ui.snapshot.OTSnapshot"/>
+    <import class="org.concord.otrunk.ui.snapshot.OTSnapshotButton"/>
+    <import class="org.concord.otrunk.ui.snapshot.OTSnapshotAlbum"/>
+    <import class="org.concord.otrunk.view.document.OTDocumentViewConfig"/>
+  </imports>
+  <objects>
+    <OTSystem>
+      <services>
+        <OTViewService>
+          <viewEntries>
+            <OTViewEntry
+              objectClass="org.concord.otrunkmw.OTModelerPage" 
+                viewClass="org.concord.otrunkmw.OTModelerPageView" />
+            <OTDocumentViewConfig
+              objectClass="org.concord.otrunk.view.document.OTDocument" 
+                viewClass="org.concord.otrunk.view.document.OTDocumentView">
+                <css>
+                body {
+                  font-size: medium;
+                  font-family: verdana;
+                }
+                .sub {
+                  font-size: x-small;
+                }
+                .header {
+                  font-size: large;
+                  font-weight: bold;
+                }
+              </css>
+            </OTDocumentViewConfig>
+            <OTViewEntry
+              objectClass="org.concord.otrunk.ui.OTChoiceWithFeedback"
+                viewClass="org.concord.otrunk.ui.swing.OTChoiceRadioButtonWithFeedbackView"/>
+            <OTViewEntry
+              objectClass="org.concord.otrunk.ui.snapshot.OTSnapshotButton" 
+                viewClass="org.concord.otrunk.ui.snapshot.OTSnapshotButtonView"/>
+            <OTViewEntry
+              objectClass="org.concord.otrunk.ui.snapshot.OTSnapshotAlbum" 
+                viewClass="org.concord.otrunk.ui.snapshot.OTSnapshotAlbumView"/>
+          </viewEntries>
+        </OTViewService>
+      </services>
+      <root>
+        <OTCompoundDoc>
+          <bodyText>
+            <center><p class="header">Make Methane Combust</p></center>
+            <p>
+										<b>Instructions:</b> Below you have <b>methane (&ch4;)</b> and <b>oxygen (&o2;)</b> molecules. <span style="color: red"><b>Rearrange the atoms by clicking and dragging</b></span> in the box below so that you form <b>carbon dioxide (&co2;)</b> and <b>water (&h2o;)</b>. When you are done, click the "Take snapshot" button and answer the questions below.
+            </p>
+						<p><center>
+										<table><tr><td align="center"><b>Balanced equation:</b><br/>
+																						<b>&equation;</b></td></tr>
+														<tr><td><object editable="true" refid="${mw_model}"/></td></tr>
+														<tr><td><object refid="${snapshot_button}" /><object refid="${album}" /></td></tr>
+										</table>
+						</center>
+            </p>
+            <p>
+              <table>
+                <tr>
+                  <td>
+                    How many &ch4; molecules did you start with?
+                  </td>
+                  <td>
+                    How many &o2; molecules did you start with?
+                  </td>
+                  <td>
+                    How many &co2; molecules did you make?
+                  </td>
+                  <td>
+                    How many &h2o; molecules did you make?
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <object refid="${question_1}" />
+                  </td>
+                  <td>
+                    <object refid="${question_2}" />
+                  </td>
+                  <td>
+                    <object refid="${question_3}" />
+                  </td>
+                  <td>
+                    <object refid="${question_4}" />
+                  </td>
+                </tr>
+              </table>
+            </p>
+            <p>
+            <b>What did you have left over? How does the balanced equation let you know how much will be left over?<br/>
+Once you think you know the answer, go to the next step.</b>
+               <br/>
+               <br/>
+            </p>
+          </bodyText>
+          <documentRefs>
+            <OTModelerPage local_id="mw_model"
+              authoredDataURL="http://www.concord.org/~aunger/document-chemical-reactions-methane.cml" />
+            <OTChoiceWithFeedback local_id="question_1" immediateFeedback="false">
+              <choices>
+                <OTText name="A. 1" />
+                <OTText name="B. 2" local_id="correct_choice_1" />
+                <OTText name="C. 3" />
+                <OTText name="D. 4" />
+              </choices>
+              <correctChoice>
+                <object refid="${correct_choice_1}" />
+              </correctChoice>
+            </OTChoiceWithFeedback>
+            <OTChoiceWithFeedback local_id="question_2" immediateFeedback="false">
+              <choices>
+                <OTText name="A. 2" />
+                <OTText name="B. 3" />
+                <OTText name="C. 4" />
+                <OTText name="D. 5"  local_id="correct_choice_2"/>
+              </choices>
+              <correctChoice>
+                <object refid="${correct_choice_2}" />
+              </correctChoice>
+            </OTChoiceWithFeedback>
+            <OTChoiceWithFeedback local_id="question_3" immediateFeedback="false">
+              <choices>
+                <OTText name="A. 1" />
+                <OTText name="B. 2" local_id="correct_choice_3" />
+                <OTText name="C. 3" />
+                <OTText name="D. 4" />
+              </choices>
+              <correctChoice>
+                <object refid="${correct_choice_3}" />
+              </correctChoice>
+            </OTChoiceWithFeedback>
+            <OTChoiceWithFeedback local_id="question_4" immediateFeedback="false">
+              <choices>
+                <OTText name="A. 1" />
+                <OTText name="B. 2" />
+                <OTText name="C. 3" />
+                <OTText name="D. 4" local_id="correct_choice_4" />
+              </choices>
+              <correctChoice>
+                <object refid="${correct_choice_4}" />
+              </correctChoice>
+            </OTChoiceWithFeedback>
+            <OTSnapshotButton local_id="snapshot_button"
+              target="${mw_model}"
+              snapshotAlbum="${album}"/>
+            <OTSnapshotAlbum local_id="album"/>
+          </documentRefs>
+        </OTCompoundDoc>      
+      </root>
+    </OTSystem>
+  </objects>
+</otrunk>
