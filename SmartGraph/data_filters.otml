@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<otrunk id="33754150-b594-11d9-9669-0800200c9a66" >
+  <imports>
+    <import class="org.concord.otrunk.OTSystem"/>
+    <import class="org.concord.otrunk.view.OTFolderObject"/>
+    <import class="org.concord.otrunk.view.OTViewEntry"/>
+    <import class="org.concord.otrunk.view.OTViewService"/>
+    <import class="org.concord.framework.otrunk.view.OTFrame"/>
+    <import class="org.concord.data.state.OTDataStore"/>
+    <import class="org.concord.data.state.OTDataChannelDescription"/>
+    <import class="org.concord.data.state.OTDataField"/>
+    <import class="org.concord.data.state.OTWaveGenerator"/>
+    <import class="org.concord.datagraph.state.OTDataGraph"/>
+    <import class="org.concord.datagraph.state.OTDataAxis"/>
+    <import class="org.concord.datagraph.state.OTDataGraphable"/>
+    <import class="org.concord.datagraph.state.OTDataCollector"/>
+    <import class="org.concord.datagraph.state.OTMultiDataGraph"/>
+    <import class="org.concord.datagraph.state.OTDataPointLabel"/>
+    <import class="org.concord.datagraph.state.OTDataPointRuler"/>
+    <import class="org.concord.graph.util.state.OTDrawingTool"/>
+    <import class="org.concord.graph.util.state.OTDrawingStamp"/>
+    <import class="org.concord.graph.util.state.OTDrawingImageIcon"/>
+    <import class="org.concord.graph.util.state.OTDrawingShape"/>
+    <import class="org.concord.graph.util.state.OTPointTextLabel"/>
+    <import class="org.concord.otrunk.view.document.OTCompoundDoc"/>
+    <import class="org.concord.smartgraph.OTDataFilter"/>
+    <import class="org.concord.smartgraph.OTDataFilterDescription"/>
+  </imports>
+  <objects>
+    <OTSystem>
+      <services>
+        <OTViewService>
+          <viewEntries>
+            <OTViewEntry
+              objectClass="org.concord.otrunk.control.OTButton" 
+              viewClass="org.concord.otrunk.control.OTButtonView"/>
+            <OTViewEntry
+              objectClass="org.concord.otrunk.view.document.OTCompoundDoc" 
+              viewClass="org.concord.otrunk.view.document.OTDocumentView"/>
+            <OTViewEntry 
+              objectClass="org.concord.datagraph.state.OTDataGraph" 
+              viewClass="org.concord.datagraph.state.OTDataGraphView"/>
+            <OTViewEntry
+              objectClass="org.concord.otrunk.view.OTFolderObject"
+              viewClass="org.concord.otrunk.view.OTFolderObjectView"/>
+          </viewEntries>
+        </OTViewService>
+      </services>
+      <root>
+        <OTFolderObject name="graphs">
+          <children>
+ 	        <OTCompoundDoc name="Graph with Filters">
+	          <bodyText>
+	            <p>Graph with Filters:</p>
+                <object refid="${data_graph1}"/><br/>
+              </bodyText>
+            </OTCompoundDoc>
+          </children>
+        </OTFolderObject>
+      </root>
+      <library>
+	      <OTDataGraph name="Predefined Data Graph 1" local_id="data_graph1">
+	        <graphables>
+                <object refid="${graphable01}"/>
+                <object refid="${graphable02}"/>
+                <object refid="${graphable03}"/>
+                <object refid="${graphable04}"/>
+	        </graphables>
+	        <xDataAxis>
+	          <OTDataAxis min="0" max="5" label="x"/>
+	        </xDataAxis>
+	        <yDataAxis>
+	          <OTDataAxis min="0" max="100" label="y"/>
+	        </yDataAxis>
+	      </OTDataGraph>
+          <OTDataGraphable name="Predefined data graphable 1" local_id="graphable01"
+            connectPoints="true" color="0xff0000" drawMarks="false"
+            xColumn="0" yColumn="1">
+            <dataStore>
+                <object refid="${datastore01}"/>
+            </dataStore>
+          </OTDataGraphable>
+          <OTDataGraphable name="filter 2" local_id="graphable02"
+            connectPoints="true" color="0xaa00ff" drawMarks="false"
+            xColumn="0" yColumn="1">
+            <dataStore>
+                <object refid="${datafilter02}"/>
+            </dataStore>
+          </OTDataGraphable>
+          <OTDataGraphable name="filter 3" local_id="graphable03"
+            connectPoints="false" color="0x0000ff" drawMarks="true"
+            xColumn="0" yColumn="1">
+            <dataStore>
+                <object refid="${datafilter03}"/>
+            </dataStore>
+          </OTDataGraphable>
+          <OTDataGraphable name="filter 4" local_id="graphable04"
+            connectPoints="true" color="0x00aa00" drawMarks="false"
+            xColumn="0" yColumn="2">
+            <dataStore>
+                <object refid="${datafilter04}"/>
+            </dataStore>
+          </OTDataGraphable>
+          <OTDataStore name="Predefined data 1" local_id="datastore01" numberChannels="2">
+            <channelDescriptions>
+              <OTDataChannelDescription precision="0" unit="s"/>
+              <OTDataChannelDescription precision="-2"/>
+            </channelDescriptions>
+            <valuesString> 0 10 0.5 50 1 75 1.5 45 2 50 2.5 65 3 40 3.5 35 4 20</valuesString>
+          </OTDataStore>
+          <OTDataFilter local_id="datafilter02">
+          	<description>
+	          	<OTDataFilterDescription operation="average"/>
+	        </description>
+          	<inputDataStore>
+                <object refid="${datastore01}"/>
+          	</inputDataStore>
+          </OTDataFilter>
+          <OTDataFilter local_id="datafilter03">
+          	<description>
+	          	<OTDataFilterDescription operation="maximum"/>
+	        </description>
+          	<inputDataStore>
+                <object refid="${datastore01}"/>
+          	</inputDataStore>
+          </OTDataFilter>
+          <OTDataFilter local_id="datafilter04">
+          	<description>
+	          	<OTDataFilterDescription operation="slope"/>
+	        </description>
+          	<inputDataStore>
+                <object refid="${datastore01}"/>
+          	</inputDataStore>
+          </OTDataFilter>
+      </library>
+    </OTSystem>
+  </objects>
+</otrunk>
