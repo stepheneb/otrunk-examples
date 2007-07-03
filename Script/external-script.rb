@@ -2,6 +2,6 @@ require 'java'
 
 include_class 'javax.swing.JOptionPane'
 
-def clicked
+def self.clicked
   JOptionPane.showMessageDialog(nil, "Hello World")
 end
