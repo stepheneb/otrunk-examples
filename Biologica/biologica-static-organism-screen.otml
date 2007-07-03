@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<otrunk id="33754150-b594-11d9-9669-0800200c9a66">
+  <imports>
+    <import class="org.concord.otrunk.OTSystem" />
+    <import class="org.concord.otrunk.view.OTViewEntry" />
+    <import class="org.concord.otrunk.view.OTViewBundle" />
+    <import class="org.concord.biologica.state.OTChromosome" />
+    <import class="org.concord.biologica.state.OTStaticOrganism" />
+    <import class="org.concord.biologica.state.OTOrganism" />
+    <import class="org.concord.biologica.state.OTWorld" />
+    <import class="org.concord.otrunk.view.document.OTCompoundDoc" />
+    <import class="org.concord.otrunk.script.ui.OTScriptObject" />
+    <import class="org.concord.otrunk.script.js.OTJavascript" />
+    <import class="org.concord.otrunk.script.OTScriptEngineBundle" />
+    <import class="org.concord.otrunk.script.OTScriptEngineEntry" />
+  </imports>
+
+  <objects>
+    <OTSystem>
+
+      <bundles>
+        <OTViewBundle>
+          <viewEntries>
+            <OTViewEntry
+              objectClass="org.concord.biologica.state.OTChromosome"
+              viewClass="org.concord.biologica.state.ui.OTChromosomeView" />
+            <OTViewEntry
+              objectClass="org.concord.biologica.state.OTStaticOrganism"
+              viewClass="org.concord.biologica.state.ui.OTStaticOrganismView" />
+            <OTViewEntry
+              objectClass="org.concord.otrunk.script.ui.OTScriptObject"
+              viewClass="org.concord.otrunk.script.ui.OTScriptObjectView" />
+            <OTViewEntry
+              objectClass="org.concord.otrunk.view.document.OTDocument"
+              viewClass="org.concord.otrunk.view.document.OTDocumentView" />
+          </viewEntries>
+        </OTViewBundle>
+        <OTScriptEngineBundle>
+          <engines>
+            <OTScriptEngineEntry
+              objectClass="org.concord.otrunk.script.js.OTJavascript"
+              engineClass="org.concord.otrunk.script.js.OTJavascriptEngine" />
+          </engines>
+        </OTScriptEngineBundle>
+      </bundles>
+
+      <root>
+        <OTCompoundDoc name="Static Organisms">
+          <bodyText>
+            <table>
+              <tr height="310">
+                <td width="250">
+                  <object editable="true" refid="${maleStaticOrganism}" />
+                </td>
+                <td width="630">
+                  <object editable="true" refid="${maleChromosome}" />
+                </td>
+                <td valign="top" rowspan="2" width="300">
+                  Side text here
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <object editable="true"
+                    refid="${femaleStaticOrganism}" />
+                </td>
+                <td>
+                  <object editable="true" refid="${femaleChromosome}" />
+                </td>
+              </tr>
+              <tr height="40">
+                <td colspan="2" align="right">Buttons here</td>
+                <td align="center">Meiosis button here</td>
+              </tr>
+            </table>
+            <object refid="${staticOrg_script_object}" />
+          </bodyText>
+          <documentRefs>
+            <OTOrganism local_id="maleOrganism">
+              <name>male</name>
+              <sex>0</sex>
+              <world>
+                <object refid="${dragon_world}" />
+              </world>
+              <alleles>a:B</alleles>
+            </OTOrganism>
+            <OTOrganism local_id="femaleOrganism">
+              <name>female</name>
+              <sex>1</sex>
+              <world>
+                <object refid="${dragon_world}" />
+              </world>
+              <alleles>a:b,b:B</alleles>
+            </OTOrganism>
+            <OTWorld
+              speciesPath="org/concord/biologica/worlds/dragon.xml"
+              local_id="dragon_world" />
+            <OTChromosome local_id="maleChromosome"
+              name="maleChromosome" width="630" height="310" />
+            <OTStaticOrganism local_id="maleStaticOrganism"
+              name="maleStaticOrganism" />
+            <OTChromosome local_id="femaleChromosome"
+              name="femaleChromosome" width="630" height="310" />
+            <OTStaticOrganism local_id="femaleStaticOrganism"
+              name="femaleStaticOrganism" />
+            <OTScriptObject local_id="staticOrg_script_object">
+              <referenceObjects>
+                <object refid="${maleChromosome}" />
+                <object refid="${maleStaticOrganism}" />
+                <object refid="${femaleChromosome}" />
+                <object refid="${femaleStaticOrganism}" />
+                <object refid="${maleOrganism}" />
+                <object refid="${femaleOrganism}" />
+              </referenceObjects>
+              <script>
+                <OTJavascript src="biologica-static-organism-screen.js" />
+              </script>
+            </OTScriptObject>
+          </documentRefs>
+        </OTCompoundDoc>
+
+      </root>
+
+    </OTSystem>
+  </objects>
+</otrunk>
