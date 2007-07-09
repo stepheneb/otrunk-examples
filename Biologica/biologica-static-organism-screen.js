@@ -12,21 +12,14 @@ var femaleOrganismView = context.getComponentForObject("femaleStaticOrganism");
 // System.err.println("mcv is a " + maleChromosomeView.getClass().getName());
 // System.err.println("fcv is a " + femaleChromosomeView.getClass().getName());
 
-var maleOTOrg = context.getObject("male");
-var femaleOTOrg = context.getObject("female");
-var maleOrg = context.getRealObject(maleOTOrg);
-var femaleOrg = context.getRealObject(femaleOTOrg);
+var maleOrg = maleOrganismView.getOrganism();
+var femaleOrg = femaleOrganismView.getOrganism();
 
 var oldMaleAlleles = maleOrg.getAlleleString();
 var oldFemaleAlleles = femaleOrg.getAlleleString();
 
-maleOTOrg.setAlleles(oldMaleAlleles);
-femaleOTOrg.setAlleles(oldMaleAlleles);
-
 var species = maleOrg.getWorld().getCurrentSpecies();
 var genes = species.getGeneList();
-
-var inChallenge = false;
 
 var propertyChangeHandler =
 {
@@ -51,10 +44,7 @@ var propertyChangeHandler =
 			var comparisonChromoAlleleArray = comparisonAlleles.split(",",0);
 			var theChromoAlleleArray = theAlleles.split(",",0);
 
-			var theAllele;
-			var theGene;
-
-			compareAlleles(theChromoAlleleArray,comparisonChromoAlleleArray,theAllele,theGene);
+			compareAlleles(theChromoAlleleArray,comparisonChromoAlleleArray);
 			
 		}
 
@@ -64,10 +54,10 @@ var propertyChangeHandler =
 var propertyChangeListener = new PropertyChangeListener(propertyChangeHandler);
 
 function init() {
-  maleChromosomeView.setOrganism(maleOrg);
-  maleOrganismView.setOrganism(maleOrg);
-  femaleChromosomeView.setOrganism(femaleOrg);
-  femaleOrganismView.setOrganism(femaleOrg);
+  // maleChromosomeView.setOrganism(maleOrg);
+  // maleOrganismView.setOrganism(maleOrg);
+  // femaleChromosomeView.setOrganism(femaleOrg);
+  // femaleOrganismView.setOrganism(femaleOrg);
   
   maleOrg.addPropertyChangeListener(propertyChangeListener);
 	femaleOrg.addPropertyChangeListener(propertyChangeListener);
@@ -77,10 +67,10 @@ function init() {
 
 function save() {
 	maleOrg.removePropertyChangeListener(propertyChangeListener);
-	femaleOrg.removePropertyChangeListener(propertyChangeListener);
+	// femaleOrg.removePropertyChangeListener(propertyChangeListener);
 }
 
-function compareAlleles(newChromoAlleleArray, oldChromoAlleleArray, changedAllele, changedGene)
+function compareAlleles(newChromoAlleleArray, oldChromoAlleleArray)
 {
 	if (!newChromoAlleleArray.length == oldChromoAlleleArray.length)
 	{
