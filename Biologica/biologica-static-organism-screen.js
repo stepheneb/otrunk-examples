@@ -9,6 +9,12 @@ var maleOrganismView = context.getComponentForObject("maleStaticOrganism");
 var femaleChromosomeView = context.getViewForObject("femaleChromosome").getChromosomeView();
 var femaleOrganismView = context.getComponentForObject("femaleStaticOrganism");
 
+var meiosisButton = context.getComponentForObject("meiosis_button");
+var challengeButton = context.getComponentForObject("challenge_button");
+var appState = context.getObject("appState");
+
+var inChallenge = false;
+
 // System.err.println("mcv is a " + maleChromosomeView.getClass().getName());
 // System.err.println("fcv is a " + femaleChromosomeView.getClass().getName());
 
@@ -54,10 +60,21 @@ var propertyChangeHandler =
 var propertyChangeListener = new PropertyChangeListener(propertyChangeHandler);
 
 function init() {
-  // maleChromosomeView.setOrganism(maleOrg);
-  // maleOrganismView.setOrganism(maleOrg);
-  // femaleChromosomeView.setOrganism(femaleOrg);
-  // femaleOrganismView.setOrganism(femaleOrg);
+  if (appState.getText().compareTo("inChallenge") == 0 || appState.getText().compareTo("inChallenge2") == 0) {
+		inChallenge = true;
+		challengeButton.setText("Back to Meiosis Challenge");
+	}
+	else {
+		inChallege = false;
+	}
+	
+	if (appState.getText().compareTo("Beginning") == 0) {
+		appState.setText("started");
+		meiosisButton.setText("Go to Meiosis");
+	}
+	
+	meiosisButton.setVisible(! inChallenge);
+	challengeButton.setVisible(inChallenge);
   
   maleOrg.addPropertyChangeListener(propertyChangeListener);
 	femaleOrg.addPropertyChangeListener(propertyChangeListener);
@@ -66,8 +83,11 @@ function init() {
 }
 
 function save() {
+	meiosisButton.setVisible(true);
+	challengeButton.setVisible(true);
+	
 	maleOrg.removePropertyChangeListener(propertyChangeListener);
-	// femaleOrg.removePropertyChangeListener(propertyChangeListener);
+	femaleOrg.removePropertyChangeListener(propertyChangeListener);
 }
 
 function compareAlleles(newChromoAlleleArray, oldChromoAlleleArray)

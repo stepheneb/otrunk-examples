@@ -1,12 +1,18 @@
-var newOrg;
-var appState;
-var textArea;
-var nextChallengeButton
-var chromoButton;
-var meiosisButton;
-var meiosisView;
+importPackage(Packages.org.concord.biologica);
+importPackage(Packages.org.concord.biologica.ui);
+importPackage(Packages.org.concord.biologica.engine);
+importPackage(Packages.java.lang);
+importPackage(Packages.java.beans);
 
-var world;
+var newOrg;
+var appState = context.getObject("appState");
+var textArea = context.getViewForObject("challenge_one_cards");
+var nextChallengeButton = context.getComponentForObject("next_challenge_button");
+var chromoButton = context.getComponentForObject("chromo_button");
+var meiosisButton = context.getComponentForObject("meiosis_button");
+var meiosisView = context.getComponentForObject("challengeOneMeiosisView").getComponent(0);
+
+var world = meiosisView.getMotherOrganism().getWorld();
 
 var propertyChangeHandler =
 {
@@ -36,6 +42,10 @@ function init() {
 	appState.setText("inChallenge");
 	textArea.setCurrentCard("challengeStr");
 	meiosisView.setSexViewMode(SexView.SEX_VIEW_MODE_SIX_VIEWS);
+	
+	nextChallengeButton.setVisible(false);
+	chromoButton.setVisible(true);
+	meiosisButton.setVisible(true);
 
 	world.addPropertyChangeListener(propertyChangeListener);
 	return true;

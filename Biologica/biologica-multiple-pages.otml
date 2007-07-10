@@ -30,7 +30,7 @@
     <OTSystem>
 
       <bundles>
-        <OTViewBundle showLeftPanel="true">
+        <OTViewBundle showLeftPanel="false">
           <viewEntries>
             <OTViewEntry objectClass="org.concord.biologica.state.OTSex"
               viewClass="org.concord.biologica.state.ui.OTSexView" />
@@ -52,7 +52,7 @@
               <css>
                 td { padding: 0px; margin: 0px; }
 
-                p { font-size: 5; }
+                p { font-size: large; }
               </css>
             </OTDocumentViewConfig>
             <OTViewEntry
@@ -75,9 +75,12 @@
       <root>
         <OTCompoundDoc name="Introduction">
           <bodyText>
-            Today we're going to learn about genetics using dragons.<br/>
-            Click here to begin: <object refid="${chromo_button}" />
-            <object refid="${chromo_button_script}" />
+            <p>Today we're going to learn about genetics using dragons.<br/>
+            Click here to begin:</p>
+            <p>
+              <object refid="${chromo_button}" />
+              <object refid="${chromo_button_script}" />
+            </p>
           </bodyText>
           <children>
             <object refid="${static_organism_page}" />
@@ -98,11 +101,12 @@
                     <td width="300"><object refid="${challenge_two_cards}" /></td>
                   </tr>
                   <tr height="40">
-                    <td align="right"><object refid="${next_challenge_button}" /><object refid="${chromo_button}" /></td>
-                    <td align="center"><object refid="${meiosis_button}" /></td>
+                    <td align="right"><object refid="${chromo_button}" /></td>
+                    <td align="center"> </td>
                   </tr>
                 </table>
                 <object refid="${challenge_two_script_object}" />
+                <object refid="${chromo_button_script}" />
               </bodyText>
             </OTCompoundDoc>
             <OTCompoundDoc name="Challenge One"
@@ -116,11 +120,14 @@
                     <td width="300"><object refid="${challenge_one_cards}" /></td>
                   </tr>
                   <tr height="40">
-                    <td align="right"><object refid="${challenge_button}" /></td>
+                    <td align="right"><object refid="${next_challenge_button}" /><object refid="${chromo_button}" /></td>
                     <td align="center"><object refid="${meiosis_button}" /></td>
                   </tr>
                 </table>
                 <object refid="${challenge_one_script_object}" />
+                <object refid="${meiosis_button_script}" />
+                <object refid="${chromo_button_script}" />
+                <object refid="${next_challenge_button_script}" />
               </bodyText>
             </OTCompoundDoc>
             <OTCompoundDoc name="Meiosis" local_id="meiosis_page">
@@ -138,6 +145,8 @@
                   </tr>
                 </table>
                 <object refid="${meiosis_script_object}" />
+                <object refid="${chromo_button_script}" />
+                <object refid="${challenge_button_script}" />
               </bodyText>
             </OTCompoundDoc>
             <OTCompoundDoc name="Static Organisms"
@@ -167,7 +176,7 @@
                     </td>
                   </tr>
                   <tr height="40">
-                    <td colspan="2" align="right">Buttons here</td>
+                    <td colspan="2" align="right"><object refid="${challenge_button}" /></td>
                     <td align="center">
                       <object refid="${meiosis_button}" />
                     </td>
@@ -175,6 +184,7 @@
                 </table>
                 <object refid="${staticOrg_script_object}" />
                 <object refid="${meiosis_button_script}" />
+                <object refid="${challenge_button_script}" />
               </bodyText>
             </OTCompoundDoc>
             
@@ -399,8 +409,7 @@
               <text>
                 &telslogo;
                 <font size="5" color="blue">
-                  Well done! That's the last challenge. Hit Exit to quit
-                  the activity.
+                  Well done! That's the last challenge.
                 </font>
               </text>
             </OTTextPane>
@@ -464,23 +473,7 @@
               </world>
               <alleles>a:B</alleles>
             </OTOrganism>
-            <OTOrganism local_id="challengeTwoFemaleOrganism">
-              <name>female</name>
-              <sex>1</sex>
-              <world>
-                <object refid="${dragon_world}" />
-              </world>
-              <alleles>a:b,b:B</alleles>
-            </OTOrganism>
-            <OTOrganism local_id="challengeTwoMaleOrganism">
-              <name>male</name>
-              <sex>0</sex>
-              <world>
-                <object refid="${dragon_world}" />
-              </world>
-              <alleles>a:B</alleles>
-            </OTOrganism>
-            <OTOrganism local_id="challengeOneFemaleOrganism">
+            <OTOrganism local_id="challengeFemaleOrganism">
               <name>female</name>
               <sex>1</sex>
               <world>
@@ -488,7 +481,7 @@
               </world>
               <alleles>a:h,b:h,a:w,b:W,a:L,b:l,a:t,b:t,a:F,b:f,a:a,b:a,a:B,b:B</alleles>
             </OTOrganism>
-            <OTOrganism local_id="challengeOneMaleOrganism">
+            <OTOrganism local_id="challengeMaleOrganism">
               <name>male</name>
               <sex>0</sex>
               <world>
@@ -539,27 +532,26 @@
             </OTSex>
             <OTSex local_id="challengeOneMeiosisView" width="880" height="620">
               <motherOrganism>
-                <object refid="${challengeOneFemaleOrganism}" />
+                <object refid="${challengeFemaleOrganism}" />
               </motherOrganism>
               <fatherOrganism>
-                <object refid="${challengeOneMaleOrganism}" />
+                <object refid="${challengeMaleOrganism}" />
               </fatherOrganism>
             </OTSex>
-            <OTSex local_id="ChallengeTwoMeiosisView" width="880" height="620">
+            <OTSex local_id="challengeTwoMeiosisView" width="880" height="620">
               <motherOrganism>
-                <object refid="${challengeTwoFemaleOrganism}" />
+                <object refid="${challengeFemaleOrganism}" />
               </motherOrganism>
               <fatherOrganism>
-                <object refid="${challengeTwoMaleOrganism}" />
+                <object refid="${challengeMaleOrganism}" />
               </fatherOrganism>
             </OTSex>
             
             <!-- Various buttons used on the different pages -->
-            <OTButton text="Go to Meiosis" local_id="meiosis_button" />
-            <OTButton text="Go to Chromosomes" local_id="chromo_button" />
+            <OTButton text="Back to Meiosis" local_id="meiosis_button" />
+            <OTButton text="Back to Chromosomes" local_id="chromo_button" />
             <OTButton text="Take the Meiosis Challenge!" local_id="challenge_button" />
             <OTButton text="Next Challenge" local_id="next_challenge_button" />
-            <OTButton text="Back to Meiosis Challenge" local_id="back_to_challenge_button" />
 
             <!-- Script definitions for the various buttons -->
             <OTScriptObject local_id="meiosis_button_script">
@@ -582,17 +574,19 @@
             </OTScriptObject>
             <OTScriptObject local_id="challenge_button_script">
               <referenceObjects>
+                <object refid="${challenge_button}" />
+                <object refid="${challenge_two_page}" />
                 <object refid="${challenge_one_page}" />
-                <object refid="${meiosis_button}" />
+                <object refid="${appState}" />
               </referenceObjects>
               <script>
-                <OTJavascript src="generic-link-button.js" />
+                <OTJavascript src="challenge-link-button.js" />
               </script>
             </OTScriptObject>
             <OTScriptObject local_id="next_challenge_button_script">
               <referenceObjects>
                 <object refid="${challenge_two_page}" />
-                <object refid="${meiosis_button}" />
+                <object refid="${next_challenge_button}" />
               </referenceObjects>
               <script>
                 <OTJavascript src="generic-link-button.js" />
@@ -602,9 +596,10 @@
             <!-- Script definitions for the various views -->
             <OTScriptObject local_id="challenge_two_script_object">
               <referenceObjects>
-                <object refid="${meiosisView}" />
-                <object refid="${challengeTwoMaleOrganism}" />
-                <object refid="${challengeTwoFemaleOrganism}" />
+                <object refid="${challengeTwoMeiosisView}" />
+                <object refid="${chromo_button}" />
+                <object refid="${challenge_two_cards}" />
+                <object refid="${appState}" />
               </referenceObjects>
               <script>
                 <OTJavascript src="biologica-challenge2-screen.js" />
@@ -612,9 +607,12 @@
             </OTScriptObject>
             <OTScriptObject local_id="challenge_one_script_object">
               <referenceObjects>
-                <object refid="${meiosisView}" />
-                <object refid="${challengeOneMaleOrganism}" />
-                <object refid="${challengeOneFemaleOrganism}" />
+                <object refid="${challengeOneMeiosisView}" />
+                <object refid="${appState}" />
+                <object refid="${challenge_one_cards}" />
+                <object refid="${next_challenge_button}" />
+                <object refid="${chromo_button}" />
+                <object refid="${meiosis_button}" />
               </referenceObjects>
               <script>
                 <OTJavascript src="biologica-challenge1-screen.js" />
@@ -626,8 +624,9 @@
                 <object refid="${maleStaticOrganism}" />
                 <object refid="${femaleChromosome}" />
                 <object refid="${femaleStaticOrganism}" />
-                <object refid="${maleOrganism}" />
-                <object refid="${femaleOrganism}" />
+                <object refid="${meiosis_button}" />
+                <object refid="${challenge_button}" />
+                <object refid="${appState}" />
               </referenceObjects>
               <script>
                 <OTJavascript src="biologica-static-organism-screen.js" />
@@ -637,11 +636,16 @@
               <referenceObjects>
                 <object refid="${meiosisView}" />
                 <object refid="${meiosis_cards}" />
+                <object refid="${chromo_button}" />
+                <object refid="${challenge_button}" />
+                <object refid="${appState}" />
               </referenceObjects>
               <script>
                 <OTJavascript src="biologica-meiosis-screen.js" />
               </script>
             </OTScriptObject>
+            <!-- Application state object -->
+            <OTText local_id="appState" text="Beginning" />
           </documentRefs>
         </OTCompoundDoc>
 

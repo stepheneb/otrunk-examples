@@ -4,10 +4,14 @@ importPackage(Packages.org.concord.biologica.engine);
 importPackage(Packages.java.lang);
 importPackage(Packages.java.beans);
 
-var meiosisView = context.getComponentForObject(0).getComponent(0);
+var meiosisView = context.getComponentForObject("meiosisView").getComponent(0);
 var world = meiosisView.getMotherOrganism().getWorld();
 
-var textArea = context.getViewForObject(1);
+var textArea = context.getViewForObject("meiosis_cards");
+
+var chromoButton = context.getComponentForObject("chromo_button");
+var challengeButton = context.getComponentForObject("challenge_button");
+var appState = context.getObject("appState");
 
 var motherGameteInFertilization = false;
 var fatherGameteInFertilization = false;
@@ -59,13 +63,11 @@ var worldPropertyChangeListener = new PropertyChangeListener(worldPropertyChange
 
 function init()
 {
-	// challengeButton.setText(challengeButtonStr);
-	// meiosisButton.setText(meiosisButtonStr);
 	textArea.setCurrentCard("meiosisStr");
-//	chromoButton.setVisible(true);
-//	challengeButton.setVisible(true);
-	// meiosisView.setMotherOrganism(femaleOrg);
-	// meiosisView.setFatherOrganism(maleOrg);
+	
+  chromoButton.setVisible(true);
+  challengeButton.setVisible(true);
+  
 	meiosisView.setSexViewMode(SexView.SEX_VIEW_MODE_SIX_VIEWS);
 	meiosisView.setAlignmentControlsVisible(false);
 
@@ -73,8 +75,9 @@ function init()
 
 	meiosisView.addPropertyChangeListener(meiosisPropertyChangeListener);
 	world.addPropertyChangeListener(worldPropertyChangeListener);
-
-	// frame.repaint();
+	
+	appState.setText("notInChallenge");
+	
 	return true;
 }
 
