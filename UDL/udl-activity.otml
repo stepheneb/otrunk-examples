@@ -45,6 +45,14 @@
 		<import class="org.concord.otrunk.udl2.OTSection"/>
 		<import class="org.concord.otrunk.udl2.OTSoundObject" />
 		<import class="org.concord.otrunk.udl2.OTUDLQuestions" />
+		<import class="org.concord.otrunk.ui.snapshot.OTSnapshot"/>
+		<import class="org.concord.otrunk.ui.snapshot.OTSnapshotButton"/>
+		<import class="org.concord.otrunk.ui.snapshot.OTSnapshotAlbum"/>
+		<import class="org.concord.graph.util.state.OTDrawingTool"/>
+		<import class="org.concord.graph.util.state.OTDrawingStamp"/>
+		<import class="org.concord.graph.util.state.OTDrawingImageIcon"/>
+		<import class="org.concord.graph.util.state.OTDrawingShape"/>
+		<import class="org.concord.otrunk.ui.OTImage"/>
 	</imports>
 	<objects>
 		<OTSystem>
@@ -54,6 +62,8 @@
            				<OTFrame width="800" height="600"/>
          			</frame>
 					<viewEntries>
+						<OTViewEntry local_id="snapshot_button_view" objectClass="org.concord.otrunk.ui.snapshot.OTSnapshotButton" viewClass="org.concord.otrunk.ui.snapshot.OTSnapshotButtonView"/>
+						<OTViewEntry objectClass="org.concord.otrunk.ui.snapshot.OTSnapshotAlbum" viewClass="org.concord.otrunk.ui.snapshot.OTSnapshotAlbumView"/>
 						<OTViewEntry
 							objectClass="org.concord.otrunk.udl.friction.OTFrictionModel"
 							viewClass="org.concord.otrunk.udl.friction.OTFrictionModelView" />
@@ -157,7 +167,8 @@
 									<content>
 										<OTCompoundDoc>
 											<bodyText>
-											¿Que pasaría si no fuera la fricción?
+											¿Que pasaría si no fuera la fricción?<p/>
+											<img src="http://concord.org/~sfentress/udl_images/udl-kids.jpg" border="1"/>
 											</bodyText>
 										</OTCompoundDoc>
 									</content>
@@ -663,7 +674,21 @@
 									<content>
 										<OTCompoundDoc>
 											<bodyText>
-												<object refid="${friction1}" />
+												<table>
+													<tr>
+														<td colspan="2">
+															<object refid="${friction1}" />
+														</td>
+													</tr>
+													<tr>
+														<td>
+															<object refid="${fr1_snapshot_button}"/>
+														</td>
+														<td>
+															<object refid="${album}"/>
+														</td>
+													</tr>
+												</table>
 											</bodyText>
 											<documentRefs>
 												<OTFrictionModel local_id="friction1"
@@ -671,6 +696,8 @@
 													showPushButtons="false"
 													showSlider="false"
 													rampAngle="0"/>
+												<OTSnapshotButton local_id="fr1_snapshot_button" target="${friction1}" snapshotAlbum="${album}"/>
+												<OTSnapshotAlbum local_id="album"/>
 											</documentRefs>
 										</OTCompoundDoc>
 									</content>
