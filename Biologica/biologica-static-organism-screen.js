@@ -27,6 +27,8 @@ var oldFemaleAlleles = femaleOrg.getAlleleString();
 var species = maleOrg.getWorld().getCurrentSpecies();
 var genes = species.getGeneList();
 
+var contents = context.getContents();
+
 var propertyChangeHandler =
 {
 	propertyChange: function(evt)
@@ -119,8 +121,13 @@ function compareAlleles(newChromoAlleleArray, oldChromoAlleleArray)
 			else if (geneIndex < 5) chromoStr = "2";
 			else if (geneIndex > 4) chromoStr = "X";
 
-			System.out.println("You changed the " + theName + " " + species.getName() + ", " + "Chromosome: " + chromoStr + oldChromo
-				+ ", " + genes.get(geneIndex) + ", new Allele: " + newAllele + ", old Allele: " + oldAllele);
+// Really basic and simple logging
+      var logStr = "You changed the " + theName + " " + species.getName() + ", " + "Chromosome: " + chromoStr + oldChromo
+				+ ", " + genes.get(geneIndex) + ", new Allele: " + newAllele + ", old Allele: " + oldAllele;
+				var ottext = context.getOTObject("org.concord.otrunk.ui.OTText");
+				ottext.setText(logStr);
+				contents.add(ottext);
+			System.out.println(logStr);
 
 			return;
 		}
