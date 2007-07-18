@@ -5,7 +5,7 @@
 		<import class="org.concord.otrunk.view.OTFolderObject" />
 		<import class="org.concord.otrunk.view.OTViewEntry" />
 		<import class="org.concord.otrunk.view.OTViewMode" />
-		<import class="org.concord.otrunk.view.OTViewService" />
+		<import class="org.concord.otrunk.view.OTViewBundle"/>
 		<import class="org.concord.framework.otrunk.view.OTFrame" />
 		<import class="org.concord.otrunk.view.document.OTCompoundDoc" />
 		<import class="org.concord.otrunk.view.document.OTTextObject" />
@@ -55,11 +55,17 @@
 		<import class="org.concord.graph.util.state.OTDrawingImageIcon"/>
 		<import class="org.concord.graph.util.state.OTDrawingShape"/>
 		<import class="org.concord.otrunk.ui.OTImage"/>
+		<import class="org.concord.otrunk.udl.OTZoom"/>
+    	<import class="org.concord.otrunk.udl.OTZoomTransform"/>
+    	<import class="org.concord.otrunk.script.ui.OTScriptObject"/>
+		<import class="org.concord.otrunk.script.js.OTJavascript"/>
+		<import class="org.concord.otrunk.script.OTScriptEngineBundle"/>
+		<import class="org.concord.otrunk.script.OTScriptEngineEntry"/>
 	</imports>
 	<objects>
 		<OTSystem>
-			<services>
-				<OTViewService showLeftPanel="false">
+			<bundles>
+				<OTViewBundle showLeftPanel="false">
 					<frame>
            				<OTFrame width="850" height="600"/>
          			</frame>
@@ -132,9 +138,18 @@
 						<OTViewEntry local_id="drawing_view"
 							objectClass="org.concord.graph.util.state.OTDrawingTool2" 
               				viewClass="org.concord.datagraph.state.OTDataDrawingToolView"/>
+              			<OTViewEntry objectClass="org.concord.otrunk.udl.OTZoom"
+            				viewClass="org.concord.otrunk.udl.OTZoomView" />
+            			<OTViewEntry objectClass="org.concord.otrunk.script.ui.OTScriptObject" 
+            				viewClass="org.concord.otrunk.script.ui.OTScriptObjectView"/>
 					</viewEntries>
-				</OTViewService>
-			</services>
+				</OTViewBundle>
+				<OTScriptEngineBundle>
+					<engines>
+						<OTScriptEngineEntry objectClass="org.concord.otrunk.script.js.OTJavascript" engineClass="org.concord.otrunk.script.js.OTJavascriptEngine"/>
+					</engines>
+				</OTScriptEngineBundle>
+			</bundles>
 			<library>
 				<OTFrame local_id="definition_frame" width="220"
 					height="120" borderlessPopup="true"/>
@@ -177,7 +192,7 @@
 										<OTCompoundDoc>
 											<bodyText><div class="body">
 											What if there were no friction?<p/>
-											<img src="http://udl.concord.org/share/Friction/Winter.jpg" width="200" height="181" border="1"/><p/>
+											<img src="http://udl.concord.org/share/Friction/Winter%20Activities%20155.jpg" border="1"/><p/>
 											This module explores the role of friction in everyday life.
 											</div></bodyText>
 										</OTCompoundDoc>
@@ -198,7 +213,7 @@
 										<OTCompoundDoc>
 											<bodyText><div class="body">
 											¿Que pasaría si no hubiera fricción?<p/>
-											<img src="http://udl.concord.org/share/Friction/Winter.jpg" width="200" height="181" border="1"/><p/>
+											<img src="http://udl.concord.org/share/Friction/Winter%20Activities%20155.jpg" border="1"/><p/>
 											En este actividad, usted explorara el role de fricción en la vida normal.
 											</div></bodyText>
 										</OTCompoundDoc>
@@ -824,7 +839,7 @@
 													showPushButtons="false"
 													showSlider="false"
 													rampAngle="0"/>
-												<OTSnapshotButton local_id="fr1_snapshot_button" target="${friction1}" snapshotAlbum="${album}"/>
+												<OTSnapshotButton local_id="fr1_snapshot_button" target="${fr_model}" snapshotAlbum="${album}"/>
 												<OTSnapshotAlbum local_id="album"/>
 											</documentRefs>
 										</OTCompoundDoc>
@@ -1203,6 +1218,7 @@
 												<li>Start the sensor and measure the temperature of the penny before you start touching, rubbing or pushing the penny.</li>
 												<li>Record the temperature of the penny: <object refid="${text70}" /></li>
 											</ol>
+											<p/>
 											</div></bodyText>
 											<documentRefs>
 												<OTText local_id="text70"/>
@@ -1212,7 +1228,243 @@
 								</OTSection>
 							</content>
 						</OTUDLExploration>
-						<OTUDLExploration title="[Exploration 4]" computerBased="false">
+						<OTUDLExploration title="Surface model" computerBased="false">
+							<content>
+								<OTSection>
+									<title>
+										<OTSoundObject string="Discovery Question" />
+									</title>
+									<content>
+										<OTCompoundDoc>
+											<bodyText><div class="body">
+											Why does a surface heat up when you rub it against another surface?<p/>
+											Explore a molecular model to see how friction creates heat.
+											</div></bodyText>
+										</OTCompoundDoc>
+									</content>
+								</OTSection>
+								<OTSection>
+									<title>
+										<OTSoundObject string="Procedure"/>
+									</title>
+									<content>
+										<OTCompoundDoc>
+											<bodyText><div class="body">
+												<div class="story">
+													Johnny and Susie were recounting their experience in Sticky World and Slippery World to their 
+													Uncle Hubris, who was also a middle school science teacher. They weren't sure he believed that 
+													those two worlds existed, but he went along with them anyway and asked many questions. Finally 
+													Johnny was fed up with so many questions and decided to ask one of his own. "So, what makes 
+													something have more or less  friction?" he asked, figuring that Uncle Hubris wouldn't be able 
+													to explain it. 
+													<p/>
+													Instead, a big smile lit up Uncle Hubris' face, as if he'd just been asked to talk about his favorite 
+													subject. Johnny groaned. He could feel a science lesson coming on. "It's all about molecules," said 
+													Uncle Hubris, "and you know what they are, right?" Right.
+													<p/>
+													"Atoms are very tiny, and they're the building blocks of the universe," replied Susie brightly. This was 
+													the answer she had learned in school last year. 
+													<p/>
+													"That's true," replied Uncle Hubris, but what do they look like?"
+												</div>
+												<ol>
+													<li>
+														Picture one surface rubbing on another surface. What would it look like if you could 
+																	see it with a very powerful microscope – so powerful that you could see individual molecules?
+														<table>
+															<tr>
+																<td>
+																	Use words and a drawing to show what you think the two surfaces would look like.  
+																</td>
+																<td width="300">
+																	<object refid="${rubtext1}"/>
+																</td>
+															</tr>
+														</table>
+														<object refid="${rubdrawing1}"/><p />
+													</li>
+												</ol>
+											</div></bodyText>
+											<documentRefs>
+												<OTText local_id="rubtext1" />
+												<OTDrawingTool2 local_id="rubdrawing1"/>
+											</documentRefs>
+										</OTCompoundDoc>
+									</content>
+								</OTSection>
+								<OTSection>
+									<title>
+										<OTSoundObject string="Procedure continued"/>
+									</title>
+									<content>
+										<OTCompoundDoc>
+											<bodyText><div class="body">
+												<div class="story">
+												"That's very good!" exclaimed Uncle Hubris.  "I just happen to have a model on my computer that shows what 
+												happens to atoms when two surfaces rub together." Johnny groaned again, but just a little bit. He was also intrigued.
+												<p/>
+												"Here it is!" cried Uncle Hubris, starting up his computer. First we zoom in, and then we see the model of atoms!"
+												</div>
+												<ol>
+													<li>
+														Here is a box on a slide. Now zoom in on the surface by pushing the <b>Zoom In</b> button.<p/>
+														<object refid="${zoom}"/>
+														<p/>
+													</li>
+													<li>
+														Here is the model of two surfaces that Uncle Hubris showed Susie and Johnny. Things are so enlarged that you 
+														can see individual atoms. The red atoms are part of the top object that is moving. The black atoms are 
+														part of the surface. Gravity is pushing the red object down on the surface.<p/>
+														<img src="http://udl.concord.org/share/Friction/mwimagelabeled.png"/>
+														<p/>
+													</li>
+													<li>
+														Predict what you think will happen to the atoms if the rede object is dragged to the right. <p/>
+														The molecules will <br/>
+														<object refid="${rubtext2}"/> <br/> 
+														when the red object is dragged, because <br/>
+														<object refid="${rubtext3}"/>
+														<p/>
+													</li>
+													<li>
+														Run the model by clicking on the "play" button. Once it starts, slowly drag the slider to start the object moving. Observe and describe what happens to the atoms.  Look very carefully at the ones where the two surfaces meet. 
+														<p/>
+														<object refid="${mw-fric-model-1}"/><p/>
+													</li>
+													<li>
+														Would you say this is a slippery surface or a sticky surface?<p/>
+														<object refid="${rubradio1}"/><p/>
+														Why?<p/>
+														I think it's<br/>
+														<object refid="${rubtext4}"/><br/>
+														because I notice that<br/>
+														<object refid="${rubtext5}"/><p/>
+													</li>
+													<li>
+														Now look at the model below. This is the same model, except that the atoms are now colored according to how fast they
+														are wiggling. Red is faster and white is slower.<p/>
+														Run the model below, and again drag the slider slowly to start the object moving.<p/>
+														<object refid="${mw-fric-model-2}"/><p/>
+													</li>
+													<li>
+														What happens to the color of the atoms in the object as it moves across the surface?<p/>
+														<object refid="${rubtext6}"/><p/>
+														What happens to the temperature?<p/>
+														<object refid="${rubtext7}"/><p/>
+													</li>
+													<li>
+														Temperature is a measure of how fast the atoms are wiggling. Higher temperature means faster atoms. 
+														Why do you think the moving block causes the temperature to change? <p/>
+														<object refid="${rubtext8}"/><p/>
+													</li>
+												</ol>
+											</div></bodyText>
+											<documentRefs>
+												<OTText local_id="rubtext2" />
+												<OTText local_id="rubtext3" />
+												<OTText local_id="rubtext4" />
+												<OTText local_id="rubtext5" />
+												<OTText local_id="rubtext6" />
+												<OTText local_id="rubtext7" />
+												<OTText local_id="rubtext8" />
+												<OTScriptObject local_id="slipstick_script">
+													<referenceObjects>
+														<object refid="${rubradio1}"/>
+														<object refid="${slipsticktext}"/>
+													</referenceObjects>
+													<script>
+														<OTJavascript>
+															<script>
+																importClass(Packages.java.awt.event.ActionListener);
+																
+																var text = context.getObject(1);
+																var destination = context.getObject(0);
+																
+																function init() {
+																	text.setBodyText("yay!");
+																	return true;
+																}
+																
+																function save() {
+																	return true;
+																}
+															</script>
+														</OTJavascript>
+													</script>
+												</OTScriptObject>
+												<OTCompoundDoc local_id="slipsticktext"/>
+												<OTChoice local_id="rubradio1">
+													<choices>
+														<OTText name="slippery" />
+														<OTText name="sticky" />
+													</choices>
+												</OTChoice>
+												<OTZoom local_id="zoom" name="Zoom Tool">
+									              <transforms>
+									              	<OTZoomTransform scale="0.5" topLeftX="30" topLeftY="92"/>
+									              	<OTZoomTransform scale="0.5" topLeftX="30" topLeftY="92"/>
+									              	<OTZoomTransform scale="0.5" topLeftX="30" topLeftY="93"/>
+									              	<OTZoomTransform scale="0.5" topLeftX="30" topLeftY="94"/>
+									              	<OTZoomTransform scale="0.5" topLeftX="30" topLeftY="82"/>
+									              	<OTZoomTransform scale="0.5" topLeftX="30" topLeftY="120"/> 
+									              	<OTZoomTransform scale="0.5" topLeftX="30" topLeftY="100"/>            
+									              </transforms>
+									              <images>
+									              	<OTImage imageBytes="imagessmooth/slidezoom1_smooth_sm.png" />
+									              	<OTImage imageBytes="imagessmooth/slidezoom2_smooth_sm.png" />
+									              	<OTImage imageBytes="imagessmooth/slidezoom3_smooth_sm.png" />
+									              	<OTImage imageBytes="imagessmooth/slidezoom4_smooth_sm.png" />
+									              	<OTImage imageBytes="imagessmooth/slidezoom5_smooth_sm.png" />
+									              	<OTImage imageBytes="imagessmooth/slidezoom6b_smooth_sm.png" />
+									              	<OTImage imageBytes="imagessmooth/slidezoom7_smooth_sm.png" />
+									              	<OTImage imageBytes="imagessmooth/slidezoom8_smooth_sm.png" />
+									              </images>
+									            </OTZoom>
+									            <OTModelerPage local_id="mw-fric-model-1" authoredDataURL="http://mw2.concord.org/model/113da4e605b/frictionslideonly.cml"/>
+									            <OTModelerPage local_id="mw-fric-model-2" authoredDataURL="http://mw2.concord.org/model/113da5098a1/frictionke.cml"/>
+											</documentRefs>
+										</OTCompoundDoc>
+									</content>
+								</OTSection>
+								<OTSection>
+									<title>
+										<OTSoundObject string="Procedure continued"/>
+									</title>
+									<content>
+										<OTCompoundDoc>
+											<bodyText><div class="body">
+												<div class="story">
+													Johnny wasn't satisfied. "Now I can see why rubbing warms things up," he said, 
+													"but why does more friction mean harder work to move, like in Sticky World?"
+													<p/>
+													Susie jumped into the conversation. "More friction means more heat, and more heat means more work!"<p/>
+													
+													"That's right!" cried Uncle Hubris, obviously enjoying himself. "If two surfaces have lots of friction, 
+													the surface atoms heat up a great deal when they slide across each other. Making heat takes work, 
+													because heat is a form of energy and energy has to come from somewhere. Where does it come from?"<p/>
+													
+													"It comes from my muscles pushing my foot along, right?" said Johnny, who felt more comfortable now.<p/>
+													
+													
+													"Yes," replied Uncle Hubris. "And what about a slippery surface?"<p/>
+
+													"There's no friction and sliding is easy! It doesn't take any energy and it doesn't heat up the surface," Susie replied.
+												</div>
+												In your own words, explain why rough surfaces with lots of friction heat up when you rub them.<br/>
+												Use the words <b>atoms</b>, <b>temperature</b>, and <b>surface</b>.<p/>
+												<object refid="${rubtext9}"/><p/>
+												In your own words, explain why smooth surfaces with very little friction don't heat up when you rub them.<br/>
+												Use the words <b>atoms</b>, <b>temperature</b>, and <b>surface</b>.<p/>
+												<object refid="${rubtext10}"/><p/>
+											</div></bodyText>
+											<documentRefs>
+												<OTText local_id="rubtext9" />
+												<OTText local_id="rubtext10" />
+											</documentRefs>
+										</OTCompoundDoc>
+									</content>
+								</OTSection>
+							</content>
 						</OTUDLExploration>
 					</explorations>
 					<preTest>
