@@ -33,10 +33,16 @@
 			class="org.concord.otrunk.view.prototype.OTPrototypeEventController" />
 		<import
 			class="org.concord.otrunk.view.prototype.OTPrototypeMapEntry" />
-		<import class="org.concord.datagraph.state.OTDataCollector"/>
-		<import class="org.concord.datagraph.state.OTDataAxis"/>
-    	<import class="org.concord.datagraph.state.OTDataGraphable"/>
-    	<import class="org.concord.data.state.OTDataStore"/>
+		 <import class="org.concord.data.state.OTDataStore"/>
+    <import class="org.concord.sensor.state.OTZeroSensor"/>
+    <import class="org.concord.data.state.OTDataChannelDescription"/>
+    <import class="org.concord.data.state.OTDataField"/>
+    <import class="org.concord.datagraph.state.OTDataGraph"/>
+    <import class="org.concord.datagraph.state.OTDataAxis"/>
+    <import class="org.concord.datagraph.state.OTDataGraphable"/>
+    <import class="org.concord.datagraph.state.OTDataCollector"/>
+    <import class="org.concord.datagraph.state.OTMultiDataGraph"/>
+    <import class="org.concord.datagraph.state.OTPluginView"/>
 		<import class="org.concord.otrunk.udl2.OTUDLActivity" />
 		<import class="org.concord.otrunk.udl2.OTUDLExploration" />
 		<import class="org.concord.otrunk.udl.friction.OTFrictionModel" />
@@ -61,6 +67,11 @@
 		<import class="org.concord.otrunk.script.js.OTJavascript"/>
 		<import class="org.concord.otrunk.script.OTScriptEngineBundle"/>
 		<import class="org.concord.otrunk.script.OTScriptEngineEntry"/>
+		<import class="org.concord.sensor.state.OTDeviceConfig"/>
+		<import class="org.concord.sensor.state.OTExperimentRequest"/>
+		<import class="org.concord.sensor.state.OTInterfaceManager"/>
+		<import class="org.concord.sensor.state.OTSensorDataProxy"/>
+		<import class="org.concord.sensor.state.OTSensorRequest"/>
 	</imports>
 	<objects>
 		<OTSystem>
@@ -142,6 +153,11 @@
             				viewClass="org.concord.otrunk.udl.OTZoomView" />
             			<OTViewEntry objectClass="org.concord.otrunk.script.ui.OTScriptObject" 
             				viewClass="org.concord.otrunk.script.ui.OTScriptObjectView"/>
+            			<OTViewEntry viewClass="org.concord.datagraph.state.OTDataCollectorView" objectClass="org.concord.datagraph.state.OTDataCollector"/>
+          				<OTViewEntry viewClass="org.concord.datagraph.state.OTDataGraphView" objectClass="org.concord.datagraph.state.OTDataGraph"/>
+            			<OTViewEntry viewClass="org.concord.data.state.OTDataFieldView" objectClass="org.concord.data.state.OTDataField"/>
+						<OTViewEntry viewClass="org.concord.datagraph.state.OTMultiDataGraphView" objectClass="org.concord.datagraph.state.OTMultiDataGraph"/>
+						
 					</viewEntries>
 				</OTViewBundle>
 				<OTScriptEngineBundle>
@@ -613,6 +629,8 @@
 													Rub the penny <b>slowly</b> for 10 seconds, then stop for 5 seconds, and then 
 													<b>faster</b> for 10 seconds on the wood block. Don't push down harder! <p/>
 													<img src="http://udl.concord.org/share/Friction/penny-rub2.jpg"/><p/>
+													To start to collect data, press the <b>Start</b> button on the graph below.<p/>
+													<object refid="${tempgraph1}"/>
 												</li>
 												<li>
 													Describe the graph. Which had more heating effect, rubbing slowly or rubbing fast?<p/>
@@ -624,6 +642,32 @@
 											<documentRefs>
 												<OTText local_id="text70"/>
 												<OTText local_id="pennytext1"/>
+												<OTDataCollector name="datacollector" multipleGraphableEnabled="false" title="Temperature Sensor Graph" local_id="tempgraph1" autoScaleEnabled="true">
+									              <source>
+									                <OTDataGraphable name="Sensor" connectPoints="true" yColumn="1" drawMarks="false" color="0x0000ff" xColumn="0">
+									                  <dataProducer>
+									                    <OTSensorDataProxy name="dataproducer" local_id="dp_dc_id_1">
+									                      <request>
+									                        <OTExperimentRequest period="0.1">
+									                          <sensorRequests>
+									                            <OTSensorRequest stepSize="0.1" type="0" unit="degC" port="0" requiredMax="40.0" displayPrecision="-1" requiredMin="0.0"/>
+									                          </sensorRequests>
+									                        </OTExperimentRequest>
+									                      </request>
+									                    </OTSensorDataProxy>
+									                  </dataProducer>
+									                  <dataStore>
+									                    <OTDataStore local_id="ds_dc_id_1"/>
+									                  </dataStore>
+									                </OTDataGraphable>
+									              </source>
+									              <xDataAxis>
+									                <OTDataAxis max="60" units="s" min="0" label="Time"/>
+									              </xDataAxis>
+									              <yDataAxis>
+									                <OTDataAxis max="40.0" units="degC" min="0.0" label="Temperature"/>
+									              </yDataAxis>
+									            </OTDataCollector>
 											</documentRefs>
 										</OTCompoundDoc>
 									</content>
