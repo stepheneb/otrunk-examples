@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE otrunk [
+<!ENTITY telslogo "<p align='center'><img src='http://www.telscenter.org/images/logo_home.jpg' /><br/></p>">
+]>
 <otrunk id="33754150-b594-11d9-9669-0800200c9a66">
   <imports>
     <import class="org.concord.otrunk.OTSystem" />
@@ -7,18 +10,23 @@
     <import class="org.concord.biologica.state.OTSex" />
     <import class="org.concord.biologica.state.OTOrganism" />
     <import class="org.concord.biologica.state.OTWorld" />
+    <import class="org.concord.otrunk.ui.OTTextPane" />
+    <import class="org.concord.otrunk.ui.OTButton" />
+    <import class="org.concord.otrunk.ui.OTCardContainer" />
+    <import class="org.concord.otrunk.ui.OTText" />
     <import class="org.concord.otrunk.view.document.OTCompoundDoc" />
     <import class="org.concord.otrunk.script.ui.OTScriptObject" />
     <import class="org.concord.otrunk.script.js.OTJavascript" />
     <import class="org.concord.otrunk.script.OTScriptEngineBundle" />
     <import class="org.concord.otrunk.script.OTScriptEngineEntry" />
+    <import class="org.concord.framework.otrunk.view.OTFrame" />
   </imports>
 
   <objects>
     <OTSystem>
 
       <bundles>
-        <OTViewBundle>
+        <OTViewBundle showLeftPanel="false">
           <viewEntries>
             <OTViewEntry objectClass="org.concord.biologica.state.OTSex"
               viewClass="org.concord.biologica.state.ui.OTSexView" />
@@ -28,7 +36,16 @@
             <OTViewEntry
               objectClass="org.concord.otrunk.view.document.OTDocument"
               viewClass="org.concord.otrunk.view.document.OTDocumentView" />
+            <OTViewEntry objectClass="org.concord.otrunk.ui.OTTextPane"
+              viewClass="org.concord.otrunk.ui.swing.OTTextPaneView" />
+            <OTViewEntry objectClass="org.concord.otrunk.ui.OTButton"
+              viewClass="org.concord.otrunk.ui.swing.OTButtonView" />
+            <OTViewEntry objectClass="org.concord.otrunk.ui.OTCardContainer"
+              viewClass="org.concord.otrunk.ui.swing.OTCardContainerView" />
           </viewEntries>
+          <frame>
+            <OTFrame width="1100" height="660" />
+          </frame>
         </OTViewBundle>
         <OTScriptEngineBundle>
           <engines>
@@ -40,29 +57,38 @@
       </bundles>
 
       <root>
-        <OTCompoundDoc name="Meiosis" local_id="meiosis_page">
-          <bodyText>
-            <table width="880" height="620">
-              <tr>
-                <td>
-                  <object editable="true" refid="${meiosisView}" />
-                </td>
-                <td>Side Text</td>
-              </tr>
-              <tr height="40">
-                <td align="right">Buttons here</td>
-                <td align="center">Meiosis Button here</td>
-              </tr>
-            </table>
-            <object refid="${meiosis_script_object}" />
-          </bodyText>
+          <OTCompoundDoc name="Meiosis" local_id="meiosis_page">
+              <bodyText>
+                <table>
+                  <tr height="620">
+                    <td width="880">
+                      <object editable="true" refid="${meiosisView}" />
+                    </td>
+                    <td width="300"><object refid="${meiosis_cards}" /></td>
+                  </tr>
+                  <tr height="40">
+                    <td align="right"><object refid="${challenge_button}" /><object refid="${chromo_button}" /></td>
+                    <td align="center"></td>
+                  </tr>
+                </table>
+                <object refid="${meiosis_script_object}" />
+              </bodyText>
           <documentRefs>
-            <OTSex local_id="meiosisView" width="880" height="620" />
+            <OTSex local_id="meiosisView" width="880" height="620">
+              <fatherOrganism>
+                <object refid="${maleOrganism}" />
+              </fatherOrganism>
+              <motherOrganism>
+                <object refid="${femaleOrganism}" />
+              </motherOrganism>
+            </OTSex>
             <OTScriptObject local_id="meiosis_script_object">
               <referenceObjects>
                 <object refid="${meiosisView}" />
-                <object refid="${maleOrganism}" />
-                <object refid="${femaleOrganism}" />
+                <object refid="${meiosis_cards}" />
+                <object refid="${chromo_button}" />
+                <object refid="${challenge_button}" />
+                <object refid="${appState}" />
               </referenceObjects>
               <script>
                 <OTJavascript src="biologica-meiosis-screen.js" />
@@ -87,6 +113,130 @@
             <OTWorld
               speciesPath="org/concord/biologica/worlds/dragon.xml"
               local_id="dragon_world" />
+            <OTButton text="placeholder - no functionality" local_id="chromo_button" />
+            <OTButton text="placeholder - no functionality" local_id="challenge_button" />
+            <OTText text="foo" local_id="appState" />
+            <OTCardContainer local_id="meiosis_cards" width="300" height="620">
+              <cards>
+                <object refid="${meiosis_text}" />
+                <object refid="${motherMagnifiedStr}" />
+                <object refid="${fatherMagnifiedStr}" />
+                <object refid="${fertilizationStr}" />
+                <object refid="${fatherGameteSelectedStr}" />
+                <object refid="${motherGameteSelectedStr}" />
+                <object refid="${newOrganismStr}" />
+              </cards>
+              <currentCard>
+                <object refid="${meiosis_text}" />
+              </currentCard>
+            </OTCardContainer>
+            <OTTextPane local_id="meiosis_text" name="meiosisStr">
+              <text>
+                &telslogo;
+                <font size="5" color="black">
+                  <p>This is the Meiosis and Fertilization view. The round
+                  circles under the dragons are "germ cells". If you
+                  click on the "Play" button, or run the thumbnail to
+                  the right, you will run a simulation of meiosis, in
+                  which the germ cell will divide twice and produce four
+                  gametes. Select one of the gametes and click on the
+                  arrow key to move it into the fertilization chamber in
+                  the middle. Do this with both dragons and then run the
+                  fertilization animation to bring the two gametes
+                  together to form a fertilized egg, and --
+                <font color="red">presto!</font>
+                  -- a new dragon will appear.</p>
+                  <p>The new dragon gets its genes, and therefore its
+                  phenotype, from the gametes, so if you look at the
+                  chromosomes in the gametes -- and you know the
+                  genotype-to-phenotype rules! -- you should be able to
+                  predict what the baby dragon will look like. If you
+                  want to see the genes in the gametes, click on the
+                  little magnifying glass in the lower left corner of
+                  the gamete window. The letters represent the different
+                  alleles, or forms of genes, in that gamete.</p>
+                </font>
+              </text>
+            </OTTextPane>
+            <OTTextPane local_id="motherMagnifiedStr"
+              name="motherMagnifiedStr">
+              <text>
+                &telslogo;
+                <font size="5">
+                  <p>You are looking at the chromosomes of the mother under
+                  a magnifying glass. The labels attached to the
+                  chromosomes are the alleles -- the different versions
+                  of the genes. If you run Meiosis all the way to the
+                  end (either by using the Play button or by dragging
+                  the slider all the way to the right) the alleles will
+                  line up at the top of the window so you can see them
+                  more clearly.</p>
+                </font>
+              </text>
+            </OTTextPane>
+            <OTTextPane local_id="fatherMagnifiedStr"
+              name="fatherMagnifiedStr">
+              <text>
+                &telslogo;
+                <font size="5">
+                  <p>You are looking at the chromosomes of the father under
+                  a magnifying glass. The labels attached to the
+                  chromosomes are the alleles -- the different versions
+                  of the genes. If you run Meiosis all the way to the
+                  end (either by using the Play button or by dragging
+                  the slider all the way to the right) the alleles will
+                  line up at the top of the window so you can see them
+                  more clearly.</p>
+                </font>
+              </text>
+            </OTTextPane>
+            <OTTextPane local_id="fertilizationStr"
+              name="fertilizationStr">
+              <text>
+                &telslogo;
+                <font size="5">
+                  <p>You now have two gametes in the fertilization chamber
+                  -- one from each parent. Hit the Play button or drag
+                  the thumbnail to the right to run fertilization and
+                  create an offspring.</p>
+                </font>
+              </text>
+            </OTTextPane>
+            <OTTextPane local_id="fatherGameteSelectedStr"
+              name="fatherGameteSelectedStr">
+              <text>
+                &telslogo;
+                <font size="5">
+                  <p>You have selected a gamete from the father. If you
+                  want to use this gamete for fertilization use the
+                  arrow key to move it into the fertilization chamber.</p>
+                </font>
+              </text>
+            </OTTextPane>
+            <OTTextPane local_id="motherGameteSelectedStr"
+              name="motherGameteSelectedStr">
+              <text>
+                &telslogo;
+                <font size="5">
+                  <p>You have selected a gamete from the mother. If you
+                  want to use this gamete for fertilization use the
+                  arrow key to move it into the fertilization chamber.</p>
+                </font>
+              </text>
+            </OTTextPane>
+            <OTTextPane local_id="newOrganismStr"
+              name="newOrganismStr">
+              <text>
+                &telslogo;
+                <font size="5">
+                  <p>Congratulations, you've made a new baby dragon! Its
+                  physical traits are determined by its genes, using the
+                  rules you've already investigated. Half of those genes
+                  came from its mother and the other half from its
+                  father, which is why it has traits from both parents.</p>
+                </font>
+              </text>
+            </OTTextPane>
           </documentRefs>
         </OTCompoundDoc>
 
