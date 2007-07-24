@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<otrunk id="678b5190-0bcf-012a-b542-0017f2cc694e">
+
+  <imports>
+    <import class="org.concord.otrunk.OTSystem" />
+    <import class="org.concord.otrunk.view.OTViewEntry" />
+    <import class="org.concord.otrunk.view.OTViewBundle" />
+    <import class="org.concord.otrunk.ui.OTText" />
+    <import class="org.concord.otrunk.ui.OTButton" />
+    <import class="org.concord.otrunk.ui.OTPlacementContainer" />
+    <import class="org.concord.otrunk.ui.OTPlacement" />
+    <import class="org.concord.otrunk.ui.OTBorderContainer" />
+    <import class="org.concord.otrunk.ui.OTCardContainer" />
+    <import class="org.concord.otrunk.ui.OTViewChild" />
+    <import class="org.concord.otrunk.view.document.OTCompoundDoc" />
+    <import class="org.concord.otrunk.view.document.OTDocumentViewConfig" />
+    <import class="org.concord.otrunk.script.ui.OTScriptObject" />
+    <import class="org.concord.otrunk.script.js.OTJavascript" />
+    <import class="org.concord.otrunk.script.OTScriptEngineBundle" />
+    <import class="org.concord.otrunk.script.OTScriptEngineEntry" />
+    <import class="org.concord.otrunk.udl3.OTQuestion" />
+    <import class="org.concord.otrunk.udl3.OTQuestionList" />
+    <import class="org.concord.otrunk.ui.OTChoice" />
+  </imports>
+
+  <objects>
+    <OTSystem>
+      <bundles>
+        <OTViewBundle>
+          <views>
+          	<OTViewEntry
+				objectClass="org.concord.otrunk.ui.OTChoice"
+				viewClass="org.concord.otrunk.ui.swing.OTChoiceRadioButtonView" />
+          	<OTViewEntry
+          		objectClass="org.concord.otrunk.udl3.OTQuestion"
+          		viewClass="org.concord.otrunk.udl3.OTQuestionView" />
+            <OTViewEntry
+              objectClass="org.concord.otrunk.script.ui.OTScriptObject"
+              viewClass="org.concord.otrunk.script.ui.OTScriptObjectView" />
+            <OTViewEntry
+              objectClass="org.concord.otrunk.ui.OTCardContainer"
+              viewClass="org.concord.otrunk.ui.swing.OTCardContainerView" />
+            <OTViewEntry
+              objectClass="org.concord.otrunk.ui.OTBorderContainer"
+              viewClass="org.concord.otrunk.ui.swing.OTBorderContainerView" />
+            <OTViewEntry
+              objectClass="org.concord.otrunk.ui.OTPlacementContainer"
+              viewClass="org.concord.otrunk.ui.swing.OTPlacementContainerView" />
+            
+            <OTViewEntry local_id="text-edit"
+              	objectClass="org.concord.otrunk.ui.OTText" 
+              	viewClass="org.concord.otrunk.ui.swing.OTTextEditView"/>
+              	
+              	<OTViewEntry local_id="text-label" 
+            	objectClass="org.concord.otrunk.ui.OTText"
+              	viewClass="org.concord.otrunk.ui.swing.OTTextView" />
+            <OTDocumentViewConfig
+							local_id="compound_doc_view"
+							objectClass="org.concord.otrunk.view.document.OTCompoundDoc"
+							viewClass="org.concord.otrunk.view.document.OTDocumentView" 
+							css="body {font-size: 22;}"/>
+            <OTViewEntry objectClass="org.concord.otrunk.ui.OTButton"
+              viewClass="org.concord.otrunk.ui.swing.OTButtonView" />
+          </views>
+        </OTViewBundle>
+        <OTScriptEngineBundle>
+          <engines>
+            <OTScriptEngineEntry
+              objectClass="org.concord.otrunk.script.js.OTJavascript"
+              engineClass="org.concord.otrunk.script.js.OTJavascriptEngine" />
+          </engines>
+        </OTScriptEngineBundle>
+      </bundles>
+	  <library>
+	  	<OTText local_id="text1" />
+	  </library>
+      <root>
+            <OTCompoundDoc name="Card Layout">
+              <bodyText>
+              Hello...<br/>
+                <object refid="${card_container}" />
+                <br />
+                <object refid="${button1}" />
+                <object refid="${card_flip_script1}" />
+              </bodyText>
+            
+          <documentRefs>
+          
+          	<!-- This example shows the variety of objects that can be placed in the OTCardContainer.
+          		Of note is the OTViewChild, which allows you to specify the view used to display
+          		the OTObject. -->
+            <OTCardContainer local_id="card_container" name="Card Container">
+              <cards>
+                <object refid="${object1}" />
+                <object refid="${object2}" />
+                <object refid="${object3}" />
+                <object refid="${object4}" />
+                <object refid="${object5}" />
+              </cards>
+              <currentCard>
+                <object refid="${object1}" />
+              </currentCard>
+            </OTCardContainer>
+            
+            <OTQuestion local_id="object1" name="object1">
+            	<prompt>
+            		<OTCompoundDoc bodyText="Here is a question" />
+            	</prompt>
+            	<input>
+            		<OTViewChild viewid="${text-edit}">
+            			<object>
+            				<OTText/>
+            			</object>
+            		</OTViewChild>
+            	</input>
+            </OTQuestion>
+            <OTQuestion local_id="object2" name="object2">
+            	<prompt>
+            		<OTCompoundDoc>
+            			<bodyText>
+            				Here is a question. <br/> Here is a hint
+            			</bodyText>
+            		</OTCompoundDoc>
+            	</prompt>
+            	<input>
+            		<OTViewChild viewid="${text-edit}">
+            			<object>
+            				<OTText/>
+            			</object>
+            		</OTViewChild>
+            	</input>
+            </OTQuestion>
+            <OTQuestion local_id="object3" name="object3">
+            	<prompt>
+            		<OTCompoundDoc bodyText="Here is a question phrased differently" />
+            	</prompt>
+            	<input>
+            		<OTViewChild viewid="${text-edit}">
+            			<object>
+            				<OTText/>
+            			</object>
+            		</OTViewChild>
+            	</input>
+            </OTQuestion>
+            <OTQuestion local_id="object4" name="object4">
+            	<prompt>
+            		<OTCompoundDoc bodyText="Here is a question" />
+            	</prompt>
+            	<input>
+            		<OTViewChild viewid="${text-edit}">
+            			<object>
+            				<OTText text="Here is some initial text"/>
+            			</object>
+            		</OTViewChild>
+            	</input>
+            </OTQuestion>
+            <OTQuestion local_id="object5" name="object5">
+            	<prompt>
+            		<OTCompoundDoc bodyText="Here is a question" />
+            	</prompt>
+            	<input>
+            		<OTChoice>
+						<choices>
+							<OTText name="Here is an answer" />
+							<OTText name="Here is another answer" />
+						</choices>
+					</OTChoice>
+            	</input>
+            </OTQuestion>
+            
+            <OTQuestionList local_id="questionlist">
+            	<questions>
+            		<object refid="${object1}" />
+            		<object refid="${object2}" />
+            		<object refid="${object3}" />
+            		<object refid="${object4}" />
+            		<object refid="${object5}" />
+            	</questions>
+            </OTQuestionList>
+            
+            <OTButton local_id="button1" name="Button" text="Help" />
+            
+            
+            <OTScriptObject local_id="card_flip_script1">
+              <referenceObjects>
+                <object refid="${card_container}" />
+                <object refid="${button1}" />
+                <object refid="${questionlist}" />
+              </referenceObjects>
+              <script>
+                <OTJavascript src="set_button.js" />
+              </script>
+            </OTScriptObject>
+          </documentRefs>
+        </OTCompoundDoc>
+      </root>
+    </OTSystem>
+  </objects>
+</otrunk>
