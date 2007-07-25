@@ -1,43 +1,205 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<otrunk id="33754150-b594-11d9-9669-0800200c9a66" >
+<otrunk id="33754150-b594-11d9-9669-0800200c9a66">
   <imports>
-    <import class="org.concord.otrunk.OTSystem"/>
-    <import class="org.concord.otrunk.view.OTViewEntry"/>
-    <import class="org.concord.otrunk.view.OTViewService"/>
-    <import class="org.concord.otrunk.view.document.OTCompoundDoc"/>
-    <import class="org.concord.otrunk.view.document.OTTextObject"/>
-    <import class="org.concord.otrunkcck.OTCCKModel"/>
+    <import class="org.concord.otrunk.OTSystem" />
+    <import class="org.concord.otrunk.view.OTViewEntry" />
+    <import class="org.concord.otrunk.view.OTViewBundle" />
+    <import class="org.concord.otrunk.view.document.OTCompoundDoc" />
+    <import class="org.concord.otrunk.view.document.OTTextObject" />
+
+    <import class="org.concord.otrunk.ui.OTText" />
+
+    <import class="org.concord.otrunkcck.OTCCKModel" />
+
+    <import class="org.concord.otrunk.ui.OTImage" />
+    <import class="org.concord.otrunk.ui.OTImageViewConfig" />
+    <import class="org.concord.data.state.OTUnitValue" />
+    <import class="org.concord.data.state.OTUnitValueViewConfig" />
+
+    <import class="org.concord.otrunk.ui.notebook.OTNotebookMeasurement" />
+    <import class="org.concord.otrunk.ui.notebook.OTNotebook" />
+
+    <import class="org.concord.calculator.state.OTProgrammableCalculator" />
+    <import class="org.concord.calculator.state.OTProgrammableCalculatorTest" />
+    <import class="org.concord.calculator.state.OTExpression" />
+    <import class="org.concord.calculator.state.OTExpressionList" />
+    <import class="org.concord.calculator.state.OTExpressionSymbol" />
+    <import class="org.concord.calculator.state.OTExpressionSymbolList" />
+    <import class="org.concord.calculator.state.OTExpressionVariable" />
+    <import class="org.concord.calculator.state.OTExpressionConstant" />
+    <import class="org.concord.calculator.state.OTExpressionConstantList" />
+    <import class="org.concord.calculator.state.ui.OTProgrammableCalculatorViewEntry" />
+
+    <import class="org.concord.otrunk.script.ui.OTScriptObject" />
+    <import class="org.concord.otrunk.script.js.OTJavascript" />
+    <import class="org.concord.otrunk.script.OTScriptEngineBundle" />
+    <import class="org.concord.otrunk.script.OTScriptEngineEntry" />
   </imports>
   <objects>
     <OTSystem>
-      <services>
-        <OTViewService showLeftPanel="false">
+      <bundles>
+        <OTScriptEngineBundle>
+          <engines>
+            <OTScriptEngineEntry objectClass="org.concord.otrunk.script.js.OTJavascript" engineClass="org.concord.otrunk.script.js.OTJavascriptEngine" />
+          </engines>
+        </OTScriptEngineBundle>
+        <OTViewBundle showLeftPanel="true">
           <viewEntries>
-            <OTViewEntry
-              objectClass="org.concord.otrunkcck.OTCCKModel" 
-              viewClass="org.concord.otrunkcck.OTCCKCAPAModelView"/>
-            <OTViewEntry
-              objectClass="org.concord.otrunk.view.document.OTDocument" 
-              viewClass="org.concord.otrunk.view.document.OTDocumentView"/>
+            <OTViewEntry objectClass="org.concord.otrunk.script.ui.OTScriptObject" viewClass="org.concord.otrunk.script.ui.OTScriptObjectView" />
+            <OTUnitValueViewConfig objectClass="org.concord.data.state.OTUnitValue" viewClass="org.concord.data.state.OTUnitValueView">
+              <precision>1</precision>
+              <editable>false</editable>
+            </OTUnitValueViewConfig>
+            <OTViewEntry objectClass="org.concord.calculator.state.OTExpressionList" viewClass="org.concord.calculator.state.ui.OTExpressionListView" />
+            <OTViewEntry objectClass="org.concord.calculator.state.OTExpressionConstantList"
+              viewClass="org.concord.calculator.state.ui.OTExpressionConstantListView" />
+            <OTViewEntry objectClass="org.concord.calculator.state.OTExpressionConstant" viewClass="org.concord.calculator.state.ui.OTExpressionConstantView" />
+            <OTViewEntry objectClass="org.concord.calculator.state.OTExpressionVariable" viewClass="org.concord.calculator.state.ui.OTExpressionVariableView" />
+            <OTViewEntry objectClass="org.concord.calculator.state.OTExpression" viewClass="org.concord.calculator.state.ui.OTExpressionResultView"
+              local_id="resultViewEntry" />
+            <OTViewEntry objectClass="org.concord.calculator.state.OTExpressionSymbol" viewClass="org.concord.calculator.state.ui.OTExpressionSymbolView" />
+            <OTViewEntry objectClass="org.concord.calculator.state.OTExpressionSymbolList"
+              viewClass="org.concord.calculator.state.ui.OTExpressionSymbolListView" />
+            <OTProgrammableCalculatorViewEntry objectClass="org.concord.calculator.state.OTProgrammableCalculator"
+              viewClass="org.concord.calculator.state.ui.OTProgrammableCalculatorView">
+              <resultViewEntry>
+                <object refid="${resultViewEntry}" />
+              </resultViewEntry>
+            </OTProgrammableCalculatorViewEntry>
+            <OTViewEntry objectClass="org.concord.calculator.state.OTProgrammableCalculatorTest"
+              viewClass="org.concord.calculator.state.ui.OTProgrammableCalculatorTestView" />
+            <OTImageViewConfig objectClass="org.concord.otrunk.ui.OTImage" viewClass="org.concord.otrunk.ui.swing.OTImageView">
+              <preferredWidth>75</preferredWidth>
+              <preferredHeight>75</preferredHeight>
+              <zoomEnabled>true</zoomEnabled>
+            </OTImageViewConfig>
+            <OTViewEntry objectClass="org.concord.otrunk.ui.notebook.OTNotebook" viewClass="org.concord.otrunk.ui.notebook.OTNotebookView" />
+            <OTViewEntry objectClass="org.concord.otrunk.ui.notebook.OTNotebookMeasurement"
+              viewClass="org.concord.otrunk.ui.notebook.OTNotebookMeasurementView" />
+            <OTViewEntry objectClass="org.concord.otrunkcck.OTCCKModel" viewClass="org.concord.otrunkcck.OTCCKCAPAModelView" />
+            <OTViewEntry objectClass="org.concord.otrunk.view.document.OTDocument" viewClass="org.concord.otrunk.view.document.OTDocumentView" />
+            <OTViewEntry objectClass="org.concord.otrunk.ui.OTText" viewClass="org.concord.otrunk.ui.swing.OTTextEditView" />
           </viewEntries>
-        </OTViewService>
-      </services>
+        </OTViewBundle>
+      </bundles>
       <root>
-          <OTCompoundDoc name="CCK">
-            <bodyText>
+        <OTCompoundDoc name="CCK">
+          <bodyText>
+            <object refid="${cck_model}" />
+            <object refid="${measurement_recorder}" />
+          </bodyText>
+          <documentRefs>
+            <OTCCKModel name="CCK Model" local_id="cck_model" authoredDataURL="" useDCandAC="false"/>
+            <OTCompoundDoc name="Calculator" local_id="calculator_page">
+              <bodyText>
+                <object refid="${calc}" />
+              </bodyText>
+              <documentRefs>
+                <OTProgrammableCalculatorTest name="Calc Test" local_id="calc">
+                  <constants>
+                    <OTExpressionConstantList local_id="constantList1" name="ExpressionConstantList">
+                      <expressionConstants>
+                        <OTExpressionConstant local_id="constant1">
+                          <symbol>
+                            <OTExpressionSymbol local_id="constant1_symbol">
+                              <symbol>pi</symbol>
+                              <value>
+                                <OTUnitValue value="3.14159" unit="" />
+                              </value>
+                            </OTExpressionSymbol>
+                          </symbol>
+                          <note>
+                            <OTText local_id="constant1_annotation">
+                              <text>My text1</text>
+                            </OTText>
+                          </note>
+                        </OTExpressionConstant>
+                        <OTExpressionConstant local_id="constant2">
+                          <symbol>
+                            <OTExpressionSymbol local_id="constant2_symbol">
+                              <symbol>e</symbol>
+                              <value>
+                                <OTUnitValue value="2.71828" unit="" />
+                              </value>
+                            </OTExpressionSymbol>
+                          </symbol>
+                          <note>
+                            <OTText local_id="constant2_annotation">
+                              <text>My text2</text>
+                            </OTText>
+                          </note>
+                        </OTExpressionConstant>
+                      </expressionConstants>
+                    </OTExpressionConstantList>
+                  </constants>
+                  <notebook>
+                    <OTNotebook local_id="notebook" name="nb">
+                      <entries>
+                        <OTNotebookMeasurement>
+                          <notes>
+                            <OTText>
+                              <text>My text3</text>
+                            </OTText>
+                          </notes>
+                          <unitValue>
+                            <OTUnitValue value="21" unit="cm" />
+                          </unitValue>
+                          <image>
+                            <OTImage imageBytes="http://www.concord.org/images/logos/cc/cc-logo.gif" />
+                          </image>
+                        </OTNotebookMeasurement>
+                        <OTNotebookMeasurement>
+                          <notes>
+                            <OTText>
+                              <text>My text4</text>
+                            </OTText>
+                          </notes>
+                          <unitValue>
+                            <OTUnitValue value="42" unit="cm" />
+                          </unitValue>
+                          <image>
+                            <OTImage imageBytes="http://www.concord.org/images/logos/cc/cc-logo.gif" width="200" />
+                          </image>
+                        </OTNotebookMeasurement>
+                      </entries>
+                    </OTNotebook>
+                  </notebook>
+                  <calculator>
+                    <OTProgrammableCalculator name="Programmable Calc" local_id="calculator1">
+                      <expressionList>
+                        <OTExpressionList local_id="expressionlist1" name="ExpressionList">
+                          <expressions>
+                            <OTExpression local_id="expression1">
+                              <expression>f=m*a</expression>
+                            </OTExpression>
+                            <OTExpression local_id="expression2">
+                              <expression>f2=m*a</expression>
+                            </OTExpression>
+                            <OTExpression local_id="expression3">
+                              <expression>f3=m*a</expression>
+                            </OTExpression>
+                          </expressions>
+                        </OTExpressionList>
+                      </expressionList>
+                    </OTProgrammableCalculator>
+                  </calculator>
+                </OTProgrammableCalculatorTest>
+              </documentRefs>
+            </OTCompoundDoc>
+            <OTScriptObject local_id="measurement_recorder">
+            <referenceObjects>
               <object refid="${cck_model}" />
-            </bodyText>
-            <documentRefs>
-              <OTCCKModel name="CCK Model" local_id="cck_model"
-                authoredDataURL="" useDCandAC="false" />
-              <OTCompoundDoc name="Calculator" local_id="calculator_page">
-                <bodyText>Nothing here yet</bodyText>
-              </OTCompoundDoc>
-            </documentRefs>
-            <children>
-              <object refid="${calculator_page}" />
-            </children>
-          </OTCompoundDoc>
+              <object refid="${notebook}" />
+            </referenceObjects>
+              <script>
+                <OTJavascript src="measurement-recorder.js" />
+              </script>
+            </OTScriptObject>
+          </documentRefs>
+          <children>
+            <object refid="${calculator_page}" />
+          </children>
+        </OTCompoundDoc>
       </root>
     </OTSystem>
   </objects>

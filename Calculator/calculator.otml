@@ -21,11 +21,10 @@
     <import class="org.concord.calculator.state.OTExpressionList" />
     <import class="org.concord.calculator.state.OTExpressionSymbol" />
     <import class="org.concord.calculator.state.OTExpressionSymbolList" />
-    <import class="org.concord.calculator.state.OTExpressionResult" />
     <import class="org.concord.calculator.state.OTExpressionVariable" />
     <import class="org.concord.calculator.state.OTExpressionConstant" />
     <import class="org.concord.calculator.state.OTExpressionConstantList" />
-    <import class="org.concord.framework.otrunk.view.OTFrame" />
+    <import class="org.concord.calculator.state.ui.OTProgrammableCalculatorViewEntry" />
   </imports>
   <objects>
     <OTSystem>
@@ -55,9 +54,8 @@
               viewClass="org.concord.calculator.state.ui.OTExpressionVariableView">
             </OTViewEntry>
             <OTViewEntry
-              objectClass="org.concord.calculator.state.OTExpressionResult"
-              viewClass="org.concord.calculator.state.ui.OTExpressionResultView">
-            </OTViewEntry>
+              objectClass="org.concord.calculator.state.OTExpression"
+              viewClass="org.concord.calculator.state.ui.OTExpressionResultView" local_id="resultViewEntry" />
             <OTViewEntry
               objectClass="org.concord.calculator.state.OTExpressionSymbol"
               viewClass="org.concord.calculator.state.ui.OTExpressionSymbolView">
@@ -66,18 +64,13 @@
               objectClass="org.concord.calculator.state.OTExpressionSymbolList"
               viewClass="org.concord.calculator.state.ui.OTExpressionSymbolListView">
             </OTViewEntry>
-            <OTViewEntry
-              objectClass="org.concord.calculator.state.OTExpressionResult"
-              viewClass="org.concord.calculator.state.ui.OTExpressionResultView">
-            </OTViewEntry>
-            <OTViewEntry
-              objectClass="org.concord.calculator.state.OTExpressionVariable"
-              viewClass="org.concord.calculator.state.ui.OTExpressionVariableView">
-            </OTViewEntry>
-            <OTViewEntry
+            <OTProgrammableCalculatorViewEntry
               objectClass="org.concord.calculator.state.OTProgrammableCalculator"
               viewClass="org.concord.calculator.state.ui.OTProgrammableCalculatorView">
-            </OTViewEntry>
+              <resultViewEntry>
+                <object refid="${resultViewEntry}" />
+              </resultViewEntry>
+            </OTProgrammableCalculatorViewEntry>
             <OTViewEntry
               objectClass="org.concord.calculator.state.OTProgrammableCalculatorTest"
               viewClass="org.concord.calculator.state.ui.OTProgrammableCalculatorTestView">
@@ -127,20 +120,20 @@
             <OTExpressionSymbolList local_id="symbolList1"
               name="ExpressionSymbolList">
               <expressionSymbols>
-                <OTExpressionResult local_id="result1">
+                <OTExpressionSymbol local_id="result1">
                   <symbol>x</symbol>
                   <value>
                     <OTUnitValue local_id="unitvalue1" value="20.653"
                       unit="NONY" />
                   </value>
-                </OTExpressionResult>
-                <OTExpressionVariable local_id="variable1">
+                </OTExpressionSymbol>
+                <OTExpressionSymbol local_id="variable1">
                   <symbol>y</symbol>
                   <value>
                     <OTUnitValue local_id="unitvalue2" value="22.653"
                       unit="CM" />
                   </value>
-                </OTExpressionVariable>
+                </OTExpressionSymbol>
               </expressionSymbols>
             </OTExpressionSymbolList>
             <OTExpressionConstantList local_id="constantList1"
@@ -174,7 +167,8 @@
                 <object refid="${expressionlist1}" />
               </expressionList>
               <expressionSymbols>
-                <object refid="${symbolList1}" />
+                <object refid="${result1}" />
+                <object refid="${variable1}" />
               </expressionSymbols>
             </OTProgrammableCalculator>
             <OTProgrammableCalculatorTest name="Calc Test">
