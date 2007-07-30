@@ -9,17 +9,19 @@
 		<import class="org.concord.graph.util.state.OTDrawingShape"/>
 		<import class="org.concord.graph.util.state.OTDrawingTool2"/>
 		<import class="org.concord.otrunk.OTSystem" />
-		<import class="org.concord.otrunk.ui.OTText" />
-		<import class="org.concord.otrunk.ui.OTCardContainer" />
-		<import class="org.concord.otrunk.udl3.OTUDLMenu" />
-		<import class="org.concord.otrunk.udl3.OTUDLCSSModifier" />
-		<import class="org.concord.otrunk.udl3.OTUDLCSSGroup" />
-		<import class="org.concord.otrunk.udl3.OTUDLContainer" />
-		<import class="org.concord.otrunk.udl3.OTUDLSection" />
+		<import class="org.concord.otrunk.udl.OTUDLCharacter" />
+		<import class="org.concord.otrunk.udl.OTUDLCharacterGroup" />
+		<import class="org.concord.otrunk.udl.document.OTUDLCSSModifier" />
+		<import class="org.concord.otrunk.udl.document.OTUDLCSSGroup" />
 		<import class="org.concord.otrunk.udl.document.OTDefinition"/>
 		<import class="org.concord.otrunk.udl.document.OTDefinitionManager"/>
 		<import class="org.concord.otrunk.udl.document.OTUDLDocumentViewConfig" />
 		<import class="org.concord.otrunk.udl.document.OTUDLCompoundDoc" />
+		<import class="org.concord.otrunk.udl3.OTUDLMenu" />
+		<import class="org.concord.otrunk.udl3.OTUDLContainer" />
+		<import class="org.concord.otrunk.udl3.OTUDLSection" />
+		<import class="org.concord.otrunk.ui.OTText" />
+		<import class="org.concord.otrunk.ui.OTCardContainer" />
 		<import class="org.concord.otrunk.view.OTViewChild" />
 		<import class="org.concord.otrunk.view.document.OTCompoundDoc" />
 		<import class="org.concord.otrunk.view.OTViewEntry" />
@@ -35,14 +37,17 @@
 					</frame>
 					<views>
 						<OTViewEntry
+							objectClass="org.concord.otrunk.udl.OTUDLCharacterGroup"
+							viewClass="org.concord.otrunk.udl.OTUDLCharacterGroupView"/>
+						<OTViewEntry
 							objectClass="org.concord.otrunk.udl3.OTUDLSection"
 							viewClass="org.concord.otrunk.udl3.OTUDLSectionView" />
 						<OTViewEntry
 							objectClass="org.concord.otrunk.udl3.OTUDLContainer"
 							viewClass="org.concord.otrunk.udl3.OTUDLContainerView" />
 						<OTViewEntry
-							objectClass="org.concord.otrunk.udl3.OTUDLCSSModifier"
-							viewClass="org.concord.otrunk.udl3.OTUDLCSSModifierView" />
+							objectClass="org.concord.otrunk.udl.document.OTUDLCSSModifier"
+							viewClass="org.concord.otrunk.udl.document.OTUDLCSSModifierView" />
 						<OTViewEntry local_id="menu-vertical"
 							objectClass="org.concord.otrunk.udl3.OTUDLMenu"
 							viewClass="org.concord.otrunk.udl3.OTUDLMenuView4" />
@@ -89,6 +94,9 @@
 									font-size: 18;
 									BACKGROUND-COLOR: rgb(250, 250, 150);
 								}
+							a 	{
+									text-decoration: none;
+								}
 							DIV.body
 								{
 									BACKGROUND-COLOR: rgb(250, 255, 255);
@@ -99,6 +107,7 @@
 								  	TEXT-DECORATION: none
 								  	MARGIN: 5px;
 								  	PADDING: 8px;
+								  	height: 100%;
 								}
 							DIV.story
 								{
@@ -143,7 +152,7 @@
 								}
 							DIV.leftpanel
 								{
-								  BACKGROUND-COLOR: rgb(150, 150, 255);
+								  BACKGROUND-COLOR: rgb(135, 206, 255);
 								}
 							DIV.buffer
 								{
@@ -169,26 +178,22 @@
 					<title>
 						<OTCompoundDoc local_id="title">
 							<bodyText>
-								<div class="leftpanel-">
-									<img
-										src="http://udl.concord.org/share/udl-tree-only.png" width="80"
-										height="84" />
-									<br />
-									<div class="activity-title">
-										UDL Friction
+								<div class="buffer-">
+									<div class="leftpanel">
+										<img
+											src="http://udl.concord.org/share/udl-tree-only.png" width="70"
+											height="73" />
+										<br />
+										<div class="activity-title">
+											UDL Friction
+										</div>
 									</div>
 								</div>
 							</bodyText>
 						</OTCompoundDoc>
 					</title>
 					<menu>
-						<OTCompoundDoc>
-							<bodyText>
-								<div class="leftpanel">
-									<object refid="${menu}" viewid="${menu-vertical}" />
-								</div>
-							</bodyText>
-						</OTCompoundDoc>
+						<OTViewChild object="${menu}" viewid="${menu-vertical}" useScrollPane="true" scrollPanelHasBorder="false"/>
 					</menu>
 					<topBar>
 						<OTCompoundDoc>
@@ -198,7 +203,12 @@
 						</OTCompoundDoc>
 					</topBar>
 					<characters>
-						<object refid="${characters}" />
+						<OTUDLCharacterGroup>
+							<characters>
+								<OTUDLCharacter inactiveImageURL="http://upload.wikimedia.org/wikipedia/commons/4/4d/Crystal_Clear_app_katuberling.png"/>
+								<OTUDLCharacter inactiveImageURL="http://upload.wikimedia.org/wikipedia/commons/d/d7/Exquisite-gimp2_0.png"/>
+							</characters>
+						</OTUDLCharacterGroup>
 					</characters>
 					<content>
 						<OTCardContainer local_id="section-card-container">
@@ -671,7 +681,13 @@
 						</OTUDLCSSGroup>
 					</cssGroups>
 				</OTUDLCSSModifier>
-				<OTCompoundDoc bodyText="Characters" local_id="characters" />
+				<OTCompoundDoc local_id="characters">
+					<bodyText>
+						<div class="leftpanel">
+							Characters
+						</div>
+					</bodyText>
+				</OTCompoundDoc>
 				<OTUDLMenu local_id="introduction-menu" 
 					cardContainer="${introduction-card-container}" />
 				<OTUDLMenu local_id="exploration1-menu"
