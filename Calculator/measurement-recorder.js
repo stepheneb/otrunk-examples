@@ -13,6 +13,8 @@ var otNotebookObject = context.getObject("notebook");
 var cckModule = context.getViewForObject("cck_model").getModule();
 var apparatusPanel = context.getComponentForObject("cck_model");
 
+var previousValue = Double.NaN;
+
 function init() {
 	multimeter.addListener(multimeterHandler);
 	return true;
@@ -29,10 +31,12 @@ var multimeterHandler = new MultimeterModel.Listener() {
 	{
 		var value = multimeter.getCurrentValue();
 
-		if(Double.isNaN(value)) {
+		if(Double.isNaN(value) || Double.compare(previousValue, value) == 0) {
+			previousValue = value;
 			return;
 		}
 		else {
+			previousValue = value;
 			var units = "";
 			var state = multimeter.getState();
 			if (state == MultimeterModel.AMMETER_STATE) {
@@ -80,7 +84,7 @@ function logNotebook(value, units) {
 		notes.setText("Screenshot taken at " + (new java.util.Date()));
 				
 		uv.setValue(value);
-		System.err.println("Units: " + units);
+		// System.err.println("Units: " + units);
 		uv.setUnit(java.lang.String(units));
 				
 		measurement.setImage(image);
