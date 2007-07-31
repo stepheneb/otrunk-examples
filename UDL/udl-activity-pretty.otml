@@ -11,12 +11,14 @@
 		<import class="org.concord.otrunk.OTSystem" />
 		<import class="org.concord.otrunk.udl.OTUDLCharacter" />
 		<import class="org.concord.otrunk.udl.OTUDLCharacterGroup" />
-		<import class="org.concord.otrunk.udl.document.OTUDLCSSModifier" />
-		<import class="org.concord.otrunk.udl.document.OTUDLCSSGroup" />
+		<import class="org.concord.otrunk.udl.OTUDLCoachStatement" />
 		<import class="org.concord.otrunk.udl.document.OTDefinition"/>
 		<import class="org.concord.otrunk.udl.document.OTDefinitionManager"/>
-		<import class="org.concord.otrunk.udl.document.OTUDLDocumentViewConfig" />
 		<import class="org.concord.otrunk.udl.document.OTUDLCompoundDoc" />
+		<import class="org.concord.otrunk.udl.document.OTUDLCSSModifier" />
+		<import class="org.concord.otrunk.udl.document.OTUDLCSSGroup" />
+		<import class="org.concord.otrunk.udl.document.OTUDLDocumentViewConfig" />
+		<import class="org.concord.otrunk.udl3.OTQuestion" />
 		<import class="org.concord.otrunk.udl3.OTUDLMenu" />
 		<import class="org.concord.otrunk.udl3.OTUDLContainer" />
 		<import class="org.concord.otrunk.udl3.OTUDLSection" />
@@ -36,6 +38,9 @@
 						<OTFrame useScrollPane="false" width="850" height="600"/>
 					</frame>
 					<views>
+						<OTViewEntry
+							objectClass="org.concord.otrunk.udl3.OTQuestion"
+							viewClass="org.concord.otrunk.udl3.OTQuestionView" />
 						<OTViewEntry
 							objectClass="org.concord.otrunk.udl.OTUDLCharacterGroup"
 							viewClass="org.concord.otrunk.udl.OTUDLCharacterGroupView"/>
@@ -89,6 +94,7 @@
 							objectClass="org.concord.otrunk.view.document.OTCompoundDoc"
 							viewClass="org.concord.otrunk.udl.document.OTUDLDocumentView"
 							definitionManager="${definition-manager}"
+							characterGroup="${character-group}"
 							css="
 							body {
 									font-size: 18;
@@ -203,15 +209,53 @@
 						</OTCompoundDoc>
 					</topBar>
 					<characters>
-						<OTUDLCharacterGroup>
+						<OTUDLCharacterGroup local_id="character-group">
 							<characters>
-								<OTUDLCharacter inactiveImageURL="http://upload.wikimedia.org/wikipedia/commons/4/4d/Crystal_Clear_app_katuberling.png"/>
-								<OTUDLCharacter inactiveImageURL="http://upload.wikimedia.org/wikipedia/commons/d/d7/Exquisite-gimp2_0.png"/>
+								<OTUDLCharacter local_id="character_potato" inactiveImageURL="http://upload.wikimedia.org/wikipedia/commons/4/4d/Crystal_Clear_app_katuberling.png"/>
+								<OTUDLCharacter local_id="character_fox" inactiveImageURL="http://upload.wikimedia.org/wikipedia/commons/d/d7/Exquisite-gimp2_0.png"/>
 							</characters>
+							<speechFrame>
+								<OTFrame local_id="speech_frame" width="380"
+									height="340" borderlessPopup="false"/>
+							</speechFrame>
+							<tempStatement>
+								<OTCompoundDoc>
+									<bodyText>
+										<div class="buffer">
+											<div class="border">
+												<div class="body">
+													Here is a very clever and insightful suggestion.<br/>
+													<object refid="${coach-question}"/>
+												</div>
+											</div>
+										</div>
+									</bodyText>
+									<documentRefs>
+										<OTQuestion local_id="coach-question">
+											<prompt>
+												<OTCompoundDoc>
+													<bodyText>
+														<div class="body">
+															What do you think?
+														</div>
+													</bodyText>
+												</OTCompoundDoc>
+											</prompt>
+											<input>
+												<OTViewChild viewid="${text-edit}">
+													<object>
+														<OTText/>
+													</object>
+												</OTViewChild>
+											</input>
+										</OTQuestion>
+									</documentRefs>
+								</OTCompoundDoc>
+							</tempStatement>
 						</OTUDLCharacterGroup>
 					</characters>
 					<content>
-						<OTCardContainer local_id="section-card-container">
+						<OTCardContainer local_id="section-card-container" loadViewOnlyOnDemand="true">
 							<cards>
 								<OTUDLSection local_id="section_pretest"
 									name="Pretest" isPretest="true">
@@ -219,7 +263,7 @@
 										<OTCompoundDoc bodyText="Pretest" />
 									</header>
 									<content>
-										<OTCardContainer local_id="pretest-card-container" contentsMayScroll="true">
+										<OTCardContainer local_id="pretest-card-container" contentsMayScroll="true" loadViewOnlyOnDemand="true">
 											<cards>
 												<OTUDLCompoundDoc local_id="pretest-1" name="1">
 													<bodyText>
@@ -259,71 +303,84 @@
 										</OTCompoundDoc>
 									</header>
 									<content>
-										<OTCardContainer local_id="introduction-card-container" contentsMayScroll="true">
+										<OTCardContainer local_id="introduction-card-container" contentsMayScroll="true" loadViewOnlyOnDemand="true">
 											<cards>
-												<OTUDLCompoundDoc local_id="introduction-1" name="Driving question">
-													<bodyText>
-														<div class="buffer">
-															<div class="border">
-																<div class="body">
-																	<div class="subtitle">
-																		Driving Question
+														<OTUDLCompoundDoc local_id="introduction-1" name="Driving question">
+															<bodyText>
+																<div class="buffer">
+																	<div class="border">
+																		<div class="body">
+																			<div class="subtitle">
+																				Driving Question
+																			</div>
+																			What if there were no friction?<p/>
+																			<img src="http://udl.concord.org/share/Friction/Winter%20Activities%20155.png" border="1"/><p/>
+																			This module explores the role of friction in everyday life.
+																		</div>
 																	</div>
-																	What if there were no friction?<p/>
-																	<img src="http://udl.concord.org/share/Friction/Winter%20Activities%20155.png" border="1"/><p/>
-																	This module explores the role of friction in everyday life.
 																</div>
-															</div>
-														</div>
-													</bodyText>
-												</OTUDLCompoundDoc>
-												<OTUDLCompoundDoc name="Exploring the question">
-													<bodyText>
-														<div class="buffer">
-															<div class="border">
-																<div class="body">
-																	<div class="subtitle">
-																		Exploring the question
+															</bodyText>
+															<coachStatements>
+																<OTUDLCoachStatement coach="${character_potato}">
+																	<statement>
+																		<OTCompoundDoc>
+																			<bodyText>
+																				This is a very interesting suggestion.
+																			</bodyText>
+																		</OTCompoundDoc>
+																	</statement>
+																</OTUDLCoachStatement>
+															</coachStatements>
+														</OTUDLCompoundDoc>
+												
+														<OTUDLCompoundDoc name="Exploring the question">
+															<bodyText>
+																<div class="buffer">
+																	<div class="border">
+																		<div class="body">
+																			<div class="subtitle">
+																				Exploring the question
+																			</div>
+																			Jennifer lives in a world that would seem very strange to us. Everything is very slippery, like ice. 
+																			All of the surfaces have very little friction.  Friction is the name given to the force that makes 
+																			something slow down when it is sliding across another surface. <p/>
+																			
+																			Jennifer is used to her world with very little friction, but we would have trouble. <p/>
+																			
+																			<table>
+																				<tr>
+																					<td>
+																						Describe what it feels like to walk around on ice. 
+																						You can use pictures or words to describe what it is like. 
+																					</td>
+																					<td width="300">
+																						<object refid="${introtext1}"/>
+																					</td>
+																				</tr>
+																			</table>
+																			<object refid="${introdrawing1}"/><p />
+																			
+																			<table>
+																				<tr>
+																					<td>
+																						Name another surface that is very, very slippery!
+																					</td>
+																					<td width="300">
+																						<object refid="${introtext2}"/>
+																					</td>
+																				</tr>
+																			</table> 
+																		</div>
 																	</div>
-																	Jennifer lives in a world that would seem very strange to us. Everything is very slippery, like ice. 
-																	All of the surfaces have very little friction.  Friction is the name given to the force that makes 
-																	something slow down when it is sliding across another surface. <p/>
-																	
-																	Jennifer is used to her world with very little friction, but we would have trouble. <p/>
-																	
-																	<table>
-																		<tr>
-																			<td>
-																				Describe what it feels like to walk around on ice. 
-																				You can use pictures or words to describe what it is like. 
-																			</td>
-																			<td width="300">
-																				<object refid="${introtext1}"/>
-																			</td>
-																		</tr>
-																	</table>
-																	<object refid="${introdrawing1}"/><p />
-																	
-																	<table>
-																		<tr>
-																			<td>
-																				Name another surface that is very, very slippery!
-																			</td>
-																			<td width="300">
-																				<object refid="${introtext2}"/>
-																			</td>
-																		</tr>
-																	</table> 
 																</div>
-															</div>
-														</div>
-													</bodyText>
-													<documentRefs>
-														<OTText local_id="introtext1"/>
-														<OTText local_id="introtext2"/>
-														<OTDrawingTool2 local_id="introdrawing1"/>
-													</documentRefs>
-												</OTUDLCompoundDoc>
+															</bodyText>
+															<documentRefs>
+																<OTText local_id="introtext1"/>
+																<OTText local_id="introtext2"/>
+																<OTDrawingTool2 local_id="introdrawing1"/>
+															</documentRefs>
+														</OTUDLCompoundDoc>
+													
 											</cards>
 											<currentCard>
 												<object refid="${introduction-1}" />
@@ -358,7 +415,7 @@
 										</OTCompoundDoc>
 									</header>
 									<content>
-										<OTCardContainer local_id="exploration1-card-container" contentsMayScroll="true">
+										<OTCardContainer local_id="exploration1-card-container" contentsMayScroll="true" loadViewOnlyOnDemand="true">
 											<cards>
 												<OTUDLCompoundDoc local_id="exploration1-1" name="1">
 														<bodyText>
@@ -428,25 +485,25 @@
 										<OTCompoundDoc bodyText="Exploration 2" />
 									</header>
 									<content>
-										<OTCardContainer local_id="exploration2-card-container" contentsMayScroll="true">
+										<OTCardContainer local_id="exploration2-card-container" contentsMayScroll="true" loadViewOnlyOnDemand="true">
 											<cards>
-												<OTUDLCompoundDoc local_id="exploration2-1" name="1">
+												<OTUDLCompoundDoc local_id="exploration2-1" name="2-1">
 													<bodyText>
 														Exploration 2 part 1.
 													</bodyText>
 												</OTUDLCompoundDoc>
-												<OTUDLCompoundDoc local_id="exploration2-2" name="2">
+												<OTUDLCompoundDoc local_id="exploration2-2" name="2-2">
 													<bodyText>
 														Exploration 2 part 2
 													</bodyText>
 												</OTUDLCompoundDoc>
-												<OTUDLCompoundDoc local_id="exploration2-3" name="3">
+												<OTUDLCompoundDoc local_id="exploration2-3" name="2-3">
 													<bodyText>Exploration 2 part 3</bodyText>
 												</OTUDLCompoundDoc>
-												<OTUDLCompoundDoc local_id="exploration2-4" name="4">
+												<OTUDLCompoundDoc local_id="exploration2-4" name="2-4">
 													<bodyText>Exploration 2 part 4</bodyText>
 												</OTUDLCompoundDoc>
-												<OTUDLCompoundDoc local_id="exploration2-5" name="5">
+												<OTUDLCompoundDoc local_id="exploration2-5" name="2-5">
 													<bodyText>Exploration 2 part 5</bodyText>
 												</OTUDLCompoundDoc>
 											</cards>
@@ -477,7 +534,7 @@
 										<OTCompoundDoc bodyText="Exploration 3" />
 									</header>
 									<content>
-										<OTCardContainer local_id="exploration3-card-container" contentsMayScroll="true">
+										<OTCardContainer local_id="exploration3-card-container" contentsMayScroll="true" loadViewOnlyOnDemand="true">
 											<cards>
 												<OTUDLCompoundDoc local_id="exploration3-1" name="1">
 													<bodyText>
@@ -512,7 +569,7 @@
 										<OTCompoundDoc bodyText="Exploration 4" />
 									</header>
 									<content>
-										<OTCardContainer local_id="exploration4-card-container" contentsMayScroll="true">
+										<OTCardContainer local_id="exploration4-card-container" contentsMayScroll="true" loadViewOnlyOnDemand="true">
 											<cards>
 												<OTUDLCompoundDoc local_id="exploration4-1" name="1">
 													<bodyText>
@@ -547,7 +604,7 @@
 										<OTCompoundDoc bodyText="Exploration 5" />
 									</header>
 									<content>
-										<OTCardContainer local_id="exploration5-card-container" contentsMayScroll="true">
+										<OTCardContainer local_id="exploration5-card-container" contentsMayScroll="true" loadViewOnlyOnDemand="true">
 											<cards>
 												<OTUDLCompoundDoc local_id="exploration5-1" name="1">
 													<bodyText>
@@ -582,7 +639,7 @@
 										<OTCompoundDoc bodyText="Wrapup" />
 									</header>
 									<content>
-										<OTCardContainer local_id="exploration6-card-container" contentsMayScroll="true">
+										<OTCardContainer local_id="exploration6-card-container" contentsMayScroll="true" loadViewOnlyOnDemand="true">
 											<cards>
 												<OTUDLCompoundDoc local_id="exploration6-1" name="1">
 													<bodyText>
@@ -681,13 +738,6 @@
 						</OTUDLCSSGroup>
 					</cssGroups>
 				</OTUDLCSSModifier>
-				<OTCompoundDoc local_id="characters">
-					<bodyText>
-						<div class="leftpanel">
-							Characters
-						</div>
-					</bodyText>
-				</OTCompoundDoc>
 				<OTUDLMenu local_id="introduction-menu" 
 					cardContainer="${introduction-card-container}" />
 				<OTUDLMenu local_id="exploration1-menu"
