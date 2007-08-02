@@ -176,7 +176,7 @@
 																<object refid="${section_intro}"/>
 															</referenceObjects>
 															<script>
-																<object refid="${set_button.js}"/>
+																<object refid="${change_page.js}"/>
 															</script>
 														</OTScriptObject>
 														<OTChoice local_id="question1-56">
@@ -636,7 +636,7 @@
 																<object refid="${password}"/>
 															</referenceObjects>
 															<script>
-																<object refid="${set_button.js}"/>
+																<object refid="${change_page.js}"/>
 															</script>
 														</OTScriptObject>
 													</documentRefs>
@@ -691,11 +691,32 @@
 																		<li>Which of the following statements is <b>not</b> true?<br/>
 																			<object refId="${question4-56b}"/><p/></li>
 																	</ol>
+																	Click the <b>submit</b> button when you have finished.<br/>
+																	<table>
+																		<tr>
+																			<td>
+																				<object refId="${post-test-submit-button}"/>
+																				<object refId="${post-test-submit-script}"/>
+																			</td>
+																		</tr>
+																	</table>
 																</div>
 															</div>
 														</div>
 													</bodyText>
 													<documentRefs>
+														<OTButton local_id="post-test-submit-button" name="Button" text="Submit"/>
+														<OTText local_id="message" name="Message" 
+															text="You have now completed this unit. You may tell your teacher that you have finished." />
+														<OTScriptObject local_id="post-test-submit-script">
+															<referenceObjects>
+																<object refid="${post-test-submit-button}"/>
+																<object refid="${message}"/>
+															</referenceObjects>
+															<script>
+																<object refid="${show_message.js}"/>
+															</script>
+														</OTScriptObject>
 														<OTChoice local_id="question1-56b">
 															<choices>
 																<OTText name="It runs out of push"/>
@@ -940,7 +961,7 @@
 						</OTUDLMenuRule>
 					</rules>
 				</OTUDLMenuRule>
-				<OTJavascript local_id="set_button.js">
+				<OTJavascript local_id="change_page.js">
 					<script>
 						importClass(Packages.java.awt.event.ActionListener);
 						importClass(Packages.java.util.Vector);
@@ -971,6 +992,39 @@
 									}
 								}
 										cardContainer.setCurrentCard(card);
+								}
+						};
+						var buttonListener = new ActionListener(buttonHandler);
+
+						function init() {
+							button.addActionListener(buttonListener);
+
+							return true;
+						}
+
+						function save() {
+							button.removeActionListener(buttonListener);
+							return true;
+						}
+					</script>
+				</OTJavascript>
+				<OTJavascript local_id="show_message.js">
+					<script>
+						importClass(Packages.java.awt.event.ActionListener);
+						importClass(Packages.java.util.Vector);
+						importClass(Packages.org.concord.otrunk.udl3.OTQuestionList);
+						importClass(Packages.org.concord.framework.otrunk.OTObjectList);
+						importClass(Packages.javax.swing.JOptionPane);
+
+						var button = context.getComponentForObject("Button");
+						var message = context.getObject("Message");
+
+						var buttonHandler =
+						{
+								actionPerformed: function(evt)
+								{
+									var messageString = message.getText();
+									JOptionPane.showMessageDialog(null, messageString);
 								}
 						};
 						var buttonListener = new ActionListener(buttonHandler);
