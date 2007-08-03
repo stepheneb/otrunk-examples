@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<otrunk id="678b5190-0bcf-012a-b542-0017f2cc694e">
+
+	<imports>
+		<import class="org.concord.otrunk.OTSystem" />
+		<import class="org.concord.otrunk.view.OTViewEntry" />
+		<import class="org.concord.otrunk.view.OTViewBundle" />
+		<import class="org.concord.otrunk.ui.OTText" />
+		<import class="org.concord.otrunk.ui.OTButton" />
+		<import class="org.concord.otrunk.ui.OTPlacementContainer" />
+		<import class="org.concord.otrunk.ui.OTPlacement" />
+		<import class="org.concord.otrunk.ui.OTBorderContainer" />
+		<import class="org.concord.otrunk.ui.OTCardContainer" />
+		<import class="org.concord.otrunk.view.OTViewChild" />
+		<import class="org.concord.otrunk.view.document.OTCompoundDoc" />
+		<import
+			class="org.concord.otrunk.view.document.OTDocumentViewConfig" />
+		<import class="org.concord.otrunk.script.ui.OTScriptObject" />
+		<import class="org.concord.otrunk.script.js.OTJavascript" />
+		<import class="org.concord.otrunk.script.OTScriptEngineBundle" />
+		<import class="org.concord.otrunk.script.OTScriptEngineEntry" />
+		<import class="org.concord.otrunk.udl.document.OTUDLComment" />
+		<import class="org.concord.otrunk.udl3.OTQuestion" />
+		<import class="org.concord.otrunk.udl3.OTQuestionList" />
+		<import class="org.concord.otrunk.udl3.OTUDLQuestions" />
+		<import class="org.concord.otrunk.ui.OTChoice" />
+		<import class="org.concord.otrunk.view.OTViewMode" />
+	</imports>
+
+	<objects>
+		<OTSystem>
+			<bundles>
+				<OTViewBundle currentMode="reporting"
+					local_id="view-bundle" name="Bundle">
+					<views>
+						<OTViewEntry local_id="comment-view"
+							objectClass="org.concord.otrunk.udl.document.OTUDLComment"
+							viewClass="org.concord.otrunk.udl.document.OTUDLCommentLearnerView" />
+						<OTViewEntry local_id="questions-card-view"
+							objectClass="org.concord.otrunk.udl3.OTUDLQuestions"
+							viewClass="org.concord.otrunk.udl3.OTUDLQuestionsCardView" />
+
+						<OTViewEntry
+							objectClass="org.concord.otrunk.ui.OTChoice"
+							viewClass="org.concord.otrunk.ui.swing.OTChoiceRadioButtonView" />
+						<OTViewEntry
+							objectClass="org.concord.otrunk.udl3.OTQuestion"
+							viewClass="org.concord.otrunk.udl3.OTQuestionView" />
+						<OTViewEntry
+							objectClass="org.concord.otrunk.script.ui.OTScriptObject"
+							viewClass="org.concord.otrunk.script.ui.OTScriptObjectView" />
+						<OTViewEntry local_id="text-edit"
+							objectClass="org.concord.otrunk.ui.OTText"
+							viewClass="org.concord.otrunk.ui.swing.OTTextEditView" />
+						<OTViewEntry local_id="text-label"
+							objectClass="org.concord.otrunk.ui.OTText"
+							viewClass="org.concord.otrunk.ui.swing.OTTextView" />
+						<OTDocumentViewConfig
+							local_id="compound_doc_view"
+							name="Document_View"
+							objectClass="org.concord.otrunk.view.document.OTCompoundDoc"
+							viewClass="org.concord.otrunk.view.document.OTDocumentView"
+							css="body {font-size: 22;}"
+							mode="default" />
+						<OTViewEntry
+							objectClass="org.concord.otrunk.ui.OTButton"
+							viewClass="org.concord.otrunk.ui.swing.OTButtonView" />
+					</views>
+					<modes>
+						<OTViewMode name="default"/>
+						<OTViewMode name="reporting">
+							<map>
+								<entry key="${comment-view}">
+									<OTViewEntry
+										objectClass="org.concord.otrunk.udl.document.OTUDLComment"
+										viewClass="org.concord.otrunk.udl.document.OTUDLCommentTeacherView" />
+								</entry>
+								<entry key="${questions-card-view}">
+									<OTViewEntry
+										objectClass="org.concord.otrunk.udl3.OTUDLQuestions"
+										viewClass="org.concord.otrunk.udl3.OTUDLQuestionsReportView" />
+								</entry>
+							</map>
+						</OTViewMode>
+					</modes>
+				</OTViewBundle>
+				<OTScriptEngineBundle>
+					<engines>
+						<OTScriptEngineEntry
+							objectClass="org.concord.otrunk.script.js.OTJavascript"
+							engineClass="org.concord.otrunk.script.js.OTJavascriptEngine" />
+					</engines>
+				</OTScriptEngineBundle>
+			</bundles>
+			<library>
+				<OTText local_id="text1" />
+			</library>
+			<root>
+				<OTCompoundDoc name="Reporting example">
+					<bodyText>
+						Answer the following question:
+						<p />
+						<object refid="${udlquestions1}" />
+						<br />
+						<object refid="${comment}" viewid="${comment-view}"/>
+						<p />
+						<table>
+							<tr>
+								<td>
+									<object
+										refid="${switch-modes-button}" />
+									<object refid="${switch-script}" />
+								</td>
+							</tr>
+						</table>
+					</bodyText>
+					<documentRefs>
+						<OTUDLComment local_id="comment" text="Type your comment here..." />
+						<OTButton local_id="switch-modes-button" text="Switch modes" name="Button"/>
+						<OTScriptObject local_id="switch-script">
+							<referenceObjects>
+								<object refid="${switch-modes-button}" />
+								<object refid="${compound_doc_view}" />
+							</referenceObjects>
+							<script>
+								<object refid="${switch-modes.js}" />
+							</script>
+						</OTScriptObject>
+						<OTUDLQuestions local_id="udlquestions1">
+							<questions>
+								<OTQuestion local_id="object111"
+									name="L5">
+									<prompt>
+										<OTCompoundDoc>
+											<bodyText>
+												<div class="body">
+													Here is a question
+												</div>
+											</bodyText>
+										</OTCompoundDoc>
+									</prompt>
+									<input>
+										<OTViewChild
+											viewid="${text-edit}">
+											<object>
+												<OTText />
+											</object>
+										</OTViewChild>
+									</input>
+								</OTQuestion>
+								<OTQuestion local_id="object112"
+									name="L4">
+									<prompt>
+										<OTCompoundDoc>
+											<bodyText>
+												<div class="body">
+													Here is a question.
+													<br />
+													Here is a hint
+												</div>
+											</bodyText>
+										</OTCompoundDoc>
+									</prompt>
+									<input>
+										<OTViewChild
+											viewid="${text-edit}">
+											<object>
+												<OTText />
+											</object>
+										</OTViewChild>
+									</input>
+								</OTQuestion>
+								<OTQuestion local_id="object113"
+									name="L3">
+									<prompt>
+										<OTCompoundDoc>
+											<bodyText>
+												<div class="body">
+													Here is a question
+													that helps you out
+												</div>
+											</bodyText>
+										</OTCompoundDoc>
+									</prompt>
+									<input>
+										<OTCompoundDoc>
+											<bodyText>
+												<div class="body">
+													I think the answer
+													is
+													<object
+														refid="${text109}" viewid="${text-edit}" />
+													because
+													<br />
+													<object
+														refid="${text110}" viewid="${text-edit}" />
+												</div>
+											</bodyText>
+											<documentRefs>
+												<OTText
+													local_id="text109" />
+												<OTText
+													local_id="text110" />
+											</documentRefs>
+										</OTCompoundDoc>
+									</input>
+								</OTQuestion>
+								<OTQuestion local_id="object114"
+									name="L2">
+									<prompt>
+										<OTCompoundDoc>
+											<bodyText>
+												<div class="body">
+													Here is a question
+													with the initial
+													text in the window
+												</div>
+											</bodyText>
+										</OTCompoundDoc>
+									</prompt>
+									<input>
+										<OTViewChild
+											viewid="${text-edit}">
+											<object>
+												<OTText
+													text="I think the answer is" />
+											</object>
+										</OTViewChild>
+									</input>
+								</OTQuestion>
+								<OTQuestion local_id="object115"
+									name="L1">
+									<prompt>
+										<OTCompoundDoc>
+											<bodyText>
+												<div class="body">
+													Here is a
+													multiple-choice
+													question
+												</div>
+											</bodyText>
+										</OTCompoundDoc>
+									</prompt>
+									<input>
+										<OTChoice>
+											<choices>
+												<OTText
+													name="Here is an answer" />
+												<OTText
+													name="Here is another answer" />
+											</choices>
+										</OTChoice>
+									</input>
+								</OTQuestion>
+							</questions>
+						</OTUDLQuestions>
+					</documentRefs>
+				</OTCompoundDoc>
+			</root>
+			<library>
+				<OTJavascript local_id="switch-modes.js">
+					<script>
+						importClass(Packages.java.awt.event.ActionListener);
+						importClass(Packages.java.util.Vector);
+						importClass(Packages.org.concord.otrunk.udl3.OTQuestionList);
+						importClass(Packages.org.concord.framework.otrunk.OTObjectList);
+						importClass(Packages.javax.swing.JOptionPane);
+
+						var button = context.getComponentForObject("Button"); 
+						var view = context.getObject("Document_View");
+
+						var buttonHandler = { 
+							actionPerformed:
+								function(evt) { 
+									if (view.getMode().equals("default")){
+										view.setMode("reporting");
+									} else {
+										view.setMode("default");
+									}
+								} 
+						}; 
+						
+						var buttonListener = new ActionListener(buttonHandler);
+
+						function init() {
+							button.addActionListener(buttonListener);
+							return true; 
+						}
+
+						function save() {
+							button.removeActionListener(buttonListener);
+							return true; 
+						}
+					</script>
+				</OTJavascript>
+			</library>
+		</OTSystem>
+	</objects>
+</otrunk>
