@@ -75,7 +75,10 @@ var pageListener = new PageListener(pageHandler);
 
 
 // Initialize the listeners.
-page = context.getComponentForObject(0).getComponent(0);
+//page = context.getComponentForObject(0).getComponent(0);
+
+//page = context.viewContext.getComponentByObject(mwModelRef).getComponent(0);
+page = mwModelComponent.getComponent(0);
 page.addPageListener(pageListener);
 
 var contents = context.getContents();
