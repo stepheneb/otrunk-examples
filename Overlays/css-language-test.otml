@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<otrunk id="33754150-b594-11d9-9669-0800200c9a66" >
+
+  <imports>    
+    <import class="org.concord.otrunk.OTSystem"/>
+    <import class="org.concord.otrunk.overlay.OTOverlay"/>
+    <import class="org.concord.otrunk.view.OTViewEntry"/>
+    <import class="org.concord.otrunk.view.OTViewBundle"/>
+    <import class="org.concord.otrunk.ui.OTText"/>
+    <import class="org.concord.otrunk.view.prototype.OTPrototypeViewEntry"/>
+    <import class="org.concord.otrunk.view.prototype.OTPrototypeEventController"/>
+    <import class="org.concord.otrunk.view.prototype.OTPrototypeMapEntry"/>
+    <import class="org.concord.otrunk.ui.OTChoice"/>
+    <import class="org.concord.otrunk.udl.document.OTUDLCompoundDoc"/>
+    <import class="org.concord.otrunk.udl.document.OTUDLDocumentViewConfig"/>
+  </imports>
+  
+  <objects>
+    <OTSystem local_id="system">
+    
+      <bundles>
+        <OTViewBundle>
+          <viewEntries>
+            <OTUDLDocumentViewConfig 
+				local_id="compound_doc_view" 
+				objectClass="org.concord.otrunk.view.document.OTCompoundDoc" 
+				viewClass="org.concord.otrunk.udl.document.OTUDLDocumentView"
+				css="	body {	 font-size: 18;		BACKGROUND-COLOR: rgb(250, 250, 150);		}"/>
+            <OTViewEntry
+              objectClass="org.concord.otrunk.ui.OTText" 
+              viewClass="org.concord.otrunk.ui.swing.OTTextView"/>
+             <OTPrototypeViewEntry local_id="textsize_choice_view"
+            	objectClass="org.concord.otrunk.OTSystem"
+            	viewClass="org.concord.otrunk.view.prototype.OTPrototypeView"
+            	viewEntry="${choice_view}">
+            	<prototype>
+            	    <OTChoice>
+            	    	<choices>
+            	    		<OTOverlay name="Normal" local_id="normalsize_overlay"/>
+            	    		<OTOverlay name="Large" local_id="large_overlay">
+            	    			<deltaObjectMap>
+            	    				<entry key="${compound_doc_view}">
+            	    					<OTUDLDocumentViewConfig 
+											objectClass="org.concord.otrunk.view.document.OTCompoundDoc" 
+											viewClass="org.concord.otrunk.udl.document.OTUDLDocumentView"
+											css="	body {	 font-size: 28;		BACKGROUND-COLOR: rgb(250, 250, 150);		}"/>
+            	    				</entry>
+            	    			</deltaObjectMap>
+            	    		</OTOverlay>
+            	    	</choices>
+            	    </OTChoice>
+            	</prototype>
+            	<controller>
+            	    <!--  turn off the prototype copying so we can test this better -->
+            		<OTPrototypeEventController copyPrototype="false">
+            			<mapping>
+            			   <OTPrototypeMapEntry 
+            			   		modelProperty="overlays[1]" 
+            			   		prototypeProperty="currentChoice"/>
+            			</mapping>
+            		</OTPrototypeEventController>
+            	</controller>
+            </OTPrototypeViewEntry>
+            <OTPrototypeViewEntry local_id="language_choice_view"
+            	objectClass="org.concord.otrunk.OTSystem"
+            	viewClass="org.concord.otrunk.view.prototype.OTPrototypeView"
+            	viewEntry="${choice_view}">
+            	<prototype>
+            	    <OTChoice>
+            	    	<choices>
+            	    		<OTOverlay name="English" local_id="english_overlay"/>
+            	    		<OTOverlay name="Español" local_id="spanish_overlay">
+            	    			<deltaObjectMap>
+            	    				<entry key="${text1}">
+            	    					<OTUDLCompoundDoc>
+							          		<bodyText>Hola Mundo!</bodyText>
+							          	</OTUDLCompoundDoc>
+            	    				</entry>
+            	    			</deltaObjectMap>
+            	    		</OTOverlay>
+            	    		<!--  Hallo Welt -->
+            	    		<OTOverlay name="Deutsch" local_id="german_overlay">
+            	    			<deltaObjectMap>
+            	    				<entry key="${text1}">
+            	    					<OTText>
+            	    						<text>Hallo Welt!</text>
+            	    					</OTText>
+            	    				</entry>
+            	    			</deltaObjectMap>
+            	    		</OTOverlay>
+            	    	</choices>
+            	    </OTChoice>
+            	</prototype>
+            	<controller>
+            	    <!--  turn off the prototype copying so we can test this better -->
+            		<OTPrototypeEventController copyPrototype="true">
+            			<mapping>
+            			   <OTPrototypeMapEntry 
+            			   		modelProperty="overlays[0]" 
+            			   		prototypeProperty="currentChoice"/>
+            			</mapping>
+            		</OTPrototypeEventController>
+            	</controller>
+            </OTPrototypeViewEntry>
+            <OTViewEntry local_id="choice_view"
+              objectClass="org.concord.otrunk.ui.OTChoice"
+              viewClass="org.concord.otrunk.ui.swing.OTChoiceComboBoxView"/>
+          </viewEntries>
+        </OTViewBundle>
+      </bundles>
+
+      <overlays>
+        <object refid="${english_overlay}"/>
+        <object refid="${normalsize_overlay}"/>
+      </overlays>
+      
+      <root>
+        <OTUDLCompoundDoc>
+          <bodyText>
+            <object refid="${system}" viewid="${language_choice_view}"/>
+            <object refid="${system}" viewid="${textsize_choice_view}"/><br/>
+            <object refid="${text1}"/>            
+          </bodyText>
+          <documentRefs>
+          	<OTUDLCompoundDoc name="Text Object" local_id="text1">
+          		<bodyText>Hello World!</bodyText>
+          	</OTUDLCompoundDoc>		
+          </documentRefs>
+        </OTUDLCompoundDoc>
+      </root>
+      
+    </OTSystem>
+  </objects>
+</otrunk>
