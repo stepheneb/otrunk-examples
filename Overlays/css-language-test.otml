@@ -7,6 +7,7 @@
     <import class="org.concord.otrunk.view.OTViewEntry"/>
     <import class="org.concord.otrunk.view.OTViewBundle"/>
     <import class="org.concord.otrunk.ui.OTText"/>
+    <import class="org.concord.otrunk.view.document.OTCssText"/>
     <import class="org.concord.otrunk.view.prototype.OTPrototypeViewEntry"/>
     <import class="org.concord.otrunk.view.prototype.OTPrototypeEventController"/>
     <import class="org.concord.otrunk.view.prototype.OTPrototypeMapEntry"/>
@@ -24,8 +25,14 @@
             <OTUDLDocumentViewConfig 
 				local_id="compound_doc_view" 
 				objectClass="org.concord.otrunk.view.document.OTCompoundDoc" 
-				viewClass="org.concord.otrunk.udl.document.OTUDLDocumentView"
-				css="	body {	 font-size: 18;		BACKGROUND-COLOR: rgb(250, 250, 150);		}"/>
+				viewClass="org.concord.otrunk.udl.document.OTUDLDocumentView">
+				<cssBlocks>
+					<OTCssText local_id="css-text-size"
+						cssText="body {	 font-size: 18;}"/>
+					<OTCssText local_id="css-background-color"
+						cssText="body {	 BACKGROUND-COLOR: rgb(250, 250, 150);}"/>
+				</cssBlocks>
+			</OTUDLDocumentViewConfig>
             <OTViewEntry
               objectClass="org.concord.otrunk.ui.OTText" 
               viewClass="org.concord.otrunk.ui.swing.OTTextView"/>
@@ -36,12 +43,12 @@
             	<prototype>
             	    <OTChoice>
             	    	<choices>
-            	    		<OTOverlay name="Normal" local_id="normalsize_overlay"/>
-            	    		<OTOverlay name="Large" local_id="large_overlay">
+            	    		<OTOverlay name="Normal text" local_id="normalsize_overlay"/>
+            	    		<OTOverlay name="Large text" local_id="large_overlay">
             	    			<deltaObjectMap>
-            	    				<entry key="${compound_doc_view}">
-            	    					<OTUDLDocumentViewConfig 
-											css="	body {	 font-size: 28;		BACKGROUND-COLOR: rgb(250, 250, 150);		}"/>
+            	    				<entry key="${css-text-size}">
+            	    					<OTCssText
+											cssText="body {	 font-size: 28;}"/>
             	    				</entry>
             	    			</deltaObjectMap>
             	    		</OTOverlay>
@@ -54,6 +61,36 @@
             			<mapping>
             			   <OTPrototypeMapEntry 
             			   		modelProperty="overlays[1]" 
+            			   		prototypeProperty="currentChoice"/>
+            			</mapping>
+            		</OTPrototypeEventController>
+            	</controller>
+            </OTPrototypeViewEntry>
+            <OTPrototypeViewEntry local_id="color_choice_view"
+            	objectClass="org.concord.otrunk.OTSystem"
+            	viewClass="org.concord.otrunk.view.prototype.OTPrototypeView"
+            	viewEntry="${choice_view}">
+            	<prototype>
+            	    <OTChoice>
+            	    	<choices>
+            	    		<OTOverlay name="Yellow" local_id="yellow_overlay"/>
+            	    		<OTOverlay name="White" local_id="white_overlay">
+            	    			<deltaObjectMap>
+            	    				<entry key="${css-background-color}">
+            	    					<OTCssText
+											cssText="body {	 BACKGROUND-COLOR: rgb(255, 255, 255);}"/>
+            	    				</entry>
+            	    			</deltaObjectMap>
+            	    		</OTOverlay>
+            	    	</choices>
+            	    </OTChoice>
+            	</prototype>
+            	<controller>
+            	    <!--  turn off the prototype copying so we can test this better -->
+            		<OTPrototypeEventController copyPrototype="false">
+            			<mapping>
+            			   <OTPrototypeMapEntry 
+            			   		modelProperty="overlays[2]" 
             			   		prototypeProperty="currentChoice"/>
             			</mapping>
             		</OTPrototypeEventController>
@@ -80,9 +117,9 @@
             	    		<OTOverlay name="Deutsch" local_id="german_overlay">
             	    			<deltaObjectMap>
             	    				<entry key="${text1}">
-            	    					<OTText>
-            	    						<text>Hallo Welt!</text>
-            	    					</OTText>
+            	    					<OTUDLCompoundDoc>
+							          		<bodyText>Hallo Welt!</bodyText>
+							          	</OTUDLCompoundDoc>
             	    				</entry>
             	    			</deltaObjectMap>
             	    		</OTOverlay>
@@ -110,13 +147,15 @@
       <overlays>
         <object refid="${english_overlay}"/>
         <object refid="${normalsize_overlay}"/>
+        <object refid="${yellow_overlay}"/>
       </overlays>
       
       <root>
         <OTUDLCompoundDoc>
           <bodyText>
             <object refid="${system}" viewid="${language_choice_view}"/>
-            <object refid="${system}" viewid="${textsize_choice_view}"/><br/>
+            <object refid="${system}" viewid="${textsize_choice_view}"/>
+            <object refid="${system}" viewid="${color_choice_view}"/><br/>
             <object refid="${text1}"/>            
           </bodyText>
           <documentRefs>
