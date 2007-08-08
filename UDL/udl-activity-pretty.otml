@@ -29,6 +29,7 @@
 		<import class="org.concord.otrunk.udl3.OTUDLMenu"/>
 		<import class="org.concord.otrunk.udl3.OTUDLContainer"/>
 		<import class="org.concord.otrunk.udl3.OTUDLQuestions" />
+		<import class="org.concord.otrunk.udl3.OTUDLQuestionViewConfig" />
 		<import class="org.concord.otrunk.udl3.OTUDLSection"/>
 		<import class="org.concord.otrunk.ui.OTButton"/>
 		<import class="org.concord.otrunk.ui.OTCardContainer"/>
@@ -38,6 +39,7 @@
 		<import class="org.concord.otrunk.ui.snapshot.OTSnapshot"/>
 		<import class="org.concord.otrunk.ui.snapshot.OTSnapshotButton"/>
 		<import class="org.concord.otrunk.ui.snapshot.OTSnapshotAlbum"/>
+		<import class="org.concord.otrunk.ui.swing.OTChoiceViewConfig"/>
 		<import class="org.concord.graph.util.state.OTDrawingTool"/>
 		<import class="org.concord.graph.util.state.OTDrawingStamp"/>
 		<import class="org.concord.graph.util.state.OTDrawingImageIcon"/>
@@ -59,12 +61,14 @@
 						<OTFrame useScrollPane="false" width="850" height="600"/>
 					</frame>
 					<views>
-						<OTViewEntry local_id="questions-card-view" objectClass="org.concord.otrunk.udl3.OTUDLQuestions" viewClass="org.concord.otrunk.udl3.OTUDLQuestionsCardView" />
+						<!-- The OTUDLQuestionViewConfig can be used to set the default scaffolding level, and whether the student can navigate through the levels.
+						  The default scaffolding level just uses the order of the items inside OTUDLQuestions/questions. It is not aware of the names
+						  such as "L1", "L2", etc. -->
+						<OTUDLQuestionViewConfig local_id="questions-card-view" isLevelFrozen="false" defaultScaffoldLevel="3" objectClass="org.concord.otrunk.udl3.OTUDLQuestions" viewClass="org.concord.otrunk.udl3.OTUDLQuestionsCardView" />
 						<OTViewEntry objectClass="org.concord.otrunk.ui.OTImage" viewClass="org.concord.otrunk.ui.swing.OTImageView" />
 						<OTViewEntry local_id="snapshot_button_view" objectClass="org.concord.otrunk.ui.snapshot.OTSnapshotButton" viewClass="org.concord.otrunk.ui.snapshot.OTSnapshotButtonView"/>
 						<OTViewEntry objectClass="org.concord.otrunk.ui.snapshot.OTSnapshotAlbum" viewClass="org.concord.otrunk.ui.snapshot.OTSnapshotAlbumView"/>
 						<OTViewEntry objectClass="org.concord.otrunk.udl.friction.OTFrictionModel" viewClass="org.concord.otrunk.udl.friction.OTFrictionModelView" />
-						<OTViewEntry objectClass="org.concord.otrunk.ui.OTChoice" viewClass="org.concord.otrunk.ui.swing.OTChoiceRadioButtonView"/>
 						<OTViewEntry objectClass="org.concord.otrunk.ui.OTButton" viewClass="org.concord.otrunk.ui.swing.OTButtonView"/>
 						<OTViewEntry objectClass="org.concord.otrunk.script.ui.OTScriptObject" viewClass="org.concord.otrunk.script.ui.OTScriptObjectView"/>
 						<OTViewEntry objectClass="org.concord.otrunk.ui.OTButton" viewClass="org.concord.otrunk.ui.swing.OTButtonView"/>
@@ -76,7 +80,7 @@
 						<OTViewEntry local_id="menu-vertical" objectClass="org.concord.otrunk.udl3.OTUDLMenu" viewClass="org.concord.otrunk.udl3.OTUDLMenuView4"/>
 						<OTViewEntry local_id="menu-horizontal-circle" objectClass="org.concord.otrunk.udl3.OTUDLMenu" viewClass="org.concord.otrunk.udl3.OTUDLMenuHorizontalView2"/>
 						<OTViewEntry objectClass="org.concord.otrunk.udl3.OTQuestion" viewClass="org.concord.otrunk.udl3.OTQuestionView"/>
-						<OTViewEntry objectClass="org.concord.otrunk.ui.OTChoice" viewClass="org.concord.otrunk.ui.swing.OTChoiceRadioButtonView" local_id="choice-radio-view"/>
+						<OTChoiceViewConfig objectClass="org.concord.otrunk.ui.OTChoice" viewClass="org.concord.otrunk.ui.swing.OTChoiceRadioButtonView" useViewsAsChoices="true" local_id="choice-radio-view"/>
 						<OTViewEntry objectClass="org.concord.otrunk.ui.OTChoice"  viewClass="org.concord.otrunk.ui.swing.OTChoiceComboBoxView" local_id="choice-combo-view" />
 						<OTViewEntry objectClass="org.concord.otrunk.udl3.OTQuestion" viewClass="org.concord.otrunk.udl3.OTQuestionView"/>
 						<OTViewEntry objectClass="org.concord.otrunk.script.ui.OTScriptObject" viewClass="org.concord.otrunk.script.ui.OTScriptObjectView"/>
@@ -449,9 +453,27 @@
 														</OTScriptObject>
 														<OTChoice local_id="question1-56">
 															<choices>
-																<OTText name="It runs out of push"/>
-																<OTText name="It rubs against the ice"/>
-																<OTText name="In runs out of electricity"/>
+																<OTCompoundDoc>
+																	<bodyText>
+																		<div class="body-no-border">
+																			It runs out of push
+																		</div>
+																	</bodyText>
+																</OTCompoundDoc>
+																<OTCompoundDoc>
+																	<bodyText>
+																		<div class="body-no-border">
+																			It rubs against the ice
+																		</div>
+																	</bodyText>
+																</OTCompoundDoc>
+																<OTCompoundDoc>
+																	<bodyText>
+																		<div class="body-no-border">
+																			In runs out of electricity
+																		</div>
+																	</bodyText>
+																</OTCompoundDoc>
 															</choices>
 														</OTChoice>
 														<OTChoice local_id="question2-56">
