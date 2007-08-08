@@ -9,6 +9,7 @@
 		<import class="org.concord.graph.util.state.OTDrawingShape"/>
 		<import class="org.concord.graph.util.state.OTDrawingTool2"/>
 		<import class="org.concord.otrunk.OTSystem"/>
+		<import class="org.concord.otrunk.overlay.OTOverlay"/>
 		<import class="org.concord.otrunk.script.ui.OTScriptObject"/>
 		<import class="org.concord.otrunk.script.js.OTJavascript"/>
 		<import class="org.concord.otrunk.script.OTScriptEngineBundle"/>
@@ -42,12 +43,16 @@
 		<import class="org.concord.graph.util.state.OTDrawingImageIcon"/>
 		<import class="org.concord.graph.util.state.OTDrawingShape"/>
 		<import class="org.concord.otrunk.view.OTViewChild"/>
-		<import class="org.concord.otrunk.view.document.OTCompoundDoc"/>
 		<import class="org.concord.otrunk.view.OTViewEntry"/>
 		<import class="org.concord.otrunk.view.OTViewBundle"/>
+		<import class="org.concord.otrunk.view.document.OTCompoundDoc"/>
+		<import class="org.concord.otrunk.view.document.OTCssText"/>
+		<import class="org.concord.otrunk.view.prototype.OTPrototypeViewEntry"/>
+	    <import class="org.concord.otrunk.view.prototype.OTPrototypeEventController"/>
+	    <import class="org.concord.otrunk.view.prototype.OTPrototypeMapEntry"/>
 	</imports>
 	<objects>
-		<OTSystem>
+		<OTSystem local_id="system">
 			<bundles>
 				<OTViewBundle showLeftPanel="false">
 					<frame>
@@ -71,7 +76,8 @@
 						<OTViewEntry local_id="menu-vertical" objectClass="org.concord.otrunk.udl3.OTUDLMenu" viewClass="org.concord.otrunk.udl3.OTUDLMenuView4"/>
 						<OTViewEntry local_id="menu-horizontal-circle" objectClass="org.concord.otrunk.udl3.OTUDLMenu" viewClass="org.concord.otrunk.udl3.OTUDLMenuHorizontalView2"/>
 						<OTViewEntry objectClass="org.concord.otrunk.udl3.OTQuestion" viewClass="org.concord.otrunk.udl3.OTQuestionView"/>
-						<OTViewEntry objectClass="org.concord.otrunk.ui.OTChoice" viewClass="org.concord.otrunk.ui.swing.OTChoiceRadioButtonView"/>
+						<OTViewEntry objectClass="org.concord.otrunk.ui.OTChoice" viewClass="org.concord.otrunk.ui.swing.OTChoiceRadioButtonView" local_id="choice-radio-view"/>
+						<OTViewEntry objectClass="org.concord.otrunk.ui.OTChoice"  viewClass="org.concord.otrunk.ui.swing.OTChoiceComboBoxView" local_id="choice-combo-view" />
 						<OTViewEntry objectClass="org.concord.otrunk.udl3.OTQuestion" viewClass="org.concord.otrunk.udl3.OTQuestionView"/>
 						<OTViewEntry objectClass="org.concord.otrunk.script.ui.OTScriptObject" viewClass="org.concord.otrunk.script.ui.OTScriptObjectView"/>
 						<OTViewEntry objectClass="org.concord.otrunk.ui.OTCardContainer" viewClass="org.concord.otrunk.ui.swing.OTCardContainerView"/>
@@ -79,7 +85,214 @@
 						<OTViewEntry objectClass="org.concord.otrunk.ui.OTPlacementContainer" viewClass="org.concord.otrunk.ui.swing.OTPlacementContainerView"/>
 						<OTViewEntry local_id="text-edit" objectClass="org.concord.otrunk.ui.OTText" viewClass="org.concord.otrunk.ui.swing.OTTextEditView"/>
 						<OTViewEntry local_id="text-label" objectClass="org.concord.otrunk.ui.OTText" viewClass="org.concord.otrunk.ui.swing.OTTextView"/>
-						<OTUDLDocumentViewConfig local_id="compound_doc_view" objectClass="org.concord.otrunk.view.document.OTCompoundDoc" viewClass="org.concord.otrunk.udl.document.OTUDLDocumentView" definitionManager="${definition-manager}" css="	body {	 font-size: 18;		BACKGROUND-COLOR: rgb(250, 250, 150);		}		a {		 text-decoration: none;		}		DIV.body	 {	 BACKGROUND-COLOR: rgb(250, 255, 255);	 FONT-WEIGHT: bolder;		FONT-STYLE: normal;		 FONT-FAMILY: Verdana, Arial;		 FONT-VARIANT: normal;		TEXT-DECORATION: none		 MARGIN: 5px;		 PADDING: 8px;		height: 100%;		}		DIV.story		{		BORDER-COLOR: gray;		 BORDER-WIDTH: 1px;		 BORDER-STYLE: solid;		 PADDING-RIGHT: 10px;		 PADDING-LEFT: 10px;	 FONT-WEIGHT: bolder;		PADDING-BOTTOM: 10px;		 MARGIN: 2px 10% 10px;	 COLOR: rgb(0,0,0);		PADDING-TOP: 10px;	 MARGIN: 10px;	 }	 DIV.activity-title		{		 font-size: 35;		 FONT-WEIGHT: bold;		 MARGIN: 2px 10% 10px;	 COLOR: rgb(0,0,0);		}		DIV.title		{		font-size: 30;	 FONT-WEIGHT: bold;		PADDING-BOTTOM: 10px;		 PADDING-LEFT: 20px;	 MARGIN: 2px 10% 10px;		COLOR: rgb(0,0,0);		PADDING-TOP: 10px;	 }	 DIV.subtitle		{		 font-size: 25;		 FONT-WEIGHT: bold;		 PADDING-BOTTOM: 10px;	 PADDING-LEFT: 20px;		MARGIN: 2px 10% 10px;		COLOR: rgb(0,0,0);	 PADDING-TOP: 10px;		}	 DIV.leftpanel	 {		BACKGROUND-COLOR: rgb(135, 206, 255);		}		DIV.buffer	 {		PADDING: 10px;		BACKGROUND-COLOR: rgb(250, 250, 150);		}		DIV.border	 {		PADDING: 3px;		BACKGROUND-COLOR: #FF6600;	 }	DIV.definition-border		{		 PADDING: 3px;	 BACKGROUND-COLOR: rgb(0, 0, 255);	 } DIV.question { BACKGROUND-COLOR: rgb(230, 230, 250); }"/>
+						<OTUDLDocumentViewConfig 
+							local_id="compound_doc_view" 
+							objectClass="org.concord.otrunk.view.document.OTCompoundDoc" 
+							viewClass="org.concord.otrunk.udl.document.OTUDLDocumentView" 
+							definitionManager="${definition-manager}">
+							<cssBlocks>
+								<OTCssText local_id="css-font"
+									cssText="
+										body {	 
+											font-size: 18; 
+										}
+										a {		 
+											text-decoration: none;		
+										}
+										DIV.body {	 	 
+											FONT-WEIGHT: bolder;		
+											FONT-STYLE: normal;		 
+											FONT-FAMILY: Verdana, Arial;		 
+											FONT-VARIANT: normal;		
+											TEXT-DECORATION: none		
+										}
+										DIV.story {
+											FONT-WEIGHT: bolder;
+										}
+										DIV.activity-title {		 
+											font-size: 35;		 
+											FONT-WEIGHT: bold;
+										}		
+										DIV.title {		
+											font-size: 30;	 
+											FONT-WEIGHT: bold;
+										}
+										DIV.subtitle {		 
+											font-size: 25;		 
+											FONT-WEIGHT: bold;
+										}"/>
+								<OTCssText local_id="css-color"
+									cssText="
+										body {	 
+											BACKGROUND-COLOR: rgb(250, 250, 150); 
+										}
+										DIV.body {	 	 
+											BACKGROUND-COLOR: rgb(250, 255, 255);
+										}
+										DIV.story {
+											BORDER-COLOR: gray;
+											COLOR: rgb(0,0,0);
+										}
+										DIV.activity-title {		 
+											COLOR: rgb(0,0,0);
+										}		
+										DIV.title {		
+											COLOR: rgb(0,0,0);
+										}
+										DIV.subtitle {		 
+											COLOR: rgb(0,0,0);
+										}
+										DIV.leftpanel {		
+											BACKGROUND-COLOR: rgb(135, 206, 255);
+										}
+										DIV.buffer {		
+											BACKGROUND-COLOR: rgb(250, 250, 150);
+										}		
+										DIV.border {
+											BACKGROUND-COLOR: #FF6600;	 
+										}	
+										DIV.definition-border {
+											BACKGROUND-COLOR: rgb(0, 0, 255);
+										} 
+										DIV.question { 
+											BACKGROUND-COLOR: rgb(230, 230, 250); 
+										}
+										"/>
+								<OTCssText local_id="css-layout"
+									cssText="
+										DIV.body {	 	 
+											 MARGIN: 5px;		 
+											 PADDING: 8px;		
+											 height: 100%;
+										}
+										DIV.story {
+											 PADDING-RIGHT: 10px;		 
+											 PADDING-LEFT: 10px;
+											 PADDING-BOTTOM: 10px;
+											 PADDING-TOP: 10px;	 
+											 MARGIN: 2px 10% 10px;
+											 MARGIN: 10px;
+										}
+										DIV.activity-title {		 
+											MARGIN: 2px 10% 10px;
+										}		
+										DIV.title {		
+											PADDING-BOTTOM: 10px;		 
+											PADDING-LEFT: 20px;	
+											PADDING-TOP: 10px; 
+											MARGIN: 2px 10% 10px;
+										}
+										DIV.subtitle {		 
+											PADDING-BOTTOM: 10px;	 
+											PADDING-LEFT: 20px;	
+											PADDING-TOP: 10px;	
+											MARGIN: 2px 10% 10px;
+										}
+										DIV.buffer {		
+											PADDING: 10px;
+										}		
+										DIV.border {
+											PADDING: 3px; 
+										}	
+										DIV.definition-border {
+											PADDING: 3px;
+										}"/>
+							</cssBlocks>
+						</OTUDLDocumentViewConfig>
+						<OTPrototypeViewEntry local_id="textsize-choice-view"
+			            	objectClass="org.concord.otrunk.OTSystem"
+			            	viewClass="org.concord.otrunk.view.prototype.OTPrototypeView"
+			            	viewEntry="${choice-combo-view}">
+			            	<prototype>
+			            	    <OTChoice>
+			            	    	<choices>
+			            	    		<OTOverlay name="Small text" local_id="small-text-overlay">
+			            	    			<deltaObjectMap>
+			            	    				<entry key="${css-font}">
+			            	    					<OTCssText
+														cssText="
+															body {	 
+																font-size: 14; 
+															}
+															a {		 
+																text-decoration: none;		
+															}
+															DIV.body {	 	 
+																FONT-WEIGHT: bolder;		
+																FONT-STYLE: normal;		 
+																FONT-FAMILY: Verdana, Arial;		 
+																FONT-VARIANT: normal;		
+																TEXT-DECORATION: none		
+															}
+															DIV.story {
+																FONT-WEIGHT: bolder;
+															}
+															DIV.activity-title {		 
+																font-size: 28;		 
+																FONT-WEIGHT: bold;
+															}		
+															DIV.title {		
+																font-size: 25;	 
+																FONT-WEIGHT: bold;
+															}
+															DIV.subtitle {		 
+																font-size: 20;		 
+																FONT-WEIGHT: bold;
+															}"/>
+			            	    				</entry>
+			            	    			</deltaObjectMap>
+			            	    		</OTOverlay>
+			            	    		<OTOverlay name="Normal text" local_id="normal-text-overlay"/>
+			            	    		<OTOverlay name="Large text" local_id="large-text-overlay">
+			            	    			<deltaObjectMap>
+			            	    				<entry key="${css-font}">
+			            	    					<OTCssText
+														cssText="
+															body {	 
+																font-size: 24; 
+															}
+															a {		 
+																text-decoration: none;		
+															}
+															DIV.body {	 	 
+																FONT-WEIGHT: bolder;		
+																FONT-STYLE: normal;		 
+																FONT-FAMILY: Verdana, Arial;		 
+																FONT-VARIANT: normal;		
+																TEXT-DECORATION: none		
+															}
+															DIV.story {
+																FONT-WEIGHT: bolder;
+															}
+															DIV.activity-title {		 
+																font-size: 37;		 
+																FONT-WEIGHT: bold;
+															}		
+															DIV.title {		
+																font-size: 34;	 
+																FONT-WEIGHT: bold;
+															}
+															DIV.subtitle {		 
+																font-size: 28;		 
+																FONT-WEIGHT: bold;
+															}"/>
+			            	    				</entry>
+			            	    			</deltaObjectMap>
+			            	    		</OTOverlay>
+			            	    	</choices>
+			            	    </OTChoice>
+			            	</prototype>
+			            	<controller>
+			            	    <!--  turn off the prototype copying so we can test this better -->
+			            		<OTPrototypeEventController copyPrototype="false">
+			            			<mapping>
+			            			   <OTPrototypeMapEntry 
+			            			   		modelProperty="overlays[0]" 
+			            			   		prototypeProperty="currentChoice"/>
+			            			</mapping>
+			            		</OTPrototypeEventController>
+			            	</controller>
+			            </OTPrototypeViewEntry>
 						<OTViewEntry objectClass="org.concord.graph.util.state.OTDrawingTool2" viewClass="org.concord.datagraph.state.OTDataDrawingToolView"/>
 					</views>
 				</OTViewBundle>
@@ -89,18 +302,19 @@
 					</engines>
 				</OTScriptEngineBundle>
 			</bundles>
+			<overlays>
+		        <object refid="${normal-text-overlay}"/>
+		    </overlays>
 			<root>
 				<OTUDLContainer name="UDL Friction">
 					<title>
 						<OTCompoundDoc local_id="title">
 							<bodyText>
-								<div class="buffer-">
-									<div class="leftpanel">
-										<img src="http://udl.concord.org/share/udl-tree-only.png" width="70" height="73"/>
-										<br/>
-										<div class="activity-title">
-											UDL Friction
-										</div>
+								<div class="leftpanel">
+									<img src="http://udl.concord.org/share/udl-tree-only.png" width="70" height="73"/>
+									<br/>
+									<div class="activity-title">
+										UDL Friction
 									</div>
 								</div>
 							</bodyText>
@@ -112,7 +326,9 @@
 					<topBar>
 						<OTCompoundDoc>
 							<bodyText>
-								<object refid="${css-menu}"/>
+								<table><tr><td>
+									<object refid="${system}" viewid="${textsize-choice-view}"/>
+								</td></tr></table>
 							</bodyText>
 							<documentRefs>
 								<OTUDLCSSModifier local_id="css-menu" documentView="${compound_doc_view}">
