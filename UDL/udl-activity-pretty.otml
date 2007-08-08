@@ -196,6 +196,9 @@
 										}	
 										DIV.definition-border {
 											PADDING: 3px;
+										}
+										DIV.top-menu {
+											TEXT-ALIGN: right;
 										}"/>
 							</cssBlocks>
 						</OTUDLDocumentViewConfig>
@@ -293,6 +296,45 @@
 			            		</OTPrototypeEventController>
 			            	</controller>
 			            </OTPrototypeViewEntry>
+			            <OTPrototypeViewEntry local_id="language-choice-view"
+			            	objectClass="org.concord.otrunk.OTSystem"
+			            	viewClass="org.concord.otrunk.view.prototype.OTPrototypeView"
+			            	viewEntry="${choice-combo-view}">
+			            	<prototype>
+			            	    <OTChoice>
+			            	    	<choices>
+			            	    		<OTOverlay name="English" local_id="english-overlay" />
+			            	    		<OTOverlay name="Español" local_id="spanish-overlay">
+			            	    			<deltaObjectMap>
+			            	    				<entry key="${title}">
+			            	    					<OTCompoundDoc>
+														<bodyText>
+															<div class="leftpanel">
+																<img src="http://udl.concord.org/share/udl-tree-only.png" width="70" height="73"/>
+																<br/>
+																<div class="activity-title">
+																	Fricción UDL
+																</div>
+															</div>
+														</bodyText>
+													</OTCompoundDoc>
+			            	    				</entry>
+			            	    			</deltaObjectMap>
+			            	    		</OTOverlay>
+			            	    	</choices>
+			            	    </OTChoice>
+			            	</prototype>
+			            	<controller>
+			            	    <!--  turn off the prototype copying so we can test this better -->
+			            		<OTPrototypeEventController copyPrototype="false">
+			            			<mapping>
+			            			   <OTPrototypeMapEntry 
+			            			   		modelProperty="overlays[1]" 
+			            			   		prototypeProperty="currentChoice"/>
+			            			</mapping>
+			            		</OTPrototypeEventController>
+			            	</controller>
+			            </OTPrototypeViewEntry>
 						<OTViewEntry objectClass="org.concord.graph.util.state.OTDrawingTool2" viewClass="org.concord.datagraph.state.OTDataDrawingToolView"/>
 					</views>
 				</OTViewBundle>
@@ -304,6 +346,7 @@
 			</bundles>
 			<overlays>
 		        <object refid="${normal-text-overlay}"/>
+		        <object refid="${english-overlay}"/>
 		    </overlays>
 			<root>
 				<OTUDLContainer name="UDL Friction">
@@ -326,26 +369,19 @@
 					<topBar>
 						<OTCompoundDoc>
 							<bodyText>
-								<table><tr><td>
-									<object refid="${system}" viewid="${textsize-choice-view}"/>
-								</td></tr></table>
+								<div class="top-menu">
+									<table>
+										<tr>
+											<td>
+												<object refid="${system}" viewid="${language-choice-view}"/>
+											</td>
+											<td>
+												<object refid="${system}" viewid="${textsize-choice-view}"/>
+											</td>
+										</tr>
+									</table>
+								</div>
 							</bodyText>
-							<documentRefs>
-								<OTUDLCSSModifier local_id="css-menu" documentView="${compound_doc_view}">
-									<cssGroups>
-										<OTUDLCSSGroup>
-											<cssTexts>
-												<OTText name="Small text" text="body {font-size: 15;} DIV.title {font-size: 26;} DIV.activity-title {font-size: 30;} DIV.subtitle {font-size: 22}"/>
-												<OTText name="Medium text" text="body {font-size: 18;}  DIV.title {font-size: 30;} DIV.activity-title {font-size: 35;} DIV.subtitle {font-size: 25}" local_id="default-text-size"/>
-												<OTText name="Large text" text="body {font-size: 26;}  DIV.title {font-size: 33;} DIV.activity-title {font-size: 38;} DIV.subtitle {font-size: 29}"/>
-											</cssTexts>
-											<currentCssText>
-												<object refid="${default-text-size}"/>
-											</currentCssText>
-										</OTUDLCSSGroup>
-									</cssGroups>
-								</OTUDLCSSModifier>
-							</documentRefs>
 						</OTCompoundDoc>
 					</topBar>
 					<characters>
