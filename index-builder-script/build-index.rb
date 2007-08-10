@@ -1,35 +1,29 @@
-#!/usr/local/bin/ruby
+#! /usr/bin/ruby -w
 
 require 'find'
 
-body_html="<ul>"
+puts "Content-type: text/plain\n\n"
 
-excludes = ["CVS"]
-Find.find(".") do |path|
-  if FileTest.directory?(path)
-    if excludes.include?(File.basename(path))
-        Find.prune       # Don't look any further into this directory.
-    else
-      next
-    end
-  else
-    if path =~ /.*otml$/
-      otml_file = path[2,path.length-2]
-      jnlp_url = "http://rails.dev.concord.org/sds/2/offering/144/jnlp/540/view?sailotrunk.otmlurl=http://continuum.concord.org/otrunk/examples/#{otml_file}&sailotrunk.hidetree=false"
-      body_html += "<li>#{otml_file} - <a href=\"#{jnlp_url}\">jnlp</a> - <a href=\"#{otml_file}\">otml</a></li>\n"
-    end
-  end
-end
+# print error messages on stdout so we can see them in the browser
+STDERR.reopen(STDOUT)
 
-body_html += "</ul>"
+puts "hello I am"
 
-heading_html = <<end_of_html
+system("whoami")
+puts Dir.pwd
+puts Dir.chdir("../otrunk/examples")
+puts Dir.pwd
+system("svn up")
+
+def writeHtmlPage(title, body, filename)
+
+html_text = <<end_of_html
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
 <HTML>
 
 <HEAD>
 <META HTTP-EQUIV="Content-Type" CONTENT="text/html;CHARSET=iso-8859-1">
-<TITLE>OTrunk Examples</TITLE>
+<TITLE>#{title}</TITLE>
 <style type="text/css">
 h3 {margin-bottom: 0.5em; margin-top:2em; border-bottom: 1px solid }
 h4 {margin-bottom: 0.2em}
@@ -37,16 +31,86 @@ h4 {margin-bottom: 0.2em}
 </HEAD>
 
 <BODY BGCOLOR="#FFFFFF">
-<h2>OTrunk Examples</h2>
-end_of_html
-
-ending_html = <<end_of_html
+<h2>#{title}</h2>
+#{body}
 </BODY>
 </HTML>
 end_of_html
 
-current = File.open("example-index.html", "w")
-current.write(heading_html)
-current.write(body_html)
-current.write(ending_html)
+current = File.open(filename, "w")
+current.write(html_text)
 current.close
+
+end
+
+index_page_body = "<table>"
+
+excludes = ["CVS",".svn",".",".."]
+
+dir = Dir.new(".")
+dir.sort.each do |path|
+  if FileTest.directory?(path)
+    if excludes.include?(File.basename(path))
+    else
+      index_page_body += "<tr><td><a href=""#{path}/ot-index.html"">#{path}</a></td></tr>"
+    end    
+  end
+end
+
+index_page_body += "</table>"
+index_page_body += "<hr/><br/><br/><a href=""http://continuum.concord.org/cgi-script/hello.rb"">Update Index</a>"
+
+writeHtmlPage("OTrunk Examples", index_page_body, "example-index.html")
+
+
+dir.each do |path|
+  if FileTest.directory?(path)
+    if excludes.include?(File.basename(path))
+    else      
+      jnlp_url_tmpl = "http://rails.dev.concord.org/sds/2/offering/144/jnlp/540/view?sailotrunk.otmlurl=%otml_url%&sailotrunk.hidetree=false"
+
+      jnlp_url_tmpl_file_name = "#{path}/jnlp_url.tmpl"
+      if FileTest.exists?(jnlp_url_tmpl_file_name)
+        tmp_io = File.open(jnlp_url_tmpl_file_name, "r")
+        jnlp_url_tmpl = tmp_io.read()
+        tmp_io.close()
+      end
+
+      # Try to append the author mode.
+      jnlp_url_tmpl_author = jnlp_url_tmpl + "&jnlp_properties=otrunk.view.author%253Dtrue%2526"
+
+      subdir = Dir.new(path)
+      otml_launchers = "<h4>Run Examples</h4> <table>"
+      all_files = "<h4>All Files</h4><table>"
+
+      subdir.each do |subpath|
+          if subpath =~ /.*otml$/
+            # look up the file in the .svn/entries file to gets its svn commit number 
+
+            svn_status = `svn status -v #{path}/#{subpath}`
+            # trim off the first 8 chars as they are status info we dont' care about
+            svn_status = svn_status[8,svn_status.length-8]
+            svn_status_arr = svn_status.split(' ')
+            
+            otml_url = "http://continuum.concord.org/otrunk/examples/#{path}/#{subpath}"
+            jnlp_url = jnlp_url_tmpl.sub(/%otml_url%/, otml_url)
+            jnlp_author_url = jnlp_url_tmpl_author.sub(/%otml_url%/, otml_url)
+            otml_launchers += "<tr><td>#{subpath} - <a href=""#{jnlp_url}"">jnlp learner mode</a> - <a href=""#{jnlp_author_url}"">jnlp author mode</a> - <a href=""#{subpath}"">otml</a> rev #{svn_status_arr[1]} #{svn_status_arr[2]}</td></tr>"
+          end
+          
+          all_files += "<tr><td><a href=""#{subpath}"">#{subpath}</a></td></tr>"
+      end
+      otml_launchers += "</table><hr/>"
+      all_files += "</table>"
+
+      index_page_body = "<a href=""../example-index.html"">Examples Index</a><br/>\n"  +  
+        "<a href=""http://confluence.concord.org/display/CSP/#{path}"">Confluence Notes</a><br/>\n" +
+        otml_launchers + all_files
+
+      index_page_body += "<hr/>The jnlp urls were constructed using the following template:<br/>\n"
+      index_page_body += jnlp_url_tmpl + "<br/>\n"
+      index_page_body += "You can change this string by putting it in a file named: <b>jnlp_url.tmpl</b> in this directory"
+      writeHtmlPage("#{path} Examples", index_page_body, "#{path}/ot-index.html");
+    end    
+  end
+end
