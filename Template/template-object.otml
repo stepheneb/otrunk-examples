@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<otrunk id="33754150-b594-11d9-9669-0800200c9a66" >
+
+  <imports>
+    <import class="org.concord.otrunk.OTSystem"/>
+    <import class="org.concord.otrunk.view.OTViewEntry"/>
+    <import class="org.concord.otrunk.view.OTViewBundle"/>
+    <import class="org.concord.otrunk.view.OTFolderObject"/>
+    <import class="org.concord.otrunk.velocity.OTVelocityTemplate"/>
+    <import class="org.concord.otrunk.template.OTTemplateEngineBundle"/>
+    <import class="org.concord.otrunk.template.OTTemplateEngineEntry"/>
+    <import class="org.concord.otrunk.template.OTTemplateObject"/>
+    <import class="org.concord.otrunk.template.OTTemplateVariable"/>
+    <import class="org.concord.otrunk.ui.OTText"/>
+  </imports>
+  
+  <objects>
+    <OTSystem>    
+      <bundles>
+        <OTTemplateEngineBundle>
+          <engines>
+            <OTTemplateEngineEntry objectClass="org.concord.otrunk.velocity.OTVelocityTemplate"
+            	engineClass="org.concord.otrunk.velocity.OTVelocityTemplateEngine"/>            
+          </engines>
+        </OTTemplateEngineBundle>
+        <OTViewBundle>
+          <viewEntries>
+			<OTViewEntry
+				objectClass="org.concord.otrunk.template.OTTemplateObject"
+				viewClass="org.concord.otrunk.template.OTTemplateObjectView"/>
+            <OTViewEntry
+               objectClass="org.concord.otrunk.ui.OTText"
+               viewClass="org.concord.otrunk.ui.swing.OTTextView"/>
+          </viewEntries>
+        </OTViewBundle>
+      </bundles>
+      
+      <root>
+		<OTTemplateObject>
+		    <template>
+		      <OTVelocityTemplate>
+		        <template>
+		        	Hello $folder.name that is the label name.
+		        	<ul>
+		        		#foreach( $child in $folder.children.vector )
+		        		<li>
+		        			<a href="$child.globalId">$child.name</a>
+		        		</li>
+		        		#end
+					</ul>
+		        </template>
+		      </OTVelocityTemplate>
+		    </template>
+			<variables>
+				<OTTemplateVariable name="folder">
+					<reference>
+						<OTFolderObject name="FolderObject">
+							<children>
+								<OTText name="ChildOne"
+									text="child 1 text" />
+								<OTText name="ChildTwo"
+									text="child 2 text" />
+								<OTText name="ChildThree"
+									text="child 3 text" />
+							</children>
+						</OTFolderObject>
+					</reference>
+				</OTTemplateVariable>
+			</variables>
+		</OTTemplateObject>
+      </root>
+      
+    </OTSystem>
+  </objects>
+</otrunk>
