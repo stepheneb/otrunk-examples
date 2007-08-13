@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<otrunk id="33754150-b594-11d9-9669-0800200c9a66" >
+  <imports>
+    <import class="org.concord.otrunk.OTSystem"/>
+    <import class="org.concord.otrunk.view.OTFolderObject"/>
+    <import class="org.concord.otrunk.view.OTViewEntry"/>
+    <import class="org.concord.otrunk.view.OTViewBundle"/>
+    <import class="org.concord.otrunk.view.prototype.OTPrototypeViewEntry"/>
+    <import class="org.concord.otrunk.view.prototype.OTPrototypeEventController"/>
+    <import class="org.concord.otrunk.view.prototype.OTPrototypeMapEntry"/>
+    <import class="org.concord.otrunk.view.prototype.OTPropertyReference"/>
+    <import class="org.concord.otrunk.ui.OTButton"/>
+    <import class="org.concord.framework.otrunk.view.OTFrame"/>
+    <import class="org.concord.otrunk.ui.OTText"/>
+    <import class="org.concord.otrunk.view.document.OTCompoundDoc"/>
+    <import class="org.concord.otrunk.velocity.OTVelocityXHTMLViewEntry"/>
+    <import class="org.concord.otrunk.velocity.OTVelocityTemplate"/>
+
+    <import class="org.concord.otrunk.template.OTTemplateEngineBundle"/>
+    <import class="org.concord.otrunk.template.OTTemplateEngineEntry"/>
+    <import class="org.concord.otrunk.template.OTTemplateObject"/>
+    <import class="org.concord.otrunk.template.OTTemplateVariable"/>
+    
+  </imports>
+  <objects>
+    <OTSystem>
+      <bundles>
+        <OTTemplateEngineBundle>
+          <engines>
+            <OTTemplateEngineEntry objectClass="org.concord.otrunk.velocity.OTVelocityTemplate"
+            	engineClass="org.concord.otrunk.velocity.OTVelocityTemplateEngine"/>            
+          </engines>
+        </OTTemplateEngineBundle>
+        <OTViewBundle>
+          <viewEntries>
+            <OTViewEntry local_id="text_edit"
+              objectClass="org.concord.otrunk.ui.OTText" 
+              viewClass="org.concord.otrunk.ui.swing.OTTextEditView"/>
+            <OTViewEntry
+              objectClass="org.concord.otrunk.ui.OTButton"
+              viewClass="org.concord.otrunk.ui.swing.OTButtonView"/>
+            
+            <OTPrototypeViewEntry 
+            	objectClass="org.concord.otrunk.view.prototype.OTPropertyReference"
+            	viewClass="org.concord.otrunk.view.prototype.OTPrototypePropertyView"
+            	viewEntry="${text_edit}">
+            	<prototype>
+            		<OTText text="default" />
+            	</prototype>
+            	<controller>
+            		<OTPrototypeEventController>
+            			<mapping>
+            			   <OTPrototypeMapEntry prototypeProperty="text"/>
+            			</mapping>
+            		</OTPrototypeEventController>
+            	</controller>
+            </OTPrototypeViewEntry>
+
+            <OTViewEntry local_id="document_view"
+              objectClass="org.concord.otrunk.view.document.OTDocument" 
+              viewClass="org.concord.otrunk.view.document.OTDocumentView"/>                         
+			<OTViewEntry
+				objectClass="org.concord.otrunk.template.OTTemplateObject"
+				viewClass="org.concord.otrunk.template.OTTemplateObjectView"/>
+          </viewEntries>
+        </OTViewBundle>
+      </bundles>
+      <root>
+        <OTCompoundDoc name="root">
+          <bodyText>
+            An example of using a template document to with a hard coded list of property reference 
+            to edit a particular instance of an Object.
+   		  </bodyText>   		  
+   		  <children>
+   		    <OTTemplateObject name="Template Document">
+   		      <template>
+   		        <OTVelocityTemplate>
+   		          <template>
+   		          	Name: $model.name Text: $model.text
+   		          	<table>
+   		          	   #foreach( $property in $properties.children.vector)
+   		          		<tr>
+   		          			<td>$property.name :</td>
+   		          			<td>
+   		          				<object refid="$property.globalId" />
+   		          			</td>
+   		          		</tr>
+   		          		#end
+   		          	</table>
+   		          </template>
+   		        </OTVelocityTemplate>
+   		      </template>
+   		      <variables>
+   		        <OTTemplateVariable name="model" reference="${button}"/>
+   		        <OTTemplateVariable name="properties">
+   		        	<reference>
+   		        		<OTFolderObject>
+   		        		  <children>
+   		        			<OTPropertyReference
+   		        				property="name" reference="${button}" />
+   		        			<OTPropertyReference
+   		        				property="text" reference="${button}" />
+   		        		  </children>
+   		        		</OTFolderObject>
+   		        	</reference>
+   		        </OTTemplateVariable>
+   		      </variables>
+   		    </OTTemplateObject>
+   		    <OTButton local_id="button" name="button name" text="Click Me"/>
+   		  </children>
+   	    </OTCompoundDoc>
+      </root>
+    </OTSystem>
+  </objects>
+</otrunk>
