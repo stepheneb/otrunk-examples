@@ -7,6 +7,8 @@ importPackage(Packages.org.concord.otrunk.ui);
 importPackage(Packages.org.concord.otrunk.ui.notebook);
 importPackage(Packages.org.concord.data.state);
 importPackage(Packages.edu.colorado.phet.cck.piccolo_cck);
+importPackage(Packages.edu.colorado.phet.cck.model);
+importPackage(Packages.edu.colorado.phet.cck.model.components);
 // importClass(Packages.edu.colorado.phet.cck.piccolo_cck.MultimeterModel.Listener);
 
 var otNotebookObject = context.getObject("notebook");
@@ -15,8 +17,17 @@ var apparatusPanel = context.getComponentForObject("cck_model");
 
 var previousValue = Double.NaN;
 
+var firstMeasurement = true; //Checks to see if this is the first measurement
+var infoCards = context.getViewForObject("infoCards");
+
+var content = context.getContents();
+var logTextObject = context.getOTObject("org.concord.otrunk.ui.OTText");
+logTextObject.setText("my text");
+content.add(logTextObject);
+
 function init() {
 	multimeter.addListener(multimeterHandler);
+	createResistor();
 	return true;
 }
 
@@ -35,7 +46,11 @@ var multimeterHandler = new MultimeterModel.Listener() {
 			previousValue = value;
 			return;
 		}
-		else {
+		else {			//we've made a valid measurement
+			if(firstMeasurement){
+				firstMeasurement = false;
+				infoCards.setCurrentCard("firstMeasurementText");
+			}
 			previousValue = value;
 			var units = "";
 			var state = multimeter.getState();
@@ -92,4 +107,40 @@ function logNotebook(value, units) {
 		measurement.setUnitValue(uv);
 				
 		list.add(measurement);
+}
+
+function createResistor()
+{
+	System.out.println("cckModule class = " + cckModule.getClass())
+	var resistorLength = 1.7 * CCKModel.RESISTOR_DIMENSION.getLength();
+	var resistorHeight = 1.7 * CCKModel.RESISTOR_DIMENSION.getHeight();
+	var x1 = 4.5;
+	var y1 = 2;
+	var x2 = x1 + resistorLength;
+	var y2 = y1;
+	var randomGen = new java.util.Random;
+	var random = (randomGen.nextInt(20) * 5) + 5;
+	var circuit = cckModule.circuit;
+	System.out.println(circuit.getClass().toString())
+
+	startJunction = new Junction(x1, y1);
+	endJunction = new Junction(x2, y2);
+
+	var newBranch = new Resistor(circuit.getKirkhoffListener(), startJunction, endJunction, resistorLength, resistorHeight);
+	newBranch.setResistance(java.lang.Double(random));
+	newBranch.setVisibleColorBands(false);
+//	newBranch.setMovable(true);
+	newBranch.setDebugLabel("#Ringless Resistor");
+	
+	cckModule.getCircuit().addBranch(newBranch);
+	circuitGraphic = cckModule.getCircuitGraphic();
+	circuitGraphic.addGraphic(newBranch);
+
+	var menu = circuitGraphic.getGraphic(newBranch).getMenu();
+	var menuComponent = menu.getMenuComponent();
+	var menuItems = menuComponent.getSubElements();
+
+	menuItems[0].setEnabled(false);
+	menuItems[1].setEnabled(false);
+	menuItems[2].setEnabled(false);
 }
