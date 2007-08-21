@@ -120,7 +120,7 @@ function createResistor()
 	var y2 = y1;
 	var randomGen = new java.util.Random;
 	var random = (randomGen.nextInt(20) * 5) + 5;
-	var circuit = cckModule.circuit;
+	var circuit = cckModule.getCircuit();
 	System.out.println(circuit.getClass().toString())
 
 	startJunction = new Junction(x1, y1);
@@ -132,15 +132,6 @@ function createResistor()
 //	newBranch.setMovable(true);
 	newBranch.setDebugLabel("#Ringless Resistor");
 	
+	newBranch.setMenuEnabled(false);
 	cckModule.getCircuit().addBranch(newBranch);
-	circuitGraphic = cckModule.getCircuitGraphic();
-	circuitGraphic.addGraphic(newBranch);
-
-	var menu = circuitGraphic.getGraphic(newBranch).getMenu();
-	var menuComponent = menu.getMenuComponent();
-	var menuItems = menuComponent.getSubElements();
-
-	menuItems[0].setEnabled(false);
-	menuItems[1].setEnabled(false);
-	menuItems[2].setEnabled(false);
 }
