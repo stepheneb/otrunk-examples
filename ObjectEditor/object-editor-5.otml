@@ -21,6 +21,10 @@
     <import class="org.concord.otrunk.template.OTTemplateObject"/>
     <import class="org.concord.otrunk.template.OTTemplateVariable"/>
     
+    <import class="org.concord.otrunk.script.js.OTJavascript" />
+    <import class="org.concord.otrunk.script.OTScriptEngineBundle" />
+    <import class="org.concord.otrunk.script.OTScriptEngineEntry" />
+    <import class="org.concord.otrunk.script.view.OTPrototypeScriptController" />
   </imports>
   <objects>
     <OTSystem>
@@ -31,6 +35,13 @@
             	engineClass="org.concord.otrunk.velocity.OTVelocityTemplateEngine"/>            
           </engines>
         </OTTemplateEngineBundle>
+        <OTScriptEngineBundle>
+          <engines>
+            <OTScriptEngineEntry
+              objectClass="org.concord.otrunk.script.js.OTJavascript"
+              engineClass="org.concord.otrunk.script.js.OTJavascriptEngine" />
+          </engines>
+        </OTScriptEngineBundle>
         <OTViewBundle>
           <viewEntries>
             <OTViewEntry local_id="text_edit"
@@ -56,10 +67,37 @@
             	</controller>
             </OTPrototypeViewEntry>
 
+            <OTPrototypeViewEntry local_id="button_editor"
+            	objectClass="org.concord.otrunk.ui.OTButton"
+            	viewEntry="${template_object_view}">
+            	<prototype>
+            		<OTTemplateObject name="Template Document"
+            			template="${object_editing_template}">
+            			<variables>
+            				<OTTemplateVariable name="model"/>
+            				<OTTemplateVariable name="properties">
+            					<reference>
+            					    <!--  this object will get filled in by the script when 
+            					    it initializes the prototype copy -->
+            						<OTFolderObject/>
+            					</reference>
+            				</OTTemplateVariable>
+            			</variables>
+            		</OTTemplateObject>
+            	</prototype>
+            	<controller>
+            		<OTPrototypeScriptController>
+            			<script>
+            				<OTJavascript src="object-editor-5.js" />
+            			</script>
+            		</OTPrototypeScriptController>
+            	</controller>
+            </OTPrototypeViewEntry>
+
             <OTViewEntry local_id="document_view"
               objectClass="org.concord.otrunk.view.document.OTDocument" 
               viewClass="org.concord.otrunk.view.document.OTDocumentView"/>                         
-			<OTViewEntry
+			<OTViewEntry local_id="template_object_view"
 				objectClass="org.concord.otrunk.template.OTTemplateObject"
 				viewClass="org.concord.otrunk.template.OTTemplateObjectView"/>
           </viewEntries>
@@ -85,28 +123,18 @@
       <root>
         <OTCompoundDoc name="root">
           <bodyText>
-            An example of using a template document to with a hard coded list of property references 
-            to edit a particular instance of an Object.
+            This is an example of using a prototype view, where the prototype is a template object.
+ With OTPropertyReferences pointing to the properties being displayed.  These PropertyReferences are not
+ bound to a particular instance in the prototype, but the prototype view's controller binds them when the view
+ is first requested.  This should make the view work for any instance of the particular object type (OTClass).
    		  </bodyText>   		  
    		  <children>
-   		    <OTTemplateObject name="Template Document"
-   		    	template="${object_editing_template}">
-   		      <variables>
-   		        <OTTemplateVariable name="model" reference="${button}"/>
-   		        <OTTemplateVariable name="properties">
-   		        	<reference>
-   		        		<OTFolderObject>
-   		        		  <children>
-   		        			<OTPropertyReference
-   		        				property="name" reference="${button}" />
-   		        			<OTPropertyReference
-   		        				property="text" reference="${button}" />
-   		        		  </children>
-   		        		</OTFolderObject>
-   		        	</reference>
-   		        </OTTemplateVariable>
-   		      </variables>
-   		    </OTTemplateObject>
+			<OTCompoundDoc name="Button Editing Doc">
+			  <bodyText>
+			     Document for pointing to the editing view of the button object.<br/>
+			     <object refid="${button}" viewid="${button_editor}"/>
+			  </bodyText>
+			</OTCompoundDoc>   		  
    		    <OTButton local_id="button" name="button name" text="Click Me"/>
    		  </children>
    	    </OTCompoundDoc>

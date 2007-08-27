@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<otrunk id="33754150-b594-11d9-9669-0800200c9a66" >
+  <imports>
+    <import class="org.concord.otrunk.OTSystem"/>
+    <import class="org.concord.otrunk.view.OTFolderObject"/>
+    <import class="org.concord.otrunk.view.OTViewEntry"/>
+    <import class="org.concord.otrunk.view.OTViewBundle"/>
+    <import class="org.concord.otrunk.view.prototype.OTPrototypeViewEntry"/>
+    <import class="org.concord.otrunk.view.prototype.OTPrototypeEventController"/>
+    <import class="org.concord.otrunk.view.prototype.OTPrototypeMapEntry"/>
+    <import class="org.concord.otrunk.view.prototype.OTPropertyReference"/>
+    <import class="org.concord.framework.otrunk.view.OTFrame"/>
+    <import class="org.concord.otrunk.view.OTViewChild"/>
+    <import class="org.concord.otrunk.ui.OTButton"/>
+    <import class="org.concord.otrunk.ui.OTText"/>
+    <import class="org.concord.otrunk.ui.OTListBox"/>
+    <import class="org.concord.otrunk.ui.OTChoice"/>
+    <import class="org.concord.otrunk.ui.OTCardContainer"/>
+    <import class="org.concord.otrunk.ui.OTSplitPane"/>
+    <import class="org.concord.otrunk.ui.tree.OTTree"/>
+    <import class="org.concord.otrunk.view.document.OTCompoundDoc"/>
+    <import class="org.concord.otrunk.velocity.OTVelocityXHTMLViewEntry"/>
+    <import class="org.concord.otrunk.velocity.OTVelocityTemplate"/>
+
+    <import class="org.concord.otrunk.template.OTTemplateEngineBundle"/>
+    <import class="org.concord.otrunk.template.OTTemplateEngineEntry"/>
+    <import class="org.concord.otrunk.template.OTTemplateObject"/>
+    <import class="org.concord.otrunk.template.OTTemplateVariable"/>
+    
+    <import class="org.concord.otrunk.script.js.OTJavascript" />
+    <import class="org.concord.otrunk.script.OTScriptEngineBundle" />
+    <import class="org.concord.otrunk.script.OTScriptEngineEntry" />
+    <import class="org.concord.otrunk.script.ui.OTScriptObject" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariable" />
+    
+    <import class="org.concord.otrunk.script.view.OTPrototypeScriptController" />
+  </imports>
+  <objects>
+    <OTSystem local_id="system">
+      <bundles>
+        <OTTemplateEngineBundle>
+          <engines>
+            <OTTemplateEngineEntry objectClass="org.concord.otrunk.velocity.OTVelocityTemplate"
+            	engineClass="org.concord.otrunk.velocity.OTVelocityTemplateEngine"/>            
+          </engines>
+        </OTTemplateEngineBundle>
+        <OTScriptEngineBundle>
+          <engines>
+            <OTScriptEngineEntry
+              objectClass="org.concord.otrunk.script.js.OTJavascript"
+              engineClass="org.concord.otrunk.script.js.OTJavascriptEngine" />
+          </engines>
+        </OTScriptEngineBundle>
+        <OTViewBundle>
+          <viewEntries>
+            <OTViewEntry local_id="split_pane_view" 
+            	objectClass="org.concord.otrunk.ui.OTSplitPane"
+                viewClass="org.concord.otrunk.ui.swing.OTSplitPaneView"/>
+            <OTViewEntry objectClass="org.concord.otrunk.ui.tree.OTTree"
+                viewClass="org.concord.otrunk.ui.swing.OTTreeView"/>
+            <OTViewEntry objectClass="org.concord.otrunk.script.ui.OTScriptObject"
+                viewClass="org.concord.otrunk.script.ui.OTScriptObjectView"/>
+            <OTViewEntry local_id="text_edit"
+              objectClass="org.concord.otrunk.ui.OTText" 
+              viewClass="org.concord.otrunk.ui.swing.OTTextEditView"/>
+            <OTViewEntry local_id="list_edit"
+              objectClass="org.concord.otrunk.ui.OTListBox" 
+              viewClass="org.concord.otrunk.ui.swing.OTListBoxView"/>
+            <OTViewEntry local_id="choice_edit"
+              objectClass="org.concord.otrunk.ui.OTChoice"
+              viewClass="org.concord.otrunk.ui.swing.OTChoiceComboBoxView"/>
+            <OTViewEntry
+              objectClass="org.concord.otrunk.ui.OTButton"
+              viewClass="org.concord.otrunk.ui.swing.OTButtonView"/>
+            <OTViewEntry
+              objectClass="org.concord.otrunk.ui.OTCardContainer"
+              viewClass="org.concord.otrunk.ui.swing.OTCardContainerView"/>
+            
+            <OTPrototypeViewEntry local_id="primitive_editor"
+            	objectClass="org.concord.otrunk.view.prototype.OTPropertyReference"
+            	viewClass="org.concord.otrunk.view.prototype.OTPrototypePropertyView"
+            	viewEntry="${text_edit}"
+            	savePrototypeCopies="false">
+            	<prototype>
+            		<OTText text="default" />
+            	</prototype>
+            	<controller>
+            		<OTPrototypeEventController>
+            			<mapping>
+            			   <OTPrototypeMapEntry prototypeProperty="text"/>
+            			</mapping>
+            		</OTPrototypeEventController>
+            	</controller>
+            </OTPrototypeViewEntry>
+
+            <OTPrototypeViewEntry local_id="boolean_editor"
+            	objectClass="org.concord.otrunk.view.prototype.OTPropertyReference"
+            	viewClass="org.concord.otrunk.view.prototype.OTPrototypeView"
+            	viewEntry="${choice_edit}"
+            	savePrototypeCopies="false">
+            	<prototype>
+            	    <OTChoice>
+            	      <choices>
+	            		<OTText name="true" />
+    	        		<OTText name="false" />
+            	      </choices>
+            	    </OTChoice>
+            	</prototype>
+            	<controller>
+            		<OTPrototypeScriptController>
+            			<script>
+            				<OTJavascript src="boolean-editor.js" />
+            			</script>
+            		</OTPrototypeScriptController>
+            	</controller>
+            </OTPrototypeViewEntry>
+
+            <OTPrototypeViewEntry local_id="list_editor"
+            	objectClass="org.concord.otrunk.view.prototype.OTPropertyReference"
+            	viewClass="org.concord.otrunk.view.prototype.OTPrototypePropertyView"
+            	viewEntry="${list_edit}"
+            	savePrototypeCopies="false">
+            	<prototype>
+            		<OTListBox />
+            	</prototype>
+            	<controller>
+            		<OTPrototypeEventController>
+            			<mapping>
+            			   <OTPrototypeMapEntry prototypeProperty="items"/>
+            			</mapping>
+            		</OTPrototypeEventController>
+            	</controller>
+            </OTPrototypeViewEntry>
+
+            <OTViewEntry local_id="document_view"
+              objectClass="org.concord.otrunk.view.document.OTDocument" 
+              viewClass="org.concord.otrunk.view.document.OTDocumentView"/>                         
+			<OTViewEntry local_id="template_object_view"
+				objectClass="org.concord.otrunk.template.OTTemplateObject"
+				viewClass="org.concord.otrunk.template.OTTemplateObjectView"/>
+
+          </viewEntries>
+        </OTViewBundle>
+      </bundles>
+      <library>
+            <OTPrototypeViewEntry local_id="object_form_editor"
+            	objectClass="org.concord.framework.otrunk.OTObject"
+            	viewEntry="${template_object_view}"
+            	savePrototypeCopies="false">
+            	<prototype>
+            		<OTTemplateObject name="Template Document"
+            			template="${object_editing_template}">
+            			<variables>
+            				<OTTemplateVariable name="model"/>
+            				<OTTemplateVariable name="properties">
+            					<reference>
+            					    <!--  this object will get filled in by the script when 
+            					    it initializes the prototype copy -->
+            						<OTFolderObject/>
+            					</reference>
+            				</OTTemplateVariable>
+            			</variables>
+            		</OTTemplateObject>
+            	</prototype>
+            	<controller>
+            		<OTPrototypeScriptController>
+            			<script>
+            				<OTJavascript src="object-editor-6.js" />
+            			</script>
+            		</OTPrototypeScriptController>
+            	</controller>
+            </OTPrototypeViewEntry>
+
+
+            <OTPrototypeViewEntry local_id="object_tree_editor"
+            	objectClass="org.concord.framework.otrunk.OTObject"
+            	viewEntry="${split_pane_view}"
+            	savePrototypeCopies="false">
+            	<prototype>
+            		<OTSplitPane>
+            			<first>
+            				<OTTree/>
+            			</first>
+            			<second>
+            				<OTViewChild viewid="${object_form_editor}" />
+            			</second>
+            		</OTSplitPane>
+            	</prototype>
+            	<controller>
+            		<OTPrototypeScriptController>
+            			<script>
+            				<OTJavascript src="tree-listener.js" />
+            			</script>
+            		</OTPrototypeScriptController>
+            	</controller>
+            </OTPrototypeViewEntry>
+
+      	<OTVelocityTemplate local_id="object_editing_template">
+      		<template>
+      			OTClass: ${model.otClass().instanceClass.name}
+      			<table>
+      				#foreach( $property in $properties.children.vector)
+      				<tr>
+      					<td>$property.property :</td>
+      					<td width="300">
+      					  #set( $classProperty = $model.otClass().getProperty($property.property) )
+      					
+      					  #if( $classProperty.primitive )
+      						#if( $classProperty.type.primitiveName == "boolean" )
+        						<object refid="$property.globalId" viewid="${boolean_editor}"/>
+      						#else
+        						<object refid="$property.globalId" viewid="${primitive_editor}"/>
+      						#end
+      					  #elseif ( $classProperty.list )
+      						<object refid="$property.globalId" viewid="${list_editor}"/>      					    
+      					  #end
+      					</td>
+      				</tr>
+      				#end
+      			</table>
+      		</template>
+      	</OTVelocityTemplate>
+      </library>
+      <root>
+        <OTCompoundDoc name="root">
+          <bodyText>
+            This example combines the tree viewer with the object editor attempting to make a complete editor
+            for any OTrunk object.            
+   		  </bodyText>   		  
+   		  <children>
+   		    <OTViewChild name="tree view" viewid="${object_tree_editor}"
+   		    	object="${object_form_editor}"/>
+   		  </children>
+   	    </OTCompoundDoc>
+      </root>
+    </OTSystem>
+  </objects>
+</otrunk>
