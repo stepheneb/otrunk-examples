@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<otrunk id="33754150-b594-11d9-9669-0800200c9a66" >
+
+  <imports>
+    <import class="org.concord.otrunk.OTSystem"/>
+    <import class="org.concord.otrunk.view.OTViewEntry"/>
+    <import class="org.concord.otrunk.view.OTViewBundle"/>
+    <import class="org.concord.otrunk.view.OTFolderObject"/>
+    <import class="org.concord.otrunk.velocity.OTVelocityTemplate"/>
+    <import class="org.concord.otrunk.template.OTTemplateEngineBundle"/>
+    <import class="org.concord.otrunk.template.OTTemplateEngineEntry"/>
+    <import class="org.concord.otrunk.template.OTTemplateObject"/>
+    <import class="org.concord.otrunk.template.OTTemplateVariable"/>
+    <import class="org.concord.graph.util.state.OTPoint2D"/>
+  </imports>
+  
+  <objects>
+    <OTSystem>    
+      <bundles>
+        <OTTemplateEngineBundle>
+          <engines>
+            <OTTemplateEngineEntry objectClass="org.concord.otrunk.velocity.OTVelocityTemplate"
+            	engineClass="org.concord.otrunk.velocity.OTVelocityTemplateEngine"/>            
+          </engines>
+        </OTTemplateEngineBundle>
+        <OTViewBundle>
+          <viewEntries>
+			<OTViewEntry
+				objectClass="org.concord.otrunk.template.OTTemplateObject"
+				viewClass="org.concord.otrunk.template.OTTemplateObjectView"/>
+          </viewEntries>
+        </OTViewBundle>
+      </bundles>
+      
+      <root>
+		<OTTemplateObject>
+		    <template>
+		      <OTVelocityTemplate>
+		        <template>
+		            The plant grew $math.sub( $second.y, $first.y) centimeters 
+		            during the last $math.sub( $second.x, $first.x) days.
+		        </template>
+		      </OTVelocityTemplate>
+		    </template>
+			<variables>
+				<OTTemplateVariable name="first">
+					<reference>
+					    <OTPoint2D x="1" y="10"/>
+					</reference>
+				</OTTemplateVariable>
+				<OTTemplateVariable name="second">
+					<reference>
+					    <OTPoint2D x="5" y="15"/>
+					</reference>
+				</OTTemplateVariable>
+			</variables>
+		</OTTemplateObject>
+      </root>
+      
+    </OTSystem>
+  </objects>
+</otrunk>
