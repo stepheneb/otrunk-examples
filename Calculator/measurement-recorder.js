@@ -27,6 +27,7 @@ content.add(logTextObject);
 
 function init() {
 	multimeter.addListener(multimeterHandler);
+	multimeter.setStateDisabled(MultimeterModel.OHMMETER_STATE);
 	createResistor();
 	return true;
 }
@@ -132,6 +133,23 @@ function createResistor()
 //	newBranch.setMovable(true);
 	newBranch.setDebugLabel("#Ringless Resistor");
 	
-	newBranch.setMenuEnabled(false);
+	// newBranch.setMenuEnabled(false);
+	
+	// circuitGraphic = cckModule.getCircuitGraphic();
+	// circuitGraphic.addGraphic(newBranch);
 	cckModule.getCircuit().addBranch(newBranch);
+	
+	var menu = cckModule.getCckSimulationPanel().getCircuitNode().getBranchNode(newBranch).getMenu();
+	// var menuComponent = menu.getMenuComponent();
+	var menuItems = menu.getSubElements();
+	
+	System.err.println("menuItems: " + menuItems.length);
+	for (var i = 0; i < menuItems.length; i++) {
+		System.err.println("Item " + i + " is " + menuItems[i].getClass().getName());
+	}
+	menuItems[0].setEnabled(false);
+	menuItems[1].setEnabled(false);
+	menuItems[2].setEnabled(false);
+	
+	
 }

@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<otrunk id="33754150-b594-11d9-9669-0800200c9a66">
+<otrunk xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:noNamespaceSchemaLocation="../../OTrunk/schema/otrunk_all.xsd"
+ id="33754150-b594-11d9-9669-0800200c9a66">
 	<imports>
 		<import class="org.concord.otrunk.OTSystem" />
 		<import class="org.concord.otrunk.view.OTViewEntry" />
@@ -44,6 +46,9 @@
 			class="org.concord.calculator.state.ui.OTProgrammableCalculatorViewEntry" />
 
 		<import class="org.concord.otrunk.script.ui.OTScriptObject" />
+		<import class="org.concord.otrunk.script.ui.OTScriptVariable" />
+		<import class="org.concord.otrunk.script.ui.OTScriptVariableView" />
+		<import class="org.concord.otrunk.script.ui.OTScriptVariableComponent" />
 		<import class="org.concord.otrunk.script.js.OTJavascript" />
 		<import class="org.concord.otrunk.script.OTScriptEngineBundle" />
 		<import class="org.concord.otrunk.script.OTScriptEngineEntry" />
@@ -138,21 +143,20 @@
 							viewClass="org.concord.otrunk.ui.swing.OTTextPaneView" />
 					</viewEntries>
 					<frame>
-						<OTFrame width="1160" height="633" />
+						<OTFrame width="1160" height="638" />
 					</frame>
 				</OTViewBundle>
 			</bundles>
 			<root>
-				<OTCompoundDoc name="Introduction">
-					<bodyText>Intro text...</bodyText>
+				<OTCompoundDoc name="CCK">
+					<bodyText><object refid="${cck_model_placement_view}" /></bodyText>
 					<children>
-						<object refid="${cck_model_placement_view}" />
 						<object refid="${calculator_page}" />
 					</children>
 				</OTCompoundDoc>
 			</root>
 			<library>
-				<OTPlacementContainer width="1217" height="673"
+				<OTPlacementContainer width="1217" height="705"
 					local_id="cck_model_placement_view" name="CCK">
 					<placements>
 						<OTPlacement component="${submitAnswerButton}"
@@ -232,13 +236,17 @@ This is the first measurement text.
 				<OTButton local_id="submitAnswerButton"
 					text="Submit Answer" />
 				<OTScriptObject local_id="measurement_recorder">
-					<referenceObjects>
-						<object refid="${cck_model}" />
-						<object refid="${notebook}" />
-						<object refid="${infoCards}" />
-					</referenceObjects>
+					<variables>
+						<OTScriptVariableView name="cckModelView" reference="${cck_model}" />
+						<OTScriptVariableComponent name="apparatusPanel" reference="${cck_model}" />
+						<OTScriptVariable name="otNotebookObject" reference="${notebook}" />
+						<OTScriptVariableView name="infoArea" reference="${infoCards}" />
+						<OTScriptVariableComponent name="testButton" reference="${testButton}" />
+						<OTScriptVariableComponent name="submitAnswerButton" reference="${submitAnswerButton}" />
+						<OTScriptVariableComponent name="answerBox" reference="${answerBox}" />
+					</variables>
 					<script>
-						<OTJavascript src="measurement-recorder.js" />
+						<OTJavascript src="capa-example.js"  />
 					</script>
 				</OTScriptObject>
 				<OTCCKModel name="CCK Model" local_id="cck_model"
@@ -295,18 +303,6 @@ This is the first measurement text.
 											local_id="expression1">
 											<expression>
 												r=e/i
-											</expression>
-										</OTExpression>
-										<OTExpression
-											local_id="expression2">
-											<expression>
-												e=i*r
-											</expression>
-										</OTExpression>
-										<OTExpression
-											local_id="expression3">
-											<expression>
-												i=e/r
 											</expression>
 										</OTExpression>
 									</expressions>
