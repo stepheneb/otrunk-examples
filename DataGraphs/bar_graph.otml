@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<otrunk id="33754150-b594-11d9-9669-0800200c9a66">
+  <imports>
+    <import class="org.concord.otrunk.OTSystem" />
+    <import class="org.concord.otrunk.view.OTFolderObject" />
+    <import class="org.concord.otrunk.view.OTViewEntry" />
+    <import class="org.concord.otrunk.view.OTViewService" />
+    <import class="org.concord.framework.otrunk.view.OTFrame" />
+    <import class="org.concord.otrunk.view.document.OTCompoundDoc" />
+    <import class="org.concord.otrunk.view.document.OTTextObject" />
+    <import class="org.concord.data.state.OTDataStore"/>
+    <import class="org.concord.data.state.OTDataChannelDescription"/>
+    <import class="org.concord.data.state.OTDataTable"/>
+    <import class="org.concord.datagraph.state.OTDataGraph"/>
+    <import class="org.concord.datagraph.state.OTDataAxis"/>
+    <import class="org.concord.datagraph.state.OTDataGraphable"/>
+    <import class="org.concord.datagraph.state.OTDataBarGraphable"/>
+  </imports>
+  <objects>
+    <OTSystem>
+      <services>
+        <OTViewService>
+          <viewEntries>
+            <OTViewEntry objectClass="org.concord.otrunk.view.document.OTTextObject" viewClass="org.concord.otrunk.view.document.OTTextObjectView" />
+            <OTViewEntry objectClass="org.concord.otrunk.view.document.OTCompoundDoc" viewClass="org.concord.otrunk.view.document.OTDocumentView" />
+            <OTViewEntry objectClass="org.concord.datagraph.state.OTDataGraph" viewClass="org.concord.datagraph.state.OTDataGraphView"/>
+            <OTViewEntry objectClass="org.concord.data.state.OTDataTable" viewClass="org.concord.data.state.OTDataTableView"/>
+            <OTViewEntry objectClass="org.concord.otrunk.view.OTFolderObject" viewClass="org.concord.otrunk.view.OTFolderObjectView"/>
+          </viewEntries>
+        </OTViewService>
+      </services>
+      <root>
+        <OTFolderObject name="Folder">
+          <children>
+            <OTCompoundDoc name="Bar Graph">
+              <bodyText>
+	            <object refid="${data_graph1}"/><br/>
+	            <object refid="${bar_graph1}"/><br/>
+	            <object refid="${data_table1}"/><br/>
+              </bodyText>
+            </OTCompoundDoc>
+          </children>
+        </OTFolderObject>
+      </root>
+      <library>
+		<OTDataGraph name="Graph 1" local_id="data_graph1" showToolbar="false">
+		  <graphables>
+            <object refid="${graphable1}"/>
+		  </graphables>
+          <xDataAxis>
+            <OTDataAxis min="0" max="10" label="Weeks"/>
+          </xDataAxis>
+          <yDataAxis>
+            <OTDataAxis min="0" max="10" label="Lenght"/>
+          </yDataAxis>
+		</OTDataGraph>
+		<OTDataGraph name="Bar Graph 1" local_id="bar_graph1" showToolbar="false">
+		  <graphables>
+            <object refid="${graphable2}"/>
+		  </graphables>
+          <xDataAxis>
+            <OTDataAxis min="0" max="10" label="Weeks" intervalWorld="1"/>
+          </xDataAxis>
+          <yDataAxis>
+            <OTDataAxis min="0" max="10" label="Lenght"/>
+          </yDataAxis>
+		</OTDataGraph>
+		<OTDataGraphable local_id="graphable1" connectPoints="true" color="0x00C000">
+          <dataStore>
+            <object refid="${datastore1}"/>
+          </dataStore>
+		</OTDataGraphable>
+		<OTDataBarGraphable local_id="graphable2" color="0x00C000" lineWidth="30" maxBarsToSelect="2">
+          <dataStore>
+            <object refid="${datastore1}"/>
+          </dataStore>
+		</OTDataBarGraphable>
+        <OTDataTable local_id="data_table1">
+          <dataStore>
+            <object refid="${datastore1}"/>
+          </dataStore>
+        </OTDataTable>
+        <OTDataStore local_id="datastore1" numberChannels="2">
+          <channelDescriptions>
+            <OTDataChannelDescription name="" precision="1"/>
+            <OTDataChannelDescription precision="2"/>
+          </channelDescriptions>
+          <valuesString> 1 2 2 3 3 4 4 7 5 8 6 9 7 9 </valuesString>
+        </OTDataStore>
+      </library>
+    </OTSystem>
+  </objects>
+</otrunk>
+
