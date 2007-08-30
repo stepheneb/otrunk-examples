@@ -24,6 +24,7 @@
     <import class="org.concord.graph.util.state.OTPointTextLabel"/>
     <import class="org.concord.data.state.OTLinearProducerFilter"/>    
     <import class="org.concord.data.state.OTIntegratingProducerFilter"/>    
+    <import class="org.concord.data.state.OTDifferentiatingProducerFilter"/>    
   </imports>
   <objects>
     <OTSystem>
@@ -97,7 +98,7 @@
                 <OTDataAxis min="-2" max="2" label="sin(x)"/>
               </yDataAxis>
             </OTDataCollector>
-            <OTDataCollector name="Wave Graph Linear Filtered">
+            <OTDataCollector name="Wave Graph Integration Filtered">
               <source>
                 <OTDataGraphable connectPoints="true" color="0x0000ff"
                   drawMarks="false" name="Pressure1" xColumn="0" yColumn="1">
@@ -108,6 +109,30 @@
                   				sampleTime="0.3" />
                   		</source>
                   	</OTIntegratingProducerFilter>
+                  </dataProducer>
+                  <dataStore>
+                    <OTDataStore/>
+                  </dataStore>
+                </OTDataGraphable>
+              </source>
+              <xDataAxis>
+                <OTDataAxis min="0" max="60" label="Time" units="s"/>
+              </xDataAxis>
+              <yDataAxis>
+                <OTDataAxis min="-2" max="2" label="sin(x)"/>
+              </yDataAxis>
+            </OTDataCollector>
+            <OTDataCollector name="Wave Graph Derivative Filtered">
+              <source>
+                <OTDataGraphable connectPoints="true" color="0x0000ff"
+                  drawMarks="false" name="Pressure1" xColumn="0" yColumn="1">
+                  <dataProducer>
+                  	<OTDifferentiatingProducerFilter sourceChannel="1">
+                  		<source>
+                  			<OTWaveGenerator timeScale="0.2"
+                  				sampleTime="0.3" />
+                  		</source>
+                  	</OTDifferentiatingProducerFilter>
                   </dataProducer>
                   <dataStore>
                     <OTDataStore/>
