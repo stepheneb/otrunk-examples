@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<otrunk id="874b8410-3938-012a-b543-0017f2cc694e" >
+  <imports>
+    <import class="org.concord.otrunk.OTSystem"/>
+    <import class="org.concord.otrunk.view.OTViewEntry"/>
+    <import class="org.concord.otrunk.view.OTViewBundle" />
+    <import class="org.concord.otrunk.script.OTScriptEngineBundle" />
+    <import class="org.concord.otrunk.script.OTScriptEngineEntry" />
+    <import class="org.concord.otrunk.view.document.OTCompoundDoc"/>
+    <import class="org.concord.otrunk.view.document.OTTextObject"/>
+    <import class="org.concord.otrunkmw.OTModelerPage"/>
+    <import class="org.concord.otrunk.ui.OTText"/>
+    <import class="org.concord.otrunk.ui.snapshot.OTSnapshot"/>
+    <import class="org.concord.otrunk.ui.snapshot.OTSnapshotButton"/>
+    <import class="org.concord.otrunk.ui.snapshot.OTSnapshotAlbum"/>
+    <import class="org.concord.otrunk.view.document.OTDocumentViewConfig"/>
+    <import class="org.concord.otrunk.script.ui.OTScriptObject" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariable" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariableComponent" />
+    <import class="org.concord.otrunk.script.js.OTJavascript" />
+    <import class="org.concord.datagraph.state.OTDataGraph"/>
+    <import class="org.concord.datagraph.state.OTDataCollector"/>
+    <import class="org.concord.datagraph.state.OTDataAxis"/>
+    <import class="org.concord.datagraph.state.OTDataGraphable"/>
+    <import class="org.concord.data.state.OTDataStore"/>
+    <import class="org.concord.data.state.OTDataChannelDescription"/>
+    <import class="org.concord.otrunk.ui.OTTextPane"/>
+    <import class="org.concord.otrunk.ui.OTPlacementContainer"/>
+    <import class="org.concord.otrunk.ui.OTPlacement"/>
+    <import class="org.concord.framework.otrunk.view.OTFrame" />
+  </imports>
+  <objects>
+    <OTSystem>
+      <bundles>
+        <OTViewBundle showLeftPanel="false">
+          <views>
+            <OTViewEntry
+              objectClass="org.concord.otrunkmw.OTModelerPage" 
+                viewClass="org.concord.otrunkmw.OTModelerPageView" />
+            <OTViewEntry
+              objectClass="org.concord.otrunk.ui.OTTextPane"
+              viewClass="org.concord.otrunk.ui.swing.OTTextPaneView"/>
+            <OTViewEntry
+              objectClass="org.concord.otrunk.ui.OTPlacementContainer"
+                viewClass="org.concord.otrunk.ui.swing.OTPlacementContainerView"/>
+            <OTViewEntry
+              objectClass="org.concord.otrunk.script.ui.OTScriptObject"
+              viewClass="org.concord.otrunk.script.ui.OTScriptObjectView" />
+            <OTDocumentViewConfig
+              objectClass="org.concord.otrunk.view.document.OTDocument" 
+                viewClass="org.concord.otrunk.view.document.OTDocumentView">
+                <css>
+                body {
+                  font-size: medium;
+                  font-family: verdana;
+                  background-color: white;
+                }
+                .sub {
+                  font-size: x-small;
+                }
+                .header {
+                  font-size: large;
+                  font-weight: bold;
+                }
+              </css>
+            </OTDocumentViewConfig>
+            <OTViewEntry
+              objectClass="org.concord.otrunk.ui.snapshot.OTSnapshotButton" 
+                viewClass="org.concord.otrunk.ui.snapshot.OTSnapshotButtonView"/>
+            <OTViewEntry
+              objectClass="org.concord.otrunk.ui.snapshot.OTSnapshotAlbum" 
+                viewClass="org.concord.otrunk.ui.snapshot.OTSnapshotAlbumView"/>
+            <OTViewEntry 
+              objectClass="org.concord.datagraph.state.OTDataGraph" 
+              viewClass="org.concord.datagraph.state.OTDataGraphView"/>
+            <OTViewEntry 
+              objectClass="org.concord.datagraph.state.OTDataCollector" 
+              viewClass="org.concord.datagraph.state.OTDataCollectorNonEditableView"/>
+          </views>
+          <frame>
+            <OTFrame width="850" height="640" />
+          </frame>
+        </OTViewBundle>
+        <OTScriptEngineBundle>
+          <engines>
+            <OTScriptEngineEntry
+              objectClass="org.concord.otrunk.script.js.OTJavascript"
+              engineClass="org.concord.otrunk.script.js.OTJavascriptEngine" />
+          </engines>
+        </OTScriptEngineBundle>
+      </bundles>
+      <root>
+        <OTCompoundDoc>
+          <bodyText>
+            <object refid="${placementContainer}" />
+          </bodyText>
+          <documentRefs>
+            <OTModelerPage local_id="model"
+              authoredDataURL="http://mw2.concord.org/model/114bcc40e9a/ht.cml" />
+            <OTPlacementContainer width="900" height="680" local_id="placementContainer">
+              <placements>                                                                                                                                   
+                  <OTPlacement component="${textPane}" height="320" width="490" x="410" y="70"/>
+                  <OTPlacement component="${graph}" height="290" width="490" x="390" y="390"/>
+                  <OTPlacement component="${model}" height="670" width="350" x="15" y="10"/>
+                  <OTPlacement component="${titlePane}" height="50"  width="490" x="390" y="10"/>
+                  <OTPlacement component="${script}" height="0" width="0" x="0" y="0" />
+              </placements>
+            </OTPlacementContainer>
+            <OTTextPane local_id="textPane">
+              <text>
+                <p><FONT face="SansSerif"  size="4" >Now look at what happens at the atomic level
+                  as the temperature of the cup goes down and the temperature of the counter goes up.</FONT></p>
+                  <p><FONT face="SansSerif"  size="4" >
+                    The model shows atoms from the cup and counter at the instant they touch.
+                    (Because atoms are so small, though, this model only shows a very small section
+                    of the cup and counter where they touch.)</FONT></p>
+                <p><FONT face="SansSerif" size="4">Use the
+                  sun-shaped tool to
+                  heat the cup atoms. Pick up the sun-shaped tool and click it on the atoms from
+                  the cup (the green atoms). Heat them to about 60 degrees.
+                  (You can check the current temperature on the graph.)</FONT></p>
+                <p><FONT face="SansSerif" size="4">
+                    The yellow arrow on each atom shows the speed and direction of that atom.
+                    (The speed of the atom is its <b>kinetic</b> energy.)</FONT></p>
+                <p><FONT face="SansSerif" size="4">When you have heated the atoms to about 60
+                  degrees, press the <b>Run</b> button to start the simulation.</FONT></p>
+                <p><FONT face="SansSerif" size="4">When the simulation starts, what can you say
+                    about the speeds of the cup (green) atoms in comparison to the speeds of the
+                    counter (blue) atoms? How do they compare in the end? What is happening to
+                    the atoms of the cup as the temperature of the cup cools down?
+                    What is happening to the atoms of the counter as the temperature
+                    of the counter rises?</FONT></p>
+                <p><FONT face="SansSerif" size="4">What do you think will happen if the cup atoms start at a higher temperature?
+                    Try it!</FONT></p>
+                <p><FONT face="SansSerif" size="4">If you want, you can also put a <b>check</b> in the box below to make the atoms with
+                      high kinetic energy red and atoms with low kinetic energy white.</FONT></p>
+              </text>
+            </OTTextPane>
+            <OTTextPane local_id="titlePane">
+              <text>
+                <center><h1>Atomic-scale model of cooling</h1></center>
+              </text>
+            </OTTextPane>
+            <OTDataCollector name="Model Data" local_id="graph" multipleGraphableEnabled="false" autoScaleEnabled="false">
+              <graphables>
+                <OTDataGraphable local_id="atom1"
+                  connectPoints="true" color="0x5d970c" drawMarks="false"
+                  name="Ck Temp" xColumn="0" yColumn="1">
+                  <dataStore>
+                    <OTDataStore local_id="atom1_datastore" numberChannels="2">
+                      <channelDescriptions>
+                        <OTDataChannelDescription precision="0" unit="s"/>
+                        <OTDataChannelDescription precision="-2" unit="degC"/>
+                      </channelDescriptions>
+                      <valuesString></valuesString>
+                    </OTDataStore>
+                  </dataStore>
+                </OTDataGraphable>
+                <OTDataGraphable local_id="atom2"
+                  connectPoints="true" color="0x787cbc" drawMarks="false"
+                  name="Ws Temp" xColumn="0" yColumn="1">
+                  <dataStore>
+                    <OTDataStore local_id="atom2_datastore" numberChannels="2">
+                      <channelDescriptions>
+                        <OTDataChannelDescription precision="0" unit="s"/>
+                        <OTDataChannelDescription precision="-2" unit="degC"/>
+                      </channelDescriptions>
+                      <valuesString></valuesString>
+                    </OTDataStore>
+                  </dataStore>
+                </OTDataGraphable>
+              </graphables>
+              <xDataAxis>
+                <OTDataAxis min="-1" max="56" label="Time" units="s" local_id="xAxis">
+                  <graphables>
+                    <object refid="${atom1}"/>
+                    <object refid="${atom2}"/>
+                  </graphables>
+                </OTDataAxis>
+              </xDataAxis>
+              <yDataAxis>
+                <OTDataAxis min="-10" max="100" label="Temperature" units="degC" local_id="yAxis">
+                  <graphables>
+                    <object refid="${atom1}"/>
+                    <object refid="${atom2}"/>
+                  </graphables>
+                </OTDataAxis>
+              </yDataAxis>              
+              </OTDataCollector>
+            <OTScriptObject local_id="script">
+              <variables>
+                <OTScriptVariable name="otObject" reference="${graph}" />
+                <OTScriptVariable name="datastore2" reference="${atom2_datastore}" />
+                <OTScriptVariable name="datastore1" reference="${atom1_datastore}" />
+                <OTScriptVariable name="yAxis" reference="${yAxis}" />
+                <OTScriptVariable name="xAxis" reference="${xAxis}" />
+                <OTScriptVariableComponent name="modelComponent" reference="${model}" />
+                <OTScriptVariableComponent name="graph" reference="${graph}" />
+              </variables>
+              <script>
+                <OTJavascript src="document-heat-and-temp.js" />
+              </script>
+            </OTScriptObject>
+          </documentRefs>
+        </OTCompoundDoc>      
+      </root>
+    </OTSystem>
+  </objects>
+</otrunk>
