@@ -27,6 +27,7 @@
     <import class="org.concord.smartgraph.OTDataFilterDescription"/>
     <import class="org.concord.data.state.OTDataTable"/>
     <import class="org.concord.data.state.OTDataColumnDescription"/>
+    <import class="org.concord.otrunk.OTProperty"/>
   </imports>
   <objects>
     <OTSystem>
@@ -71,6 +72,7 @@
                 <object refid="${graphable02}"/>
                 <object refid="${graphable03}"/>
                 <object refid="${graphable04}"/>
+                <object refid="${graphable05}"/>
 	        </graphables>
 	        <xDataAxis>
 	          <OTDataAxis min="0" max="5" label="x"/>
@@ -116,6 +118,13 @@
                 <object refid="${datafilter04}"/>
             </dataStore>
           </OTDataGraphable>
+          <OTDataGraphable name="filter 5" local_id="graphable05"
+            connectPoints="true" color="0xff8800" drawMarks="false"
+            xColumn="0" yColumn="1">
+            <dataStore>
+                <object refid="${datafilter05}"/>
+            </dataStore>
+          </OTDataGraphable>
           <OTDataStore name="Predefined data 1" local_id="datastore01" numberChannels="2">
             <channelDescriptions>
               <OTDataChannelDescription unit="s"/>
@@ -123,7 +132,7 @@
             </channelDescriptions>
             <valuesString> 0 10 0.5 50 1 75 1.5 45 2 50 2.5 65 3 40 3.5 35 4 20</valuesString>
           </OTDataStore>
-          <OTDataFilter local_id="datafilter02">
+          <OTDataFilter name="average filter obj" local_id="datafilter02">
           	<description>
 	          	<OTDataFilterDescription operation="average"/>
 	        </description>
@@ -142,6 +151,18 @@
           <OTDataFilter local_id="datafilter04">
           	<description>
 	          	<OTDataFilterDescription operation="slope"/>
+	        </description>
+          	<inputDataStore>
+                <object refid="${datastore01}"/>
+          	</inputDataStore>
+          </OTDataFilter>
+          <OTDataFilter name="average filter obj" local_id="datafilter05">
+          	<description>
+	          	<OTDataFilterDescription operation="average">
+	          		<properties>
+	          			<OTProperty name="type" value="absolute"/>
+	          		</properties>
+	          	</OTDataFilterDescription>
 	        </description>
           	<inputDataStore>
                 <object refid="${datastore01}"/>
