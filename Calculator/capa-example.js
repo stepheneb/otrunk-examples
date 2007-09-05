@@ -23,6 +23,7 @@ importPackage(Packages.org.concord.swing.util);
 importPackage(Packages.org.concord.otrunk.ui);
 importPackage(Packages.org.concord.otrunk.ui.notebook);
 importPackage(Packages.org.concord.data.state);
+importPackage(Packages.org.concord.framework.otrunk);
 
 
 var accuracyMessage = "<p> <font size=5 color=blue>Note: at the moment the digital multimeter doesn't report out voltages and currents to sufficient accuracy for you to be able to figure out the resistance to the nearest ohm. This will be corrected soon. For the moment, be aware that we are restricting our unknown resistance to be evenly divisible by 5. </font> </p>";
@@ -144,15 +145,16 @@ function init()
 			var multimeterListener = new MultimeterModel.Listener() {			
 				multimeterChanged: function()
 				{
+					
 					var value = multimeter.getCurrentValue();
-			
+
 					if(Double.isNaN(value) || Double.compare(previousValue, value) == 0) {
 						previousValue = value;
 						return;
 					}
 					else {			//we've made a valid measurement
 						previousValue = value;
-						var units = "";
+						var units = "?";
 						var state = multimeter.getState();
 						if (state == MultimeterModel.AMMETER_STATE) {
 							units = multimeter.getRangePrefix() + "A";
@@ -180,7 +182,64 @@ function init()
 							solverFinishedOnce = false;
 						}
 						
-						logNotebook(value, units);
+						var rangedMMValueString = new Packages.java.lang.String(value + " " + units);
+
+		System.out.println("multimeterValue = " + value);
+		System.out.println("rangedMMValueString = " + rangedMMValueString);
+		
+		var branchObjectResistor = branchArray["#Ringless Resistor"];
+			if (branchObjectResistor == null) {
+				System.err.println("Didn't find #Ringless Resistor");
+				return;
+			}
+			var branchResistor = branchObjectResistor.branch;
+						
+				var rangedBRVoltageValueString = new Packages.java.lang.String(rangeValue(branchResistor.getVoltageDrop()) + "V");
+				var rangedBRAmperageValueString = new Packages.java.lang.String(rangeValue(branchResistor.getCurrent()) + "A");
+
+		System.out.println("rangedBRVoltageValueString = " + rangedBRVoltageValueString);
+		System.out.println("rangedBRAmperageValueString = " + rangedBRAmperageValueString);
+						
+						if(rangedMMValueString.contains("???"))
+					return;
+				
+				var rangedMMValueArray = rangedMMValueString.split("\\s");
+				var rangedBRVoltageValueArray = rangedBRVoltageValueString.split("\\s");
+				var rangedBRAmperageValueArray = rangedBRAmperageValueString.split("\\s");
+
+				if (rangedMMValueArray.length == 1) 
+					rangedMMValueArray = new Array(rangedMMValueArray[0], "");
+
+// array contains four elements. [0] is ranged number from the DMM, 
+// 	[1] is its unit (e.g., mV),
+//	[2] is the voltage through the ringless resister, and 
+//  [3] is the amperage through the ringless resister
+
+				var array = [ java.lang.Math.abs(java.lang.Double(rangedMMValueArray[0])), 
+					rangedMMValueArray[1],
+					java.lang.Math.abs(java.lang.Double(rangedBRVoltageValueArray[0])),
+					java.lang.Math.abs(java.lang.Double(rangedBRAmperageValueArray[0]))];
+
+/*
+				var array = [ java.lang.Math.abs(java.lang.Double(rangedMMValueArray)), 
+					multimeter.actingAsVoltmeter() ? (rangedMMValueArray + "V") : multimeter.actingAsAmmeter() ? (rangedMMValueArray + "A") : "",
+					java.lang.Math.abs(java.lang.Double(rangedBRVoltageValueArray)),
+					java.lang.Math.abs(java.lang.Double(rangedBRAmperageValueArray))];
+*/
+				
+				multimeterMeasurements[("Measurement " + measurementCounter)] = array;
+				measurementCounter++;
+				if (firstMeasurement)
+				{
+					firstMeasurement = false;
+					infoArea.setCurrentCard("firstMeasurementText");
+					Toolkit.getDefaultToolkit().beep();
+				}
+
+				logNotebook(value, units);
+				lastMMStateViable = true;
+				solverFinishedOnce = true;
+						
 					}
 				}
 			}
@@ -484,9 +543,10 @@ function init()
 			else
 				branchObject.name = getBranchName(branch);
 
+			System.err.println("Adding object to branchArray: " + branchObject.key + ", " + branchObject);
 			branchArray[branchObject.key] = branchObject;
 
-			var nameTest = new java.lang.String(branchObject.name);
+			var nameTest = new Packages.java.lang.String(branchObject.name);
 
 			//Adds a volt listener
 			
@@ -536,92 +596,10 @@ function init()
 	var circuitSolutionListener = new CircuitSolutionListener() {
 		circuitSolverFinished: function()
 		{
-			if(solverFinishedOnce)
-				return;
-			var multimeter = cckModule.getMultimeterModel();
-			if(multimeter == null)
-				return;
-
-			var multimeterValue = multimeter.getCurrentValue();
-			// var multimeterResistorBranch = branchArray["#Multimeter Resistor"];
-			// var multimeterResistor = multimeterResistorBranch.branch;
-			var branchObjectResistor = branchArray["#Ringless Resistor"];
-			if (branchObjectResistor == null)
-				return;
-			var branchResistor = branchObjectResistor.branch;
-
-			var isOKValue = ! java.lang.Double.isNaN(multimeterValue);
-
-			if(isOKValue)
-			{
-System.out.println("Entered okay value");
-				var mmUnit;
-				if(multimeter.getState() == MultimeterModel.VOLTMETER_STATE)
-					mmUnit = multimeter.getRangePrefix() + "V";
-				else if(multimeter.getState() == MultimeterModel.AMMETER_STATE)
-					mmUnit = multimeter.getRangePrefix() + "A";
-				else
-					mmUnit = "";
-				
-				var rangedMMValueString = multimeterValue + " " + mmUnit;
-
-		System.out.println("multimeterValue = " + multimeterValue);
-		System.out.println("rangedMMValueString = " + rangedMMValueString);
-
-
-				var rangedBRVoltageValueString = rangeValue(branchResistor.getVoltageDrop()) + "V";
-				var rangedBRAmperageValueString = rangeValue(branchResistor.getCurrent()) + "A";
-
-		System.out.println("rangedBRVoltageValueString = " + rangedBRVoltageValueString);
-		System.out.println("rangedBRAmperageValueString = " + rangedBRAmperageValueString);
-
-				if(rangedMMValueString.contains("???"))
-					return;
-				
-				var rangedMMValueArray = rangedMMValueString.split("\\s");
-				var rangedBRVoltageValueArray = rangedBRVoltageValueString.split("\\s");
-				var rangedBRAmperageValueArray = rangedBRAmperageValueString.split("\\s");
-
-				if (rangedMMValueArray.length == 1) 
-					rangedMMValueArray = new Array(rangedMMValueArray[0], "");
-
-// array contains four elements. [0] is ranged number from the DMM, 
-// 	[1] is its unit (e.g., mV),
-//	[2] is the voltage through the ringless resister, and 
-//  [3] is the amperage through the ringless resister
-
-				var array = [ java.lang.Math.abs(java.lang.Double(rangedMMValueArray[0])), 
-					rangedMMValueArray[1],
-					java.lang.Math.abs(java.lang.Double(rangedBRVoltageValueArray[0])),
-					java.lang.Math.abs(java.lang.Double(rangedBRAmperageValueArray[0]))];
-
-/*
-				var array = [ java.lang.Math.abs(java.lang.Double(rangedMMValueArray)), 
-					multimeter.actingAsVoltmeter() ? (rangedMMValueArray + "V") : multimeter.actingAsAmmeter() ? (rangedMMValueArray + "A") : "",
-					java.lang.Math.abs(java.lang.Double(rangedBRVoltageValueArray)),
-					java.lang.Math.abs(java.lang.Double(rangedBRAmperageValueArray))];
-*/
-				
-				multimeterMeasurements[("Measurement " + measurementCounter)] = array;
-				measurementCounter++;
-				if (firstMeasurement)
-				{
-					firstMeasurement = false;
-					infoArea.setCurrentCard("firstMeasurementText");
-					Toolkit.getDefaultToolkit().beep();
-				}
-
-				lastMMStateViable = true;
-				solverFinishedOnce = true;
-			}
-			
-		},
+			},
 	};
 
 	circuit.addCircuitListener(circuitHandler);
-	
-	var circuitSolver = model.getCircuitSolver();
-	circuitSolver.addSolutionListener(circuitSolutionListener);
 
 	cckModule.setElectronsVisible(visibleElectrons);
 	// application.startApplication();
@@ -662,6 +640,19 @@ function createResistor()
 
 	System.out.println("The Ringless Resistor's Resistance is " + newBranch.getResistance());
 logFile.println("The Ringless Resistor's Resistance is " + newBranch.getResistance());
+
+			var branchObject = new Object();
+			branchObject.branch = newBranch;
+			branchObject.key = newBranch.getName();
+			branchObject.voltage = 0.0;
+			branchObject.current = 0.0;
+			if(newBranch.getName().startsWith("#"))
+				branchObject.name = newBranch.getName();
+			else
+				branchObject.name = getBranchName(newBranch);
+
+			System.err.println("Adding object to branchArray: " + branchObject.key + ", " + branchObject);
+			branchArray[branchObject.key] = branchObject;
 }
 
 var otExample;
@@ -680,6 +671,8 @@ function rangeValue(value) {
         		value = Math.abs(value);
         	}
         	
+        	System.err.println("Value to range is: " + value);
+        	
         	if(value >= 1000) {
         		unitPrefix = " k";
         		displayValue = value / 1000;
@@ -693,7 +686,7 @@ function rangeValue(value) {
         		displayValue = value * 1000;
         	}
         	
-        	exponent = Math.log10(Math.abs(displayValue));
+        	exponent = Packages.java.lang.Math.log10(Math.abs(displayValue));
         	
         	if(exponent >= 0) {
             	leftOfDecimalDigits = exponent + 1;
@@ -710,8 +703,13 @@ function rangeValue(value) {
         		displayValue = temp / Math.pow(10, displayDigits - leftOfDecimalDigits);
         	}
         	
-        	var displayString = displayValue + "";
-        	var addZeroes = (displayDigits + 1) - displayString.length();
+        	// System.err.println("displayValue is a: " + displayValue.getClass().getName());
+        	var displayString = new Packages.java.lang.String(displayValue);
+        	// System.err.println(displayString.getClass().getName());
+        	// displayString = displayString + "a"; // + displayValue;
+        	// System.err.println(displayString.getClass().getName());
+        	// System.err.println("Display string: " + displayString /*+ " is a " + displayString.getClass().getName()*/);
+        	var addZeroes = (displayDigits + 1) - (displayString.length());
         	
         	if(displayValue < 100)
         		if(displayString.length() < displayDigits + 1)
@@ -808,7 +806,7 @@ function logNotebook(value, unit) {
 		list.add(measurement);
 }
 
-var testButtonHandler =
+/* var testButtonHandler =
 {
 	actionPerformed: function(evt)
 	{	
@@ -817,7 +815,7 @@ var testButtonHandler =
 }
 var testButtonListener = new ActionListener(testButtonHandler);
 testButton.addActionListener(testButtonListener);
-testButton.setText("NB Test");
+testButton.setText("NB Test"); */
 
 //This function gets the name of the branch from the branch's classpath, and then returns the name of the branch plus 
 //the latest number of branches of that type in the CCK program.
@@ -996,8 +994,8 @@ logFile.println("All measurements: " );
 	{
 		var currentMeasurement = "Measurement " + i;
 		var array = multimeterMeasurements[currentMeasurement];
-System.out.println(currentMeasurement + " with " + array[0] + " " + array[1] + " measured while there were " + array[2] + " and " + array[3] + " through the resistor.");
-logFile.println(currentMeasurement + " with " + array[0] + " " + array[1] + " measured while there were " + array[2] + " and " + array[3] + " through the resistor.");
+System.out.println(currentMeasurement + " with " + array[0] + " '" + array[1] + "' measured while there were " + array[2] + " and " + array[3] + " through the resistor.");
+logFile.println(currentMeasurement + " with " + array[0] + " '" + array[1] + "' measured while there were " + array[2] + " and " + array[3] + " through the resistor.");
 
 	}
 
@@ -1013,7 +1011,7 @@ logFile.println(currentMeasurement + " with " + array[0] + " " + array[1] + " me
 		correctAmmeterMeasurements[i] = null;
 
 		if(array != null)
-			if(array[0] == array[3] && (array[1].equals("A") || array[1].equals("mA") || array[1].equals("kA")))
+			if(Math.abs((array[0]-array[3])/array[3]) < 0.001 && (array[1].equals("A") || array[1].equals("mA") || array[1].equals("kA")))
 			{
 				correctAmmeterMeasurements[i] = currentMeasurement;
 				numCorrectAmmeterMeasurements++;
@@ -1041,7 +1039,7 @@ System.out.println("bestVoltMeasurement" + bestVoltMeasurement);
 
 
 			if(bestVoltMeasurementTest != null && correctAmmeterMeasurements[j] != null)
-				if(bestVoltMeasurementTest[0] == array[2])
+				if((bestVoltMeasurementTest[0]-array[2])/array[2] < 0.0001)
 				{
 					if(numCorrectVoltMeasurements != 0)
 						if(correctVoltmeterMeasurements[numCorrectVoltMeasurements - 1].equals(bestVoltMeasurement))
@@ -1158,14 +1156,15 @@ System.out.println("In function solution, array = " + array[0] + ", " + array [1
 	substMap.put("calculatedResistance",String(calculatedResistance));
 	substMap.put("shortCircuitCounter",String(shortCircuitCounter));
 
+	// FIXME Replace with OTVelocity templates...
 	if(answerType == 1)
-		solutionString = subst.substitute(solutionString1, substMap);
+		solutionString = substitute(solutionString1, substMap);
 	else if(answerType == 2)
-		solutionString = subst.substitute(solutionString2, substMap);
+		solutionString = substitute(solutionString2, substMap);
 	else if(answerType == 3)
-		solutionString = subst.substitute(solutionString3, substMap);
+		solutionString = substitute(solutionString3, substMap);
 	else if(answerType == 4 )
-		solutionString = subst.substitute(solutionString4, substMap);
+		solutionString = substitute(solutionString4, substMap);
 
 	var shortCircuitMsg = "";
 
@@ -1176,13 +1175,17 @@ System.out.println("In function solution, array = " + array[0] + ", " + array [1
 		else if (shortCircuitCounter == 2)
 			shortCircuitMsg = shortCircuitMsg2;
 		else
-		shortCircuitMsg = subst.substitute(shortCircuitMsg3, substMap);
+		shortCircuitMsg = substitute(shortCircuitMsg3, substMap);
 	}
 
 //Check for units reported
 	var unitsMsg = unitsNotReported;
 	if (unitsGiven) unitsMsg = unitsReported;
-	infoArea.setText(startHTML + capaLogo + solutionString + unitsMsg + shortCircuitMsg + endHTML);
+	var otxml = new OTXMLString(startHTML + capaLogo + solutionString + unitsMsg + shortCircuitMsg + endHTML);
+	// System.err.println("Solution message is: ");
+	// System.err.println(startHTML + capaLogo + solutionString + unitsMsg + shortCircuitMsg + endHTML);
+	solutionText.setText(otxml);
+	infoArea.setCurrentCard("solutionText");
 }
 
 /*var toggleMultiMeterButtonHandler =
@@ -1275,3 +1278,29 @@ function save()
 {
 	logFile.close();
 }
+
+function substitute(text, map) {
+	var prefix = "$";
+	var suffix = "$";
+	var keys = map.keySet().iterator();
+		while (keys.hasNext())
+		{
+			var variable = keys.next();
+			var value = map.get(variable);
+			text = replaceAll(new Packages.java.lang.String(text), new Packages.java.lang.String(prefix + variable + suffix), new Packages.java.lang.String(value));
+		}
+	    return text;
+}
+
+function replaceAll(text, searchValue, replaceValue)
+	{
+		if (replaceValue.indexOf(searchValue) > -1)
+			return text;
+			
+		var n = searchValue.length();
+		for (var i = text.indexOf(searchValue); i > -1; i = text.indexOf(searchValue, i + 1))
+		{
+			text = text.substring(0, i) + replaceValue + text.substring(i + n);
+		}
+		return text;
+	}
