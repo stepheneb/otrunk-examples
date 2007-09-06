@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<otrunk id="33754150-b594-11d9-9669-0800200c9a66" >
+  <imports>
+    <import class="org.concord.otrunk.OTSystem"/>
+    <import class="org.concord.otrunk.view.OTViewBundle"/>
+    <import class="org.concord.otrunk.view.OTViewEntry"/>
+    <import class="org.concord.otrunk.script.js.OTJavascript"/>
+    <import class="org.concord.otrunk.script.OTScriptEngineBundle"/>
+    <import class="org.concord.otrunk.script.OTScriptEngineEntry"/>
+    <import class="org.concord.otrunk.view.OTFolderObject"/>
+    <import class="org.concord.otrunk.view.OTViewEntry"/>
+    <import class="org.concord.otrunk.view.OTViewService"/>
+    <import class="org.concord.framework.otrunk.view.OTFrame"/>
+    <import class="org.concord.data.state.OTDataStore"/>
+    <import class="org.concord.data.state.OTDataChannelDescription"/>
+    <import class="org.concord.data.state.OTDataField"/>
+    <import class="org.concord.data.state.OTWaveGenerator"/>
+    <import class="org.concord.datagraph.state.OTDataGraph"/>
+    <import class="org.concord.datagraph.state.OTDataAxis"/>
+    <import class="org.concord.datagraph.state.OTDataGraphable"/>
+    <import class="org.concord.datagraph.state.OTDataCollector"/>
+    <import class="org.concord.datagraph.state.OTMultiDataGraph"/>
+    <import class="org.concord.datagraph.state.OTDataPointLabel"/>
+    <import class="org.concord.datagraph.state.OTDataPointRuler"/>
+    <import class="org.concord.graph.util.state.OTDrawingTool"/>
+    <import class="org.concord.graph.util.state.OTDrawingStamp"/>
+    <import class="org.concord.graph.util.state.OTDrawingImageIcon"/>
+    <import class="org.concord.graph.util.state.OTDrawingShape"/>
+    <import class="org.concord.graph.util.state.OTPointTextLabel"/>
+    <import class="org.concord.otrunk.view.document.OTCompoundDoc"/>
+    <import class="org.concord.smartgraph.OTDataFilter"/>
+    <import class="org.concord.smartgraph.OTDataFilterDescription"/>
+    <import class="org.concord.data.state.OTDataTable"/>
+    <import class="org.concord.data.state.OTDataColumnDescription"/>
+    <import class="org.concord.otrunk.OTProperty"/>
+	<import class="org.concord.otrunk.script.ui.OTScriptObject" />
+	<import class="org.concord.otrunk.script.ui.OTScriptVariable" />
+    <import class="org.concord.otrunk.view.OTViewChild"/>
+  </imports>
+  <objects>
+    <OTSystem>
+      <bundles>
+        <OTViewBundle>
+          <views>
+			<OTViewEntry
+			  objectClass="org.concord.otrunk.script.ui.OTScriptObject"
+			  viewClass="org.concord.otrunk.script.ui.OTScriptObjectView"/>
+            <OTViewEntry
+              objectClass="org.concord.otrunk.view.document.OTCompoundDoc" 
+              viewClass="org.concord.otrunk.view.document.OTDocumentView"/>
+            <OTViewEntry 
+              objectClass="org.concord.datagraph.state.OTDataGraph" 
+              viewClass="org.concord.datagraph.state.OTDataGraphView"/>
+            <OTViewEntry
+              objectClass="org.concord.otrunk.view.OTFolderObject"
+              viewClass="org.concord.otrunk.view.OTFolderObjectView"/>
+            <OTViewEntry
+              objectClass="org.concord.data.state.OTDataTable"
+              viewClass="org.concord.data.state.OTDataTableView"/>
+          </views>
+        </OTViewBundle>
+        <OTScriptEngineBundle>
+          <engines>
+             <OTScriptEngineEntry 
+             	objectClass="org.concord.otrunk.script.js.OTJavascript"
+             	engineClass="org.concord.otrunk.script.js.OTJavascriptEngine"/>
+          </engines>
+        </OTScriptEngineBundle>
+      </bundles>
+      <root>
+        <OTFolderObject name="Graphs">
+          <children>
+ 	        <OTCompoundDoc name="Graph with Filter">
+	          <bodyText>
+	            <p>Graph with Filter:</p>
+                <object refid="${data_graph1}"/><br/>
+                <object refid="${data_table1}"/><br/>
+				<object refid="${script_object}"/>
+              </bodyText>
+            </OTCompoundDoc>
+            <OTViewChild name="Edit script" object="${script_object}" viewid="${script_edit_view}"/>
+          </children>
+        </OTFolderObject>
+      </root>
+      <library>
+	      <OTDataGraph name="Predefined Data Graph 1" local_id="data_graph1" multipleGraphableEnabled="false">
+	        <graphables>
+                <object refid="${graphable01}"/>
+                <object refid="${graphable02}"/>
+	        </graphables>
+	        <xDataAxis>
+	          <OTDataAxis min="0" max="5" label="x"/>
+	        </xDataAxis>
+	        <yDataAxis>
+	          <OTDataAxis min="0" max="100" label="y"/>
+	        </yDataAxis>
+	      </OTDataGraph>
+	      <OTDataTable local_id="data_table1">
+	      	<dataStore>
+	      		<object refid="${datastore01}"/>
+	      	</dataStore>
+	      	<columns>
+	      		<OTDataColumnDescription label="x"/>
+	      		<OTDataColumnDescription label="y" color="0xFF0000"/>
+	      	</columns>
+	      </OTDataTable>
+          <OTDataGraphable name="Predefined data graphable 1" local_id="graphable01"
+            connectPoints="true" color="0xff0000" drawMarks="false"
+            xColumn="0" yColumn="1">
+            <dataStore>
+                <object refid="${datastore01}"/>
+            </dataStore>
+          </OTDataGraphable>
+          <OTDataGraphable name="filter 2" local_id="graphable02"
+            connectPoints="true" color="0xaa00ff" drawMarks="false"
+            xColumn="0" yColumn="1">
+            <dataStore>
+                <object refid="${datafilter02}"/>
+            </dataStore>
+          </OTDataGraphable>
+          <OTDataStore name="Predefined data 1" local_id="datastore01" numberChannels="2">
+            <channelDescriptions>
+              <OTDataChannelDescription unit="s"/>
+              <OTDataChannelDescription unit="m"/>
+            </channelDescriptions>
+            <valuesString> 0 10 0.5 50 1 75 1.5 45 2 50 2.5 65 3 40 3.5 35 4 20</valuesString>
+          </OTDataStore>
+          <OTDataFilter name="average filter obj" local_id="datafilter02">
+          	<description>
+	          	<OTDataFilterDescription operation="average" filterClass="org.concord.examples.smartgraph.DataAmplifier">
+	          		<properties>
+	          			<OTProperty name="magnification" value="2"/>
+	          		</properties>
+          		</OTDataFilterDescription>
+	        </description>
+          	<inputDataStore>
+                <object refid="${datastore01}"/>
+          	</inputDataStore>
+          </OTDataFilter>
+          <OTScriptObject name="Script 2" local_id="script_object">
+          	<variables>
+          		<OTScriptVariable name="graphable" reference="${graphable01}"/>
+          		<OTScriptVariable name="filter" reference="${datafilter02}"/>
+          	</variables>
+			<script>
+				<OTJavascript src="data_filters_script.js"/>
+			</script>
+          </OTScriptObject>
+          <OTScriptObject name="Script 2" local_id="script_object2">
+          	<variables>
+          		<OTScriptVariable name="graphable" reference="${graphable01}"/>
+          		<OTScriptVariable name="filter" reference="${datafilter02}"/>
+          	</variables>
+			<script>
+          
+	            <OTJavascript>
+	              <script>
+//This is an example embedded script
+importClass(Packages.java.lang.System);
+
+function init()
+{
+	System.out.println("changing color in the script --- ");
+	graphable.setColor(0x0000FF);
+	graphable.setDrawMarks(true);
+	graphable.setConnectPoints(false);
+
+	return true;
+}
+
+function save()
+{
+	return null;
+}				  </script>
+			  	</OTJavascript>
+		  	</script>
+	  	  </OTScriptObject>
+		  <OTViewEntry
+			  objectClass="org.concord.otrunk.script.ui.OTScriptObject"
+			  viewClass="org.concord.otrunk.script.ui.OTScriptObjectEditView"
+			  local_id="script_edit_view"/>
+      </library>
+    </OTSystem>
+  </objects>
+</otrunk>
