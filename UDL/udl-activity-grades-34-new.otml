@@ -2,13 +2,21 @@
 <otrunk id="678b5190-0bcf-012a-b542-0017f2cc694e">
 	<imports>
 		<import class="org.concord.data.state.OTDataStore"/>
-		 <import class="org.concord.datagraph.state.OTDataGraphable"/>
+		<import class="org.concord.data.state.OTDataChannelDescription"/>
+		<import class="org.concord.data.state.OTDataField"/>
+		<import class="org.concord.datagraph.state.OTDataGraph"/>
+		<import class="org.concord.datagraph.state.OTDataAxis"/>
+		<import class="org.concord.datagraph.state.OTDataGraphable"/>
+		<import class="org.concord.datagraph.state.OTDataCollector"/>
+		<import class="org.concord.datagraph.state.OTMultiDataGraph"/>
+		<import class="org.concord.datagraph.state.OTPluginView"/>
 		<import class="org.concord.framework.otrunk.view.OTFrame"/>
 		<import class="org.concord.graph.util.state.OTDrawingTool"/>
 		<import class="org.concord.graph.util.state.OTDrawingStamp"/>
 		<import class="org.concord.graph.util.state.OTDrawingImageIcon"/>
 		<import class="org.concord.graph.util.state.OTDrawingShape"/>
 		<import class="org.concord.graph.util.state.OTDrawingTool2"/>
+		<import class="org.concord.graph.util.state.OTPointTextLabel"/>
 		<import class="org.concord.otrunk.OTSystem"/>
 		<import class="org.concord.otrunk.overlay.OTOverlay"/>
 		<import class="org.concord.otrunk.script.ui.OTScriptObject"/>
@@ -49,6 +57,12 @@
 		<import class="org.concord.otrunk.view.prototype.OTPrototypeViewEntry"/>
 	    <import class="org.concord.otrunk.view.prototype.OTPrototypeEventController"/>
 	    <import class="org.concord.otrunk.view.prototype.OTPrototypeMapEntry"/>
+	    <import class="org.concord.sensor.state.OTDeviceConfig"/>
+		<import class="org.concord.sensor.state.OTExperimentRequest"/>
+		<import class="org.concord.sensor.state.OTInterfaceManager"/>
+		<import class="org.concord.sensor.state.OTSensorDataProxy"/>
+		<import class="org.concord.sensor.state.OTSensorRequest"/>
+		<import class="org.concord.sensor.state.OTZeroSensor"/>
 	</imports>
 	<objects>
 		<OTSystem local_id="system">
@@ -86,6 +100,11 @@
 						<OTViewEntry objectClass="org.concord.otrunk.ui.OTPlacementContainer" viewClass="org.concord.otrunk.ui.swing.OTPlacementContainerView"/>
 						<OTViewEntry local_id="text-edit" objectClass="org.concord.otrunk.ui.OTText" viewClass="org.concord.otrunk.ui.swing.OTTextEditView"/>
 						<OTViewEntry local_id="text-label" objectClass="org.concord.otrunk.ui.OTText" viewClass="org.concord.otrunk.ui.swing.OTTextView"/>
+						<OTViewEntry viewClass="org.concord.datagraph.state.OTDataCollectorView" objectClass="org.concord.datagraph.state.OTDataCollector"/>
+						<OTViewEntry viewClass="org.concord.datagraph.state.OTDataGraphView" objectClass="org.concord.datagraph.state.OTDataGraph"/>
+						<OTViewEntry viewClass="org.concord.data.state.OTDataFieldView" objectClass="org.concord.data.state.OTDataField"/>
+						<OTViewEntry viewClass="org.concord.datagraph.state.OTDataDrawingToolView" objectClass="org.concord.graph.util.state.OTDrawingTool"/>
+						<OTViewEntry viewClass="org.concord.datagraph.state.OTMultiDataGraphView" objectClass="org.concord.datagraph.state.OTMultiDataGraph"/>
 						<OTUDLDocumentViewConfig 
 							local_id="compound_doc_view" 
 							objectClass="org.concord.otrunk.view.document.OTCompoundDoc" 
@@ -764,6 +783,11 @@
 						<OTScriptEngineEntry objectClass="org.concord.otrunk.script.js.OTJavascript" engineClass="org.concord.otrunk.script.js.OTJavascriptEngine"/>
 					</engines>
 				</OTScriptEngineBundle>
+				<OTInterfaceManager>
+					<deviceConfigs>
+						<OTDeviceConfig configString="none" deviceId="10"/>
+					</deviceConfigs>
+				</OTInterfaceManager>
 			</bundles>
 			<overlays>
 		        <object refid="${normal-text-overlay}"/>
@@ -3066,7 +3090,7 @@
 														</OTUDLCoachStatement>
 													</coachStatements>
 												</OTUDLCompoundDoc>
-												<OTUDLCompoundDoc local_id="exploration2-2c" name="2-2">
+												<OTUDLCompoundDoc local_id="exploration2-2" name="materials">
 													<bodyText>
 														<div class="buffer">
 															<div class="border">
@@ -3090,133 +3114,181 @@
 														<OTDrawingTool2 local_id="drawing1"/>
 													</documentRefs>
 												</OTUDLCompoundDoc>
-												<OTUDLCompoundDoc local_id="exploration2-3" name="2-3">
+												<OTUDLCompoundDoc local_id="exploration2-3" name="explore1">
 													<bodyText>
 														<div class="buffer">
 															<div class="border">
 																<div class="body">
 																	<div class="subtitle">
-																		Scaffolded Questions
+																		Explore
 																	</div>
-																	Answer the following question:<p/>
-																	<object refid="${udlquestions1}" viewid="${questions-card-view}"/><p/>
-																	For more on questions, see otrunk-examples/UDL/udl-questions-examples.
+																	<ol>
+																		<li>
+																			Think of several kinds of shoes. Are some of them slippery and some of them sticky, or are they all the same? List your examples and how much friction you think they have.
+																			<p/>
+																		</li>
+																		<li>
+																			Collect different types of shoes from students in the class. Be sure you keep track who they belong to! Make a list describing them. What are they especially good for? What is the bottom of the shoe made of?
+																			<p/>
+																		</li>
+																	</ol>
+																	<table border="1">
+																		<tr>
+																			<td>
+																				Student
+																			</td>
+																			<td>
+																				Type of shoe
+																			</td>
+																			<td>
+																				What it is for
+																			</td>
+																			<td>
+																				What the sole is made of
+																			</td>
+																		</tr>
+																		<tr>
+																			<td>
+																				<object refid="${act3-exp1-text1}"/>
+																			</td>
+																			<td>
+																				<object refid="${act3-exp1-text2}"/>
+																			</td>
+																			<td>
+																				<object refid="${act3-exp1-text3}"/>
+																			</td>
+																			<td>
+																				<object refid="${act3-exp1-text4}"/>
+																			</td>
+																		</tr>
+																		<tr>
+																			<td>
+																				<object refid="${act3-exp1-text5}"/>
+																			</td>
+																			<td>
+																				<object refid="${act3-exp1-text6}"/>
+																			</td>
+																			<td>
+																				<object refid="${act3-exp1-text7}"/>
+																			</td>
+																			<td>
+																				<object refid="${act3-exp1-text8}"/>
+																			</td>
+																		</tr>
+																		<tr>
+																			<td>
+																				<object refid="${act3-exp1-text9}"/>
+																			</td>
+																			<td>
+																				<object refid="${act3-exp1-text10}"/>
+																			</td>
+																			<td>
+																				<object refid="${act3-exp1-text11}"/>
+																			</td>
+																			<td>
+																				<object refid="${act3-exp1-text12}"/>
+																			</td>
+																		</tr>
+																		<tr>
+																			<td>
+																				<object refid="${act3-exp1-text13}"/>
+																			</td>
+																			<td>
+																				<object refid="${act3-exp1-text14}"/>
+																			</td>
+																			<td>
+																				<object refid="${act3-exp1-text15}"/>
+																			</td>
+																			<td>
+																				<object refid="${act3-exp1-text16}"/>
+																			</td>
+																		</tr>
+																	</table>
 																</div>
-																<!-- Po tht eppsii tht eoooos s?ppeo -->
 															</div>
 														</div>
 													</bodyText>
 													<documentRefs>
-														<OTUDLQuestions local_id="udlquestions1">
-															<questions>
-																<OTQuestion local_id="object111" name="L5">
-													            	<prompt>
-													            		<OTCompoundDoc>
-													            			<bodyText>
-													            				<div class="body-no-border">
-													            					Here is a question
-													            				</div>
-													            			</bodyText>
-													            		</OTCompoundDoc>
-													            	</prompt>
-													            	<input>
-													            		<OTViewChild viewid="${text-edit}">
-													            			<object>
-													            				<OTText/>
-													            			</object>
-													            		</OTViewChild>
-													            	</input>
-													            </OTQuestion>
-													            <OTQuestion local_id="object112" name="L4">
-													            	<prompt>
-													            		<OTCompoundDoc>
-													            			<bodyText>
-													            				<div class="body-no-border">
-													            					Here is a question. <br/> Here is a hint
-													            				</div>
-													            			</bodyText>
-													            		</OTCompoundDoc>
-													            	</prompt>
-													            	<input>
-													            		<OTViewChild viewid="${text-edit}">
-													            			<object>
-													            				<OTText/>
-													            			</object>
-													            		</OTViewChild>
-													            	</input>
-													            </OTQuestion>
-													            <OTQuestion local_id="object113" name="L3">
-													            	<prompt>
-													            		<OTCompoundDoc>
-													            			<bodyText>
-													            				<div class="body-no-border">
-													            					Here is a question that helps you out
-													            				</div>
-													            			</bodyText>
-													            		</OTCompoundDoc>
-													            	</prompt>
-													            	<input>
-													            		<OTCompoundDoc>
-													            			<bodyText>
-													            				<div class="body-no-border">
-													            					I think the answer is <object refid="${text109}" viewid="${text-edit}"/> 
-													            					because<br/>
-													            					<object refid="${text110}" viewid="${text-edit}"/>
-													            				</div>
-													            			</bodyText>
-													            			<documentRefs>
-													            				<OTText local_id="text109"/>
-													            				<OTText local_id="text110"/>
-													            			</documentRefs>
-													            		</OTCompoundDoc>
-													            	</input>
-													            </OTQuestion>
-													            <OTQuestion local_id="object114" name="L2">
-													            	<prompt>
-													            		<OTCompoundDoc>
-													            			<bodyText>
-													            				<div class="body-no-border">
-													            					Here is a question with the initial text in the window
-													            				</div>
-													            			</bodyText>
-													            		</OTCompoundDoc>
-													            	</prompt>
-													            	<input>
-													            		<OTViewChild viewid="${text-edit}">
-													            			<object>
-													            				<OTText text="I think the answer is"/>
-													            			</object>
-													            		</OTViewChild>
-													            	</input>
-													            </OTQuestion>
-													            <OTQuestion local_id="object115" name="L1">
-													            	<prompt>
-													            		<OTCompoundDoc>
-													            			<bodyText>
-													            				<div class="body-no-border">
-													            					Here is a multiple-choice question
-													            				</div>
-													            			</bodyText>
-													            		</OTCompoundDoc>
-													            	</prompt>
-													            	<input>
-													            		<OTChoice>
-																			<choices>
-																				<OTText name="Here is an answer" />
-																				<OTText name="Here is another answer" />
-																			</choices>
-																		</OTChoice>
-													            	</input>
-													            </OTQuestion>
-															</questions>
-													</OTUDLQuestions>
+														<OTText local_id="act3-exp1-text1"/>
+														<OTText local_id="act3-exp1-text2"/>
+														<OTText local_id="act3-exp1-text3"/>
+														<OTText local_id="act3-exp1-text4"/>
+														<OTText local_id="act3-exp1-text5"/>
+														<OTText local_id="act3-exp1-text6"/>
+														<OTText local_id="act3-exp1-text7"/>
+														<OTText local_id="act3-exp1-text8"/>
+														<OTText local_id="act3-exp1-text9"/>
+														<OTText local_id="act3-exp1-text10"/>
+														<OTText local_id="act3-exp1-text11"/>
+														<OTText local_id="act3-exp1-text12"/>
+														<OTText local_id="act3-exp1-text13"/>
+														<OTText local_id="act3-exp1-text14"/>
+														<OTText local_id="act3-exp1-text15"/>
+														<OTText local_id="act3-exp1-text16"/>
 													</documentRefs>
 												</OTUDLCompoundDoc>
-												<OTUDLCompoundDoc local_id="exploration2-4" name="2-4">
-													<bodyText>Exploration 2 part 4</bodyText>
-												</OTUDLCompoundDoc>
-												<OTUDLCompoundDoc local_id="exploration2-5" name="2-5">
-													<bodyText>Exploration 2 part 5</bodyText>
+												<OTUDLCompoundDoc local_id="exploration2-4" name="explore1">
+													<bodyText>
+														<div class="buffer">
+															<div class="border">
+																<div class="body">
+																	<div class="subtitle">
+																		Explore page 2
+																	</div>
+																	<ol>
+																		<li>
+																			Put a plastic bottle into each shoe. Add water so that all of the shoes weigh the same. You can weigh the shoes using the force sensor.<p/>
+																			<img src="http://udl.concord.org/share/Friction/weigh-sneaker-web.png"/><p/>
+																		</li>
+																		<object refid="${dc_id_1}"/><br/>
+																		<table>
+																			<tr>
+																				<td>
+																					<object refid="${forc_zero_button_dc_id_1}"/>
+																				</td>
+																			</tr>
+																		</table>
+																	</ol>
+																</div>
+															</div>
+														</div>
+													</bodyText>
+													<documentRefs>
+														<OTDataCollector name="datacollector" multipleGraphableEnabled="false" title="Force (5N) Sensor Graph" local_id="dc_id_1" autoScaleEnabled="true">
+															<source>
+																<OTDataGraphable name="Sensor" connectPoints="true" yColumn="1" drawMarks="false" color="0x0000ff" xColumn="0">
+																	<dataProducer>
+																		<OTSensorDataProxy name="dataproducer" local_id="dp_dc_id_1">
+																			<request>
+																				<OTExperimentRequest period="0.01">
+																					<sensorRequests>
+																						<OTSensorRequest stepSize="0.01" type="5" unit="N" port="0" requiredMax="4.0" displayPrecision="-2" requiredMin="-4.0"/>
+																					</sensorRequests>
+																				</OTExperimentRequest>
+																			</request>
+																			<zeroSensor>
+																				<OTZeroSensor sensorIndex="0" local_id="forc_zero_dc_id_1"/>
+																			</zeroSensor>
+																		</OTSensorDataProxy>
+																	</dataProducer>
+																	<dataStore>
+																		<OTDataStore local_id="ds_dc_id_1"/>
+																	</dataStore>
+																</OTDataGraphable>
+															</source>
+															<xDataAxis>
+																<OTDataAxis max="60" units="s" min="0" label="Time"/>
+															</xDataAxis>
+															<yDataAxis>
+																<OTDataAxis max="4.0" units="N" min="-4.0" label="Forc-e (5N)"/>
+															</yDataAxis>
+														</OTDataCollector>
+														<OTButton text="Zero Force" local_id="forc_zero_button_dc_id_1">
+															<action>
+																<object refid="${forc_zero_dc_id_1}"/>
+															</action>
+														</OTButton>
+													</documentRefs>
 												</OTUDLCompoundDoc>
 											</cards>
 											<currentCard>
@@ -3716,34 +3788,17 @@
 							</definition>
 						</OTDefinition>
 						<OTDefinition>
-							<word>fricción</word>
+							<word>evidence</word>
 							<definition>
 								<OTCompoundDoc>
 									<bodyText>
-										<div class="body"><b>Fricción:</b> La fuerza que hace decelerar a un objeto cuando se pasa sobre algúna superficie.
+										<div class="buffer">
+											<div class="definition-border">
+												<div class="body">
+														<b>Evidence</b> is what you observe or measure to support an idea.
+													</div>
 											</div>
-									</bodyText>
-								</OTCompoundDoc>
-							</definition>
-						</OTDefinition>
-						<OTDefinition>
-							<word>superficie</word>
-							<definition>
-								<OTCompoundDoc>
-									<bodyText>
-										<div class="body"><b>Superficie:</b> La superficie es la parte externa de un objeto. 
-											</div>
-									</bodyText>
-								</OTCompoundDoc>
-							</definition>
-						</OTDefinition>
-						<OTDefinition>
-							<word>fuerza</word>
-							<definition>
-								<OTCompoundDoc>
-									<bodyText>
-										<div class="body"><b>Fuerza:</b> Un empuje o un jalón que hace mover, parar, o cambiar dirección a un objeto.
-											</div>
+										</div>
 									</bodyText>
 								</OTCompoundDoc>
 							</definition>
@@ -3753,8 +3808,12 @@
 							<definition>
 								<OTCompoundDoc>
 									<bodyText>
+										<div class="buffer">
+											<div class="definition-border">
 										<div class="body"><b>Fricción:</b> La fuerza que hace decelerar a un objeto cuando se pasa sobre algúna superficie.
 											</div>
+											</div>
+										</div>
 									</bodyText>
 								</OTCompoundDoc>
 							</definition>
@@ -3764,8 +3823,12 @@
 							<definition>
 								<OTCompoundDoc>
 									<bodyText>
+										<div class="buffer">
+											<div class="definition-border">
 										<div class="body"><b>Superficie:</b> La superficie es la parte externa de un objeto. 
 											</div>
+											</div>
+										</div>
 									</bodyText>
 								</OTCompoundDoc>
 							</definition>
@@ -3775,8 +3838,12 @@
 							<definition>
 								<OTCompoundDoc>
 									<bodyText>
+										<div class="buffer">
+											<div class="definition-border">
 										<div class="body"><b>Fuerza:</b> Un empuje o un jalón que hace mover, parar, o cambiar dirección a un objeto.
 											</div>
+											</div>
+										</div>
 									</bodyText>
 								</OTCompoundDoc>
 							</definition>
