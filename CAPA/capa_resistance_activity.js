@@ -130,11 +130,6 @@ function init()
 	// FIXME replace circuitGraphicListener with circuitListener or something
 	
 	setupMultimeter();	
-
-	// FIXME: this could be done in the otml
-	cckModule.setGrabBagEnabled(false);
-	cckModule.setElectronsVisible(false);
-	//
 	
 	// Circuit listener will handle adding branches, connect and disconnect junctions, etc. 
 	// It will also add a current and voltage listener to the resistor or multimeter
