@@ -20,6 +20,8 @@
 		<import class="org.concord.otrunk.OTSystem"/>
 		<import class="org.concord.otrunk.overlay.OTOverlay"/>
 		<import class="org.concord.otrunk.script.ui.OTScriptObject"/>
+		<import class="org.concord.otrunk.script.ui.OTScriptVariable"/>
+		<import class="org.concord.otrunk.script.ui.OTScriptVariableComponent"/>
 		<import class="org.concord.otrunk.script.js.OTJavascript"/>
 		<import class="org.concord.otrunk.script.OTScriptEngineBundle"/>
 		<import class="org.concord.otrunk.script.OTScriptEngineEntry"/>
@@ -382,11 +384,14 @@
 																		<documentRefs>
 																			<OTButton local_id="pretest-submit-button-sp" name="Button" text="Someter"/>
 																			<OTScriptObject local_id="pretest-button-script-sp">
-																				<referenceObjects>
-																					<object refid="${section-card-container}"/>
-																					<object refid="${pretest-submit-button-sp}"/>
-																					<object refid="${section_intro}"/>
-																				</referenceObjects>
+																				<variables>
+																					<OTScriptVariable name="cardContainer"
+																						reference="${section-card-container}"/>
+																					<OTScriptVariableComponent name="button"
+																						reference="${pretest-submit-button-sp}"/>
+																					<OTScriptVariable name="card"
+																						reference="${section_intro}"/>
+																				</variables>
 																				<script>
 																					<object refid="${change_page.js}"/>
 																				</script>
@@ -882,11 +887,14 @@
 													<documentRefs>
 														<OTButton local_id="pretest-submit-button" name="Button" text="Submit"/>
 														<OTScriptObject local_id="pretest-button-script">
-															<referenceObjects>
-																<object refid="${section-card-container}"/>
-																<object refid="${pretest-submit-button}"/>
-																<object refid="${section_intro}"/>
-															</referenceObjects>
+															<variables>
+																<OTScriptVariable name="cardContainer"
+																	reference="${section-card-container}"/>
+																<OTScriptVariableComponent name="button"
+																	reference="${pretest-submit-button}"/>
+																<OTScriptVariable name="card"
+																	reference="${section_intro}"/>
+															</variables>
 															<script>
 																<object refid="${change_page.js}"/>
 															</script>
@@ -3546,13 +3554,18 @@
 														<OTText local_id="password" text="friction" name="Password"/>
 														<OTButton local_id="wrapup-submit-button" name="Button" text="Submit"/>
 														<OTScriptObject local_id="wrapup-button-script">
-															<referenceObjects>
-																<object refid="${section-card-container}"/>
-																<object refid="${wrapup-submit-button}"/>
-																<object refid="${section_posttest}"/>
-																<object refid="${password-field}"/>
-																<object refid="${password}"/>
-															</referenceObjects>
+															<variables>
+																<OTScriptVariable name="cardContainer"
+																	reference="${section-card-container}"/>
+																<OTScriptVariableComponent name="button"
+																	reference="${wrapup-submit-button}"/>
+																<OTScriptVariable name="card"
+																	reference="${section_posttest}"/>
+																<OTScriptVariableComponent name="passwordfield"
+																	reference="${password-field}"/>
+																<OTScriptVariable name="password"
+																	reference="${password}"/>
+															</variables>
 															<script>
 																<object refid="${change_page.js}"/>
 															</script>
@@ -3627,10 +3640,12 @@
 														<OTText local_id="message" name="Message" 
 															text="You have now completed this unit. You may tell your teacher that you have finished." />
 														<OTScriptObject local_id="post-test-submit-script">
-															<referenceObjects>
-																<object refid="${post-test-submit-button}"/>
-																<object refid="${message}"/>
-															</referenceObjects>
+															<variables>
+																<OTScriptVariableComponent name="button"
+																	reference="${post-test-submit-button}"/>
+																<OTScriptVariable name="message"
+																	reference="${message}"/>
+															</variables>
 															<script>
 																<object refid="${show_message.js}"/>
 															</script>
@@ -3887,14 +3902,10 @@
 						importClass(Packages.org.concord.otrunk.udl3.OTQuestionList);
 						importClass(Packages.org.concord.framework.otrunk.OTObjectList);
 						importClass(Packages.javax.swing.JOptionPane);
-
-						var cardContainer = context.getObject(0);
-						var button = context.getComponentForObject("Button");
-						var card = context.getObject(2);
-						var passwordfield = context.getComponentForObject("PasswordField");
-						var password = context.getObject("Password");
+						
 						var numCards;
 						var currentcard;
+						var passwordfield;
 
 						var buttonHandler =
 						{
@@ -3934,9 +3945,6 @@
 						importClass(Packages.org.concord.otrunk.udl3.OTQuestionList);
 						importClass(Packages.org.concord.framework.otrunk.OTObjectList);
 						importClass(Packages.javax.swing.JOptionPane);
-
-						var button = context.getComponentForObject("Button");
-						var message = context.getObject("Message");
 
 						var buttonHandler =
 						{
