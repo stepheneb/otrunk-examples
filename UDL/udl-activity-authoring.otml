@@ -53,6 +53,7 @@
 		<import class="org.concord.otrunk.ui.swing.OTChoiceViewConfig"/>
 		<import class="org.concord.otrunk.view.OTViewChild"/>
 		<import class="org.concord.otrunk.view.OTViewEntry"/>
+		<import class="org.concord.otrunk.view.OTViewMode" />
 		<import class="org.concord.otrunk.view.OTViewBundle"/>
 		<import class="org.concord.otrunk.view.document.OTCompoundDoc"/>
 		<import class="org.concord.otrunk.view.document.OTCssText"/>
@@ -69,7 +70,23 @@
 	<objects>
 		<OTSystem local_id="system">
 			<bundles>
-				<OTViewBundle showLeftPanel="false">
+				<OTViewBundle showLeftPanel="true" currentMode="authoring">
+					<modes>
+						<OTViewMode name="default"/>
+						<OTViewMode name="authoring">
+							<map>
+								<entry key="${menu-horizontal-circle}">
+									<OTViewEntry
+										objectClass="org.concord.otrunk.udl3.OTUDLMenu" 
+										viewClass="org.concord.otrunk.udl.ui.OTUDLMenuPageEditView" />
+								</entry>
+								<entry key="${text-edit}">
+									<OTViewEntry objectClass="org.concord.otrunk.ui.OTText" viewClass="org.concord.otrunk.ui.swing.OTTextView"/>
+								</entry>
+								
+							</map>
+						</OTViewMode>
+					</modes>
 					<frame>
 						<OTFrame useScrollPane="false" width="850" height="600"/>
 					</frame>
@@ -88,10 +105,10 @@
 						<OTViewEntry objectClass="org.concord.otrunk.udl3.OTQuestion" viewClass="org.concord.otrunk.udl3.OTQuestionView"/>
 						<OTViewEntry objectClass="org.concord.otrunk.udl.OTUDLCharacterGroup" viewClass="org.concord.otrunk.udl.OTUDLCharacterGroupView"/>
 						<OTViewEntry objectClass="org.concord.otrunk.udl3.OTUDLSection" viewClass="org.concord.otrunk.udl3.OTUDLSectionView"/>
-						<OTViewEntry objectClass="org.concord.otrunk.udl3.OTUDLContainer" viewClass="org.concord.otrunk.udl3.OTUDLContainerView"/>
+						<OTViewEntry local_id="container_view" objectClass="org.concord.otrunk.udl3.OTUDLContainer" viewClass="org.concord.otrunk.udl3.OTUDLContainerView"/>
 						<OTViewEntry objectClass="org.concord.otrunk.udl.document.OTUDLCSSModifier" viewClass="org.concord.otrunk.udl.document.OTUDLCSSModifierView"/>
-						<OTViewEntry local_id="menu-vertical" objectClass="org.concord.otrunk.udl3.OTUDLMenu" viewClass="org.concord.otrunk.udl3.OTUDLMenuView4"/>
-						<OTViewEntry local_id="menu-horizontal-circle" objectClass="org.concord.otrunk.udl3.OTUDLMenu" viewClass="org.concord.otrunk.udl3.OTUDLMenuHorizontalView2"/>
+						<OTViewEntry local_id="menu-vertical" objectClass="org.concord.otrunk.udl3.OTUDLMenu" viewClass="org.concord.otrunk.udl.ui.OTUDLMenuSectionView"/>
+						<OTViewEntry local_id="menu-horizontal-circle" objectClass="org.concord.otrunk.udl3.OTUDLMenu" viewClass="org.concord.otrunk.udl.ui.OTUDLMenuPageView"/>
 						<OTViewEntry objectClass="org.concord.otrunk.udl3.OTQuestion" viewClass="org.concord.otrunk.udl3.OTQuestionView"/>
 						<OTChoiceViewConfig objectClass="org.concord.otrunk.ui.OTChoice" viewClass="org.concord.otrunk.ui.swing.OTChoiceRadioButtonView" useViewsAsChoices="true" local_id="choice-radio-view"/>
 						<OTViewEntry objectClass="org.concord.otrunk.ui.OTChoice"  viewClass="org.concord.otrunk.ui.swing.OTChoiceComboBoxView" local_id="choice-combo-view" />
@@ -383,7 +400,7 @@
 						</OTCompoundDoc>
 					</title>
 					<menu>
-						<OTViewChild object="${menu}" viewid="${menu-vertical}" useScrollPane="true" scrollPanelHasBorder="false"/>
+						<OTViewChild object="${menu}" useScrollPane="true" scrollPanelHasBorder="false"/>
 					</menu>
 					<topBar>
 						<OTCompoundDoc>
