@@ -171,7 +171,7 @@
 								<OTCssText local_id="css-color"
 									cssText="
 										body {	 
-											BACKGROUND-COLOR: rgb(250, 250, 150); 
+											BACKGROUND-COLOR: rgb(255, 255, 255); 
 										}
 										DIV.body {	 	 
 											BACKGROUND-COLOR: rgb(250, 255, 255);
@@ -197,13 +197,13 @@
 											COLOR: rgb(0,0,0);
 										}
 										DIV.leftpanel {		
-											BACKGROUND-COLOR: rgb(135, 206, 255);
+											BACKGROUND-COLOR: rgb(190, 190, 255);
 										}
 										DIV.buffer {		
-											BACKGROUND-COLOR: rgb(250, 250, 150);
+											BACKGROUND-COLOR: rgb(255, 255, 255);
 										}		
 										DIV.border {
-											BACKGROUND-COLOR: #FF6600;	 
+											BACKGROUND-COLOR: rgb(190, 190, 255); 
 										}	
 										DIV.definition-border {
 											BACKGROUND-COLOR: rgb(0, 0, 255);
@@ -462,6 +462,9 @@
 														<div class="buffer">
 															<div class="border">
 																<div class="body">
+																	<div class="subtitle">
+																		Page 1
+																	</div>
 																	Page 1
 																</div>
 															</div>
@@ -500,7 +503,7 @@
 						<OTScriptObject local_id="pretest-button-script">
 							<variables>
 								<OTScriptVariable name="cardContainer"
-									reference="${section-card-container}"/>
+									reference="${section-1-card-container}"/>
 							</variables>
 							<script>
 								<object refid="${authoring_script.js}"/>
@@ -621,22 +624,40 @@
 						{
 								stateChanged: function(evt)
 								{
-									System.out.println("change");
+									System.out.println(evt.getProperty());
 									if (evt.getProperty().equalsIgnoreCase("cards")) {
-										System.out.println("new page");
+										System.out.println("It was cards");
+										var numCards = evt.getSource().getCards().size();
+										var doc = evt.getSource().getCards().get(numCards-1);
+										doc.setBodyText("&lt;div class=\"buffer\"&gt;"+
+															"&lt;div class=\"border\"&gt;"+
+																"&lt;div class=\"body\"&gt;"+
+																"&lt;div class=\"subtitle\"&gt;"+
+																		"New page"+
+																	"&lt;/div&gt;"+
+																	"New page"+
+																"&lt;/div&gt;"+
+															"&lt;/div&gt;"+
+														"&lt;/div&gt;");
+								
+									System.out.println("Doc: "+doc);
+									System.out.println("Body text: "+doc.getBodyText());
+								//	doc.setBodyText("test");
+									System.out.println("Body text: "+doc.getBodyText());
 									}
 								}
 						};
 						var pageContainerListener = new OTChangeListener(pageContainerHandler);
 						
 						function init() {
+							cardContainer.addOTChangeListener(pageContainerListener);
 						//	for (var i=0; i &lt; cardContainer.getCards().size(); i++){
 						//		var pageContainer = cardContainer.getCards().get(i).getContent();
-						//		System.out.println(pageContainer);
+						///		System.out.println(pageContainer);
 						//		pageContainer.addOTChangeListener(pageContainerListener);
 						//	}
 							//cardContainer.addOTChangeListener(sectionContainerListener);
-							var pageContainer = cardContainer.getCards().get(0).getContent();
+						//	var pageContainer = cardContainer.getCards().get(0).getContent();
 						//	pageContainer.addOTChangeListener(sectionContainerListener);
 							
 							return true;
