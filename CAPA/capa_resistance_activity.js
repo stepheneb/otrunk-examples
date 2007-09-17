@@ -72,8 +72,8 @@ var unitsReported = "<p> <font size=5 color=red> You reported the units (ohms) c
 
 var stringClass = Class.forName("java.lang.String");
 var moduleClass = Class.forName("edu.colorado.phet.common_cck.application.Module");
-var cckModule = cckModelView.getModule();
-var model = cckModule.getCCKModel();
+var cckModule = cckModelView.getModule();	// CCKPiccoloModule
+var cckModel = cckModule.getCCKModel();		// CCKModel
 var circuitNode = cckModule.getCckSimulationPanel().getCircuitNode();
 
 var disableMenus = true;
@@ -112,14 +112,16 @@ var sourceList = new Vector();
 
 var helpEnabled = false;
 
+var myResistor = null;
+
 /**
  * This function is called when the script starts up
+ * It returns a boolean indicating whether the initialization 
+ * was successful or not.
  */
 function init()
 {
 	System.out.println("-------------------------- init --------------------------------");
-
-	//All the script from here down to "clock.addClockTickListener(clockListener);" is for the initialization of the program
 
 	setupGUI();
 	
@@ -127,12 +129,8 @@ function init()
 		
 	setupLogFile(getStudentName());
 
-	// FIXME replace circuitGraphicListener with circuitListener or something
-	
 	setupMultimeter();	
 	
-	// Circuit listener will handle adding branches, connect and disconnect junctions, etc. 
-	// It will also add a current and voltage listener to the resistor or multimeter
 	setupCircuitListener();
 	
 	setupAnswerButton();
@@ -164,12 +162,25 @@ function setupGUI()
 /** This function will be called only when the activity is run for the first time */
 function setupActivity()
 {
-	createResistor();
+	//Find out if the activity has been run already
+	var bInitialSetupDone = scriptState.get("initialSetupDone");
+	if (bInitialSetupDone == null) bInitialSetupDone = false;
+	else bInitialSetupDone = true;
+	
+	if (!bInitialSetupDone){
+		createResistor();
+	}
+	else{
+	
+	}
+	
+	//Save the state of the script marking that the initial setup is done
+	scriptState.put("initialSetupDone", new Boolean(true));
 }
 
 function getStudentName()
 {
-	return "foo";
+	return "student";
 	// FIXME: should handle this elsewhere		
 	/* var allLetters = false;
 	do
@@ -193,7 +204,7 @@ function setupLogFile(studentName)
 
 function setupApparatusPanel()
 {
-	//Listener for the apparatus panel size changes
+	//Listener for the apparatus panel size changes. Not sure what for
 	var panelHandler =
 	{
 		componentResized: function(event)
@@ -211,8 +222,8 @@ function setupMultimeter()
 {
 	var multimeter = cckModule.getMultimeterModel();
 	multimeter.setStateDisabled(MultimeterModel.OHMMETER_STATE);
-	// cckModule.setWiggleMeVisible(false);
-	model.setInternalResistanceOn(false);
+	// cckModule.setWiggleMeVisible(false);	//this method doesn't exist anymore in cck
+	cckModel.setInternalResistanceOn(false);
 
 	var multimeterListener = new MultimeterModel.Listener() 
 	{			
@@ -265,7 +276,17 @@ function setupMultimeter()
 					return;
 				}
 				var branchResistor = branchObjectResistor.branch;
-						
+				System.out.println("branchResistor:"+branchResistor);
+				
+				//////////
+				System.out.println("///////////////");
+				System.out.println("branchResistor getVoltageDrop(): " + branchResistor.getVoltageDrop());
+				System.out.println("branchResistor getCurrent(): " + branchResistor.getCurrent());
+				System.out.println("myResistor getVoltageDrop(): " + myResistor.getVoltageDrop());
+				System.out.println("myResistor getCurrent(): " + myResistor.getCurrent());
+				System.out.println("///////////////");
+				/////////
+				
 				var rangedBRVoltageValueString = new Packages.java.lang.String(rangeValue(branchResistor.getVoltageDrop()) + "V");
 				var rangedBRAmperageValueString = new Packages.java.lang.String(rangeValue(branchResistor.getCurrent()) + "A");
 
@@ -300,17 +321,15 @@ function setupMultimeter()
 				
 				multimeterMeasurements[("Measurement " + measurementCounter)] = array;
 				measurementCounter++;
-				if (firstMeasurement)
-				{
-					firstMeasurement = false;
-					OTCardContainerView.setCurrentCard(otInfoAreaCards, "firstMeasurementText");
-					Toolkit.getDefaultToolkit().beep();
-				}
+				
+				showFirstMeasurementMessage();
 
 				logNotebook(value, units);
 				lastMMStateViable = true;
 				solverFinishedOnce = true;
-						
+				
+				//more debug info
+				printMeasurements();
 			}
 		} // end of multimeterChanged: function()
 		
@@ -320,6 +339,27 @@ function setupMultimeter()
 	// cckModule.setMultimeterVisible(multiMeterVisible);
 
 }// end of setupMultimeter()
+
+function showFirstMeasurementMessage()
+{
+	if (firstMeasurement)
+	{
+		firstMeasurement = false;
+		OTCardContainerView.setCurrentCard(otInfoAreaCards, "firstMeasurementText");
+		Toolkit.getDefaultToolkit().beep();
+	}
+}
+
+/** Debug purposes */
+function printMeasurements()
+{
+	for (var i = 1; i < measurementCounter; i++){
+		var currentMeasurement = "Measurement " + i;
+		var array = multimeterMeasurements[currentMeasurement];
+		System.out.println("Measurement "+currentMeasurement + " with " + array[0] + " '" + array[1] + "' measured while there were " + array[2] + " and " + array[3] + " through the resistor.");
+		logFile.println("Measurement "+currentMeasurement + " with " + array[0] + " '" + array[1] + "' measured while there were " + array[2] + " and " + array[3] + " through the resistor.");
+	}
+}
 
 /**
  * Sets up the circuit listener which will handle adding branches, connect and disconnect junctions, etc
@@ -360,9 +400,12 @@ function setupCircuitListener()
 			}
 
 			if(lastMMStateViable)
+			{
 				if(deltaVoltage < aTolerance && deltaCurrent < vTolerance)
+				{
 					return;
-
+				}
+			}
 			logFile.println("A voltage of " + presentVoltage + " with a current of " + presentCurrent + " is flowing through " + branch.getName());
 
 			solverFinishedOnce = false;
@@ -567,7 +610,7 @@ function setupCircuitListener()
 			else{
 				branchObject.name = getBranchName(branch);
 			}
-			System.err.println("Adding object to branchArray: " + branchObject.key + ", " + branchObject);
+			System.out.println("Adding object to branchArray: " + branchObject.key + ", " + branchObject);
 			branchArray[branchObject.key] = branchObject;
 
 			var nameTest = new Packages.java.lang.String(branchObject.name);
@@ -615,14 +658,20 @@ function setupCircuitListener()
 		
 	};// end of var circuitHandler = new CircuitListener()
 
+	circuit.addCircuitListener(circuitHandler);
+	
 	var circuitSolutionListener = new CircuitSolutionListener() 
 	{
 		circuitSolverFinished: function()
 		{
+			System.out.println("----________ circuitSolverFinished! _________----");
+			System.out.println("myResistor getVoltageDrop(): " + myResistor.getVoltageDrop());
 		},
 	};
+	
+	var circuitSolver = cckModel.getCircuitSolver();
+	circuitSolver.addSolutionListener(circuitSolutionListener);
 
-	circuit.addCircuitListener(circuitHandler);
 
 }// End of setupCircuitListener()
 
@@ -699,8 +748,10 @@ function createResistor()
 	else{
 		branchObject.name = getBranchName(newBranch);
 	}
-	System.err.println("Adding object to branchArray: " + branchObject.key + ", " + branchObject);
+	System.out.println("Adding object to branchArray: " + branchObject.key + ", " + branchObject);
 	branchArray[branchObject.key] = branchObject;
+	
+	myResistor = newBranch;
 	
 }// end of createResistor()
 
@@ -752,12 +803,12 @@ function rangeValue(value)
 		displayValue = temp / Math.pow(10, displayDigits - leftOfDecimalDigits);
 	}
 	
-	// System.err.println("displayValue is a: " + displayValue.getClass().getName());
+	// System.out.println("displayValue is a: " + displayValue.getClass().getName());
 	var displayString = new Packages.java.lang.String(displayValue);
-	// System.err.println(displayString.getClass().getName());
+	// System.out.println(displayString.getClass().getName());
 	// displayString = displayString + "a"; // + displayValue;
-	// System.err.println(displayString.getClass().getName());
-	// System.err.println("Display string: " + displayString /*+ " is a " + displayString.getClass().getName()*/);
+	// System.out.println(displayString.getClass().getName());
+	// System.out.println("Display string: " + displayString /*+ " is a " + displayString.getClass().getName()*/);
 	var addZeroes = (displayDigits + 1) - (displayString.length());
 	
 	if(displayValue < 100){
@@ -1236,8 +1287,8 @@ function showSolution(answerType, correctAmmeterMeasurements, correctVoltmeterMe
 	var unitsMsg = unitsNotReported;
 	if (unitsGiven) unitsMsg = unitsReported;
 	var otxml = new OTXMLString(startHTML + solutionString + unitsMsg + shortCircuitMsg + endHTML);
-	// System.err.println("Solution message is: ");
-	// System.err.println(startHTML + solutionString + unitsMsg + shortCircuitMsg + endHTML);
+	// System.out.println("Solution message is: ");
+	// System.out.println(startHTML + solutionString + unitsMsg + shortCircuitMsg + endHTML);
 	solutionText.setText(otxml);
 	OTCardContainerView.setCurrentCard(otInfoAreaCards, "solutionText");
 }
