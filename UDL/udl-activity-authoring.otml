@@ -496,8 +496,19 @@
 							</currentCard>
 						</OTCardContainer>
 					</content>
+					<script>
+						<OTScriptObject local_id="pretest-button-script">
+							<variables>
+								<OTScriptVariable name="cardContainer"
+									reference="${section-card-container}"/>
+							</variables>
+							<script>
+								<object refid="${authoring_script.js}"/>
+							</script>
+						</OTScriptObject>
+					</script>
 				</OTUDLContainer>
-			</root>
+			<!-- Authoring scripts --></root>
 			<library>
 				<OTUDLMenu local_id="menu" cardContainer="${section-card-container}" menuRule="${section-rule}"/>
 				<OTUDLMenu local_id="section-1-menu" cardContainer="${section-1-card-container}"  menuRule="${page-rule}"/>
@@ -581,6 +592,58 @@
 
 						function save() {
 							button.removeActionListener(buttonListener);
+							return true;
+						}
+					</script>
+				</OTJavascript>
+				<OTJavascript local_id="authoring_script.js">
+					<script>
+						importClass(Packages.org.concord.framework.otrunk.OTChangeEvent);
+						importClass(Packages.org.concord.framework.otrunk.OTChangeListener);
+						importClass(Packages.org.concord.framework.otrunk.OTObject);
+						importClass(Packages.org.concord.framework.otrunk.OTObjectList);
+						importClass(Packages.org.concord.otrunk.ui.OTCardContainer);
+						importClass(Packages.java.lang.System);
+						importClass(Packages.org.concord.framework.otrunk.OTObjectList);
+						
+						var sectionContainerHandler =
+						{
+								stateChanged: function(evt)
+								{
+									if (evt.getProperty().equalsIgnoreCase("cards")) {
+										System.out.println("new section");
+									}
+								}
+						};
+						var sectionContainerListener = new OTChangeListener(sectionContainerHandler);
+						
+						var pageContainerHandler =
+						{
+								stateChanged: function(evt)
+								{
+									System.out.println("change");
+									if (evt.getProperty().equalsIgnoreCase("cards")) {
+										System.out.println("new page");
+									}
+								}
+						};
+						var pageContainerListener = new OTChangeListener(pageContainerHandler);
+						
+						function init() {
+						//	for (var i=0; i &lt; cardContainer.getCards().size(); i++){
+						//		var pageContainer = cardContainer.getCards().get(i).getContent();
+						//		System.out.println(pageContainer);
+						//		pageContainer.addOTChangeListener(pageContainerListener);
+						//	}
+							//cardContainer.addOTChangeListener(sectionContainerListener);
+							var pageContainer = cardContainer.getCards().get(0).getContent();
+						//	pageContainer.addOTChangeListener(sectionContainerListener);
+							
+							return true;
+						}
+
+						function save() {
+							cardContainer.removeOTChangeListener(sectionContainerListener);
 							return true;
 						}
 					</script>
