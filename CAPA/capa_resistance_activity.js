@@ -112,7 +112,8 @@ var sourceList = new Vector();
 
 var helpEnabled = false;
 
-var myResistor = null;
+//Variables
+var targetResistor = null;
 
 /**
  * This function is called when the script starts up
@@ -168,14 +169,16 @@ function setupActivity()
 	else bInitialSetupDone = true;
 	
 	if (!bInitialSetupDone){
-		createResistor();
+		targetResistor = createResistor();
 	}
 	else{
-	
+		//Find the resistor in the saved circuit
+		targetResistor = findBranch("#Ringless Resistor");
+		System.out.println("Resistor found: "+targetResistor.getName());
 	}
 	
 	//Save the state of the script marking that the initial setup is done
-	scriptState.put("initialSetupDone", new Boolean(true));
+	scriptState.put("initialSetupDone", new java.lang.Boolean(true));
 }
 
 function getStudentName()
@@ -282,8 +285,8 @@ function setupMultimeter()
 				System.out.println("///////////////");
 				System.out.println("branchResistor getVoltageDrop(): " + branchResistor.getVoltageDrop());
 				System.out.println("branchResistor getCurrent(): " + branchResistor.getCurrent());
-				System.out.println("myResistor getVoltageDrop(): " + myResistor.getVoltageDrop());
-				System.out.println("myResistor getCurrent(): " + myResistor.getCurrent());
+				System.out.println("targetResistor getVoltageDrop(): " + targetResistor.getVoltageDrop());
+				System.out.println("targetResistor getCurrent(): " + targetResistor.getCurrent());
 				System.out.println("///////////////");
 				/////////
 				
@@ -613,10 +616,10 @@ function setupCircuitListener()
 			System.out.println("Adding object to branchArray: " + branchObject.key + ", " + branchObject);
 			branchArray[branchObject.key] = branchObject;
 
-			var nameTest = new Packages.java.lang.String(branchObject.name);
+			var branchName = new Packages.java.lang.String(branchObject.name);
 
 			//Adds a volt listener
-			if(nameTest.equals("#Multimeter Resistor") || nameTest.equals("#Ringless Resistor"))
+			if(branchName.equals("#Multimeter Resistor") || branchName.equals("#Ringless Resistor"))
 			{
 				branch.addCurrentVoltListener(currentVoltListener);
 			}
@@ -665,7 +668,7 @@ function setupCircuitListener()
 		circuitSolverFinished: function()
 		{
 			System.out.println("----________ circuitSolverFinished! _________----");
-			System.out.println("myResistor getVoltageDrop(): " + myResistor.getVoltageDrop());
+			System.out.println("targetResistor getVoltageDrop(): " + targetResistor.getVoltageDrop());
 		},
 	};
 	
@@ -751,7 +754,7 @@ function createResistor()
 	System.out.println("Adding object to branchArray: " + branchObject.key + ", " + branchObject);
 	branchArray[branchObject.key] = branchObject;
 	
-	myResistor = newBranch;
+	return newBranch;
 	
 }// end of createResistor()
 
@@ -908,6 +911,24 @@ function roundedValue(number)
 	var rounder = new DecimalFormat("#.###");
 	
 	return rounder.format(number);
+}
+
+/**
+ * Looks in the circuit and finds the first branch with the given name and returns it
+ */
+function findBranch(name)
+{
+	var circuit = cckModule.getCircuit();
+	var branches = circuit.getBranches();
+	System.out.println("");
+	System.out.println("the circuit has "+branches.length+" branches.");
+	for (var i=0; i<branches.length; i++){
+		var branch = branches[i];
+		System.out.println("branch "+i+" - "+branch.getName());
+		if (branch.getName().equals(name)) return branch;
+	}
+	System.out.println("");
+	return null;
 }
 
 /** Function for creating a branch of any type */
