@@ -172,9 +172,13 @@ function setupActivity()
 		targetResistor = createResistor();
 	}
 	else{
-		//Find the resistor in the saved circuit
+		//Initialize the branch array to be consistent
+		initBranchArray();
+		//Find the resistor in the saved circuit (not in the non-sense branch array)
 		targetResistor = findBranch("#Ringless Resistor");
-		System.out.println("Resistor found: "+targetResistor.getName());
+		if (targetResistor != null){
+			System.out.println("Resistor found: "+targetResistor.getName());
+		}
 	}
 	
 	//Save the state of the script marking that the initial setup is done
@@ -273,25 +277,23 @@ function setupMultimeter()
 				System.out.println("multimeterValue = " + value);
 				System.out.println("rangedMMValueString = " + rangedMMValueString);
 		
-				var branchObjectResistor = branchArray["#Ringless Resistor"];
-				if (branchObjectResistor == null) {
+				if (targetResistor == null) {
 					System.err.println("Didn't find #Ringless Resistor");
 					return;
 				}
-				var branchResistor = branchObjectResistor.branch;
-				System.out.println("branchResistor:"+branchResistor);
+				System.out.println("branchResistor:"+targetResistor);
 				
 				//////////
 				System.out.println("///////////////");
-				System.out.println("branchResistor getVoltageDrop(): " + branchResistor.getVoltageDrop());
-				System.out.println("branchResistor getCurrent(): " + branchResistor.getCurrent());
+				System.out.println("branchResistor getVoltageDrop(): " + targetResistor.getVoltageDrop());
+				System.out.println("branchResistor getCurrent(): " + targetResistor.getCurrent());
 				System.out.println("targetResistor getVoltageDrop(): " + targetResistor.getVoltageDrop());
 				System.out.println("targetResistor getCurrent(): " + targetResistor.getCurrent());
 				System.out.println("///////////////");
 				/////////
 				
-				var rangedBRVoltageValueString = new Packages.java.lang.String(rangeValue(branchResistor.getVoltageDrop()) + "V");
-				var rangedBRAmperageValueString = new Packages.java.lang.String(rangeValue(branchResistor.getCurrent()) + "A");
+				var rangedBRVoltageValueString = new Packages.java.lang.String(rangeValue(targetResistor.getVoltageDrop()) + "V");
+				var rangedBRAmperageValueString = new Packages.java.lang.String(rangeValue(targetResistor.getCurrent()) + "A");
 
 				System.out.println("rangedBRVoltageValueString = " + rangedBRVoltageValueString);
 				System.out.println("rangedBRAmperageValueString = " + rangedBRAmperageValueString);
@@ -602,19 +604,7 @@ function setupCircuitListener()
 			var startJunction = branch.getStartJunction();
 			var endJunction = branch.getEndJunction();
 
-			var branchObject = new Object();
-			branchObject.branch = branch;
-			branchObject.key = branch.getName();
-			branchObject.voltage = 0.0;
-			branchObject.current = 0.0;
-			if(branch.getName().startsWith("#")){
-				branchObject.name = branch.getName();
-			}
-			else{
-				branchObject.name = getBranchName(branch);
-			}
-			System.out.println("Adding object to branchArray: " + branchObject.key + ", " + branchObject);
-			branchArray[branchObject.key] = branchObject;
+			var branchObject = addBranchToArray(branch);
 
 			var branchName = new Packages.java.lang.String(branchObject.name);
 
@@ -740,23 +730,31 @@ function createResistor()
 	System.out.println("The Ringless Resistor's Resistance is " + newBranch.getResistance());
 	logFile.println("The Ringless Resistor's Resistance is " + newBranch.getResistance());
 
-	var branchObject = new Object();
-	branchObject.branch = newBranch;
-	branchObject.key = newBranch.getName();
-	branchObject.voltage = 0.0;
-	branchObject.current = 0.0;
-	if(newBranch.getName().startsWith("#")){
-		branchObject.name = newBranch.getName();
-	}
-	else{
-		branchObject.name = getBranchName(newBranch);
-	}
-	System.out.println("Adding object to branchArray: " + branchObject.key + ", " + branchObject);
-	branchArray[branchObject.key] = branchObject;
+	var branchObject = addBranchToArray(newBranch);
 	
 	return newBranch;
 	
 }// end of createResistor()
+
+/** Adds an object to this non-sense array */
+function addBranchToArray(branch)
+{
+	var branchObject = new Object();
+	branchObject.branch = branch;
+	branchObject.key = branch.getName();
+	branchObject.voltage = 0.0;
+	branchObject.current = 0.0;
+	if(branch.getName().startsWith("#")){
+		branchObject.name = branch.getName();
+	}
+	else{
+		branchObject.name = getBranchName(branch);
+	}
+	System.out.println("Adding object to branchArray: " + branchObject.key + ", " + branchObject);
+	branchArray[branchObject.key] = branchObject;
+	
+	return branchObject;
+}
 
 /** */
 function rangeValue(value) 
@@ -920,151 +918,31 @@ function findBranch(name)
 {
 	var circuit = cckModule.getCircuit();
 	var branches = circuit.getBranches();
+	for (var i=0; i<branches.length; i++){
+		var branch = branches[i];
+		if (branch.getName().equals(name)) return branch;
+	}
+	return null;
+}
+
+/**
+ * Initializes the non-sense local array of branch objects
+ */
+function initBranchArray()
+{
+	var circuit = cckModule.getCircuit();
+	var branches = circuit.getBranches();
 	System.out.println("");
 	System.out.println("the circuit has "+branches.length+" branches.");
 	for (var i=0; i<branches.length; i++){
 		var branch = branches[i];
-		System.out.println("branch "+i+" - "+branch.getName());
-		if (branch.getName().equals(name)) return branch;
+		System.out.println("branch "+i+" - "+branch.getName());		
+		//Add it to the branchArray to be consistent although I wan to take this out entirely
+		addBranchToArray(branch);
+		//
 	}
 	System.out.println("");
 	return null;
-}
-
-/** Function for creating a branch of any type */
-//FIXME: This function is not currently being used but it might be useful (maybe in java)?
-function createBranch(x1, y1, branchType)
-{
-	var newBranch;
-	var changex;
-	var startJunction;
-	var endJunction; 
-	var x2;
-	var y2;
-
-	var kirkhoffListener = cckModule.getCircuit().getKirkhoffListener();
-
-	if(branchType.equals("Wire"))
-	{
-		changex = cckModule.getCCKModel().WIRE_LENGTH / 2;
-		x1 -= changex;
-		x2 = x1 + cckModule.getCCKModel().WIRE_LENGTH;
-		y2 = y1;
-
-		startJunction = new Junction(x1, y1);
-		endJunction = new Junction(x2, y2);
-
-		newBranch = new Branch(kirkhoffListener, startJunction, endJunction);	
-		//newBranch = new ScriptBranch();
-	}
-	else if(branchType.equals("Resistor"))
-	{
-		var resistorLength = cckModule.getCCKModel().RESISTOR_DIMENSION.getLength();
-		var resistorHeight = cckModule.getCCKModel().RESISTOR_DIMENSION.getHeight();
-		changex = resistorLength / 2;
-		x1 -= changex;
-		x2 = x1 + resistorLength;
-		y2 = y1;
-
-		startJunction = new Junction(x1, y1);
-		endJunction = new Junction(x2, y2);
-
-		newBranch = new Resistor(kirkhoffListener, startJunction, endJunction, resistorLength, resistorHeight);
-		//newBranch = new ScriptResistor();
-		//newBranch.setHeight(resistorHeight);
-		//newBranch.setLength(resistorLength);
-		newBranch.setResistance(10.0);
-		newBranch.setVisibleColorBands(false);
-	}
-	else if(branchType.equals("Battery"))
-	{
-		var batteryLength = cckModule.getCCKModel().BATTERY_DIMENSION.getLength();
-		var batteryHeight = cckModule.getCCKModel().BATTERY_DIMENSION.getHeight();
-		changex = batteryLength / 2;
-		x1 -= changex;
-		x2 = x1 + batteryLength;
-		y2 = y1;
-		
-		startJunction = new Junction(x1, y1);
-		endJunction = new Junction(x2, y2);
-
-		//newBranch = new ScriptBattery();
-		newBranch = new Battery(kirkhoffListener, startJunction, endJunction, batteryLength, batteryHeight, 0.001, true);
-	}
-	else if(branchType.equals("Light Bulb"))
-	{
-		var bulbLength = cckModule.getCCKModel().BULB_DIMENSION.getLength();
-		var bulbHeight = cckModule.getCCKModel().BULB_DIMENSION.getHeight();
-		var bulbWidth = 0.95;
-		var junctDist = cckModule.getCCKModel().BULB_DIMENSION.getDistBetweenJunctions();
-
-		/*var changex = junctDist / 2;
-		var changey = junctDist / 2;
-		x1 -= changex;
-		y1 -= changey;*/
-		x2 = x1 + java.lang.Math.sqrt((junctDist * junctDist) / 2);
-		y2 = y1 + java.lang.Math.sqrt((junctDist * junctDist) / 2);
-
-		startJunction = new Junction(x1, y1);
-		endJunction = new Junction(x2, y2);
-		newBranch = new Bulb(kirkhoffListener, startJunction, endJunction, bulbWidth, junctDist, bulbHeight, false);
-	}
-	else if(branchType.equals("Switch"))
-	{
-		var switchLength = cckModule.getCCKModel().SWITCH_DIMENSION.getLength();
-		var switchHeight = cckModule.getCCKModel().SWITCH_DIMENSION.getHeight();
-		changex = switchLength / 2;
-		x1 -= changex;
-		x2 = x1 + switchLength;
-		y2 = y1;
-		
-		startJunction = new Junction(x2, y2);
-		endJunction = new Junction(x1, y1);
-
-		//newBranch = new ScriptBattery();
-		newBranch = new Switch(kirkhoffListener, startJunction, endJunction, false, switchLength, switchHeight);
-	}
-	else
-	{
-		changex = cckModule.WIRE_LENGTH / 2;
-		x1 -= changex;
-		x2 = x1 + cckModule.WIRE_LENGTH;
-		y2 = y1;
-		
-		startJunction = new Junction(x1, y1);
-		endJunction = new Junction(x2, y2);
-
-		//newBranch = new ScriptBranch();
-		newBranch = new Branch(kirkhoffListener, startJunction, endJunction);
-	}	
-
-	
-	//Add these when the classes for the no argument constructors are working
-	//
-	//newBranch.setStartJunction(startJunction);
-	//newBranch.setEndJunction(endJunction);
-	//newBranch.addKirkhoffListener(cckModule.getKirkhoffListener());	
-	var circuit = cckModule.getCircuit();
-	circuit.addBranch(newBranch);
-	// circuitGraphic.addGraphic(newBranch);
-
-	// FIXME: This doesn't seem to do anything...
-	/* if(branchType.equals("Resistor"))
-	{
-		var graphic = circuitGraphic.getGraphic(newBranch);
-	} */
-	
-	// newBranch.setMovable(true);
-	var menu = circuitNode.getBranchNode(newBranch).getMenu();
-
-	for(var i = 0; i < menuItems.length; i++)
-	{
-		var item = menuItems[i];
-		System.out.println(item);
-	}
-
-	menuItems[0].setEnabled(false);
-	//circuitGraphic.getGraphic(newBranch).setVisible(false);
 }
 
 /** Checks the answer and creates messages according to the answer submitted */
