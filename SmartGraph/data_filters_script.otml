@@ -36,6 +36,8 @@
 	<import class="org.concord.otrunk.script.ui.OTScriptObject" />
 	<import class="org.concord.otrunk.script.ui.OTScriptVariable" />
     <import class="org.concord.otrunk.view.OTViewChild"/>
+	<import class="org.concord.otrunk.script.OTScript" />
+    <import class="org.concord.examples.smartgraph.OTDataFilterScript"/>
   </imports>
   <objects>
     <OTSystem>
@@ -78,7 +80,8 @@
 				<object refid="${script_object}"/>
               </bodyText>
             </OTCompoundDoc>
-            <OTViewChild name="Edit script" object="${script_object}" viewid="${script_edit_view}"/>
+            <OTViewChild name="Edit general script" object="${script_01}" viewid="${script_edit_view}"/>
+            <OTViewChild name="Edit filter script" object="${script_02}" viewid="${script_edit_view}"/>
           </children>
         </OTFolderObject>
       </root>
@@ -125,7 +128,7 @@
             </channelDescriptions>
             <valuesString> 0 10 0.5 50 1 75 1.5 45 2 50 2.5 65 3 40 3.5 35 4 20</valuesString>
           </OTDataStore>
-          <OTDataFilter name="average filter obj" local_id="datafilter02">
+          <OTDataFilter name="average filter obj" local_id="datafilter02_old">
           	<description>
 	          	<OTDataFilterDescription operation="average" filterClass="org.concord.examples.smartgraph.DataAmplifier">
 	          		<properties>
@@ -137,33 +140,48 @@
                 <object refid="${datastore01}"/>
           	</inputDataStore>
           </OTDataFilter>
-          <OTScriptObject name="Script 2" local_id="script_object">
+          <OTDataFilterScript name="script filter obj" local_id="datafilter02">
+          	<description>
+	          	<OTDataFilterDescription operation="custom script"/>
+	        </description>
+	        <filterScript>
+	        	<object refid="${script_02}"/>
+	        </filterScript>
+          	<inputDataStore>
+                <object refid="${datastore01}"/>
+          	</inputDataStore>
+          </OTDataFilterScript>
+          <OTScriptObject name="Script external" local_id="script_object_no">
           	<variables>
           		<OTScriptVariable name="graphable" reference="${graphable01}"/>
-          		<OTScriptVariable name="filter" reference="${datafilter02}"/>
           	</variables>
 			<script>
 				<OTJavascript src="data_filters_script.js"/>
 			</script>
           </OTScriptObject>
-          <OTScriptObject name="Script 2" local_id="script_object2">
+          <OTScriptObject name="Script embedded" local_id="script_object">
           	<variables>
           		<OTScriptVariable name="graphable" reference="${graphable01}"/>
-          		<OTScriptVariable name="filter" reference="${datafilter02}"/>
           	</variables>
 			<script>
-          
-	            <OTJavascript>
-	              <script>
+          		<object refid="${script_01}"/>
+		  	</script>
+	  	  </OTScriptObject>
+		  <OTViewEntry
+			  objectClass="org.concord.otrunk.script.OTScript"
+			  viewClass="org.concord.otrunk.script.ui.OTScriptEditView"
+			  local_id="script_edit_view"/>
+	      <OTJavascript local_id="script_01" name="General Script">
+	          <script>
 //This is an example embedded script
 importClass(Packages.java.lang.System);
 
 function init()
 {
 	System.out.println("changing color in the script --- ");
-	graphable.setColor(0x0000FF);
-	graphable.setDrawMarks(true);
-	graphable.setConnectPoints(false);
+	//graphable.setColor(0xFFFF00);	//yellow
+	//graphable.setDrawMarks(true);
+	//graphable.setConnectPoints(false);
 
 	return true;
 }
@@ -171,14 +189,25 @@ function init()
 function save()
 {
 	return null;
-}				  </script>
-			  	</OTJavascript>
-		  	</script>
-	  	  </OTScriptObject>
-		  <OTViewEntry
-			  objectClass="org.concord.otrunk.script.ui.OTScriptObject"
-			  viewClass="org.concord.otrunk.script.ui.OTScriptObjectEditView"
-			  local_id="script_edit_view"/>
+}
+			  </script>
+		  </OTJavascript>
+	      <OTJavascript local_id="script_02" name="Filter Script">
+	          <script>
+importClass(Packages.java.lang.System);
+importClass(Packages.java.lang.Float);
+
+function filterYValue(x, y)
+{
+	var val;
+	
+	val = y + 10;
+	//val = y - y/2;
+	
+	return new Float(val);
+}
+			  </script>
+		  </OTJavascript>
       </library>
     </OTSystem>
   </objects>
