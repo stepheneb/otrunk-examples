@@ -49,24 +49,13 @@ importPackage(Packages.org.concord.framework.otrunk);
 
 importClass(Packages.org.concord.otrunk.ui.swing.OTCardContainerView);
 
-var accuracyMessage = "<p> <font size=5 color=blue>Note: at the moment the digital multimeter doesn't report out voltages and currents to sufficient accuracy for you to be able to figure out the resistance to the nearest ohm. This will be corrected soon. For the moment, be aware that we are restricting our unknown resistance to be evenly divisible by 5. </font> </p>";
-var branchAddedMsg = " added";
+var startHTML = "<html><blockquote>";
 var endHTML = "</blockquote></html>";
-var junctionA = " junction A";
-var junctionB = " junction B";
-var junctionsConnectedMsg = " connected to:";
-var junctionsDisconMsg = " disconnected from each other.";
-var notebookAnnouncement = "<p><font size='5'>You've connected the digital multimeter to the circuit. Remember, you can make it a voltmeter or an ammeter by turning the dial. If you're having trouble seeing it, you can make it bigger by right-clicking on it.</font></p>";
+var multimeterAnnouncement = "<p><font size='5'>You've connected the digital multimeter to the circuit. Remember, you can make it a voltmeter or an ammeter by turning the dial. If you're having trouble seeing it, you can make it bigger by right-clicking on it.</font></p>";
 var shortCircuitMsg1 = "<p><font color=red size = 5>You shortcircuited the battery once.</font></p>";
 var shortCircuitMsg2 = "<p><font color=red size = 5>You shortcircuited the battery twice. Shame on you!!</font></p>";
 var shortCircuitMsg3 = "<p><font color=red size = 5>You shortcircuited the battery $shortCircuitCounter$ times.  OUCH!!</font></p>";
 var shortCircuitStr = "SHORT CIRCUIT WARNING!!! Cut all power immediately!";
-var solutionString = "";
-var solutionString1 = "<p><font size=5>That's right! You measured the voltage drop across the resistor as $firstVoltmeterMeasurement$ at a time when the current through it was $firstAmmeterMeasurement$. Ohm's Law, solved for resistance, is R = V/I, where V is in volts and I is in amperes, so the resistance is $calculatedResistance$ ohms. </p>";
-var solutionString2 = "<p><font size=5>That's not the right resistance, but you did make the right measurements.<br><br> You measured the current through the resistor as $firstAmmeterMeasurement$ at a time when the voltage drop across it was $firstVoltmeterMeasurement$. The ratio of those two numbers (in volts per ampere) is $calculatedResistance$ ohms, which is the resistance you were trying to measure. </p>";
-var solutionString3 = "<p><font size=5> You got the right resistance, but you didn't do it the way I expected because you never measured the voltage across the resistor and the current through it.<br><br> <font color=red size=5>How did you get the right answer?</font> </p>";
-var solutionString4 = "<p><font size=5> That's not the right answer, and you didn't make the right measurements. In order to figure out the resistance you need to measure the current through it and the voltage across it, and then use <font color=red>Ohm's Law</font>. </p>";
-var startHTML = "<html><blockquote>";
 var unitsNotReported = "<p><font size=5 color=red> You did not report the units (ohms) correctly in your answer. </font>";
 var unitsReported = "<p> <font size=5 color=red> You reported the units (ohms) correctly in your answer. Well done! </font>";
 
@@ -75,20 +64,12 @@ var cckModule = cckModelView.getModule();	// (CCKPiccoloModule)
 var cckModel = cckModule.getCCKModel();		// (CCKModel)
 var cckCircuitNode = cckModule.getCckSimulationPanel().getCircuitNode();	// (CircuitNode)
 var cckCircuit = cckModule.getCircuit();	// (Circuit)
+var cckMultimeter = cckModule.getMultimeterModel();		// (MultimeterModel)
 //
 
 // Variables that should be saved (as part of the script state)
 var shortCircuitCounter = 0;	// How many times has the user caused a short circuit
 //
-
-//////////////////////
-//Candidate variables to go puff
-var typeHash = new HashMap();
-var measurementCounter = 1;
-var branchArray = new Object();  //This is an array of branchObjects, which store the properties of each branch.
-var junctionArray = new Object(); //This is an array of all the branches connected to the indexed junction.
-var multimeterMeasurements = new Object();
-//////////////////////
 
 var initializationDone = true;	// Whether the init() function is done or not
 var shortCircuit = false;		// Flag used to determine if the user has caused a short circuit in THIS current change  
@@ -96,9 +77,9 @@ var solverFinishedOnce = false;	// ?
 var lastMMStateViable = false;	// ?
 var unitsGiven;					// Whether the user reported units in the last answer
 var logFile;					// Used for logging information
-var previousValue = Double.NaN;	// Value that stores the last multimeter measurement, to avoid repeated measurements
 var firstJunctionsConnected = true;	//Used to put up text the first time a junction is connected.
 var firstMeasurement = true; 		//Used to put up text the first time a measurement is made.
+var previousMultimeterValue = Double.NaN;	// Value that stores the last multimeter measurement, to avoid repeated measurements
 
 var aTolerance = 0.01;			// Tolerance for current
 var vTolerance = 0.01;			// Tolerance for voltage
@@ -150,10 +131,24 @@ function save()
 	System.out.println("-------------------------- save--------------------------------");
 	
 	//Save state variables
-	scriptState.put("shortCircuitCounter", new java.lang.Integer(shortCircuitCounter));
+	saveStateVariable("shortCircuitCounter", new java.lang.Integer(shortCircuitCounter));
+	//
+	
+	//Log measurements
+	logMeasurements();
 	//
 	
 	logFile.close();
+}
+
+function getStateVariable(name)
+{
+	return scriptState.get(name);
+}
+
+function saveStateVariable(name, value)
+{
+	scriptState.put(name, value);
 }
 
 /** Initial set up if the GUI. This stuff eventually could be moved to the otml file */
@@ -162,35 +157,58 @@ function setupGUI()
 	answerBox.setBackground(Color.yellow);
 }
 
-/** This function will be called only when the activity is run for the first time */
+/** 
+ * Specific things to set up in this activity. 
+ * Checks if the activity has been loaded or if it's run for the first time 
+ */
 function setupActivity()
 {
 	//Find out if the activity has been run already
-	var bInitialSetupDone = scriptState.get("initialSetupDone");
+	var bInitialSetupDone = getStateVariable("initialSetupDone");
 	if (bInitialSetupDone == null) bInitialSetupDone = false;
 	else bInitialSetupDone = true;
 	
 	if (!bInitialSetupDone){
-		targetResistor = createResistor();
+	
+		setupActivityInitial();
 	}
 	else{
-		//Initialize the branch array to be consistent
-		initBranchArray();
-		//Find the resistor in the saved circuit (not in the non-sense branch array)
-		targetResistor = findBranch("#Ringless Resistor");
-		if (targetResistor != null){
-			System.out.println("Resistor found: "+targetResistor.getName());
-		}
 		
-		//Load state variables
-		var val = scriptState.get("shortCircuitCounter");
-		shortCircuitCounter = val.intValue();
-		System.out.println("Number of short circuits: "+shortCircuitCounter);
-		//
+		setupActivityLoaded();
 	}
 	
 	//Save the state of the script marking that the initial setup is done
-	scriptState.put("initialSetupDone", new java.lang.Boolean(true));
+	saveStateVariable("initialSetupDone", new java.lang.Boolean(true));
+}
+
+/** 
+ * Sets up this specific activity
+ * This function will be called only when the activity is run for the first time 
+ */
+function setupActivityInitial()
+{
+	//Create the resistor that the user has to solve
+	targetResistor = createResistor();
+}
+
+/** 
+ * Sets up this specific activity
+ * This function will be called only when the activity has already been played, so it needs
+ * to load its state in order to be initialized
+ */
+function setupActivityLoaded()
+{
+	//Find the target resistor in the saved circuit
+	targetResistor = findBranch("#Ringless Resistor");
+	if (targetResistor == null){	
+		System.err.println("Error, target resistor not found!");
+	}
+	
+	//Load state variables
+	var val = getStateVariable("shortCircuitCounter");
+	shortCircuitCounter = val.intValue();
+	System.out.println("Number of short circuits: "+shortCircuitCounter);
+	//
 }
 
 function getStudentName()
@@ -244,136 +262,123 @@ function addMeasurement(type, value, unit, extra)
 	
 	//Add it to the array
 	measurements[measurements.length] = measurement;
+	
+	return measurement;
 }
 
 function printMeasurements()
 {
 	System.out.println(measurements.toSource());
-	//for (var i=0; i<measurements.length; i++)
+}
+
+function logMeasurements()
+{
+	var strLog;
+	logInformation("Measurements:");
+	for (var i=0; i<measurements.length; i++){
+		var m = measurements[i];
+		strLog = "type=" + m.type + " value=" + m.value + " unit=" + m.unit;
+		if (m.extra != null){
+			strLog = strLog + " " + m.extra.toSource();
+		}
+		logInformation(strLog); 
+	}
+}
+
+function logInformation(info)
+{
+	info = (new java.util.Date()).toString() + " - " + info
+	//System.out.println(info);
+	logFile.println(info);
 }
 
 function setupMultimeter()
 {
-	var multimeter = cckModule.getMultimeterModel();
-	multimeter.setStateDisabled(MultimeterModel.OHMMETER_STATE);
+	//Disable ohmmeter
+	cckMultimeter.setStateDisabled(MultimeterModel.OHMMETER_STATE);
+	//
+	
 	// cckModule.setWiggleMeVisible(false);	//this method doesn't exist anymore in cck
 	cckModel.setInternalResistanceOn(false);
 
 	var multimeterListener = new MultimeterModel.Listener() 
-	{			
+	{
+		//The way this works now is assuming that this function gets called when the multimeter gets a measurement
 		multimeterChanged: function()
 		{				
-			var value = multimeter.getCurrentValue();
-			var type = "";
-
-			if(Double.isNaN(value) || MathUtil.isApproxEqual(previousValue, value, 0.01)) {
-				previousValue = value;
+			var value = cckMultimeter.getCurrentValue();
+			
+			//Checks that the value measured it not the same as the previous value captured
+			if(Double.isNaN(value) || MathUtil.isApproxEqual(previousMultimeterValue, value, 0.001)) {
+				previousMultimeterValue = value;
 				return;
 			}
 			else {			//we've made a valid measurement
-				previousValue = value;
-				var units = "?";
-				var state = multimeter.getState();
+				previousMultimeterValue = value;
+
+				var type = "";
+				var units = cckMultimeter.getRangePrefix();
+				
+				var targetResistorVoltage;
+				var targetResistorCurrent;
+				
+				var state = cckMultimeter.getState();
 				if (state == MultimeterModel.AMMETER_STATE) {
 					type = "current";
-					units = multimeter.getRangePrefix() + "A";
-					System.out.println("The multimeter is set to ammeter");
-					System.out.println("Multimeter value in ammeter mode is " + multimeter.getCurrentValue());
-					System.out.println("");
-					logFile.println("The multimeter is set to ammeter");
-					logFile.println("Multimeter value in ammeter mode is " + multimeter.getCurrentValue());
+					units = units + "A";
+					logInformation("Multimeter value in ammeter mode is " + value + " " + units);
 				}
 				else if (state == MultimeterModel.OHMMETER_STATE) {
 					type = "resistance";
-					units = multimeter.getRangePrefix() + "Ω";
+					units = units + "Ω";
+					logInformation("Multimeter value in ohmmeter mode is " + value + " " + units);
 				}
 				else if (state == MultimeterModel.VOLTMETER_STATE) {
 					type = "voltage";
-					units = multimeter.getRangePrefix() + "V";
-					System.out.println("The multimeter is set to voltmeter");
-					System.out.println("Multimeter value in voltmeter mode is " + multimeter.getCurrentValue());
-					System.out.println("");
-					logFile.println("The multimeter is set to voltmeter");
-					logFile.println("Multimeter value in voltmeter mode is " + multimeter.getCurrentValue());
+					units = units + "V";
+					logInformation("Multimeter value in voltmeter mode is " + value + " " + units);
 				}
 				else if (state == MultimeterModel.OFF_STATE) {
 					type = "off";
-					System.out.println("The multimeter is off");
-					logFile.println("The multimeter is off");
+					units = "?";
+					logInformation("The multimeter is set to off");
 					lastMMStateViable = false;
 					solverFinishedOnce = false;
-				}
-				
-				var rangedMMValueString = new Packages.java.lang.String(value + " " + units);
-
-				System.out.println("multimeterValue = " + value);
-				System.out.println("rangedMMValueString = " + rangedMMValueString);
-		
-				if (targetResistor == null) {
-					System.err.println("Didn't find #Ringless Resistor");
 					return;
 				}
-				System.out.println("branchResistor:"+targetResistor);
 				
-				//////////
-				System.out.println("///////////////");
-				System.out.println("targetResistor getVoltageDrop(): " + targetResistor.getVoltageDrop());
-				System.out.println("targetResistor getCurrent(): " + targetResistor.getCurrent());
-				System.out.println("///////////////");
-				/////////
+				//Get the voltage drop and the current that is going through the target resistor at the time of the measurement				
+				//Since these values are in volts and amperes, we need to "range" them so they are in the same units
+				//as the measurement values (this is so we can compare them)
+				targetResistorVoltage = targetResistor.getVoltageDrop();
+				targetResistorCurrent = targetResistor.getCurrent();				
+				var targetResistorVoltageString = rangeValue(targetResistorVoltage) + "V";
+				var targetResistorCurrentString = rangeValue(targetResistorCurrent) + "A";
+				//
 				
-				var rangedBRVoltageValueString = new Packages.java.lang.String(rangeValue(targetResistor.getVoltageDrop()) + "V");
-				var rangedBRAmperageValueString = new Packages.java.lang.String(rangeValue(targetResistor.getCurrent()) + "A");
-
-				System.out.println("rangedBRVoltageValueString = " + rangedBRVoltageValueString);
-				System.out.println("rangedBRAmperageValueString = " + rangedBRAmperageValueString);
-						
-				if(rangedMMValueString.contains("???")) return;
-				
-				var rangedMMValueArray = rangedMMValueString.split("\\s");
-				var rangedBRVoltageValueArray = rangedBRVoltageValueString.split("\\s");
-				var rangedBRAmperageValueArray = rangedBRAmperageValueString.split("\\s");
-
-				if (rangedMMValueArray.length == 1) {
-					rangedMMValueArray = new Array(rangedMMValueArray[0], "");
-				}
-				
-				// array contains four elements. [0] is ranged number from the DMM, 
-				// 	[1] is its unit (e.g., mV),
-				//	[2] is the voltage through the ringless resister, and 
-				//  [3] is the amperage through the ringless resister
-				var array = [ java.lang.Math.abs(java.lang.Double(rangedMMValueArray[0])), 
-					rangedMMValueArray[1],
-					java.lang.Math.abs(java.lang.Double(rangedBRVoltageValueArray[0])),
-					java.lang.Math.abs(java.lang.Double(rangedBRAmperageValueArray[0]))];
-
-				/*
-				var array = [ java.lang.Math.abs(java.lang.Double(rangedMMValueArray)), 
-					multimeter.actingAsVoltmeter() ? (rangedMMValueArray + "V") : multimeter.actingAsAmmeter() ? (rangedMMValueArray + "A") : "",
-					java.lang.Math.abs(java.lang.Double(rangedBRVoltageValueArray)),
-					java.lang.Math.abs(java.lang.Double(rangedBRAmperageValueArray))];
-				*/
-				
-				multimeterMeasurements[("Measurement " + measurementCounter)] = array;
-				measurementCounter++;
-				
+				logInformation("Target resistor voltage drop: " + targetResistorVoltage + " -> " + targetResistorVoltageString);	
+				logInformation("Target resistor current: " + targetResistorCurrent + " -> " + targetResistorCurrentString);	
+							
 				showFirstMeasurementMessage();
 
 				logNotebook(value, units);
 				lastMMStateViable = true;
 				solverFinishedOnce = true;
 				
-				addMeasurement(type, value, units, {'resistorVoltage':array[2], 'resistorCurrent':array[3]} );
+				//Record the measurement, including the voltage and current of the target resistor
+				var m = addMeasurement(type, value, units, {'resistorVoltage':targetResistorVoltageString, 'resistorCurrent':targetResistorCurrentString} );
+				//
 				
 				//more debug info
-				printMultimeterMeasurements();
-				printMeasurements();
+				System.out.println(m.toSource());
+				//printMeasurements();
+				//
 			}
 		} // end of multimeterChanged: function()
 		
 	}; // end of var multimeterListener = new MultimeterModel.Listener() 
 
-	multimeter.addListener(multimeterListener);
+	cckMultimeter.addListener(multimeterListener);
 
 }// end of setupMultimeter()
 
@@ -383,18 +388,15 @@ function showFirstMeasurementMessage()
 	{
 		firstMeasurement = false;
 		OTCardContainerView.setCurrentCard(otInfoAreaCards, "firstMeasurementText");
-		Toolkit.getDefaultToolkit().beep();
 	}
 }
 
-/** Debug purposes */
-function printMultimeterMeasurements()
+function showFirstJunctionMessage()
 {
-	for (var i = 1; i < measurementCounter; i++){
-		var currentMeasurement = "Measurement " + i;
-		var array = multimeterMeasurements[currentMeasurement];
-		System.out.println("Measurement "+currentMeasurement + " with " + array[0] + " '" + array[1] + "' measured while there were " + array[2] + " and " + array[3] + " through the resistor.");
-		logFile.println("Measurement "+currentMeasurement + " with " + array[0] + " '" + array[1] + "' measured while there were " + array[2] + " and " + array[3] + " through the resistor.");
+	if(firstJunctionsConnected)
+	{
+		firstJunctionsConnected = false;
+		OTCardContainerView.setCurrentCard(otInfoAreaCards, "firstJunctionText");
 	}
 }
 
@@ -416,53 +418,31 @@ function setupCircuitListener()
 		*/	
 		currentOrVoltageChanged: function(branch)
 		{
-			var multimeter = cckModule.getMultimeterModel();
-			var branchObject = branchArray[branch.getName()];
-			var presentVoltage = branch.getVoltageDrop();
-			var presentCurrent = branch.getCurrent();
-			var deltaVoltage = Math.abs(presentVoltage - branchObject.voltage);
-			var deltaCurrent = Math.abs(presentCurrent - branchObject.current);
-
-			//System.out.println("A voltage of " + presentVoltage + " with a current of " + presentCurrent + " is flowing through " + branch.getLabel());
-			// var multimeter = cckModule.getMultimeterModel();
-
-			if(deltaVoltage > vTolerance)
-			{
-				branchObject.voltage = presentVoltage;
-			}
-
-			if(deltaCurrent > aTolerance)
-			{
-				branchObject.current = presentCurrent;
-			}
-
-			if(lastMMStateViable)
-			{
-				if(deltaVoltage < aTolerance && deltaCurrent < vTolerance)
-				{
-					return;
-				}
-			}
-			logFile.println("A voltage of " + presentVoltage + " with a current of " + presentCurrent + " is flowing through " + branch.getName());
+			var branchVoltage = branch.getVoltageDrop();
+			var branchCurrent = branch.getCurrent();
+			
+			logInformation("A voltage of " + branchVoltage + " with a current of " + branchCurrent + " is flowing through " + branch.getName());
 
 			solverFinishedOnce = false;
 
 			//Detect shortcircuit
-			if(Math.abs(presentCurrent) > 10 && shortCircuit == false)
+			if(Math.abs(branchCurrent) > 10 && shortCircuit == false)
 			{
 				var warningDialog = new JOptionPane();
 				warningDialog.showMessageDialog(frame, shortCircuitStr, "", JOptionPane.WARNING_MESSAGE);
 				shortCircuit = true;
 				shortCircuitCounter++;
+				System.out.println("++++ SHORT CIRCUIT ++++");
 			}
-			else if(!(Math.abs(presentCurrent) > Math.abs(presentVoltage) + 1))
+			else if(!(Math.abs(branchCurrent) > Math.abs(branchVoltage) + 1))
 			{
 				shortCircuit = false;			
 			}
+			//
 		}
 	}
 
-	//circuitHandler handles all changes in the circuit, updating junctionArray and branchArray as needed. 
+	//circuitHandler handles all changes in the circuit
 	var circuitHandler = new CircuitListener() 
 	{
 		branchesMoved: function(branches)
@@ -474,9 +454,7 @@ function setupCircuitListener()
 		},
 		
 		branchRemoved: function(branch)
-		{			
-			var branchObject = branchArray[branch.getName()];
-			System.out.println(branchObject + " removed from the circuit");
+		{
 		},
 
 		junctionAdded: function(junction)
@@ -488,202 +466,26 @@ function setupCircuitListener()
 		{
 			if(!initializationDone)	return;
 			
-			if(firstJunctionsConnected)
-			{
-				firstJunctionsConnected = false;
-				Toolkit.getDefaultToolkit().beep();
-				OTCardContainerView.setCurrentCard(otInfoAreaCards, "firstJunctionText");
-			}
-
-			var branchList = new Vector();
-			var branchAList = junctionArray[a.getName()];
-			var myBranchName = "";
-			if (branchAList == null) { branchAList = new Vector(); }
-			var e = branchAList.elements();
-
-			//This while loop checks all the elements of the Vector branchAList, which are branches, and adds a comma between 
-			//the names of each branch name. Additionally, it checks if the junction a represents the start junction
-			//(A) or the end junction (B) for the branches to which junction a is connected.
-
-			while (e.hasMoreElements()) 
-			{
-				var temp = e.nextElement();
-				var branchObject = branchArray[temp.getName()];
-				myBranchName += branchObject.name;
-
-				if(newTarget == temp.getStartJunction()) 	myBranchName += junctionA;
-				if(newTarget == temp.getEndJunction())		myBranchName += junctionB;
-				if(e.hasMoreElements())						myBranchName += ", ";
-			}
-			
-			
-			//Adds the message "connected to: " and puts that at the end of all the branch names above.
-			myBranchName += junctionsConnectedMsg;
-			System.out.print(myBranchName + " ");			
-			logFile.print(myBranchName + " ");
-			myBranchName = "";
-
-			//This while loop does the same as above, except it's for branchBList
-			var branchBList = junctionArray[b.getName()];
-			if (branchBList == null) { branchBList = new Vector(); }
-			for (var e = branchBList.elements() ; e.hasMoreElements() ;) 
-			{
-				var temp = e.nextElement();
-				var branchObject = branchArray[temp.getName()];
-				myBranchName += branchObject.name;
-
-				if(newTarget == temp.getStartJunction())
-					myBranchName += junctionA;
-				if(newTarget == temp.getEndJunction())
-					myBranchName += junctionB;
-				if(e.hasMoreElements())
-					myBranchName += ", ";
-			}
-			
-			branchList.addAll(branchAList);
-			branchList.addAll(branchBList);
-
-			System.out.println(myBranchName);
-			logFile.println(myBranchName);
-
-			junctionArray[newTarget.getName()] = branchList;
-
-			///////////////////////////Unused script for recording 0.0 measurements/////////////////////////						
-			/*var multimeter = cckModule.getMultimeter();
-			var multimeterValue = multimeter.getMultimeterValue();
-			var branchObjectResistor = branchArray["#Ringless Resistor"];
-			var branchResistor = branchObjectResistor.branch;
-			var isOKValue = ! java.lang.Double.isNaN(multimeterValue);
-
-			if(!isOKValue)
-				return;
-
-			if(multimeterValue == 0)
-			{
-				var array = [ java.lang.Math.abs(java.lang.Double(roundedValue(multimeterValue))), 
-					multimeter.actingAsVoltmeter() ? "V" : multimeter.actingAsAmmeter() ? "A" : "",
-					java.lang.Math.abs(java.lang.Double(roundedValue(branchResistor.getVoltageDrop()))) + " V",
-					java.lang.Math.abs(java.lang.Double(roundedValue(branchResistor.getCurrent()))) + " A"];
-				multimeterMeasurements[("Measurement " + measurementCounter)] = array;
-				measurementCounter++;
-			}*/
-			///////////////////////////Unused script for recording 0.0 measurements////////////////////////
+			showFirstJunctionMessage();
 		},
 
-		/** Junctions Split is called every time one branch is disconnected from other branches via the deletion of a junction.
-		 * The script in this function prints all the names of all the branches involved (with each name seperated by a comma)
-		 * and then adds the string " disconnected from each other." at the end.
-		 */
+		/** Junctions Split is called every time one branch is disconnected from other branches via the deletion of a junction */
 		junctionsSplit: function(old, j) // j is the array of all the new junctions created by the split of old
 		{
-			var branchList = junctionArray[old.getName()];
-			var branchNames = "";
-
-			//The first loop iterates through the branchList vector and assigns the branch(es) in branchList to tempBranch
-			for(var e = branchList.elements(); e.hasMoreElements();)
-			{
-				var tempBranch = e.nextElement();
-				var branchObject = branchArray[tempBranch.getName()];
-				var tempJunctionLabel;
-				var i = 0;
-				
-				//The second loop iterates through the array of junctions, "j", and tests
-				for(var i = 0; i < j.length; i++)
-				{
-					var tempStartJunction = tempBranch.getStartJunction();
-					var tempEndJunction = tempBranch.getEndJunction();
-					var newBranchList = new Vector();
-					tempJunctionLabel = j[i].getName();
-					newBranchList.add(tempBranch);
-
-					if(tempStartJunction.getName() == j[i].getName())
-					{
-						junctionArray[tempJunctionLabel] = newBranchList;
-						branchNames += branchObject.name;
-						break;
-					}
-					else if(tempEndJunction.getName() == j[i].getName())
-					{
-						junctionArray[tempJunctionLabel] = newBranchList;
-						branchNames += branchObject.name;
-						break;
-					}
-				}
-
-				if(e.hasMoreElements())
-					branchNames += ", ";
-			}
-
-
-			branchNames += junctionsDisconMsg;
-			logFile.println(branchNames);
 		},
 		
-		/* This method is called every time a graphic is added (really, every time a branch is added). The script in the
-		 * function sets all the needed values (the branch's name, label, voltage, current, and the branch itself)
-		 * to an associative array called "branchObject". branchObject is then stored in another associative array called
-		 * "branchArray", and uses a key (which is also the label of the branch) of branchObject as the index. This way, 
-		 * when other functions want to access the values of a particular branchObject, they need the label of the branch 
-		 *(a string returned by the method branch.getLabel()).
-		 */
+		/* This method is called every time a branch is added */
 		branchAdded: function(branch)
 		{
 			if(!initializationDone)	return;
-
-			var startJunctionList = new Vector();
-			var endJunctionList = new Vector();
-			var startJunction = branch.getStartJunction();
-			var endJunction = branch.getEndJunction();
-
-			var branchObject = addBranchToArray(branch);
-
-			var branchName = new Packages.java.lang.String(branchObject.name);
-
-			//Adds a volt listener
-			if(branchName.equals("#Multimeter Resistor") || branchName.equals("#Ringless Resistor"))
-			{
-				branch.addCurrentVoltListener(currentVoltListener);
-			}
-
-			startJunctionList.add(branch);
-			endJunctionList.add(branch);
-
-			junctionArray[startJunction.getName()] = startJunctionList;
-			junctionArray[endJunction.getName()] = endJunctionList;
-
-			var className = branch.getClass().getName();
-			var names = className.split("\\.");
-			var typeName = names[names.length - 1];
-
-			if(typeName.equals("Battery"))
-			{				
-				var randomGen = new java.util.Random;
-				var random = randomGen.nextInt(10) + 11;
-				branch.setVoltageDrop(9);
-
-				// var menu = circuitGraphic.getGraphic(branch).getMenu();
-				var menuComponent = cckCircuitNode.getBranchNode(branch).getMenu();
-				var menuItems = menuComponent.getSubElements();
-				menuItems[0].setEnabled(false);
-				menuItems[1].setEnabled(false);
-				menuItems[3].setEnabled(false);
-			}
-			if(typeName.equals("Resistor"))
-			{
-				var menuComponent = cckCircuitNode.getBranchNode(branch).getMenu();
-				var menuItems = menuComponent.getSubElements();
-				
-				menuItems[0].setEnabled(false);
-				menuItems[1].setEnabled(false);
-			}
-			System.out.println(branchObject.name + " added to the circuit");
-			logFile.println(branchObject.name + " added to the circuit");
+			
 		}
 		
 	};// end of var circuitHandler = new CircuitListener()
 
 	cckCircuit.addCircuitListener(circuitHandler);
 	
+	/*
 	var circuitSolutionListener = new CircuitSolutionListener() 
 	{
 		circuitSolverFinished: function()
@@ -695,7 +497,7 @@ function setupCircuitListener()
 	
 	var circuitSolver = cckModel.getCircuitSolver();
 	circuitSolver.addSolutionListener(circuitSolutionListener);
-
+	*/
 
 }// End of setupCircuitListener()
 
@@ -709,7 +511,7 @@ function setupAnswerButton()
 		actionPerformed: function(evt)
 		{
 			var enteredText = answerBox.getText();
-			System.out.println(enteredText);
+			//System.out.println(enteredText);
 			var valuePosition = enteredText.search(/\d+(.\d*)?/);
 			var unitsPosition = enteredText.search(/ohms?/i);
 			var answer = -1;
@@ -758,36 +560,21 @@ function createResistor()
 	//Disable the pop up menu
 	newBranch.setMenuEnabled(false);
 
-	System.out.println("The Ringless Resistor's Resistance is " + newBranch.getResistance());
-	logFile.println("The Ringless Resistor's Resistance is " + newBranch.getResistance());
+	logInformation("The target Resistor's resistance is " + newBranch.getResistance());
 
-	var branchObject = addBranchToArray(newBranch);
-	
 	return newBranch;
 	
 }// end of createResistor()
 
-/** Adds an object to this non-sense array */
-function addBranchToArray(branch)
+/** A function that cuts down all values to the third decimal place when used, and rounding when neccessary */
+function roundedValue(number)
 {
-	var branchObject = new Object();
-	branchObject.branch = branch;
-	branchObject.key = branch.getName();
-	branchObject.voltage = 0.0;
-	branchObject.current = 0.0;
-	if(branch.getName().startsWith("#")){
-		branchObject.name = branch.getName();
-	}
-	else{
-		branchObject.name = getBranchName(branch);
-	}
-	System.out.println("Adding object to branchArray: " + branchObject.key + ", " + branchObject);
-	branchArray[branchObject.key] = branchObject;
+	var rounder = new DecimalFormat("#.###");
 	
-	return branchObject;
+	return rounder.format(number);
 }
 
-/** */
+/** Copy/pasted from the original CCK */
 function rangeValue(value) 
 {
 	var unitPrefix;
@@ -797,13 +584,13 @@ function rangeValue(value)
 	var leftOfDecimalDigits;
 	var rightOfDecimalZeroes;
 	var displayDigits = 4;
-     	
+     	     	
 	if(value < 0){
 		sign = "-";
 		value = Math.abs(value);
 	}
 	
-	System.out.println("Value to range is: " + value);
+	//System.out.println("Value to range is: " + value);
 	
 	if(value >= 1000) {
 		unitPrefix = " k";
@@ -818,7 +605,13 @@ function rangeValue(value)
 		displayValue = value * 1000;
 	}
 	
-	exponent = Packages.java.lang.Math.log10(Math.abs(displayValue));
+	if (MathUtil.isApproxEqual(displayValue, 0, 0.001)){
+		return "0 ";
+	}
+	
+	exponent = Packages.java.lang.Math.log10(displayValue);
+	
+	//System.out.println("exponent:"+exponent);
 	
 	if(exponent >= 0) {
 	   	leftOfDecimalDigits = exponent + 1;
@@ -853,10 +646,10 @@ function rangeValue(value)
 	
 	//System.out.println(sign + displayString + unitPrefix);
 	if(displayValue < 1000){
-		return sign + displayString + unitPrefix;
+		return "" + sign + displayString + unitPrefix;
 	}
 	else if (displayValue < 0.001){
-		return sign + 0 + unitPrefix;
+		return "" + sign + "0" + unitPrefix;
 	}
 	else{
 		return "???";
@@ -903,45 +696,6 @@ function logNotebook(value, unit)
 	list.add(measurement);
 }
 
-/** 
- * This function gets the name of the branch from the branch's classpath, 
- * and then returns the name of the branch plus 
- * the latest number of branches of that type in the CCK program.
- */
-function getBranchName(branch)
-{
-	var typeNumber = new Integer(1);
-	var className = branch.getClass().getName();
-	var names = className.split("\\.");
-	var typeName = names[names.length - 1];
-
-	if (typeName.equals("Branch"))
-	{
-		typeName = "Wire";
-	}
-
-	if(typeHash.containsKey(typeName))
-	{
-		typeNumber = typeHash.get(typeName);
-		typeNumber++;
-		typeHash.put(typeName, new Integer(typeNumber));
-	}
-	else
-	{
-		typeHash.put(typeName, typeNumber);
-	}
-		
-	return typeName + " " + typeHash.get(typeName);
-}
-
-/** A function that cuts down all values to the third decimal place when used, and rounding when neccessary */
-function roundedValue(number)
-{
-	var rounder = new DecimalFormat("#.###");
-	
-	return rounder.format(number);
-}
-
 /**
  * Looks in the circuit and finds the first branch with the given name and returns it
  */
@@ -955,262 +709,54 @@ function findBranch(name)
 	return null;
 }
 
-/**
- * Initializes the non-sense local array of branch objects
- */
-function initBranchArray()
-{
-	var branches = cckCircuit.getBranches();
-	System.out.println("");
-	System.out.println("the circuit has "+branches.length+" branches.");
-	for (var i=0; i<branches.length; i++){
-		var branch = branches[i];
-		System.out.println("branch "+i+" - "+branch.getName());		
-		//Add it to the branchArray to be consistent although I wan to take this out entirely
-		addBranchToArray(branch);
-		//
-	}
-	System.out.println("");
-	return null;
-}
-
 /** Checks the answer and creates messages according to the answer submitted */
 function checkAnswer(answerValue)
 {
-	System.out.println("All measurements: ");
-	logFile.println("All measurements: " );
-	for(var i = 1; i < measurementCounter; i++)
-	{
-		var currentMeasurement = "Measurement " + i;
-		var array = multimeterMeasurements[currentMeasurement];
-		System.out.println(currentMeasurement + " with " + array[0] + " '" + array[1] + "' measured while there were " + array[2] + " and " + array[3] + " through the resistor.");
-		logFile.println(currentMeasurement + " with " + array[0] + " '" + array[1] + "' measured while there were " + array[2] + " and " + array[3] + " through the resistor.");
-	}
+	logInformation("Answer Submitted: "+answerValue);
 
-	var correctAmmeterMeasurements = new Array();
-	var correctVoltmeterMeasurements = new Array();
-	var numCorrectAmmeterMeasurements = 0;
-
-	//Finds the number of correct ammeter measurements and stores them in the array correctAmmeterMeasurements
-	for(var i = 1; i < measurementCounter; i++)
-	{
-		var currentMeasurement = "Measurement " + i;
-		var array = multimeterMeasurements[currentMeasurement];
-		correctAmmeterMeasurements[i] = null;
-
-		if(array != null)
-		{
-			if(Math.abs((array[0]-array[3])/array[3]) < 0.001 && (array[1].equals("A") || array[1].equals("mA") || array[1].equals("kA")))
-			{
-				correctAmmeterMeasurements[i] = currentMeasurement;
-				numCorrectAmmeterMeasurements++;
-			}
-		}
-	}
-
-	var bestVoltMeasurement;
-	var numCorrectVoltMeasurements = 0;
-
-	//Checks every voltage measurement against the voltage value of every correct ammeter measurement
-	for(var i = 1; i < measurementCounter; i++)
-	{	
-		var array = multimeterMeasurements["Measurement " + i];
-			
-		if(array[0] > 0 && (array[1].equals("V") || array[1].equals("mV") || array[1].equals("kV")))
-		{
-			bestVoltMeasurement = "Measurement " + i;
-		}
-
-		for(var j = 1; j < measurementCounter; j++)
-		{
-			array = multimeterMeasurements["Measurement " + j];
-			var bestVoltMeasurementTest = multimeterMeasurements[bestVoltMeasurement];
-
-			System.out.println("array = " + array[0] + " " + array[1] + " " + array[2] + " " + array[3]);
-			System.out.println("bestVoltMeasurement" + bestVoltMeasurement);
-
-			if(bestVoltMeasurementTest != null && correctAmmeterMeasurements[j] != null)
-			{
-				if((bestVoltMeasurementTest[0]-array[2])/array[2] < 0.0001)
-				{
-					if(numCorrectVoltMeasurements != 0)
-					{
-						if(correctVoltmeterMeasurements[numCorrectVoltMeasurements - 1].equals(bestVoltMeasurement))
-						{
-							continue;
-						}
-					}
-
-					correctVoltmeterMeasurements[numCorrectVoltMeasurements] = bestVoltMeasurement;
-					numCorrectVoltMeasurements++;
-					break;
-				}
-			}
-		}
-	}
-
-	if(numCorrectAmmeterMeasurements == 0)
-	{
-		System.out.println("There are no correct ammeter measurements.");
-		logFile.println("There are no correct ammeter measurements.");
-	}
-	else
-	{
-		for(var i = 0; i < correctAmmeterMeasurements.length; i++)
-		{
-			if(correctAmmeterMeasurements[i] != null)
-			{
-				System.out.println("A correct ammeter measurement is: " + correctAmmeterMeasurements[i]);
-				logFile.println("A correct ammeter measurement is: " + correctAmmeterMeasurements[i]);
-			}
-		}
-	}
-
-	if(numCorrectVoltMeasurements == 0) 
-	{
-		System.out.println("There are no correct volt measurements");
-		logFile.println("There are no correct volt measurements");
-	}
-	else
-	{
-		for(var i = 0; i < numCorrectVoltMeasurements; i++)
-		{
-			System.out.println("A correct volt measurement is: " + correctVoltmeterMeasurements[i]);
-			logFile.println("A correct volt measurement is: " + correctVoltmeterMeasurements[i]);
-		}
-	}
-	
-	System.out.println("Number of short circuits: " + shortCircuitCounter);
-	logFile.println("Number of short circuits: " + shortCircuitCounter);
-
-	var answerType = null;
-	var branchObjectResistor = branchArray["#Ringless Resistor"];
-	var branchResistor = branchObjectResistor.branch;
-	
-	//Tests for each kind of answer type:
-	//
-	//Answer Type 1: Measured at least one correct volt measurement and ammeter measurement and reported the correct resistance
-	//Answer Type 2: Measured at least one correct volt measurement and ammeter measurement and reported the incorrect resistance
-	//Answer Type 3: Did not measure at least one correct volt measurement or ammeter measurement, and guessed the correct resistance
-	//Answer Type 4: None of the above (did nothing correct) 
-
-	if(numCorrectAmmeterMeasurements > 0 && numCorrectVoltMeasurements > 0 && answerValue == branchResistor.getResistance())
-	{
+	// Simply check that the value answered was right
+	var value = (new java.lang.Double(answerValue).doubleValue());
+	if (MathUtil.isApproxEqual(value, targetResistor.getResistance(), 0.0001)){
 		answerType = 1;
 	}
-	else if((numCorrectAmmeterMeasurements > 0 && numCorrectVoltMeasurements > 0) && answerValue != branchResistor.getResistance())
-	{
+	else{
 		answerType = 2;
 	}
-	else if((numCorrectAmmeterMeasurements == 0 || numCorrectVoltMeasurements == 0) && answerValue == branchResistor.getResistance())
-	{
-		answerType = 3;
-	}
-	else
-	{
-		answerType = 4;
-	}
+	//
+	
+	// Take into account short circuits? shortCircuitCounter
 
-	showSolution(answerType, correctAmmeterMeasurements, correctVoltmeterMeasurements);
+	showSolution(answerType);
 }
 
 /** Shows a message as feedback after submitting an answer */
 function showSolution(answerType, correctAmmeterMeasurements, correctVoltmeterMeasurements)
 {
-	var firstAmmeterMeasurement;
-	var firstAmmeterMeasurementUnits;
-	var firstVoltmeterMeasurement = null;
-	var firstVoltmeterMeasurementUnits = "V";
-	var actualCurrentThroughResistor;
-
-	var array;
-
-	if(answerType == 1 || answerType == 2)
-	{
-		for(var i = 0; i < correctAmmeterMeasurements.length; i++)
-		{
-			var ammeterVoltageMeasurement;
-
-			if(correctAmmeterMeasurements[i] != null)
-			{
-				array = multimeterMeasurements[correctAmmeterMeasurements[i]];
-
-				System.out.println("In function solution, array = " + array[0] + ", " + array [1] + ", " + array [2] + ", " + array [3]);
-
-				firstAmmeterMeasurement = array[3];
-				firstAmmeterMeasurementUnits = array[1];
-				ammeterVoltageMeasurement = array[2];
-
-				for(var j = 0; j < correctVoltmeterMeasurements.length; j++)
-				{
-					array = multimeterMeasurements[correctVoltmeterMeasurements[j]];
-				
-					System.out.println("multimeterMeasurements[correctVoltmeterMeasurements["+j+"] = " + array[0] + ", " + array [1] + ", " + array [2] + ", " + array [3]);
-					System.out.println("ammeterVoltageMeasurement:"+ammeterVoltageMeasurement);
-				
-					if(ammeterVoltageMeasurement == array[2])
-					{
-						firstVoltmeterMeasurement = array[0];
-						break;
-					}
-				}
-			}
-
-			if(firstVoltmeterMeasurement != null)
-				break;
-		}
-
-		if (firstAmmeterMeasurementUnits == "mA")
-		{
-			actualCurrentThroughResistor = firstAmmeterMeasurement / 1000;
-		}
-	}
-	
-	var calculatedResistance = (firstVoltmeterMeasurement / actualCurrentThroughResistor);
-	calculatedResistance = java.lang.Math.round(calculatedResistance);
-
-	//Put variables into hash map so we can construct the report.
-	substMap.put("firstVoltmeterMeasurement",String(firstVoltmeterMeasurement) + " " + firstVoltmeterMeasurementUnits);
-	substMap.put("firstAmmeterMeasurement",String(firstAmmeterMeasurement) + " " + firstAmmeterMeasurementUnits);
-	substMap.put("calculatedResistance",String(calculatedResistance));
-	substMap.put("shortCircuitCounter",String(shortCircuitCounter));
-
-	// FIXME Replace with OTVelocity templates...
-	if(answerType == 1)
-	{
-		solutionString = substitute(solutionString1, substMap);
-	}
-	else if(answerType == 2)
-	{
-		solutionString = substitute(solutionString2, substMap);
-	}
-	else if(answerType == 3)
-	{
-		solutionString = substitute(solutionString3, substMap);
-	}
-	else if(answerType == 4 )
-	{
-		solutionString = substitute(solutionString4, substMap);
-	}
-
+	var solutionString = "";
 	var shortCircuitMsg = "";
+	
+	if (answerType == 1){
+		solutionString = "Correct.";
+	}
+	else{
+		solutionString = "Incorrect.";
+	}	
+
+	substMap.put("shortCircuitCounter",String(shortCircuitCounter));
 
 	if (shortCircuitCounter!= 0)
 	{
-		if (shortCircuitCounter == 1)
-		{
+		if (shortCircuitCounter == 1){
 			shortCircuitMsg = shortCircuitMsg1;
 		}
-		else if (shortCircuitCounter == 2)
-		{
+		else if (shortCircuitCounter == 2){
 			shortCircuitMsg = shortCircuitMsg2;
 		}
-		else
-		{
+		else{
 			shortCircuitMsg = substitute(shortCircuitMsg3, substMap);
 		}
 	}
-
+	
 	//Check for units reported
 	var unitsMsg = unitsNotReported;
 	if (unitsGiven) unitsMsg = unitsReported;
@@ -1261,7 +807,7 @@ function substitute(text, map)
 		var variable = keys.next();
 		var value = map.get(variable);
 		
-		System.out.println("variable map: "+ variable+": "+value);
+		//System.out.println("variable map: "+ variable+": "+value);
 		
 		text = replaceAll(new Packages.java.lang.String(text), new Packages.java.lang.String(prefix + variable + suffix), new Packages.java.lang.String(value));
 	}
