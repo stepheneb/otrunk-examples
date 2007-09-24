@@ -1,0 +1,375 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<otrunk id="33754150-b594-11d9-9669-0800200c9a66" >
+  <imports>
+    <import class="org.concord.otrunk.OTSystem"/>
+
+    <import class="org.concord.otrunk.view.OTFolderObject"/>
+    <import class="org.concord.otrunk.view.OTViewEntry"/>
+    <import class="org.concord.otrunk.view.OTViewService"/>
+    <import class="org.concord.otrunk.view.OTViewChild"/>
+
+    <import class="org.concord.otrunk.view.prototype.OTPrototypeViewEntry"/>
+    <import class="org.concord.otrunk.view.prototype.OTPrototypeEventController"/>
+    <import class="org.concord.otrunk.view.prototype.OTPrototypeMapEntry"/>
+    <import class="org.concord.otrunk.view.prototype.OTPropertyReference"/>
+
+    <import class="org.concord.otrunk.view.document.OTCompoundDoc"/>
+
+    <import class="org.concord.otrunk.ui.OTButton"/>
+    <import class="org.concord.otrunk.ui.OTText"/>
+    <import class="org.concord.otrunk.ui.OTListBox"/>
+    <import class="org.concord.otrunk.ui.OTChoice"/>
+    <import class="org.concord.otrunk.ui.OTCardContainer"/>
+    <import class="org.concord.otrunk.ui.OTSplitPane"/>
+    <import class="org.concord.otrunk.ui.tree.OTTree"/>
+
+    <import class="org.concord.otrunk.velocity.OTVelocityXHTMLViewEntry"/>
+    <import class="org.concord.otrunk.velocity.OTVelocityTemplate"/>
+
+    <import class="org.concord.otrunk.template.OTTemplateEngineBundle"/>
+    <import class="org.concord.otrunk.template.OTTemplateEngineEntry"/>
+    <import class="org.concord.otrunk.template.OTTemplateObject"/>
+    <import class="org.concord.otrunk.template.OTTemplateVariable"/>
+    
+    <import class="org.concord.otrunk.script.OTScriptEngineBundle" />
+    <import class="org.concord.otrunk.script.OTScriptEngineEntry" />
+
+    <import class="org.concord.otrunk.script.js.OTJavascript" />
+
+    <import class="org.concord.otrunk.script.ui.OTScriptObject" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariable" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariableRealObject" />
+    <import class="org.concord.otrunk.script.ui.OTScriptButton"/>
+    
+    <import class="org.concord.otrunk.script.view.OTPrototypeScriptController" />
+
+    <import class="org.concord.framework.otrunk.view.OTFrame"/>
+
+    <import class="org.concord.data.state.OTDataStore"/>
+    <import class="org.concord.data.state.OTDataChannelDescription"/>
+    <import class="org.concord.data.state.OTDataField"/>
+    <import class="org.concord.data.state.OTWaveGenerator"/>
+    <import class="org.concord.data.state.OTDataTable"/>
+    <import class="org.concord.data.state.OTLinearProducerFilter"/>    
+    <import class="org.concord.data.state.OTIntegratingProducerFilter"/>    
+    <import class="org.concord.data.state.OTDifferentiatingProducerFilter"/>    
+    <import class="org.concord.data.state.OTHoltsMethodSmoothing"/>
+    
+    <import class="org.concord.datagraph.state.OTDataGraph"/>
+    <import class="org.concord.datagraph.state.OTDataAxis"/>
+    <import class="org.concord.datagraph.state.OTDataGraphable"/>
+    <import class="org.concord.datagraph.state.OTDataCollector"/>
+    <import class="org.concord.datagraph.state.OTMultiDataGraph"/>
+    <import class="org.concord.datagraph.state.OTDataPointLabel"/>
+    <import class="org.concord.datagraph.state.OTDataPointRuler"/>
+
+    <import class="org.concord.graph.util.state.OTDrawingTool"/>
+    <import class="org.concord.graph.util.state.OTDrawingStamp"/>
+    <import class="org.concord.graph.util.state.OTDrawingImageIcon"/>
+    <import class="org.concord.graph.util.state.OTDrawingShape"/>
+    <import class="org.concord.graph.util.state.OTPointTextLabel"/>
+    
+  </imports>
+  <objects>
+    <OTSystem>
+      <bundles>
+        <OTTemplateEngineBundle>
+          <engines>
+            <OTTemplateEngineEntry objectClass="org.concord.otrunk.velocity.OTVelocityTemplate"
+            	engineClass="org.concord.otrunk.velocity.OTVelocityTemplateEngine"/>            
+          </engines>
+        </OTTemplateEngineBundle>
+        <OTScriptEngineBundle>
+          <engines>
+            <OTScriptEngineEntry
+              objectClass="org.concord.otrunk.script.js.OTJavascript"
+              engineClass="org.concord.otrunk.script.js.OTJavascriptEngine" />
+          </engines>
+        </OTScriptEngineBundle>
+        <OTViewService>
+          <viewEntries>
+            <OTViewEntry 
+              objectClass="org.concord.datagraph.state.OTDataGraph" 
+              viewClass="org.concord.datagraph.state.OTDataGraphView"/>
+            <OTViewEntry 
+              objectClass="org.concord.data.state.OTDataField" 
+              viewClass="org.concord.data.state.OTDataFieldView"/>
+            <OTViewEntry
+              objectClass="org.concord.datagraph.state.OTDataCollector" 
+              viewClass="org.concord.datagraph.state.OTDataCollectorView"/>
+            <OTViewEntry
+              objectClass="org.concord.graph.util.state.OTDrawingTool" 
+              viewClass="org.concord.datagraph.state.OTDataDrawingToolView"/>
+            <OTViewEntry
+              objectClass="org.concord.datagraph.state.OTMultiDataGraph" 
+              viewClass="org.concord.datagraph.state.OTMultiDataGraphView"/>
+            <OTViewEntry local_id="document_view"
+              objectClass="org.concord.otrunk.view.document.OTDocument" 
+              viewClass="org.concord.otrunk.view.document.OTDocumentView"/>                         
+            <OTViewEntry
+              objectClass="org.concord.otrunk.view.OTFolderObject"
+              viewClass="org.concord.otrunk.view.OTFolderObjectView"/>
+            <OTViewEntry
+              objectClass="org.concord.data.state.OTDataTable"
+              viewClass="org.concord.data.state.OTDataTableView"/>
+            <OTViewEntry
+              objectClass="org.concord.otrunk.script.ui.OTScriptButton" 
+              viewClass="org.concord.otrunk.script.ui.OTScriptButtonView"/>
+            <OTViewEntry
+              objectClass="org.concord.otrunk.script.OTScript" 
+              viewClass="org.concord.otrunk.script.ui.OTScriptEditView"/>
+                       
+            <OTViewEntry local_id="split_pane_view" 
+            	objectClass="org.concord.otrunk.ui.OTSplitPane"
+                viewClass="org.concord.otrunk.ui.swing.OTSplitPaneView"/>
+            <OTViewEntry objectClass="org.concord.otrunk.ui.tree.OTTree"
+                viewClass="org.concord.otrunk.ui.swing.OTTreeView"/>
+            <OTViewEntry objectClass="org.concord.otrunk.script.ui.OTScriptObject"
+                viewClass="org.concord.otrunk.script.ui.OTScriptObjectView"/>
+            <OTViewEntry local_id="text_edit"
+              objectClass="org.concord.otrunk.ui.OTText" 
+              viewClass="org.concord.otrunk.ui.swing.OTTextEditView"/>
+            <OTViewEntry local_id="list_edit"
+              objectClass="org.concord.otrunk.ui.OTListBox" 
+              viewClass="org.concord.otrunk.ui.swing.OTListBoxView"/>
+            <OTViewEntry local_id="choice_edit"
+              objectClass="org.concord.otrunk.ui.OTChoice"
+              viewClass="org.concord.otrunk.ui.swing.OTChoiceComboBoxView"/>
+            <OTViewEntry
+              objectClass="org.concord.otrunk.ui.OTButton"
+              viewClass="org.concord.otrunk.ui.swing.OTButtonView"/>
+            <OTViewEntry
+              objectClass="org.concord.otrunk.ui.OTCardContainer"
+              viewClass="org.concord.otrunk.ui.swing.OTCardContainerView"/>
+            
+            <OTPrototypeViewEntry local_id="primitive_editor"
+            	objectClass="org.concord.otrunk.view.prototype.OTPropertyReference"
+            	viewClass="org.concord.otrunk.view.prototype.OTPrototypePropertyView"
+            	viewEntry="${text_edit}"
+            	savePrototypeCopies="false">
+            	<prototype>
+            		<OTText text="default" />
+            	</prototype>
+            	<controller>
+            		<OTPrototypeEventController>
+            			<mapping>
+            			   <OTPrototypeMapEntry prototypeProperty="text"/>
+            			</mapping>
+            		</OTPrototypeEventController>
+            	</controller>
+            </OTPrototypeViewEntry>
+
+            <OTPrototypeViewEntry local_id="boolean_editor"
+            	objectClass="org.concord.otrunk.view.prototype.OTPropertyReference"
+            	viewClass="org.concord.otrunk.view.prototype.OTPrototypeView"
+            	viewEntry="${choice_edit}"
+            	savePrototypeCopies="false">
+            	<prototype>
+            	    <OTChoice>
+            	      <choices>
+	            		<OTText name="true" />
+    	        		<OTText name="false" />
+            	      </choices>
+            	    </OTChoice>
+            	</prototype>
+            	<controller>
+            		<OTPrototypeScriptController>
+            			<script>
+            				<OTJavascript src="../ObjectEditor/boolean-editor.js" />
+            			</script>
+            		</OTPrototypeScriptController>
+            	</controller>
+            </OTPrototypeViewEntry>
+
+            <OTPrototypeViewEntry local_id="list_editor"
+            	objectClass="org.concord.otrunk.view.prototype.OTPropertyReference"
+            	viewClass="org.concord.otrunk.view.prototype.OTPrototypePropertyView"
+            	viewEntry="${list_edit}"
+            	savePrototypeCopies="false">
+            	<prototype>
+            		<OTListBox />
+            	</prototype>
+            	<controller>
+            		<OTPrototypeEventController>
+            			<mapping>
+            			   <OTPrototypeMapEntry prototypeProperty="items"/>
+            			</mapping>
+            		</OTPrototypeEventController>
+            	</controller>
+            </OTPrototypeViewEntry>
+
+			<OTViewEntry local_id="template_object_view"
+				objectClass="org.concord.otrunk.template.OTTemplateObject"
+				viewClass="org.concord.otrunk.template.OTTemplateObjectView"/>
+              
+          </viewEntries>
+        </OTViewService>
+      </bundles>
+      <library>
+                  <OTPrototypeViewEntry local_id="object_form_editor"
+            	objectClass="org.concord.framework.otrunk.OTObject"
+            	viewEntry="${template_object_view}"
+            	savePrototypeCopies="false">
+            	<prototype>
+            		<OTTemplateObject name="Template Document"
+            			template="${object_editing_template}">
+            			<variables>
+            				<OTTemplateVariable name="model"/>
+            				<OTTemplateVariable name="properties">
+            					<reference>
+            					    <!--  this object will get filled in by the script when 
+            					    it initializes the prototype copy -->
+            						<OTFolderObject/>
+            					</reference>
+            				</OTTemplateVariable>
+            			</variables>
+            		</OTTemplateObject>
+            	</prototype>
+            	<controller>
+            		<OTPrototypeScriptController>
+            			<script>
+            				<OTJavascript src="../ObjectEditor/object-editor-6.js" />
+            			</script>
+            		</OTPrototypeScriptController>
+            	</controller>
+            </OTPrototypeViewEntry>
+
+
+            <OTPrototypeViewEntry local_id="object_tree_editor"
+            	objectClass="org.concord.framework.otrunk.OTObject"
+            	viewEntry="${split_pane_view}"
+            	savePrototypeCopies="false">
+            	<prototype>
+            		<OTSplitPane>
+            			<first>
+            				<OTTree/>
+            			</first>
+            			<second>
+            				<OTViewChild viewid="${object_form_editor}" />
+            			</second>
+            		</OTSplitPane>
+            	</prototype>
+            	<controller>
+            		<OTPrototypeScriptController>
+            			<script>
+            				<OTJavascript src="tree-listener.js" />
+            			</script>
+            		</OTPrototypeScriptController>
+            	</controller>
+            </OTPrototypeViewEntry>
+
+      	<OTVelocityTemplate local_id="object_editing_template">
+      		<template>
+      			OTClass: ${model.otClass().instanceClass.name}
+      			<table>
+      				#foreach( $property in $properties.children.vector)
+      				<tr>
+      					<td>$property.property :</td>
+      					<td width="300">
+      					  #set( $classProperty = $model.otClass().getProperty($property.property) )
+      					
+      					  #if( $classProperty.primitive )
+      						#if( $classProperty.type.primitiveName == "boolean" )
+        						<object refid="$property.globalId" viewid="${boolean_editor}"/>
+      						#else
+        						<object refid="$property.globalId" viewid="${primitive_editor}"/>
+      						#end
+      					  #elseif ( $classProperty.list )
+      						<object refid="$property.globalId" viewid="${list_editor}"/>      					    
+      					  #end
+
+      					  #if( $classProperty.default )
+      					     <div style="margin: 0px 0px 0px 20px;">default: $classProperty.default</div>
+      					  #end
+      					</td>
+      				</tr>
+      				#end
+      			</table>
+      		</template>
+      	</OTVelocityTemplate>
+      </library>
+      <root>
+        <OTFolderObject name="graphs">
+          <children>
+            <OTCompoundDoc name="calibration document">
+              <bodyText>
+                <table>
+                  <tr><td><object refid="${source_graph}"/></td>
+                    <td><object refid="${calibrated_graph}"/></td>
+                  </tr>                  
+                </table>
+
+                <table>
+                	<tr>
+                		<td>
+                			<object refid="${calibration_filter}"
+                				viewid="${object_form_editor}" />
+                		</td>
+                		<td>
+                		    <object refid="${add_point_button}"/>
+                		    <br/>
+                			<object refid="${calibration_point_table}" />
+                		</td>
+                	</tr>
+                </table>
+              </bodyText>              
+          	</OTCompoundDoc>
+            <OTDataCollector name="Source Graph" local_id="source_graph">
+              <source>
+                <OTDataGraphable connectPoints="true" color="0x0000ff"
+                  drawMarks="false" name="Uncalibrated Data" xColumn="0" yColumn="1">
+                  <dataProducer>
+                    <OTWaveGenerator local_id="source_data_producer" timeScale="0.2" sampleTime="0.3"/>
+                  </dataProducer>
+                  <dataStore>
+                    <OTDataStore local_id="data_store" virtualChannels="true"/>
+                  </dataStore>
+                </OTDataGraphable>
+              </source>
+              <xDataAxis>
+                <OTDataAxis min="0" max="60" label="Time" units="s"/>
+              </xDataAxis>
+              <yDataAxis>
+                <OTDataAxis min="-2" max="2" label="sin(x)"/>
+              </yDataAxis>
+            </OTDataCollector>
+            <OTDataCollector name="Calibrated Graph" local_id="calibrated_graph">
+              <source>
+                <OTDataGraphable 
+                  connectPoints="true" 
+                  color="0x0000ff"
+                  drawMarks="false" 
+                  name="Calibrated Data" 
+                  xColumn="0" 
+                  yColumn="1"
+                  dataProducer="${calibration_filter}"
+                  />
+              </source>
+              <xDataAxis>
+                <OTDataAxis min="0" max="60" label="Time" units="s"/>
+              </xDataAxis>
+              <yDataAxis>
+                <OTDataAxis min="-2" max="2" label="sin(x)"/>
+              </yDataAxis>
+            </OTDataCollector>
+            <OTViewChild name="calibration filter editor" viewid="${object_form_editor}" object="${calibration_filter}"/>
+            <OTLinearProducerFilter name="Calibration Filter" local_id="calibration_filter" k0="5" k1="5" sourceChannel="1"
+            	source="${source_data_producer}" />
+            <OTDataTable name="Calibration Point Table" local_id="calibration_point_table">
+               <dataStore>
+                 <OTDataStore local_id="calibration_points" numberChannels="2"/>
+               </dataStore>
+            </OTDataTable>
+            <OTScriptButton name="Add Data Point Button" text="Add Point" local_id="add_point_button" script="${add_data_point_script}">
+               <scriptVariables>
+                 <OTScriptVariableRealObject name="calibrationPoints" reference="${calibration_points}"/>
+                 <OTScriptVariableRealObject name="sourceDataStore" reference="${data_store}"/>
+               </scriptVariables>
+            </OTScriptButton>
+            <OTJavascript name="Add Data Point Script" local_id="add_data_point_script" src="add_data_point.js"/>            
+          </children>
+        </OTFolderObject>
+      </root>      
+    </OTSystem>
+  </objects>
+</otrunk>
