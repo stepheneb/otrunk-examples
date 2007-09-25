@@ -90,9 +90,17 @@
 									<OTObjectEditViewConfig 
 										objectClass="org.concord.otrunk.view.document.OTCompoundDoc" 
 										viewClass="org.concord.otrunk.view.document.OTCompoundDocEditView"
-										usePopupEditWindows="true"/>
+										usePopupEditWindows="true">
+											<objectsToInsert>
+												<OTText name="Text field"/>
+												<OTDrawingTool2 name="Draw tool"/>
+												<OTChoice name="Choices"/>
+											</objectsToInsert>
+									</OTObjectEditViewConfig>
 								</entry>
-								
+								<entry key="${choice-radio-view}">
+									<OTChoiceViewConfig objectClass="org.concord.otrunk.ui.OTChoice" viewClass="org.concord.otrunk.ui.swing.OTChoiceComboBoxEditView" useViewsAsChoices="true"/>
+								</entry>
 							</map>
 						</OTViewMode>
 					</modes>
@@ -394,7 +402,7 @@
 		        <object refid="${english-overlay}"/>
 		    </overlays>
 			<root>
-				<OTUDLContainer name="UDL Activity">
+				<OTUDLContainer name="UDL Activity" cssColor="${css-color}">
 					<title>
 						<OTCompoundDoc local_id="title">
 							<bodyText>
@@ -463,9 +471,9 @@
 															<div class="border">
 																<div class="body">
 																	<div class="subtitle">
-																		Page 1
+																		New page
 																	</div>
-																	Page 1 content
+																	New page content
 																</div>
 															</div>
 														</div>
@@ -500,10 +508,20 @@
 						</OTCardContainer>
 					</content>
 					<script>
-						<OTScriptObject local_id="pretest-button-script">
+						<OTScriptObject>
 							<variables>
 								<OTScriptVariable name="cardContainer"
+									reference="${section-card-container}"/>
+								<OTScriptVariable name="firstSectionCardContainer"
 									reference="${section-1-card-container}"/>
+								<OTScriptVariable name="system"
+									reference="${system}"/>
+								<OTScriptVariable name="menuPageRule"
+									reference="${page-rule}"/>
+								<OTScriptVariable name="sampleMenu"
+									reference="${menu}"/>
+								<OTScriptVariable name="menuHorizontalView"
+									reference="${menu-horizontal-circle}"/>
 							</variables>
 							<script>
 								<object refid="${authoring_script.js}"/>
@@ -606,15 +624,64 @@
 						importClass(Packages.org.concord.framework.otrunk.OTObject);
 						importClass(Packages.org.concord.framework.otrunk.OTObjectList);
 						importClass(Packages.org.concord.otrunk.ui.OTCardContainer);
+						importClass(Packages.org.concord.otrunk.udl3.OTUDLMenu);
 						importClass(Packages.java.lang.System);
 						importClass(Packages.org.concord.framework.otrunk.OTObjectList);
-						
+
 						var sectionContainerHandler =
 						{
 								stateChanged: function(evt)
 								{
+									System.out.println("section handler");
+									if (evt.getProperty().equalsIgnoreCase("currentCard")){
+										System.out.println("adding listener");
+										var numCards = evt.getSource().getCards().size();
+										var section = evt.getSource().getCards().get(numCards-1);
+										section.getContent().addOTChangeListener(pageContainerListener);
+									}
 									if (evt.getProperty().equalsIgnoreCase("cards")) {
-										System.out.println("new section");
+										var numCards = evt.getSource().getCards().size();
+										var section = evt.getSource().getCards().get(numCards-1);
+										section.setName("Section "+numCards);
+										
+										var header = section.getHeader();
+										
+										header.setBodyText("&lt;div class=\"title\"&gt;"+
+															"Section " + numCards +
+														"&lt;/div&gt;");
+										
+										var doc = section.getContent().getCurrentCard();
+										
+										doc.setBodyText("&lt;div class=\"buffer\"&gt;"+
+															"&lt;div class=\"border\"&gt;"+
+																"&lt;div class=\"body\"&gt;"+
+																"&lt;div class=\"subtitle\"&gt;\n"+
+																		"New page"+
+																	"\n&lt;/div&gt;\n"+
+																	"New page content"+
+																"\n&lt;/div&gt;"+
+															"&lt;/div&gt;"+
+														"&lt;/div&gt;");
+														
+										var menu = doc.getOTObjectService().createObject(sampleMenu.otClass().getInstanceClass());
+										menu.setCardContainer(section.getContent());
+										menu.setMenuRule(menuPageRule);
+										
+										system.getLibrary().add(menu);
+										
+										var footer = section.getFooter();
+										
+										footer.setBodyText("&lt;div align=\"center\"&gt;" +
+															"&lt;table&gt;"+
+																	"&lt;tr&gt;"+
+																		"&lt;td&gt;"+
+																			"&lt;object refid=\""+menu.getGlobalId()+"\" viewid=\""+menuHorizontalView.getGlobalId()+"\"/&gt;" +
+																		"&lt;/td&gt;"+
+																	"&lt;/tr&gt;"+
+															"&lt;/table&gt;"+
+															"&lt;/div&gt;");
+														
+										section.getContent().addOTChangeListener(pageContainerListener);
 									}
 								}
 						};
@@ -626,7 +693,6 @@
 								{
 									System.out.println(evt.getProperty());
 									if (evt.getProperty().equalsIgnoreCase("cards")) {
-										System.out.println("It was cards");
 										var numCards = evt.getSource().getCards().size();
 										var doc = evt.getSource().getCards().get(numCards-1);
 										doc.setBodyText("&lt;div class=\"buffer\"&gt;"+
@@ -645,15 +711,8 @@
 						var pageContainerListener = new OTChangeListener(pageContainerHandler);
 						
 						function init() {
-							cardContainer.addOTChangeListener(pageContainerListener);
-						//	for (var i=0; i &lt; cardContainer.getCards().size(); i++){
-						//		var pageContainer = cardContainer.getCards().get(i).getContent();
-						///		System.out.println(pageContainer);
-						//		pageContainer.addOTChangeListener(pageContainerListener);
-						//	}
-							//cardContainer.addOTChangeListener(sectionContainerListener);
-						//	var pageContainer = cardContainer.getCards().get(0).getContent();
-						//	pageContainer.addOTChangeListener(sectionContainerListener);
+							cardContainer.addOTChangeListener(sectionContainerListener);
+							firstSectionCardContainer.addOTChangeListener(pageContainerListener);
 							
 							return true;
 						}
