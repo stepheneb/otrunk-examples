@@ -2,13 +2,17 @@
 <otrunk id="2dde6a72-6ba7-11dc-8314-0800200c9a66" >
   <imports>
     <import class="org.concord.otrunk.OTSystem"/>
+
     <import class="org.concord.otrunk.view.OTFolderObject"/>
     <import class="org.concord.otrunk.view.OTViewEntry"/>
     <import class="org.concord.otrunk.view.OTViewBundle"/>
+    <import class="org.concord.otrunk.view.OTViewMode"/>
+	
     <import class="org.concord.otrunk.view.prototype.OTPrototypeViewEntry"/>
     <import class="org.concord.otrunk.view.prototype.OTPrototypeEventController"/>
     <import class="org.concord.otrunk.view.prototype.OTPrototypeMapEntry"/>
     <import class="org.concord.otrunk.view.prototype.OTPropertyReference"/>
+
     <import class="org.concord.framework.otrunk.view.OTFrame"/>
     <import class="org.concord.otrunk.view.OTViewChild"/>
     <import class="org.concord.otrunk.ui.OTButton"/>
@@ -51,7 +55,7 @@
               engineClass="org.concord.otrunk.script.js.OTJavascriptEngine" />
           </engines>
         </OTScriptEngineBundle>
-        <OTViewBundle>
+        <OTViewBundle currentMode="object_editor_mode">
           <viewEntries>
             <OTViewEntry local_id="split_pane_view" 
             	objectClass="org.concord.otrunk.ui.OTSplitPane"
@@ -139,7 +143,42 @@
 				objectClass="org.concord.otrunk.template.OTTemplateObject"
 				viewClass="org.concord.otrunk.template.OTTemplateObjectView"/>
 
+			<!--  if nothing else can be found then use the tree editor, 
+			   it might be better to put this in a mode and set the mode when 
+			   starting things up, that way the object will have to use this 
+			   editor.  -->
+            <OTPrototypeViewEntry local_id="object_tree_editor"
+            	objectClass="org.concord.framework.otrunk.OTObject"
+            	viewEntry="${split_pane_view}"
+            	savePrototypeCopies="false"
+            	viewMode="_no_view_mode">
+            	<prototype>
+            		<OTSplitPane>
+            			<first>
+            				<OTTree/>
+            			</first>
+            			<second>
+            				<OTViewChild viewid="${object_form_editor}" />
+            			</second>
+            		</OTSplitPane>
+            	</prototype>
+            	<controller>
+            		<OTPrototypeScriptController>
+            			<script>
+            				<OTJavascript src="tree-listener.js" />
+            			</script>
+            		</OTPrototypeScriptController>
+            	</controller>
+            </OTPrototypeViewEntry>
+
           </viewEntries>
+          <modes>
+            <OTViewMode name="object_editor_mode">
+              <default>
+                <object refid="${object_tree_editor}"/>
+              </default>
+            </OTViewMode>
+          </modes>
         </OTViewBundle>
       </bundles>
       <library>
@@ -172,28 +211,6 @@
             </OTPrototypeViewEntry>
 
 
-            <OTPrototypeViewEntry local_id="object_tree_editor"
-            	objectClass="org.concord.framework.otrunk.OTObject"
-            	viewEntry="${split_pane_view}"
-            	savePrototypeCopies="false">
-            	<prototype>
-            		<OTSplitPane>
-            			<first>
-            				<OTTree/>
-            			</first>
-            			<second>
-            				<OTViewChild viewid="${object_form_editor}" />
-            			</second>
-            		</OTSplitPane>
-            	</prototype>
-            	<controller>
-            		<OTPrototypeScriptController>
-            			<script>
-            				<OTJavascript src="tree-listener.js" />
-            			</script>
-            		</OTPrototypeScriptController>
-            	</controller>
-            </OTPrototypeViewEntry>
 
       	<OTVelocityTemplate local_id="object_editing_template">
       		<template>
