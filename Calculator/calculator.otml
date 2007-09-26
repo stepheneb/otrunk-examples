@@ -24,6 +24,7 @@
     <import class="org.concord.calculator.state.OTExpressionConstant" />
     <import class="org.concord.calculator.state.OTExpressionConstantList" />
     <import class="org.concord.calculator.state.ui.OTProgrammableCalculatorViewEntry" />
+    <import class="org.concord.calculator.state.ui.OTExpressionVariableViewConfig" />
   </imports>
   <objects>
     <OTSystem>
@@ -45,9 +46,28 @@
             <OTViewEntry
               objectClass="org.concord.calculator.state.OTExpressionConstant"
               viewClass="org.concord.calculator.state.ui.OTExpressionConstantView"/>
-            <OTViewEntry
+            <OTUnitValueViewConfig local_id="variableValueViewEntry"
+              objectClass="org.concord.data.state.OTUnitValue"
+              viewClass="org.concord.data.state.OTUnitValueEditView">
+              <precision>1</precision>
+              <editable>false</editable>
+            </OTUnitValueViewConfig>
+            <OTExpressionVariableViewConfig
               objectClass="org.concord.calculator.state.OTExpressionVariable"
-              viewClass="org.concord.calculator.state.ui.OTExpressionVariableView"/>
+              viewClass="org.concord.calculator.state.ui.OTExpressionVariableView">
+              <unitsConversionList>
+              	<string>m</string>
+              	<string>cm</string>
+              	<string>m/s</string>
+              	<string>cm/s</string>
+              	<string>s</string>
+              	<string>kg</string>
+              	<string>g</string>
+              </unitsConversionList>
+              <variableValueViewEntry>
+              	<object refid="${variableValueViewEntry}"/>
+              </variableValueViewEntry>
+            </OTExpressionVariableViewConfig>
             <OTViewEntry
               objectClass="org.concord.calculator.state.OTExpression"
               viewClass="org.concord.calculator.state.ui.OTExpressionResultView" local_id="resultViewEntry" />
@@ -140,8 +160,7 @@
 				      <OTExpressionSymbol local_id="symbol_constant2">
 				        <symbol>PI</symbol>
 				        <value>
-				          <OTUnitValue local_id="value_constant2" value="3.1415"
-				            unit="" />
+				          <OTUnitValue local_id="value_constant2" value="3.1415"/>
 				        </value>
 				      </OTExpressionSymbol>
                   </symbol>
@@ -156,7 +175,8 @@
 				      <OTExpressionSymbol local_id="symbol_constant3">
 				        <symbol>k</symbol>
 				        <value>
-				          <OTUnitValue local_id="value_constant3" value="10"/>
+				          <OTUnitValue local_id="value_constant3" value="10"
+				          		unit="kg"/>
 				        </value>
 				      </OTExpressionSymbol>
                   </symbol>
