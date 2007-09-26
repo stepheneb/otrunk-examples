@@ -514,6 +514,8 @@
 									reference="${section-card-container}"/>
 								<OTScriptVariable name="firstSectionCardContainer"
 									reference="${section-1-card-container}"/>
+								<OTScriptVariable name="firstSection"
+									reference="${section_1}"/>
 								<OTScriptVariable name="system"
 									reference="${system}"/>
 								<OTScriptVariable name="menuPageRule"
@@ -627,14 +629,29 @@
 						importClass(Packages.org.concord.otrunk.udl3.OTUDLMenu);
 						importClass(Packages.java.lang.System);
 						importClass(Packages.org.concord.framework.otrunk.OTObjectList);
-
+						
+						var sectionHandler =
+						{
+							stateChanged: function(evt)
+							{
+								if (evt.getProperty().equalsIgnoreCase("name")){
+									var section = evt.getSource();
+									var header = section.getHeader();
+										
+										header.setBodyText("&lt;div class=\"title\"&gt;"+
+															section.getName() +
+														"&lt;/div&gt;");
+								}
+							}
+						}
+						
+						var sectionListener = new OTChangeListener(sectionHandler);
+						
 						var sectionContainerHandler =
 						{
 								stateChanged: function(evt)
 								{
-									System.out.println("section handler");
 									if (evt.getProperty().equalsIgnoreCase("currentCard")){
-										System.out.println("adding listener");
 										var numCards = evt.getSource().getCards().size();
 										var section = evt.getSource().getCards().get(numCards-1);
 										section.getContent().addOTChangeListener(pageContainerListener);
@@ -682,6 +699,7 @@
 															"&lt;/div&gt;");
 														
 										section.getContent().addOTChangeListener(pageContainerListener);
+										section.addOTChangeListener(sectionListener);
 									}
 								}
 						};
@@ -713,6 +731,10 @@
 						function init() {
 							cardContainer.addOTChangeListener(sectionContainerListener);
 							firstSectionCardContainer.addOTChangeListener(pageContainerListener);
+							
+						//	cardContainer.getCurrentCard().addOTChangeListener(sectionListener);
+						//	System.out.println(cardContainer.getCurrentCard());
+							firstSection.addOTChangeListener(sectionListener);
 							
 							return true;
 						}
