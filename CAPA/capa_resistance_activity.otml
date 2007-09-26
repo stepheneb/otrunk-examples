@@ -8,23 +8,24 @@
 		<import class="org.concord.otrunk.view.OTViewBundle" />
 		<import class="org.concord.otrunk.view.document.OTCompoundDoc" />
 		<import class="org.concord.otrunk.view.document.OTTextObject" />
+		<import class="org.concord.otrunk.view.OTFrameDisplayAction"/>
 		<import class="org.concord.framework.otrunk.view.OTFrame" />
+
+		<import class="org.concord.otrunkcck.OTCCKModel" />
+
+		<import class="org.concord.data.state.OTUnitValue" />
+		<import class="org.concord.data.state.OTUnitValueViewConfig" />
 
 		<import class="org.concord.otrunk.ui.OTText" />
 		<import class="org.concord.otrunk.ui.OTTextPane" />
 		<import class="org.concord.otrunk.ui.OTButton" />
 		<import class="org.concord.otrunk.ui.OTPlacement" />
 		<import class="org.concord.otrunk.ui.OTPlacementContainer" />
-
-		<import class="org.concord.otrunkcck.OTCCKModel" />
-
 		<import class="org.concord.otrunk.ui.OTImage" />
 		<import class="org.concord.otrunk.ui.OTImageViewConfig" />
-		<import class="org.concord.data.state.OTUnitValue" />
-		<import class="org.concord.data.state.OTUnitValueViewConfig" />
-
 		<import class="org.concord.otrunk.ui.notebook.OTNotebookMeasurement" />
 		<import class="org.concord.otrunk.ui.notebook.OTNotebook" />
+		<import class="org.concord.otrunk.ui.OTCardContainer" />
 
 		<import	class="org.concord.calculator.state.OTProgrammableCalculator" />
 		<import	class="org.concord.calculator.state.OTProgrammableCalculatorNotebook" />
@@ -44,7 +45,6 @@
 		<import class="org.concord.otrunk.script.js.OTJavascript" />
 		<import class="org.concord.otrunk.script.OTScriptEngineBundle" />
 		<import class="org.concord.otrunk.script.OTScriptEngineEntry" />
-		<import class="org.concord.otrunk.ui.OTCardContainer" />
 	</imports>
 	<objects>
 		<OTSystem>
@@ -56,7 +56,7 @@
 							engineClass="org.concord.otrunk.script.js.OTJavascriptEngine" />
 					</engines>
 				</OTScriptEngineBundle>
-				<OTViewBundle showLeftPanel="true">
+				<OTViewBundle showLeftPanel="false">
 					<viewEntries>
 						<OTViewEntry
 							objectClass="org.concord.otrunk.script.ui.OTScriptObject"
@@ -152,16 +152,13 @@
 							viewClass="org.concord.otrunk.ui.swing.OTTextPaneView" />
 					</viewEntries>
 					<frame>
-						<OTFrame width="1160" height="638" />
+						<OTFrame width="960" height="680" />
 					</frame>
 				</OTViewBundle>
 			</bundles>
 			<root>
 				<OTCompoundDoc name="Resistor Activity">
 					<bodyText><object refid="${cck_model_placement_view}"/></bodyText>
-					<children>
-						<object refid="${calculator_page}" />
-					</children>
 				</OTCompoundDoc>
 			</root>
 			<library>
@@ -171,7 +168,7 @@
 						<object refid="${infoCards}"/>
 					</bodyText>
 				</OTCompoundDoc>
-				<OTPlacementContainer width="1217" height="705"
+				<OTPlacementContainer width="960" height="680"
 					local_id="cck_model_placement_view" name="CCK">
 					<placements>
 						<OTPlacement component="${submitAnswerButton}"
@@ -180,8 +177,8 @@
 							height="600" width="330" x="710" y="10" />
 						<OTPlacement component="${answerBox}"
 							height="40" width="120" x="270" y="650" />
-						<!-- <OTPlacement component="${testButton}"
-							height="40" width="100" x="830" y="630" /> -->
+						<OTPlacement component="${testButton}"
+							height="40" width="150" x="800" y="630" />
 						<OTPlacement component="${cck_model}"
 							height="600" width="700" x="10" y="10" />
 						<OTPlacement component="${activity_script}"
@@ -197,7 +194,20 @@
 					</cards>
 				</OTCardContainer>
 				<OTText local_id="answerBox"/>
-				<OTButton local_id="testButton" text="Test Button" />
+				<OTButton local_id="testButton" text="Show Calculator">
+					<action>
+						<object refid="${show_calculator_action}"/>
+					</action>
+				</OTButton>
+				<OTFrameDisplayAction local_id="show_calculator_action">
+					<frame>
+						<OTFrame local_id="calculator_popup"
+							width="600" height="700" title="Calculator"/>
+					</frame>
+					<objectToDisplay>
+						<object refid="${calculator_page}"/>
+					</objectToDisplay>
+				</OTFrameDisplayAction>
 				<OTButton local_id="submitAnswerButton"	text="Submit Answer" />
 				<OTScriptObject local_id="activity_script">
 					<variables>
