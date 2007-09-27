@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<otrunk id="678b5190-0bcf-012a-b542-0017f2cc694e">
+<otrunk id="2767fe20-6c7d-11dc-8314-0800200c9a66">
 	<imports>
 		<import class="org.concord.data.state.OTDataStore"/>
 		<import class="org.concord.data.state.OTDataChannelDescription"/>
@@ -512,10 +512,6 @@
 							<variables>
 								<OTScriptVariable name="cardContainer"
 									reference="${section-card-container}"/>
-								<OTScriptVariable name="firstSectionCardContainer"
-									reference="${section-1-card-container}"/>
-								<OTScriptVariable name="firstSection"
-									reference="${section_1}"/>
 								<OTScriptVariable name="system"
 									reference="${system}"/>
 								<OTScriptVariable name="menuPageRule"
@@ -728,13 +724,18 @@
 						};
 						var pageContainerListener = new OTChangeListener(pageContainerHandler);
 						
+						var sections = [];
+						var sectionCardContainers = [];
+						
 						function init() {
 							cardContainer.addOTChangeListener(sectionContainerListener);
-							firstSectionCardContainer.addOTChangeListener(pageContainerListener);
 							
-						//	cardContainer.getCurrentCard().addOTChangeListener(sectionListener);
-						//	System.out.println(cardContainer.getCurrentCard());
-							firstSection.addOTChangeListener(sectionListener);
+							for (var i = 0; i &lt; cardContainer.getCards().size(); i++){
+								sections[i] = cardContainer.getCards().get(i);
+								sections[i].addOTChangeListener(sectionListener);
+								sectionCardContainers[i] = sections[i].getContent();
+								sectionCardContainers[i].addOTChangeListener(pageContainerListener);
+							}
 							
 							return true;
 						}
