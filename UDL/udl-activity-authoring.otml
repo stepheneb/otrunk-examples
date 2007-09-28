@@ -629,6 +629,27 @@
 						importClass(Packages.java.lang.System);
 						importClass(Packages.org.concord.framework.otrunk.OTObjectList);
 						
+						
+						var pageHandler =
+						{
+							stateChanged: function(evt)
+							{
+								if (evt.getProperty().equalsIgnoreCase("coachStatements") &amp;&amp; evt.getOperation().equalsIgnoreCase("add")){
+									var statement = evt.getValue();
+									var statementDoc = statement.getStatement();
+									var statementText = statementDoc.getBodyText();
+									statementDoc.setBodyText("&lt;div class=\"buffer\"&gt;"+
+																"&lt;div class=\"border\"&gt;"+
+																	"&lt;div class=\"body\"&gt;"+
+																		statementText +
+																	"&lt;/div&gt;"+
+																"&lt;/div&gt;"+
+														"&lt;/div&gt;");
+								}
+							}
+						}
+						var pageListener = new OTChangeListener(pageHandler);
+						
 						var sectionHandler =
 						{
 							stateChanged: function(evt)
@@ -672,12 +693,15 @@
 															"&lt;div class=\"border\"&gt;"+
 																"&lt;div class=\"body\"&gt;"+
 																"&lt;div class=\"subtitle\"&gt;\n"+
-																		"New page"+
+																		"New page!!!"+
 																	"\n&lt;/div&gt;\n"+
 																	"New page content"+
 																"\n&lt;/div&gt;"+
 															"&lt;/div&gt;"+
 														"&lt;/div&gt;");
+										
+										pages.push(doc)	
+										pages[pages.length-1].addOTChangeListener(pageListener);
 														
 										var menu = doc.getOTObjectService().createObject(sampleMenu.otClass().getInstanceClass());
 										menu.setCardContainer(section.getContent());
@@ -722,6 +746,8 @@
 																"\n&lt;/div&gt;"+
 															"&lt;/div&gt;"+
 														"&lt;/div&gt;");
+										pages.push(doc)	
+										pages[pages.length-1].addOTChangeListener(pageListener);
 									}
 								}
 						};
@@ -729,15 +755,24 @@
 						
 						var sections = [];
 						var sectionCardContainers = [];
+						var pages = [];
 						
 						function init() {
 							cardContainer.addOTChangeListener(sectionContainerListener);
 							
+							var pageIndex = 0;
 							for (var i = 0; i &lt; cardContainer.getCards().size(); i++){
 								sections[i] = cardContainer.getCards().get(i);
 								sections[i].addOTChangeListener(sectionListener);
+								
 								sectionCardContainers[i] = sections[i].getContent();
 								sectionCardContainers[i].addOTChangeListener(pageContainerListener);
+								
+								for (var j = 0; j &lt; sectionCardContainers[i].getCards().size(); j++){
+									pages[pageIndex] = sectionCardContainers[i].getCards().get(j);
+									pages[pageIndex].addOTChangeListener(pageListener);
+									pageIndex++;
+								}
 							}
 							
 							return true;
