@@ -48,16 +48,10 @@ importPackage(Packages.org.concord.data.state);
 importPackage(Packages.org.concord.framework.otrunk);
 
 importClass(Packages.org.concord.otrunk.ui.swing.OTCardContainerView);
+importClass(Packages.org.concord.otrunk.ui.OTText);
 
 var startHTML = "<html><blockquote>";
 var endHTML = "</blockquote></html>";
-var multimeterAnnouncement = "<p><font size='5'>You've connected the digital multimeter to the circuit. Remember, you can make it a voltmeter or an ammeter by turning the dial. If you're having trouble seeing it, you can make it bigger by right-clicking on it.</font></p>";
-var shortCircuitMsg1 = "<p><font color=red size = 5>You shortcircuited the battery once.</font></p>";
-var shortCircuitMsg2 = "<p><font color=red size = 5>You shortcircuited the battery twice. Shame on you!!</font></p>";
-var shortCircuitMsg3 = "<p><font color=red size = 5>You shortcircuited the battery $shortCircuitCounter$ times.  OUCH!!</font></p>";
-var shortCircuitStr = "SHORT CIRCUIT WARNING!!! Cut all power immediately!";
-var unitsNotReported = "<p><font size=5 color=red> You did not report the units (ohms) correctly in your answer. </font>";
-var unitsReported = "<p> <font size=5 color=red> You reported the units (ohms) correctly in your answer. Well done! </font>";
 
 //CCK handy objects 
 var cckModule = cckModelView.getModule();	// (CCKPiccoloModule)
@@ -77,14 +71,13 @@ var solverFinishedOnce = false;	// ?
 var lastMMStateViable = false;	// ?
 var unitsGiven;					// Whether the user reported units in the last answer
 var logFile;					// Used for logging information
+var xmlText;					// OTXMLText object used for logging information
 var firstJunctionsConnected = true;	//Used to put up text the first time a junction is connected.
 var firstMeasurement = true; 		//Used to put up text the first time a measurement is made.
 var previousMultimeterValue = Double.NaN;	// Value that stores the last multimeter measurement, to avoid repeated measurements
 
 var aTolerance = 0.01;			// Tolerance for current
 var vTolerance = 0.01;			// Tolerance for voltage
-
-var substMap = new HashMap();	// This handles variable substitution in string variables.
 
 var helpEnabled = false;		// Help button ??
 
@@ -106,7 +99,7 @@ function init()
 	
 	setupApparatusPanel();
 		
-	setupLogFile(getStudentName());
+	initLogging();
 
 	setupMultimeter();	
 	
@@ -131,6 +124,7 @@ function save()
 	System.out.println("-------------------------- save--------------------------------");
 	
 	//Save state variables
+	saveStateVariable("initialSetupDone", new java.lang.Boolean(true));	//Marks that the initial setup is done
 	saveStateVariable("shortCircuitCounter", new java.lang.Integer(shortCircuitCounter));
 	//
 	
@@ -138,7 +132,7 @@ function save()
 	logMeasurements();
 	//
 	
-	logFile.close();
+	finalizeLogging();
 }
 
 function getStateVariable(name)
@@ -168,17 +162,17 @@ function setupActivity()
 	if (bInitialSetupDone == null) bInitialSetupDone = false;
 	else bInitialSetupDone = true;
 	
-	if (!bInitialSetupDone){
+	var bLoadedDone = false;
+	
+	if (bInitialSetupDone){
+	
+		bLoadedDone = setupActivityLoaded();
+	}
+	
+	if (!bInitialSetupDone || !bLoadedDone){
 	
 		setupActivityInitial();
 	}
-	else{
-		
-		setupActivityLoaded();
-	}
-	
-	//Save the state of the script marking that the initial setup is done
-	saveStateVariable("initialSetupDone", new java.lang.Boolean(true));
 }
 
 /** 
@@ -202,6 +196,8 @@ function setupActivityLoaded()
 	targetResistor = findBranch("#Ringless Resistor");
 	if (targetResistor == null){	
 		System.err.println("Error, target resistor not found!");
+		System.err.println("Error: initialSetupDone was set, but activity could not be loaded. It will be recreatd from scratch");
+		return false;
 	}
 	
 	//Load state variables
@@ -209,30 +205,46 @@ function setupActivityLoaded()
 	shortCircuitCounter = val.intValue();
 	System.out.println("Number of short circuits: "+shortCircuitCounter);
 	//
+	
+	return true;
 }
 
-function getStudentName()
+function getLogFilename()
 {
-	return "student";
-	// FIXME: should handle this elsewhere		
-	/* var allLetters = false;
-	do
-	{
-		var studentName = new java.lang.String(JOptionPane.showInputDialog("Please enter your name"));
-		if(studentName != null)
-			if(studentName.matches("[a-zA-Z\\s]*"))
-				allLetters = true;
-	} while(!allLetters); */
-	//
+	return "capa_resistance_activity_log";
 }
 
 /** Creates a text file in the Desktop with logging information. File is called studentName.txt */
-function setupLogFile(studentName)
+function initLogging()
 {
+	var studentName = getLogFilename();
 	var desktop = new File(System.getProperty("user.home") + "/Desktop");
 	var outputFile = new File(desktop, studentName + ".txt");
 	logFile = new PrintWriter(new FileOutputStream(outputFile));
 	// logFile.println(studentName + "\'s log");
+	
+	//Create an OTText
+	xmlText = otObjectService.createObject(OTText);
+	xmlText.setText("CAPA - Measuring Resistance 2.0\n");
+	//Put logging information into the otContents of the script object
+	otContents.add(xmlText);
+	
+	logInformation("Activity started");
+}
+
+function logInformation(info)
+{
+	info = (new java.util.Date()).toString() + " - " + info;
+	//System.out.println(info);
+	logFile.println(info);
+	xmlText.setText(xmlText.getText() + info + "\n");
+}
+
+function finalizeLogging()
+{
+	logInformation("Activity finished");
+	
+	logFile.close();	
 }
 
 function setupApparatusPanel()
@@ -285,13 +297,6 @@ function logMeasurements()
 	}
 }
 
-function logInformation(info)
-{
-	info = (new java.util.Date()).toString() + " - " + info
-	//System.out.println(info);
-	logFile.println(info);
-}
-
 function setupMultimeter()
 {
 	//Disable ohmmeter
@@ -326,17 +331,17 @@ function setupMultimeter()
 				if (state == MultimeterModel.AMMETER_STATE) {
 					type = "current";
 					units = units + "A";
-					logInformation("Multimeter value in ammeter mode is " + value + " " + units);
+					logInformation("Multimeter measurement (Ammeter mode): " + value + " " + units);
 				}
 				else if (state == MultimeterModel.OHMMETER_STATE) {
 					type = "resistance";
 					units = units + "Ω";
-					logInformation("Multimeter value in ohmmeter mode is " + value + " " + units);
+					logInformation("Multimeter measurement (Ohmmeter mode): " + value + " " + units);
 				}
 				else if (state == MultimeterModel.VOLTMETER_STATE) {
 					type = "voltage";
 					units = units + "V";
-					logInformation("Multimeter value in voltmeter mode is " + value + " " + units);
+					logInformation("Multimeter measurement (Voltmeter mode): " + value + " " + units);
 				}
 				else if (state == MultimeterModel.OFF_STATE) {
 					type = "off";
@@ -429,6 +434,7 @@ function setupCircuitListener()
 			if(Math.abs(branchCurrent) > 10 && shortCircuit == false)
 			{
 				var warningDialog = new JOptionPane();
+				var shortCircuitStr = "shortCircuitStr";
 				warningDialog.showMessageDialog(frame, shortCircuitStr, "", JOptionPane.WARNING_MESSAGE);
 				shortCircuit = true;
 				shortCircuitCounter++;
@@ -712,17 +718,21 @@ function findBranch(name)
 /** Checks the answer and creates messages according to the answer submitted */
 function checkAnswer(answerValue)
 {
-	logInformation("Answer Submitted: "+answerValue);
+	var strMsg = "Answer Submitted: "+answerValue;
 
 	// Simply check that the value answered was right
 	var value = (new java.lang.Double(answerValue).doubleValue());
 	if (MathUtil.isApproxEqual(value, targetResistor.getResistance(), 0.0001)){
 		answerType = 1;
+		strMsg = strMsg + " (Correct)";
 	}
 	else{
 		answerType = 2;
+		strMsg = strMsg + " (Incorrect)";
 	}
 	//
+	
+	logInformation(strMsg);
 	
 	// Take into account short circuits? shortCircuitCounter
 
@@ -742,24 +752,25 @@ function showSolution(answerType, correctAmmeterMeasurements, correctVoltmeterMe
 		solutionString = "Incorrect.";
 	}	
 
-	substMap.put("shortCircuitCounter",String(shortCircuitCounter));
-
 	if (shortCircuitCounter!= 0)
 	{
+		shortCircuitCounter = "" + shortCircuitCounter + " short circuits.";
+/*
 		if (shortCircuitCounter == 1){
-			shortCircuitMsg = shortCircuitMsg1;
+			shortCircuitMsg = eval(shortCircuitMsg1);
 		}
 		else if (shortCircuitCounter == 2){
-			shortCircuitMsg = shortCircuitMsg2;
+			shortCircuitMsg = eval(shortCircuitMsg2);
 		}
 		else{
-			shortCircuitMsg = substitute(shortCircuitMsg3, substMap);
+			shortCircuitMsg = eval(shortCircuitMsg3);
 		}
+*/
 	}
 	
 	//Check for units reported
-	var unitsMsg = unitsNotReported;
-	if (unitsGiven) unitsMsg = unitsReported;
+	var unitsMsg = "No units reported. ";					//unitsNotReported;
+	if (unitsGiven) unitsMsg = "Reported units. ";		//unitsReported;
 	var otxml = new OTXMLString(startHTML + solutionString + unitsMsg + shortCircuitMsg + endHTML);
 	// System.out.println("Solution message is: ");
 	// System.out.println(startHTML + solutionString + unitsMsg + shortCircuitMsg + endHTML);
