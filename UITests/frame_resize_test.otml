@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<otrunk id="33754150-b594-11d9-9669-0800200c9a66">
+  <imports>
+    <import class="org.concord.otrunk.OTSystem" />
+=    <import class="org.concord.otrunk.view.OTViewEntry" />
+     <import class="org.concord.otrunk.view.OTViewBundle"/>
+    <import class="org.concord.otrunk.view.OTViewService" />
+    <import class="org.concord.framework.otrunk.view.OTFrame" />
+    <import class="org.concord.otrunk.view.document.OTCompoundDoc" />
+    <import class="org.concord.data.state.OTDataStore"/>
+    <import class="org.concord.data.state.OTDataChannelDescription"/>
+    <import class="org.concord.data.state.OTDataTable"/>
+    <import class="org.concord.datagraph.state.OTDataGraph"/>
+    <import class="org.concord.datagraph.state.OTDataAxis"/>
+    <import class="org.concord.datagraph.state.OTDataGraphable"/>
+    <import class="org.concord.datagraph.state.OTDataBarGraphable"/>
+  </imports>
+  <objects>
+    <OTSystem>
+      <bundles>
+        <OTViewBundle showLeftPanel="false">
+          <viewEntries>
+            <OTViewEntry 
+            	objectClass="org.concord.otrunk.view.document.OTTextObject" 
+            	viewClass="org.concord.otrunk.view.document.OTTextObjectView" />
+            <OTViewEntry 
+            	objectClass="org.concord.otrunk.view.document.OTCompoundDoc" 
+            	viewClass="org.concord.otrunk.view.document.OTDocumentView" />
+            <OTViewEntry 
+            	objectClass="org.concord.datagraph.state.OTDataGraph" 
+            	viewClass="org.concord.datagraph.state.OTDataGraphView"/>
+            <OTViewEntry 
+            	objectClass="org.concord.data.state.OTDataTable" 
+            	viewClass="org.concord.data.state.OTDataTableView"/>
+          </viewEntries>
+          <frame>
+          	<OTFrame width="250" height="200" />
+          </frame>
+        </OTViewBundle>
+      </bundles>
+      <root>
+        <OTCompoundDoc name="Bar Graph">
+          <bodyText>
+          This graph should be seen completely in the frame (including both axes)<br/>
+          <object refid="${data_graph1}"/><br/>
+          </bodyText>
+        </OTCompoundDoc>
+      </root>
+      <library>
+		<OTDataGraph name="Graph 1" local_id="data_graph1" showToolbar="false">
+		  <graphables>
+            <object refid="${graphable1}"/>
+		  </graphables>
+          <xDataAxis>
+            <OTDataAxis min="0" max="10" label="Weeks"/>
+          </xDataAxis>
+          <yDataAxis>
+            <OTDataAxis min="0" max="10" label="Length"/>
+          </yDataAxis>
+		</OTDataGraph>
+		<OTDataGraphable local_id="graphable1" connectPoints="true" color="0x00C000">
+          <dataStore>
+            <object refid="${datastore1}"/>
+          </dataStore>
+		</OTDataGraphable>
+        <OTDataStore local_id="datastore1" numberChannels="2">
+          <channelDescriptions>
+            <OTDataChannelDescription name="x" precision="2"/>
+            <OTDataChannelDescription name="y" precision="2"/>
+          </channelDescriptions>
+          <valuesString> 1 2 2 3 3 4 4 7 5 8 6 9 7 9 </valuesString>
+        </OTDataStore>
+      </library>
+    </OTSystem>
+  </objects>
+</otrunk>
+
