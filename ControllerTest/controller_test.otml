@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<otrunk id="33754150-b594-11d9-9669-0800200c9a66" >
+  <imports>
+    <import class="org.concord.otrunk.OTSystem"/>
+    <import class="org.concord.otrunk.view.OTFolderObject"/>
+    <import class="org.concord.otrunk.view.OTViewEntry"/>
+    <import class="org.concord.otrunk.view.OTViewService"/>
+    <import class="org.concord.framework.otrunk.view.OTFrame"/>
+    <import class="org.concord.data.state.OTDataStore"/>
+    <import class="org.concord.data.state.OTDataChannelDescription"/>
+    <import class="org.concord.data.state.OTDataField"/>
+    <import class="org.concord.data.state.OTWaveGenerator"/>
+    <import class="org.concord.datagraph.state.OTDataGraph"/>
+    <import class="org.concord.datagraph.state.OTDataAxis"/>
+    <import class="org.concord.datagraph.state.OTDataGraphable"/>
+    <import class="org.concord.datagraph.state.OTDataCollector"/>
+    <import class="org.concord.datagraph.state.OTMultiDataGraph"/>
+    <import class="org.concord.datagraph.state.OTDataPointLabel"/>
+    <import class="org.concord.datagraph.state.OTDataPointRuler"/>
+    <import class="org.concord.graph.util.state.OTDrawingTool"/>
+    <import class="org.concord.graph.util.state.OTDrawingStamp"/>
+    <import class="org.concord.graph.util.state.OTDrawingImageIcon"/>
+    <import class="org.concord.graph.util.state.OTDrawingShape"/>
+    <import class="org.concord.graph.util.state.OTPointTextLabel"/>
+    <import class="org.concord.otrunk.view.document.OTCompoundDoc"/>
+  </imports>
+  <objects>
+    <OTSystem>
+      <services>
+        <OTViewService>
+          <viewEntries>
+            <OTViewEntry 
+              objectClass="org.concord.datagraph.state.OTDataGraph" 
+              viewClass="org.concord.datagraph.state.OTDataGraphView"/>
+            <OTViewEntry 
+              objectClass="org.concord.data.state.OTDataField" 
+              viewClass="org.concord.data.state.OTDataFieldView"/>
+            <OTViewEntry
+              objectClass="org.concord.datagraph.state.OTDataCollector" 
+              viewClass="org.concord.datagraph.state.OTDataCollectorView"/>
+            <OTViewEntry
+              objectClass="org.concord.graph.util.state.OTDrawingTool" 
+              viewClass="org.concord.datagraph.state.OTDataDrawingToolView"/>
+            <OTViewEntry
+              objectClass="org.concord.datagraph.state.OTMultiDataGraph" 
+              viewClass="org.concord.datagraph.state.OTMultiDataGraphView"/>
+            <OTViewEntry
+              objectClass="org.concord.otrunk.view.document.OTDocument" 
+              viewClass="org.concord.otrunk.view.document.OTDocumentView"/>
+            <OTViewEntry
+              objectClass="org.concord.otrunk.view.OTFolderObject"
+              viewClass="org.concord.otrunk.view.OTFolderObjectView"/>
+          </viewEntries>
+        </OTViewService>
+      </services>
+      <root>
+        <OTCompoundDoc name="controller test" local_id="root_doc">        
+			<bodyText>
+				NOTE: This example appears to be broken.
+				
+				<h3>Info</h3>
+				This example demonstrates how a single controller is shared across multiple	views.
+				The controller in this case is the OTDataStoreController
+				From the end user point of view this shouldn't be any diferent than when the controller
+				isn't shared.  But from the Java programmer's point of view this can simplify some 
+				interactions between OT Objects and the realObjects they are connected to.
+				
+				
+				<h3>Graph 1</h3>
+				<object refid="${graph_1}"/>
+				<h3>Graph 2</h3>
+				<object refid="${graph_2}"/>
+				<h3>Link to Ourselves</h3>
+				This is a link to ourselves which should open in a new frame.  In this case with the 
+				current code this will cause a new controller to be generated.  This demonstrates how
+				the controller is only shared between views on a top level container.						
+				<a href="${root_doc}" target="${popup_frame}">popup window</a>
+			</bodyText>
+			<children>
+				<OTDataCollector local_id="graph_1"
+					name="Wave Graph dt:0.3 description:dt">
+					<source>
+						<OTDataGraphable connectPoints="true"
+							color="0x0000ff" drawMarks="false" name="Pressure1" xColumn="0"
+							yColumn="1">
+							<dataProducer>
+								<OTWaveGenerator timeScale="0.2"
+									sampleTime="0.3" />
+							</dataProducer>
+							<dataStore>
+								<OTDataStore local_id="data_store" />
+							</dataStore>
+						</OTDataGraphable>
+					</source>
+					<xDataAxis>
+						<OTDataAxis min="0" max="60" label="Time"
+							units="s" />
+					</xDataAxis>
+					<yDataAxis>
+						<OTDataAxis min="-2" max="2" label="sin(x)" />
+					</yDataAxis>
+				</OTDataCollector>
+				<OTDataCollector local_id="graph_2"
+					name="Wave Graph dt:0.5 description:dt">
+					<source>
+						<OTDataGraphable connectPoints="true"
+							color="0x0000ff" drawMarks="false" name="Pressure1" xColumn="0"
+							yColumn="1">
+							<dataProducer>
+								<OTWaveGenerator timeScale="0.2"
+									sampleTime="0.3" />
+							</dataProducer>
+							<dataStore refid="${data_store}" />
+						</OTDataGraphable>
+					</source>
+					<xDataAxis>
+						<OTDataAxis min="0" max="60" label="Time"
+							units="s" />
+					</xDataAxis>
+					<yDataAxis>
+						<OTDataAxis min="-2" max="2" label="sin(x)" />
+					</yDataAxis>
+				</OTDataCollector>
+			</children>
+        </OTCompoundDoc>
+      </root>
+      <library>
+        <OTFrame local_id="popup_frame" width="600" height="600"/>
+      </library>
+    </OTSystem>
+  </objects>
+</otrunk>
