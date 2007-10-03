@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<otrunk id="0f1473c0-7200-11dc-8314-0800200c9a66">
+
+  <imports>
+    <import class="org.concord.otrunk.OTSystem"/>
+    <import class="org.concord.otrunk.view.OTViewBundle"/>
+    <import class="org.concord.otrunk.view.OTViewEntry"/>
+    <import class="org.concord.otrunk.view.document.OTCompoundDoc"/>
+    <import class="org.concord.otrunk.ui.OTText"/>
+    
+	<import class="org.concord.otrunk.script.ui.OTScriptObject"/>
+	<import class="org.concord.otrunk.script.ui.OTScriptVariable"/>
+	<import class="org.concord.otrunk.script.js.OTJavascript" />
+	<import class="org.concord.otrunk.script.OTScriptEngineBundle"/>
+	<import class="org.concord.otrunk.script.OTScriptEngineEntry"/>
+  </imports>
+  
+  <objects>
+    <OTSystem>
+      <bundles>
+        <OTViewBundle showLeftPanel="false">
+          <views>
+            <OTViewEntry
+              objectClass="org.concord.otrunk.ui.OTText" 
+              viewClass="org.concord.otrunk.ui.swing.OTTextView"/>
+			<OTViewEntry
+				objectClass="org.concord.otrunk.script.ui.OTScriptObject"
+				viewClass="org.concord.otrunk.script.ui.OTScriptObjectView"/>
+			<OTViewEntry
+				objectClass="org.concord.otrunk.view.document.OTDocument"
+				viewClass="org.concord.otrunk.view.document.OTDocumentView" />
+          </views>
+        </OTViewBundle>
+<OTScriptEngineBundle>
+  <engines>
+     <OTScriptEngineEntry 
+     	objectClass="org.concord.otrunk.script.js.OTJavascript"
+     	engineClass="org.concord.otrunk.script.js.OTJavascriptEngine"/>
+  </engines>
+</OTScriptEngineBundle>
+      </bundles>
+      
+      <root>
+        <OTCompoundDoc>
+        	<bodyText>
+        		This is a document. The following text will be changed by a script:<br/>
+        		<object refid="${text_object}"/>
+        		<object refid="${script_object}"/>
+        	</bodyText>
+        </OTCompoundDoc>
+      </root>
+      <library>
+      	<OTText local_id="text_object"/>
+      	<OTScriptObject local_id="script_object">
+  <variables>
+    <OTScriptVariable name="myTextVariable" reference="${text_object}"/>
+  </variables>
+      		<script>
+	      		<OTJavascript>
+	      			<script>
+function init()
+{
+  //This function is called when the script is loaded.
+  myTextVariable.setText("Hello world, I'm a script!!");
+}
+	      			</script>
+	      		</OTJavascript>
+	      	</script>
+      	</OTScriptObject>
+      </library>
+      
+    </OTSystem>
+  </objects>
+</otrunk>
