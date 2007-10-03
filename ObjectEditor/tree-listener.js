@@ -11,7 +11,7 @@ var changeHandler =
 		// send in a dummy ot change, so the split pane updates
 		// because all we did was change the viewChild object the splitPane will
 		// not get the change event.
-		splitPane.notifyOTChange("second", "set", null);
+		splitPane.notifyOTChange("second", "set", null, null);
 	}
 };
 var changeListener = new OTChangeListener(changeHandler);
