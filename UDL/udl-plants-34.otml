@@ -77,14 +77,21 @@
             <OTViewMode name="default" />
             <OTViewMode name="authoring">
               <map>
-                <entry key="2767fe20-6c7d-11dc-8314-0800200c9a66!/compound_doc_view">
+                <entry key="${compound_doc_view}">
                   <OTObjectEditViewConfig objectClass="org.concord.otrunk.view.document.OTCompoundDoc" viewClass="org.concord.otrunk.view.document.OTCompoundDocEditView" usePopupEditWindows="true" copyNewObjectsByDefault="true">
                     <objectsToInsert>
                       <OTText name="Text field" />
                       <OTDrawingTool2 name="Draw tool" />
                       <OTChoice name="Choices" />
+                      <OTUDLQuestions name="Scaffolded questions" />
                     </objectsToInsert>
                   </OTObjectEditViewConfig>
+                </entry>
+                <entry key="${questions-card-view}">
+                	<OTUDLQuestionViewConfig objectClass="org.concord.otrunk.udl.question.OTUDLQuestions" viewClass="org.concord.otrunk.udl.question.OTUDLQuestionsEditView" />
+                </entry>
+                <entry key="${question-view}">
+                	<OTViewEntry objectClass="org.concord.otrunk.udl.question.OTQuestion" viewClass="org.concord.otrunk.udl.question.OTQuestionEditView" />
                 </entry>
                 <entry key="2767fe20-6c7d-11dc-8314-0800200c9a66!/menu-vertical">
                   <OTViewEntry objectClass="org.concord.otrunk.udl3.OTUDLMenu" viewClass="org.concord.otrunk.udl.ui.OTUDLMenuSectionEditView" />
@@ -108,7 +115,7 @@
             <!-- The OTUDLQuestionViewConfig can be used to set the default scaffolding level, and whether the student can navigate through the levels.
 						  The default scaffolding level just uses the order of the items inside OTUDLQuestions/questions. It is not aware of the names
 						  such as "L1", "L2", etc. -->
-            <OTUDLQuestionViewConfig local_id="questions-card-view" isLevelFrozen="false" defaultScaffoldLevel="0" objectClass="org.concord.otrunk.udl3.OTUDLQuestions" viewClass="org.concord.otrunk.udl3.OTUDLQuestionsCardView" />
+            <OTUDLQuestionViewConfig local_id="questions-card-view" isLevelFrozen="false" defaultScaffoldLevel="0" objectClass="org.concord.otrunk.udl.question.OTUDLQuestions" viewClass="org.concord.otrunk.udl.question.OTUDLQuestionsCardView" />
             <OTViewEntry objectClass="org.concord.otrunk.ui.OTImage" viewClass="org.concord.otrunk.ui.swing.OTImageView" />
             <OTViewEntry local_id="snapshot_button_view" objectClass="org.concord.otrunk.ui.snapshot.OTSnapshotButton" viewClass="org.concord.otrunk.ui.snapshot.OTSnapshotButtonView" />
             <OTViewEntry objectClass="org.concord.otrunk.ui.snapshot.OTSnapshotAlbum" viewClass="org.concord.otrunk.ui.snapshot.OTSnapshotAlbumView" />
@@ -116,14 +123,13 @@
             <OTViewEntry objectClass="org.concord.otrunk.ui.OTButton" viewClass="org.concord.otrunk.ui.swing.OTButtonView" />
             <OTViewEntry objectClass="org.concord.otrunk.script.ui.OTScriptObject" viewClass="org.concord.otrunk.script.ui.OTScriptObjectView" />
             <OTViewEntry objectClass="org.concord.otrunk.ui.OTButton" viewClass="org.concord.otrunk.ui.swing.OTButtonView" />
-            <OTViewEntry objectClass="org.concord.otrunk.udl3.OTQuestion" viewClass="org.concord.otrunk.udl3.OTQuestionView" />
+            <OTViewEntry local_id="question-view" objectClass="org.concord.otrunk.udl.question.OTQuestion" viewClass="org.concord.otrunk.udl.question.OTQuestionView" />
             <OTViewEntry local_id="character-group-view" objectClass="org.concord.otrunk.udl.OTUDLCharacterGroup" viewClass="org.concord.otrunk.udl.OTUDLCharacterGroupView" />
             <OTViewEntry objectClass="org.concord.otrunk.udl3.OTUDLSection" viewClass="org.concord.otrunk.udl3.OTUDLSectionView" />
             <OTViewEntry local_id="container_view" objectClass="org.concord.otrunk.udl3.OTUDLContainer" viewClass="org.concord.otrunk.udl3.OTUDLContainerView" />
             <OTViewEntry objectClass="org.concord.otrunk.udl.document.OTUDLCSSModifier" viewClass="org.concord.otrunk.udl.document.OTUDLCSSModifierView" />
             <OTViewEntry local_id="menu-vertical" objectClass="org.concord.otrunk.udl3.OTUDLMenu" viewClass="org.concord.otrunk.udl.ui.OTUDLMenuSectionView" />
             <OTViewEntry local_id="menu-horizontal-circle" objectClass="org.concord.otrunk.udl3.OTUDLMenu" viewClass="org.concord.otrunk.udl.ui.OTUDLMenuPageView" />
-            <OTViewEntry objectClass="org.concord.otrunk.udl3.OTQuestion" viewClass="org.concord.otrunk.udl3.OTQuestionView" />
             <OTChoiceViewConfig local_id="choice-radio-view" objectClass="org.concord.otrunk.ui.OTChoice" viewClass="org.concord.otrunk.ui.swing.OTChoiceRadioButtonView" useViewsAsChoices="true" />
             <OTViewEntry local_id="choice-combo-view" objectClass="org.concord.otrunk.ui.OTChoice" viewClass="org.concord.otrunk.ui.swing.OTChoiceComboBoxView" />
             <OTViewEntry objectClass="org.concord.otrunk.udl3.OTQuestion" viewClass="org.concord.otrunk.udl3.OTQuestionView" />
@@ -345,6 +351,8 @@
                         <object refid="${page-1}" />
                         <object refid="${page-1}" />
                         <object refid="${page-1}" />
+                        <object refid="${page-1}" />
+                        <object refid="${page-1}" />
                       </viewedCards>
                     </OTCardContainer>
                   </content>
@@ -379,7 +387,7 @@
                 </OTUDLSection>
                 <OTUDLSection id="3908005f-7120-11dc-b75e-4b06cf421f29" name="Introduction" isComputerBased="false" isIntroduction="true" isMath="false" isPosttest="false" isPretest="false" isReading="false" isWrapup="false">
                   <content>
-                    <OTCardContainer id="39082771-7120-11dc-b75e-4b06cf421f29"  contentsMayScroll="true" loadViewOnlyOnDemand="true">
+                    <OTCardContainer id="39082771-7120-11dc-b75e-4b06cf421f29" contentsMayScroll="true" loadViewOnlyOnDemand="true">
                       <cards>
                         <OTUDLCompoundDoc id="39082770-7120-11dc-b75e-4b06cf421f29" name="39082770-7120-11dc-b75e-4b06cf421f29">
                           <bodyText>
@@ -540,7 +548,7 @@
                 </OTUDLSection>
                 <OTUDLSection id="56475636-7120-11dc-b75e-4b06cf421f29" name="Watch it grow!" isComputerBased="true" isIntroduction="false" isMath="false" isPosttest="false" isPretest="false" isReading="false" isWrapup="false">
                   <content>
-                    <OTCardContainer id="56477d48-7120-11dc-b75e-4b06cf421f29"  contentsMayScroll="true" loadViewOnlyOnDemand="true">
+                    <OTCardContainer id="56477d48-7120-11dc-b75e-4b06cf421f29" contentsMayScroll="true" loadViewOnlyOnDemand="true">
                       <cards>
                         <OTUDLCompoundDoc id="56477d47-7120-11dc-b75e-4b06cf421f29" name="56477d47-7120-11dc-b75e-4b06cf421f29">
                           <bodyText>
@@ -661,9 +669,9 @@
                     <object refid="56477d4a-7120-11dc-b75e-4b06cf421f29" />
                   </south>
                 </OTUDLSection>
-                <OTUDLSection viewContainerIsUpdateable="true" local_id="section-stems-roots-leaves" name="Stems, roots, leaves" isComputerBased="true" isIntroduction="false" isMath="false" isPosttest="false" isPretest="false" isReading="false" isWrapup="false">
+                <OTUDLSection local_id="section-stems-roots-leaves" name="Stems, roots, leaves" isComputerBased="true" isIntroduction="false" isMath="false" isPosttest="false" isPretest="false" isReading="false" isWrapup="false">
                   <content>
-                    <OTCardContainer id="9b7e306f-7121-11dc-b75e-4b06cf421f29"  contentsMayScroll="true" loadViewOnlyOnDemand="true">
+                    <OTCardContainer id="9b7e306f-7121-11dc-b75e-4b06cf421f29" contentsMayScroll="true" loadViewOnlyOnDemand="true">
                       <cards>
                         <OTUDLCompoundDoc local_id="stems-roots-leaves-page-1" name="9b7e095e-7121-11dc-b75e-4b06cf421f29">
                           <bodyText>
@@ -696,62 +704,110 @@
                               <div class="border">
                                 <div class="body">
                                   <div class="subtitle">Explore</div>
-                                  	Find two other people you want to work with. Your teacher may help you pick your partners and provide you with the materials.
-                                	<p/>
-                                	Each of you will be investigating a separate part of the plant.  As a group, decide who will become the <b>Leaf Expert</b>, the <b>Stem Expert</b> and the <b>Root Expert</b>.
-                                	<p/>
-                                	<table>
-                                		<tr>
-                                			<td>
-                                				If you are the <b>Leaf expert</b> 
-                                			</td>
-                                			<td>
-                                				<object refid="${leaf-expert-button}"/>
-                                			</td>
-                                		</tr>
-                                		<tr>
-                                			<td>
-                                				If you are the <b>Stem expert</b> 
-                                			</td>
-                                			<td>
-                                				<object refid="${stem-expert-button}"/>
-                                			</td>
-                                		</tr>
-                                		<tr>
-                                			<td>
-                                				If you are the <b>Root expert</b> 
-                                			</td>
-                                			<td>
-                                				<object refid="${root-expert-button}"/>
-                                			</td>
-                                		</tr>
-                                	</table>
-                                	<object refid="${path-selection-script}"/>
+                                  Find two other people you want to work with. Your teacher may help you pick your partners and provide you with the materials.
+                                  <p />
+                                  Each of you will be investigating a separate part of the plant.  As a group, decide who will become the
+                                  <b>Leaf Expert</b>
+                                  , the
+                                  <b>Stem Expert</b>
+                                  and the
+                                  <b>Root Expert</b>
+                                  .
+                                  <p />
+                                  <table>
+                                    <tr>
+                                      <td>
+                                        If you are the
+                                        <b>Leaf expert</b>
+                                      </td>
+                                      <td>
+                                        <object refid="${leaf-expert-button}" />
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>
+                                        If you are the
+                                        <b>Stem expert</b>
+                                      </td>
+                                      <td>
+                                        <object refid="${stem-expert-button}" />
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>
+                                        If you are the
+                                        <b>Root expert</b>
+                                      </td>
+                                      <td>
+                                        <object refid="${root-expert-button}" />
+                                      </td>
+                                    </tr>
+                                  </table>
+                                  <object refid="${path-selection-script}" />
                                 </div>
                               </div>
                             </div>
                           </bodyText>
                           <documentRefs>
-                          	<OTButton local_id="leaf-expert-button" text="click here!"/>
-                          	<OTButton local_id="stem-expert-button" text="click here!"/>
-                          	<OTButton local_id="root-expert-button" text="click here!"/>
-                          	<OTScriptObject local_id="path-selection-script">
-                          		<variables>
-                          			<OTScriptVariableComponent reference="${leaf-expert-button}" name="leafButton"/>
-                          			<OTScriptVariableComponent reference="${stem-expert-button}" name="stemButton"/>
-                          			<OTScriptVariableComponent reference="${root-expert-button}" name="rootButton"/>
-                          			<OTScriptVariable reference="${roots-section}" name="rootsSection"/>
-                          			<OTScriptVariable reference="${leaves-section}" name="leavesSection"/>
-                          			<OTScriptVariable reference="${stems-section}" name="stemsSection"/>
-                          			<OTScriptVariable reference="${leaves-page-3}" name="leavesFirstPage"/>
-                          			<OTScriptVariable reference="${stems-page-3}" name="stemsFirstPage"/>
-                          			<OTScriptVariable reference="${roots-page-3}" name="rootsFirstPage"/>
-                          			<OTScriptVariableView reference="${path-selection-script}" name="scriptView"/>
-                          		</variables>
-                          		<script>
-                          			<OTJavascript>
-                          				<script>
-                          					importClass(Packages.java.awt.event.ActionListener);
+                            <OTButton local_id="leaf-expert-button" text="click here!" />
+                            <OTButton local_id="stem-expert-button" text="click here!" />
+                            <OTButton local_id="root-expert-button" text="click here!" />
+                            <OTScriptObject local_id="path-selection-script">
+                              <variables>
+                                <OTScriptVariableComponent name="leafButton">
+                                  <reference>
+                                    <object refid="${leaf-expert-button}" />
+                                  </reference>
+                                </OTScriptVariableComponent>
+                                <OTScriptVariableComponent name="stemButton">
+                                  <reference>
+                                    <object refid="${stem-expert-button}" />
+                                  </reference>
+                                </OTScriptVariableComponent>
+                                <OTScriptVariableComponent name="rootButton">
+                                  <reference>
+                                    <object refid="${root-expert-button}" />
+                                  </reference>
+                                </OTScriptVariableComponent>
+                                <OTScriptVariable name="rootsSection">
+                                  <reference>
+                                    <object refid="${roots-section}" />
+                                  </reference>
+                                </OTScriptVariable>
+                                <OTScriptVariable name="leavesSection">
+                                  <reference>
+                                    <object refid="${leaves-section}" />
+                                  </reference>
+                                </OTScriptVariable>
+                                <OTScriptVariable name="stemsSection">
+                                  <reference>
+                                    <object refid="${stems-section}" />
+                                  </reference>
+                                </OTScriptVariable>
+                                <OTScriptVariable name="leavesFirstPage">
+                                  <reference>
+                                    <object refid="${leaves-page-3}" />
+                                  </reference>
+                                </OTScriptVariable>
+                                <OTScriptVariable name="stemsFirstPage">
+                                  <reference>
+                                    <object refid="${stems-page-3}" />
+                                  </reference>
+                                </OTScriptVariable>
+                                <OTScriptVariable name="rootsFirstPage">
+                                  <reference>
+                                    <object refid="${roots-page-3}" />
+                                  </reference>
+                                </OTScriptVariable>
+                                <OTScriptVariableView name="scriptView">
+                                  <reference>
+                                    <object refid="${path-selection-script}" />
+                                  </reference>
+                                </OTScriptVariableView>
+                              </variables>
+                              <script>
+                                <OTJavascript>
+                                  <script>importClass(Packages.java.awt.event.ActionListener);
                           					importClass(Packages.java.lang.System);
                           					
                           					function init()
@@ -793,11 +849,10 @@
                           							scriptView.getViewContainer().getUpdateableContainer().setCurrentObject(rootsSection);
                           							rootsSection.getContent().setCurrentCard(rootsFirstPage);
                           						}
-                          					}
-                          				</script>
-                          			</OTJavascript>
-                          		</script>
-                          	</OTScriptObject>
+                          					}</script>
+                                </OTJavascript>
+                              </script>
+                            </OTScriptObject>
                           </documentRefs>
                         </OTUDLCompoundDoc>
                       </cards>
@@ -856,7 +911,7 @@
                 </OTUDLSection>
                 <OTUDLSection id="a217a474-7121-11dc-b75e-4b06cf421f29" name="Water and sunlight" isComputerBased="true" isIntroduction="false" isMath="false" isPosttest="false" isPretest="false" isReading="false" isWrapup="false">
                   <content>
-                    <OTCardContainer id="a217a476-7121-11dc-b75e-4b06cf421f29"  contentsMayScroll="true" loadViewOnlyOnDemand="true">
+                    <OTCardContainer id="a217a476-7121-11dc-b75e-4b06cf421f29" contentsMayScroll="true" loadViewOnlyOnDemand="true">
                       <cards>
                         <OTUDLCompoundDoc id="a217a475-7121-11dc-b75e-4b06cf421f29" name="a217a475-7121-11dc-b75e-4b06cf421f29">
                           <bodyText>
@@ -1295,6 +1350,8 @@
                 <object refid="b2c81a82-7121-11dc-b75e-4b06cf421f29" />
                 <object refid="c720ff27-7121-11dc-b75e-4b06cf421f29" />
                 <object refid="bebf0020-7121-11dc-b75e-4b06cf421f29" />
+                <object refid="${section_1}" />
+                <object refid="${section_1}" />
               </viewedCards>
             </OTCardContainer>
           </content>
@@ -1384,21 +1441,21 @@
         </OTDefinitionManager>
         <OTUDLMenuRule local_id="page-rule" jumpToViewedCard="true" stepAhead="true" />
         <OTUDLMenuRule local_id="section-rule" jumpToAnyCard="true" />
-        
-        <OTUDLSection viewContainerIsUpdateable="true" local_id="roots-section" name="Stems, roots, leaves" isComputerBased="true" isIntroduction="false" isMath="false" isPosttest="false" isPretest="false" isReading="false" isWrapup="false">
+        <OTUDLSection local_id="roots-section" name="Stems, roots, leaves" isComputerBased="true" isIntroduction="false" isMath="false" isPosttest="false" isPretest="false" isReading="false" isWrapup="false">
           <content>
             <OTCardContainer local_id="roots-card-container" contentsMayScroll="true" loadViewOnlyOnDemand="true">
               <cards>
-                <object refid="${stems-roots-leaves-page-1}"/>
-                <object refid="${stems-roots-leaves-page-2}"/>
+                <object refid="${stems-roots-leaves-page-1}" />
+                <object refid="${stems-roots-leaves-page-2}" />
                 <OTUDLCompoundDoc local_id="roots-page-3">
                   <bodyText>
                     <div class="buffer">
                       <div class="border">
                         <div class="body">
                           <div class="subtitle">Roots</div>
-                          Roots page one.<p/>
-                          <img src="http://confluence.concord.org/download/attachments/12521/mangrove.jpg"/>
+                          Roots page one.
+                          <p />
+                          <img src="http://confluence.concord.org/download/attachments/12521/mangrove.jpg" />
                         </div>
                       </div>
                     </div>
@@ -1410,8 +1467,9 @@
                       <div class="border">
                         <div class="body">
                           <div class="subtitle">Roots 2</div>
-                          Roots page two.<p/>
-                          <img src="http://confluence.concord.org/download/attachments/12521/potato.jpg"/>
+                          Roots page two.
+                          <p />
+                          <img src="http://confluence.concord.org/download/attachments/12521/potato.jpg" />
                         </div>
                       </div>
                     </div>
@@ -1423,8 +1481,9 @@
                       <div class="border">
                         <div class="body">
                           <div class="subtitle">Roots 3</div>
-                          Roots page three.<p/>
-                          <img src="http://confluence.concord.org/download/attachments/12521/mangrove.jpg"/>
+                          Roots page three.
+                          <p />
+                          <img src="http://confluence.concord.org/download/attachments/12521/mangrove.jpg" />
                         </div>
                       </div>
                     </div>
@@ -1432,7 +1491,7 @@
                 </OTUDLCompoundDoc>
               </cards>
               <currentCard>
-                <object refid="${roots-page-3}"/>
+                <object refid="${roots-page-3}" />
               </currentCard>
               <viewedCards>
                 <object refid="${stems-roots-leaves-page-1}" />
@@ -1450,35 +1509,35 @@
           </header>
           <footer>
             <OTCompoundDoc>
-             <bodyText>
-               <div align="center">
-                 <table>
-                   <tr>
-                     <td>
-                       <object refid="${section-roots-menu}" viewid="${menu-horizontal-circle}" />
-                     </td>
-                   </tr>
-                 </table>
-               </div>
-             </bodyText>
-           </OTCompoundDoc>
+              <bodyText>
+                <div align="center">
+                  <table>
+                    <tr>
+                      <td>
+                        <object refid="${section-roots-menu}" viewid="2767fe20-6c7d-11dc-8314-0800200c9a66!/menu-horizontal-circle" />
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+              </bodyText>
+            </OTCompoundDoc>
           </footer>
         </OTUDLSection>
-        
-        <OTUDLSection viewContainerIsUpdateable="true" local_id="leaves-section" name="Stems, roots, leaves" isComputerBased="true" isIntroduction="false" isMath="false" isPosttest="false" isPretest="false" isReading="false" isWrapup="false">
+        <OTUDLSection local_id="leaves-section" name="Stems, roots, leaves" isComputerBased="true" isIntroduction="false" isMath="false" isPosttest="false" isPretest="false" isReading="false" isWrapup="false">
           <content>
             <OTCardContainer local_id="leaves-card-container" contentsMayScroll="true" loadViewOnlyOnDemand="true">
               <cards>
-                <object refid="${stems-roots-leaves-page-1}"/>
-                <object refid="${stems-roots-leaves-page-2}"/>
+                <object refid="${stems-roots-leaves-page-1}" />
+                <object refid="${stems-roots-leaves-page-2}" />
                 <OTUDLCompoundDoc local_id="leaves-page-3">
                   <bodyText>
                     <div class="buffer">
                       <div class="border">
                         <div class="body">
                           <div class="subtitle">Leaves</div>
-                          Leaves page one.<p/>
-                          <img src="http://confluence.concord.org/download/attachments/12521/mangrove.jpg"/>
+                          Leaves page one.
+                          <p />
+                          <img src="http://confluence.concord.org/download/attachments/12521/mangrove.jpg" />
                         </div>
                       </div>
                     </div>
@@ -1490,8 +1549,9 @@
                       <div class="border">
                         <div class="body">
                           <div class="subtitle">Leaves 2</div>
-                          Leaves page two.<p/>
-                          <img src="http://confluence.concord.org/download/attachments/12521/potato.jpg"/>
+                          Leaves page two.
+                          <p />
+                          <img src="http://confluence.concord.org/download/attachments/12521/potato.jpg" />
                         </div>
                       </div>
                     </div>
@@ -1499,7 +1559,7 @@
                 </OTUDLCompoundDoc>
               </cards>
               <currentCard>
-                <object refid="${leaves-page-3}"/>
+                <object refid="${leaves-page-3}" />
               </currentCard>
               <viewedCards>
                 <object refid="${stems-roots-leaves-page-1}" />
@@ -1517,35 +1577,35 @@
           </header>
           <footer>
             <OTCompoundDoc>
-             <bodyText>
-               <div align="center">
-                 <table>
-                   <tr>
-                     <td>
-                       <object refid="${section-leaves-menu}" viewid="${menu-horizontal-circle}" />
-                     </td>
-                   </tr>
-                 </table>
-               </div>
-             </bodyText>
-           </OTCompoundDoc>
+              <bodyText>
+                <div align="center">
+                  <table>
+                    <tr>
+                      <td>
+                        <object refid="${section-leaves-menu}" viewid="2767fe20-6c7d-11dc-8314-0800200c9a66!/menu-horizontal-circle" />
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+              </bodyText>
+            </OTCompoundDoc>
           </footer>
         </OTUDLSection>
-        
-        <OTUDLSection viewContainerIsUpdateable="true" local_id="stems-section" name="Stems, roots, leaves" isComputerBased="true" isIntroduction="false" isMath="false" isPosttest="false" isPretest="false" isReading="false" isWrapup="false">
+        <OTUDLSection local_id="stems-section" name="Stems, roots, leaves" isComputerBased="true" isIntroduction="false" isMath="false" isPosttest="false" isPretest="false" isReading="false" isWrapup="false">
           <content>
             <OTCardContainer local_id="stems-card-container" contentsMayScroll="true" loadViewOnlyOnDemand="true">
               <cards>
-                <object refid="${stems-roots-leaves-page-1}"/>
-                <object refid="${stems-roots-leaves-page-2}"/>
+                <object refid="${stems-roots-leaves-page-1}" />
+                <object refid="${stems-roots-leaves-page-2}" />
                 <OTUDLCompoundDoc local_id="stems-page-3">
                   <bodyText>
                     <div class="buffer">
                       <div class="border">
                         <div class="body">
                           <div class="subtitle">Stems</div>
-                          Stems page one.<p/>
-                          <img src="http://confluence.concord.org/download/attachments/12521/mangrove.jpg"/>
+                          Stems page one.
+                          <p />
+                          <img src="http://confluence.concord.org/download/attachments/12521/mangrove.jpg" />
                         </div>
                       </div>
                     </div>
@@ -1557,8 +1617,9 @@
                       <div class="border">
                         <div class="body">
                           <div class="subtitle">Stems 2</div>
-                          Stems page two.<p/>
-                          <img src="http://confluence.concord.org/download/attachments/12521/potato.jpg"/>
+                          Stems page two.
+                          <p />
+                          <img src="http://confluence.concord.org/download/attachments/12521/potato.jpg" />
                         </div>
                       </div>
                     </div>
@@ -1566,7 +1627,7 @@
                 </OTUDLCompoundDoc>
               </cards>
               <currentCard>
-                <object refid="${stems-page-3}"/>
+                <object refid="${stems-page-3}" />
               </currentCard>
               <viewedCards>
                 <object refid="${stems-roots-leaves-page-1}" />
@@ -1584,22 +1645,20 @@
           </header>
           <footer>
             <OTCompoundDoc>
-             <bodyText>
-               <div align="center">
-                 <table>
-                   <tr>
-                     <td>
-                       <object refid="${section-stems-menu}" viewid="${menu-horizontal-circle}" />
-                     </td>
-                   </tr>
-                 </table>
-               </div>
-             </bodyText>
-           </OTCompoundDoc>
+              <bodyText>
+                <div align="center">
+                  <table>
+                    <tr>
+                      <td>
+                        <object refid="${section-stems-menu}" viewid="2767fe20-6c7d-11dc-8314-0800200c9a66!/menu-horizontal-circle" />
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+              </bodyText>
+            </OTCompoundDoc>
           </footer>
         </OTUDLSection>
-        
-        
         <OTJavascript local_id="change_page.js">
           <script>importClass(Packages.java.awt.event.ActionListener);
 						importClass(Packages.java.util.Vector);
@@ -1845,4 +1904,3 @@
     </OTSystem>
   </objects>
 </otrunk>
-
