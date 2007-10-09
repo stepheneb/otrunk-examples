@@ -94,8 +94,15 @@
                       <OTText name="Text field" />
                       <OTDrawingTool2 name="Draw tool" />
                       <OTChoice name="Choices" />
+                      <OTUDLQuestions name="Scaffolded questions" />
                     </objectsToInsert>
                   </OTObjectEditViewConfig>
+                </entry>
+                <entry key="${questions-card-view}">
+                	<OTUDLQuestionViewConfig objectClass="org.concord.otrunk.udl3.OTUDLQuestions" viewClass="org.concord.otrunk.udl3.OTUDLQuestionsEditView" />
+                </entry>
+                <entry key="${question-view}">
+                	<OTViewEntry objectClass="org.concord.otrunk.udl3.OTQuestion" viewClass="org.concord.otrunk.udl3.OTQuestionEditView" />
                 </entry>
               </map>
             </OTViewMode>
@@ -107,7 +114,7 @@
             <!-- The OTUDLQuestionViewConfig can be used to set the default scaffolding level, and whether the student can navigate through the levels.
 						  The default scaffolding level just uses the order of the items inside OTUDLQuestions/questions. It is not aware of the names
 						  such as "L1", "L2", etc. -->
-            <OTUDLQuestionViewConfig local_id="questions-card-view" isLevelFrozen="false" defaultScaffoldLevel="0" objectClass="org.concord.otrunk.udl3.OTUDLQuestions" viewClass="org.concord.otrunk.udl3.OTUDLQuestionsUpdateView" />
+            <OTUDLQuestionViewConfig local_id="questions-card-view" isLevelFrozen="false" defaultScaffoldLevel="0" objectClass="org.concord.otrunk.udl3.OTUDLQuestions" viewClass="org.concord.otrunk.udl3.OTUDLQuestionsCardView" />
             <OTViewEntry objectClass="org.concord.otrunk.ui.OTImage" viewClass="org.concord.otrunk.ui.swing.OTImageView" />
             <OTViewEntry local_id="snapshot_button_view" objectClass="org.concord.otrunk.ui.snapshot.OTSnapshotButton" viewClass="org.concord.otrunk.ui.snapshot.OTSnapshotButtonView" />
             <OTViewEntry objectClass="org.concord.otrunk.ui.snapshot.OTSnapshotAlbum" viewClass="org.concord.otrunk.ui.snapshot.OTSnapshotAlbumView" />
@@ -115,7 +122,7 @@
             <OTViewEntry objectClass="org.concord.otrunk.ui.OTButton" viewClass="org.concord.otrunk.ui.swing.OTButtonView" />
             <OTViewEntry objectClass="org.concord.otrunk.script.ui.OTScriptObject" viewClass="org.concord.otrunk.script.ui.OTScriptObjectView" />
             <OTViewEntry objectClass="org.concord.otrunk.ui.OTButton" viewClass="org.concord.otrunk.ui.swing.OTButtonView" />
-            <OTViewEntry objectClass="org.concord.otrunk.udl3.OTQuestion" viewClass="org.concord.otrunk.udl3.OTQuestionView" />
+            <OTViewEntry local_id="question-view" objectClass="org.concord.otrunk.udl3.OTQuestion" viewClass="org.concord.otrunk.udl3.OTQuestionView" />
             <OTViewEntry local_id="character-group-view" objectClass="org.concord.otrunk.udl.OTUDLCharacterGroup" viewClass="org.concord.otrunk.udl.OTUDLCharacterGroupView" />
             <OTViewEntry objectClass="org.concord.otrunk.udl3.OTUDLSection" viewClass="org.concord.otrunk.udl3.OTUDLSectionView" />
             <OTViewEntry objectClass="org.concord.otrunk.udl3.OTUDLContainer" viewClass="org.concord.otrunk.udl3.OTUDLContainerView" />
@@ -4475,6 +4482,7 @@
 						importClass(Packages.org.concord.otrunk.udl3.OTUDLMenu);
 						importClass(Packages.java.lang.System);
 						importClass(Packages.org.concord.framework.otrunk.OTObjectList);
+						importClass(Packages.org.concord.framework.otrunk.OTObjectService);
 						
 						
 						var pageHandler =
@@ -4558,11 +4566,14 @@
 										
 										var footer = section.getFooter();
 										
+										var otid = menu.getOTObjectService().getExternalID(menu);
+										var viewid = menu.getOTObjectService().getExternalID(menuHorizontalView);
+										
 										footer.setBodyText("&lt;div align=\"center\"&gt;" +
 															"&lt;table&gt;"+
 																	"&lt;tr&gt;"+
 																		"&lt;td&gt;"+
-																			"&lt;object refid=\""+menu.getGlobalId()+"\" viewid=\""+menuHorizontalView.getGlobalId()+"\"/&gt;" +
+																			"&lt;object refid=\""+otid+"\" viewid=\""+viewid+"\"/&gt;" +
 																		"&lt;/td&gt;"+
 																	"&lt;/tr&gt;"+
 															"&lt;/table&gt;"+
