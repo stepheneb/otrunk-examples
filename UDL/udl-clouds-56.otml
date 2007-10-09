@@ -1,0 +1,1677 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<otrunk id="2767fe20-6c7d-11dc-8314-0800200c9a66">
+  <imports>
+    <import class="org.concord.data.state.OTDataStore" />
+    <import class="org.concord.data.state.OTDataChannelDescription" />
+    <import class="org.concord.data.state.OTDataField" />
+    <import class="org.concord.datagraph.state.OTDataGraph" />
+    <import class="org.concord.datagraph.state.OTDataAxis" />
+    <import class="org.concord.datagraph.state.OTDataGraphable" />
+    <import class="org.concord.datagraph.state.OTDataCollector" />
+    <import class="org.concord.datagraph.state.OTMultiDataGraph" />
+    <import class="org.concord.datagraph.state.OTPluginView" />
+    <import class="org.concord.framework.otrunk.view.OTFrame" />
+    <import class="org.concord.graph.util.state.OTDrawingTool" />
+    <import class="org.concord.graph.util.state.OTDrawingStamp" />
+    <import class="org.concord.graph.util.state.OTDrawingImageIcon" />
+    <import class="org.concord.graph.util.state.OTDrawingShape" />
+    <import class="org.concord.graph.util.state.OTDrawingTool2" />
+    <import class="org.concord.graph.util.state.OTPointTextLabel" />
+    <import class="org.concord.otrunk.OTSystem" />
+    <import class="org.concord.otrunk.overlay.OTOverlay" />
+    <import class="org.concord.otrunk.script.ui.OTScriptObject" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariable" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariableComponent" />
+    <import class="org.concord.otrunk.script.js.OTJavascript" />
+    <import class="org.concord.otrunk.script.OTScriptEngineBundle" />
+    <import class="org.concord.otrunk.script.OTScriptEngineEntry" />
+    <import class="org.concord.otrunk.udl.OTUDLCharacter" />
+    <import class="org.concord.otrunk.udl.OTUDLCharacterGroup" />
+    <import class="org.concord.otrunk.udl.OTUDLCoachStatement" />
+    <import class="org.concord.otrunk.udl.OTUDLMenuRule" />
+    <import class="org.concord.otrunk.udl.document.OTDefinition" />
+    <import class="org.concord.otrunk.udl.document.OTDefinitionManager" />
+    <import class="org.concord.otrunk.udl.document.OTUDLCompoundDoc" />
+    <import class="org.concord.otrunk.udl.document.OTUDLCSSModifier" />
+    <import class="org.concord.otrunk.udl.document.OTUDLCSSGroup" />
+    <import class="org.concord.otrunk.udl.document.OTUDLDocumentViewConfig" />
+    <import class="org.concord.otrunk.udl.friction.OTFrictionModel" />
+    <import class="org.concord.otrunk.udl3.OTQuestion" />
+    <import class="org.concord.otrunk.udl3.OTUDLMenu" />
+    <import class="org.concord.otrunk.udl3.OTUDLContainer" />
+    <import class="org.concord.otrunk.udl3.OTUDLQuestions" />
+    <import class="org.concord.otrunk.udl3.OTUDLQuestionViewConfig" />
+    <import class="org.concord.otrunk.udl3.OTUDLSection" />
+    <import class="org.concord.otrunk.ui.OTButton" />
+    <import class="org.concord.otrunk.ui.OTCardContainer" />
+    <import class="org.concord.otrunk.ui.OTChoice" />
+    <import class="org.concord.otrunk.ui.OTImage" />
+    <import class="org.concord.otrunk.ui.OTText" />
+    <import class="org.concord.otrunk.ui.snapshot.OTSnapshot" />
+    <import class="org.concord.otrunk.ui.snapshot.OTSnapshotButton" />
+    <import class="org.concord.otrunk.ui.snapshot.OTSnapshotAlbum" />
+    <import class="org.concord.otrunk.ui.swing.OTChoiceViewConfig" />
+    <import class="org.concord.otrunk.view.OTObjectEditViewConfig" />
+    <import class="org.concord.otrunk.view.OTViewChild" />
+    <import class="org.concord.otrunk.view.OTViewEntry" />
+    <import class="org.concord.otrunk.view.OTViewMode" />
+    <import class="org.concord.otrunk.view.OTViewBundle" />
+    <import class="org.concord.otrunk.view.document.OTCompoundDoc" />
+    <import class="org.concord.otrunk.view.document.OTCssText" />
+    <import class="org.concord.otrunk.view.prototype.OTPrototypeViewEntry" />
+    <import class="org.concord.otrunk.view.prototype.OTPrototypeEventController" />
+    <import class="org.concord.otrunk.view.prototype.OTPrototypeMapEntry" />
+    <import class="org.concord.sensor.state.OTDeviceConfig" />
+    <import class="org.concord.sensor.state.OTExperimentRequest" />
+    <import class="org.concord.sensor.state.OTInterfaceManager" />
+    <import class="org.concord.sensor.state.OTSensorDataProxy" />
+    <import class="org.concord.sensor.state.OTSensorRequest" />
+    <import class="org.concord.sensor.state.OTZeroSensor" />
+    <import class="org.concord.otrunk.udl.question.OTQuestion" />
+  </imports>
+  <objects>
+    <OTSystem local_id="system">
+      <bundles>
+        <OTViewBundle showLeftPanel="false" currentMode="authoring">
+          <modes>
+            <OTViewMode name="default" />
+            <OTViewMode name="authoring">
+              <map>
+                <entry key="2767fe20-6c7d-11dc-8314-0800200c9a66!/compound_doc_view">
+                  <OTObjectEditViewConfig objectClass="org.concord.otrunk.view.document.OTCompoundDoc" viewClass="org.concord.otrunk.view.document.OTCompoundDocEditView" usePopupEditWindows="true" copyNewObjectsByDefault="true">
+                    <objectsToInsert>
+                      <OTText name="Text field" />
+                      <OTDrawingTool2 name="Draw tool" />
+                      <OTChoice name="Choices" />
+                      <OTUDLQuestions name="Scaffolded questions">
+                        <questions>
+                          <org.concord.otrunk.udl.question.OTQuestion name="L5">
+                            <prompt>
+                              <OTUDLCompoundDoc>
+                                <bodyText>Insert prompt here</bodyText>
+                              </OTUDLCompoundDoc>
+                            </prompt>
+                            <input>
+                              <OTUDLCompoundDoc>
+                                <bodyText>Insert input here</bodyText>
+                              </OTUDLCompoundDoc>
+                            </input>
+                          </org.concord.otrunk.udl.question.OTQuestion>
+                          <org.concord.otrunk.udl.question.OTQuestion name="L4">
+                            <prompt>
+                              <OTUDLCompoundDoc>
+                                <bodyText>Insert prompt here</bodyText>
+                              </OTUDLCompoundDoc>
+                            </prompt>
+                            <input>
+                              <OTUDLCompoundDoc>
+                                <bodyText>Insert input here</bodyText>
+                              </OTUDLCompoundDoc>
+                            </input>
+                          </org.concord.otrunk.udl.question.OTQuestion>
+                          <org.concord.otrunk.udl.question.OTQuestion name="L3">
+                            <prompt>
+                              <OTUDLCompoundDoc>
+                                <bodyText>Insert prompt here</bodyText>
+                              </OTUDLCompoundDoc>
+                            </prompt>
+                            <input>
+                              <OTUDLCompoundDoc>
+                                <bodyText>Insert input here</bodyText>
+                              </OTUDLCompoundDoc>
+                            </input>
+                          </org.concord.otrunk.udl.question.OTQuestion>
+                          <org.concord.otrunk.udl.question.OTQuestion name="L2">
+                            <prompt>
+                              <OTUDLCompoundDoc>
+                                <bodyText>Insert prompt here</bodyText>
+                              </OTUDLCompoundDoc>
+                            </prompt>
+                            <input>
+                              <OTUDLCompoundDoc>
+                                <bodyText>Insert input here</bodyText>
+                              </OTUDLCompoundDoc>
+                            </input>
+                          </org.concord.otrunk.udl.question.OTQuestion>
+                          <org.concord.otrunk.udl.question.OTQuestion name="L1">
+                            <prompt>
+                              <OTUDLCompoundDoc>
+                                <bodyText>Insert prompt here</bodyText>
+                              </OTUDLCompoundDoc>
+                            </prompt>
+                            <input>
+                              <OTUDLCompoundDoc>
+                                <bodyText>Insert input here</bodyText>
+                              </OTUDLCompoundDoc>
+                            </input>
+                          </org.concord.otrunk.udl.question.OTQuestion>
+                        </questions>
+                      </OTUDLQuestions>
+                    </objectsToInsert>
+                  </OTObjectEditViewConfig>
+                </entry>
+                <entry key="2767fe20-6c7d-11dc-8314-0800200c9a66!/questions-card-view">
+                  <OTUDLQuestionViewConfig objectClass="org.concord.otrunk.udl.question.OTUDLQuestions" viewClass="org.concord.otrunk.udl.question.OTUDLQuestionsEditView" />
+                </entry>
+                <entry key="2767fe20-6c7d-11dc-8314-0800200c9a66!/menu-vertical">
+                  <OTViewEntry objectClass="org.concord.otrunk.udl3.OTUDLMenu" viewClass="org.concord.otrunk.udl.ui.OTUDLMenuSectionEditView" />
+                </entry>
+                <entry key="2767fe20-6c7d-11dc-8314-0800200c9a66!/choice-radio-view">
+                  <OTChoiceViewConfig objectClass="org.concord.otrunk.ui.OTChoice" viewClass="org.concord.otrunk.ui.swing.OTChoiceComboBoxEditView" useViewsAsChoices="true" />
+                </entry>
+                <entry key="2767fe20-6c7d-11dc-8314-0800200c9a66!/character-group-view">
+                  <OTViewEntry objectClass="org.concord.otrunk.udl.OTUDLCharacterGroup" viewClass="org.concord.otrunk.udl.OTUDLCharacterGroupEditView" />
+                </entry>
+                <entry key="2767fe20-6c7d-11dc-8314-0800200c9a66!/question-view">
+                  <OTViewEntry objectClass="org.concord.otrunk.udl.question.OTQuestion" viewClass="org.concord.otrunk.udl.question.OTQuestionEditView" />
+                </entry>
+                <entry key="2767fe20-6c7d-11dc-8314-0800200c9a66!/menu-horizontal-circle">
+                  <OTViewEntry objectClass="org.concord.otrunk.udl3.OTUDLMenu" viewClass="org.concord.otrunk.udl.ui.OTUDLMenuPageEditView" />
+                </entry>
+              </map>
+            </OTViewMode>
+          </modes>
+          <frame>
+            <OTFrame useScrollPane="false" width="850" height="600" />
+          </frame>
+          <views>
+            <!-- The OTUDLQuestionViewConfig can be used to set the default scaffolding level, and whether the student can navigate through the levels.
+						  The default scaffolding level just uses the order of the items inside OTUDLQuestions/questions. It is not aware of the names
+						  such as "L1", "L2", etc. -->
+            <OTUDLQuestionViewConfig local_id="questions-card-view" isLevelFrozen="false" defaultScaffoldLevel="0" objectClass="org.concord.otrunk.udl.question.OTUDLQuestions" viewClass="org.concord.otrunk.udl.question.OTUDLQuestionsCardView" />
+            <OTViewEntry objectClass="org.concord.otrunk.ui.OTImage" viewClass="org.concord.otrunk.ui.swing.OTImageView" />
+            <OTViewEntry local_id="snapshot_button_view" objectClass="org.concord.otrunk.ui.snapshot.OTSnapshotButton" viewClass="org.concord.otrunk.ui.snapshot.OTSnapshotButtonView" />
+            <OTViewEntry objectClass="org.concord.otrunk.ui.snapshot.OTSnapshotAlbum" viewClass="org.concord.otrunk.ui.snapshot.OTSnapshotAlbumView" />
+            <OTViewEntry objectClass="org.concord.otrunk.udl.friction.OTFrictionModel" viewClass="org.concord.otrunk.udl.friction.OTFrictionModelView" />
+            <OTViewEntry objectClass="org.concord.otrunk.ui.OTButton" viewClass="org.concord.otrunk.ui.swing.OTButtonView" />
+            <OTViewEntry objectClass="org.concord.otrunk.script.ui.OTScriptObject" viewClass="org.concord.otrunk.script.ui.OTScriptObjectView" />
+            <OTViewEntry objectClass="org.concord.otrunk.ui.OTButton" viewClass="org.concord.otrunk.ui.swing.OTButtonView" />
+            <OTViewEntry local_id="question-view" objectClass="org.concord.otrunk.udl.question.OTQuestion" viewClass="org.concord.otrunk.udl.question.OTQuestionView" />
+            <OTViewEntry local_id="character-group-view" objectClass="org.concord.otrunk.udl.OTUDLCharacterGroup" viewClass="org.concord.otrunk.udl.OTUDLCharacterGroupView" />
+            <OTViewEntry objectClass="org.concord.otrunk.udl3.OTUDLSection" viewClass="org.concord.otrunk.udl3.OTUDLSectionView" />
+            <OTViewEntry local_id="container_view" objectClass="org.concord.otrunk.udl3.OTUDLContainer" viewClass="org.concord.otrunk.udl3.OTUDLContainerView" />
+            <OTViewEntry objectClass="org.concord.otrunk.udl.document.OTUDLCSSModifier" viewClass="org.concord.otrunk.udl.document.OTUDLCSSModifierView" />
+            <OTViewEntry local_id="menu-vertical" objectClass="org.concord.otrunk.udl3.OTUDLMenu" viewClass="org.concord.otrunk.udl.ui.OTUDLMenuSectionView" />
+            <OTViewEntry local_id="menu-horizontal-circle" objectClass="org.concord.otrunk.udl3.OTUDLMenu" viewClass="org.concord.otrunk.udl.ui.OTUDLMenuPageView" />
+            <OTViewEntry objectClass="org.concord.otrunk.udl3.OTQuestion" viewClass="org.concord.otrunk.udl3.OTQuestionView" />
+            <OTChoiceViewConfig local_id="choice-radio-view" objectClass="org.concord.otrunk.ui.OTChoice" viewClass="org.concord.otrunk.ui.swing.OTChoiceRadioButtonView" useViewsAsChoices="true" />
+            <OTViewEntry local_id="choice-combo-view" objectClass="org.concord.otrunk.ui.OTChoice" viewClass="org.concord.otrunk.ui.swing.OTChoiceComboBoxView" />
+            <OTViewEntry objectClass="org.concord.otrunk.script.ui.OTScriptObject" viewClass="org.concord.otrunk.script.ui.OTScriptObjectView" />
+            <OTViewEntry objectClass="org.concord.otrunk.ui.OTCardContainer" viewClass="org.concord.otrunk.ui.swing.OTCardContainerView" />
+            <OTViewEntry objectClass="org.concord.otrunk.ui.OTBorderContainer" viewClass="org.concord.otrunk.ui.swing.OTBorderContainerView" />
+            <OTViewEntry objectClass="org.concord.otrunk.ui.OTPlacementContainer" viewClass="org.concord.otrunk.ui.swing.OTPlacementContainerView" />
+            <OTViewEntry local_id="text-edit" objectClass="org.concord.otrunk.ui.OTText" viewClass="org.concord.otrunk.ui.swing.OTTextEditView" />
+            <OTViewEntry local_id="text-label" objectClass="org.concord.otrunk.ui.OTText" viewClass="org.concord.otrunk.ui.swing.OTTextView" />
+            <OTViewEntry viewClass="org.concord.datagraph.state.OTDataCollectorView" objectClass="org.concord.datagraph.state.OTDataCollector" />
+            <OTViewEntry viewClass="org.concord.datagraph.state.OTDataGraphView" objectClass="org.concord.datagraph.state.OTDataGraph" />
+            <OTViewEntry viewClass="org.concord.data.state.OTDataFieldView" objectClass="org.concord.data.state.OTDataField" />
+            <OTViewEntry viewClass="org.concord.datagraph.state.OTDataDrawingToolView" objectClass="org.concord.graph.util.state.OTDrawingTool" />
+            <OTViewEntry viewClass="org.concord.datagraph.state.OTMultiDataGraphView" objectClass="org.concord.datagraph.state.OTMultiDataGraph" />
+            <OTUDLDocumentViewConfig local_id="compound_doc_view" objectClass="org.concord.otrunk.view.document.OTCompoundDoc" viewClass="org.concord.otrunk.udl.document.OTUDLDocumentView">
+              <definitionManager>
+                <object refid="${definition-manager}" />
+              </definitionManager>
+              <cssBlocks>
+                <OTCssText local_id="css-font" cssText="           body {              font-size: 18;            }           a {               text-decoration: none;             }           DIV.body {                 FONT-STYLE: normal;               FONT-FAMILY: Verdana, Arial;               FONT-VARIANT: normal;              TEXT-DECORATION: none             }           DIV.story {            FONT-WEIGHT: bolder;           }           DIV.activity-title {               font-size: 29;               FONT-WEIGHT: bold;           }             DIV.title {              font-size: 30;              FONT-WEIGHT: bold;           }           DIV.subtitle {               font-size: 25;               FONT-WEIGHT: bold;           }           DIV.subtitle-continue {               FONT-WEIGHT: bold;           }" />
+                <OTCssText local_id="css-color" cssText="           body {              BACKGROUND-COLOR: rgb(255, 255, 255);            }           DIV.body {                BACKGROUND-COLOR: rgb(250, 255, 255);           }           DIV.body-no-border {            BACKGROUND-COLOR: rgb(250, 255, 255);           }           DIV.story {            BORDER-COLOR: blue;            BACKGROUND-COLOR: rgb(210,230,255);            COLOR: rgb(0,0,0);           }           DIV.story-border {            BACKGROUND-COLOR: rgb(100, 130, 200);           }           DIV.activity-title {               COLOR: rgb(0,0,0);           }             DIV.title {              COLOR: rgb(0,0,0);           }           DIV.subtitle {               COLOR: rgb(0,0,0);           }           DIV.leftpanel {              BACKGROUND-COLOR: rgb(190, 190, 255);           }           DIV.buffer {              BACKGROUND-COLOR: rgb(255, 255, 255);           }             DIV.border {            BACKGROUND-COLOR: rgb(190, 190, 255);            }            DIV.definition-border {            BACKGROUND-COLOR: rgb(0, 0, 255);           }            DIV.question {             BACKGROUND-COLOR: rgb(230, 230, 250);            }           " />
+                <OTCssText local_id="css-layout" cssText="           DIV.body {                 MARGIN: 5px;                PADDING: 8px;               height: 100%;           }           DIV.story {             padding: 5px;           }           DIV.story-border {            padding: 1px;           }           DIV.activity-title {               MARGIN: 2px 10% 10px;           }             DIV.title {              PADDING-BOTTOM: 10px;               PADDING-LEFT: 20px;             PADDING-TOP: 10px;             MARGIN: 2px 10% 10px;           }           DIV.subtitle {               PADDING-BOTTOM: 10px;              PADDING-LEFT: 20px;             PADDING-TOP: 10px;             MARGIN: 2px 10% 10px;           }           DIV.buffer {              PADDING: 10px;           }             DIV.border {            PADDING: 3px;            }            DIV.definition-border {            PADDING: 3px;           }           DIV.top-menu {            TEXT-ALIGN: right;           }" />
+              </cssBlocks>
+            </OTUDLDocumentViewConfig>
+            <OTPrototypeViewEntry local_id="textsize-choice-view" objectClass="org.concord.otrunk.OTSystem" viewClass="org.concord.otrunk.view.prototype.OTPrototypeView" copyPrototype="false">
+              <viewEntry>
+                <object refid="${choice-combo-view}" />
+              </viewEntry>
+              <prototype>
+                <OTChoice>
+                  <choices>
+                    <OTOverlay local_id="small-text-overlay" name="Small text">
+                      <deltaObjectMap>
+                        <entry key="2767fe20-6c7d-11dc-8314-0800200c9a66!/css-font">
+                          <OTCssText cssText="                body {                   font-size: 14;                 }                a {                    text-decoration: none;                  }                DIV.body {                     FONT-WEIGHT: bolder;                   FONT-STYLE: normal;                    FONT-FAMILY: Verdana, Arial;                    FONT-VARIANT: normal;                   TEXT-DECORATION: none                  }                DIV.story {                 FONT-WEIGHT: bolder;                }                DIV.activity-title {                    font-size: 28;                    FONT-WEIGHT: bold;                }                  DIV.title {                   font-size: 25;                   FONT-WEIGHT: bold;                }                DIV.subtitle {                    font-size: 20;                    FONT-WEIGHT: bold;                }                DIV.subtitle-continue {                    FONT-WEIGHT: bold;                }" />
+                        </entry>
+                      </deltaObjectMap>
+                    </OTOverlay>
+                    <OTOverlay local_id="normal-text-overlay" name="Normal text" />
+                    <OTOverlay local_id="large-text-overlay" name="Large text">
+                      <deltaObjectMap>
+                        <entry key="2767fe20-6c7d-11dc-8314-0800200c9a66!/css-font">
+                          <OTCssText cssText="                body {                   font-size: 24;                 }                a {                    text-decoration: none;                  }                DIV.body {                     FONT-WEIGHT: bolder;                   FONT-STYLE: normal;                    FONT-FAMILY: Verdana, Arial;                    FONT-VARIANT: normal;                   TEXT-DECORATION: none                  }                DIV.story {                 FONT-WEIGHT: bolder;                }                DIV.activity-title {                    font-size: 37;                    FONT-WEIGHT: bold;                }                  DIV.title {                   font-size: 34;                   FONT-WEIGHT: bold;                }                DIV.subtitle {                    font-size: 28;                    FONT-WEIGHT: bold;                }                DIV.subtitle-continue {                    FONT-WEIGHT: bold;                }" />
+                        </entry>
+                      </deltaObjectMap>
+                    </OTOverlay>
+                  </choices>
+                  <currentChoice>
+                    <object refid="${normal-text-overlay}" />
+                  </currentChoice>
+                </OTChoice>
+              </prototype>
+              <controller>
+                <OTPrototypeEventController>
+                  <mapping>
+                    <OTPrototypeMapEntry modelProperty="overlays[0]" prototypeProperty="currentChoice" />
+                  </mapping>
+                </OTPrototypeEventController>
+              </controller>
+            </OTPrototypeViewEntry>
+            <OTPrototypeViewEntry local_id="language-choice-view" objectClass="org.concord.otrunk.OTSystem" viewClass="org.concord.otrunk.view.prototype.OTPrototypeView" copyPrototype="false">
+              <viewEntry>
+                <object refid="${choice-combo-view}" />
+              </viewEntry>
+              <prototype>
+                <OTChoice>
+                  <choices>
+                    <OTOverlay local_id="english-overlay" name="English" />
+                    <OTOverlay local_id="spanish-overlay" name="Español" />
+                  </choices>
+                  <currentChoice>
+                    <object refid="${english-overlay}" />
+                  </currentChoice>
+                </OTChoice>
+              </prototype>
+              <controller>
+                <OTPrototypeEventController>
+                  <mapping>
+                    <OTPrototypeMapEntry modelProperty="overlays[1]" prototypeProperty="currentChoice" />
+                  </mapping>
+                </OTPrototypeEventController>
+              </controller>
+            </OTPrototypeViewEntry>
+            <OTViewEntry objectClass="org.concord.graph.util.state.OTDrawingTool2" viewClass="org.concord.datagraph.state.OTDataDrawingToolView" />
+          </views>
+        </OTViewBundle>
+        <OTScriptEngineBundle>
+          <engines>
+            <OTScriptEngineEntry objectClass="org.concord.otrunk.script.js.OTJavascript" engineClass="org.concord.otrunk.script.js.OTJavascriptEngine" />
+          </engines>
+        </OTScriptEngineBundle>
+        <OTInterfaceManager>
+          <deviceConfigs>
+            <OTDeviceConfig configString="none" deviceId="10" />
+          </deviceConfigs>
+        </OTInterfaceManager>
+      </bundles>
+      <overlays>
+        <object refid="${normal-text-overlay}" />
+        <object refid="${english-overlay}" />
+      </overlays>
+      <root>
+        <OTUDLContainer name="UDL Activity">
+          <cssColor>
+            <object refid="${css-color}" />
+          </cssColor>
+          <title>
+            <OTCompoundDoc local_id="title">
+              <bodyText>
+                <div class="leftpanel">
+                  <img src="http://udl.concord.org/share/udl-tree-only.png" width="70" height="73" />
+                  <br />
+                  <div class="activity-title">UDL Activity</div>
+                </div>
+              </bodyText>
+            </OTCompoundDoc>
+          </title>
+          <menu>
+            <OTViewChild useScrollPane="true" scrollPanelHasBorder="false">
+              <object>
+                <object refid="${menu}" />
+              </object>
+            </OTViewChild>
+          </menu>
+          <topBar>
+            <OTCompoundDoc>
+              <bodyText>
+                <div class="top-menu">
+                  <table>
+                    <tr>
+                      <td>
+                        <object refid="${system}" viewid="2767fe20-6c7d-11dc-8314-0800200c9a66!/language-choice-view" />
+                      </td>
+                      <td>
+                        <object refid="${system}" viewid="2767fe20-6c7d-11dc-8314-0800200c9a66!/textsize-choice-view" />
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+              </bodyText>
+            </OTCompoundDoc>
+          </topBar>
+          <characters>
+            <OTUDLCharacterGroup local_id="character-group">
+              <topLevelCardContainer>
+                <object refid="${section-card-container}" />
+              </topLevelCardContainer>
+              <characters>
+                <OTUDLCharacter local_id="character_affective" inactiveImageURL="http://confluence.concord.org/download/attachments/12353/blah-head-small.png" activeImageURL="http://confluence.concord.org/download/attachments/12353/blah-head.png" />
+                <OTUDLCharacter local_id="character_strategic" inactiveImageURL="http://confluence.concord.org/download/attachments/12353/clunk-head-small.png" activeImageURL="http://confluence.concord.org/download/attachments/12353/clunk-head.png" />
+                <OTUDLCharacter local_id="character_recognition" inactiveImageURL="http://confluence.concord.org/download/attachments/12353/roxy-head-small.png" activeImageURL="http://confluence.concord.org/download/attachments/11818/roxy-large.gif" />
+              </characters>
+              <speechFrame>
+                <OTFrame local_id="speech_frame" width="380" height="340" borderlessPopup="false" />
+              </speechFrame>
+            </OTUDLCharacterGroup>
+          </characters>
+          <content>
+            <OTCardContainer local_id="section-card-container" loadViewOnlyOnDemand="true">
+              <cards>
+                <OTUDLSection local_id="section_1" name="Pre-test" isComputerBased="false" isIntroduction="false" isMath="false" isPosttest="false" isPretest="true" isReading="false" isWrapup="false">
+                  <header>
+                    <OTCompoundDoc id="2767fe20-6c7d-11dc-8314-0800200c9a66!/section_1/header">
+                      <bodyText>
+                        <div class="title">Pre-test</div>
+                      </bodyText>
+                    </OTCompoundDoc>
+                  </header>
+                  <content>
+                    <OTCardContainer local_id="section-1-card-container" contentsMayScroll="true" loadViewOnlyOnDemand="true">
+                      <cards>
+                        <OTUDLCompoundDoc local_id="page-1" name="1">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle">New page</div>
+                                  New page content
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                        </OTUDLCompoundDoc>
+                      </cards>
+                      <currentCard>
+                        <object refid="${page-1}" />
+                      </currentCard>
+                      <viewedCards>
+                        <object refid="${page-1}" />
+                        <object refid="${page-1}" />
+                      </viewedCards>
+                    </OTCardContainer>
+                  </content>
+                  <footer>
+                    <OTCompoundDoc id="2767fe20-6c7d-11dc-8314-0800200c9a66!/section_1/footer">
+                      <bodyText>
+                        <div align="center">
+                          <table>
+                            <tr>
+                              <td>
+                                <object refid="${section-1-menu}" viewid="2767fe20-6c7d-11dc-8314-0800200c9a66!/menu-horizontal-circle" />
+                              </td>
+                            </tr>
+                          </table>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                        <object refid="${section-1-menu}" />
+                        <object refid="${menu-horizontal-circle}" />
+                      </documentRefs>
+                    </OTCompoundDoc>
+                  </footer>
+                  <north>
+                    <object refid="${section_1/header}" />
+                  </north>
+                  <center>
+                    <object refid="${section-1-card-container}" />
+                  </center>
+                  <south>
+                    <object refid="${section_1/footer}" />
+                  </south>
+                </OTUDLSection>
+                <OTUDLSection id="4b142e39-767f-11dc-a568-7984efa6d7c4" name="Introduction" isComputerBased="false" isIntroduction="true" isMath="false" isPosttest="false" isPretest="false" isReading="false" isWrapup="false">
+                  <content>
+                    <OTCardContainer id="4b14554b-767f-11dc-a568-7984efa6d7c4" contentsMayScroll="true" loadViewOnlyOnDemand="true">
+                      <cards>
+                        <OTUDLCompoundDoc id="4b142e3a-767f-11dc-a568-7984efa6d7c4" name="%4b142e3a-767f-11dc-a568-7984efa6d7c4">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle">Driving question</div>
+                                  Why are there clouds?
+                                  <p />
+                                  <img src="http://udl.concord.org/share/Clouds/Clouds166.jpg" />
+                                  <p />
+                                  This unit explores the water cycle.
+                                  <p />
+                                  [Note: this is the same as the Introduction for Grades 3-4.  Okay as is?]
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                        </OTUDLCompoundDoc>
+                      </cards>
+                      <currentCard>
+                        <object refid="4b142e3a-767f-11dc-a568-7984efa6d7c4" />
+                      </currentCard>
+                      <viewedCards>
+                        <object refid="4b142e3a-767f-11dc-a568-7984efa6d7c4" />
+                        <object refid="4b142e3a-767f-11dc-a568-7984efa6d7c4" />
+                      </viewedCards>
+                    </OTCardContainer>
+                  </content>
+                  <header>
+                    <OTUDLCompoundDoc id="4b14554c-767f-11dc-a568-7984efa6d7c4" name="%4b14554c-767f-11dc-a568-7984efa6d7c4">
+                      <bodyText>
+                        <div class="title">Introduction</div>
+                      </bodyText>
+                    </OTUDLCompoundDoc>
+                  </header>
+                  <footer>
+                    <OTUDLCompoundDoc id="4b14554d-767f-11dc-a568-7984efa6d7c4" name="%4b14554d-767f-11dc-a568-7984efa6d7c4">
+                      <documentRefs>
+                        <OTUDLMenu id="4b1825df-767f-11dc-a568-7984efa6d7c4">
+                          <cardContainer>
+                            <object refid="4b14554b-767f-11dc-a568-7984efa6d7c4" />
+                          </cardContainer>
+                          <menuRule>
+                            <object refid="${page-rule}" />
+                          </menuRule>
+                        </OTUDLMenu>
+                        <object refid="${menu-horizontal-circle}" />
+                      </documentRefs>
+                      <bodyText>
+                        <div align="center">
+                          <table>
+                            <tr>
+                              <td>
+                                <object refid="4b1825df-767f-11dc-a568-7984efa6d7c4" viewid="2767fe20-6c7d-11dc-8314-0800200c9a66!/menu-horizontal-circle" />
+                              </td>
+                            </tr>
+                          </table>
+                        </div>
+                      </bodyText>
+                    </OTUDLCompoundDoc>
+                  </footer>
+                  <north>
+                    <object refid="4b14554c-767f-11dc-a568-7984efa6d7c4" />
+                  </north>
+                  <center>
+                    <object refid="4b14554b-767f-11dc-a568-7984efa6d7c4" />
+                  </center>
+                  <south>
+                    <object refid="4b14554d-767f-11dc-a568-7984efa6d7c4" />
+                  </south>
+                </OTUDLSection>
+                <OTUDLSection id="2fc0704f-7689-11dc-a568-7984efa6d7c4" name="Water" isComputerBased="true" isIntroduction="false" isMath="false" isPosttest="false" isPretest="false" isReading="false" isWrapup="false">
+                  <content>
+                    <OTCardContainer id="2fc09761-7689-11dc-a568-7984efa6d7c4" contentsMayScroll="true" loadViewOnlyOnDemand="true">
+                      <cards>
+                        <OTUDLCompoundDoc id="2fc09760-7689-11dc-a568-7984efa6d7c4" name="%2fc09760-7689-11dc-a568-7984efa6d7c4">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle">Engage</div>
+                                  Where do you think the water you drink comes from?
+                                  <p />
+                                  <img src="http://udl.concord.org/share/Clouds/waterglass.jpg" />
+                                  <p />
+                                  Image by Flickr user bram app: http://flickr.com/photos/bramapp/266010360/
+                                  <br />
+                                  Used with permission: http://creativecommons.org/licenses/by-nc-nd/2.0/
+                                  <p />
+                                  In this activity, you will [need text here].
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                        </OTUDLCompoundDoc>
+                        <OTUDLCompoundDoc id="743b9116-7689-11dc-a568-7984efa6d7c4" name="%743b9116-7689-11dc-a568-7984efa6d7c4">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle">Explore</div>
+                                  The water in the oceans is salty, and you cannot drink it.
+                                  <p />
+                                  1. Most of the water on earth is contained in the world's oceans.
+                                  <p />
+                                  In the Drawing Tool below, a giant puddle of water is shown, which represents all the water in the oceans. If all the snow and ice in the world melted into a puddle next to this one, how big would this other puddle be? Next to the graphic of the ocean water, use the Drawing Tool to draw what you think the size of this snow and ice puddle would be in relation to the ocean.  This stamp represents the amount of salt water in all the oceans of the Earth.
+                                  <br />
+                                  <object refid="9dc20f57-7689-11dc-a568-7984efa6d7c4" />
+                                  <p />
+                                  [ART: Background Image, Ocean]
+                                  <p />
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                          <documentRefs>
+                            <OTDrawingTool2 id="9dc20f57-7689-11dc-a568-7984efa6d7c4" name="Draw tool" />
+                          </documentRefs>
+                        </OTUDLCompoundDoc>
+                        <OTUDLCompoundDoc id="af556b48-7689-11dc-a568-7984efa6d7c4" name="%af556b48-7689-11dc-a568-7984efa6d7c4">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle-continued" />
+                                  2. Now check your prediction. A stamp has been added to the Drawing Tool that represents all the fresh water on Earth. Fresh water makes up less than 4% of all the water on Earth. How does that compare to your prediction?
+                                  <br />
+                                  <object refid="ccb0867a-7689-11dc-a568-7984efa6d7c4" />
+                                  <p />
+                                  [ART: Background image, Ice and Snow]
+                                  <p />
+                                  3. Ice and snow account for less than 2% of the water on earth. How much of the fresh water on Earth is in liquid form? Draw the size of the puddle next to the graphic of the ice and snow puzzle.
+                                  <br />
+                                  <object refid="d89e1d3b-7689-11dc-a568-7984efa6d7c4" />
+                                  <p />
+                                  4. Now check your prediction. A stamp has been added to the Drawing Tool that represents all the liquid fresh water on Earth, which is found in lakes, streams and under the ground. Although snow and ice only account for less than 2% of all the water on earth, they store the majority of the earth's fresh water (69%). How did the size of the stamp compare with your predicted size?
+                                  <p />
+                                  5. What other forms does the freshwater take?
+                                  <br />
+                                  <object refid="e3bbb9cc-7689-11dc-a568-7984efa6d7c4" />
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                          <documentRefs>
+                            <OTText id="ccb0867a-7689-11dc-a568-7984efa6d7c4" name="Text field" />
+                            <OTDrawingTool2 id="d89e1d3b-7689-11dc-a568-7984efa6d7c4" name="Draw tool" />
+                            <OTText id="e3bbb9cc-7689-11dc-a568-7984efa6d7c4" name="Text field" />
+                          </documentRefs>
+                        </OTUDLCompoundDoc>
+                        <OTUDLCompoundDoc id="ee43a60d-7689-11dc-a568-7984efa6d7c4" name="%ee43a60d-7689-11dc-a568-7984efa6d7c4">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle">Explain</div>
+                                  Most of the water on the Earth (over 96%) is in the oceans, seas and bays, and is salty. We can't drink that water, or use it for agriculture, and we don't use saltwater in our homes. That leaves less than 4% of the water for use by humans and many plants and animals. And half of that water is permanently frozen! The fresh water available for human use is limited, and it is important to conserve our fresh water and protect it from being wasted or polluted.
+                                  <p />
+                                  Why haven't we run out of water already? Well, the answer is clouds. Clouds are an important part of the water cycle, a process that recycles water. It helps get water from the ocean back into fresh water we can drink!
+                                  <p />
+                                  Water vapor, the form of water that is a gas, is released by plants (transpiration) and evaporates from lakes, the ocean and the surface of the Earth.
+                                  <p />
+                                  <img src="http://udl.concord.org/share/Clouds/evaporation.png" />
+                                  <p />
+                                  When conditions are right, water turns back into a liquid in the form of tiny droplets.
+                                  <p />
+                                  <img src="http://udl.concord.org/share/Clouds/condensation.png" />
+                                  <p />
+                                  As the tiny droplets form, they start to clump together and increase in size. When the droplets are big enough, they fall to the ground as precipitation.
+                                  <p />
+                                  <img src="http://udl.concord.org/share/Clouds/precipitation.png" />
+                                  <p />
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                        </OTUDLCompoundDoc>
+                        <OTUDLCompoundDoc id="7e265d8f-768a-11dc-a568-7984efa6d7c4" name="%7e265d8f-768a-11dc-a568-7984efa6d7c4">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle-continued" />
+                                  Now that you've taken a close look at the water on the Earth, why do you say we need clouds?
+                                  <br />
+                                  <object refid="47b17a5e-768a-11dc-a568-7984efa6d7c4" />
+                                  <p />
+                                  L5: Write your response in the box below.
+                                  <br />
+                                  L4: What part do clouds play in the water cycle?
+                                  <br />
+                                  L3: Without clouds there would be no... and we wouldn't have any ... for drinking.
+                                  <br />
+                                  L2: Without clouds there would be no (sunshine, rain and snow, oceans) and we wouldn't have any fresh water for drinking.
+                                  <br />
+                                  L1: Without clouds there would be no rain and snow and we wouldn't have any fresh water for drinking.
+                                  <br />
+                                  <p />
+                                  You have now completed the
+                                  <b>Water</b>
+                                  activity.
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                          <documentRefs>
+                            <OTText id="47b17a5e-768a-11dc-a568-7984efa6d7c4" name="Text field" />
+                          </documentRefs>
+                        </OTUDLCompoundDoc>
+                      </cards>
+                      <currentCard>
+                        <object refid="2fc09760-7689-11dc-a568-7984efa6d7c4" />
+                      </currentCard>
+                      <viewedCards>
+                        <object refid="2fc09760-7689-11dc-a568-7984efa6d7c4" />
+                        <object refid="2fc09760-7689-11dc-a568-7984efa6d7c4" />
+                        <object refid="743b9116-7689-11dc-a568-7984efa6d7c4" />
+                        <object refid="af556b48-7689-11dc-a568-7984efa6d7c4" />
+                        <object refid="ee43a60d-7689-11dc-a568-7984efa6d7c4" />
+                        <object refid="7e265d8f-768a-11dc-a568-7984efa6d7c4" />
+                      </viewedCards>
+                    </OTCardContainer>
+                  </content>
+                  <header>
+                    <OTUDLCompoundDoc id="2fc09762-7689-11dc-a568-7984efa6d7c4" name="%2fc09762-7689-11dc-a568-7984efa6d7c4">
+                      <bodyText>
+                        <div class="title">Water</div>
+                      </bodyText>
+                    </OTUDLCompoundDoc>
+                  </header>
+                  <footer>
+                    <OTUDLCompoundDoc id="2fc0e583-7689-11dc-a568-7984efa6d7c4" name="%2fc0e583-7689-11dc-a568-7984efa6d7c4">
+                      <documentRefs>
+                        <OTUDLMenu id="2fc2e155-7689-11dc-a568-7984efa6d7c4">
+                          <cardContainer>
+                            <object refid="2fc09761-7689-11dc-a568-7984efa6d7c4" />
+                          </cardContainer>
+                          <menuRule>
+                            <object refid="${page-rule}" />
+                          </menuRule>
+                        </OTUDLMenu>
+                        <object refid="${menu-horizontal-circle}" />
+                      </documentRefs>
+                      <bodyText>
+                        <div align="center">
+                          <table>
+                            <tr>
+                              <td>
+                                <object refid="2fc2e155-7689-11dc-a568-7984efa6d7c4" viewid="2767fe20-6c7d-11dc-8314-0800200c9a66!/menu-horizontal-circle" />
+                              </td>
+                            </tr>
+                          </table>
+                        </div>
+                      </bodyText>
+                    </OTUDLCompoundDoc>
+                  </footer>
+                  <north>
+                    <object refid="2fc09762-7689-11dc-a568-7984efa6d7c4" />
+                  </north>
+                  <center>
+                    <object refid="2fc09761-7689-11dc-a568-7984efa6d7c4" />
+                  </center>
+                  <south>
+                    <object refid="2fc0e583-7689-11dc-a568-7984efa6d7c4" />
+                  </south>
+                </OTUDLSection>
+                <OTUDLSection id="56250340-768b-11dc-a568-7984efa6d7c4" name="Activity 2" isComputerBased="true" isIntroduction="false" isMath="false" isPosttest="false" isPretest="false" isReading="false" isWrapup="false">
+                  <content>
+                    <OTCardContainer id="56252a52-768b-11dc-a568-7984efa6d7c4" contentsMayScroll="true" loadViewOnlyOnDemand="true">
+                      <cards>
+                        <OTUDLCompoundDoc id="56250341-768b-11dc-a568-7984efa6d7c4" name="%56250341-768b-11dc-a568-7984efa6d7c4">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle">New page</div>
+                                  New page content
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                        </OTUDLCompoundDoc>
+                      </cards>
+                      <currentCard>
+                        <object refid="56250341-768b-11dc-a568-7984efa6d7c4" />
+                      </currentCard>
+                      <viewedCards>
+                        <object refid="56250341-768b-11dc-a568-7984efa6d7c4" />
+                        <object refid="56250341-768b-11dc-a568-7984efa6d7c4" />
+                      </viewedCards>
+                    </OTCardContainer>
+                  </content>
+                  <header>
+                    <OTUDLCompoundDoc id="56252a53-768b-11dc-a568-7984efa6d7c4" name="%56252a53-768b-11dc-a568-7984efa6d7c4">
+                      <bodyText>
+                        <div class="title">Activity 2</div>
+                      </bodyText>
+                    </OTUDLCompoundDoc>
+                  </header>
+                  <footer>
+                    <OTUDLCompoundDoc id="56252a54-768b-11dc-a568-7984efa6d7c4" name="%56252a54-768b-11dc-a568-7984efa6d7c4">
+                      <documentRefs>
+                        <OTUDLMenu id="5626b0f6-768b-11dc-a568-7984efa6d7c4">
+                          <cardContainer>
+                            <object refid="56252a52-768b-11dc-a568-7984efa6d7c4" />
+                          </cardContainer>
+                          <menuRule>
+                            <object refid="${page-rule}" />
+                          </menuRule>
+                        </OTUDLMenu>
+                        <object refid="${menu-horizontal-circle}" />
+                      </documentRefs>
+                      <bodyText>
+                        <div align="center">
+                          <table>
+                            <tr>
+                              <td>
+                                <object refid="5626b0f6-768b-11dc-a568-7984efa6d7c4" viewid="2767fe20-6c7d-11dc-8314-0800200c9a66!/menu-horizontal-circle" />
+                              </td>
+                            </tr>
+                          </table>
+                        </div>
+                      </bodyText>
+                    </OTUDLCompoundDoc>
+                  </footer>
+                  <north>
+                    <object refid="56252a53-768b-11dc-a568-7984efa6d7c4" />
+                  </north>
+                  <center>
+                    <object refid="56252a52-768b-11dc-a568-7984efa6d7c4" />
+                  </center>
+                  <south>
+                    <object refid="56252a54-768b-11dc-a568-7984efa6d7c4" />
+                  </south>
+                </OTUDLSection>
+                <OTUDLSection id="5ae8a5d7-768b-11dc-a568-7984efa6d7c4" name="Activity 3" isComputerBased="true" isIntroduction="false" isMath="false" isPosttest="false" isPretest="false" isReading="false" isWrapup="false">
+                  <content>
+                    <OTCardContainer id="5ae8a5d9-768b-11dc-a568-7984efa6d7c4" contentsMayScroll="true" loadViewOnlyOnDemand="true">
+                      <cards>
+                        <OTUDLCompoundDoc id="5ae8a5d8-768b-11dc-a568-7984efa6d7c4" name="%5ae8a5d8-768b-11dc-a568-7984efa6d7c4">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle">New page</div>
+                                  New page content
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                        </OTUDLCompoundDoc>
+                      </cards>
+                      <currentCard>
+                        <object refid="5ae8a5d8-768b-11dc-a568-7984efa6d7c4" />
+                      </currentCard>
+                      <viewedCards>
+                        <object refid="5ae8a5d8-768b-11dc-a568-7984efa6d7c4" />
+                        <object refid="5ae8a5d8-768b-11dc-a568-7984efa6d7c4" />
+                      </viewedCards>
+                    </OTCardContainer>
+                  </content>
+                  <header>
+                    <OTUDLCompoundDoc id="5ae8a5da-768b-11dc-a568-7984efa6d7c4" name="%5ae8a5da-768b-11dc-a568-7984efa6d7c4">
+                      <bodyText>
+                        <div class="title">Activity 3</div>
+                      </bodyText>
+                    </OTUDLCompoundDoc>
+                  </header>
+                  <footer>
+                    <OTUDLCompoundDoc id="5ae8a5db-768b-11dc-a568-7984efa6d7c4" name="%5ae8a5db-768b-11dc-a568-7984efa6d7c4">
+                      <documentRefs>
+                        <OTUDLMenu id="5aea2c7d-768b-11dc-a568-7984efa6d7c4">
+                          <cardContainer>
+                            <object refid="5ae8a5d9-768b-11dc-a568-7984efa6d7c4" />
+                          </cardContainer>
+                          <menuRule>
+                            <object refid="${page-rule}" />
+                          </menuRule>
+                        </OTUDLMenu>
+                        <object refid="${menu-horizontal-circle}" />
+                      </documentRefs>
+                      <bodyText>
+                        <div align="center">
+                          <table>
+                            <tr>
+                              <td>
+                                <object refid="5aea2c7d-768b-11dc-a568-7984efa6d7c4" viewid="2767fe20-6c7d-11dc-8314-0800200c9a66!/menu-horizontal-circle" />
+                              </td>
+                            </tr>
+                          </table>
+                        </div>
+                      </bodyText>
+                    </OTUDLCompoundDoc>
+                  </footer>
+                  <north>
+                    <object refid="5ae8a5da-768b-11dc-a568-7984efa6d7c4" />
+                  </north>
+                  <center>
+                    <object refid="5ae8a5d9-768b-11dc-a568-7984efa6d7c4" />
+                  </center>
+                  <south>
+                    <object refid="5ae8a5db-768b-11dc-a568-7984efa6d7c4" />
+                  </south>
+                </OTUDLSection>
+                <OTUDLSection id="5f56ae5e-768b-11dc-a568-7984efa6d7c4" name="It's raining, it's pouring" isComputerBased="true" isIntroduction="false" isMath="false" isPosttest="false" isPretest="false" isReading="false" isWrapup="false">
+                  <content>
+                    <OTCardContainer id="5f56ae60-768b-11dc-a568-7984efa6d7c4" contentsMayScroll="true" loadViewOnlyOnDemand="true">
+                      <cards>
+                        <OTUDLCompoundDoc id="5f56ae5f-768b-11dc-a568-7984efa6d7c4" name="%5f56ae5f-768b-11dc-a568-7984efa6d7c4">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle">Engage</div>
+                                  Why do you think it rains more on the coast than inland?
+                                  <p />
+                                  <img src="http://udl.concord.org/share/Clouds/oceanrain.jpg" />
+                                  <p />
+                                  Image by Flickr user Mil: http://flickr.com/photos/danw/237415246/
+                                  <br />
+                                  Used with permission: http://creativecommons.org/licenses/by-nc/2.0/
+                                  <p />
+                                  In this activity, you will [need text here].
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                        </OTUDLCompoundDoc>
+                        <OTUDLCompoundDoc id="497bdc85-768e-11dc-a568-7984efa6d7c4" name="%497bdc85-768e-11dc-a568-7984efa6d7c4">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle">Materials</div>
+                                  <ul>
+                                    <li>Two plastic bowls filled with sand</li>
+                                    <li>Water</li>
+                                    <li>Incandescent lamp</li>
+                                    <li>Plastic wrap</li>
+                                    <li>Relative humidity sensor (optional)</li>
+                                    <li>Plastic bag (optional)</li>
+                                  </ul>
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                        </OTUDLCompoundDoc>
+                        <OTUDLCompoundDoc id="8100f736-768e-11dc-a568-7984efa6d7c4" name="%8100f736-768e-11dc-a568-7984efa6d7c4">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle">Explore</div>
+                                  1. Prepare two plastic bowls filled with sand. Add water to the sand in one bowl, and leave the other dry.
+                                  <p />
+                                  2. Label the bowl with wet sand "coast" and the bowl with dry sand "inland."
+                                  <p />
+                                  3. Stretch a piece of plastic wrap over the tops of both bowls.
+                                  <p />
+                                  4. Place the bowls under the lamp.
+                                  <p />
+                                  5. Observe the plastic wrap. What is the difference between the two bowls?
+                                  <br />
+                                  <object refid="91e74a47-768e-11dc-a568-7984efa6d7c4" />
+                                  <p />
+                                  L5: Write your response in the box below.
+                                  <br />
+                                  L4: Compare the plastic wrap between the two bowls.
+                                  <br />
+                                  L3: The plastic wrap above the "coast" bowl looks ... and above the "inland" bowl looks...
+                                  <br />
+                                  L2: The plastic wrap above the (*"coast," "inland") bowl looks cloudy.
+                                  <br />
+                                  L1: The plastic wrap above the "coast" bowl looks cloudy.
+                                  <br />
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                          <documentRefs>
+                            <OTText id="91e74a47-768e-11dc-a568-7984efa6d7c4" name="Text field" />
+                          </documentRefs>
+                        </OTUDLCompoundDoc>
+                        <OTUDLCompoundDoc id="e5655848-768e-11dc-a568-7984efa6d7c4" name="%e5655848-768e-11dc-a568-7984efa6d7c4">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle">Optional</div>
+                                  6. Put the "inland" bowl in a plastic bag with the relative humidity sensor.
+                                  <p />
+                                  7. Collect data below. [DATA COLLECTION]
+                                  <p />
+                                  8. Put the "coast" bowl in a plastic bag with the relative humidity sensor.
+                                  <p />
+                                  9. Predict what the relative humidity will be like in near the "coast" bowl. [PREDICTION: DATA COLLECTION]
+                                  <p />
+                                  What was the difference between the air near the "coast" bowl and near the "inland" bowl?
+                                  <br />
+                                  <object refid="f715b219-768e-11dc-a568-7984efa6d7c4" />
+                                  <p />
+                                  L5: Write your response in the box below.
+                                  <br />
+                                  L4: Compare the relative humidities above each bowl.
+                                  <br />
+                                  L3: The air near the ... bowl was more humid.
+                                  <br />
+                                  L2: The air near the (*coast, inland) bowl was more humid.
+                                  <br />
+                                  L1: The air near the coast bowl was more humid.
+                                  <p />
+                                  Why do you think there is that difference?
+                                  <br />
+                                  <object refid="241f3c9a-768f-11dc-a568-7984efa6d7c4" />
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                          <documentRefs>
+                            <OTText id="f715b219-768e-11dc-a568-7984efa6d7c4" name="Text field" />
+                            <OTText id="241f3c9a-768f-11dc-a568-7984efa6d7c4" name="Text field" />
+                          </documentRefs>
+                        </OTUDLCompoundDoc>
+                        <OTUDLCompoundDoc id="3629010b-768f-11dc-a568-7984efa6d7c4" name="%3629010b-768f-11dc-a568-7984efa6d7c4">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle">Explain</div>
+                                  The air near the bowl representing the coast was more humid. That means there was more water in the air. As the lamp warmed up the bowls, adding heat energy, some of the water in the sand evaporated. When it condensed on the plastic wrap, you could see it as a cloudy film. This cloudy film represents a cloud.
+                                  <p />
+                                  On the Earth, there is generally more humidity near the coast of oceans and very large lakes. The water vapor in the air can form water droplets in clouds, and eventually fall to the ground as precipitation in the form of rain or snow. For this reason, clouds form more often near large bodies of water and those areas generally receive more precipitation.
+                                  <p />
+                                  [Note: this is very didactic and doesn't ask kids to share their explanation.]
+                                  <p />
+                                  You have now complted the
+                                  <b>It's raining, it's pouring</b>
+                                  activity.
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                        </OTUDLCompoundDoc>
+                      </cards>
+                      <currentCard>
+                        <object refid="3629010b-768f-11dc-a568-7984efa6d7c4" />
+                      </currentCard>
+                      <viewedCards>
+                        <object refid="5f56ae5f-768b-11dc-a568-7984efa6d7c4" />
+                        <object refid="5f56ae5f-768b-11dc-a568-7984efa6d7c4" />
+                        <object refid="497bdc85-768e-11dc-a568-7984efa6d7c4" />
+                        <object refid="8100f736-768e-11dc-a568-7984efa6d7c4" />
+                        <object refid="e5655848-768e-11dc-a568-7984efa6d7c4" />
+                        <object refid="3629010b-768f-11dc-a568-7984efa6d7c4" />
+                      </viewedCards>
+                    </OTCardContainer>
+                  </content>
+                  <header>
+                    <OTUDLCompoundDoc id="5f56ae61-768b-11dc-a568-7984efa6d7c4" name="%5f56ae61-768b-11dc-a568-7984efa6d7c4">
+                      <bodyText>
+                        <div class="title">It's raining, it's pouring</div>
+                      </bodyText>
+                    </OTUDLCompoundDoc>
+                  </header>
+                  <footer>
+                    <OTUDLCompoundDoc id="5f56ae62-768b-11dc-a568-7984efa6d7c4" name="%5f56ae62-768b-11dc-a568-7984efa6d7c4">
+                      <documentRefs>
+                        <OTUDLMenu id="5f58f854-768b-11dc-a568-7984efa6d7c4">
+                          <cardContainer>
+                            <object refid="5f56ae60-768b-11dc-a568-7984efa6d7c4" />
+                          </cardContainer>
+                          <menuRule>
+                            <object refid="${page-rule}" />
+                          </menuRule>
+                        </OTUDLMenu>
+                        <object refid="${menu-horizontal-circle}" />
+                      </documentRefs>
+                      <bodyText>
+                        <div align="center">
+                          <table>
+                            <tr>
+                              <td>
+                                <object refid="5f58f854-768b-11dc-a568-7984efa6d7c4" viewid="2767fe20-6c7d-11dc-8314-0800200c9a66!/menu-horizontal-circle" />
+                              </td>
+                            </tr>
+                          </table>
+                        </div>
+                      </bodyText>
+                    </OTUDLCompoundDoc>
+                  </footer>
+                  <north>
+                    <object refid="5f56ae61-768b-11dc-a568-7984efa6d7c4" />
+                  </north>
+                  <center>
+                    <object refid="5f56ae60-768b-11dc-a568-7984efa6d7c4" />
+                  </center>
+                  <south>
+                    <object refid="5f56ae62-768b-11dc-a568-7984efa6d7c4" />
+                  </south>
+                </OTUDLSection>
+                <OTUDLSection id="633bfee5-768b-11dc-a568-7984efa6d7c4" name="Story " isComputerBased="false" isIntroduction="false" isMath="false" isPosttest="false" isPretest="false" isReading="true" isWrapup="false">
+                  <content>
+                    <OTCardContainer id="633bfee7-768b-11dc-a568-7984efa6d7c4" contentsMayScroll="true" loadViewOnlyOnDemand="true">
+                      <cards>
+                        <OTUDLCompoundDoc id="633bfee6-768b-11dc-a568-7984efa6d7c4" name="%633bfee6-768b-11dc-a568-7984efa6d7c4">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle">New page</div>
+                                  New page content
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                        </OTUDLCompoundDoc>
+                      </cards>
+                      <currentCard>
+                        <object refid="633bfee6-768b-11dc-a568-7984efa6d7c4" />
+                      </currentCard>
+                      <viewedCards>
+                        <object refid="633bfee6-768b-11dc-a568-7984efa6d7c4" />
+                        <object refid="633bfee6-768b-11dc-a568-7984efa6d7c4" />
+                      </viewedCards>
+                    </OTCardContainer>
+                  </content>
+                  <header>
+                    <OTUDLCompoundDoc id="633c25f8-768b-11dc-a568-7984efa6d7c4" name="%633c25f8-768b-11dc-a568-7984efa6d7c4">
+                      <bodyText>
+                        <div class="title">Story</div>
+                      </bodyText>
+                    </OTUDLCompoundDoc>
+                  </header>
+                  <footer>
+                    <OTUDLCompoundDoc id="633c25f9-768b-11dc-a568-7984efa6d7c4" name="%633c25f9-768b-11dc-a568-7984efa6d7c4">
+                      <documentRefs>
+                        <OTUDLMenu id="633dfabb-768b-11dc-a568-7984efa6d7c4">
+                          <cardContainer>
+                            <object refid="633bfee7-768b-11dc-a568-7984efa6d7c4" />
+                          </cardContainer>
+                          <menuRule>
+                            <object refid="${page-rule}" />
+                          </menuRule>
+                        </OTUDLMenu>
+                        <object refid="${menu-horizontal-circle}" />
+                      </documentRefs>
+                      <bodyText>
+                        <div align="center">
+                          <table>
+                            <tr>
+                              <td>
+                                <object refid="633dfabb-768b-11dc-a568-7984efa6d7c4" viewid="2767fe20-6c7d-11dc-8314-0800200c9a66!/menu-horizontal-circle" />
+                              </td>
+                            </tr>
+                          </table>
+                        </div>
+                      </bodyText>
+                    </OTUDLCompoundDoc>
+                  </footer>
+                  <north>
+                    <object refid="633c25f8-768b-11dc-a568-7984efa6d7c4" />
+                  </north>
+                  <center>
+                    <object refid="633bfee7-768b-11dc-a568-7984efa6d7c4" />
+                  </center>
+                  <south>
+                    <object refid="633c25f9-768b-11dc-a568-7984efa6d7c4" />
+                  </south>
+                </OTUDLSection>
+                <OTUDLSection id="67c9c46c-768b-11dc-a568-7984efa6d7c4" name="Globe toss" isComputerBased="false" isIntroduction="false" isMath="true" isPosttest="false" isPretest="false" isReading="false" isWrapup="false">
+                  <content>
+                    <OTCardContainer id="67c9eb7e-768b-11dc-a568-7984efa6d7c4" contentsMayScroll="true" loadViewOnlyOnDemand="true">
+                      <cards>
+                        <OTUDLCompoundDoc id="67c9eb7d-768b-11dc-a568-7984efa6d7c4" name="%67c9eb7d-768b-11dc-a568-7984efa6d7c4">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle">Engage</div>
+                                  Where is the fresh water?
+                                  <p />
+                                  <img src="http://udl.concord.org/share/Clouds/icecaps_earth.png" />
+                                  <p />
+                                  In this activity, you will determine what percent of the Earth is water.
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                        </OTUDLCompoundDoc>
+                        <OTUDLCompoundDoc id="b21d7941-768b-11dc-a568-7984efa6d7c4" name="%b21d7941-768b-11dc-a568-7984efa6d7c4">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle">Explore</div>
+                                  You need a soft globe for this activity.
+                                  <p />
+                                  <img src="http://udl.concord.org/share/Clouds/icecaps_earth.png" />
+                                  <p />
+                                  Note: work in groups of [add numbere here -- how many in each group?]
+                                  <p />
+                                  1. Have one member of your group throw the globe into the air and catch it.
+                                  <p />
+                                  2. Note where your thumb lands on the globe. Is it water or land?
+                                  <br />
+                                  <object refid="3309c6d2-768c-11dc-a568-7984efa6d7c4" />
+                                  <p />
+                                  3. Make a table for 100 observations and note whether your first observation is water or land.
+                                  <p />
+                                  4. Repeat 100 times.
+                                  <p />
+                                  5. What percent of your observations were water?
+                                  <br />
+                                  <object refid="46ab1b33-768c-11dc-a568-7984efa6d7c4" />
+                                  <p />
+                                  What percent were land?
+                                  <br />
+                                  <object refid="49cb6e04-768c-11dc-a568-7984efa6d7c4" />
+                                  <p />
+                                  6. How does that compare to the proportions of water and land distribution on the earth?
+                                  <p />
+                                  You have now completed the
+                                  <b>Globe toss</b>
+                                  activity.
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                          <documentRefs>
+                            <OTText id="3309c6d2-768c-11dc-a568-7984efa6d7c4" name="Text field" />
+                            <OTText id="46ab1b33-768c-11dc-a568-7984efa6d7c4" name="Text field" />
+                            <OTText id="49cb6e04-768c-11dc-a568-7984efa6d7c4" name="Text field" />
+                          </documentRefs>
+                        </OTUDLCompoundDoc>
+                      </cards>
+                      <currentCard>
+                        <object refid="b21d7941-768b-11dc-a568-7984efa6d7c4" />
+                      </currentCard>
+                      <viewedCards>
+                        <object refid="67c9eb7d-768b-11dc-a568-7984efa6d7c4" />
+                        <object refid="67c9eb7d-768b-11dc-a568-7984efa6d7c4" />
+                        <object refid="b21d7941-768b-11dc-a568-7984efa6d7c4" />
+                      </viewedCards>
+                    </OTCardContainer>
+                  </content>
+                  <header>
+                    <OTUDLCompoundDoc id="67c9eb7f-768b-11dc-a568-7984efa6d7c4" name="%67c9eb7f-768b-11dc-a568-7984efa6d7c4">
+                      <bodyText>
+                        <div class="title">Globe toss</div>
+                      </bodyText>
+                    </OTUDLCompoundDoc>
+                  </header>
+                  <footer>
+                    <OTUDLCompoundDoc id="67c9eb80-768b-11dc-a568-7984efa6d7c4" name="%67c9eb80-768b-11dc-a568-7984efa6d7c4">
+                      <documentRefs>
+                        <OTUDLMenu id="67cbe752-768b-11dc-a568-7984efa6d7c4">
+                          <cardContainer>
+                            <object refid="67c9eb7e-768b-11dc-a568-7984efa6d7c4" />
+                          </cardContainer>
+                          <menuRule>
+                            <object refid="${page-rule}" />
+                          </menuRule>
+                        </OTUDLMenu>
+                        <object refid="${menu-horizontal-circle}" />
+                      </documentRefs>
+                      <bodyText>
+                        <div align="center">
+                          <table>
+                            <tr>
+                              <td>
+                                <object refid="67cbe752-768b-11dc-a568-7984efa6d7c4" viewid="2767fe20-6c7d-11dc-8314-0800200c9a66!/menu-horizontal-circle" />
+                              </td>
+                            </tr>
+                          </table>
+                        </div>
+                      </bodyText>
+                    </OTUDLCompoundDoc>
+                  </footer>
+                  <north>
+                    <object refid="67c9eb7f-768b-11dc-a568-7984efa6d7c4" />
+                  </north>
+                  <center>
+                    <object refid="67c9eb7e-768b-11dc-a568-7984efa6d7c4" />
+                  </center>
+                  <south>
+                    <object refid="67c9eb80-768b-11dc-a568-7984efa6d7c4" />
+                  </south>
+                </OTUDLSection>
+                <OTUDLSection id="85963f13-768b-11dc-a568-7984efa6d7c4" name="Wrapping up" isComputerBased="false" isIntroduction="false" isMath="false" isPosttest="false" isPretest="false" isReading="false" isWrapup="true">
+                  <content>
+                    <OTCardContainer id="85963f15-768b-11dc-a568-7984efa6d7c4" contentsMayScroll="true" loadViewOnlyOnDemand="true">
+                      <cards>
+                        <OTUDLCompoundDoc id="85963f14-768b-11dc-a568-7984efa6d7c4" name="%85963f14-768b-11dc-a568-7984efa6d7c4">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle">New page</div>
+                                  New page content
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                        </OTUDLCompoundDoc>
+                      </cards>
+                      <currentCard>
+                        <object refid="85963f14-768b-11dc-a568-7984efa6d7c4" />
+                      </currentCard>
+                      <viewedCards>
+                        <object refid="85963f14-768b-11dc-a568-7984efa6d7c4" />
+                        <object refid="85963f14-768b-11dc-a568-7984efa6d7c4" />
+                      </viewedCards>
+                    </OTCardContainer>
+                  </content>
+                  <header>
+                    <OTUDLCompoundDoc id="85963f16-768b-11dc-a568-7984efa6d7c4" name="%85963f16-768b-11dc-a568-7984efa6d7c4">
+                      <bodyText>
+                        <div class="title">Wrapping up</div>
+                      </bodyText>
+                    </OTUDLCompoundDoc>
+                  </header>
+                  <footer>
+                    <OTUDLCompoundDoc id="85966627-768b-11dc-a568-7984efa6d7c4" name="%85966627-768b-11dc-a568-7984efa6d7c4">
+                      <documentRefs>
+                        <OTUDLMenu id="859861f9-768b-11dc-a568-7984efa6d7c4">
+                          <cardContainer>
+                            <object refid="85963f15-768b-11dc-a568-7984efa6d7c4" />
+                          </cardContainer>
+                          <menuRule>
+                            <object refid="${page-rule}" />
+                          </menuRule>
+                        </OTUDLMenu>
+                        <object refid="${menu-horizontal-circle}" />
+                      </documentRefs>
+                      <bodyText>
+                        <div align="center">
+                          <table>
+                            <tr>
+                              <td>
+                                <object refid="859861f9-768b-11dc-a568-7984efa6d7c4" viewid="2767fe20-6c7d-11dc-8314-0800200c9a66!/menu-horizontal-circle" />
+                              </td>
+                            </tr>
+                          </table>
+                        </div>
+                      </bodyText>
+                    </OTUDLCompoundDoc>
+                  </footer>
+                  <north>
+                    <object refid="85963f16-768b-11dc-a568-7984efa6d7c4" />
+                  </north>
+                  <center>
+                    <object refid="85963f15-768b-11dc-a568-7984efa6d7c4" />
+                  </center>
+                  <south>
+                    <object refid="85966627-768b-11dc-a568-7984efa6d7c4" />
+                  </south>
+                </OTUDLSection>
+                <OTUDLSection id="8ab2d71a-768b-11dc-a568-7984efa6d7c4" name="Post-test" isComputerBased="false" isIntroduction="false" isMath="false" isPosttest="true" isPretest="false" isReading="false" isWrapup="false">
+                  <content>
+                    <OTCardContainer id="8ab2fe2c-768b-11dc-a568-7984efa6d7c4" contentsMayScroll="true" loadViewOnlyOnDemand="true">
+                      <cards>
+                        <OTUDLCompoundDoc id="8ab2d71b-768b-11dc-a568-7984efa6d7c4" name="%8ab2d71b-768b-11dc-a568-7984efa6d7c4">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle">New page</div>
+                                  New page content
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                        </OTUDLCompoundDoc>
+                      </cards>
+                      <currentCard>
+                        <object refid="8ab2d71b-768b-11dc-a568-7984efa6d7c4" />
+                      </currentCard>
+                      <viewedCards>
+                        <object refid="8ab2d71b-768b-11dc-a568-7984efa6d7c4" />
+                        <object refid="8ab2d71b-768b-11dc-a568-7984efa6d7c4" />
+                      </viewedCards>
+                    </OTCardContainer>
+                  </content>
+                  <header>
+                    <OTUDLCompoundDoc id="8ab2fe2d-768b-11dc-a568-7984efa6d7c4" name="%8ab2fe2d-768b-11dc-a568-7984efa6d7c4">
+                      <bodyText>
+                        <div class="title">Post-test</div>
+                      </bodyText>
+                    </OTUDLCompoundDoc>
+                  </header>
+                  <footer>
+                    <OTUDLCompoundDoc id="8ab2fe2e-768b-11dc-a568-7984efa6d7c4" name="%8ab2fe2e-768b-11dc-a568-7984efa6d7c4">
+                      <documentRefs>
+                        <OTUDLMenu id="8ab4d1f0-768b-11dc-a568-7984efa6d7c4">
+                          <cardContainer>
+                            <object refid="8ab2fe2c-768b-11dc-a568-7984efa6d7c4" />
+                          </cardContainer>
+                          <menuRule>
+                            <object refid="${page-rule}" />
+                          </menuRule>
+                        </OTUDLMenu>
+                        <object refid="${menu-horizontal-circle}" />
+                      </documentRefs>
+                      <bodyText>
+                        <div align="center">
+                          <table>
+                            <tr>
+                              <td>
+                                <object refid="8ab4d1f0-768b-11dc-a568-7984efa6d7c4" viewid="2767fe20-6c7d-11dc-8314-0800200c9a66!/menu-horizontal-circle" />
+                              </td>
+                            </tr>
+                          </table>
+                        </div>
+                      </bodyText>
+                    </OTUDLCompoundDoc>
+                  </footer>
+                  <north>
+                    <object refid="8ab2fe2d-768b-11dc-a568-7984efa6d7c4" />
+                  </north>
+                  <center>
+                    <object refid="8ab2fe2c-768b-11dc-a568-7984efa6d7c4" />
+                  </center>
+                  <south>
+                    <object refid="8ab2fe2e-768b-11dc-a568-7984efa6d7c4" />
+                  </south>
+                </OTUDLSection>
+              </cards>
+              <currentCard>
+                <object refid="5f56ae5e-768b-11dc-a568-7984efa6d7c4" />
+              </currentCard>
+              <viewedCards>
+                <object refid="${section_1}" />
+                <object refid="${section_1}" />
+                <object refid="4b142e39-767f-11dc-a568-7984efa6d7c4" />
+                <object refid="2fc0704f-7689-11dc-a568-7984efa6d7c4" />
+                <object refid="56250340-768b-11dc-a568-7984efa6d7c4" />
+                <object refid="5ae8a5d7-768b-11dc-a568-7984efa6d7c4" />
+                <object refid="5f56ae5e-768b-11dc-a568-7984efa6d7c4" />
+                <object refid="633bfee5-768b-11dc-a568-7984efa6d7c4" />
+                <object refid="67c9c46c-768b-11dc-a568-7984efa6d7c4" />
+                <object refid="85963f13-768b-11dc-a568-7984efa6d7c4" />
+                <object refid="8ab2d71a-768b-11dc-a568-7984efa6d7c4" />
+              </viewedCards>
+            </OTCardContainer>
+          </content>
+          <script>
+            <OTScriptObject>
+              <variables>
+                <OTScriptVariable name="cardContainer">
+                  <reference>
+                    <object refid="${section-card-container}" />
+                  </reference>
+                </OTScriptVariable>
+                <OTScriptVariable name="system">
+                  <reference>
+                    <object refid="${system}" />
+                  </reference>
+                </OTScriptVariable>
+                <OTScriptVariable name="menuPageRule">
+                  <reference>
+                    <object refid="${page-rule}" />
+                  </reference>
+                </OTScriptVariable>
+                <OTScriptVariable name="sampleMenu">
+                  <reference>
+                    <object refid="${menu}" />
+                  </reference>
+                </OTScriptVariable>
+                <OTScriptVariable name="menuHorizontalView">
+                  <reference>
+                    <object refid="${menu-horizontal-circle}" />
+                  </reference>
+                </OTScriptVariable>
+              </variables>
+              <script>
+                <object refid="${authoring_script.js}" />
+              </script>
+              <scriptState />
+            </OTScriptObject>
+          </script>
+        </OTUDLContainer>
+      </root>
+      <library>
+        <OTUDLMenu local_id="menu">
+          <cardContainer>
+            <object refid="${section-card-container}" />
+          </cardContainer>
+          <menuRule>
+            <object refid="${section-rule}" />
+          </menuRule>
+        </OTUDLMenu>
+        <OTUDLMenu local_id="section-1-menu">
+          <cardContainer>
+            <object refid="${section-1-card-container}" />
+          </cardContainer>
+          <menuRule>
+            <object refid="${page-rule}" />
+          </menuRule>
+        </OTUDLMenu>
+        <OTSnapshotAlbum local_id="album" />
+        <OTDefinitionManager local_id="definition-manager">
+          <frame>
+            <OTFrame local_id="definition_frame" width="280" height="150" borderlessPopup="true" />
+          </frame>
+        </OTDefinitionManager>
+        <OTUDLMenuRule local_id="page-rule" jumpToViewedCard="true" stepAhead="true" />
+        <OTUDLMenuRule local_id="section-rule" jumpToAnyCard="true" />
+        <OTJavascript local_id="change_page.js">
+          <script>importClass(Packages.java.awt.event.ActionListener);
+						importClass(Packages.java.util.Vector);
+						importClass(Packages.org.concord.otrunk.udl3.OTQuestionList);
+						importClass(Packages.org.concord.framework.otrunk.OTObjectList);
+						importClass(Packages.javax.swing.JOptionPane);
+						
+						var numCards;
+						var currentcard;
+						var passwordfield;
+
+						var buttonHandler =
+						{
+								actionPerformed: function(evt)
+								{
+									if (passwordfield != null){
+									var passwordAttempt = passwordfield.getText();
+									if (passwordAttempt.equalsIgnoreCase(password.getText())){
+										cardContainer.setCurrentCard(card);
+										return;
+									} else {
+										JOptionPane.showMessageDialog(null, "Sorry, that's not the correct password.");
+										return;
+									}
+								}
+										cardContainer.setCurrentCard(card);
+								}
+						};
+						var buttonListener = new ActionListener(buttonHandler);
+
+						function init() {
+							button.addActionListener(buttonListener);
+
+							return true;
+						}
+
+						function save() {
+							button.removeActionListener(buttonListener);
+							return true;
+						}</script>
+        </OTJavascript>
+        <OTJavascript local_id="show_message.js">
+          <script>importClass(Packages.java.awt.event.ActionListener);
+						importClass(Packages.java.util.Vector);
+						importClass(Packages.org.concord.otrunk.udl3.OTQuestionList);
+						importClass(Packages.org.concord.framework.otrunk.OTObjectList);
+						importClass(Packages.javax.swing.JOptionPane);
+
+						var buttonHandler =
+						{
+								actionPerformed: function(evt)
+								{
+									var messageString = message.getText();
+									JOptionPane.showMessageDialog(null, messageString);
+								}
+						};
+						var buttonListener = new ActionListener(buttonHandler);
+
+						function init() {
+							button.addActionListener(buttonListener);
+
+							return true;
+						}
+
+						function save() {
+							button.removeActionListener(buttonListener);
+							return true;
+						}</script>
+        </OTJavascript>
+        <OTJavascript local_id="authoring_script.js">
+          <script>importClass(Packages.org.concord.framework.otrunk.OTChangeEvent);
+						importClass(Packages.org.concord.framework.otrunk.OTChangeListener);
+						importClass(Packages.org.concord.framework.otrunk.OTObject);
+						importClass(Packages.org.concord.framework.otrunk.OTObjectList);
+						importClass(Packages.org.concord.otrunk.ui.OTCardContainer);
+						importClass(Packages.org.concord.otrunk.udl3.OTUDLMenu);
+						importClass(Packages.java.lang.System);
+						importClass(Packages.org.concord.framework.otrunk.OTObjectList);
+						
+						
+						var pageHandler =
+						{
+							stateChanged: function(evt)
+							{
+								if (evt.getProperty().equalsIgnoreCase("coachStatements") &amp;&amp; evt.getOperation().equalsIgnoreCase("add")){
+									var statement = evt.getValue();
+									var statementDoc = statement.getStatement();
+									var statementText = statementDoc.getBodyText();
+									statementDoc.setBodyText("&lt;div class=\"buffer\"&gt;"+
+																"&lt;div class=\"border\"&gt;"+
+																	"&lt;div class=\"body\"&gt;"+
+																		statementText +
+																	"&lt;/div&gt;"+
+																"&lt;/div&gt;"+
+														"&lt;/div&gt;");
+								}
+							}
+						}
+						var pageListener = new OTChangeListener(pageHandler);
+						
+						var sectionHandler =
+						{
+							stateChanged: function(evt)
+							{
+								if (evt.getProperty().equalsIgnoreCase("name")){
+									var section = evt.getSource();
+									var header = section.getHeader();
+										
+										header.setBodyText("&lt;div class=\"title\"&gt;"+
+															section.getName() +
+														"&lt;/div&gt;");
+								}
+							}
+						}
+						
+						var sectionListener = new OTChangeListener(sectionHandler);
+						
+						var sectionContainerHandler =
+						{
+								stateChanged: function(evt)
+								{
+									if (evt.getProperty().equalsIgnoreCase("currentCard")){
+										var numCards = evt.getSource().getCards().size();
+										var section = evt.getSource().getCards().get(numCards-1);
+										section.getContent().addOTChangeListener(pageContainerListener);
+									}
+									if (evt.getProperty().equalsIgnoreCase("cards")) {
+										var numCards = evt.getSource().getCards().size();
+										var section = evt.getSource().getCards().get(numCards-1);
+										section.setName("Section "+numCards);
+										
+										var header = section.getHeader();
+										
+										header.setBodyText("&lt;div class=\"title\"&gt;"+
+															"Section " + numCards +
+														"&lt;/div&gt;");
+										
+										var doc = section.getContent().getCurrentCard();
+										
+										doc.setBodyText("&lt;div class=\"buffer\"&gt;"+
+															"&lt;div class=\"border\"&gt;"+
+																"&lt;div class=\"body\"&gt;"+
+																"&lt;div class=\"subtitle\"&gt;\n"+
+																		"New page"+
+																	"\n&lt;/div&gt;\n"+
+																	"New page content"+
+																"\n&lt;/div&gt;"+
+															"&lt;/div&gt;"+
+														"&lt;/div&gt;");
+										
+										pages.push(doc)	
+										pages[pages.length-1].addOTChangeListener(pageListener);
+														
+										var menu = doc.getOTObjectService().createObject(sampleMenu.otClass().getInstanceClass());
+										menu.setCardContainer(section.getContent());
+										menu.setMenuRule(menuPageRule);
+										
+										system.getLibrary().add(menu);
+										
+										var footer = section.getFooter();
+										
+										var otid = menu.getOTObjectService().getExternalID(menu);
+										var viewid = menu.getOTObjectService().getExternalID(menuHorizontalView);
+										
+										footer.setBodyText("&lt;div align=\"center\"&gt;" +
+															"&lt;table&gt;"+
+																	"&lt;tr&gt;"+
+																		"&lt;td&gt;"+
+																			"&lt;object refid=\""+otid+"\" viewid=\""+viewid+"\"/&gt;" +
+																		"&lt;/td&gt;"+
+																	"&lt;/tr&gt;"+
+															"&lt;/table&gt;"+
+															"&lt;/div&gt;");
+														
+										section.getContent().addOTChangeListener(pageContainerListener);
+										section.addOTChangeListener(sectionListener);
+									}
+								}
+						};
+						var sectionContainerListener = new OTChangeListener(sectionContainerHandler);
+						
+						var pageContainerHandler =
+						{
+								stateChanged: function(evt)
+								{
+									System.out.println(evt.getProperty());
+									if (evt.getProperty().equalsIgnoreCase("cards")) {
+										var numCards = evt.getSource().getCards().size();
+										var doc = evt.getSource().getCards().get(numCards-1);
+										doc.setBodyText("&lt;div class=\"buffer\"&gt;"+
+															"&lt;div class=\"border\"&gt;"+
+																"&lt;div class=\"body\"&gt;"+
+																"&lt;div class=\"subtitle\"&gt;\n"+
+																		"New page"+
+																	"\n&lt;/div&gt;\n"+
+																	"New page content"+
+																"\n&lt;/div&gt;"+
+															"&lt;/div&gt;"+
+														"&lt;/div&gt;");
+										pages.push(doc)	
+										pages[pages.length-1].addOTChangeListener(pageListener);
+									}
+								}
+						};
+						var pageContainerListener = new OTChangeListener(pageContainerHandler);
+						
+						var sections = [];
+						var sectionCardContainers = [];
+						var pages = [];
+						
+						function init() {
+							cardContainer.addOTChangeListener(sectionContainerListener);
+							
+							var pageIndex = 0;
+							for (var i = 0; i &lt; cardContainer.getCards().size(); i++){
+								sections[i] = cardContainer.getCards().get(i);
+								sections[i].addOTChangeListener(sectionListener);
+								
+								sectionCardContainers[i] = sections[i].getContent();
+								sectionCardContainers[i].addOTChangeListener(pageContainerListener);
+								
+								for (var j = 0; j &lt; sectionCardContainers[i].getCards().size(); j++){
+									pages[pageIndex] = sectionCardContainers[i].getCards().get(j);
+									pages[pageIndex].addOTChangeListener(pageListener);
+									pageIndex++;
+								}
+							}
+							
+							return true;
+						}
+
+						function save() {
+							cardContainer.removeOTChangeListener(sectionContainerListener);
+							return true;
+						}</script>
+        </OTJavascript>
+        <object refid="4b1825df-767f-11dc-a568-7984efa6d7c4" />
+        <object refid="2fc2e155-7689-11dc-a568-7984efa6d7c4" />
+        <object refid="5626b0f6-768b-11dc-a568-7984efa6d7c4" />
+        <object refid="5aea2c7d-768b-11dc-a568-7984efa6d7c4" />
+        <object refid="5f58f854-768b-11dc-a568-7984efa6d7c4" />
+        <object refid="633dfabb-768b-11dc-a568-7984efa6d7c4" />
+        <object refid="67cbe752-768b-11dc-a568-7984efa6d7c4" />
+        <object refid="859861f9-768b-11dc-a568-7984efa6d7c4" />
+        <object refid="8ab4d1f0-768b-11dc-a568-7984efa6d7c4" />
+      </library>
+    </OTSystem>
+  </objects>
+</otrunk>
