@@ -18,17 +18,19 @@
     <import class="org.concord.biologica.state.OTWorld" />
     <import class="org.concord.otrunk.view.document.OTCompoundDoc" />
     <import class="org.concord.otrunk.script.ui.OTScriptObject" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariable" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariableView" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariableComponent" />
     <import class="org.concord.otrunk.script.js.OTJavascript" />
     <import class="org.concord.otrunk.script.OTScriptEngineBundle" />
     <import class="org.concord.otrunk.script.OTScriptEngineEntry" />
     <import class="org.concord.framework.otrunk.view.OTFrame" />
-    <import
-      class="org.concord.otrunk.view.document.OTDocumentViewConfig" />
+    <import class="org.concord.otrunk.view.document.OTDocumentViewConfig" />
+    <import class="org.concord.otrunk.view.OTFolderObject" />
   </imports>
 
   <objects>
     <OTSystem>
-
       <bundles>
         <OTViewBundle showLeftPanel="false">
           <viewEntries>
@@ -46,12 +48,13 @@
               viewClass="org.concord.otrunk.ui.swing.OTButtonView" />
             <OTViewEntry objectClass="org.concord.otrunk.ui.OTCardContainer"
               viewClass="org.concord.otrunk.ui.swing.OTCardContainerView" />
+            <OTViewEntry objectClass="org.concord.otrunk.ui.OTText" 
+              viewClass="org.concord.otrunk.ui.swing.OTTextEditView"/>
             <OTDocumentViewConfig
               objectClass="org.concord.otrunk.view.document.OTDocument"
               viewClass="org.concord.otrunk.view.document.OTDocumentView">
               <css>
                 td { padding: 0px; margin: 0px; }
-
                 p { font-size: large; }
               </css>
             </OTDocumentViewConfig>
@@ -78,9 +81,8 @@
             <p>Today we're going to learn about genetics using dragons.<br/>
             Click here to begin:</p>
             <p>
-              <object refid="${chromo_button}" />
-              <object refid="${chromo_button_script}" />
-              <object refid="${intro_script_object}" />
+              <object refid="${intro_chromo_button}" />
+              <object refid="${intro_chromo_button_script}" />
             </p>
           </bodyText>
           <children>
@@ -92,85 +94,17 @@
           </children>
           <documentRefs>
             <!-- various pages (pedagogica nodes) -->
-            <OTCompoundDoc name="Extra Credit Challenge"
-              local_id="challenge_three_page">
-              <bodyText>
-                <table>
-                  <tr height="620">
-                    <td width="880">
-                      <object editable="true" refid="${challengeMeiosisView}" />
-                    </td>
-                    <td width="300"><object refid="${challenge_three_cards}" /></td>
-                  </tr>
-                  <tr height="40">
-                    <td align="right"><object refid="${chromo_button}" /></td>
-                    <td align="center"> </td>
-                  </tr>
-                </table>
-                <object refid="${challenge_three_script_object}" />
-                <object refid="${chromo_button_script}" />
-              </bodyText>
-            </OTCompoundDoc>
-            <OTCompoundDoc name="Challenge Two"
-              local_id="challenge_two_page">
-              <bodyText>
-                <table>
-                  <tr height="620">
-                    <td width="880">
-                      <object editable="true" refid="${challengeMeiosisView}" />
-                    </td>
-                    <td width="300"><object refid="${challenge_two_cards}" /></td>
-                  </tr>
-                  <tr height="40">
-                    <td align="right"><object refid="${next_challenge_button}" /><object refid="${chromo_button}" /></td>
-                    <td align="center"> </td>
-                  </tr>
-                </table>
-                <object refid="${challenge_two_script_object}" />
-                <object refid="${chromo_button_script}" />
-                <object refid="${next_challenge3_button_script}" />
-              </bodyText>
-            </OTCompoundDoc>
-            <OTCompoundDoc name="Challenge One"
-              local_id="challenge_one_page">
-              <bodyText>
-                <table>
-                  <tr height="620">
-                    <td width="880">
-                      <object editable="true" refid="${challengeMeiosisView}" />
-                    </td>
-                    <td width="300"><object refid="${challenge_one_cards}" /></td>
-                  </tr>
-                  <tr height="40">
-                    <td align="right"><object refid="${next_challenge_button}" /><object refid="${chromo_button}" /></td>
-                    <td align="center"><object refid="${meiosis_button}" /></td>
-                  </tr>
-                </table>
-                <object refid="${challenge_one_script_object}" />
-                <object refid="${meiosis_button_script}" />
-                <object refid="${chromo_button_script}" />
-                <object refid="${next_challenge_button_script}" />
-              </bodyText>
-            </OTCompoundDoc>
-            <OTCompoundDoc name="Meiosis" local_id="meiosis_page">
-              <bodyText>
-                <table>
-                  <tr height="620">
-                    <td width="880">
-                      <object editable="true" refid="${meiosisView}" />
-                    </td>
-                    <td width="300"><object refid="${meiosis_cards}" /></td>
-                  </tr>
-                  <tr height="40">
-                    <td align="right"><object refid="${challenge_button}" /><object refid="${chromo_button}" /></td>
-                    <td align="center"></td>
-                  </tr>
-                </table>
-                <object refid="${meiosis_script_object}" />
-                <object refid="${chromo_button_script}" />
-                <object refid="${challenge_button_script}" />
-              </bodyText>
-            </OTCompoundDoc>
+            <OTButton local_id="intro_chromo_button" text="Start"/>
+            <OTScriptObject local_id="intro_chromo_button_script">
+	           	<variables>
+	            	<OTScriptVariableComponent reference="${intro_chromo_button}" name="button" />
+	            	<OTScriptVariable reference="${static_organism_page}" name="destination" />
+	            </variables>
+	            <script>
+	            	<OTJavascript src="biologica/generic-link-button.js"/>
+	            </script>
+            </OTScriptObject>
+            
             <OTCompoundDoc name="Static Organisms"
               local_id="static_organism_page">
               <bodyText>
@@ -198,19 +132,137 @@
                     </td>
                   </tr>
                   <tr height="40">
-                    <td colspan="2" align="right"><object refid="${challenge_button}" /></td>
-                    <td align="center">
+                  <td align="right">
+                      <object refid="${answer_questions_button}" />
                       <object refid="${meiosis_button}" />
-                    </td>
+                  </td>
                   </tr>
                 </table>
                 <object refid="${staticOrg_script_object}" />
                 <object refid="${meiosis_button_script}" />
-                <object refid="${challenge_button_script}" />
+                <object refid="${answer_questions_script}" />
               </bodyText>
             </OTCompoundDoc>
             
+             <OTCompoundDoc name="Meiosis" local_id="meiosis_page">
+              <bodyText>
+                <table>
+                  <tr height="620">
+                    <td width="880">
+                      <object editable="true" refid="${meiosisView}" />
+                    </td>
+                    <td width="300"><object refid="${meiosis_cards}" /></td>
+                  </tr>
+                  <tr height="40">
+                    <td align="right"><object refid="${challenge_button}" /><object refid="${chromo_button}" /></td>
+                    <td align="center"></td>
+                  </tr>
+                </table>
+                <object refid="${meiosis_script_object}" />
+                <object refid="${chromo_button_script}" />
+                <object refid="${challenge_one_button_script}" />
+              </bodyText>
+            </OTCompoundDoc>
+            
+            
+            <OTCompoundDoc name="Challenge One" local_id="challenge_one_page">
+              <bodyText>
+                <table>
+                  <tr height="620">
+                    <td width="880">
+                      <object editable="true" refid="${challengeMeiosisView}" />
+                    </td>
+                    <td width="300"><object refid="${challenge_one_cards}" /></td>
+                  </tr>
+                  <tr height="40">
+                    <td align="right"><object refid="${challenge_button}" /><object refid="${chromo_button}" /></td>
+                    <td align="center"><object refid="${meiosis_button}" /></td>
+                  </tr>
+                </table>
+                <object refid="${challenge_one_script_object}" />
+                <object refid="${challenge_two_button_script}" />
+                <object refid="${meiosis_button_script}" />
+                <object refid="${chromo_button_script}" />
+              </bodyText>
+            </OTCompoundDoc>
+            
+            <OTCompoundDoc name="Challenge Two"
+              local_id="challenge_two_page">
+              <bodyText>
+                <table>
+                  <tr height="620">
+                  <td width="880">
+                      <object editable="true" refid="${challengeMeiosisView}" />
+                      <object refid="${chromo_button}" />
+                  </td>
+                  <td width="300">
+                      <object refid="${challenge_two_cards}" />
+                  </td>
+                  </tr>
+                  <tr height="40">
+                  <td align="right">
+                      <object refid="${challenge_button}" />
+                      <object refid="${exit_button}"/>
+                  </td>
+                  </tr>
+                  </table>
+	                <object refid="${challenge_two_script_object}" />
+	                <object refid="${chromo_button_script}" />
+	                <object refid="${challenge_three_button_script}" />
+	                <object refid="${exit_button_script}" />
+              </bodyText>
+            </OTCompoundDoc>
+            
+            <OTCompoundDoc name="Challenge Three"
+              local_id="challenge_three_page">
+              <bodyText>
+                <table>
+                  <tr height="620">
+                    <td width="880">
+                      <object editable="true" refid="${challengeMeiosisView}" /><object refid="${chromo_button}" />
+                    </td>
+                    <td width="300"><object refid="${challenge_three_cards}" /></td>
+                  </tr>
+                  <tr height="40">
+                    <td align="right"><object refid="${exit_button}" /></td>
+                    <td align="center"> </td>
+                  </tr>
+                </table>
+                <object refid="${challenge_three_script_object}" />
+                <object refid="${chromo_button_script}" />
+                <object refid="${exit_button_script}" />
+              </bodyText>
+            </OTCompoundDoc>
+           
+            
             <!-- Various texts used in the right-side text area -->
+            <!-- This is the text that asks the chromosome-phenotype questions. -->
+              <OTCompoundDoc name="Question_Box"
+              local_id="question_box">
+              	<bodyText>
+              		&telslogo;
+              		 <p style="color: red">OK, now that you understand the model, here are two questions.
+              		Try to answer them without using the model, but if you have 
+              		to use the model to remember something, that's all right.</p>
+              		<p style="color: blue">
+              		If you see a dragon with wings, is it possible to tell which 
+              		alleles it carries for wings (in other words, whether it is WW, Ww, wW, or ww)?
+              		Explain.</p>
+              		<object refid="${answer1}"/>
+              		<p style="color: blue"> 
+              		If you see a dragon with horns, is it possible to tell which 
+              		alleles it carries for horns (in other words, whether it is HH, Hh, hH, or hh)?
+              		Explain.</p>
+              		<object refid="${answer2}"/>
+              	</bodyText>
+              	<documentRefs>
+              	<OTText name="answer1" local_id="answer1" rows="5">
+	              	</OTText>
+	              	<OTText name="answer2" local_id="answer2" rows="5">
+	              	</OTText>
+              	</documentRefs>
+            </OTCompoundDoc>
+            
             <OTTextPane local_id="static_organism_text" name="static_organism_text">
               <text>
                 &telslogo;
@@ -230,17 +282,33 @@
                   its appearance (its "phenotype").
                 </p>
                 <p style="color: blue">
-                  When you think you understand this, click on the
-                  button to go to meiosis and learn how to give dragons
-                  offspring.
+                  When you think you understand how this model of genetics
+                  works, click on the button below and we'll ask you a few 
+                  questions about it.
                 </p>
                 </font>
+              </text>
+            </OTTextPane>
+            <OTTextPane local_id="static_organism_text2" name="static_organism_text2">
+              <text>
+                &telslogo;
+                <font size="5">
+                <p>
+                Welcome back to the chromosome laboratory! You can come here whenever you like
+                to play with the model and remind yourself how a dragon's genes (its 
+                <font style="italic" color="red">genotype</font>
+                ) determine its physical traits (its <font style="italic" color="red">
+                phenotype.</font>) 
+                </p>
+                <p style="color: blue">
+                Remember to use the scroll bar to see all the
+                chromosomes!</p></font>
               </text>
             </OTTextPane>
             <OTTextPane local_id="meiosis_text" name="meiosisStr">
               <text>
                 &telslogo;
-                <font size="5" color="black">
+                <font size="4" color="black">
                   <p>This is the Meiosis and Fertilization view. The round
                   circles under the dragons are "germ cells". If you
                   click on the "Play" button, or run the thumbnail to
@@ -358,7 +426,7 @@
                 &telslogo;
                 <font size="5" color="red">
                   <p>Oops! That baby doesn't have wings. It must have the
-                  wrong genes.</p>
+                  wrong genes.</p> </font>
                   <font color="black">
                     <p>Remember, the only way you can control which genes
                     the baby will have is by picking the right gametes
@@ -367,33 +435,40 @@
                     the chromsomes will end up in randomly different
                     gametes.)</p>
                   </font>
-                </font>
               </text>
             </OTTextPane>
             <OTTextPane local_id="challengeStr"
               name="challengeStr">
               <text>
                 &telslogo;
-                <font size="5">
-                  <p>Here are two new dragons to play with. Note that
+                <font size="6" color="blue">
+                  <p>Silver Challenge: Make a baby with wings</p>
+                </font>
+                <font size="5" color="black">
+                  <p><br/>Here are two new dragons to play with. Note that
                   neither has wings. Try to give them a baby with wings
                   by running meiosis and fertilization and picking just
-                  the right gametes to fertilize!</p>
+                  the right gametes to fertilize! Remember to use the 
+                  magnifying glass with the "plus" sign in it when you 
+                  want to see the genes in the gametes. Use the 
+                  magnifying glass with the "minus" sign to return to 
+                  the meiosis view.</p></font>
                   <font color="red">
                     <p>(If you've forgotten which gene combination makes
                     wings, go back to the chromosome view and figure it
                     out.)</p>
                   </font>
-                </font>
-              </text>
+                </text>
             </OTTextPane>
             <OTTextPane local_id="challengeStr2"
               name="challengeStr2">
               <text>
                 &telslogo;
-                <font size="5" color="red">
-                  <p>OK, here's another challenge. Try to give these two
-                  dragons a baby that has four legs. Use the "Back to
+                <font size="6" color="blue">
+                  <p>Gold Challenge: Make a baby with four legs.</p></font>
+                <font size="5" color="black">
+                  <p><br/>OK, here's another challenge. Try to give these 
+                  two dragons a baby that has four legs. Use the "Back to
                   Chromosomes" button if you need to refresh yourself on
                   the rule for legs.</p>
                 </font>
@@ -430,7 +505,7 @@
               <text>
                 &telslogo;
                 <font size="5" color="blue">
-                  Well done! For Extra Credit, click the "Next Challenge" button.
+                  Well done! If you want to keep going click on the "Extra credit" button.
                 </font>
               </text>
             </OTTextPane>
@@ -438,8 +513,14 @@
               name="challengeStr3">
               <text>
                 &telslogo;
-                <font size="5">
-                  <p>Here's an extra credit challenge: try to make a green dragon with a plain tail.</p>
+                <font size="6" color="blue">
+                <p>Platinum Challenge: Make a green dragon with a plain tail.</p></font>
+                <font size="5" color="black">
+                  <p>Here's an extra credit challenge: try to make a green 
+                  dragon with a plain tail. Note that this time we are asking 
+                  for two traits -- color and tail shape -- that are 
+                  controlled by two different genes. This is a harder 
+                  challenge than the first two.</p>
                 </font>
               </text>
             </OTTextPane>
@@ -449,11 +530,13 @@
                 &telslogo;
                 <font size="5" color="red">
                   <p>That dragon is the wrong color and it has a fancy tail. 
-You're trying to make a green dragon with a plain tail. 
-Run Meiosis and try again.
-(Note: each time you run Meiosis the chromosomes move randomly. 
-Sometimes if you don't get the gene combinations you want it pays to run 
-Meiosis again -- the results might be different!)</p>
+				  You're trying to make a green dragon with a plain tail. 
+				  Run Meiosis and try again.
+				  (Note: each time you run Meiosis the chromosomes 
+				  move randomly. 
+				  Sometimes if you don't get the gene combinations 
+				  you want it pays to run Meiosis again -- the results 
+				  might be different!)</p>
                 </font>
               </text>
             </OTTextPane>
@@ -463,10 +546,12 @@ Meiosis again -- the results might be different!)</p>
                 &telslogo;
                 <font size="5" color="red">
                   <p>That dragon has a fancy tail. You're trying to make a dragon with a plain tail. 
-Run Meiosis and try again.
-(Note: each time you run Meiosis the chromosomes move randomly. 
-Sometimes if you don't get the gene combinations you want it pays to run 
-Meiosis again -- the results might be different!)</p>
+				  Run Meiosis and try again.
+				  (Note: each time you run Meiosis the chromosomes 
+				  move randomly. 
+				  Sometimes if you don't get the gene combinations 
+				  you want it pays to run Meiosis again -- the results 
+				  might be different!)</p>
                 </font>
               </text>
             </OTTextPane>
@@ -476,10 +561,12 @@ Meiosis again -- the results might be different!)</p>
                 &telslogo;
                 <font size="5" color="red">
                   <p>That dragon is the wrong color. You're trying to make a green dragon. 
-Run Meiosis and try again. 
-(Note: each time you run Meiosis the chromosomes move randomly. 
-Sometimes if you don't get the gene combinations you want it pays to run 
-Meiosis again -- the results might be different!)</p>
+				  Run Meiosis and try again. 
+				  (Note: each time you run Meiosis the chromosomes 
+				  move randomly. 
+				  Sometimes if you don't get the gene combinations 
+				  you want it pays to run Meiosis again -- the results 
+				  might be different!)</p>
                 </font>
               </text>
             </OTTextPane>
@@ -489,8 +576,8 @@ Meiosis again -- the results might be different!)</p>
                 &telslogo;
                 <font size="6" color="blue">
                 <p>
-You did it -- you made a green dragon with a plain tail! 
-That's the last challenge!
+You did it -- you made a green dragon with a plain tail! Congratulations! 
+That's the last challenge -- click "Exit" to leave the activity.
 </p>
 </font>
               </text>
@@ -514,6 +601,8 @@ That's the last challenge!
             <OTCardContainer local_id="static_organism_cards" width="300" height="620">
               <cards>
                 <object refid="${static_organism_text}" />
+                <object refid="${question_box}" />
+                <object refid="${static_organism_text2}" />
               </cards>
             </OTCardContainer>
             <OTCardContainer local_id="challenge_one_cards" width="300" height="620">
@@ -634,98 +723,128 @@ That's the last challenge!
             </OTSex>
             
             <!-- Various buttons used on the different pages -->
+            <OTButton text="I got it!" local_id="answer_questions_button" />
             <OTButton text="Back to Meiosis" local_id="meiosis_button" />
-            <OTButton text="Back to Chromosomes" local_id="chromo_button" />
+            <OTButton text="Chromosome View" local_id="chromo_button" />
             <OTButton text="Take the Meiosis Challenge!" local_id="challenge_button" />
-            <OTButton text="Next Challenge" local_id="next_challenge_button" />
-
+            <OTButton text="Exit" local_id="exit_button"/>
+            
             <!-- Script definitions for the various buttons -->
+            
             <OTScriptObject local_id="meiosis_button_script">
-              <referenceObjects>
-                <object refid="${meiosis_page}" />
-                <object refid="${meiosis_button}" />
-              </referenceObjects>
-              <script>
-                <OTJavascript src="biologica/generic-link-button.js" />
-              </script>
+	           	<variables>
+	            	<OTScriptVariableComponent reference="${meiosis_button}" name="button" />
+	            	<OTScriptVariable reference="${current_challenge_holder}" name="current_challenge_holder" />
+              	    <OTScriptVariable reference="${meiosis_page}" name="current_page" />
+	            </variables>
+	            <script>
+	            	<OTJavascript src="biologica/challenge-link-button.js"/>
+	            </script>
             </OTScriptObject>
+            
             <OTScriptObject local_id="chromo_button_script">
-              <referenceObjects>
-                <object refid="${static_organism_page}" />
-                <object refid="${chromo_button}" />
-              </referenceObjects>
-              <script>
-                <OTJavascript src="biologica/generic-link-button.js" />
-              </script>
+	           	<variables>
+	            	<OTScriptVariableComponent reference="${chromo_button}" name="button" />
+	            	<OTScriptVariable reference="${static_organism_page}" name="destination" />
+	            </variables>
+	            <script>
+	            	<OTJavascript src="biologica/generic-link-button.js"/>
+	            </script>
             </OTScriptObject>
-            <OTScriptObject local_id="challenge_button_script">
-              <referenceObjects>
-                <object refid="${challenge_button}" />
-                <object refid="${challenge_two_page}" />
-                <object refid="${challenge_one_page}" />
-                <object refid="${challenge_three_page}" />
-                <object refid="${appState}" />
-              </referenceObjects>
-              <script>
-                <OTJavascript src="biologica/challenge-link-button.js" />
-              </script>
+            
+            <OTScriptObject local_id="challenge_one_button_script">
+	           	<variables>
+	            	<OTScriptVariableComponent reference="${challenge_button}" name="button" />
+	            	<OTScriptVariable reference="${challenge_one_page}" name="destination" />
+	            </variables>
+	            <script>
+	            	<OTJavascript src="biologica/generic-link-button.js"/>
+	            </script>
             </OTScriptObject>
-            <OTScriptObject local_id="next_challenge_button_script">
-              <referenceObjects>
-                <object refid="${challenge_two_page}" />
-                <object refid="${next_challenge_button}" />
-              </referenceObjects>
-              <script>
-                <OTJavascript src="biologica/generic-link-button.js" />
-              </script>
+            
+            <OTScriptObject local_id="challenge_two_button_script">
+	           	<variables>
+	            	<OTScriptVariableComponent reference="${challenge_button}" name="button" />
+	            	<OTScriptVariable reference="${challenge_two_page}" name="destination" />
+	            </variables>
+	            <script>
+	            	<OTJavascript src="biologica/generic-link-button.js"/>
+	            </script>
             </OTScriptObject>
-            <OTScriptObject local_id="next_challenge3_button_script">
-              <referenceObjects>
-                <object refid="${challenge_three_page}" />
-                <object refid="${next_challenge_button}" />
-              </referenceObjects>
-              <script>
-                <OTJavascript src="biologica/generic-link-button.js" />
-              </script>
+            
+            <OTScriptObject local_id="challenge_three_button_script">
+	           	<variables>
+	            	<OTScriptVariableComponent reference="${challenge_button}" name="button" />
+	            	<OTScriptVariable reference="${challenge_three_page}" name="destination" />
+	            </variables>
+	            <script>
+	            	<OTJavascript src="biologica/generic-link-button.js"/>
+	            </script>
+            </OTScriptObject>
+            
+            <OTScriptObject local_id="exit_button_script">
+	           	<variables>
+	            	<OTScriptVariableComponent reference="${exit_button}" name="button" />
+	            </variables>
+	            <script>
+	            	<OTJavascript src="biologica/exit_button_script.js"/>
+	            </script>
             </OTScriptObject>
             
             <!-- Script definitions for the various views -->
-            <OTScriptObject local_id="challenge_three_script_object">
-              <referenceObjects>
-                <object refid="${challengeMeiosisView}" />
-                <object refid="${chromo_button}" />
-                <object refid="${challenge_three_cards}" />
-                <object refid="${appState}" />
-              </referenceObjects>
-              <script>
-                <OTJavascript src="biologica/biologica-challenge3-screen.js" />
-              </script>
-            </OTScriptObject>
+            
+           <OTScriptObject local_id="challenge_one_script_object">
+             <referenceObjects>
+               <object refid="${challengeMeiosisView}" />
+               <object refid="${appState}" />
+               <object refid="${challenge_one_cards}" />
+               <object refid="${challenge_button}" />
+               <object refid="${chromo_button}" />
+               <object refid="${meiosis_button}" />
+             </referenceObjects>
+             <script>
+               <OTJavascript src="biologica/biologica-challenge1-screen.js" />
+             </script>
+            <variables>
+              	<OTScriptVariable reference="${current_challenge_holder}" name="current_challenge_holder"/>
+             	<OTScriptVariable reference="${challenge_one_page}" name="current_page"/>
+             </variables>
+           </OTScriptObject>
+            
             <OTScriptObject local_id="challenge_two_script_object">
               <referenceObjects>
                 <object refid="${challengeMeiosisView}" />
                 <object refid="${chromo_button}" />
-                <object refid="${next_challenge_button}" />
+                <object refid="${challenge_button}" />
                 <object refid="${challenge_two_cards}" />
                 <object refid="${appState}" />
               </referenceObjects>
               <script>
                 <OTJavascript src="biologica/biologica-challenge2-screen.js" />
               </script>
+                <variables>
+              		<OTScriptVariable reference="${current_challenge_holder}" name="current_challenge_holder"/>
+             		<OTScriptVariable reference="${challenge_two_page}" name="current_page"/>
+             	</variables>
             </OTScriptObject>
-            <OTScriptObject local_id="challenge_one_script_object">
+            
+            <OTScriptObject local_id="challenge_three_script_object">
               <referenceObjects>
                 <object refid="${challengeMeiosisView}" />
-                <object refid="${appState}" />
-                <object refid="${challenge_one_cards}" />
-                <object refid="${next_challenge_button}" />
                 <object refid="${chromo_button}" />
-                <object refid="${meiosis_button}" />
+                <object refid="${exit_button}" />
+                <object refid="${challenge_three_cards}" />
+                <object refid="${appState}" />
               </referenceObjects>
               <script>
-                <OTJavascript src="biologica/biologica-challenge1-screen.js" />
+                <OTJavascript src="biologica/biologica-challenge3-screen.js" />
               </script>
+                <variables>
+              		<OTScriptVariable reference="${current_challenge_holder}" name="current_challenge_holder"/>
+             		<OTScriptVariable reference="${challenge_three_page}" name="current_page"/>
+             	</variables>
             </OTScriptObject>
+            
             <OTScriptObject local_id="staticOrg_script_object">
               <referenceObjects>
                 <object refid="${maleChromosome}" />
@@ -733,13 +852,20 @@ That's the last challenge!
                 <object refid="${femaleChromosome}" />
                 <object refid="${femaleStaticOrganism}" />
                 <object refid="${meiosis_button}" />
-                <object refid="${challenge_button}" />
+                <object refid="${answer_questions_button}" />
                 <object refid="${appState}" />
               </referenceObjects>
+              <variables>
+               	<OTScriptVariableView reference="${static_organism_cards}" name="cardContainer"/>
+              	<OTScriptVariable reference="${answer_questions_script}" name="questionsAnsweredScript"/>
+                <OTScriptVariableComponent reference="${meiosis_button}" name="button" />
+	            <OTScriptVariable reference="${static_organism_page}" name="destination" />
+              </variables>
               <script>
                 <OTJavascript src="biologica/biologica-static-organism-screen.js" />
               </script>
             </OTScriptObject>
+            
             <OTScriptObject local_id="meiosis_script_object">
               <referenceObjects>
                 <object refid="${meiosisView}" />
@@ -748,35 +874,54 @@ That's the last challenge!
                 <object refid="${challenge_button}" />
                 <object refid="${appState}" />
               </referenceObjects>
+              <variables>
+              	<OTScriptVariable reference="${current_challenge_holder}" name="current_challenge_holder" />
+              	<OTScriptVariable reference="${meiosis_page}" name="current_page" />
+              	</variables>
               <script>
                 <OTJavascript src="biologica/biologica-meiosis-screen.js" />
               </script>
             </OTScriptObject>
-            <OTScriptObject local_id="intro_script_object">
-              <referenceObjects>
-                <object refid="${chromo_button}" />
-              </referenceObjects>
-              <script>
-                <OTJavascript>
-                  <script>
-                    function init() {
-                      context.getComponentForObject("chromo_button").setText("Start the Activity");
-                      return true;
-                    }
-                    
-                    function save() {
-                      return true;
-                    }
-                  </script>
-                </OTJavascript>
-              </script>
+ 
+            <!-- This is the script that takes you to the chromosome questions 
+            the first time you play with the model-->
+            <OTScriptObject local_id="answer_questions_script">
+            	<variables>
+            		<OTScriptVariableComponent name="button"
+            			reference="${answer_questions_button}" />
+            		<OTScriptVariableView name="cardContainer"
+            			reference="${static_organism_cards}" />
+            	</variables>
+			    <referenceObjects>
+                      <object refid="${meiosis_button}" />
+                </referenceObjects>
+                <script>
+                	<OTJavascript src="biologica/answer_questions_script.js">
+                	</OTJavascript>	
+                </script> 
+                
+                <!-- Making sure that the answer_questions box only appears once  -->
+                
+	          <scriptState>
+	            <entry key="questionsAnswered">
+	              <boolean>false</boolean>
+	            </entry>
+	          </scriptState>
             </OTScriptObject>
+            
             <!-- Application state object -->
             <OTText local_id="appState" text="Beginning" />
           </documentRefs>
         </OTCompoundDoc>
 
       </root>
+      <library>
+        <OTFolderObject local_id="current_challenge_holder">
+        	<children>
+        		<object refid="${meiosis_page}"/>
+        	</children>
+		</OTFolderObject>
+	  </library>
 
     </OTSystem>
   </objects>
