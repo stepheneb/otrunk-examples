@@ -1,0 +1,1555 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<otrunk id="2767fe20-6c7d-11dc-8314-0800200c9a66">
+  <imports>
+    <import class="org.concord.data.state.OTDataStore" />
+    <import class="org.concord.data.state.OTDataChannelDescription" />
+    <import class="org.concord.data.state.OTDataField" />
+    <import class="org.concord.datagraph.state.OTDataGraph" />
+    <import class="org.concord.datagraph.state.OTDataAxis" />
+    <import class="org.concord.datagraph.state.OTDataGraphable" />
+    <import class="org.concord.datagraph.state.OTDataCollector" />
+    <import class="org.concord.datagraph.state.OTMultiDataGraph" />
+    <import class="org.concord.datagraph.state.OTPluginView" />
+    <import class="org.concord.framework.otrunk.view.OTFrame" />
+    <import class="org.concord.graph.util.state.OTDrawingTool" />
+    <import class="org.concord.graph.util.state.OTDrawingStamp" />
+    <import class="org.concord.graph.util.state.OTDrawingImageIcon" />
+    <import class="org.concord.graph.util.state.OTDrawingShape" />
+    <import class="org.concord.graph.util.state.OTDrawingTool2" />
+    <import class="org.concord.graph.util.state.OTPointTextLabel" />
+    <import class="org.concord.otrunk.OTSystem" />
+    <import class="org.concord.otrunk.overlay.OTOverlay" />
+    <import class="org.concord.otrunk.script.ui.OTScriptObject" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariable" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariableComponent" />
+    <import class="org.concord.otrunk.script.js.OTJavascript" />
+    <import class="org.concord.otrunk.script.OTScriptEngineBundle" />
+    <import class="org.concord.otrunk.script.OTScriptEngineEntry" />
+    <import class="org.concord.otrunk.udl.OTUDLCharacter" />
+    <import class="org.concord.otrunk.udl.OTUDLCharacterGroup" />
+    <import class="org.concord.otrunk.udl.OTUDLCoachStatement" />
+    <import class="org.concord.otrunk.udl.OTUDLMenuRule" />
+    <import class="org.concord.otrunk.udl.document.OTDefinition" />
+    <import class="org.concord.otrunk.udl.document.OTDefinitionManager" />
+    <import class="org.concord.otrunk.udl.document.OTUDLCompoundDoc" />
+    <import class="org.concord.otrunk.udl.document.OTUDLCSSModifier" />
+    <import class="org.concord.otrunk.udl.document.OTUDLCSSGroup" />
+    <import class="org.concord.otrunk.udl.document.OTUDLDocumentViewConfig" />
+    <import class="org.concord.otrunk.udl.friction.OTFrictionModel" />
+    <import class="org.concord.otrunk.udl3.OTQuestion" />
+    <import class="org.concord.otrunk.udl3.OTUDLMenu" />
+    <import class="org.concord.otrunk.udl3.OTUDLContainer" />
+    <import class="org.concord.otrunk.udl3.OTUDLQuestions" />
+    <import class="org.concord.otrunk.udl3.OTUDLQuestionViewConfig" />
+    <import class="org.concord.otrunk.udl3.OTUDLSection" />
+    <import class="org.concord.otrunk.ui.OTButton" />
+    <import class="org.concord.otrunk.ui.OTCardContainer" />
+    <import class="org.concord.otrunk.ui.OTChoice" />
+    <import class="org.concord.otrunk.ui.OTImage" />
+    <import class="org.concord.otrunk.ui.OTText" />
+    <import class="org.concord.otrunk.ui.snapshot.OTSnapshot" />
+    <import class="org.concord.otrunk.ui.snapshot.OTSnapshotButton" />
+    <import class="org.concord.otrunk.ui.snapshot.OTSnapshotAlbum" />
+    <import class="org.concord.otrunk.ui.swing.OTChoiceViewConfig" />
+    <import class="org.concord.otrunk.view.OTObjectEditViewConfig" />
+    <import class="org.concord.otrunk.view.OTViewChild" />
+    <import class="org.concord.otrunk.view.OTViewEntry" />
+    <import class="org.concord.otrunk.view.OTViewMode" />
+    <import class="org.concord.otrunk.view.OTViewBundle" />
+    <import class="org.concord.otrunk.view.document.OTCompoundDoc" />
+    <import class="org.concord.otrunk.view.document.OTCssText" />
+    <import class="org.concord.otrunk.view.prototype.OTPrototypeViewEntry" />
+    <import class="org.concord.otrunk.view.prototype.OTPrototypeEventController" />
+    <import class="org.concord.otrunk.view.prototype.OTPrototypeMapEntry" />
+    <import class="org.concord.sensor.state.OTDeviceConfig" />
+    <import class="org.concord.sensor.state.OTExperimentRequest" />
+    <import class="org.concord.sensor.state.OTInterfaceManager" />
+    <import class="org.concord.sensor.state.OTSensorDataProxy" />
+    <import class="org.concord.sensor.state.OTSensorRequest" />
+    <import class="org.concord.sensor.state.OTZeroSensor" />
+    <import class="org.concord.otrunk.udl.question.OTQuestion" />
+  </imports>
+  <objects>
+    <OTSystem local_id="system">
+      <bundles>
+        <OTViewBundle showLeftPanel="false" currentMode="authoring">
+          <modes>
+            <OTViewMode name="default" />
+            <OTViewMode name="authoring">
+              <map>
+                <entry key="2767fe20-6c7d-11dc-8314-0800200c9a66!/compound_doc_view">
+                  <OTObjectEditViewConfig objectClass="org.concord.otrunk.view.document.OTCompoundDoc" viewClass="org.concord.otrunk.view.document.OTCompoundDocEditView" usePopupEditWindows="true" copyNewObjectsByDefault="true">
+                    <objectsToInsert>
+                      <OTText name="Text field" />
+                      <OTDrawingTool2 name="Draw tool" />
+                      <OTChoice name="Choices" />
+                      <OTUDLQuestions name="Scaffolded questions">
+                        <questions>
+                          <org.concord.otrunk.udl.question.OTQuestion name="L5">
+                            <prompt>
+                              <OTUDLCompoundDoc>
+                                <bodyText>Insert prompt here</bodyText>
+                              </OTUDLCompoundDoc>
+                            </prompt>
+                            <input>
+                              <OTUDLCompoundDoc>
+                                <bodyText>Insert input here</bodyText>
+                              </OTUDLCompoundDoc>
+                            </input>
+                          </org.concord.otrunk.udl.question.OTQuestion>
+                          <org.concord.otrunk.udl.question.OTQuestion name="L4">
+                            <prompt>
+                              <OTUDLCompoundDoc>
+                                <bodyText>Insert prompt here</bodyText>
+                              </OTUDLCompoundDoc>
+                            </prompt>
+                            <input>
+                              <OTUDLCompoundDoc>
+                                <bodyText>Insert input here</bodyText>
+                              </OTUDLCompoundDoc>
+                            </input>
+                          </org.concord.otrunk.udl.question.OTQuestion>
+                          <org.concord.otrunk.udl.question.OTQuestion name="L3">
+                            <prompt>
+                              <OTUDLCompoundDoc>
+                                <bodyText>Insert prompt here</bodyText>
+                              </OTUDLCompoundDoc>
+                            </prompt>
+                            <input>
+                              <OTUDLCompoundDoc>
+                                <bodyText>Insert input here</bodyText>
+                              </OTUDLCompoundDoc>
+                            </input>
+                          </org.concord.otrunk.udl.question.OTQuestion>
+                          <org.concord.otrunk.udl.question.OTQuestion name="L2">
+                            <prompt>
+                              <OTUDLCompoundDoc>
+                                <bodyText>Insert prompt here</bodyText>
+                              </OTUDLCompoundDoc>
+                            </prompt>
+                            <input>
+                              <OTUDLCompoundDoc>
+                                <bodyText>Insert input here</bodyText>
+                              </OTUDLCompoundDoc>
+                            </input>
+                          </org.concord.otrunk.udl.question.OTQuestion>
+                          <org.concord.otrunk.udl.question.OTQuestion name="L1">
+                            <prompt>
+                              <OTUDLCompoundDoc>
+                                <bodyText>Insert prompt here</bodyText>
+                              </OTUDLCompoundDoc>
+                            </prompt>
+                            <input>
+                              <OTUDLCompoundDoc>
+                                <bodyText>Insert input here</bodyText>
+                              </OTUDLCompoundDoc>
+                            </input>
+                          </org.concord.otrunk.udl.question.OTQuestion>
+                        </questions>
+                      </OTUDLQuestions>
+                    </objectsToInsert>
+                  </OTObjectEditViewConfig>
+                </entry>
+                <entry key="2767fe20-6c7d-11dc-8314-0800200c9a66!/questions-card-view">
+                  <OTUDLQuestionViewConfig objectClass="org.concord.otrunk.udl.question.OTUDLQuestions" viewClass="org.concord.otrunk.udl.question.OTUDLQuestionsEditView" />
+                </entry>
+                <entry key="2767fe20-6c7d-11dc-8314-0800200c9a66!/menu-vertical">
+                  <OTViewEntry objectClass="org.concord.otrunk.udl3.OTUDLMenu" viewClass="org.concord.otrunk.udl.ui.OTUDLMenuSectionEditView" />
+                </entry>
+                <entry key="2767fe20-6c7d-11dc-8314-0800200c9a66!/choice-radio-view">
+                  <OTChoiceViewConfig objectClass="org.concord.otrunk.ui.OTChoice" viewClass="org.concord.otrunk.ui.swing.OTChoiceComboBoxEditView" useViewsAsChoices="true" />
+                </entry>
+                <entry key="2767fe20-6c7d-11dc-8314-0800200c9a66!/character-group-view">
+                  <OTViewEntry objectClass="org.concord.otrunk.udl.OTUDLCharacterGroup" viewClass="org.concord.otrunk.udl.OTUDLCharacterGroupEditView" />
+                </entry>
+                <entry key="2767fe20-6c7d-11dc-8314-0800200c9a66!/question-view">
+                  <OTViewEntry objectClass="org.concord.otrunk.udl.question.OTQuestion" viewClass="org.concord.otrunk.udl.question.OTQuestionEditView" />
+                </entry>
+                <entry key="2767fe20-6c7d-11dc-8314-0800200c9a66!/menu-horizontal-circle">
+                  <OTViewEntry objectClass="org.concord.otrunk.udl3.OTUDLMenu" viewClass="org.concord.otrunk.udl.ui.OTUDLMenuPageEditView" />
+                </entry>
+              </map>
+            </OTViewMode>
+          </modes>
+          <frame>
+            <OTFrame useScrollPane="false" width="850" height="600" />
+          </frame>
+          <views>
+            <!-- The OTUDLQuestionViewConfig can be used to set the default scaffolding level, and whether the student can navigate through the levels.
+						  The default scaffolding level just uses the order of the items inside OTUDLQuestions/questions. It is not aware of the names
+						  such as "L1", "L2", etc. -->
+            <OTUDLQuestionViewConfig local_id="questions-card-view" isLevelFrozen="false" defaultScaffoldLevel="0" objectClass="org.concord.otrunk.udl.question.OTUDLQuestions" viewClass="org.concord.otrunk.udl.question.OTUDLQuestionsCardView" />
+            <OTViewEntry objectClass="org.concord.otrunk.ui.OTImage" viewClass="org.concord.otrunk.ui.swing.OTImageView" />
+            <OTViewEntry local_id="snapshot_button_view" objectClass="org.concord.otrunk.ui.snapshot.OTSnapshotButton" viewClass="org.concord.otrunk.ui.snapshot.OTSnapshotButtonView" />
+            <OTViewEntry objectClass="org.concord.otrunk.ui.snapshot.OTSnapshotAlbum" viewClass="org.concord.otrunk.ui.snapshot.OTSnapshotAlbumView" />
+            <OTViewEntry objectClass="org.concord.otrunk.udl.friction.OTFrictionModel" viewClass="org.concord.otrunk.udl.friction.OTFrictionModelView" />
+            <OTViewEntry objectClass="org.concord.otrunk.ui.OTButton" viewClass="org.concord.otrunk.ui.swing.OTButtonView" />
+            <OTViewEntry objectClass="org.concord.otrunk.script.ui.OTScriptObject" viewClass="org.concord.otrunk.script.ui.OTScriptObjectView" />
+            <OTViewEntry objectClass="org.concord.otrunk.ui.OTButton" viewClass="org.concord.otrunk.ui.swing.OTButtonView" />
+            <OTViewEntry local_id="question-view" objectClass="org.concord.otrunk.udl.question.OTQuestion" viewClass="org.concord.otrunk.udl.question.OTQuestionView" />
+            <OTViewEntry local_id="character-group-view" objectClass="org.concord.otrunk.udl.OTUDLCharacterGroup" viewClass="org.concord.otrunk.udl.OTUDLCharacterGroupView" />
+            <OTViewEntry objectClass="org.concord.otrunk.udl3.OTUDLSection" viewClass="org.concord.otrunk.udl3.OTUDLSectionView" />
+            <OTViewEntry local_id="container_view" objectClass="org.concord.otrunk.udl3.OTUDLContainer" viewClass="org.concord.otrunk.udl3.OTUDLContainerView" />
+            <OTViewEntry objectClass="org.concord.otrunk.udl.document.OTUDLCSSModifier" viewClass="org.concord.otrunk.udl.document.OTUDLCSSModifierView" />
+            <OTViewEntry local_id="menu-vertical" objectClass="org.concord.otrunk.udl3.OTUDLMenu" viewClass="org.concord.otrunk.udl.ui.OTUDLMenuSectionView" />
+            <OTViewEntry local_id="menu-horizontal-circle" objectClass="org.concord.otrunk.udl3.OTUDLMenu" viewClass="org.concord.otrunk.udl.ui.OTUDLMenuPageView" />
+            <OTViewEntry objectClass="org.concord.otrunk.udl3.OTQuestion" viewClass="org.concord.otrunk.udl3.OTQuestionView" />
+            <OTChoiceViewConfig local_id="choice-radio-view" objectClass="org.concord.otrunk.ui.OTChoice" viewClass="org.concord.otrunk.ui.swing.OTChoiceRadioButtonView" useViewsAsChoices="true" />
+            <OTViewEntry local_id="choice-combo-view" objectClass="org.concord.otrunk.ui.OTChoice" viewClass="org.concord.otrunk.ui.swing.OTChoiceComboBoxView" />
+            <OTViewEntry objectClass="org.concord.otrunk.script.ui.OTScriptObject" viewClass="org.concord.otrunk.script.ui.OTScriptObjectView" />
+            <OTViewEntry objectClass="org.concord.otrunk.ui.OTCardContainer" viewClass="org.concord.otrunk.ui.swing.OTCardContainerView" />
+            <OTViewEntry objectClass="org.concord.otrunk.ui.OTBorderContainer" viewClass="org.concord.otrunk.ui.swing.OTBorderContainerView" />
+            <OTViewEntry objectClass="org.concord.otrunk.ui.OTPlacementContainer" viewClass="org.concord.otrunk.ui.swing.OTPlacementContainerView" />
+            <OTViewEntry local_id="text-edit" objectClass="org.concord.otrunk.ui.OTText" viewClass="org.concord.otrunk.ui.swing.OTTextEditView" />
+            <OTViewEntry local_id="text-label" objectClass="org.concord.otrunk.ui.OTText" viewClass="org.concord.otrunk.ui.swing.OTTextView" />
+            <OTViewEntry viewClass="org.concord.datagraph.state.OTDataCollectorView" objectClass="org.concord.datagraph.state.OTDataCollector" />
+            <OTViewEntry viewClass="org.concord.datagraph.state.OTDataGraphView" objectClass="org.concord.datagraph.state.OTDataGraph" />
+            <OTViewEntry viewClass="org.concord.data.state.OTDataFieldView" objectClass="org.concord.data.state.OTDataField" />
+            <OTViewEntry viewClass="org.concord.datagraph.state.OTDataDrawingToolView" objectClass="org.concord.graph.util.state.OTDrawingTool" />
+            <OTViewEntry viewClass="org.concord.datagraph.state.OTMultiDataGraphView" objectClass="org.concord.datagraph.state.OTMultiDataGraph" />
+            <OTUDLDocumentViewConfig local_id="compound_doc_view" objectClass="org.concord.otrunk.view.document.OTCompoundDoc" viewClass="org.concord.otrunk.udl.document.OTUDLDocumentView">
+              <definitionManager>
+                <object refid="${definition-manager}" />
+              </definitionManager>
+              <cssBlocks>
+                <OTCssText local_id="css-font" cssText="           body {              font-size: 18;            }           a {               text-decoration: none;             }           DIV.body {                 FONT-STYLE: normal;               FONT-FAMILY: Verdana, Arial;               FONT-VARIANT: normal;              TEXT-DECORATION: none             }           DIV.story {            FONT-WEIGHT: bolder;           }           DIV.activity-title {               font-size: 29;               FONT-WEIGHT: bold;           }             DIV.title {              font-size: 30;              FONT-WEIGHT: bold;           }           DIV.subtitle {               font-size: 25;               FONT-WEIGHT: bold;           }           DIV.subtitle-continue {               FONT-WEIGHT: bold;           }" />
+                <OTCssText local_id="css-color" cssText="           body {              BACKGROUND-COLOR: rgb(255, 255, 255);            }           DIV.body {                BACKGROUND-COLOR: rgb(250, 255, 255);           }           DIV.body-no-border {            BACKGROUND-COLOR: rgb(250, 255, 255);           }           DIV.story {            BORDER-COLOR: blue;            BACKGROUND-COLOR: rgb(210,230,255);            COLOR: rgb(0,0,0);           }           DIV.story-border {            BACKGROUND-COLOR: rgb(100, 130, 200);           }           DIV.activity-title {               COLOR: rgb(0,0,0);           }             DIV.title {              COLOR: rgb(0,0,0);           }           DIV.subtitle {               COLOR: rgb(0,0,0);           }           DIV.leftpanel {              BACKGROUND-COLOR: rgb(190, 190, 255);           }           DIV.buffer {              BACKGROUND-COLOR: rgb(255, 255, 255);           }             DIV.border {            BACKGROUND-COLOR: rgb(190, 190, 255);            }            DIV.definition-border {            BACKGROUND-COLOR: rgb(0, 0, 255);           }            DIV.question {             BACKGROUND-COLOR: rgb(230, 230, 250);            }           " />
+                <OTCssText local_id="css-layout" cssText="           DIV.body {                 MARGIN: 5px;                PADDING: 8px;               height: 100%;           }           DIV.story {             padding: 5px;           }           DIV.story-border {            padding: 1px;           }           DIV.activity-title {               MARGIN: 2px 10% 10px;           }             DIV.title {              PADDING-BOTTOM: 10px;               PADDING-LEFT: 20px;             PADDING-TOP: 10px;             MARGIN: 2px 10% 10px;           }           DIV.subtitle {               PADDING-BOTTOM: 10px;              PADDING-LEFT: 20px;             PADDING-TOP: 10px;             MARGIN: 2px 10% 10px;           }           DIV.buffer {              PADDING: 10px;           }             DIV.border {            PADDING: 3px;            }            DIV.definition-border {            PADDING: 3px;           }           DIV.top-menu {            TEXT-ALIGN: right;           }" />
+              </cssBlocks>
+            </OTUDLDocumentViewConfig>
+            <OTPrototypeViewEntry local_id="textsize-choice-view" objectClass="org.concord.otrunk.OTSystem" viewClass="org.concord.otrunk.view.prototype.OTPrototypeView" copyPrototype="false">
+              <viewEntry>
+                <object refid="${choice-combo-view}" />
+              </viewEntry>
+              <prototype>
+                <OTChoice>
+                  <choices>
+                    <OTOverlay local_id="small-text-overlay" name="Small text">
+                      <deltaObjectMap>
+                        <entry key="2767fe20-6c7d-11dc-8314-0800200c9a66!/css-font">
+                          <OTCssText cssText="                body {                   font-size: 14;                 }                a {                    text-decoration: none;                  }                DIV.body {                     FONT-WEIGHT: bolder;                   FONT-STYLE: normal;                    FONT-FAMILY: Verdana, Arial;                    FONT-VARIANT: normal;                   TEXT-DECORATION: none                  }                DIV.story {                 FONT-WEIGHT: bolder;                }                DIV.activity-title {                    font-size: 28;                    FONT-WEIGHT: bold;                }                  DIV.title {                   font-size: 25;                   FONT-WEIGHT: bold;                }                DIV.subtitle {                    font-size: 20;                    FONT-WEIGHT: bold;                }                DIV.subtitle-continue {                    FONT-WEIGHT: bold;                }" />
+                        </entry>
+                      </deltaObjectMap>
+                    </OTOverlay>
+                    <OTOverlay local_id="normal-text-overlay" name="Normal text" />
+                    <OTOverlay local_id="large-text-overlay" name="Large text">
+                      <deltaObjectMap>
+                        <entry key="2767fe20-6c7d-11dc-8314-0800200c9a66!/css-font">
+                          <OTCssText cssText="                body {                   font-size: 24;                 }                a {                    text-decoration: none;                  }                DIV.body {                     FONT-WEIGHT: bolder;                   FONT-STYLE: normal;                    FONT-FAMILY: Verdana, Arial;                    FONT-VARIANT: normal;                   TEXT-DECORATION: none                  }                DIV.story {                 FONT-WEIGHT: bolder;                }                DIV.activity-title {                    font-size: 37;                    FONT-WEIGHT: bold;                }                  DIV.title {                   font-size: 34;                   FONT-WEIGHT: bold;                }                DIV.subtitle {                    font-size: 28;                    FONT-WEIGHT: bold;                }                DIV.subtitle-continue {                    FONT-WEIGHT: bold;                }" />
+                        </entry>
+                      </deltaObjectMap>
+                    </OTOverlay>
+                  </choices>
+                  <currentChoice>
+                    <object refid="${normal-text-overlay}" />
+                  </currentChoice>
+                </OTChoice>
+              </prototype>
+              <controller>
+                <OTPrototypeEventController>
+                  <mapping>
+                    <OTPrototypeMapEntry modelProperty="overlays[0]" prototypeProperty="currentChoice" />
+                  </mapping>
+                </OTPrototypeEventController>
+              </controller>
+            </OTPrototypeViewEntry>
+            <OTPrototypeViewEntry local_id="language-choice-view" objectClass="org.concord.otrunk.OTSystem" viewClass="org.concord.otrunk.view.prototype.OTPrototypeView" copyPrototype="false">
+              <viewEntry>
+                <object refid="${choice-combo-view}" />
+              </viewEntry>
+              <prototype>
+                <OTChoice>
+                  <choices>
+                    <OTOverlay local_id="english-overlay" name="English" />
+                    <OTOverlay local_id="spanish-overlay" name="Español" />
+                  </choices>
+                  <currentChoice>
+                    <object refid="${english-overlay}" />
+                  </currentChoice>
+                </OTChoice>
+              </prototype>
+              <controller>
+                <OTPrototypeEventController>
+                  <mapping>
+                    <OTPrototypeMapEntry modelProperty="overlays[1]" prototypeProperty="currentChoice" />
+                  </mapping>
+                </OTPrototypeEventController>
+              </controller>
+            </OTPrototypeViewEntry>
+            <OTViewEntry objectClass="org.concord.graph.util.state.OTDrawingTool2" viewClass="org.concord.datagraph.state.OTDataDrawingToolView" />
+          </views>
+        </OTViewBundle>
+        <OTScriptEngineBundle>
+          <engines>
+            <OTScriptEngineEntry objectClass="org.concord.otrunk.script.js.OTJavascript" engineClass="org.concord.otrunk.script.js.OTJavascriptEngine" />
+          </engines>
+        </OTScriptEngineBundle>
+        <OTInterfaceManager>
+          <deviceConfigs>
+            <OTDeviceConfig configString="none" deviceId="10" />
+          </deviceConfigs>
+        </OTInterfaceManager>
+      </bundles>
+      <overlays>
+        <object refid="${normal-text-overlay}" />
+        <object refid="${english-overlay}" />
+      </overlays>
+      <root>
+        <OTUDLContainer name="UDL Activity">
+          <cssColor>
+            <object refid="${css-color}" />
+          </cssColor>
+          <title>
+            <OTCompoundDoc local_id="title">
+              <bodyText>
+                <div class="leftpanel">
+                  <img src="http://udl.concord.org/share/udl-tree-only.png" width="70" height="73" />
+                  <br />
+                  <div class="activity-title">UDL Activity</div>
+                </div>
+              </bodyText>
+            </OTCompoundDoc>
+          </title>
+          <menu>
+            <OTViewChild useScrollPane="true" scrollPanelHasBorder="false">
+              <object>
+                <object refid="${menu}" />
+              </object>
+            </OTViewChild>
+          </menu>
+          <topBar>
+            <OTCompoundDoc>
+              <bodyText>
+                <div class="top-menu">
+                  <table>
+                    <tr>
+                      <td>
+                        <object refid="${system}" viewid="2767fe20-6c7d-11dc-8314-0800200c9a66!/language-choice-view" />
+                      </td>
+                      <td>
+                        <object refid="${system}" viewid="2767fe20-6c7d-11dc-8314-0800200c9a66!/textsize-choice-view" />
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+              </bodyText>
+            </OTCompoundDoc>
+          </topBar>
+          <characters>
+            <OTUDLCharacterGroup local_id="character-group">
+              <topLevelCardContainer>
+                <object refid="${section-card-container}" />
+              </topLevelCardContainer>
+              <characters>
+                <OTUDLCharacter local_id="character_affective" inactiveImageURL="http://confluence.concord.org/download/attachments/12353/blah-head-small.png" activeImageURL="http://confluence.concord.org/download/attachments/12353/blah-head.png" />
+                <OTUDLCharacter local_id="character_strategic" inactiveImageURL="http://confluence.concord.org/download/attachments/12353/clunk-head-small.png" activeImageURL="http://confluence.concord.org/download/attachments/12353/clunk-head.png" />
+                <OTUDLCharacter local_id="character_recognition" inactiveImageURL="http://confluence.concord.org/download/attachments/12353/roxy-head-small.png" activeImageURL="http://confluence.concord.org/download/attachments/11818/roxy-large.gif" />
+              </characters>
+              <speechFrame>
+                <OTFrame local_id="speech_frame" width="380" height="340" borderlessPopup="false" />
+              </speechFrame>
+            </OTUDLCharacterGroup>
+          </characters>
+          <content>
+            <OTCardContainer local_id="section-card-container" loadViewOnlyOnDemand="true">
+              <cards>
+                <OTUDLSection local_id="section_1" name="Pre-test" isComputerBased="false" isIntroduction="false" isMath="false" isPosttest="true" isPretest="false" isReading="false" isWrapup="false">
+                  <header>
+                    <OTCompoundDoc id="2767fe20-6c7d-11dc-8314-0800200c9a66!/section_1/header">
+                      <bodyText>
+                        <div class="title">Pre-test</div>
+                      </bodyText>
+                    </OTCompoundDoc>
+                  </header>
+                  <content>
+                    <OTCardContainer local_id="section-1-card-container" contentsMayScroll="true" loadViewOnlyOnDemand="true">
+                      <cards>
+                        <OTUDLCompoundDoc local_id="page-1" name="1">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle-continued" />
+                                  Answer the following questions. When you have finished, press the
+                                  <b>Submit</b>
+                                  button. Warning: after you hit the Submit button, you will not be able to go back and change your answers.
+                                  <p />
+                                  1. Two objects have collected static electricity with the same charge.  What would the objects do when placed near each other?
+                                  <object refid="cd232303-7760-11dc-88e0-f91e4efaa30a" />
+                                  <p />
+                                  2. Each of the arrangements below includes a battery, light bulb, and wire.  Which arrangement will light the bulb?
+                                  <br />
+                                  <img src="http://udl.concord.org/share/Electricity/pretest34.q2.jpg" />
+                                  <p />
+                                  <object refid="965fb557-7761-11dc-88e0-f91e4efaa30a" />
+                                  <p />
+                                  Explain why you chose that answer:
+                                  <br />
+                                  <object refid="b4b228e7-7761-11dc-88e0-f91e4efaa30a" />
+                                  <p />
+                                  Press the
+                                  <b>Right Arrow below</b>
+                                  to go to the next page.
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                          <documentRefs>
+                            <OTChoice id="cd232303-7760-11dc-88e0-f91e4efaa30a" name="Choices">
+                              <choices>
+                                <OTCompoundDoc name="repel">
+                                  <bodyText>repel</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="attract">
+                                  <bodyText>attract</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="nothing">
+                                  <bodyText>nothing</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="stick together">
+                                  <bodyText>stick together</bodyText>
+                                </OTCompoundDoc>
+                              </choices>
+                            </OTChoice>
+                            <OTChoice id="965fb557-7761-11dc-88e0-f91e4efaa30a" name="Choices">
+                              <choices>
+                                <OTCompoundDoc name="a.">
+                                  <bodyText>a.</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="b.">
+                                  <bodyText>b.</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="c.">
+                                  <bodyText>c.</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="d.">
+                                  <bodyText>d.</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="e.">
+                                  <bodyText>e.</bodyText>
+                                </OTCompoundDoc>
+                              </choices>
+                            </OTChoice>
+                            <OTText id="b4b228e7-7761-11dc-88e0-f91e4efaa30a" name="Text field" />
+                          </documentRefs>
+                        </OTUDLCompoundDoc>
+                        <OTUDLCompoundDoc id="f2fe0928-7761-11dc-88e0-f91e4efaa30a" name="%f2fe0928-7761-11dc-88e0-f91e4efaa30a">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle-continued" />
+                                  3. There are 100 positive charges and 98 negative charges on a piece of metal.  What is the result?
+                                  <p />
+                                  <object refid="2d203cea-7762-11dc-88e0-f91e4efaa30a" />
+                                  <p />
+                                  Explain why you chose that answer:
+                                  <br />
+                                  <object refid="09a91b19-7762-11dc-88e0-f91e4efaa30a" />
+                                  <p />
+                                  4. When you rub a balloon with wool, what happens?
+                                  <p />
+                                  <object refid="48ab2c05-7762-11dc-88e0-f91e4efaa30a" />
+                                  <p />
+                                  Press the
+                                  <b>Submit</b>
+                                  button when you are done.
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                          <documentRefs>
+                            <OTChoice id="2d203cea-7762-11dc-88e0-f91e4efaa30a" name="Choices">
+                              <choices>
+                                <OTCompoundDoc name="The charge of the metal is 198.">
+                                  <bodyText>The charge of the metal is 198.</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="The charge of the metal is -2.">
+                                  <bodyText>The charge of the metal is -2.</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="The charge of the metal is +2.">
+                                  <bodyText>The charge of the metal is +2.</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="The metal will attract objects that have a positive charge.">
+                                  <bodyText>The metal will attract objects that have a positive charge.</bodyText>
+                                </OTCompoundDoc>
+                              </choices>
+                            </OTChoice>
+                            <OTText id="09a91b19-7762-11dc-88e0-f91e4efaa30a" name="Text field" />
+                            <OTChoice id="48ab2c05-7762-11dc-88e0-f91e4efaa30a" name="Choices">
+                              <choices>
+                                <OTCompoundDoc name="Electric charges move from the wool to the balloon.">
+                                  <bodyText>Electric charges move from the wool to the balloon.</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="Electric charges are created on the balloon.">
+                                  <bodyText>Electric charges are created on the balloon.</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="Neither the wool nor the balloon changes its electric charge.">
+                                  <bodyText>Neither the wool nor the balloon changes its electric charge.</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="The balloon and the wool will repel each other.">
+                                  <bodyText>The balloon and the wool will repel each other.</bodyText>
+                                </OTCompoundDoc>
+                              </choices>
+                            </OTChoice>
+                          </documentRefs>
+                        </OTUDLCompoundDoc>
+                      </cards>
+                      <currentCard>
+                        <object refid="f2fe0928-7761-11dc-88e0-f91e4efaa30a" />
+                      </currentCard>
+                      <viewedCards>
+                        <object refid="${page-1}" />
+                        <object refid="f2fe0928-7761-11dc-88e0-f91e4efaa30a" />
+                      </viewedCards>
+                    </OTCardContainer>
+                  </content>
+                  <footer>
+                    <OTCompoundDoc id="2767fe20-6c7d-11dc-8314-0800200c9a66!/section_1/footer">
+                      <bodyText>
+                        <div align="center">
+                          <table>
+                            <tr>
+                              <td>
+                                <object refid="${section-1-menu}" viewid="2767fe20-6c7d-11dc-8314-0800200c9a66!/menu-horizontal-circle" />
+                              </td>
+                            </tr>
+                          </table>
+                        </div>
+                      </bodyText>
+                    </OTCompoundDoc>
+                  </footer>
+                  <north>
+                    <object refid="${section_1/header}" />
+                  </north>
+                  <center>
+                    <object refid="${section-1-card-container}" />
+                  </center>
+                  <south>
+                    <object refid="${section_1/footer}" />
+                  </south>
+                </OTUDLSection>
+                <OTUDLSection id="163543bd-775f-11dc-88e0-f91e4efaa30a" name="Introduction" isComputerBased="false" isIntroduction="true" isMath="false" isPosttest="false" isPretest="false" isReading="false" isWrapup="false">
+                  <content>
+                    <OTCardContainer id="163543bf-775f-11dc-88e0-f91e4efaa30a" contentsMayScroll="true" loadViewOnlyOnDemand="true">
+                      <cards>
+                        <OTUDLCompoundDoc id="163543be-775f-11dc-88e0-f91e4efaa30a" name="%163543be-775f-11dc-88e0-f91e4efaa30a">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle">Driving question</div>
+                                  What is electricity?
+                                  <p />
+                                  <img src="http://udl.concord.org/share/Electricity/elect_circle.jpg" />
+                                  <p />
+                                  Electricity is a part of modern life. Almost everyone has electricity in their house and uses it in dozens of ways all day long. But most people don't know what electricity is or how it works! This unit will help you explore electricity.
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                        </OTUDLCompoundDoc>
+                        <OTUDLCompoundDoc id="35c73ef2-7763-11dc-88e0-f91e4efaa30a" name="%35c73ef2-7763-11dc-88e0-f91e4efaa30a">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle">Exploring the question</div>
+                                  What is electricity used for? Make a list of electrical devices and what they do. Share your list with the whole class.
+                                  <br />
+                                  <object refid="44cc4ee3-7763-11dc-88e0-f91e4efaa30a" />
+                                  <p />
+                                  What are sources of electricity? Make a list and share it with the whole class.
+                                  <br />
+                                  <object refid="53f0cdb4-7763-11dc-88e0-f91e4efaa30a" />
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                          <documentRefs>
+                            <OTText id="44cc4ee3-7763-11dc-88e0-f91e4efaa30a" name="Text field" />
+                            <OTText id="53f0cdb4-7763-11dc-88e0-f91e4efaa30a" name="Text field" />
+                          </documentRefs>
+                        </OTUDLCompoundDoc>
+                      </cards>
+                      <currentCard>
+                        <object refid="35c73ef2-7763-11dc-88e0-f91e4efaa30a" />
+                      </currentCard>
+                      <viewedCards>
+                        <object refid="163543be-775f-11dc-88e0-f91e4efaa30a" />
+                        <object refid="35c73ef2-7763-11dc-88e0-f91e4efaa30a" />
+                      </viewedCards>
+                    </OTCardContainer>
+                  </content>
+                  <header>
+                    <OTUDLCompoundDoc id="163543c0-775f-11dc-88e0-f91e4efaa30a" name="%163543c0-775f-11dc-88e0-f91e4efaa30a">
+                      <bodyText>
+                        <div class="title">Introduction</div>
+                      </bodyText>
+                    </OTUDLCompoundDoc>
+                  </header>
+                  <footer>
+                    <OTUDLCompoundDoc id="16356ad1-775f-11dc-88e0-f91e4efaa30a" name="%16356ad1-775f-11dc-88e0-f91e4efaa30a">
+                      <bodyText>
+                        <div align="center">
+                          <table>
+                            <tr>
+                              <td>
+                                <object refid="1636ca62-775f-11dc-88e0-f91e4efaa30a" viewid="2767fe20-6c7d-11dc-8314-0800200c9a66!/menu-horizontal-circle" />
+                              </td>
+                            </tr>
+                          </table>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                        <OTUDLMenu id="1636ca62-775f-11dc-88e0-f91e4efaa30a">
+                          <cardContainer>
+                            <object refid="163543bf-775f-11dc-88e0-f91e4efaa30a" />
+                          </cardContainer>
+                          <menuRule>
+                            <object refid="${page-rule}" />
+                          </menuRule>
+                        </OTUDLMenu>
+                        <object refid="${menu-horizontal-circle}" />
+                      </documentRefs>
+                    </OTUDLCompoundDoc>
+                  </footer>
+                  <north>
+                    <object refid="163543c0-775f-11dc-88e0-f91e4efaa30a" />
+                  </north>
+                  <center>
+                    <object refid="163543bf-775f-11dc-88e0-f91e4efaa30a" />
+                  </center>
+                  <south>
+                    <object refid="16356ad1-775f-11dc-88e0-f91e4efaa30a" />
+                  </south>
+                </OTUDLSection>
+                <OTUDLSection id="1b062cc3-775f-11dc-88e0-f91e4efaa30a" name="Activity 1" isComputerBased="true" isIntroduction="false" isMath="false" isPosttest="false" isPretest="false" isReading="false" isWrapup="false">
+                  <content>
+                    <OTCardContainer id="1b062cc5-775f-11dc-88e0-f91e4efaa30a" contentsMayScroll="true" loadViewOnlyOnDemand="true">
+                      <cards>
+                        <OTUDLCompoundDoc id="1b062cc4-775f-11dc-88e0-f91e4efaa30a" name="%1b062cc4-775f-11dc-88e0-f91e4efaa30a">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle">New page</div>
+                                  New page content
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                        </OTUDLCompoundDoc>
+                      </cards>
+                      <currentCard>
+                        <object refid="1b062cc4-775f-11dc-88e0-f91e4efaa30a" />
+                      </currentCard>
+                      <viewedCards>
+                        <object refid="1b062cc4-775f-11dc-88e0-f91e4efaa30a" />
+                      </viewedCards>
+                    </OTCardContainer>
+                  </content>
+                  <header>
+                    <OTUDLCompoundDoc id="1b062cc6-775f-11dc-88e0-f91e4efaa30a" name="%1b062cc6-775f-11dc-88e0-f91e4efaa30a">
+                      <bodyText>
+                        <div class="title">Activity 1</div>
+                      </bodyText>
+                    </OTUDLCompoundDoc>
+                  </header>
+                  <footer>
+                    <OTUDLCompoundDoc id="1b0653d7-775f-11dc-88e0-f91e4efaa30a" name="%1b0653d7-775f-11dc-88e0-f91e4efaa30a">
+                      <bodyText>
+                        <div align="center">
+                          <table>
+                            <tr>
+                              <td>
+                                <object refid="1b067ae8-775f-11dc-88e0-f91e4efaa30a" viewid="2767fe20-6c7d-11dc-8314-0800200c9a66!/menu-horizontal-circle" />
+                              </td>
+                            </tr>
+                          </table>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                        <OTUDLMenu id="1b067ae8-775f-11dc-88e0-f91e4efaa30a">
+                          <cardContainer>
+                            <object refid="1b062cc5-775f-11dc-88e0-f91e4efaa30a" />
+                          </cardContainer>
+                          <menuRule>
+                            <object refid="${page-rule}" />
+                          </menuRule>
+                        </OTUDLMenu>
+                        <object refid="${menu-horizontal-circle}" />
+                      </documentRefs>
+                    </OTUDLCompoundDoc>
+                  </footer>
+                  <north>
+                    <object refid="1b062cc6-775f-11dc-88e0-f91e4efaa30a" />
+                  </north>
+                  <center>
+                    <object refid="1b062cc5-775f-11dc-88e0-f91e4efaa30a" />
+                  </center>
+                  <south>
+                    <object refid="1b0653d7-775f-11dc-88e0-f91e4efaa30a" />
+                  </south>
+                </OTUDLSection>
+                <OTUDLSection id="1f24dcc9-775f-11dc-88e0-f91e4efaa30a" name="Activity 2" isComputerBased="true" isIntroduction="false" isMath="false" isPosttest="false" isPretest="false" isReading="false" isWrapup="false">
+                  <content>
+                    <OTCardContainer id="1f24dccb-775f-11dc-88e0-f91e4efaa30a" contentsMayScroll="true" loadViewOnlyOnDemand="true">
+                      <cards>
+                        <OTUDLCompoundDoc id="1f24dcca-775f-11dc-88e0-f91e4efaa30a" name="%1f24dcca-775f-11dc-88e0-f91e4efaa30a">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle">New page</div>
+                                  New page content
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                        </OTUDLCompoundDoc>
+                      </cards>
+                      <currentCard>
+                        <object refid="1f24dcca-775f-11dc-88e0-f91e4efaa30a" />
+                      </currentCard>
+                      <viewedCards>
+                        <object refid="1f24dcca-775f-11dc-88e0-f91e4efaa30a" />
+                      </viewedCards>
+                    </OTCardContainer>
+                  </content>
+                  <header>
+                    <OTUDLCompoundDoc id="1f2503dc-775f-11dc-88e0-f91e4efaa30a" name="%1f2503dc-775f-11dc-88e0-f91e4efaa30a">
+                      <bodyText>
+                        <div class="title">Activity 2</div>
+                      </bodyText>
+                    </OTUDLCompoundDoc>
+                  </header>
+                  <footer>
+                    <OTUDLCompoundDoc id="1f2503dd-775f-11dc-88e0-f91e4efaa30a" name="%1f2503dd-775f-11dc-88e0-f91e4efaa30a">
+                      <bodyText>
+                        <div align="center">
+                          <table>
+                            <tr>
+                              <td>
+                                <object refid="1f2551fe-775f-11dc-88e0-f91e4efaa30a" viewid="2767fe20-6c7d-11dc-8314-0800200c9a66!/menu-horizontal-circle" />
+                              </td>
+                            </tr>
+                          </table>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                        <OTUDLMenu id="1f2551fe-775f-11dc-88e0-f91e4efaa30a">
+                          <cardContainer>
+                            <object refid="1f24dccb-775f-11dc-88e0-f91e4efaa30a" />
+                          </cardContainer>
+                          <menuRule>
+                            <object refid="${page-rule}" />
+                          </menuRule>
+                        </OTUDLMenu>
+                        <object refid="${menu-horizontal-circle}" />
+                      </documentRefs>
+                    </OTUDLCompoundDoc>
+                  </footer>
+                  <north>
+                    <object refid="1f2503dc-775f-11dc-88e0-f91e4efaa30a" />
+                  </north>
+                  <center>
+                    <object refid="1f24dccb-775f-11dc-88e0-f91e4efaa30a" />
+                  </center>
+                  <south>
+                    <object refid="1f2503dd-775f-11dc-88e0-f91e4efaa30a" />
+                  </south>
+                </OTUDLSection>
+                <OTUDLSection id="236e6d5f-775f-11dc-88e0-f91e4efaa30a" name="Activity 3" isComputerBased="true" isIntroduction="false" isMath="false" isPosttest="false" isPretest="false" isReading="false" isWrapup="false">
+                  <content>
+                    <OTCardContainer id="236e6d61-775f-11dc-88e0-f91e4efaa30a" contentsMayScroll="true" loadViewOnlyOnDemand="true">
+                      <cards>
+                        <OTUDLCompoundDoc id="236e6d60-775f-11dc-88e0-f91e4efaa30a" name="%236e6d60-775f-11dc-88e0-f91e4efaa30a">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle">New page</div>
+                                  New page content
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                        </OTUDLCompoundDoc>
+                      </cards>
+                      <currentCard>
+                        <object refid="236e6d60-775f-11dc-88e0-f91e4efaa30a" />
+                      </currentCard>
+                      <viewedCards>
+                        <object refid="236e6d60-775f-11dc-88e0-f91e4efaa30a" />
+                      </viewedCards>
+                    </OTCardContainer>
+                  </content>
+                  <header>
+                    <OTUDLCompoundDoc id="236e6d62-775f-11dc-88e0-f91e4efaa30a" name="%236e6d62-775f-11dc-88e0-f91e4efaa30a">
+                      <bodyText>
+                        <div class="title">Activity 3</div>
+                      </bodyText>
+                    </OTUDLCompoundDoc>
+                  </header>
+                  <footer>
+                    <OTUDLCompoundDoc id="236e6d63-775f-11dc-88e0-f91e4efaa30a" name="%236e6d63-775f-11dc-88e0-f91e4efaa30a">
+                      <bodyText>
+                        <div align="center">
+                          <table>
+                            <tr>
+                              <td>
+                                <object refid="236e9474-775f-11dc-88e0-f91e4efaa30a" viewid="2767fe20-6c7d-11dc-8314-0800200c9a66!/menu-horizontal-circle" />
+                              </td>
+                            </tr>
+                          </table>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                        <OTUDLMenu id="236e9474-775f-11dc-88e0-f91e4efaa30a">
+                          <cardContainer>
+                            <object refid="236e6d61-775f-11dc-88e0-f91e4efaa30a" />
+                          </cardContainer>
+                          <menuRule>
+                            <object refid="${page-rule}" />
+                          </menuRule>
+                        </OTUDLMenu>
+                        <object refid="${menu-horizontal-circle}" />
+                      </documentRefs>
+                    </OTUDLCompoundDoc>
+                  </footer>
+                  <north>
+                    <object refid="236e6d62-775f-11dc-88e0-f91e4efaa30a" />
+                  </north>
+                  <center>
+                    <object refid="236e6d61-775f-11dc-88e0-f91e4efaa30a" />
+                  </center>
+                  <south>
+                    <object refid="236e6d63-775f-11dc-88e0-f91e4efaa30a" />
+                  </south>
+                </OTUDLSection>
+                <OTUDLSection id="27c8ede5-775f-11dc-88e0-f91e4efaa30a" name="Activity 4" isComputerBased="true" isIntroduction="false" isMath="false" isPosttest="false" isPretest="false" isReading="false" isWrapup="false">
+                  <content>
+                    <OTCardContainer id="27c8ede7-775f-11dc-88e0-f91e4efaa30a" contentsMayScroll="true" loadViewOnlyOnDemand="true">
+                      <cards>
+                        <OTUDLCompoundDoc id="27c8ede6-775f-11dc-88e0-f91e4efaa30a" name="%27c8ede6-775f-11dc-88e0-f91e4efaa30a">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle">New page</div>
+                                  New page content
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                        </OTUDLCompoundDoc>
+                      </cards>
+                      <currentCard>
+                        <object refid="27c8ede6-775f-11dc-88e0-f91e4efaa30a" />
+                      </currentCard>
+                      <viewedCards>
+                        <object refid="27c8ede6-775f-11dc-88e0-f91e4efaa30a" />
+                      </viewedCards>
+                    </OTCardContainer>
+                  </content>
+                  <header>
+                    <OTUDLCompoundDoc id="27c8ede8-775f-11dc-88e0-f91e4efaa30a" name="%27c8ede8-775f-11dc-88e0-f91e4efaa30a">
+                      <bodyText>
+                        <div class="title">Activity 4</div>
+                      </bodyText>
+                    </OTUDLCompoundDoc>
+                  </header>
+                  <footer>
+                    <OTUDLCompoundDoc id="27c8ede9-775f-11dc-88e0-f91e4efaa30a" name="%27c8ede9-775f-11dc-88e0-f91e4efaa30a">
+                      <bodyText>
+                        <div align="center">
+                          <table>
+                            <tr>
+                              <td>
+                                <object refid="27c9ff5a-775f-11dc-88e0-f91e4efaa30a" viewid="2767fe20-6c7d-11dc-8314-0800200c9a66!/menu-horizontal-circle" />
+                              </td>
+                            </tr>
+                          </table>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                        <OTUDLMenu id="27c9ff5a-775f-11dc-88e0-f91e4efaa30a">
+                          <cardContainer>
+                            <object refid="27c8ede7-775f-11dc-88e0-f91e4efaa30a" />
+                          </cardContainer>
+                          <menuRule>
+                            <object refid="${page-rule}" />
+                          </menuRule>
+                        </OTUDLMenu>
+                        <object refid="${menu-horizontal-circle}" />
+                      </documentRefs>
+                    </OTUDLCompoundDoc>
+                  </footer>
+                  <north>
+                    <object refid="27c8ede8-775f-11dc-88e0-f91e4efaa30a" />
+                  </north>
+                  <center>
+                    <object refid="27c8ede7-775f-11dc-88e0-f91e4efaa30a" />
+                  </center>
+                  <south>
+                    <object refid="27c8ede9-775f-11dc-88e0-f91e4efaa30a" />
+                  </south>
+                </OTUDLSection>
+                <OTUDLSection id="2b9ab66b-775f-11dc-88e0-f91e4efaa30a" name="Story" isComputerBased="false" isIntroduction="false" isMath="false" isPosttest="false" isPretest="false" isReading="true" isWrapup="false">
+                  <content>
+                    <OTCardContainer id="2b9ab66d-775f-11dc-88e0-f91e4efaa30a" contentsMayScroll="true" loadViewOnlyOnDemand="true">
+                      <cards>
+                        <OTUDLCompoundDoc id="2b9ab66c-775f-11dc-88e0-f91e4efaa30a" name="%2b9ab66c-775f-11dc-88e0-f91e4efaa30a">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle">New page</div>
+                                  New page content
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                        </OTUDLCompoundDoc>
+                      </cards>
+                      <currentCard>
+                        <object refid="2b9ab66c-775f-11dc-88e0-f91e4efaa30a" />
+                      </currentCard>
+                      <viewedCards>
+                        <object refid="2b9ab66c-775f-11dc-88e0-f91e4efaa30a" />
+                      </viewedCards>
+                    </OTCardContainer>
+                  </content>
+                  <header>
+                    <OTUDLCompoundDoc id="2b9ab66e-775f-11dc-88e0-f91e4efaa30a" name="%2b9ab66e-775f-11dc-88e0-f91e4efaa30a">
+                      <bodyText>
+                        <div class="title">Story</div>
+                      </bodyText>
+                    </OTUDLCompoundDoc>
+                  </header>
+                  <footer>
+                    <OTUDLCompoundDoc id="2b9ab66f-775f-11dc-88e0-f91e4efaa30a" name="%2b9ab66f-775f-11dc-88e0-f91e4efaa30a">
+                      <bodyText>
+                        <div align="center">
+                          <table>
+                            <tr>
+                              <td>
+                                <object refid="2b9adc80-775f-11dc-88e0-f91e4efaa30a" viewid="2767fe20-6c7d-11dc-8314-0800200c9a66!/menu-horizontal-circle" />
+                              </td>
+                            </tr>
+                          </table>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                        <OTUDLMenu id="2b9adc80-775f-11dc-88e0-f91e4efaa30a">
+                          <cardContainer>
+                            <object refid="2b9ab66d-775f-11dc-88e0-f91e4efaa30a" />
+                          </cardContainer>
+                          <menuRule>
+                            <object refid="${page-rule}" />
+                          </menuRule>
+                        </OTUDLMenu>
+                        <object refid="${menu-horizontal-circle}" />
+                      </documentRefs>
+                    </OTUDLCompoundDoc>
+                  </footer>
+                  <north>
+                    <object refid="2b9ab66e-775f-11dc-88e0-f91e4efaa30a" />
+                  </north>
+                  <center>
+                    <object refid="2b9ab66d-775f-11dc-88e0-f91e4efaa30a" />
+                  </center>
+                  <south>
+                    <object refid="2b9ab66f-775f-11dc-88e0-f91e4efaa30a" />
+                  </south>
+                </OTUDLSection>
+                <OTUDLSection id="34fe45f1-775f-11dc-88e0-f91e4efaa30a" name="Math" isComputerBased="false" isIntroduction="false" isMath="true" isPosttest="false" isPretest="false" isReading="false" isWrapup="false">
+                  <content>
+                    <OTCardContainer id="34fe6d03-775f-11dc-88e0-f91e4efaa30a" contentsMayScroll="true" loadViewOnlyOnDemand="true">
+                      <cards>
+                        <OTUDLCompoundDoc id="34fe45f2-775f-11dc-88e0-f91e4efaa30a" name="%34fe45f2-775f-11dc-88e0-f91e4efaa30a">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle">New page</div>
+                                  New page content
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                        </OTUDLCompoundDoc>
+                      </cards>
+                      <currentCard>
+                        <object refid="34fe45f2-775f-11dc-88e0-f91e4efaa30a" />
+                      </currentCard>
+                      <viewedCards>
+                        <object refid="34fe45f2-775f-11dc-88e0-f91e4efaa30a" />
+                      </viewedCards>
+                    </OTCardContainer>
+                  </content>
+                  <header>
+                    <OTUDLCompoundDoc id="34fe6d04-775f-11dc-88e0-f91e4efaa30a" name="%34fe6d04-775f-11dc-88e0-f91e4efaa30a">
+                      <bodyText>
+                        <div class="title">Math</div>
+                      </bodyText>
+                    </OTUDLCompoundDoc>
+                  </header>
+                  <footer>
+                    <OTUDLCompoundDoc id="34fe6d05-775f-11dc-88e0-f91e4efaa30a" name="%34fe6d05-775f-11dc-88e0-f91e4efaa30a">
+                      <bodyText>
+                        <div align="center">
+                          <table>
+                            <tr>
+                              <td>
+                                <object refid="34fe9416-775f-11dc-88e0-f91e4efaa30a" viewid="2767fe20-6c7d-11dc-8314-0800200c9a66!/menu-horizontal-circle" />
+                              </td>
+                            </tr>
+                          </table>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                        <OTUDLMenu id="34fe9416-775f-11dc-88e0-f91e4efaa30a">
+                          <cardContainer>
+                            <object refid="34fe6d03-775f-11dc-88e0-f91e4efaa30a" />
+                          </cardContainer>
+                          <menuRule>
+                            <object refid="${page-rule}" />
+                          </menuRule>
+                        </OTUDLMenu>
+                        <object refid="${menu-horizontal-circle}" />
+                      </documentRefs>
+                    </OTUDLCompoundDoc>
+                  </footer>
+                  <north>
+                    <object refid="34fe6d04-775f-11dc-88e0-f91e4efaa30a" />
+                  </north>
+                  <center>
+                    <object refid="34fe6d03-775f-11dc-88e0-f91e4efaa30a" />
+                  </center>
+                  <south>
+                    <object refid="34fe6d05-775f-11dc-88e0-f91e4efaa30a" />
+                  </south>
+                </OTUDLSection>
+                <OTUDLSection id="3ec88787-775f-11dc-88e0-f91e4efaa30a" name="Wrapping up" isComputerBased="false" isIntroduction="false" isMath="false" isPosttest="false" isPretest="false" isReading="false" isWrapup="true">
+                  <content>
+                    <OTCardContainer id="3ec88789-775f-11dc-88e0-f91e4efaa30a" contentsMayScroll="true" loadViewOnlyOnDemand="true">
+                      <cards>
+                        <OTUDLCompoundDoc id="3ec88788-775f-11dc-88e0-f91e4efaa30a" name="%3ec88788-775f-11dc-88e0-f91e4efaa30a">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle">New page</div>
+                                  New page content
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                        </OTUDLCompoundDoc>
+                      </cards>
+                      <currentCard>
+                        <object refid="3ec88788-775f-11dc-88e0-f91e4efaa30a" />
+                      </currentCard>
+                      <viewedCards>
+                        <object refid="3ec88788-775f-11dc-88e0-f91e4efaa30a" />
+                      </viewedCards>
+                    </OTCardContainer>
+                  </content>
+                  <header>
+                    <OTUDLCompoundDoc id="3ec8878a-775f-11dc-88e0-f91e4efaa30a" name="%3ec8878a-775f-11dc-88e0-f91e4efaa30a">
+                      <bodyText>
+                        <div class="title">Wrapping up</div>
+                      </bodyText>
+                    </OTUDLCompoundDoc>
+                  </header>
+                  <footer>
+                    <OTUDLCompoundDoc id="3ec8878b-775f-11dc-88e0-f91e4efaa30a" name="%3ec8878b-775f-11dc-88e0-f91e4efaa30a">
+                      <bodyText>
+                        <div align="center">
+                          <table>
+                            <tr>
+                              <td>
+                                <object refid="3ec8d5ac-775f-11dc-88e0-f91e4efaa30a" viewid="2767fe20-6c7d-11dc-8314-0800200c9a66!/menu-horizontal-circle" />
+                              </td>
+                            </tr>
+                          </table>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                        <OTUDLMenu id="3ec8d5ac-775f-11dc-88e0-f91e4efaa30a">
+                          <cardContainer>
+                            <object refid="3ec88789-775f-11dc-88e0-f91e4efaa30a" />
+                          </cardContainer>
+                          <menuRule>
+                            <object refid="${page-rule}" />
+                          </menuRule>
+                        </OTUDLMenu>
+                        <object refid="${menu-horizontal-circle}" />
+                      </documentRefs>
+                    </OTUDLCompoundDoc>
+                  </footer>
+                  <north>
+                    <object refid="3ec8878a-775f-11dc-88e0-f91e4efaa30a" />
+                  </north>
+                  <center>
+                    <object refid="3ec88789-775f-11dc-88e0-f91e4efaa30a" />
+                  </center>
+                  <south>
+                    <object refid="3ec8878b-775f-11dc-88e0-f91e4efaa30a" />
+                  </south>
+                </OTUDLSection>
+                <OTUDLSection id="46f1270d-775f-11dc-88e0-f91e4efaa30a" name="Post-test" isComputerBased="false" isIntroduction="false" isMath="false" isPosttest="true" isPretest="false" isReading="false" isWrapup="false">
+                  <content>
+                    <OTCardContainer id="46f14e1f-775f-11dc-88e0-f91e4efaa30a" contentsMayScroll="true" loadViewOnlyOnDemand="true">
+                      <cards>
+                        <OTUDLCompoundDoc id="46f1270e-775f-11dc-88e0-f91e4efaa30a" name="%46f1270e-775f-11dc-88e0-f91e4efaa30a">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle-continued" />
+                                  Answer the following questions. When you have finished, press the
+                                  <b>Submit</b>
+                                  button. Warning: after you hit the Submit button, you will not be able to go back and change your answers.
+                                  <p />
+                                  1. Two objects have collected static electricity with the same charge.  What would the objects do when placed near each other?
+                                  <object refid="cd232303-7760-11dc-88e0-f91e4efaa30a" />
+                                  <p />
+                                  2. Each of the arrangements below includes a battery, light bulb, and wire.  Which arrangement will light the bulb?
+                                  <br />
+                                  <img src="http://udl.concord.org/share/Electricity/pretest34.q2.jpg" />
+                                  <p />
+                                  <object refid="965fb557-7761-11dc-88e0-f91e4efaa30a" />
+                                  <p />
+                                  Explain why you chose that answer:
+                                  <br />
+                                  <object refid="b4b228e7-7761-11dc-88e0-f91e4efaa30a" />
+                                  <p />
+                                  Press the
+                                  <b>Right Arrow below</b>
+                                  to go to the next page.
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                          <documentRefs>
+                            <object refid="cd232303-7760-11dc-88e0-f91e4efaa30a" />
+                            <object refid="965fb557-7761-11dc-88e0-f91e4efaa30a" />
+                            <object refid="b4b228e7-7761-11dc-88e0-f91e4efaa30a" />
+                          </documentRefs>
+                        </OTUDLCompoundDoc>
+                        <OTUDLCompoundDoc id="beeb1591-7762-11dc-88e0-f91e4efaa30a" name="%beeb1591-7762-11dc-88e0-f91e4efaa30a">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle-continued" />
+                                  3. There are 100 positive charges and 98 negative charges on a piece of metal.  What is the result?
+                                  <p />
+                                  <object refid="2d203cea-7762-11dc-88e0-f91e4efaa30a" />
+                                  <p />
+                                  Explain why you chose that answer:
+                                  <br />
+                                  <object refid="09a91b19-7762-11dc-88e0-f91e4efaa30a" />
+                                  <p />
+                                  4. When you rub a balloon with wool, what happens?
+                                  <p />
+                                  <object refid="48ab2c05-7762-11dc-88e0-f91e4efaa30a" />
+                                  <p />
+                                  Press the
+                                  <b>Submit</b>
+                                  button when you are done.
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                          <documentRefs>
+                            <object refid="2d203cea-7762-11dc-88e0-f91e4efaa30a" />
+                            <object refid="09a91b19-7762-11dc-88e0-f91e4efaa30a" />
+                            <object refid="48ab2c05-7762-11dc-88e0-f91e4efaa30a" />
+                          </documentRefs>
+                        </OTUDLCompoundDoc>
+                      </cards>
+                      <currentCard>
+                        <object refid="beeb1591-7762-11dc-88e0-f91e4efaa30a" />
+                      </currentCard>
+                      <viewedCards>
+                        <object refid="46f1270e-775f-11dc-88e0-f91e4efaa30a" />
+                        <object refid="beeb1591-7762-11dc-88e0-f91e4efaa30a" />
+                      </viewedCards>
+                    </OTCardContainer>
+                  </content>
+                  <header>
+                    <OTUDLCompoundDoc id="46f14e20-775f-11dc-88e0-f91e4efaa30a" name="%46f14e20-775f-11dc-88e0-f91e4efaa30a">
+                      <bodyText>
+                        <div class="title">Post-test</div>
+                      </bodyText>
+                    </OTUDLCompoundDoc>
+                  </header>
+                  <footer>
+                    <OTUDLCompoundDoc id="46f14e21-775f-11dc-88e0-f91e4efaa30a" name="%46f14e21-775f-11dc-88e0-f91e4efaa30a">
+                      <bodyText>
+                        <div align="center">
+                          <table>
+                            <tr>
+                              <td>
+                                <object refid="46f17532-775f-11dc-88e0-f91e4efaa30a" viewid="2767fe20-6c7d-11dc-8314-0800200c9a66!/menu-horizontal-circle" />
+                              </td>
+                            </tr>
+                          </table>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                        <OTUDLMenu id="46f17532-775f-11dc-88e0-f91e4efaa30a">
+                          <cardContainer>
+                            <object refid="46f14e1f-775f-11dc-88e0-f91e4efaa30a" />
+                          </cardContainer>
+                          <menuRule>
+                            <object refid="${page-rule}" />
+                          </menuRule>
+                        </OTUDLMenu>
+                        <object refid="${menu-horizontal-circle}" />
+                      </documentRefs>
+                    </OTUDLCompoundDoc>
+                  </footer>
+                  <north>
+                    <object refid="46f14e20-775f-11dc-88e0-f91e4efaa30a" />
+                  </north>
+                  <center>
+                    <object refid="46f14e1f-775f-11dc-88e0-f91e4efaa30a" />
+                  </center>
+                  <south>
+                    <object refid="46f14e21-775f-11dc-88e0-f91e4efaa30a" />
+                  </south>
+                </OTUDLSection>
+              </cards>
+              <currentCard>
+                <object refid="163543bd-775f-11dc-88e0-f91e4efaa30a" />
+              </currentCard>
+              <viewedCards>
+                <object refid="${section_1}" />
+                <object refid="163543bd-775f-11dc-88e0-f91e4efaa30a" />
+                <object refid="1b062cc3-775f-11dc-88e0-f91e4efaa30a" />
+                <object refid="1f24dcc9-775f-11dc-88e0-f91e4efaa30a" />
+                <object refid="236e6d5f-775f-11dc-88e0-f91e4efaa30a" />
+                <object refid="27c8ede5-775f-11dc-88e0-f91e4efaa30a" />
+                <object refid="2b9ab66b-775f-11dc-88e0-f91e4efaa30a" />
+                <object refid="34fe45f1-775f-11dc-88e0-f91e4efaa30a" />
+                <object refid="3ec88787-775f-11dc-88e0-f91e4efaa30a" />
+                <object refid="46f1270d-775f-11dc-88e0-f91e4efaa30a" />
+              </viewedCards>
+            </OTCardContainer>
+          </content>
+          <script>
+            <OTScriptObject>
+              <variables>
+                <OTScriptVariable name="cardContainer">
+                  <reference>
+                    <object refid="${section-card-container}" />
+                  </reference>
+                </OTScriptVariable>
+                <OTScriptVariable name="system">
+                  <reference>
+                    <object refid="${system}" />
+                  </reference>
+                </OTScriptVariable>
+                <OTScriptVariable name="menuPageRule">
+                  <reference>
+                    <object refid="${page-rule}" />
+                  </reference>
+                </OTScriptVariable>
+                <OTScriptVariable name="sampleMenu">
+                  <reference>
+                    <object refid="${menu}" />
+                  </reference>
+                </OTScriptVariable>
+                <OTScriptVariable name="menuHorizontalView">
+                  <reference>
+                    <object refid="${menu-horizontal-circle}" />
+                  </reference>
+                </OTScriptVariable>
+              </variables>
+              <script>
+                <object refid="${authoring_script.js}" />
+              </script>
+              <scriptState />
+            </OTScriptObject>
+          </script>
+        </OTUDLContainer>
+      </root>
+      <library>
+        <OTUDLMenu local_id="menu">
+          <cardContainer>
+            <object refid="${section-card-container}" />
+          </cardContainer>
+          <menuRule>
+            <object refid="${section-rule}" />
+          </menuRule>
+        </OTUDLMenu>
+        <OTUDLMenu local_id="section-1-menu">
+          <cardContainer>
+            <object refid="${section-1-card-container}" />
+          </cardContainer>
+          <menuRule>
+            <object refid="${page-rule}" />
+          </menuRule>
+        </OTUDLMenu>
+        <OTSnapshotAlbum local_id="album" />
+        <OTDefinitionManager local_id="definition-manager">
+          <frame>
+            <OTFrame local_id="definition_frame" width="280" height="150" borderlessPopup="true" />
+          </frame>
+        </OTDefinitionManager>
+        <OTUDLMenuRule local_id="page-rule" jumpToViewedCard="true" stepAhead="true" />
+        <OTUDLMenuRule local_id="section-rule" jumpToAnyCard="true" />
+        <OTJavascript local_id="change_page.js">
+          <script>importClass(Packages.java.awt.event.ActionListener);
+						importClass(Packages.java.util.Vector);
+						importClass(Packages.org.concord.otrunk.udl3.OTQuestionList);
+						importClass(Packages.org.concord.framework.otrunk.OTObjectList);
+						importClass(Packages.javax.swing.JOptionPane);
+						
+						var numCards;
+						var currentcard;
+						var passwordfield;
+
+						var buttonHandler =
+						{
+								actionPerformed: function(evt)
+								{
+									if (passwordfield != null){
+									var passwordAttempt = passwordfield.getText();
+									if (passwordAttempt.equalsIgnoreCase(password.getText())){
+										cardContainer.setCurrentCard(card);
+										return;
+									} else {
+										JOptionPane.showMessageDialog(null, "Sorry, that's not the correct password.");
+										return;
+									}
+								}
+										cardContainer.setCurrentCard(card);
+								}
+						};
+						var buttonListener = new ActionListener(buttonHandler);
+
+						function init() {
+							button.addActionListener(buttonListener);
+
+							return true;
+						}
+
+						function save() {
+							button.removeActionListener(buttonListener);
+							return true;
+						}</script>
+        </OTJavascript>
+        <OTJavascript local_id="show_message.js">
+          <script>importClass(Packages.java.awt.event.ActionListener);
+						importClass(Packages.java.util.Vector);
+						importClass(Packages.org.concord.otrunk.udl3.OTQuestionList);
+						importClass(Packages.org.concord.framework.otrunk.OTObjectList);
+						importClass(Packages.javax.swing.JOptionPane);
+
+						var buttonHandler =
+						{
+								actionPerformed: function(evt)
+								{
+									var messageString = message.getText();
+									JOptionPane.showMessageDialog(null, messageString);
+								}
+						};
+						var buttonListener = new ActionListener(buttonHandler);
+
+						function init() {
+							button.addActionListener(buttonListener);
+
+							return true;
+						}
+
+						function save() {
+							button.removeActionListener(buttonListener);
+							return true;
+						}</script>
+        </OTJavascript>
+        <OTJavascript local_id="authoring_script.js">
+          <script>importClass(Packages.org.concord.framework.otrunk.OTChangeEvent);
+						importClass(Packages.org.concord.framework.otrunk.OTChangeListener);
+						importClass(Packages.org.concord.framework.otrunk.OTObject);
+						importClass(Packages.org.concord.framework.otrunk.OTObjectList);
+						importClass(Packages.org.concord.otrunk.ui.OTCardContainer);
+						importClass(Packages.org.concord.otrunk.udl3.OTUDLMenu);
+						importClass(Packages.java.lang.System);
+						importClass(Packages.org.concord.framework.otrunk.OTObjectList);
+						
+						
+						var pageHandler =
+						{
+							stateChanged: function(evt)
+							{
+								if (evt.getProperty().equalsIgnoreCase("coachStatements") &amp;&amp; evt.getOperation().equalsIgnoreCase("add")){
+									var statement = evt.getValue();
+									var statementDoc = statement.getStatement();
+									var statementText = statementDoc.getBodyText();
+									statementDoc.setBodyText("&lt;div class=\"buffer\"&gt;"+
+																"&lt;div class=\"border\"&gt;"+
+																	"&lt;div class=\"body\"&gt;"+
+																		statementText +
+																	"&lt;/div&gt;"+
+																"&lt;/div&gt;"+
+														"&lt;/div&gt;");
+								}
+							}
+						}
+						var pageListener = new OTChangeListener(pageHandler);
+						
+						var sectionHandler =
+						{
+							stateChanged: function(evt)
+							{
+								if (evt.getProperty().equalsIgnoreCase("name")){
+									var section = evt.getSource();
+									var header = section.getHeader();
+										
+										header.setBodyText("&lt;div class=\"title\"&gt;"+
+															section.getName() +
+														"&lt;/div&gt;");
+								}
+							}
+						}
+						
+						var sectionListener = new OTChangeListener(sectionHandler);
+						
+						var sectionContainerHandler =
+						{
+								stateChanged: function(evt)
+								{
+									if (evt.getProperty().equalsIgnoreCase("currentCard")){
+										var numCards = evt.getSource().getCards().size();
+										var section = evt.getSource().getCards().get(numCards-1);
+										section.getContent().addOTChangeListener(pageContainerListener);
+									}
+									if (evt.getProperty().equalsIgnoreCase("cards")) {
+										var numCards = evt.getSource().getCards().size();
+										var section = evt.getSource().getCards().get(numCards-1);
+										section.setName("Section "+numCards);
+										
+										var header = section.getHeader();
+										
+										header.setBodyText("&lt;div class=\"title\"&gt;"+
+															"Section " + numCards +
+														"&lt;/div&gt;");
+										
+										var doc = section.getContent().getCurrentCard();
+										
+										doc.setBodyText("&lt;div class=\"buffer\"&gt;"+
+															"&lt;div class=\"border\"&gt;"+
+																"&lt;div class=\"body\"&gt;"+
+																"&lt;div class=\"subtitle\"&gt;\n"+
+																		"New page"+
+																	"\n&lt;/div&gt;\n"+
+																	"New page content"+
+																"\n&lt;/div&gt;"+
+															"&lt;/div&gt;"+
+														"&lt;/div&gt;");
+										
+										pages.push(doc)	
+										pages[pages.length-1].addOTChangeListener(pageListener);
+														
+										var menu = doc.getOTObjectService().createObject(sampleMenu.otClass().getInstanceClass());
+										menu.setCardContainer(section.getContent());
+										menu.setMenuRule(menuPageRule);
+										
+										system.getLibrary().add(menu);
+										
+										var footer = section.getFooter();
+										
+										var otid = menu.getOTObjectService().getExternalID(menu);
+										var viewid = menu.getOTObjectService().getExternalID(menuHorizontalView);
+										
+										footer.setBodyText("&lt;div align=\"center\"&gt;" +
+															"&lt;table&gt;"+
+																	"&lt;tr&gt;"+
+																		"&lt;td&gt;"+
+																			"&lt;object refid=\""+otid+"\" viewid=\""+viewid+"\"/&gt;" +
+																		"&lt;/td&gt;"+
+																	"&lt;/tr&gt;"+
+															"&lt;/table&gt;"+
+															"&lt;/div&gt;");
+														
+										section.getContent().addOTChangeListener(pageContainerListener);
+										section.addOTChangeListener(sectionListener);
+									}
+								}
+						};
+						var sectionContainerListener = new OTChangeListener(sectionContainerHandler);
+						
+						var pageContainerHandler =
+						{
+								stateChanged: function(evt)
+								{
+									System.out.println(evt.getProperty());
+									if (evt.getProperty().equalsIgnoreCase("cards")) {
+										var numCards = evt.getSource().getCards().size();
+										var doc = evt.getSource().getCards().get(numCards-1);
+										doc.setBodyText("&lt;div class=\"buffer\"&gt;"+
+															"&lt;div class=\"border\"&gt;"+
+																"&lt;div class=\"body\"&gt;"+
+																"&lt;div class=\"subtitle\"&gt;\n"+
+																		"New page"+
+																	"\n&lt;/div&gt;\n"+
+																	"New page content"+
+																"\n&lt;/div&gt;"+
+															"&lt;/div&gt;"+
+														"&lt;/div&gt;");
+										pages.push(doc)	
+										pages[pages.length-1].addOTChangeListener(pageListener);
+									}
+								}
+						};
+						var pageContainerListener = new OTChangeListener(pageContainerHandler);
+						
+						var sections = [];
+						var sectionCardContainers = [];
+						var pages = [];
+						
+						function init() {
+							cardContainer.addOTChangeListener(sectionContainerListener);
+							
+							var pageIndex = 0;
+							for (var i = 0; i &lt; cardContainer.getCards().size(); i++){
+								sections[i] = cardContainer.getCards().get(i);
+								sections[i].addOTChangeListener(sectionListener);
+								
+								sectionCardContainers[i] = sections[i].getContent();
+								sectionCardContainers[i].addOTChangeListener(pageContainerListener);
+								
+								for (var j = 0; j &lt; sectionCardContainers[i].getCards().size(); j++){
+									pages[pageIndex] = sectionCardContainers[i].getCards().get(j);
+									pages[pageIndex].addOTChangeListener(pageListener);
+									pageIndex++;
+								}
+							}
+							
+							return true;
+						}
+
+						function save() {
+							cardContainer.removeOTChangeListener(sectionContainerListener);
+							return true;
+						}</script>
+        </OTJavascript>
+        <object refid="1636ca62-775f-11dc-88e0-f91e4efaa30a" />
+        <object refid="1b067ae8-775f-11dc-88e0-f91e4efaa30a" />
+        <object refid="1f2551fe-775f-11dc-88e0-f91e4efaa30a" />
+        <object refid="236e9474-775f-11dc-88e0-f91e4efaa30a" />
+        <object refid="27c9ff5a-775f-11dc-88e0-f91e4efaa30a" />
+        <object refid="2b9adc80-775f-11dc-88e0-f91e4efaa30a" />
+        <object refid="34fe9416-775f-11dc-88e0-f91e4efaa30a" />
+        <object refid="3ec8d5ac-775f-11dc-88e0-f91e4efaa30a" />
+        <object refid="46f17532-775f-11dc-88e0-f91e4efaa30a" />
+      </library>
+    </OTSystem>
+  </objects>
+</otrunk>
