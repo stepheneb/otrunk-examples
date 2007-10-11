@@ -369,7 +369,8 @@ function setupMultimeter()
 							
 				showFirstMeasurementMessage();
 
-				logNotebook(value, units);
+				var roundedVal = Math.round(value*100)/100;
+				logNotebook(roundedVal, units);
 				lastMMStateViable = true;
 				solverFinishedOnce = true;
 				
