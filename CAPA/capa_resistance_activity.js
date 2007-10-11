@@ -749,10 +749,10 @@ function showSolution(answerType, correctAmmeterMeasurements, correctVoltmeterMe
 	var shortCircuitMsg = "";
 	
 	if (answerType == 1){
-		solutionString = "Correct.";
+		solutionString = "Your answer is correct! ";
 	}
 	else{
-		solutionString = "Incorrect.";
+		solutionString = "Sorry, incorrect answer. ";
 	}	
 
 	if (shortCircuitCounter!= 0)
@@ -772,8 +772,8 @@ function showSolution(answerType, correctAmmeterMeasurements, correctVoltmeterMe
 	}
 	
 	//Check for units reported
-	var unitsMsg = "No units reported. ";					//unitsNotReported;
-	if (unitsGiven) unitsMsg = "Reported units. ";		//unitsReported;
+	var unitsMsg = "You didn't report any units for the answer. ";					//unitsNotReported;
+	if (unitsGiven) unitsMsg = "";		//unitsReported;
 	var otxml = new OTXMLString(startHTML + solutionString + unitsMsg + shortCircuitMsg + endHTML);
 	// System.out.println("Solution message is: ");
 	// System.out.println(startHTML + solutionString + unitsMsg + shortCircuitMsg + endHTML);
