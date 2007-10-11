@@ -129,7 +129,7 @@ function save()
 	//
 	
 	//Log measurements
-	logMeasurements();
+	//logMeasurements();
 	//
 	
 	finalizeLogging();
@@ -268,7 +268,7 @@ function addMeasurement(type, value, unit, extra)
 	//Create a measurement object
 	var measurement = new Object();
 	measurement.type = type;
-	measurement.value = value;
+	measurement.value = Math.round(value*100)/100;
 	measurement.unit = unit;
 	measurement.extra = extra;	//extra information on the measurement
 	
@@ -286,7 +286,7 @@ function printMeasurements()
 function logMeasurements()
 {
 	var strLog;
-	logInformation("Measurements:");
+	logInformation("Summary of all measurements:");
 	for (var i=0; i<measurements.length; i++){
 		var m = measurements[i];
 		strLog = "type=" + m.type + " value=" + m.value + " unit=" + m.unit;
@@ -331,17 +331,20 @@ function setupMultimeter()
 				if (state == MultimeterModel.AMMETER_STATE) {
 					type = "current";
 					units = units + "A";
-					logInformation("Multimeter measurement (Ammeter mode): " + value + " " + units);
+					var roundedVal = Math.round(value*100)/100;
+					logInformation("Multimeter measurement (Ammeter mode): " + roundedVal + " " + units);
 				}
 				else if (state == MultimeterModel.OHMMETER_STATE) {
 					type = "resistance";
 					units = units + "Ω";
-					logInformation("Multimeter measurement (Ohmmeter mode): " + value + " " + units);
+					var roundedVal = Math.round(value*100)/100;
+					logInformation("Multimeter measurement (Ohmmeter mode): " + roundedVal + " " + units);
 				}
 				else if (state == MultimeterModel.VOLTMETER_STATE) {
 					type = "voltage";
 					units = units + "V";
-					logInformation("Multimeter measurement (Voltmeter mode): " + value + " " + units);
+					var roundedVal = Math.round(value*100)/100;
+					logInformation("Multimeter measurement (Voltmeter mode): " + roundedVal + " " + units);
 				}
 				else if (state == MultimeterModel.OFF_STATE) {
 					type = "off";
@@ -361,8 +364,8 @@ function setupMultimeter()
 				var targetResistorCurrentString = rangeValue(targetResistorCurrent) + "A";
 				//
 				
-				logInformation("Target resistor voltage drop: " + targetResistorVoltage + " -> " + targetResistorVoltageString);	
-				logInformation("Target resistor current: " + targetResistorCurrent + " -> " + targetResistorCurrentString);	
+				//logInformation("Target resistor voltage drop: " + targetResistorVoltage + " -> " + targetResistorVoltageString);	
+				//logInformation("Target resistor current: " + targetResistorCurrent + " -> " + targetResistorCurrentString);	
 							
 				showFirstMeasurementMessage();
 
@@ -566,7 +569,7 @@ function createResistor()
 	//Disable the pop up menu
 	newBranch.setMenuEnabled(false);
 
-	logInformation("The target Resistor's resistance is " + newBranch.getResistance());
+	logInformation("The target Resistor's resistance is " + newBranch.getResistance() + " Ohms");
 
 	return newBranch;
 	
