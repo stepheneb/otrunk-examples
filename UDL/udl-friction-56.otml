@@ -1,0 +1,2396 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<otrunk id="2767fe20-6c7d-11dc-8314-0800200c9a66">
+  <imports>
+    <import class="org.concord.data.state.OTDataStore" />
+    <import class="org.concord.data.state.OTDataChannelDescription" />
+    <import class="org.concord.data.state.OTDataField" />
+    <import class="org.concord.datagraph.state.OTDataGraph" />
+    <import class="org.concord.datagraph.state.OTDataAxis" />
+    <import class="org.concord.datagraph.state.OTDataGraphable" />
+    <import class="org.concord.datagraph.state.OTDataCollector" />
+    <import class="org.concord.datagraph.state.OTMultiDataGraph" />
+    <import class="org.concord.datagraph.state.OTPluginView" />
+    <import class="org.concord.framework.otrunk.view.OTFrame" />
+    <import class="org.concord.graph.util.state.OTDrawingTool" />
+    <import class="org.concord.graph.util.state.OTDrawingStamp" />
+    <import class="org.concord.graph.util.state.OTDrawingImageIcon" />
+    <import class="org.concord.graph.util.state.OTDrawingShape" />
+    <import class="org.concord.graph.util.state.OTDrawingTool2" />
+    <import class="org.concord.graph.util.state.OTPointTextLabel" />
+    <import class="org.concord.otrunk.OTSystem" />
+    <import class="org.concord.otrunk.overlay.OTOverlay" />
+    <import class="org.concord.otrunk.script.ui.OTScriptObject" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariable" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariableComponent" />
+    <import class="org.concord.otrunk.script.js.OTJavascript" />
+    <import class="org.concord.otrunk.script.OTScriptEngineBundle" />
+    <import class="org.concord.otrunk.script.OTScriptEngineEntry" />
+    <import class="org.concord.otrunk.udl.OTUDLCharacter" />
+    <import class="org.concord.otrunk.udl.OTUDLCharacterGroup" />
+    <import class="org.concord.otrunk.udl.OTUDLCoachStatement" />
+    <import class="org.concord.otrunk.udl.OTUDLMenuRule" />
+    <import class="org.concord.otrunk.udl.document.OTDefinition" />
+    <import class="org.concord.otrunk.udl.document.OTDefinitionManager" />
+    <import class="org.concord.otrunk.udl.document.OTUDLCompoundDoc" />
+    <import class="org.concord.otrunk.udl.document.OTUDLCSSModifier" />
+    <import class="org.concord.otrunk.udl.document.OTUDLCSSGroup" />
+    <import class="org.concord.otrunk.udl.document.OTUDLDocumentViewConfig" />
+    <import class="org.concord.otrunk.udl.friction.OTFrictionModel" />
+    <import class="org.concord.otrunk.udl3.OTQuestion" />
+    <import class="org.concord.otrunk.udl3.OTUDLMenu" />
+    <import class="org.concord.otrunk.udl3.OTUDLContainer" />
+    <import class="org.concord.otrunk.udl3.OTUDLQuestions" />
+    <import class="org.concord.otrunk.udl3.OTUDLQuestionViewConfig" />
+    <import class="org.concord.otrunk.udl3.OTUDLSection" />
+    <import class="org.concord.otrunk.ui.OTButton" />
+    <import class="org.concord.otrunk.ui.OTCardContainer" />
+    <import class="org.concord.otrunk.ui.OTChoice" />
+    <import class="org.concord.otrunk.ui.OTImage" />
+    <import class="org.concord.otrunk.ui.OTText" />
+    <import class="org.concord.otrunk.ui.snapshot.OTSnapshot" />
+    <import class="org.concord.otrunk.ui.snapshot.OTSnapshotButton" />
+    <import class="org.concord.otrunk.ui.snapshot.OTSnapshotAlbum" />
+    <import class="org.concord.otrunk.ui.swing.OTChoiceViewConfig" />
+    <import class="org.concord.otrunk.view.OTObjectEditViewConfig" />
+    <import class="org.concord.otrunk.view.OTViewChild" />
+    <import class="org.concord.otrunk.view.OTViewEntry" />
+    <import class="org.concord.otrunk.view.OTViewMode" />
+    <import class="org.concord.otrunk.view.OTViewBundle" />
+    <import class="org.concord.otrunk.view.document.OTCompoundDoc" />
+    <import class="org.concord.otrunk.view.document.OTCssText" />
+    <import class="org.concord.otrunk.view.prototype.OTPrototypeViewEntry" />
+    <import class="org.concord.otrunk.view.prototype.OTPrototypeEventController" />
+    <import class="org.concord.otrunk.view.prototype.OTPrototypeMapEntry" />
+    <import class="org.concord.sensor.state.OTDeviceConfig" />
+    <import class="org.concord.sensor.state.OTExperimentRequest" />
+    <import class="org.concord.sensor.state.OTInterfaceManager" />
+    <import class="org.concord.sensor.state.OTSensorDataProxy" />
+    <import class="org.concord.sensor.state.OTSensorRequest" />
+    <import class="org.concord.sensor.state.OTZeroSensor" />
+    <import class="org.concord.otrunk.udl.question.OTQuestion" />
+    <import class="org.concord.otrunk.udl.OTZoom"/>
+  </imports>
+  <objects>
+    <OTSystem local_id="system">
+      <bundles>
+        <OTViewBundle showLeftPanel="false" currentMode="authoring">
+          <modes>
+            <OTViewMode name="default" />
+            <OTViewMode name="authoring">
+              <map>
+                <entry key="2767fe20-6c7d-11dc-8314-0800200c9a66!/compound_doc_view">
+                  <OTObjectEditViewConfig objectClass="org.concord.otrunk.view.document.OTCompoundDoc" viewClass="org.concord.otrunk.view.document.OTCompoundDocEditView" usePopupEditWindows="true" copyNewObjectsByDefault="true">
+                    <objectsToInsert>
+                      <OTText name="Text field" />
+                      <OTDrawingTool2 name="Draw tool" />
+                      <OTChoice name="Choices" />
+                      <OTUDLQuestions name="Scaffolded questions">
+                        <questions>
+                          <OTQuestion name="L5">
+                            <prompt>
+                              <OTUDLCompoundDoc>
+                                <bodyText>Insert prompt here</bodyText>
+                              </OTUDLCompoundDoc>
+                            </prompt>
+                            <input>
+                              <OTUDLCompoundDoc>
+                                <bodyText>Insert input here</bodyText>
+                              </OTUDLCompoundDoc>
+                            </input>
+                          </OTQuestion>
+                          <OTQuestion name="L4">
+                            <prompt>
+                              <OTUDLCompoundDoc>
+                                <bodyText>Insert prompt here</bodyText>
+                              </OTUDLCompoundDoc>
+                            </prompt>
+                            <input>
+                              <OTUDLCompoundDoc>
+                                <bodyText>Insert input here</bodyText>
+                              </OTUDLCompoundDoc>
+                            </input>
+                          </OTQuestion>
+                          <OTQuestion name="L3">
+                            <prompt>
+                              <OTUDLCompoundDoc>
+                                <bodyText>Insert prompt here</bodyText>
+                              </OTUDLCompoundDoc>
+                            </prompt>
+                            <input>
+                              <OTUDLCompoundDoc>
+                                <bodyText>Insert input here</bodyText>
+                              </OTUDLCompoundDoc>
+                            </input>
+                          </OTQuestion>
+                          <OTQuestion name="L2">
+                            <prompt>
+                              <OTUDLCompoundDoc>
+                                <bodyText>Insert prompt here</bodyText>
+                              </OTUDLCompoundDoc>
+                            </prompt>
+                            <input>
+                              <OTUDLCompoundDoc>
+                                <bodyText>Insert input here</bodyText>
+                              </OTUDLCompoundDoc>
+                            </input>
+                          </OTQuestion>
+                          <OTQuestion name="L1">
+                            <prompt>
+                              <OTUDLCompoundDoc>
+                                <bodyText>Insert prompt here</bodyText>
+                              </OTUDLCompoundDoc>
+                            </prompt>
+                            <input>
+                              <OTUDLCompoundDoc>
+                                <bodyText>Insert input here</bodyText>
+                              </OTUDLCompoundDoc>
+                            </input>
+                          </OTQuestion>
+                        </questions>
+                      </OTUDLQuestions>
+                    </objectsToInsert>
+                  </OTObjectEditViewConfig>
+                </entry>
+                <entry key="2767fe20-6c7d-11dc-8314-0800200c9a66!/menu-vertical">
+                  <OTViewEntry objectClass="org.concord.otrunk.udl3.OTUDLMenu" viewClass="org.concord.otrunk.udl.ui.OTUDLMenuSectionEditView" />
+                </entry>
+                <entry key="2767fe20-6c7d-11dc-8314-0800200c9a66!/questions-card-view">
+                  <OTUDLQuestionViewConfig objectClass="org.concord.otrunk.udl.question.OTUDLQuestions" viewClass="org.concord.otrunk.udl.question.OTUDLQuestionsEditView" />
+                </entry>
+                <entry key="2767fe20-6c7d-11dc-8314-0800200c9a66!/choice-radio-view">
+                  <OTChoiceViewConfig objectClass="org.concord.otrunk.ui.OTChoice" viewClass="org.concord.otrunk.ui.swing.OTChoiceComboBoxEditView" useViewsAsChoices="true" />
+                </entry>
+                <entry key="2767fe20-6c7d-11dc-8314-0800200c9a66!/character-group-view">
+                  <OTViewEntry objectClass="org.concord.otrunk.udl.OTUDLCharacterGroup" viewClass="org.concord.otrunk.udl.OTUDLCharacterGroupEditView" />
+                </entry>
+                <entry key="2767fe20-6c7d-11dc-8314-0800200c9a66!/question-view">
+                  <OTViewEntry objectClass="org.concord.otrunk.udl.question.OTQuestion" viewClass="org.concord.otrunk.udl.question.OTQuestionEditView" />
+                </entry>
+                <entry key="2767fe20-6c7d-11dc-8314-0800200c9a66!/menu-horizontal-circle">
+                  <OTViewEntry objectClass="org.concord.otrunk.udl3.OTUDLMenu" viewClass="org.concord.otrunk.udl.ui.OTUDLMenuPageEditView" />
+                </entry>
+              </map>
+            </OTViewMode>
+          </modes>
+          <frame>
+            <OTFrame useScrollPane="false" width="850" height="600" />
+          </frame>
+          <views>
+            <!-- The OTUDLQuestionViewConfig can be used to set the default scaffolding level, and whether the student can navigate through the levels.
+						  The default scaffolding level just uses the order of the items inside OTUDLQuestions/questions. It is not aware of the names
+						  such as "L1", "L2", etc. -->
+            <OTUDLQuestionViewConfig local_id="questions-card-view" isLevelFrozen="false" defaultScaffoldLevel="0" objectClass="org.concord.otrunk.udl.question.OTUDLQuestions" viewClass="org.concord.otrunk.udl.question.OTUDLQuestionsCardView" />
+            <OTViewEntry objectClass="org.concord.otrunk.ui.OTImage" viewClass="org.concord.otrunk.ui.swing.OTImageView" />
+            <OTViewEntry local_id="snapshot_button_view" objectClass="org.concord.otrunk.ui.snapshot.OTSnapshotButton" viewClass="org.concord.otrunk.ui.snapshot.OTSnapshotButtonView" />
+            <OTViewEntry objectClass="org.concord.otrunk.ui.snapshot.OTSnapshotAlbum" viewClass="org.concord.otrunk.ui.snapshot.OTSnapshotAlbumView" />
+            <OTViewEntry objectClass="org.concord.otrunk.udl.friction.OTFrictionModel" viewClass="org.concord.otrunk.udl.friction.OTFrictionModelView" />
+            <OTViewEntry objectClass="org.concord.otrunk.ui.OTButton" viewClass="org.concord.otrunk.ui.swing.OTButtonView" />
+            <OTViewEntry objectClass="org.concord.otrunk.script.ui.OTScriptObject" viewClass="org.concord.otrunk.script.ui.OTScriptObjectView" />
+            <OTViewEntry objectClass="org.concord.otrunk.ui.OTButton" viewClass="org.concord.otrunk.ui.swing.OTButtonView" />
+            <OTViewEntry local_id="question-view" objectClass="org.concord.otrunk.udl.question.OTQuestion" viewClass="org.concord.otrunk.udl.question.OTQuestionView" />
+            <OTViewEntry local_id="character-group-view" objectClass="org.concord.otrunk.udl.OTUDLCharacterGroup" viewClass="org.concord.otrunk.udl.OTUDLCharacterGroupView" />
+            <OTViewEntry objectClass="org.concord.otrunk.udl3.OTUDLSection" viewClass="org.concord.otrunk.udl3.OTUDLSectionView" />
+            <OTViewEntry local_id="container_view" objectClass="org.concord.otrunk.udl3.OTUDLContainer" viewClass="org.concord.otrunk.udl3.OTUDLContainerView" />
+            <OTViewEntry objectClass="org.concord.otrunk.udl.document.OTUDLCSSModifier" viewClass="org.concord.otrunk.udl.document.OTUDLCSSModifierView" />
+            <OTViewEntry local_id="menu-vertical" objectClass="org.concord.otrunk.udl3.OTUDLMenu" viewClass="org.concord.otrunk.udl.ui.OTUDLMenuSectionView" />
+            <OTViewEntry local_id="menu-horizontal-circle" objectClass="org.concord.otrunk.udl3.OTUDLMenu" viewClass="org.concord.otrunk.udl.ui.OTUDLMenuPageView" />
+            <OTViewEntry objectClass="org.concord.otrunk.udl3.OTQuestion" viewClass="org.concord.otrunk.udl3.OTQuestionView" />
+            <OTChoiceViewConfig local_id="choice-radio-view" objectClass="org.concord.otrunk.ui.OTChoice" viewClass="org.concord.otrunk.ui.swing.OTChoiceRadioButtonView" useViewsAsChoices="true" />
+            <OTViewEntry local_id="choice-combo-view" objectClass="org.concord.otrunk.ui.OTChoice" viewClass="org.concord.otrunk.ui.swing.OTChoiceComboBoxView" />
+            <OTViewEntry objectClass="org.concord.otrunk.script.ui.OTScriptObject" viewClass="org.concord.otrunk.script.ui.OTScriptObjectView" />
+            <OTViewEntry objectClass="org.concord.otrunk.ui.OTCardContainer" viewClass="org.concord.otrunk.ui.swing.OTCardContainerView" />
+            <OTViewEntry objectClass="org.concord.otrunk.ui.OTBorderContainer" viewClass="org.concord.otrunk.ui.swing.OTBorderContainerView" />
+            <OTViewEntry objectClass="org.concord.otrunk.ui.OTPlacementContainer" viewClass="org.concord.otrunk.ui.swing.OTPlacementContainerView" />
+            <OTViewEntry local_id="text-edit" objectClass="org.concord.otrunk.ui.OTText" viewClass="org.concord.otrunk.ui.swing.OTTextEditView" />
+            <OTViewEntry local_id="text-label" objectClass="org.concord.otrunk.ui.OTText" viewClass="org.concord.otrunk.ui.swing.OTTextView" />
+            <OTViewEntry viewClass="org.concord.datagraph.state.OTDataCollectorView" objectClass="org.concord.datagraph.state.OTDataCollector" />
+            <OTViewEntry viewClass="org.concord.datagraph.state.OTDataGraphView" objectClass="org.concord.datagraph.state.OTDataGraph" />
+            <OTViewEntry viewClass="org.concord.data.state.OTDataFieldView" objectClass="org.concord.data.state.OTDataField" />
+            <OTViewEntry viewClass="org.concord.datagraph.state.OTDataDrawingToolView" objectClass="org.concord.graph.util.state.OTDrawingTool" />
+            <OTViewEntry viewClass="org.concord.datagraph.state.OTMultiDataGraphView" objectClass="org.concord.datagraph.state.OTMultiDataGraph" />
+            <OTUDLDocumentViewConfig local_id="compound_doc_view" objectClass="org.concord.otrunk.view.document.OTCompoundDoc" viewClass="org.concord.otrunk.udl.document.OTUDLDocumentView">
+              <definitionManager>
+                <object refid="${definition-manager}" />
+              </definitionManager>
+              <cssBlocks>
+                <OTCssText local_id="css-font" cssText="           body {              font-size: 18;            }           a {               text-decoration: none;             }           DIV.body {                 FONT-STYLE: normal;               FONT-FAMILY: Verdana, Arial;               FONT-VARIANT: normal;              TEXT-DECORATION: none             }           DIV.story {            FONT-WEIGHT: bolder;           }           DIV.activity-title {               font-size: 29;               FONT-WEIGHT: bold;           }             DIV.title {              font-size: 30;              FONT-WEIGHT: bold;           }           DIV.subtitle {               font-size: 25;               FONT-WEIGHT: bold;           }           DIV.subtitle-continue {               FONT-WEIGHT: bold;           }" />
+                <OTCssText local_id="css-color" cssText="           body {              BACKGROUND-COLOR: rgb(255, 255, 255);            }           DIV.body {                BACKGROUND-COLOR: rgb(250, 255, 255);           }           DIV.body-no-border {            BACKGROUND-COLOR: rgb(250, 255, 255);           }           DIV.story {            BORDER-COLOR: blue;            BACKGROUND-COLOR: rgb(210,230,255);            COLOR: rgb(0,0,0);           }           DIV.story-border {            BACKGROUND-COLOR: rgb(100, 130, 200);           }           DIV.activity-title {               COLOR: rgb(0,0,0);           }             DIV.title {              COLOR: rgb(0,0,0);           }           DIV.subtitle {               COLOR: rgb(0,0,0);           }           DIV.leftpanel {              BACKGROUND-COLOR: rgb(190, 190, 255);           }           DIV.buffer {              BACKGROUND-COLOR: rgb(255, 255, 255);           }             DIV.border {            BACKGROUND-COLOR: rgb(190, 190, 255);            }            DIV.definition-border {            BACKGROUND-COLOR: rgb(0, 0, 255);           }            DIV.question {             BACKGROUND-COLOR: rgb(230, 230, 250);            }           " />
+                <OTCssText local_id="css-layout" cssText="           DIV.body {                 MARGIN: 5px;                PADDING: 8px;               height: 100%;           }           DIV.story {             padding: 5px;           }           DIV.story-border {            padding: 1px;           }           DIV.activity-title {               MARGIN: 2px 10% 10px;           }             DIV.title {              PADDING-BOTTOM: 10px;               PADDING-LEFT: 20px;             PADDING-TOP: 10px;             MARGIN: 2px 10% 10px;           }           DIV.subtitle {               PADDING-BOTTOM: 10px;              PADDING-LEFT: 20px;             PADDING-TOP: 10px;             MARGIN: 2px 10% 10px;           }           DIV.buffer {              PADDING: 10px;           }             DIV.border {            PADDING: 3px;            }            DIV.definition-border {            PADDING: 3px;           }           DIV.top-menu {            TEXT-ALIGN: right;           }" />
+              </cssBlocks>
+            </OTUDLDocumentViewConfig>
+            <OTPrototypeViewEntry local_id="textsize-choice-view" objectClass="org.concord.otrunk.OTSystem" viewClass="org.concord.otrunk.view.prototype.OTPrototypeView" copyPrototype="false">
+              <viewEntry>
+                <object refid="${choice-combo-view}" />
+              </viewEntry>
+              <prototype>
+                <OTChoice>
+                  <choices>
+                    <OTOverlay local_id="small-text-overlay" name="Small text">
+                      <deltaObjectMap>
+                        <entry key="2767fe20-6c7d-11dc-8314-0800200c9a66!/css-font">
+                          <OTCssText cssText="                body {                   font-size: 14;                 }                a {                    text-decoration: none;                  }                DIV.body {                     FONT-WEIGHT: bolder;                   FONT-STYLE: normal;                    FONT-FAMILY: Verdana, Arial;                    FONT-VARIANT: normal;                   TEXT-DECORATION: none                  }                DIV.story {                 FONT-WEIGHT: bolder;                }                DIV.activity-title {                    font-size: 28;                    FONT-WEIGHT: bold;                }                  DIV.title {                   font-size: 25;                   FONT-WEIGHT: bold;                }                DIV.subtitle {                    font-size: 20;                    FONT-WEIGHT: bold;                }                DIV.subtitle-continue {                    FONT-WEIGHT: bold;                }" />
+                        </entry>
+                      </deltaObjectMap>
+                    </OTOverlay>
+                    <OTOverlay local_id="normal-text-overlay" name="Normal text" />
+                    <OTOverlay local_id="large-text-overlay" name="Large text">
+                      <deltaObjectMap>
+                        <entry key="2767fe20-6c7d-11dc-8314-0800200c9a66!/css-font">
+                          <OTCssText cssText="                body {                   font-size: 24;                 }                a {                    text-decoration: none;                  }                DIV.body {                     FONT-WEIGHT: bolder;                   FONT-STYLE: normal;                    FONT-FAMILY: Verdana, Arial;                    FONT-VARIANT: normal;                   TEXT-DECORATION: none                  }                DIV.story {                 FONT-WEIGHT: bolder;                }                DIV.activity-title {                    font-size: 37;                    FONT-WEIGHT: bold;                }                  DIV.title {                   font-size: 34;                   FONT-WEIGHT: bold;                }                DIV.subtitle {                    font-size: 28;                    FONT-WEIGHT: bold;                }                DIV.subtitle-continue {                    FONT-WEIGHT: bold;                }" />
+                        </entry>
+                      </deltaObjectMap>
+                    </OTOverlay>
+                  </choices>
+                  <currentChoice>
+                    <object refid="${normal-text-overlay}" />
+                  </currentChoice>
+                </OTChoice>
+              </prototype>
+              <controller>
+                <OTPrototypeEventController>
+                  <mapping>
+                    <OTPrototypeMapEntry modelProperty="overlays[0]" prototypeProperty="currentChoice" />
+                  </mapping>
+                </OTPrototypeEventController>
+              </controller>
+            </OTPrototypeViewEntry>
+            <OTPrototypeViewEntry local_id="language-choice-view" objectClass="org.concord.otrunk.OTSystem" viewClass="org.concord.otrunk.view.prototype.OTPrototypeView" copyPrototype="false">
+              <viewEntry>
+                <object refid="${choice-combo-view}" />
+              </viewEntry>
+              <prototype>
+                <OTChoice>
+                  <choices>
+                    <OTOverlay local_id="english-overlay" name="English" />
+                    <OTOverlay local_id="spanish-overlay" name="Espaì±°ol" />
+                  </choices>
+                  <currentChoice>
+                    <object refid="${english-overlay}" />
+                  </currentChoice>
+                </OTChoice>
+              </prototype>
+              <controller>
+                <OTPrototypeEventController>
+                  <mapping>
+                    <OTPrototypeMapEntry modelProperty="overlays[1]" prototypeProperty="currentChoice" />
+                  </mapping>
+                </OTPrototypeEventController>
+              </controller>
+            </OTPrototypeViewEntry>
+            <OTViewEntry objectClass="org.concord.graph.util.state.OTDrawingTool2" viewClass="org.concord.datagraph.state.OTDataDrawingToolView" />
+          </views>
+        </OTViewBundle>
+        <OTScriptEngineBundle>
+          <engines>
+            <OTScriptEngineEntry objectClass="org.concord.otrunk.script.js.OTJavascript" engineClass="org.concord.otrunk.script.js.OTJavascriptEngine" />
+          </engines>
+        </OTScriptEngineBundle>
+        <OTInterfaceManager>
+          <deviceConfigs>
+            <OTDeviceConfig configString="none" deviceId="10" />
+          </deviceConfigs>
+        </OTInterfaceManager>
+      </bundles>
+      <overlays>
+        <object refid="${normal-text-overlay}" />
+        <object refid="${english-overlay}" />
+        <null />
+      </overlays>
+      <root>
+        <OTUDLContainer name="UDL Activity">
+          <cssColor>
+            <object refid="${css-color}" />
+          </cssColor>
+          <menu>
+            <OTViewChild useScrollPane="true" scrollPanelHasBorder="false">
+              <object>
+                <object refid="${menu}" />
+              </object>
+            </OTViewChild>
+          </menu>
+          <topBar>
+            <OTCompoundDoc>
+              <bodyText>
+                <div class="top-menu">
+                  <table>
+                    <tr>
+                      <td>
+                        <object refid="${system}" viewid="2767fe20-6c7d-11dc-8314-0800200c9a66!/language-choice-view" />
+                      </td>
+                      <td>
+                        <object refid="${system}" viewid="2767fe20-6c7d-11dc-8314-0800200c9a66!/textsize-choice-view" />
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+              </bodyText>
+            </OTCompoundDoc>
+          </topBar>
+          <characters>
+            <OTUDLCharacterGroup local_id="character-group">
+              <topLevelCardContainer>
+                <object refid="${section-card-container}" />
+              </topLevelCardContainer>
+              <characters>
+                <OTUDLCharacter local_id="character_affective" inactiveImageURL="http://confluence.concord.org/download/attachments/12353/blah-head-small.png" activeImageURL="http://confluence.concord.org/download/attachments/12353/blah-head.png" />
+                <OTUDLCharacter local_id="character_strategic" inactiveImageURL="http://confluence.concord.org/download/attachments/12353/clunk-head-small.png" activeImageURL="http://confluence.concord.org/download/attachments/12353/clunk-head.png" />
+                <OTUDLCharacter local_id="character_recognition" inactiveImageURL="http://confluence.concord.org/download/attachments/12353/roxy-head-small.png" activeImageURL="http://confluence.concord.org/download/attachments/11818/roxy-large.gif" />
+              </characters>
+              <speechFrame>
+                <OTFrame local_id="speech_frame" width="380" height="340" borderlessPopup="false" />
+              </speechFrame>
+            </OTUDLCharacterGroup>
+          </characters>
+          <content>
+            <OTCardContainer local_id="section-card-container" loadViewOnlyOnDemand="true">
+              <cards>
+                <OTUDLSection local_id="section_1" name="Pretest" isComputerBased="false" isIntroduction="false" isMath="false" isPosttest="false" isPretest="true" isReading="false" isWrapup="false">
+                  <header>
+                    <OTCompoundDoc>
+                      <bodyText>
+                        <div class="title">Pretest</div>
+                      </bodyText>
+                    </OTCompoundDoc>
+                  </header>
+                  <content>
+                    <OTCardContainer local_id="section-1-card-container" contentsMayScroll="true" loadViewOnlyOnDemand="true">
+                      <cards>
+                        <OTUDLCompoundDoc local_id="page-1" name="1">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  1) A hockey puck slides along an icy surface. What makes it slow down?
+                                  <p />
+                                  <object refid="db088c6a-7841-11dc-8a70-bf74c85eca3f" />
+                                  <p />
+                                  2) The rougher the surface, ...
+                                  <p />
+                                  <object refid="889374f0-78de-11dc-8275-3da1b6a57fd9" />
+                                  <p />
+                                  3) Which of the following is an example of trying to increase friction?
+                                  <p />
+                                  <object refid="90d9d5a1-78de-11dc-8275-3da1b6a57fd9" />
+                                  <p />
+                                  4) Which of the following statements is not true?
+                                  <p />
+                                  <object refid="9cb6f1a2-78de-11dc-8275-3da1b6a57fd9" />
+                                  <p />
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                          <documentRefs>
+                            <OTChoice id="db088c6a-7841-11dc-8a70-bf74c85eca3f" name="Choices">
+                              <choices>
+                                <OTCompoundDoc name="It runs out of push.">
+                                  <bodyText>It runs out of push.</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="It rubs against the ice.">
+                                  <bodyText>It rubs against the ice.</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="It runs out of electricity.">
+                                  <bodyText>It runs out of electricity.</bodyText>
+                                </OTCompoundDoc>
+                              </choices>
+                            </OTChoice>
+                            <OTChoice id="889374f0-78de-11dc-8275-3da1b6a57fd9" name="Choices">
+                              <choices>
+                                <OTCompoundDoc name="the greater the friction">
+                                  <bodyText>the greater the friction</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="the less the friction">
+                                  <bodyText>the less the friction</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="the same level of friction">
+                                  <bodyText>the same level of friction</bodyText>
+                                </OTCompoundDoc>
+                              </choices>
+                            </OTChoice>
+                            <OTChoice id="90d9d5a1-78de-11dc-8275-3da1b6a57fd9" name="Choices">
+                              <choices>
+                                <OTCompoundDoc name="Squirting oil into door hinges">
+                                  <bodyText>Squirting oil into door hinges</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="Spreading grit onto icy roads">
+                                  <bodyText>Spreading grit onto icy roads</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="Waxing the underneath of skis">
+                                  <bodyText>Waxing the underneath of skis</bodyText>
+                                </OTCompoundDoc>
+                              </choices>
+                            </OTChoice>
+                            <OTChoice id="9cb6f1a2-78de-11dc-8275-3da1b6a57fd9" name="Choices">
+                              <choices>
+                                <OTCompoundDoc name="Friction can only slow things down">
+                                  <bodyText>Friction can only slow things down</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="Friction is never useful">
+                                  <bodyText>Friction is never useful</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="Friction can stop things from moving">
+                                  <bodyText>Friction can stop things from moving</bodyText>
+                                </OTCompoundDoc>
+                              </choices>
+                            </OTChoice>
+	                  <OTZoom local_id="zoom" name="Zoom Tool">
+                          </documentRefs>
+                        </OTUDLCompoundDoc>
+                      </cards>
+                      <currentCard>
+                        <object refid="${page-1}" />
+                      </currentCard>
+                      <viewedCards>
+                        <object refid="${page-1}" />
+                        <object refid="95a38b6e-7842-11dc-8a70-bf74c85eca3f" />
+                        <object refid="1497b2b3-7843-11dc-8a70-bf74c85eca3f" />
+                        <object refid="42fbeb3b-7843-11dc-8a70-bf74c85eca3f" />
+                      </viewedCards>
+                    </OTCardContainer>
+                  </content>
+                  <footer>
+                    <OTCompoundDoc>
+                      <bodyText>
+                        <div align="center">
+                          <table>
+                            <tr>
+                              <td>
+                                <object refid="${section-1-menu}" viewid="2767fe20-6c7d-11dc-8314-0800200c9a66!/menu-horizontal-circle" />
+                              </td>
+                            </tr>
+                          </table>
+                        </div>
+                      </bodyText>
+                    </OTCompoundDoc>
+                  </footer>
+                  <center>
+                    <object refid="${section-1-card-container}" />
+                  </center>
+                </OTUDLSection>
+                <OTUDLSection id="78f0fec8-78d1-11dc-82f7-4bde662316f0" name="Introduction" isComputerBased="false" isIntroduction="true" isMath="false" isPosttest="false" isPretest="false" isReading="false" isWrapup="false">
+                  <content>
+                    <OTCardContainer id="78f125da-78d1-11dc-82f7-4bde662316f0" contentsMayScroll="true" loadViewOnlyOnDemand="true">
+                      <cards>
+                        <OTUDLCompoundDoc id="78f0fec9-78d1-11dc-82f7-4bde662316f0" name="%78f0fec9-78d1-11dc-82f7-4bde662316f0">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle">Driving question</div>
+                                  What if there were no friction?
+                                  <p />
+                                  <img src="http://confluence.concord.org/download/attachments/12402/Sports%20and%20Leisure%202448.jpg" />
+                                  <p />
+                                  Explore what happens when two surfaces rub together and create friction.
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                        </OTUDLCompoundDoc>
+                        <OTUDLCompoundDoc id="beadd1de-78d2-11dc-82f7-4bde662316f0" name="%beadd1de-78d2-11dc-82f7-4bde662316f0">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle">Exploring the question 1</div>
+                                  Jennifer lives in a world that would seem very strange to us. Everything is very slippery, like ice. All of the surfaces have very little friction. Friction is the name given to the force that makes something slow down and stop when it is sliding across another surface.
+                                  <p />
+                                  Jennifer is used to her world with very little friction, but we would have trouble.
+Name two surfaces (besides ice) that are very, very slippery!
+                                  <p />
+                                  <object refid="1f95e7cf-78d4-11dc-82f7-4bde662316f0" />
+                                  <p />
+                                  List the features that you think make a surface slippery. You can use a drawing to help show the features.
+                                  <p />
+                                  <object refid="4b3e0d90-78d4-11dc-82f7-4bde662316f0" />
+                                  <p />
+                                  <object refid="4e33f501-78d4-11dc-82f7-4bde662316f0" />
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                          <documentRefs>
+                            <OTText id="1f95e7cf-78d4-11dc-82f7-4bde662316f0" name="Text field" />
+                            <OTText id="4b3e0d90-78d4-11dc-82f7-4bde662316f0" name="Text field" />
+                            <OTDrawingTool2 id="4e33f501-78d4-11dc-82f7-4bde662316f0" name="Draw tool">
+                              <graphables>
+                                <OTDataGraphable color="0" connectPoints="true" drawMarks="false" xColumn="0" yColumn="1" name="" lineWidth="2.0" drawing="true">
+                                  <dataStore>
+                                    <OTDataStore numberChannels="2">
+                                      <values>
+                                        <float>NaN</float>
+                                        <float>NaN</float>
+                                        <float>404.0</float>
+                                        <float>-51.0</float>
+                                        <float>403.0</float>
+                                        <float>-51.0</float>
+                                        <float>403.0</float>
+                                        <float>-51.0</float>
+                                        <float>400.0</float>
+                                        <float>-49.0</float>
+                                        <float>400.0</float>
+                                        <float>-49.0</float>
+                                        <float>398.0</float>
+                                        <float>-49.0</float>
+                                        <float>398.0</float>
+                                        <float>-49.0</float>
+                                        <float>394.0</float>
+                                        <float>-47.0</float>
+                                        <float>394.0</float>
+                                        <float>-47.0</float>
+                                        <float>388.0</float>
+                                        <float>-44.0</float>
+                                        <float>388.0</float>
+                                        <float>-44.0</float>
+                                        <float>385.0</float>
+                                        <float>-43.0</float>
+                                        <float>385.0</float>
+                                        <float>-43.0</float>
+                                        <float>381.0</float>
+                                        <float>-42.0</float>
+                                        <float>381.0</float>
+                                        <float>-42.0</float>
+                                        <float>378.0</float>
+                                        <float>-42.0</float>
+                                        <float>378.0</float>
+                                        <float>-42.0</float>
+                                        <float>374.0</float>
+                                        <float>-41.0</float>
+                                        <float>374.0</float>
+                                        <float>-41.0</float>
+                                        <float>369.0</float>
+                                        <float>-40.0</float>
+                                        <float>369.0</float>
+                                        <float>-40.0</float>
+                                        <float>362.0</float>
+                                        <float>-39.0</float>
+                                        <float>362.0</float>
+                                        <float>-39.0</float>
+                                        <float>355.0</float>
+                                        <float>-38.0</float>
+                                        <float>355.0</float>
+                                        <float>-38.0</float>
+                                        <float>351.0</float>
+                                        <float>-38.0</float>
+                                        <float>351.0</float>
+                                        <float>-38.0</float>
+                                        <float>347.0</float>
+                                        <float>-38.0</float>
+                                        <float>347.0</float>
+                                        <float>-38.0</float>
+                                        <float>345.0</float>
+                                        <float>-38.0</float>
+                                        <float>345.0</float>
+                                        <float>-38.0</float>
+                                        <float>342.0</float>
+                                        <float>-38.0</float>
+                                        <float>342.0</float>
+                                        <float>-38.0</float>
+                                        <float>340.0</float>
+                                        <float>-38.0</float>
+                                        <float>340.0</float>
+                                        <float>-38.0</float>
+                                        <float>337.0</float>
+                                        <float>-40.0</float>
+                                        <float>337.0</float>
+                                        <float>-40.0</float>
+                                        <float>NaN</float>
+                                        <float>NaN</float>
+                                        <float>506.0</float>
+                                        <float>-26.0</float>
+                                        <float>507.0</float>
+                                        <float>-27.0</float>
+                                        <float>507.0</float>
+                                        <float>-27.0</float>
+                                        <float>505.0</float>
+                                        <float>-31.0</float>
+                                        <float>505.0</float>
+                                        <float>-31.0</float>
+                                        <float>500.0</float>
+                                        <float>-39.0</float>
+                                        <float>500.0</float>
+                                        <float>-39.0</float>
+                                        <float>492.0</float>
+                                        <float>-50.0</float>
+                                        <float>492.0</float>
+                                        <float>-50.0</float>
+                                        <float>480.0</float>
+                                        <float>-61.0</float>
+                                        <float>480.0</float>
+                                        <float>-61.0</float>
+                                        <float>471.0</float>
+                                        <float>-70.0</float>
+                                        <float>471.0</float>
+                                        <float>-70.0</float>
+                                        <float>463.0</float>
+                                        <float>-79.0</float>
+                                        <float>463.0</float>
+                                        <float>-79.0</float>
+                                        <float>457.0</float>
+                                        <float>-88.0</float>
+                                        <float>457.0</float>
+                                        <float>-88.0</float>
+                                        <float>450.0</float>
+                                        <float>-94.0</float>
+                                        <float>450.0</float>
+                                        <float>-94.0</float>
+                                        <float>445.0</float>
+                                        <float>-98.0</float>
+                                        <float>445.0</float>
+                                        <float>-98.0</float>
+                                        <float>440.0</float>
+                                        <float>-101.0</float>
+                                        <float>440.0</float>
+                                        <float>-101.0</float>
+                                        <float>438.0</float>
+                                        <float>-102.0</float>
+                                        <float>438.0</float>
+                                        <float>-102.0</float>
+                                        <float>436.0</float>
+                                        <float>-102.0</float>
+                                        <float>436.0</float>
+                                        <float>-102.0</float>
+                                        <float>435.0</float>
+                                        <float>-102.0</float>
+                                        <float>435.0</float>
+                                        <float>-102.0</float>
+                                        <float>427.0</float>
+                                        <float>-104.0</float>
+                                        <float>427.0</float>
+                                        <float>-104.0</float>
+                                        <float>420.0</float>
+                                        <float>-104.0</float>
+                                        <float>420.0</float>
+                                        <float>-104.0</float>
+                                        <float>406.0</float>
+                                        <float>-103.0</float>
+                                        <float>406.0</float>
+                                        <float>-103.0</float>
+                                        <float>389.0</float>
+                                        <float>-96.0</float>
+                                        <float>389.0</float>
+                                        <float>-96.0</float>
+                                        <float>371.0</float>
+                                        <float>-88.0</float>
+                                        <float>371.0</float>
+                                        <float>-88.0</float>
+                                        <float>354.0</float>
+                                        <float>-80.0</float>
+                                        <float>354.0</float>
+                                        <float>-80.0</float>
+                                        <float>332.0</float>
+                                        <float>-69.0</float>
+                                        <float>332.0</float>
+                                        <float>-69.0</float>
+                                        <float>308.0</float>
+                                        <float>-58.0</float>
+                                        <float>308.0</float>
+                                        <float>-58.0</float>
+                                        <float>286.0</float>
+                                        <float>-48.0</float>
+                                        <float>286.0</float>
+                                        <float>-48.0</float>
+                                        <float>270.0</float>
+                                        <float>-37.0</float>
+                                        <float>270.0</float>
+                                        <float>-37.0</float>
+                                        <float>260.0</float>
+                                        <float>-30.0</float>
+                                        <float>260.0</float>
+                                        <float>-30.0</float>
+                                        <float>255.0</float>
+                                        <float>-26.0</float>
+                                        <float>255.0</float>
+                                        <float>-26.0</float>
+                                        <float>250.0</float>
+                                        <float>-21.0</float>
+                                        <float>250.0</float>
+                                        <float>-21.0</float>
+                                        <float>250.0</float>
+                                        <float>-19.0</float>
+                                        <float>250.0</float>
+                                        <float>-19.0</float>
+                                        <float>251.0</float>
+                                        <float>-19.0</float>
+                                        <float>251.0</float>
+                                        <float>-19.0</float>
+                                        <float>252.0</float>
+                                        <float>-19.0</float>
+                                        <float>252.0</float>
+                                        <float>-19.0</float>
+                                        <float>254.0</float>
+                                        <float>-19.0</float>
+                                        <float>254.0</float>
+                                        <float>-19.0</float>
+                                        <float>255.0</float>
+                                        <float>-19.0</float>
+                                        <float>255.0</float>
+                                        <float>-19.0</float>
+                                        <float>258.0</float>
+                                        <float>-19.0</float>
+                                        <float>258.0</float>
+                                        <float>-19.0</float>
+                                        <float>261.0</float>
+                                        <float>-19.0</float>
+                                        <float>261.0</float>
+                                        <float>-19.0</float>
+                                        <float>265.0</float>
+                                        <float>-19.0</float>
+                                        <float>265.0</float>
+                                        <float>-19.0</float>
+                                        <float>274.0</float>
+                                        <float>-20.0</float>
+                                        <float>274.0</float>
+                                        <float>-20.0</float>
+                                        <float>287.0</float>
+                                        <float>-21.0</float>
+                                        <float>287.0</float>
+                                        <float>-21.0</float>
+                                        <float>301.0</float>
+                                        <float>-23.0</float>
+                                        <float>301.0</float>
+                                        <float>-23.0</float>
+                                        <float>317.0</float>
+                                        <float>-25.0</float>
+                                        <float>317.0</float>
+                                        <float>-25.0</float>
+                                        <float>333.0</float>
+                                        <float>-28.0</float>
+                                        <float>333.0</float>
+                                        <float>-28.0</float>
+                                        <float>346.0</float>
+                                        <float>-31.0</float>
+                                        <float>346.0</float>
+                                        <float>-31.0</float>
+                                        <float>358.0</float>
+                                        <float>-35.0</float>
+                                        <float>358.0</float>
+                                        <float>-35.0</float>
+                                        <float>367.0</float>
+                                        <float>-38.0</float>
+                                        <float>367.0</float>
+                                        <float>-38.0</float>
+                                        <float>376.0</float>
+                                        <float>-41.0</float>
+                                        <float>376.0</float>
+                                        <float>-41.0</float>
+                                        <float>381.0</float>
+                                        <float>-43.0</float>
+                                        <float>381.0</float>
+                                        <float>-43.0</float>
+                                        <float>383.0</float>
+                                        <float>-46.0</float>
+                                        <float>383.0</float>
+                                        <float>-46.0</float>
+                                        <float>385.0</float>
+                                        <float>-46.0</float>
+                                        <float>385.0</float>
+                                        <float>-46.0</float>
+                                        <float>385.0</float>
+                                        <float>-48.0</float>
+                                        <float>385.0</float>
+                                        <float>-48.0</float>
+                                        <float>384.0</float>
+                                        <float>-50.0</float>
+                                        <float>384.0</float>
+                                        <float>-50.0</float>
+                                        <float>380.0</float>
+                                        <float>-58.0</float>
+                                        <float>380.0</float>
+                                        <float>-58.0</float>
+                                        <float>377.0</float>
+                                        <float>-63.0</float>
+                                        <float>377.0</float>
+                                        <float>-63.0</float>
+                                        <float>375.0</float>
+                                        <float>-65.0</float>
+                                        <float>375.0</float>
+                                        <float>-65.0</float>
+                                        <float>375.0</float>
+                                        <float>-68.0</float>
+                                        <float>375.0</float>
+                                        <float>-68.0</float>
+                                        <float>374.0</float>
+                                        <float>-68.0</float>
+                                        <float>374.0</float>
+                                        <float>-68.0</float>
+                                        <float>374.0</float>
+                                        <float>-69.0</float>
+                                        <float>374.0</float>
+                                        <float>-69.0</float>
+                                        <float>373.0</float>
+                                        <float>-70.0</float>
+                                        <float>373.0</float>
+                                        <float>-70.0</float>
+                                        <float>NaN</float>
+                                        <float>NaN</float>
+                                        <float>182.0</float>
+                                        <float>-78.0</float>
+                                        <float>180.0</float>
+                                        <float>-77.0</float>
+                                        <float>180.0</float>
+                                        <float>-77.0</float>
+                                        <float>180.0</float>
+                                        <float>-76.0</float>
+                                        <float>180.0</float>
+                                        <float>-76.0</float>
+                                        <float>180.0</float>
+                                        <float>-75.0</float>
+                                        <float>180.0</float>
+                                        <float>-75.0</float>
+                                        <float>184.0</float>
+                                        <float>-71.0</float>
+                                        <float>184.0</float>
+                                        <float>-71.0</float>
+                                        <float>188.0</float>
+                                        <float>-69.0</float>
+                                        <float>188.0</float>
+                                        <float>-69.0</float>
+                                        <float>196.0</float>
+                                        <float>-65.0</float>
+                                        <float>196.0</float>
+                                        <float>-65.0</float>
+                                        <float>203.0</float>
+                                        <float>-63.0</float>
+                                        <float>203.0</float>
+                                        <float>-63.0</float>
+                                        <float>210.0</float>
+                                        <float>-62.0</float>
+                                        <float>210.0</float>
+                                        <float>-62.0</float>
+                                        <float>216.0</float>
+                                        <float>-62.0</float>
+                                        <float>216.0</float>
+                                        <float>-62.0</float>
+                                        <float>222.0</float>
+                                        <float>-65.0</float>
+                                        <float>222.0</float>
+                                        <float>-65.0</float>
+                                        <float>227.0</float>
+                                        <float>-68.0</float>
+                                        <float>227.0</float>
+                                        <float>-68.0</float>
+                                        <float>229.0</float>
+                                        <float>-72.0</float>
+                                        <float>229.0</float>
+                                        <float>-72.0</float>
+                                        <float>229.0</float>
+                                        <float>-78.0</float>
+                                        <float>229.0</float>
+                                        <float>-78.0</float>
+                                        <float>229.0</float>
+                                        <float>-88.0</float>
+                                        <float>229.0</float>
+                                        <float>-88.0</float>
+                                        <float>229.0</float>
+                                        <float>-101.0</float>
+                                        <float>229.0</float>
+                                        <float>-101.0</float>
+                                        <float>223.0</float>
+                                        <float>-114.0</float>
+                                        <float>223.0</float>
+                                        <float>-114.0</float>
+                                        <float>217.0</float>
+                                        <float>-123.0</float>
+                                        <float>217.0</float>
+                                        <float>-123.0</float>
+                                        <float>213.0</float>
+                                        <float>-129.0</float>
+                                        <float>213.0</float>
+                                        <float>-129.0</float>
+                                        <float>206.0</float>
+                                        <float>-135.0</float>
+                                        <float>206.0</float>
+                                        <float>-135.0</float>
+                                        <float>200.0</float>
+                                        <float>-138.0</float>
+                                        <float>200.0</float>
+                                        <float>-138.0</float>
+                                        <float>194.0</float>
+                                        <float>-138.0</float>
+                                        <float>194.0</float>
+                                        <float>-138.0</float>
+                                        <float>185.0</float>
+                                        <float>-138.0</float>
+                                        <float>185.0</float>
+                                        <float>-138.0</float>
+                                        <float>170.0</float>
+                                        <float>-133.0</float>
+                                        <float>170.0</float>
+                                        <float>-133.0</float>
+                                        <float>154.0</float>
+                                        <float>-126.0</float>
+                                        <float>154.0</float>
+                                        <float>-126.0</float>
+                                        <float>139.0</float>
+                                        <float>-121.0</float>
+                                        <float>139.0</float>
+                                        <float>-121.0</float>
+                                        <float>126.0</float>
+                                        <float>-115.0</float>
+                                        <float>126.0</float>
+                                        <float>-115.0</float>
+                                        <float>117.0</float>
+                                        <float>-107.0</float>
+                                        <float>117.0</float>
+                                        <float>-107.0</float>
+                                        <float>110.0</float>
+                                        <float>-97.0</float>
+                                        <float>110.0</float>
+                                        <float>-97.0</float>
+                                        <float>108.0</float>
+                                        <float>-90.0</float>
+                                        <float>108.0</float>
+                                        <float>-90.0</float>
+                                        <float>108.0</float>
+                                        <float>-84.0</float>
+                                        <float>108.0</float>
+                                        <float>-84.0</float>
+                                        <float>110.0</float>
+                                        <float>-78.0</float>
+                                        <float>110.0</float>
+                                        <float>-78.0</float>
+                                        <float>115.0</float>
+                                        <float>-71.0</float>
+                                        <float>115.0</float>
+                                        <float>-71.0</float>
+                                        <float>119.0</float>
+                                        <float>-67.0</float>
+                                        <float>119.0</float>
+                                        <float>-67.0</float>
+                                        <float>124.0</float>
+                                        <float>-63.0</float>
+                                        <float>124.0</float>
+                                        <float>-63.0</float>
+                                        <float>128.0</float>
+                                        <float>-61.0</float>
+                                        <float>128.0</float>
+                                        <float>-61.0</float>
+                                        <float>130.0</float>
+                                        <float>-60.0</float>
+                                        <float>130.0</float>
+                                        <float>-60.0</float>
+                                        <float>134.0</float>
+                                        <float>-59.0</float>
+                                        <float>134.0</float>
+                                        <float>-59.0</float>
+                                        <float>136.0</float>
+                                        <float>-59.0</float>
+                                        <float>136.0</float>
+                                        <float>-59.0</float>
+                                        <float>139.0</float>
+                                        <float>-59.0</float>
+                                        <float>139.0</float>
+                                        <float>-59.0</float>
+                                        <float>141.0</float>
+                                        <float>-60.0</float>
+                                        <float>141.0</float>
+                                        <float>-60.0</float>
+                                        <float>147.0</float>
+                                        <float>-64.0</float>
+                                        <float>147.0</float>
+                                        <float>-64.0</float>
+                                        <float>151.0</float>
+                                        <float>-67.0</float>
+                                        <float>151.0</float>
+                                        <float>-67.0</float>
+                                        <float>158.0</float>
+                                        <float>-72.0</float>
+                                        <float>158.0</float>
+                                        <float>-72.0</float>
+                                        <float>165.0</float>
+                                        <float>-75.0</float>
+                                        <float>165.0</float>
+                                        <float>-75.0</float>
+                                        <float>173.0</float>
+                                        <float>-79.0</float>
+                                        <float>173.0</float>
+                                        <float>-79.0</float>
+                                        <float>179.0</float>
+                                        <float>-81.0</float>
+                                        <float>179.0</float>
+                                        <float>-81.0</float>
+                                        <float>183.0</float>
+                                        <float>-85.0</float>
+                                        <float>183.0</float>
+                                        <float>-85.0</float>
+                                        <float>184.0</float>
+                                        <float>-86.0</float>
+                                        <float>184.0</float>
+                                        <float>-86.0</float>
+                                        <float>184.0</float>
+                                        <float>-87.0</float>
+                                        <float>184.0</float>
+                                        <float>-87.0</float>
+                                        <float>184.0</float>
+                                        <float>-88.0</float>
+                                        <float>184.0</float>
+                                        <float>-88.0</float>
+                                        <float>184.0</float>
+                                        <float>-89.0</float>
+                                        <float>184.0</float>
+                                        <float>-89.0</float>
+                                        <float>184.0</float>
+                                        <float>-91.0</float>
+                                        <float>184.0</float>
+                                        <float>-91.0</float>
+                                        <float>184.0</float>
+                                        <float>-95.0</float>
+                                        <float>184.0</float>
+                                        <float>-95.0</float>
+                                        <float>184.0</float>
+                                        <float>-101.0</float>
+                                        <float>184.0</float>
+                                        <float>-101.0</float>
+                                        <float>180.0</float>
+                                        <float>-109.0</float>
+                                        <float>180.0</float>
+                                        <float>-109.0</float>
+                                        <float>179.0</float>
+                                        <float>-113.0</float>
+                                        <float>179.0</float>
+                                        <float>-113.0</float>
+                                        <float>178.0</float>
+                                        <float>-115.0</float>
+                                        <float>178.0</float>
+                                        <float>-115.0</float>
+                                        <float>177.0</float>
+                                        <float>-115.0</float>
+                                        <float>177.0</float>
+                                        <float>-115.0</float>
+                                        <float>179.0</float>
+                                        <float>-114.0</float>
+                                        <float>179.0</float>
+                                        <float>-114.0</float>
+                                        <float>180.0</float>
+                                        <float>-113.0</float>
+                                        <float>180.0</float>
+                                        <float>-113.0</float>
+                                        <float>184.0</float>
+                                        <float>-106.0</float>
+                                        <float>184.0</float>
+                                        <float>-106.0</float>
+                                        <float>191.0</float>
+                                        <float>-99.0</float>
+                                        <float>191.0</float>
+                                        <float>-99.0</float>
+                                        <float>204.0</float>
+                                        <float>-90.0</float>
+                                        <float>204.0</float>
+                                        <float>-90.0</float>
+                                        <float>214.0</float>
+                                        <float>-82.0</float>
+                                        <float>214.0</float>
+                                        <float>-82.0</float>
+                                        <float>221.0</float>
+                                        <float>-76.0</float>
+                                        <float>221.0</float>
+                                        <float>-76.0</float>
+                                        <float>230.0</float>
+                                        <float>-68.0</float>
+                                        <float>230.0</float>
+                                        <float>-68.0</float>
+                                        <float>238.0</float>
+                                        <float>-60.0</float>
+                                        <float>238.0</float>
+                                        <float>-60.0</float>
+                                        <float>244.0</float>
+                                        <float>-52.0</float>
+                                        <float>244.0</float>
+                                        <float>-52.0</float>
+                                        <float>247.0</float>
+                                        <float>-49.0</float>
+                                        <float>247.0</float>
+                                        <float>-49.0</float>
+                                        <float>248.0</float>
+                                        <float>-47.0</float>
+                                        <float>248.0</float>
+                                        <float>-47.0</float>
+                                        <float>248.0</float>
+                                        <float>-46.0</float>
+                                        <float>248.0</float>
+                                        <float>-46.0</float>
+                                        <float>248.0</float>
+                                        <float>-45.0</float>
+                                        <float>248.0</float>
+                                        <float>-45.0</float>
+                                        <float>244.0</float>
+                                        <float>-43.0</float>
+                                        <float>244.0</float>
+                                        <float>-43.0</float>
+                                        <float>243.0</float>
+                                        <float>-43.0</float>
+                                        <float>243.0</float>
+                                        <float>-43.0</float>
+                                        <float>242.0</float>
+                                        <float>-43.0</float>
+                                        <float>242.0</float>
+                                        <float>-43.0</float>
+                                        <float>238.0</float>
+                                        <float>-43.0</float>
+                                        <float>238.0</float>
+                                        <float>-43.0</float>
+                                        <float>228.0</float>
+                                        <float>-43.0</float>
+                                        <float>228.0</float>
+                                        <float>-43.0</float>
+                                        <float>219.0</float>
+                                        <float>-43.0</float>
+                                        <float>219.0</float>
+                                        <float>-43.0</float>
+                                        <float>213.0</float>
+                                        <float>-44.0</float>
+                                        <float>213.0</float>
+                                        <float>-44.0</float>
+                                        <float>206.0</float>
+                                        <float>-47.0</float>
+                                        <float>206.0</float>
+                                        <float>-47.0</float>
+                                        <float>200.0</float>
+                                        <float>-51.0</float>
+                                        <float>200.0</float>
+                                        <float>-51.0</float>
+                                        <float>198.0</float>
+                                        <float>-54.0</float>
+                                        <float>198.0</float>
+                                        <float>-54.0</float>
+                                        <float>193.0</float>
+                                        <float>-61.0</float>
+                                        <float>193.0</float>
+                                        <float>-61.0</float>
+                                        <float>191.0</float>
+                                        <float>-67.0</float>
+                                        <float>191.0</float>
+                                        <float>-67.0</float>
+                                        <float>190.0</float>
+                                        <float>-72.0</float>
+                                        <float>190.0</float>
+                                        <float>-72.0</float>
+                                        <float>190.0</float>
+                                        <float>-75.0</float>
+                                        <float>190.0</float>
+                                        <float>-75.0</float>
+                                        <float>194.0</float>
+                                        <float>-80.0</float>
+                                        <float>194.0</float>
+                                        <float>-80.0</float>
+                                        <float>200.0</float>
+                                        <float>-83.0</float>
+                                        <float>200.0</float>
+                                        <float>-83.0</float>
+                                        <float>208.0</float>
+                                        <float>-87.0</float>
+                                        <float>208.0</float>
+                                        <float>-87.0</float>
+                                        <float>221.0</float>
+                                        <float>-91.0</float>
+                                        <float>221.0</float>
+                                        <float>-91.0</float>
+                                        <float>238.0</float>
+                                        <float>-93.0</float>
+                                        <float>238.0</float>
+                                        <float>-93.0</float>
+                                        <float>254.0</float>
+                                        <float>-95.0</float>
+                                        <float>254.0</float>
+                                        <float>-95.0</float>
+                                        <float>270.0</float>
+                                        <float>-96.0</float>
+                                        <float>270.0</float>
+                                        <float>-96.0</float>
+                                        <float>282.0</float>
+                                        <float>-96.0</float>
+                                        <float>282.0</float>
+                                        <float>-96.0</float>
+                                        <float>294.0</float>
+                                        <float>-96.0</float>
+                                        <float>294.0</float>
+                                        <float>-96.0</float>
+                                        <float>300.0</float>
+                                        <float>-96.0</float>
+                                        <float>300.0</float>
+                                        <float>-96.0</float>
+                                        <float>306.0</float>
+                                        <float>-94.0</float>
+                                        <float>306.0</float>
+                                        <float>-94.0</float>
+                                        <float>309.0</float>
+                                        <float>-92.0</float>
+                                        <float>309.0</float>
+                                        <float>-92.0</float>
+                                        <float>311.0</float>
+                                        <float>-89.0</float>
+                                        <float>311.0</float>
+                                        <float>-89.0</float>
+                                        <float>311.0</float>
+                                        <float>-86.0</float>
+                                        <float>311.0</float>
+                                        <float>-86.0</float>
+                                        <float>311.0</float>
+                                        <float>-81.0</float>
+                                        <float>311.0</float>
+                                        <float>-81.0</float>
+                                        <float>310.0</float>
+                                        <float>-77.0</float>
+                                        <float>310.0</float>
+                                        <float>-77.0</float>
+                                        <float>308.0</float>
+                                        <float>-75.0</float>
+                                        <float>308.0</float>
+                                        <float>-75.0</float>
+                                        <float>308.0</float>
+                                        <float>-74.0</float>
+                                        <float>308.0</float>
+                                        <float>-74.0</float>
+                                      </values>
+                                    </OTDataStore>
+                                  </dataStore>
+                                </OTDataGraphable>
+                              </graphables>
+                            </OTDrawingTool2>
+                          </documentRefs>
+                        </OTUDLCompoundDoc>
+                        <OTUDLCompoundDoc id="7f4d6285-78d4-11dc-82f7-4bde662316f0" name="%7f4d6285-78d4-11dc-82f7-4bde662316f0">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle">Exploring the question 2</div>
+                                  Albert lives in a world that is just the opposite. Everything is very sticky. All of the surfaces have a large amount of friction.
+                                  <p />
+                                  Name two surfaces that have a lot of friction.
+                                  <p />
+                                  <object refid="9b49ff26-78d4-11dc-82f7-4bde662316f0" />
+                                  <p />
+                                  List the features that you think make a surface have friction. You can use a drawing to help show the features.
+                                  <p />
+                                  <object refid="c001de57-78d4-11dc-82f7-4bde662316f0" />
+                                  <p />
+                                  <object refid="d052a828-78d4-11dc-82f7-4bde662316f0" />
+                                  <p />
+                                  Explain why you couldn't light matches in a world with no friction.
+                                  <p />
+                                  <object refid="ddddc249-78d4-11dc-82f7-4bde662316f0" />
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                          <documentRefs>
+                            <OTText id="9b49ff26-78d4-11dc-82f7-4bde662316f0" name="Text field" />
+                            <OTText id="c001de57-78d4-11dc-82f7-4bde662316f0" name="Text field" />
+                            <OTDrawingTool2 id="d052a828-78d4-11dc-82f7-4bde662316f0" name="Draw tool" />
+                            <OTText id="ddddc249-78d4-11dc-82f7-4bde662316f0" name="Text field" />
+                          </documentRefs>
+                        </OTUDLCompoundDoc>
+                      </cards>
+                      <currentCard>
+                        <object refid="7f4d6285-78d4-11dc-82f7-4bde662316f0" />
+                      </currentCard>
+                      <viewedCards>
+                        <object refid="78f0fec9-78d1-11dc-82f7-4bde662316f0" />
+                        <object refid="beadd1de-78d2-11dc-82f7-4bde662316f0" />
+                        <object refid="7f4d6285-78d4-11dc-82f7-4bde662316f0" />
+                      </viewedCards>
+                    </OTCardContainer>
+                  </content>
+                  <header>
+                    <OTUDLCompoundDoc id="78f125db-78d1-11dc-82f7-4bde662316f0" name="%78f125db-78d1-11dc-82f7-4bde662316f0">
+                      <bodyText>
+                        <div class="title">Introduction</div>
+                      </bodyText>
+                    </OTUDLCompoundDoc>
+                  </header>
+                  <footer>
+                    <OTUDLCompoundDoc id="78f125dc-78d1-11dc-82f7-4bde662316f0" name="%78f125dc-78d1-11dc-82f7-4bde662316f0">
+                      <bodyText>
+                        <div align="center">
+                          <table>
+                            <tr>
+                              <td>
+                                <object refid="78f173fd-78d1-11dc-82f7-4bde662316f0" viewid="2767fe20-6c7d-11dc-8314-0800200c9a66!/menu-horizontal-circle" />
+                              </td>
+                            </tr>
+                          </table>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                        <OTUDLMenu id="78f173fd-78d1-11dc-82f7-4bde662316f0">
+                          <cardContainer>
+                            <object refid="78f125da-78d1-11dc-82f7-4bde662316f0" />
+                          </cardContainer>
+                          <menuRule>
+                            <object refid="${page-rule}" />
+                          </menuRule>
+                        </OTUDLMenu>
+                        <object refid="${menu-horizontal-circle}" />
+                      </documentRefs>
+                    </OTUDLCompoundDoc>
+                  </footer>
+                  <north>
+                    <object refid="78f125db-78d1-11dc-82f7-4bde662316f0" />
+                  </north>
+                  <center>
+                    <object refid="78f125da-78d1-11dc-82f7-4bde662316f0" />
+                  </center>
+                  <south>
+                    <object refid="78f125dc-78d1-11dc-82f7-4bde662316f0" />
+                  </south>
+                </OTUDLSection>
+                <OTUDLSection id="0be2278a-78d5-11dc-82f7-4bde662316f0" name="Strange worlds" isComputerBased="false" isIntroduction="false" isMath="false" isPosttest="false" isPretest="false" isReading="true" isWrapup="false">
+                  <content>
+                    <OTCardContainer id="0be2278c-78d5-11dc-82f7-4bde662316f0" contentsMayScroll="true" loadViewOnlyOnDemand="true">
+                      <cards>
+                        <OTUDLCompoundDoc id="0be2278b-78d5-11dc-82f7-4bde662316f0" name="%0be2278b-78d5-11dc-82f7-4bde662316f0">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle">New page</div>
+                                  Paul's story
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                        </OTUDLCompoundDoc>
+                      </cards>
+                      <currentCard>
+                        <object refid="0be2278b-78d5-11dc-82f7-4bde662316f0" />
+                      </currentCard>
+                      <viewedCards>
+                        <object refid="0be2278b-78d5-11dc-82f7-4bde662316f0" />
+                      </viewedCards>
+                    </OTCardContainer>
+                  </content>
+                  <header>
+                    <OTUDLCompoundDoc id="0be2278d-78d5-11dc-82f7-4bde662316f0" name="%0be2278d-78d5-11dc-82f7-4bde662316f0">
+                      <bodyText>
+                        <div class="title">Strange worlds</div>
+                      </bodyText>
+                    </OTUDLCompoundDoc>
+                  </header>
+                  <footer>
+                    <OTUDLCompoundDoc id="0be2278e-78d5-11dc-82f7-4bde662316f0" name="%0be2278e-78d5-11dc-82f7-4bde662316f0">
+                      <bodyText>
+                        <div align="center">
+                          <table>
+                            <tr>
+                              <td>
+                                <object refid="0be24e9f-78d5-11dc-82f7-4bde662316f0" viewid="2767fe20-6c7d-11dc-8314-0800200c9a66!/menu-horizontal-circle" />
+                              </td>
+                            </tr>
+                          </table>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                        <OTUDLMenu id="0be24e9f-78d5-11dc-82f7-4bde662316f0">
+                          <cardContainer>
+                            <object refid="0be2278c-78d5-11dc-82f7-4bde662316f0" />
+                          </cardContainer>
+                          <menuRule>
+                            <object refid="${page-rule}" />
+                          </menuRule>
+                        </OTUDLMenu>
+                        <object refid="${menu-horizontal-circle}" />
+                      </documentRefs>
+                    </OTUDLCompoundDoc>
+                  </footer>
+                  <north>
+                    <object refid="0be2278d-78d5-11dc-82f7-4bde662316f0" />
+                  </north>
+                  <center>
+                    <object refid="0be2278c-78d5-11dc-82f7-4bde662316f0" />
+                  </center>
+                  <south>
+                    <object refid="0be2278e-78d5-11dc-82f7-4bde662316f0" />
+                  </south>
+                </OTUDLSection>
+                <OTUDLSection id="364b1690-78d5-11dc-82f7-4bde662316f0" name="Penny heat" isComputerBased="true" isIntroduction="false" isMath="false" isPosttest="false" isPretest="false" isReading="false" isWrapup="false">
+                  <content>
+                    <OTCardContainer id="364b1692-78d5-11dc-82f7-4bde662316f0" contentsMayScroll="true" loadViewOnlyOnDemand="true">
+                      <cards>
+                        <OTUDLCompoundDoc id="364b1691-78d5-11dc-82f7-4bde662316f0" name="%364b1691-78d5-11dc-82f7-4bde662316f0">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle">Engage</div>
+                                  Does friction create heat?
+                                  <p />
+                                  <img src="http://udl.concord.org/share/Friction/shuttle-reentry-web.png" />
+                                  <p />
+                                  In this activity you will measure how much a penny heats up when it is rubbed on a surface.
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                        </OTUDLCompoundDoc>
+                        <OTUDLCompoundDoc id="7b73dc06-78e0-11dc-8275-3da1b6a57fd9" name="%7b73dc06-78e0-11dc-8275-3da1b6a57fd9">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle">Engage</div>
+                                  1. Rub your hands together, first slowly and then quickly. You probably notice that your skin warms up when you rub your hands quickly.
+                                  <p />
+                                  <object refid="a28c1967-78e0-11dc-8275-3da1b6a57fd9" />
+                                  <p />
+                                  2. Hold a penny against your cheek to feel its temperature. Rub the penny on a hard surface, like a block of wood. Don't use a surface that could be damaged. Rub it in a circle twenty times. Then test the temperature of the penny again by holding it against your cheek.
+                                  <p />
+                                  You probably noticed that the penny heats up.
+                                  <p />
+                                  <object refid="9524dd53-78e4-11dc-8275-3da1b6a57fd9" />
+                                  <p />
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                          <documentRefs>
+                            <OTUDLQuestions id="a28c1967-78e0-11dc-8275-3da1b6a57fd9" name="Scaffolded questions">
+                              <questions>
+                                <OTQuestion name="L5">
+                                  <prompt>
+                                    <OTUDLCompoundDoc>
+                                      <bodyText>Why do you think this happens?</bodyText>
+                                    </OTUDLCompoundDoc>
+                                  </prompt>
+                                  <input>
+                                    <OTUDLCompoundDoc>
+                                      <bodyText>
+                                        <object refid="bebdf6e7-78e0-11dc-8275-3da1b6a57fd9" />
+                                        <p />
+                                        Re-read the question.
+                                      </bodyText>
+                                      <documentRefs>
+                                        <OTText id="bebdf6e7-78e0-11dc-8275-3da1b6a57fd9" name="Text field" />
+                                      </documentRefs>
+                                    </OTUDLCompoundDoc>
+                                  </input>
+                                </OTQuestion>
+                                <OTQuestion name="L4">
+                                  <prompt>
+                                    <OTUDLCompoundDoc>
+                                      <bodyText>Why do you think this happens?</bodyText>
+                                    </OTUDLCompoundDoc>
+                                  </prompt>
+                                  <input>
+                                    <OTUDLCompoundDoc>
+                                      <bodyText>
+                                        <object refid="60e5ce28-78e1-11dc-8275-3da1b6a57fd9" />
+                                        <p />
+                                        Think about how slippery or sticky your hands are.
+                                      </bodyText>
+                                      <documentRefs>
+                                        <OTText id="60e5ce28-78e1-11dc-8275-3da1b6a57fd9" name="Text field" />
+                                      </documentRefs>
+                                    </OTUDLCompoundDoc>
+                                  </input>
+                                </OTQuestion>
+                                <OTQuestion name="L3">
+                                  <prompt>
+                                    <OTUDLCompoundDoc>
+                                      <bodyText>Why do you think this happens?</bodyText>
+                                    </OTUDLCompoundDoc>
+                                  </prompt>
+                                  <input>
+                                    <OTUDLCompoundDoc>
+                                      <bodyText>
+                                        <object refid="abd1cc49-78e1-11dc-8275-3da1b6a57fd9" />
+                                        <p />
+                                        When two smooth surfaces rub together there is _____ friction. When two rough surfaces rub together there is ____ friction.
+                                      </bodyText>
+                                      <documentRefs>
+                                        <OTText id="abd1cc49-78e1-11dc-8275-3da1b6a57fd9" name="Text field" />
+                                      </documentRefs>
+                                    </OTUDLCompoundDoc>
+                                  </input>
+                                </OTQuestion>
+                                <OTQuestion name="L2">
+                                  <prompt>
+                                    <OTUDLCompoundDoc>
+                                      <bodyText>Why do you think this happens?</bodyText>
+                                    </OTUDLCompoundDoc>
+                                  </prompt>
+                                  <input>
+                                    <OTUDLCompoundDoc>
+                                      <bodyText>
+                                        <object refid="a4443edb-78e2-11dc-8275-3da1b6a57fd9" />
+                                        <p />
+                                        When two rough surfaces rub together there is a lot of friction that results in ___________.
+                                      </bodyText>
+                                      <documentRefs>
+                                        <OTText id="a4443edb-78e2-11dc-8275-3da1b6a57fd9" name="Text field" />
+                                      </documentRefs>
+                                    </OTUDLCompoundDoc>
+                                  </input>
+                                </OTQuestion>
+                                <OTQuestion name="L1">
+                                  <prompt>
+                                    <OTUDLCompoundDoc>
+                                      <bodyText>Why do you think this happens?</bodyText>
+                                    </OTUDLCompoundDoc>
+                                  </prompt>
+                                  <input>
+                                    <OTUDLCompoundDoc>
+                                      <bodyText>
+                                        <object refid="b9def23c-78e2-11dc-8275-3da1b6a57fd9" />
+                                        <p />
+                                        When one body in contact with another is moved, heat results due to friction. Explain in your own words why this occurs.
+                                      </bodyText>
+                                      <documentRefs>
+                                        <OTText id="b9def23c-78e2-11dc-8275-3da1b6a57fd9" name="Text field" />
+                                      </documentRefs>
+                                    </OTUDLCompoundDoc>
+                                  </input>
+                                </OTQuestion>
+                              </questions>
+                            </OTUDLQuestions>
+                            <OTUDLQuestions id="9524dd53-78e4-11dc-8275-3da1b6a57fd9" name="Scaffolded questions">
+                              <questions>
+                                <OTQuestion name="L5">
+                                  <prompt>
+                                    <OTUDLCompoundDoc>
+                                      <bodyText>If there were no friction, would the penny heat up?</bodyText>
+                                    </OTUDLCompoundDoc>
+                                  </prompt>
+                                  <input>
+                                    <OTUDLCompoundDoc>
+                                      <bodyText>
+                                        <object refid="df4c04e3-78e4-11dc-8275-3da1b6a57fd9" />
+                                        <p />
+                                        Re-read the question.
+                                      </bodyText>
+                                      <documentRefs>
+                                        <OTText id="df4c04e3-78e4-11dc-8275-3da1b6a57fd9" name="Text field" />
+                                      </documentRefs>
+                                    </OTUDLCompoundDoc>
+                                  </input>
+                                </OTQuestion>
+                                <OTQuestion name="L4">
+                                  <prompt>
+                                    <OTUDLCompoundDoc>
+                                      <bodyText>If there were no friction, would the penny heat up?</bodyText>
+                                    </OTUDLCompoundDoc>
+                                  </prompt>
+                                  <input>
+                                    <OTUDLCompoundDoc>
+                                      <bodyText>
+                                        <object refid="f6c38e94-78e4-11dc-8275-3da1b6a57fd9" />
+                                        <p />
+                                        Think about what happens when two surfaces that have some resistance are rubbed together.
+                                      </bodyText>
+                                      <documentRefs>
+                                        <OTText id="f6c38e94-78e4-11dc-8275-3da1b6a57fd9" name="Text field" />
+                                      </documentRefs>
+                                    </OTUDLCompoundDoc>
+                                  </input>
+                                </OTQuestion>
+                                <OTQuestion name="L3">
+                                  <prompt>
+                                    <OTUDLCompoundDoc>
+                                      <bodyText>If there were no friction, would the penny heat up?</bodyText>
+                                    </OTUDLCompoundDoc>
+                                  </prompt>
+                                  <input>
+                                    <OTUDLCompoundDoc>
+                                      <bodyText>
+                                        <object refid="07a770a5-78e5-11dc-8275-3da1b6a57fd9" />
+                                        <p />
+                                        When two surfaces are rubbed together, think about why the objects heat up.
+                                      </bodyText>
+                                      <documentRefs>
+                                        <OTText id="07a770a5-78e5-11dc-8275-3da1b6a57fd9" name="Text field" />
+                                      </documentRefs>
+                                    </OTUDLCompoundDoc>
+                                  </input>
+                                </OTQuestion>
+                                <OTQuestion name="L2">
+                                  <prompt>
+                                    <OTUDLCompoundDoc>
+                                      <bodyText>If there were no friction, would the penny heat up?</bodyText>
+                                    </OTUDLCompoundDoc>
+                                  </prompt>
+                                  <input>
+                                    <OTUDLCompoundDoc>
+                                      <bodyText>
+                                        <object refid="207f74b6-78e5-11dc-8275-3da1b6a57fd9" />
+                                        <p />
+                                        If there were no friction while rubbing a penny on a hard surface, would anything else create heat?
+                                      </bodyText>
+                                      <documentRefs>
+                                        <OTText id="207f74b6-78e5-11dc-8275-3da1b6a57fd9" name="Text field" />
+                                      </documentRefs>
+                                    </OTUDLCompoundDoc>
+                                  </input>
+                                </OTQuestion>
+                                <OTQuestion name="L1">
+                                  <prompt>
+                                    <OTUDLCompoundDoc>
+                                      <bodyText>If there were no friction, would the penny heat up?</bodyText>
+                                    </OTUDLCompoundDoc>
+                                  </prompt>
+                                  <input>
+                                    <OTUDLCompoundDoc>
+                                      <bodyText>
+                                        <object refid="34300b57-78e5-11dc-8275-3da1b6a57fd9" />
+                                        <p />
+                                        When there is no friction, the rubbing does not cause heat. Explain in your own words why this occurs.
+                                      </bodyText>
+                                      <documentRefs>
+                                        <OTText id="34300b57-78e5-11dc-8275-3da1b6a57fd9" name="Text field" />
+                                      </documentRefs>
+                                    </OTUDLCompoundDoc>
+                                  </input>
+                                </OTQuestion>
+                              </questions>
+                            </OTUDLQuestions>
+                          </documentRefs>
+                        </OTUDLCompoundDoc>
+                        <OTUDLCompoundDoc id="5a2f987d-78e3-11dc-8275-3da1b6a57fd9" name="%5a2f987d-78e3-11dc-8275-3da1b6a57fd9">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle">Engage</div>
+                                  3. Is it your finger that makes it hot, or the rubbing?
+                                  <p />
+                                  Select one:
+                                  <object refid="a95c3ac8-78e5-11dc-8275-3da1b6a57fd9" />
+                                  <p />
+                                  How can you tell?
+                                  <p />
+                                  <object refid="b46abc29-78e5-11dc-8275-3da1b6a57fd9" />
+                                  <p />
+                                  4. Which of these things would make the penny heat up?
+                                  <p />
+                                  <object refid="ef9dc3ad-78e5-11dc-8275-3da1b6a57fd9" />
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                          <documentRefs>
+                            <OTChoice id="a95c3ac8-78e5-11dc-8275-3da1b6a57fd9" name="Choices">
+                              <choices>
+                                <OTCompoundDoc name="finger">
+                                  <bodyText>finger</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="rubbing">
+                                  <bodyText>rubbing</bodyText>
+                                </OTCompoundDoc>
+                              </choices>
+                            </OTChoice>
+                            <OTText id="b46abc29-78e5-11dc-8275-3da1b6a57fd9" name="Text field" />
+                            <OTChoice id="ef9dc3ad-78e5-11dc-8275-3da1b6a57fd9" name="Choices">
+                              <choices>
+                                <OTCompoundDoc name="Rub it faster.">
+                                  <bodyText>Rub it faster.</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="Add wax to make it more slippery.">
+                                  <bodyText>Add wax to make it more slippery.</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="Push down harder on the penny. ">
+                                  <bodyText>Push down harder on the penny.</bodyText>
+                                </OTCompoundDoc>
+                              </choices>
+                            </OTChoice>
+                          </documentRefs>
+                        </OTUDLCompoundDoc>
+                        <OTUDLCompoundDoc id="f18293d4-78e6-11dc-8275-3da1b6a57fd9" name="%f18293d4-78e6-11dc-8275-3da1b6a57fd9">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle">Materials</div>
+                                  <ul>
+                                    <li>surface temperature (fast response) sensor</li>
+                                    <li>4 pennies</li>
+                                    <li>wood block</li>
+                                    <li>tape</li>
+                                    <li>rubber cement</li>
+                                    <li>piece of cardboard (2 cm x 4 cm)</li>
+                                    <li>waxed paper (substitute: rub wax on a surface with a crayon.)</li>
+                                  </ul>
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                        </OTUDLCompoundDoc>
+                        <OTUDLCompoundDoc id="6ddd4b55-78e7-11dc-8275-3da1b6a57fd9" name="%6ddd4b55-78e7-11dc-8275-3da1b6a57fd9">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle">Explore</div>
+                                  1. Now let's test your choices to the above questions using a surface temperature sensor. Cut out a 2 x 4 cm piece of cardboard.
+                                  <p />
+                                  2. Coat one side of the cardboard and one side of 4 pennies with rubber cement.
+                                  <p />
+                                  <img src="http://udl.concord.org/share/Friction/rubbercement2-web.png" />
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                        </OTUDLCompoundDoc>
+                        <OTUDLCompoundDoc id="aa7c17d6-78e7-11dc-8275-3da1b6a57fd9" name="%aa7c17d6-78e7-11dc-8275-3da1b6a57fd9">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle">Explore</div>
+                                  3. Make a sandwich with the sensor between the penny and the cardboard.  The sides coated with rubber cement should face each other (inside the sandwich). The rubber cement will provide friction between the penny and the cardboard.
+                                  <p />
+                                  <img src="http://udl.concord.org/share/Friction/sandwich-web.png" />
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                        </OTUDLCompoundDoc>
+                        <OTUDLCompoundDoc id="f9cd6be7-78e7-11dc-8275-3da1b6a57fd9" name="%f9cd6be7-78e7-11dc-8275-3da1b6a57fd9">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle">Explore</div>
+                                  4. Put the penny on a block of wood. Hold the cardboard by the edges so that your fingers don't affect the temperature of the penny.
+                                  <p />
+                                  5. Start the sensor. Note the temperature of the penny before you start touching, rubbing or pushing the penny.
+                                  <p />
+                                  6. Hold the penny down by pressing on the edges of the cardboard. Have one student rub with the penny and another student count out seconds. Rub the penny slowly for 10 seconds, then stop for 5 seconds, and then faster for 10 seconds on the wood block. Try to push down with the same amount of force! Look at the graph.
+                                  <p />
+                                  <img src="http://udl.concord.org/share/Friction/penny-rub-web.png" />
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                        </OTUDLCompoundDoc>
+                        <OTUDLCompoundDoc id="fa12d958-78e7-11dc-8275-3da1b6a57fd9" name="%fa12d958-78e7-11dc-8275-3da1b6a57fd9">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle">Explore</div>
+                                  7. Describe the graph. Which had more heating effect, rubbing slowly or rubbing fast?
+                                  <p />
+                                  <object refid="b1374f39-78e8-11dc-8275-3da1b6a57fd9" />
+                                  <p />
+                                  8. Move the sensor and cardboard to another penny and make a new sandwich. Start the sensor and note the starting temperature of the penny.
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                          <documentRefs>
+                            <OTText id="b1374f39-78e8-11dc-8275-3da1b6a57fd9" name="Text field" />
+                          </documentRefs>
+                        </OTUDLCompoundDoc>
+                        <OTUDLCompoundDoc id="fd79406a-78e8-11dc-8275-3da1b6a57fd9" name="%fd79406a-78e8-11dc-8275-3da1b6a57fd9">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle">Explore</div>
+                                  9. Push down lightly with the cardboard and rub the penny for 10 seconds, then stop for 5 seconds, then push down hard and rub it for 10 seconds, then stop. Look at the graph.
+                                  <p />
+                                  10. Which had more heating effect, pushing down lightly or pushing down hard?
+                                  <p />
+                                  <object refid="103c69cb-78e9-11dc-8275-3da1b6a57fd9" />
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                          <documentRefs>
+                            <OTText id="103c69cb-78e9-11dc-8275-3da1b6a57fd9" name="Text field" />
+                          </documentRefs>
+                        </OTUDLCompoundDoc>
+                        <OTUDLCompoundDoc id="2c0488ec-78e9-11dc-8275-3da1b6a57fd9" name="%2c0488ec-78e9-11dc-8275-3da1b6a57fd9">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle">Explain</div>
+                                  Heat is a form of energy, so it takes energy to heat up a penny.
+Where did the heat come from?
+                                  <p />
+                                  Explain why the heating effect of rubbing fast would be different from the heating effect of rubbing slowly.
+                                  <p />
+                                  Explain why the heating effect of pushing hard would be different from the heating effect of pushing lightly.
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                        </OTUDLCompoundDoc>
+                        <OTUDLCompoundDoc id="6bb6afed-78e9-11dc-8275-3da1b6a57fd9" name="%6bb6afed-78e9-11dc-8275-3da1b6a57fd9">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle">Elaborate</div>
+                                  1. Move the sensor and cardboard to another penny and make a new sandwich. Place a sheet of waxed paper on a part of the wood. Start the sensor and note the starting temperature of the penny.
+                                  <p />
+                                  <img src="http://udl.concord.org/share/Friction/waxpenny-web.png" />
+                                  <p />
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                        </OTUDLCompoundDoc>
+                        <OTUDLCompoundDoc id="758d3ece-78ef-11dc-8275-3da1b6a57fd9" name="%758d3ece-78ef-11dc-8275-3da1b6a57fd9">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle">Elaborate</div>
+                                  2. Rub the penny for 10 seconds on the wood, then move it to the waxed paper and rub it for 10 seconds on the waxed paper, then stop. Look at the graph.
+                                  <p />
+                                  3. Describe the graph. Which caused more heating, rubbing on the wood or rubbing on the waxed paper?
+                                  <p />
+                                  <object refid="c737ec3f-78ef-11dc-8275-3da1b6a57fd9" />
+                                  <p />
+                                  <object refid="a4f3f32f-78ef-11dc-8275-3da1b6a57fd9" />
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                          <documentRefs>
+                            <OTChoice id="c737ec3f-78ef-11dc-8275-3da1b6a57fd9" name="Choices">
+                              <choices>
+                                <OTCompoundDoc name="wood">
+                                  <bodyText>wood</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="waxed paper">
+                                  <bodyText>waxed paper</bodyText>
+                                </OTCompoundDoc>
+                              </choices>
+                            </OTChoice>
+                            <OTUDLQuestions id="a4f3f32f-78ef-11dc-8275-3da1b6a57fd9" name="Scaffolded questions">
+                              <questions>
+                                <OTQuestion name="L5">
+                                  <prompt>
+                                    <OTUDLCompoundDoc>
+                                      <bodyText>Why do you think this was true?</bodyText>
+                                    </OTUDLCompoundDoc>
+                                  </prompt>
+                                  <input>
+                                    <OTUDLCompoundDoc>
+                                      <bodyText>
+                                        <object refid="0abe25b3-78f0-11dc-8275-3da1b6a57fd9" />
+                                        <p />
+                                        Re-read the question.
+                                      </bodyText>
+                                      <documentRefs>
+                                        <OTText id="0abe25b3-78f0-11dc-8275-3da1b6a57fd9" name="Text field" />
+                                      </documentRefs>
+                                    </OTUDLCompoundDoc>
+                                  </input>
+                                </OTQuestion>
+                                <OTQuestion name="L4">
+                                  <prompt>
+                                    <OTUDLCompoundDoc>
+                                      <bodyText>Why do you think this was true?</bodyText>
+                                    </OTUDLCompoundDoc>
+                                  </prompt>
+                                  <input>
+                                    <OTUDLCompoundDoc>
+                                      <bodyText>
+                                        <object refid="2953e3c4-78f0-11dc-8275-3da1b6a57fd9" />
+                                        <p />
+                                        Think which surface is more slippery.
+                                      </bodyText>
+                                      <documentRefs>
+                                        <OTText id="2953e3c4-78f0-11dc-8275-3da1b6a57fd9" name="Text field" />
+                                      </documentRefs>
+                                    </OTUDLCompoundDoc>
+                                  </input>
+                                </OTQuestion>
+                                <OTQuestion name="L3">
+                                  <prompt>
+                                    <OTUDLCompoundDoc>
+                                      <bodyText>Why do you think this was true?</bodyText>
+                                    </OTUDLCompoundDoc>
+                                  </prompt>
+                                  <input>
+                                    <OTUDLCompoundDoc>
+                                      <bodyText>
+                                        <object refid="3a894135-78f0-11dc-8275-3da1b6a57fd9" />
+                                        <p />
+                                        When the penny and the wood are rubbed together there is _____ friction. When the penny and the waxed paper are rubbed together there is ____ friction.
+                                      </bodyText>
+                                      <documentRefs>
+                                        <OTText id="3a894135-78f0-11dc-8275-3da1b6a57fd9" name="Text field" />
+                                      </documentRefs>
+                                    </OTUDLCompoundDoc>
+                                  </input>
+                                </OTQuestion>
+                                <OTQuestion name="L2">
+                                  <prompt>
+                                    <OTUDLCompoundDoc>
+                                      <bodyText>Why do you think this was true?</bodyText>
+                                    </OTUDLCompoundDoc>
+                                  </prompt>
+                                  <input>
+                                    <OTUDLCompoundDoc>
+                                      <bodyText>
+                                        <object refid="58d30226-78f0-11dc-8275-3da1b6a57fd9" />
+                                        <p />
+                                        When two rough surfaces rub together there is a lot of friction that results in ___________.
+                                      </bodyText>
+                                      <documentRefs>
+                                        <OTText id="58d30226-78f0-11dc-8275-3da1b6a57fd9" name="Text field" />
+                                      </documentRefs>
+                                    </OTUDLCompoundDoc>
+                                  </input>
+                                </OTQuestion>
+                                <OTQuestion name="L1">
+                                  <prompt>
+                                    <OTUDLCompoundDoc>
+                                      <bodyText>Why do you think this was true?</bodyText>
+                                    </OTUDLCompoundDoc>
+                                  </prompt>
+                                  <input>
+                                    <OTUDLCompoundDoc>
+                                      <bodyText>
+                                        <object refid="6c27e437-78f0-11dc-8275-3da1b6a57fd9" />
+                                        <p />
+                                        The wax paper is smoother than the wood surface. Which one will cause the least amount of friction?
+                                      </bodyText>
+                                      <documentRefs>
+                                        <OTText id="6c27e437-78f0-11dc-8275-3da1b6a57fd9" name="Text field" />
+                                      </documentRefs>
+                                    </OTUDLCompoundDoc>
+                                  </input>
+                                </OTQuestion>
+                              </questions>
+                            </OTUDLQuestions>
+                          </documentRefs>
+                        </OTUDLCompoundDoc>
+                        <OTUDLCompoundDoc id="85867d68-78f0-11dc-8275-3da1b6a57fd9" name="%85867d68-78f0-11dc-8275-3da1b6a57fd9">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle">Evaluate</div>
+                                  Automobile brakes heat up a lot when a car comes to a stop. The heat energy comes from the energy of motion of the car. Based on your experiments with a penny, answer these questions.
+Stepping harder on the brakes makes the car stop faster. Would this cause more heating in the brakes?
+                                  <p />
+                                  <object refid="9fb29fc9-78f0-11dc-8275-3da1b6a57fd9" />
+                                  <p />
+                                  Explain your answer.
+                                  <p />
+                                  <object refid="ad0ebaaa-78f0-11dc-8275-3da1b6a57fd9" />
+                                  <p />
+                                  Which would cause more heating in the brakes?
+                                  <p />
+                                  <object refid="baad35bb-78f0-11dc-8275-3da1b6a57fd9" />
+                                  <p />
+                                  Explain your answer.
+                                  <p />
+                                  <object refid="c88892bc-78f0-11dc-8275-3da1b6a57fd9" />
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                          <documentRefs>
+                            <OTChoice id="9fb29fc9-78f0-11dc-8275-3da1b6a57fd9" name="Choices">
+                              <choices>
+                                <OTCompoundDoc name="yes">
+                                  <bodyText>yes</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="no">
+                                  <bodyText>no</bodyText>
+                                </OTCompoundDoc>
+                              </choices>
+                            </OTChoice>
+                            <OTText id="ad0ebaaa-78f0-11dc-8275-3da1b6a57fd9" name="Text field" />
+                            <OTChoice id="baad35bb-78f0-11dc-8275-3da1b6a57fd9" name="Choices">
+                              <choices>
+                                <OTCompoundDoc name="stopping a slow-moving car">
+                                  <bodyText>stopping a slow-moving car</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="stopping a fast-moving car">
+                                  <bodyText>stopping a fast-moving car</bodyText>
+                                </OTCompoundDoc>
+                              </choices>
+                            </OTChoice>
+                            <OTText id="c88892bc-78f0-11dc-8275-3da1b6a57fd9" name="Text field" />
+                          </documentRefs>
+                        </OTUDLCompoundDoc>
+                      </cards>
+                      <currentCard>
+                        <object refid="85867d68-78f0-11dc-8275-3da1b6a57fd9" />
+                      </currentCard>
+                      <viewedCards>
+                        <object refid="364b1691-78d5-11dc-82f7-4bde662316f0" />
+                        <object refid="7b73dc06-78e0-11dc-8275-3da1b6a57fd9" />
+                        <object refid="5a2f987d-78e3-11dc-8275-3da1b6a57fd9" />
+                        <object refid="f18293d4-78e6-11dc-8275-3da1b6a57fd9" />
+                        <object refid="6ddd4b55-78e7-11dc-8275-3da1b6a57fd9" />
+                        <object refid="aa7c17d6-78e7-11dc-8275-3da1b6a57fd9" />
+                        <object refid="f9cd6be7-78e7-11dc-8275-3da1b6a57fd9" />
+                        <object refid="fa12d958-78e7-11dc-8275-3da1b6a57fd9" />
+                        <object refid="fd79406a-78e8-11dc-8275-3da1b6a57fd9" />
+                        <object refid="2c0488ec-78e9-11dc-8275-3da1b6a57fd9" />
+                        <object refid="6bb6afed-78e9-11dc-8275-3da1b6a57fd9" />
+                        <object refid="758d3ece-78ef-11dc-8275-3da1b6a57fd9" />
+                        <object refid="85867d68-78f0-11dc-8275-3da1b6a57fd9" />
+                      </viewedCards>
+                    </OTCardContainer>
+                  </content>
+                  <header>
+                    <OTUDLCompoundDoc id="364b1693-78d5-11dc-82f7-4bde662316f0" name="%364b1693-78d5-11dc-82f7-4bde662316f0">
+                      <bodyText>
+                        <div class="title">Penny heat</div>
+                      </bodyText>
+                    </OTUDLCompoundDoc>
+                  </header>
+                  <footer>
+                    <OTUDLCompoundDoc id="364b3da4-78d5-11dc-82f7-4bde662316f0" name="%364b3da4-78d5-11dc-82f7-4bde662316f0">
+                      <bodyText>
+                        <div align="center">
+                          <table>
+                            <tr>
+                              <td>
+                                <object refid="364b64b5-78d5-11dc-82f7-4bde662316f0" viewid="2767fe20-6c7d-11dc-8314-0800200c9a66!/menu-horizontal-circle" />
+                              </td>
+                            </tr>
+                          </table>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                        <OTUDLMenu id="364b64b5-78d5-11dc-82f7-4bde662316f0">
+                          <cardContainer>
+                            <object refid="364b1692-78d5-11dc-82f7-4bde662316f0" />
+                          </cardContainer>
+                          <menuRule>
+                            <object refid="${page-rule}" />
+                          </menuRule>
+                        </OTUDLMenu>
+                        <object refid="${menu-horizontal-circle}" />
+                      </documentRefs>
+                    </OTUDLCompoundDoc>
+                  </footer>
+                  <north>
+                    <object refid="364b1693-78d5-11dc-82f7-4bde662316f0" />
+                  </north>
+                  <center>
+                    <object refid="364b1692-78d5-11dc-82f7-4bde662316f0" />
+                  </center>
+                  <south>
+                    <object refid="364b3da4-78d5-11dc-82f7-4bde662316f0" />
+                  </south>
+                </OTUDLSection>
+              </cards>
+              <currentCard>
+                <object refid="364b1690-78d5-11dc-82f7-4bde662316f0" />
+              </currentCard>
+              <viewedCards>
+                <object refid="${section_1}" />
+                <object refid="78f0fec8-78d1-11dc-82f7-4bde662316f0" />
+                <object refid="0be2278a-78d5-11dc-82f7-4bde662316f0" />
+                <object refid="364b1690-78d5-11dc-82f7-4bde662316f0" />
+              </viewedCards>
+            </OTCardContainer>
+          </content>
+          <script>
+            <OTScriptObject>
+              <variables>
+                <OTScriptVariable name="cardContainer">
+                  <reference>
+                    <object refid="${section-card-container}" />
+                  </reference>
+                </OTScriptVariable>
+                <OTScriptVariable name="system">
+                  <reference>
+                    <object refid="${system}" />
+                  </reference>
+                </OTScriptVariable>
+                <OTScriptVariable name="menuPageRule">
+                  <reference>
+                    <object refid="${page-rule}" />
+                  </reference>
+                </OTScriptVariable>
+                <OTScriptVariable name="sampleMenu">
+                  <reference>
+                    <object refid="${menu}" />
+                  </reference>
+                </OTScriptVariable>
+                <OTScriptVariable name="menuHorizontalView">
+                  <reference>
+                    <object refid="${menu-horizontal-circle}" />
+                  </reference>
+                </OTScriptVariable>
+              </variables>
+              <script>
+                <object refid="${authoring_script.js}" />
+              </script>
+              <scriptState />
+            </OTScriptObject>
+          </script>
+        </OTUDLContainer>
+      </root>
+      <library>
+        <OTUDLMenu local_id="menu">
+          <cardContainer>
+            <object refid="${section-card-container}" />
+          </cardContainer>
+          <menuRule>
+            <object refid="${section-rule}" />
+          </menuRule>
+        </OTUDLMenu>
+        <OTUDLMenu local_id="section-1-menu">
+          <cardContainer>
+            <object refid="${section-1-card-container}" />
+          </cardContainer>
+          <menuRule>
+            <object refid="${page-rule}" />
+          </menuRule>
+        </OTUDLMenu>
+        <OTSnapshotAlbum local_id="album" />
+        <OTDefinitionManager local_id="definition-manager">
+          <frame>
+            <OTFrame local_id="definition_frame" width="280" height="150" borderlessPopup="true" />
+          </frame>
+        </OTDefinitionManager>
+        <OTUDLMenuRule local_id="page-rule" jumpToViewedCard="true" stepAhead="true" />
+        <OTUDLMenuRule local_id="section-rule" jumpToAnyCard="true" />
+        <OTJavascript local_id="change_page.js">
+          <script>importClass(Packages.java.awt.event.ActionListener);
+						importClass(Packages.java.util.Vector);
+						importClass(Packages.org.concord.otrunk.udl3.OTQuestionList);
+						importClass(Packages.org.concord.framework.otrunk.OTObjectList);
+						importClass(Packages.javax.swing.JOptionPane);
+						
+						var numCards;
+						var currentcard;
+						var passwordfield;
+
+						var buttonHandler =
+						{
+								actionPerformed: function(evt)
+								{
+									if (passwordfield != null){
+									var passwordAttempt = passwordfield.getText();
+									if (passwordAttempt.equalsIgnoreCase(password.getText())){
+										cardContainer.setCurrentCard(card);
+										return;
+									} else {
+										JOptionPane.showMessageDialog(null, "Sorry, that's not the correct password.");
+										return;
+									}
+								}
+										cardContainer.setCurrentCard(card);
+								}
+						};
+						var buttonListener = new ActionListener(buttonHandler);
+
+						function init() {
+							button.addActionListener(buttonListener);
+
+							return true;
+						}
+
+						function save() {
+							button.removeActionListener(buttonListener);
+							return true;
+						}</script>
+        </OTJavascript>
+        <OTJavascript local_id="show_message.js">
+          <script>importClass(Packages.java.awt.event.ActionListener);
+						importClass(Packages.java.util.Vector);
+						importClass(Packages.org.concord.otrunk.udl3.OTQuestionList);
+						importClass(Packages.org.concord.framework.otrunk.OTObjectList);
+						importClass(Packages.javax.swing.JOptionPane);
+
+						var buttonHandler =
+						{
+								actionPerformed: function(evt)
+								{
+									var messageString = message.getText();
+									JOptionPane.showMessageDialog(null, messageString);
+								}
+						};
+						var buttonListener = new ActionListener(buttonHandler);
+
+						function init() {
+							button.addActionListener(buttonListener);
+
+							return true;
+						}
+
+						function save() {
+							button.removeActionListener(buttonListener);
+							return true;
+						}</script>
+        </OTJavascript>
+        <OTJavascript local_id="authoring_script.js">
+          <script>importClass(Packages.org.concord.framework.otrunk.OTChangeEvent);
+						importClass(Packages.org.concord.framework.otrunk.OTChangeListener);
+						importClass(Packages.org.concord.framework.otrunk.OTObject);
+						importClass(Packages.org.concord.framework.otrunk.OTObjectList);
+						importClass(Packages.org.concord.otrunk.ui.OTCardContainer);
+						importClass(Packages.org.concord.otrunk.udl3.OTUDLMenu);
+						importClass(Packages.java.lang.System);
+						importClass(Packages.org.concord.framework.otrunk.OTObjectList);
+						
+						
+						var pageHandler =
+						{
+							stateChanged: function(evt)
+							{
+								if (evt.getProperty().equalsIgnoreCase("coachStatements") &amp;&amp; evt.getOperation().equalsIgnoreCase("add")){
+									var statement = evt.getValue();
+									var statementDoc = statement.getStatement();
+									var statementText = statementDoc.getBodyText();
+									statementDoc.setBodyText("&lt;div class=\"buffer\"&gt;"+
+																"&lt;div class=\"border\"&gt;"+
+																	"&lt;div class=\"body\"&gt;"+
+																		statementText +
+																	"&lt;/div&gt;"+
+																"&lt;/div&gt;"+
+														"&lt;/div&gt;");
+								}
+							}
+						}
+						var pageListener = new OTChangeListener(pageHandler);
+						
+						var sectionHandler =
+						{
+							stateChanged: function(evt)
+							{
+								if (evt.getProperty().equalsIgnoreCase("name")){
+									var section = evt.getSource();
+									var header = section.getHeader();
+										
+										header.setBodyText("&lt;div class=\"title\"&gt;"+
+															section.getName() +
+														"&lt;/div&gt;");
+								}
+							}
+						}
+						
+						var sectionListener = new OTChangeListener(sectionHandler);
+						
+						var sectionContainerHandler =
+						{
+								stateChanged: function(evt)
+								{
+									if (evt.getProperty().equalsIgnoreCase("currentCard")){
+										var numCards = evt.getSource().getCards().size();
+										var section = evt.getSource().getCards().get(numCards-1);
+										section.getContent().addOTChangeListener(pageContainerListener);
+									}
+									if (evt.getProperty().equalsIgnoreCase("cards")) {
+										var numCards = evt.getSource().getCards().size();
+										var section = evt.getSource().getCards().get(numCards-1);
+										section.setName("Section "+numCards);
+										
+										var header = section.getHeader();
+										
+										header.setBodyText("&lt;div class=\"title\"&gt;"+
+															"Section " + numCards +
+														"&lt;/div&gt;");
+										
+										var doc = section.getContent().getCurrentCard();
+										
+										doc.setBodyText("&lt;div class=\"buffer\"&gt;"+
+															"&lt;div class=\"border\"&gt;"+
+																"&lt;div class=\"body\"&gt;"+
+																"&lt;div class=\"subtitle\"&gt;\n"+
+																		"New page"+
+																	"\n&lt;/div&gt;\n"+
+																	"New page content"+
+																"\n&lt;/div&gt;"+
+															"&lt;/div&gt;"+
+														"&lt;/div&gt;");
+										
+										pages.push(doc)	
+										pages[pages.length-1].addOTChangeListener(pageListener);
+														
+										var menu = doc.getOTObjectService().createObject(sampleMenu.otClass().getInstanceClass());
+										menu.setCardContainer(section.getContent());
+										menu.setMenuRule(menuPageRule);
+										
+										system.getLibrary().add(menu);
+										
+										var footer = section.getFooter();
+										
+										var otid = menu.getOTObjectService().getExternalID(menu);
+										var viewid = menu.getOTObjectService().getExternalID(menuHorizontalView);
+										
+										footer.setBodyText("&lt;div align=\"center\"&gt;" +
+															"&lt;table&gt;"+
+																	"&lt;tr&gt;"+
+																		"&lt;td&gt;"+
+																			"&lt;object refid=\""+otid+"\" viewid=\""+viewid+"\"/&gt;" +
+																		"&lt;/td&gt;"+
+																	"&lt;/tr&gt;"+
+															"&lt;/table&gt;"+
+															"&lt;/div&gt;");
+														
+										section.getContent().addOTChangeListener(pageContainerListener);
+										section.addOTChangeListener(sectionListener);
+									}
+								}
+						};
+						var sectionContainerListener = new OTChangeListener(sectionContainerHandler);
+						
+						var pageContainerHandler =
+						{
+								stateChanged: function(evt)
+								{
+									System.out.println(evt.getProperty());
+									if (evt.getProperty().equalsIgnoreCase("cards")) {
+										var numCards = evt.getSource().getCards().size();
+										var doc = evt.getSource().getCards().get(numCards-1);
+										doc.setBodyText("&lt;div class=\"buffer\"&gt;"+
+															"&lt;div class=\"border\"&gt;"+
+																"&lt;div class=\"body\"&gt;"+
+																"&lt;div class=\"subtitle\"&gt;\n"+
+																		"New page"+
+																	"\n&lt;/div&gt;\n"+
+																	"New page content"+
+																"\n&lt;/div&gt;"+
+															"&lt;/div&gt;"+
+														"&lt;/div&gt;");
+										pages.push(doc)	
+										pages[pages.length-1].addOTChangeListener(pageListener);
+									}
+								}
+						};
+						var pageContainerListener = new OTChangeListener(pageContainerHandler);
+						
+						var sections = [];
+						var sectionCardContainers = [];
+						var pages = [];
+						
+						function init() {
+							cardContainer.addOTChangeListener(sectionContainerListener);
+							
+							var pageIndex = 0;
+							for (var i = 0; i &lt; cardContainer.getCards().size(); i++){
+								sections[i] = cardContainer.getCards().get(i);
+								sections[i].addOTChangeListener(sectionListener);
+								
+								sectionCardContainers[i] = sections[i].getContent();
+								sectionCardContainers[i].addOTChangeListener(pageContainerListener);
+								
+								for (var j = 0; j &lt; sectionCardContainers[i].getCards().size(); j++){
+									pages[pageIndex] = sectionCardContainers[i].getCards().get(j);
+									pages[pageIndex].addOTChangeListener(pageListener);
+									pageIndex++;
+								}
+							}
+							
+							return true;
+						}
+
+						function save() {
+							cardContainer.removeOTChangeListener(sectionContainerListener);
+							return true;
+						}</script>
+        </OTJavascript>
+        <object refid="78f173fd-78d1-11dc-82f7-4bde662316f0" />
+        <object refid="0be24e9f-78d5-11dc-82f7-4bde662316f0" />
+        <object refid="364b64b5-78d5-11dc-82f7-4bde662316f0" />
+      </library>
+    </OTSystem>
+  </objects>
+</otrunk>
+
