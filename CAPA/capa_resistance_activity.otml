@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<otrunk xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
- xsi:noNamespaceSchemaLocation="../../OTrunk/schema/otrunk_all.xsd"
+<otrunk 
  id="33754150-b594-11d9-9669-0800200c9a66">
 	<imports>
 		<import class="org.concord.otrunk.OTSystem" />
@@ -35,7 +34,6 @@
 		<import	class="org.concord.calculator.state.OTExpressionVariable" />
 		<import	class="org.concord.calculator.state.OTExpressionConstant" />
 		<import	class="org.concord.calculator.state.OTExpressionConstantList" />
-		<import	class="org.concord.calculator.state.ui.OTProgrammableCalculatorViewEntry" />
 	    <import class="org.concord.calculator.state.ui.OTExpressionVariableViewConfig" />
 
 		<import class="org.concord.otrunk.script.ui.OTScriptObject" />
@@ -61,7 +59,7 @@
 						<OTViewEntry
 							objectClass="org.concord.otrunk.script.ui.OTScriptObject"
 							viewClass="org.concord.otrunk.script.ui.OTScriptObjectView" />
-							<OTViewEntry
+						<OTViewEntry
 							objectClass="org.concord.otrunk.ui.OTCardContainer"
 							viewClass="org.concord.otrunk.ui.swing.OTCardContainerView" />
 						<OTUnitValueViewConfig
@@ -76,6 +74,9 @@
 						<OTViewEntry
 							objectClass="org.concord.calculator.state.OTExpressionConstantList"
 							viewClass="org.concord.calculator.state.ui.OTExpressionConstantListView" />
+			            <OTViewEntry
+				            objectClass="org.concord.calculator.state.OTExpressionSymbolList"
+				            viewClass="org.concord.calculator.state.ui.OTExpressionSymbolListView"/>
 						<OTViewEntry
 							objectClass="org.concord.calculator.state.OTExpressionConstant"
 							viewClass="org.concord.calculator.state.ui.OTExpressionConstantView" />
@@ -109,13 +110,10 @@
 						<OTViewEntry
 							objectClass="org.concord.calculator.state.OTExpressionSymbol"
 							viewClass="org.concord.calculator.state.ui.OTExpressionSymbolView" />
-						<OTProgrammableCalculatorViewEntry
+						<OTViewEntry
 							objectClass="org.concord.calculator.state.OTProgrammableCalculator"
 							viewClass="org.concord.calculator.state.ui.OTProgrammableCalculatorView">
-							<resultViewEntry>
-								<object refid="${resultViewEntry}" />
-							</resultViewEntry>
-						</OTProgrammableCalculatorViewEntry>
+						</OTViewEntry>
 						<OTViewEntry
 							objectClass="org.concord.calculator.state.OTProgrammableCalculatorNotebook"
 							viewClass="org.concord.calculator.state.ui.OTProgrammableCalculatorNotebookView" />
@@ -205,7 +203,7 @@
 							width="600" height="700" title="Calculator"/>
 					</frame>
 					<objectToDisplay>
-						<object refid="${calculator_page}"/>
+						<object refid="${calc}"/>
 					</objectToDisplay>
 				</OTFrameDisplayAction>
 				<OTButton local_id="submitAnswerButton"	text="Submit Answer" />
@@ -219,6 +217,7 @@
 						<OTScriptVariableComponent name="submitAnswerButton" reference="${submitAnswerButton}" />
 						<OTScriptVariableComponent name="answerBox" reference="${answerBox}" />
 						<OTScriptVariable name="solutionText" reference="${solutionText}" />
+						<OTScriptVariable name="otCalculatorObject" reference="${calc}"/>
 					</variables>
 					<script>
 						<OTJavascript src="capa_resistance_activity.js"  />
@@ -233,29 +232,20 @@
 						<object refid="${calc}" />
 					</bodyText>
 				</OTCompoundDoc>
-				<OTProgrammableCalculatorNotebook name="Calc Notebook"
-					local_id="calc">
+				<OTProgrammableCalculator local_id="calculator1" 
+					name="Programmable Calc" showResultsSeparate="true">
+				</OTProgrammableCalculator>
+				<OTProgrammableCalculatorNotebook name="Calc Notebook" local_id="calc">
 					<constants>
 						<OTExpressionConstantList
 							local_id="constantList1" name="ExpressionConstantList">
-							<expressionConstants/>
 						</OTExpressionConstantList>
 					</constants>
 					<notebook>
-						<OTNotebook local_id="notebook" name="nb"
-							height="300">
-							<entries>
-							</entries>
-						</OTNotebook>
+						<OTNotebook local_id="notebook" name="nb"/>
 					</notebook>
 					<calculator>
-						<OTProgrammableCalculator
-							name="Programmable Calc" local_id="calculator1">
-							<expressionList>
-								<OTExpressionList
-									local_id="expressionlist1" name="ExpressionList"/>
-							</expressionList>
-						</OTProgrammableCalculator>
+						<object refid="${calculator1}"/>
 					</calculator>
 				</OTProgrammableCalculatorNotebook>
 				<OTTextPane local_id="introText" name="introText">

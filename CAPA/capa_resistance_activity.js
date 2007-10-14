@@ -19,6 +19,10 @@
  * JButton 				submitAnswerButton; // Actual swing button used to submit the answer
  * JTextArea 			answerBox;			// Swing text component where the user writes the answer
  * OTTextPane			solutionText;		// OT Text Pane that holds the text with the solution
+ * OTProgrammableCalculatorNotebook 
+ *						otCalculatorObject	// OT Calculator-notebook object
+ * OTProgrammableCalculatorView
+ * 						otCalculatorView	// OT Calculator view
  */
 
 importPackage(Packages.java.lang);
@@ -49,6 +53,9 @@ importPackage(Packages.org.concord.framework.otrunk);
 
 importClass(Packages.org.concord.otrunk.ui.swing.OTCardContainerView);
 importClass(Packages.org.concord.otrunk.ui.OTText);
+importClass(Packages.org.concord.calculator.state.OTProgrammableCalculatorEventHandler);
+importClass(Packages.org.concord.calculator.state.OTProgrammableCalculatorEvent);
+importClass(Packages.org.concord.calculator.state.OTProgrammableCalculatorListener);
 
 var startHTML = "<html><blockquote>";
 var endHTML = "</blockquote></html>";
@@ -86,6 +93,9 @@ var targetResistor = null;		// (Branch) Resistor that needs to be solved by the 
 var measurements = [];			// Array of measurement objects
 //
 
+var calculatorEventHandler;		// (OTProgrammableCalculatorEventHandler)
+var calculatorListener;
+
 /**
  * This function is called when the script starts up
  * It returns a boolean indicating whether the initialization 
@@ -98,7 +108,7 @@ function init()
 	setupGUI();
 	
 	setupApparatusPanel();
-		
+	
 	initLogging();
 
 	setupMultimeter();	
@@ -107,13 +117,52 @@ function init()
 	
 	setupAnswerButton();
 	
+	setupCalculatorListener();
+	
+    setupActivity();
+    
     initializationDone = true;
     
-    //FIXME: This should only be called when the activity is launched for the first time
-    setupActivity();
-    //
-    
     return initializationDone;
+}
+
+function setupCalculatorListener()
+{
+	var calculatorHandler =
+	{
+		variableChanged : function(evt)
+		{
+			//Log when a variable gets a new value (dragged from notebook)
+			//or when the user changes units
+			if (evt.getOperation().equals(OTProgrammableCalculatorEvent.VariableEvent.OP_CHANGE_VALUE) ||
+					evt.getOperation().equals(OTProgrammableCalculatorEvent.VariableEvent.OP_CHANGE_UNIT)){
+				logInformation("Calculator - Variable " + evt.getDescription());
+			}
+		},
+		
+		constantChanged : function(evt)
+		{
+			//Log when a constant is added, changed or removed
+			logInformation("Calculator - Constant " + evt.getDescription());
+		},
+		
+		formulaChanged : function(evt)
+		{
+			//Log when a formula gets added, edited, removed or when it gets a value
+			logInformation("Calculator - Formula  " + evt.getDescription());
+		}
+	}
+
+	calculatorListener = new OTProgrammableCalculatorListener(calculatorHandler);	
+	
+	calculatorEventHandler = new OTProgrammableCalculatorEventHandler(otCalculatorObject);//, controllerService);
+	calculatorEventHandler.setCalculator(otCalculatorObject.getCalculator());
+	
+	calculatorEventHandler.addCalculatorListener(calculatorListener);
+	
+	//otCalculatorView.addCalculatorListener(calculatorListener);
+	System.out.println("my listener is "+calculatorListener);
+
 }
 
 /**
@@ -129,7 +178,7 @@ function save()
 	//
 	
 	//Log measurements
-	//logMeasurements();
+	logMeasurements();
 	//
 	
 	finalizeLogging();
@@ -235,7 +284,7 @@ function initLogging()
 function logInformation(info)
 {
 	info = (new java.util.Date()).toString() + " - " + info;
-	//System.out.println(info);
+	//System.out.println("LOG --- " + info);
 	logFile.println(info);
 	xmlText.setText(xmlText.getText() + info + "\n");
 }
@@ -274,7 +323,7 @@ function addMeasurement(type, value, unit, extra)
 	
 	//Add it to the array
 	measurements[measurements.length] = measurement;
-	
+
 	return measurement;
 }
 
@@ -286,7 +335,7 @@ function printMeasurements()
 function logMeasurements()
 {
 	var strLog;
-	logInformation("Summary of all measurements:");
+	logInformation("Measurements:");
 	for (var i=0; i<measurements.length; i++){
 		var m = measurements[i];
 		strLog = "type=" + m.type + " value=" + m.value + " unit=" + m.unit;
@@ -331,20 +380,17 @@ function setupMultimeter()
 				if (state == MultimeterModel.AMMETER_STATE) {
 					type = "current";
 					units = units + "A";
-					var roundedVal = Math.round(value*100)/100;
-					logInformation("Multimeter measurement (Ammeter mode): " + roundedVal + " " + units);
+					logInformation("Multimeter measurement (Ammeter mode): " + value + " " + units);
 				}
 				else if (state == MultimeterModel.OHMMETER_STATE) {
 					type = "resistance";
 					units = units + "Ω";
-					var roundedVal = Math.round(value*100)/100;
-					logInformation("Multimeter measurement (Ohmmeter mode): " + roundedVal + " " + units);
+					logInformation("Multimeter measurement (Ohmmeter mode): " + value + " " + units);
 				}
 				else if (state == MultimeterModel.VOLTMETER_STATE) {
 					type = "voltage";
 					units = units + "V";
-					var roundedVal = Math.round(value*100)/100;
-					logInformation("Multimeter measurement (Voltmeter mode): " + roundedVal + " " + units);
+					logInformation("Multimeter measurement (Voltmeter mode): " + value + " " + units);
 				}
 				else if (state == MultimeterModel.OFF_STATE) {
 					type = "off";
@@ -364,13 +410,12 @@ function setupMultimeter()
 				var targetResistorCurrentString = rangeValue(targetResistorCurrent) + "A";
 				//
 				
-				//logInformation("Target resistor voltage drop: " + targetResistorVoltage + " -> " + targetResistorVoltageString);	
-				//logInformation("Target resistor current: " + targetResistorCurrent + " -> " + targetResistorCurrentString);	
+				logInformation("Target resistor voltage drop: " + targetResistorVoltage + " -> " + targetResistorVoltageString);	
+				logInformation("Target resistor current: " + targetResistorCurrent + " -> " + targetResistorCurrentString);	
 							
 				showFirstMeasurementMessage();
 
-				var roundedVal = Math.round(value*100)/100;
-				logNotebook(roundedVal, units);
+				logNotebook(value, units);
 				lastMMStateViable = true;
 				solverFinishedOnce = true;
 				
@@ -570,7 +615,7 @@ function createResistor()
 	//Disable the pop up menu
 	newBranch.setMenuEnabled(false);
 
-	logInformation("The target Resistor's resistance is " + newBranch.getResistance() + " Ohms");
+	logInformation("The target Resistor's resistance is " + newBranch.getResistance());
 
 	return newBranch;
 	
@@ -750,10 +795,10 @@ function showSolution(answerType, correctAmmeterMeasurements, correctVoltmeterMe
 	var shortCircuitMsg = "";
 	
 	if (answerType == 1){
-		solutionString = "Your answer is correct! ";
+		solutionString = "Correct.";
 	}
 	else{
-		solutionString = "Sorry, incorrect answer. ";
+		solutionString = "Incorrect.";
 	}	
 
 	if (shortCircuitCounter!= 0)
@@ -773,8 +818,8 @@ function showSolution(answerType, correctAmmeterMeasurements, correctVoltmeterMe
 	}
 	
 	//Check for units reported
-	var unitsMsg = "You didn't report any units for the answer. ";					//unitsNotReported;
-	if (unitsGiven) unitsMsg = "";		//unitsReported;
+	var unitsMsg = "No units reported. ";					//unitsNotReported;
+	if (unitsGiven) unitsMsg = "Reported units. ";		//unitsReported;
 	var otxml = new OTXMLString(startHTML + solutionString + unitsMsg + shortCircuitMsg + endHTML);
 	// System.out.println("Solution message is: ");
 	// System.out.println(startHTML + solutionString + unitsMsg + shortCircuitMsg + endHTML);
