@@ -148,8 +148,14 @@ function setupCalculatorListener()
 		
 		formulaChanged : function(evt)
 		{
-			//Log when a formula gets added, edited, removed or when it gets a value
+			//Log when a formula gets added, edited, removed 
 			logInformation("Calculator - Formula  " + evt.getDescription());
+		},
+		
+		resultChanged : function (evt)
+		{
+			//Log when a formula result gets a value
+			logInformation("Calculator - Formula Result " + evt.getDescription());
 		}
 	}
 
@@ -169,9 +175,15 @@ function setupCalculatorListener()
 		{
 			System.out.println("ot change: "+evt.getDescription());
 			if (evt.getProperty().equals("selectedAnswer")){
-				var val = evt.getValue();
-				var txtValue = val.getValue() + " " + val.getUnit();
-				answerBox.setText(txtValue);
+				var valObj = evt.getValue();
+				if (valObj != null){
+					var val = valObj.getValue();
+					if (!Float.isNaN(val)){
+						val = Math.round(val*100)/100;
+						var txtValue = val + " " + valObj.getUnit();
+						answerBox.setText(txtValue);
+					}
+				}
 			}
 		}
 	}
@@ -211,7 +223,8 @@ function saveStateVariable(name, value)
 /** Initial set up if the GUI. This stuff eventually could be moved to the otml file */
 function setupGUI()
 {
-	answerBox.setBackground(Color.yellow);
+	answerBox.setBackground(new Color(1,1,0.8));
+	answerBox.setEditable(false);
 }
 
 /** 
@@ -785,7 +798,7 @@ function checkAnswer(answerValue)
 
 	// Simply check that the value answered was right
 	var value = (new java.lang.Double(answerValue).doubleValue());
-	if (MathUtil.isApproxEqual(value, targetResistor.getResistance(), 0.0001)){
+	if (MathUtil.isApproxEqual(value, targetResistor.getResistance(), 0.1)){
 		answerType = 1;
 		strMsg = strMsg + " (Correct)";
 	}
@@ -809,10 +822,10 @@ function showSolution(answerType, correctAmmeterMeasurements, correctVoltmeterMe
 	var shortCircuitMsg = "";
 	
 	if (answerType == 1){
-		solutionString = "Correct.";
+		solutionString = "Your answer is correct!";
 	}
 	else{
-		solutionString = "Incorrect.";
+		solutionString = "Sorry, incorrect answer.";
 	}	
 
 	if (shortCircuitCounter!= 0)
@@ -832,8 +845,8 @@ function showSolution(answerType, correctAmmeterMeasurements, correctVoltmeterMe
 	}
 	
 	//Check for units reported
-	var unitsMsg = "No units reported. ";					//unitsNotReported;
-	if (unitsGiven) unitsMsg = "Reported units. ";		//unitsReported;
+	var unitsMsg = "You didn't report any units in your answer. ";					//unitsNotReported;
+	if (unitsGiven) unitsMsg = "";		//unitsReported;
 	var otxml = new OTXMLString(startHTML + solutionString + unitsMsg + shortCircuitMsg + endHTML);
 	// System.out.println("Solution message is: ");
 	// System.out.println(startHTML + solutionString + unitsMsg + shortCircuitMsg + endHTML);
