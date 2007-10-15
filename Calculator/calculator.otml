@@ -16,6 +16,7 @@
     <import class="org.concord.data.state.OTUnitValue" />
     <import class="org.concord.data.state.OTUnitValueViewConfig" />
     <import class="org.concord.otrunk.ui.OTText" />
+    <import class="org.concord.otrunk.ui.OTButton" />
     <import class="org.concord.calculator.state.OTProgrammableCalculator" />
     <import class="org.concord.calculator.state.OTProgrammableCalculatorNotebook" />
     <import class="org.concord.calculator.state.OTExpression" />
@@ -26,9 +27,12 @@
     <import class="org.concord.calculator.state.OTExpressionConstantList" />
     <import class="org.concord.calculator.state.OTExpressionSymbolList" />
     <import class="org.concord.calculator.state.ui.OTExpressionVariableViewConfig" />
+    <import class="org.concord.calculator.state.ui.OTProgrammableCalculatorViewConfig" />
+	<import class="org.concord.calculator.state.OTProgrammableCalculatorResultChooser" />
     
 	<import class="org.concord.otrunk.script.ui.OTScriptObject"/>   
 	<import class="org.concord.otrunk.script.ui.OTScriptVariable" />
+	<import class="org.concord.otrunk.script.ui.OTScriptVariableComponent" />
 	<import class="org.concord.otrunk.script.js.OTJavascript" />  
 	<import class="org.concord.otrunk.script.OTScriptEngineBundle"/>   
 	<import class="org.concord.otrunk.script.OTScriptEngineEntry"/>  
@@ -46,6 +50,9 @@
 		</OTScriptEngineBundle> 
 		<OTViewBundle>
           <viewEntries>
+          	<OTViewEntry
+          	  objectClass="org.concord.otrunk.ui.OTButton"
+          	  viewClass="org.concord.otrunk.ui.swing.OTButtonView"/>
             <OTUnitValueViewConfig
               objectClass="org.concord.data.state.OTUnitValue"
               viewClass="org.concord.data.state.OTUnitValueView">
@@ -86,6 +93,26 @@
               	<object refid="${variableValueViewEntry}"/>
               </variableValueViewEntry>
             </OTExpressionVariableViewConfig>
+            <OTProgrammableCalculatorViewConfig
+              objectClass="org.concord.calculator.state.OTProgrammableCalculator"
+              viewClass="org.concord.calculator.state.ui.OTProgrammableCalculatorView">
+              <resultsTableViewEntry>
+              	<object refid="${resultsTableViewEntry}"/>
+              </resultsTableViewEntry>
+            </OTProgrammableCalculatorViewConfig>
+            <OTProgrammableCalculatorViewConfig local_id="resultsTableViewEntry"
+              objectClass="org.concord.calculator.state.OTProgrammableCalculator"
+              viewClass="org.concord.calculator.state.ui.OTExpressionResultCalculatorTableView">
+              <unitsConversionList>
+              	<string>m</string>
+              	<string>cm</string>
+              	<string>m/s</string>
+              	<string>cm/s</string>
+              	<string>s</string>
+              	<string>kg</string>
+              	<string>g</string>
+              </unitsConversionList>
+            </OTProgrammableCalculatorViewConfig>
             <OTViewEntry
               objectClass="org.concord.calculator.state.OTExpressionResult"
               viewClass="org.concord.calculator.state.ui.OTExpressionResultView"/>
@@ -93,11 +120,11 @@
               objectClass="org.concord.calculator.state.OTExpressionSymbol"
               viewClass="org.concord.calculator.state.ui.OTExpressionSymbolView"/>
             <OTViewEntry
-              objectClass="org.concord.calculator.state.OTProgrammableCalculator"
-              viewClass="org.concord.calculator.state.ui.OTProgrammableCalculatorView"/>
-            <OTViewEntry
               objectClass="org.concord.calculator.state.OTProgrammableCalculatorNotebook"
               viewClass="org.concord.calculator.state.ui.OTProgrammableCalculatorNotebookView"/>
+            <OTViewEntry
+              objectClass="org.concord.calculator.state.OTProgrammableCalculatorResultChooser"
+              viewClass="org.concord.calculator.state.ui.OTProgrammableCalculatorResultChooserView"/>
             <OTImageViewConfig
               objectClass="org.concord.otrunk.ui.OTImage"
               viewClass="org.concord.otrunk.ui.swing.OTImageView">
@@ -274,16 +301,88 @@
 				</OTProgrammableCalculator>
               </calculator>
             </OTProgrammableCalculatorNotebook>
+			<OTProgrammableCalculator name="Programmable Calculator - empty" local_id="calculator2"/>
             <OTCompoundDoc name="Other Calculator Notebook and Script">
             	<bodyText>
             		<object refid="${calc2}"/>
             		<object refid="${script}"/>	
             	</bodyText>
             </OTCompoundDoc>
+            <OTCompoundDoc name="Select Answer">
+            	<bodyText>
+            		<object refid="${answerText}"/><br/>
+            		<object refid="${answerButton}"/>
+            		<object refid="${answerValue}"/><br/>
+            		<object refid="${answer_script}"/><br/>
+            		<object refid="${calc_answer_chooser}"/>
+            	</bodyText>	
+            </OTCompoundDoc>
           </children>
         </OTFolderObject>
       </root>
       <library>
+      	<OTUnitValue local_id="answerValue"/>
+        <OTProgrammableCalculatorResultChooser name="Answer chooser" local_id="calc_answer_chooser">
+        	<calculator>
+        		<object refid="${calc_note}"/>
+        	</calculator>
+        </OTProgrammableCalculatorResultChooser>
+   		<OTText local_id="answerText"/>
+   		<OTButton text="Select Answer" local_id="answerButton"/>
+		<OTScriptObject local_id="answer_script">
+		  <variables>
+			<OTScriptVariable name="otCalculatorObject" reference="${calculator1}"/>
+			<OTScriptVariableComponent name="answerButton" reference="${answerButton}"/>
+			<OTScriptVariableComponent name="answerText" reference="${answerText}"/>
+			<OTScriptVariable name="chooser" reference="${calc_answer_chooser}"/>
+		  </variables>
+		  <script>  
+			<OTJavascript>  
+			  <script>  
+importClass(Packages.java.lang.System);
+importClass(Packages.java.awt.event.ActionListener);
+importClass(Packages.org.concord.framework.otrunk.OTChangeListener);
+
+function init()
+{
+	var buttonHandler = 
+	{
+		actionPerformed:function(evt)
+		{
+			var res = otCalculatorObject.getResultValues().getCurrentSymbol();
+			if (res != null){
+				var val = res.getValue();
+				var txtValue = val.getValue() + " " + val.getUnit();
+				answerText.setText("1. "+txtValue);
+			}
+		}
+	};
+	var buttonListener = new ActionListener(buttonHandler);
+	answerButton.addActionListener(buttonListener);
+	
+	var otHandler =
+	{
+		stateChanged:function(evt)
+		{
+			System.out.println("ot change: "+evt.getDescription());
+			if (evt.getProperty().equals("selectedAnswer")){
+				var val = evt.getValue();
+				var txtValue = val.getValue() + " " + val.getUnit();
+				answerBox.setText("2. "+txtValue);
+			}
+		}
+	}
+	var otListener = new OTChangeListener(otHandler);
+	chooser.addOTChangeListener(otListener);
+}
+
+function save()
+{
+}
+		      </script>  
+		    </OTJavascript>  
+		  </script>  		 
+      	</OTScriptObject>
       	<OTScriptObject local_id="script">
       	  <variables>
       	  	<OTScriptVariable name="otCalculatorObject" reference="${calc2}"/>

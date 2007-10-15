@@ -163,6 +163,20 @@ function setupCalculatorListener()
 	//otCalculatorView.addCalculatorListener(calculatorListener);
 	System.out.println("my listener is "+calculatorListener);
 
+	var otHandler =
+	{
+		stateChanged:function(evt)
+		{
+			System.out.println("ot change: "+evt.getDescription());
+			if (evt.getProperty().equals("selectedAnswer")){
+				var val = evt.getValue();
+				var txtValue = val.getValue() + " " + val.getUnit();
+				answerBox.setText(txtValue);
+			}
+		}
+	}
+	var otListener = new OTChangeListener(otHandler);
+	answerChooser.addOTChangeListener(otListener);
 }
 
 /**

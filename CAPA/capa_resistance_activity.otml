@@ -35,6 +35,8 @@
 		<import	class="org.concord.calculator.state.OTExpressionConstant" />
 		<import	class="org.concord.calculator.state.OTExpressionConstantList" />
 	    <import class="org.concord.calculator.state.ui.OTExpressionVariableViewConfig" />
+	    <import class="org.concord.calculator.state.ui.OTProgrammableCalculatorViewConfig" />
+		<import class="org.concord.calculator.state.OTProgrammableCalculatorResultChooser" />
 
 		<import class="org.concord.otrunk.script.ui.OTScriptObject" />
 		<import class="org.concord.otrunk.script.ui.OTScriptVariable" />
@@ -103,6 +105,29 @@
 			              	<object refid="${variableValueViewEntry}"/>
 			              </variableValueViewEntry>
 			            </OTExpressionVariableViewConfig>
+			            <OTProgrammableCalculatorViewConfig
+			              objectClass="org.concord.calculator.state.OTProgrammableCalculator"
+			              viewClass="org.concord.calculator.state.ui.OTProgrammableCalculatorView">
+			              <resultsTableViewEntry>
+			              	<object refid="${resultsTableViewEntry}"/>
+			              </resultsTableViewEntry>
+			            </OTProgrammableCalculatorViewConfig>
+			            <OTProgrammableCalculatorViewConfig local_id="resultsTableViewEntry"
+			              objectClass="org.concord.calculator.state.OTProgrammableCalculator"
+			              viewClass="org.concord.calculator.state.ui.OTExpressionResultCalculatorTableView">
+			              <unitsConversionList>
+			              	<string>kg</string>
+			              	<string>Ohms</string>
+			              	<string>mOhms</string>
+			              	<string>kOhms</string>
+			              	<string>mA</string>
+			              	<string>kA</string>
+			              	<string>A</string>
+			              	<string>mV</string>
+			              	<string>kV</string>
+			              	<string>V</string>
+			              </unitsConversionList>
+			            </OTProgrammableCalculatorViewConfig>
 						<OTViewEntry
 							objectClass="org.concord.calculator.state.OTExpression"
 							viewClass="org.concord.calculator.state.ui.OTExpressionResultView"
@@ -111,12 +136,11 @@
 							objectClass="org.concord.calculator.state.OTExpressionSymbol"
 							viewClass="org.concord.calculator.state.ui.OTExpressionSymbolView" />
 						<OTViewEntry
-							objectClass="org.concord.calculator.state.OTProgrammableCalculator"
-							viewClass="org.concord.calculator.state.ui.OTProgrammableCalculatorView">
-						</OTViewEntry>
-						<OTViewEntry
 							objectClass="org.concord.calculator.state.OTProgrammableCalculatorNotebook"
 							viewClass="org.concord.calculator.state.ui.OTProgrammableCalculatorNotebookView" />
+			            <OTViewEntry
+					        objectClass="org.concord.calculator.state.OTProgrammableCalculatorResultChooser"
+					        viewClass="org.concord.calculator.state.ui.OTProgrammableCalculatorResultChooserView"/>
 						<OTImageViewConfig
 							objectClass="org.concord.otrunk.ui.OTImage"
 							viewClass="org.concord.otrunk.ui.swing.OTImageView">
@@ -203,7 +227,8 @@
 							width="600" height="700" title="Calculator"/>
 					</frame>
 					<objectToDisplay>
-						<object refid="${calc}"/>
+<!-- 					<object refid="${calc}"/>		-->
+						<object refid="${calc_answer_chooser}"/>
 					</objectToDisplay>
 				</OTFrameDisplayAction>
 				<OTButton local_id="submitAnswerButton"	text="Submit Answer" />
@@ -218,6 +243,7 @@
 						<OTScriptVariableComponent name="answerBox" reference="${answerBox}" />
 						<OTScriptVariable name="solutionText" reference="${solutionText}" />
 						<OTScriptVariable name="otCalculatorObject" reference="${calc}"/>
+						<OTScriptVariable name="answerChooser" reference="${calc_answer_chooser}"/>
 					</variables>
 					<script>
 						<OTJavascript src="capa_resistance_activity.js"  />
@@ -241,6 +267,11 @@
 						<object refid="${calculator1}"/>
 					</calculator>
 				</OTProgrammableCalculatorNotebook>
+		        <OTProgrammableCalculatorResultChooser name="Answer chooser" local_id="calc_answer_chooser">
+		        	<calculator>
+		        		<object refid="${calc}"/>
+		        	</calculator>
+		        </OTProgrammableCalculatorResultChooser>
 				<OTTextPane local_id="introText" name="introText">
 					<text>
 						<html>
