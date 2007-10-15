@@ -561,6 +561,35 @@ function setupCircuitListener()
 		{
 			if(!initializationDone)	return;
 			
+			//Check if it's battery or -> change pop up menu
+			var className = branch.getClass().getName();
+			var names = className.split("\\.");
+			var typeName = names[names.length - 1];
+
+			if(typeName.equals("Battery"))
+			{
+				//Random voltage
+				var randomGen = new java.util.Random;
+				var random = randomGen.nextInt(2) + 7;
+				branch.setVoltageDrop(random);
+				//Different internal resistance
+				branch.setInternalResistance(5);
+
+				//Disable options in the pop up menu
+				var menuComponent = cckCircuitNode.getBranchNode(branch).getMenu();
+				var menuItems = menuComponent.getSubElements();
+				menuItems[0].setEnabled(false);		//"Change voltage" option
+				menuItems[1].setEnabled(false);		//"Change internal resistance" option
+				menuItems[3].setEnabled(false);		//"Show vale" option
+			}
+			if(typeName.equals("Resistor"))
+			{
+//				var menuComponent = circuitNode.getBranchNode(branch).getMenu();
+//				var menuItems = menuComponent.getSubElements();
+				
+//				menuItems[0].setEnabled(false);
+//				menuItems[1].setEnabled(false);
+			}
 		}
 		
 	};// end of var circuitHandler = new CircuitListener()
