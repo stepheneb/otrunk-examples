@@ -36,6 +36,7 @@ importPackage(Packages.java.awt.image);
 
 importPackage(Packages.javax.swing);
 importPackage(Packages.javax.imageio);
+importClass(Packages.java.text.DecimalFormat);
 
 importPackage(Packages.edu.colorado.phet.cck.model);
 importPackage(Packages.edu.colorado.phet.cck.model.components);
@@ -81,7 +82,9 @@ var logFile;					// Used for logging information
 var xmlText;					// OTXMLText object used for logging information
 var firstJunctionsConnected = true;	//Used to put up text the first time a junction is connected.
 var firstMeasurement = true; 		//Used to put up text the first time a measurement is made.
+
 var previousMultimeterValue = Double.NaN;	// Value that stores the last multimeter measurement, to avoid repeated measurements
+var previousMultimeterState = -1;			// Value
 
 var aTolerance = 0.01;			// Tolerance for current
 var vTolerance = 0.01;			// Tolerance for voltage
@@ -171,17 +174,20 @@ function setupCalculatorListener()
 
 	var otHandler =
 	{
+		//Called when the user selects a value in the calculator window
 		stateChanged:function(evt)
 		{
-			System.out.println("ot change: "+evt.getDescription());
+			//System.out.println("ot change: "+evt.getDescription());
 			if (evt.getProperty().equals("selectedAnswer")){
 				var valObj = evt.getValue();
 				if (valObj != null){
 					var val = valObj.getValue();
 					if (!Float.isNaN(val)){
-						val = Math.round(val*100)/100;
+						val = roundValue(val);
 						var txtValue = val + " " + valObj.getUnit();
 						answerBox.setText(txtValue);
+						
+						//TODO: Close the calculator window
 					}
 				}
 			}
@@ -233,6 +239,10 @@ function setupGUI()
  */
 function setupActivity()
 {
+	//Disable ohmmeter
+	cckMultimeter.setStateDisabled(MultimeterModel.OHMMETER_STATE);
+	//
+	
 	//Find out if the activity has been run already
 	var bInitialSetupDone = getStateVariable("initialSetupDone");
 	if (bInitialSetupDone == null) bInitialSetupDone = false;
@@ -344,7 +354,7 @@ function addMeasurement(type, value, unit, extra)
 	//Create a measurement object
 	var measurement = new Object();
 	measurement.type = type;
-	measurement.value = Math.round(value*100)/100;
+	measurement.value = value;
 	measurement.unit = unit;
 	measurement.extra = extra;	//extra information on the measurement
 	
@@ -362,7 +372,7 @@ function printMeasurements()
 function logMeasurements()
 {
 	var strLog;
-	logInformation("Measurements:");
+	logInformation("Measurements Summary:");
 	for (var i=0; i<measurements.length; i++){
 		var m = measurements[i];
 		strLog = "type=" + m.type + " value=" + m.value + " unit=" + m.unit;
@@ -374,11 +384,7 @@ function logMeasurements()
 }
 
 function setupMultimeter()
-{
-	//Disable ohmmeter
-	cckMultimeter.setStateDisabled(MultimeterModel.OHMMETER_STATE);
-	//
-	
+{	
 	// cckModule.setWiggleMeVisible(false);	//this method doesn't exist anymore in cck
 	cckModel.setInternalResistanceOn(false);
 
@@ -388,36 +394,44 @@ function setupMultimeter()
 		multimeterChanged: function()
 		{				
 			var value = cckMultimeter.getCurrentValue();
+			var state = cckMultimeter.getState();
 			
 			//Checks that the value measured it not the same as the previous value captured
-			if(Double.isNaN(value) || MathUtil.isApproxEqual(previousMultimeterValue, value, 0.001)) {
+			//if the measurement was the same kind of measurement
+			if(Double.isNaN(value) || 
+				(MathUtil.isApproxEqual(previousMultimeterValue, value, 0.001) &&
+				previousMultimeterState == state)) {
+				
+			//Repeated measurement
 				previousMultimeterValue = value;
 				return;
 			}
-			else {			//we've made a valid measurement
+			else {			
+			//Measurement
 				previousMultimeterValue = value;
+				previousMultimeterState = state;
 
+				var roundedValue = roundValue(value);
 				var type = "";
 				var units = cckMultimeter.getRangePrefix();
 				
 				var targetResistorVoltage;
 				var targetResistorCurrent;
 				
-				var state = cckMultimeter.getState();
 				if (state == MultimeterModel.AMMETER_STATE) {
 					type = "current";
 					units = units + "A";
-					logInformation("Multimeter measurement (Ammeter mode): " + value + " " + units);
+					logInformation("Multimeter measurement (Ammeter mode): " + roundedValue + " " + units);
 				}
 				else if (state == MultimeterModel.OHMMETER_STATE) {
 					type = "resistance";
 					units = units + "Ω";
-					logInformation("Multimeter measurement (Ohmmeter mode): " + value + " " + units);
+					logInformation("Multimeter measurement (Ohmmeter mode): " + roundedValue + " " + units);
 				}
 				else if (state == MultimeterModel.VOLTMETER_STATE) {
 					type = "voltage";
 					units = units + "V";
-					logInformation("Multimeter measurement (Voltmeter mode): " + value + " " + units);
+					logInformation("Multimeter measurement (Voltmeter mode): " + roundedValue + " " + units);
 				}
 				else if (state == MultimeterModel.OFF_STATE) {
 					type = "off";
@@ -437,17 +451,17 @@ function setupMultimeter()
 				var targetResistorCurrentString = rangeValue(targetResistorCurrent) + "A";
 				//
 				
-				logInformation("Target resistor voltage drop: " + targetResistorVoltage + " -> " + targetResistorVoltageString);	
-				logInformation("Target resistor current: " + targetResistorCurrent + " -> " + targetResistorCurrentString);	
+				System.out.println("Target resistor voltage drop: " + targetResistorVoltage + " -> " + targetResistorVoltageString);	
+				System.out.println("Target resistor current: " + targetResistorCurrent + " -> " + targetResistorCurrentString);	
 							
 				showFirstMeasurementMessage();
 
-				logNotebook(value, units);
+				logNotebook(roundedValue, units);
 				lastMMStateViable = true;
 				solverFinishedOnce = true;
 				
 				//Record the measurement, including the voltage and current of the target resistor
-				var m = addMeasurement(type, value, units, {'resistorVoltage':targetResistorVoltageString, 'resistorCurrent':targetResistorCurrentString} );
+				var m = addMeasurement(type, roundedValue, units, {'resistorVoltage':targetResistorVoltageString, 'resistorCurrent':targetResistorCurrentString} );
 				//
 				
 				//more debug info
@@ -625,18 +639,18 @@ function setupAnswerButton()
 			//System.out.println(enteredText);
 			var valuePosition = enteredText.search(/\d+(.\d*)?/);
 			var unitsPosition = enteredText.search(/ohms?/i);
-			var answer = -1;
+			var answerValue = "";
 			unitsGiven = false;
 			if (valuePosition > -1)
 			{
-				answer = enteredText.match(/\d+(.\d*)?/)[0];
+				answerValue = enteredText.match(/\d+(.\d*)?/)[0];
 			}
 			if (unitsPosition > -1)
 			{
 				unitsGiven = true;
 			}
 			//infoArea.setText(valuePosition + ", " + unitsPosition + ", " + answer + ", " + unitsGiven);
-			checkAnswer(answer);
+			checkAnswer(answerValue, enteredText);
 		}
 	}
 		
@@ -671,18 +685,17 @@ function createResistor()
 	//Disable the pop up menu
 	newBranch.setMenuEnabled(false);
 
-	logInformation("The target Resistor's resistance is " + newBranch.getResistance());
+	logInformation("The target Resistor's resistance is " + newBranch.getResistance() + " ohms");
 
 	return newBranch;
 	
 }// end of createResistor()
 
-/** A function that cuts down all values to the third decimal place when used, and rounding when neccessary */
-function roundedValue(number)
+function roundValue(value)
 {
-	var rounder = new DecimalFormat("#.###");
-	
-	return rounder.format(number);
+	//var rounder = new DecimalFormat("#.##");
+	//return rounder.format(value).toString();
+	return Math.round(value*100)/100;
 }
 
 /** Copy/pasted from the original CCK */
@@ -691,10 +704,6 @@ function rangeValue(value)
 	var unitPrefix;
 	var sign = "";
 	var displayValue;
-	var exponent;
-	var leftOfDecimalDigits;
-	var rightOfDecimalZeroes;
-	var displayDigits = 4;
      	     	
 	if(value < 0){
 		sign = "-";
@@ -717,54 +726,12 @@ function rangeValue(value)
 	}
 	
 	if (MathUtil.isApproxEqual(displayValue, 0, 0.001)){
-		return "0 ";
+		return "0 " + unitPrefix;
 	}
 	
-	exponent = Packages.java.lang.Math.log10(displayValue);
+	displayValue = roundValue(displayValue);
 	
-	//System.out.println("exponent:"+exponent);
-	
-	if(exponent >= 0) {
-	   	leftOfDecimalDigits = exponent + 1;
-	   	rightOfDecimalZeroes = 0;	
-	}
-	else {
-	   	leftOfDecimalDigits = 0;
-	   	rightOfDecimalZeroes = -exponent + 1;
-	}
-	
-	if(leftOfDecimalDigits < displayDigits) {
-		var temp = displayValue + 5 * Math.pow(10, leftOfDecimalDigits - displayDigits - 1);
-		temp = (temp * Math.pow(10, displayDigits - leftOfDecimalDigits));
-		displayValue = temp / Math.pow(10, displayDigits - leftOfDecimalDigits);
-	}
-	
-	// System.out.println("displayValue is a: " + displayValue.getClass().getName());
-	var displayString = new Packages.java.lang.String(displayValue);
-	// System.out.println(displayString.getClass().getName());
-	// displayString = displayString + "a"; // + displayValue;
-	// System.out.println(displayString.getClass().getName());
-	// System.out.println("Display string: " + displayString /*+ " is a " + displayString.getClass().getName()*/);
-	var addZeroes = (displayDigits + 1) - (displayString.length());
-	
-	if(displayValue < 100){
-		if(displayString.length() < displayDigits + 1){
-			for(var i = 0; i < addZeroes; i++){
-				displayString += "0";
-			}
-		}
-	}
-	
-	//System.out.println(sign + displayString + unitPrefix);
-	if(displayValue < 1000){
-		return "" + sign + displayString + unitPrefix;
-	}
-	else if (displayValue < 0.001){
-		return "" + sign + "0" + unitPrefix;
-	}
-	else{
-		return "???";
-	}
+	return "" + sign + displayValue + unitPrefix;
 	
 }// end of rangeValue()
 
@@ -821,9 +788,9 @@ function findBranch(name)
 }
 
 /** Checks the answer and creates messages according to the answer submitted */
-function checkAnswer(answerValue)
+function checkAnswer(answerValue, answerText)
 {
-	var strMsg = "Answer Submitted: "+answerValue;
+	var strMsg = "Answer Submitted: "+answerText;
 
 	// Simply check that the value answered was right
 	var value = (new java.lang.Double(answerValue).doubleValue());
