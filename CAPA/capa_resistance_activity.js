@@ -12,17 +12,17 @@
 
 /**
  * Variables coming from the script OT context:
- * OTCCKCAPAModelView 	cckModelView; 		// CCK model view object
- * JPanel 				apparatusPanel;		// Swing panel that contains the CCKPanel (useful to take the screenshot)
- * OTNotebook 			otNotebookObject;	// OT Notebook object to use to keep track of measurements
- * OTCardContainer 		otInfoAreaCards;	// OT card container for the information area of the activity. Used to switch between messages by switching to a different card.
- * JButton 				submitAnswerButton; // Actual swing button used to submit the answer
- * JTextArea 			answerBox;			// Swing text component where the user writes the answer
- * OTTextPane			solutionText;		// OT Text Pane that holds the text with the solution
- * OTProgrammableCalculatorNotebook 
- *						otCalculatorObject	// OT Calculator-notebook object
- * OTProgrammableCalculatorView
- * 						otCalculatorView	// OT Calculator view
+ * cckModelView			(OTCCKCAPAModelView)		// CCK model view object
+ * apparatusPanel		(JPanel)					// Swing panel that contains the CCKPanel (useful to take the screenshot)
+ * otNotebookObject		(OTNotebook) 				// OT Notebook object to use to keep track of measurements
+ * otInfoAreaCards		(OTCardContainer)			// OT card container for the information area of the activity. Used to switch between messages by switching to a different card.
+ * submitAnswerButton	(JButton) 					// Actual swing button used to submit the answer
+ * answerBox			(JTextArea)					// Swing text component where the user writes the answer
+ * solutionText			(OTTextPane)				// OT Text Pane that holds the text with the solution
+ * otCalculatorObject	(OTProgrammableCalculatorNotebook)			// OT Calculator-notebook object
+ * answerChooser		(OTProgrammableCalculatorResultChooser)
+ * calculatorButton		(JButton)
+ * calculatorHelpAction (OTAction)
  */
 
 importPackage(Packages.java.lang);
@@ -54,6 +54,7 @@ importPackage(Packages.org.concord.framework.otrunk);
 
 importClass(Packages.org.concord.otrunk.ui.swing.OTCardContainerView);
 importClass(Packages.org.concord.otrunk.ui.OTText);
+importClass(Packages.org.concord.framework.otrunk.view.OTActionContext);
 importClass(Packages.org.concord.calculator.state.OTProgrammableCalculatorEventHandler);
 importClass(Packages.org.concord.calculator.state.OTProgrammableCalculatorEvent);
 importClass(Packages.org.concord.calculator.state.OTProgrammableCalculatorListener);
@@ -81,6 +82,7 @@ var logFile;					// Used for logging information
 var xmlText;					// OTXMLText object used for logging information
 var firstJunctionsConnected = true;	//Used to put up text the first time a junction is connected.
 var firstMeasurement = true; 		//Used to put up text the first time a measurement is made.
+var bCalculatorShow = false;	//Indicates whether the calculator has been showed or not
 
 var previousMultimeterValue = Double.NaN;	// Value that stores the last multimeter measurement, to avoid repeated measurements
 var previousMultimeterState = -1;			// Value
@@ -122,11 +124,11 @@ function init()
 	
 	setupCalculatorListener();
 	
-    setupActivity();
+	setupActivity();
     
-    initializationDone = true;
-    
-    return initializationDone;
+	initializationDone = true;
+        
+	return initializationDone;
 }
 
 function setupCalculatorListener()
@@ -195,6 +197,17 @@ function setupCalculatorListener()
 	}
 	var otListener = new OTChangeListener(otHandler);
 	answerChooser.addOTChangeListener(otListener);
+	
+	var calculatorButtonHandler =
+	{
+		actionPerformed : function(evt)
+		{
+		    showCalculatorHelp();
+		}
+	}
+	var calculatorButtonListener = new ActionListener(calculatorButtonHandler);
+	calculatorButton.addActionListener(calculatorButtonListener);
+	System.out.println("aading action listener from script");
 }
 
 /**
@@ -372,7 +385,7 @@ function printMeasurements()
 function logMeasurements()
 {
 	var strLog;
-	logInformation("Measurements Summary:");
+	logInformation("Measurements Summary - "+measurements.length+" measurements");
 	for (var i=0; i<measurements.length; i++){
 		var m = measurements[i];
 		strLog = "type=" + m.type + " value=" + m.value + " unit=" + m.unit;
@@ -587,7 +600,7 @@ function setupCircuitListener()
 				var random = randomGen.nextInt(2) + 7;
 				branch.setVoltageDrop(random);
 				//Different internal resistance
-//				branch.setInternalResistance(5);
+				branch.setInternalResistance(5);
 
 				//Disable options in the pop up menu
 				var menuComponent = cckCircuitNode.getBranchNode(branch).getMenu();
@@ -876,6 +889,22 @@ function showSolution(answerValueType, answerUnitType)
 	strMsg = strMsg + "  (Value:" + answerValueType + ", Unit:" + answerUnitType +"): "
 	strMsg = strMsg + solutionMsg
 	logInformation(strMsg);
+}
+
+function showCalculatorHelp()
+{
+	if (bCalculatorShow) return;
+	
+	var actionContextHandler =
+	{
+		getViewContext : function()
+		{
+			return viewContext;
+		}
+	}
+	var actionContextImpl = new OTActionContext(actionContextHandler); 
+	calculatorHelpAction.doAction(actionContextImpl);
+	bCalculatorShow = true;
 }
 
 /** Show and Hide Help button */

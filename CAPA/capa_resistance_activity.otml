@@ -178,7 +178,7 @@
 							viewClass="org.concord.otrunk.script.ui.OTScriptObjectContentsReportView" />
 					</viewEntries>
 					<frame>
-						<OTFrame width="930" height="680" />
+						<OTFrame width="940" height="680" />
 					</frame>
 				</OTViewBundle>
 			</bundles>
@@ -194,7 +194,7 @@
 						<object refid="${infoCards}"/>
 					</bodyText>
 				</OTCompoundDoc>
-				<OTPlacementContainer width="930" height="680"
+				<OTPlacementContainer width="940" height="680"
 					local_id="cck_model_placement_view" name="CCK">
 					<placements>
 						<OTPlacement component="${submitAnswerButton}"
@@ -205,12 +205,12 @@
 							height="35" width="100" x="730" y="610" />
 						<OTPlacement component="${cck_model}"
 							height="600" width="700" x="10" y="10" />
-						<OTPlacement component="${activity_script}"
-							height="0" width="0" x="0" y="0" />
 						<OTPlacement component="${calculatorButton}"
 							height="40" width="150" x="150" y="610" />
 						<OTPlacement component="${reportButton}"
 							height="40" width="150" x="400" y="610" />
+						<OTPlacement component="${activity_script}"
+							height="0" width="0" x="0" y="0" />
 					</placements>
 				</OTPlacementContainer>
 				<OTCardContainer local_id="infoCards">
@@ -230,7 +230,7 @@
 				<OTFrameDisplayAction local_id="show_calculator_action">
 					<frame>
 						<OTFrame local_id="calculator_popup"
-							width="600" height="700" title="Calculator"/>
+							width="600" height="700" title="Notebook and Calculator"/>
 					</frame>
 					<objectToDisplay>
 						<object refid="${calc_answer_chooser}"/>
@@ -258,6 +258,16 @@
 						<object refid="${script_report_view}"/>
 					</viewid>
 				</OTViewChild>
+				<OTFrameDisplayAction local_id="show_calculator_help">
+					<frame>
+						<OTFrame local_id="calculator_help_popup"
+							width="400" height="500" title="Notebook and Calculator Help"
+							alwaysOnTop="true"/>
+					</frame>
+					<objectToDisplay>
+						<object refid="${calculatorHelpText}"/>
+					</objectToDisplay>
+				</OTFrameDisplayAction>
 				<OTButton local_id="submitAnswerButton"	text="Submit Answer" />
 				<OTScriptObject local_id="activity_script">
 					<variables>
@@ -265,12 +275,13 @@
 						<OTScriptVariableComponent name="apparatusPanel" reference="${cck_model}" />
 						<OTScriptVariable name="otNotebookObject" reference="${notebook}" />
 						<OTScriptVariable name="otInfoAreaCards" reference="${infoCards}" />
-						<!-- <OTScriptVariableComponent name="calculatorButton" reference="${calculatorButton}" /> -->
 						<OTScriptVariableComponent name="submitAnswerButton" reference="${submitAnswerButton}" />
 						<OTScriptVariableComponent name="answerBox" reference="${answerBox}" />
 						<OTScriptVariable name="solutionText" reference="${solutionText}" />
 						<OTScriptVariable name="otCalculatorObject" reference="${calc}"/>
 						<OTScriptVariable name="answerChooser" reference="${calc_answer_chooser}"/>
+						<OTScriptVariableComponent name="calculatorButton" reference="${calculatorButton}"/>
+						<OTScriptVariable name="calculatorHelpAction" reference="${show_calculator_help}"/>
 					</variables>
 					<script>
 						<OTJavascript src="capa_resistance_activity.js"  />
@@ -295,7 +306,8 @@
 						<object refid="${calculator1}"/>
 					</calculator>
 				</OTProgrammableCalculatorNotebook>
-		        <OTProgrammableCalculatorResultChooser name="Answer chooser" local_id="calc_answer_chooser">
+		        <OTProgrammableCalculatorResultChooser name="Answer chooser" local_id="calc_answer_chooser"
+		        	closeFrameAfterSelection="true">
 		        	<calculator>
 		        		<object refid="${calc}"/>
 		        	</calculator>
@@ -368,6 +380,31 @@
 						Placeholder.
 					</text>
 				</OTTextPane>
+				<OTCompoundDoc local_id="calculatorHelpText">
+					<bodyText>
+						<font size="4" face="Verdana">
+							<p align="center">This is your online Laboratory Notebook.</p>
+							<p>
+							Every time you make a measurement it will be pasted into the top pane. <br/>
+							The notebook also comes with an online programmable calculator, 
+							which can compute answers for you if it knows what the formula is. <br/>
+							You can use the "Formulas" box to type a formula with a one variable 
+							on the left and some algebraic expression with measured variables 
+							on the right. The formula can also involve constants on the right, 
+							but it must have only one variable on the left. <br/>
+							When you do that all the measured variables will show up in the 
+							Variables box. You can then drag a measurement onto the appropriate 
+							variable and that will set the variable to be the measured value. <br/>
+							When all the measured variables are set in this way the calculator 
+							will calculate the result for you. 
+							It will not know the correct units for the answer, 
+							however -- you have to enter those yourself, using the popup menu. 
+							When you think you have the correct answer, drag it onto the 
+							"Submit Answer" box.
+							</p>
+						</font>
+					</bodyText>
+				</OTCompoundDoc>
 			</library>
 		</OTSystem>
 	</objects>
