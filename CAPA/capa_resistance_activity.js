@@ -77,7 +77,6 @@ var initializationDone = true;	// Whether the init() function is done or not
 var shortCircuit = false;		// Flag used to determine if the user has caused a short circuit in THIS current change  
 var solverFinishedOnce = false;	// ?
 var lastMMStateViable = false;	// ?
-var unitsGiven;					// Whether the user reported units in the last answer
 var logFile;					// Used for logging information
 var xmlText;					// OTXMLText object used for logging information
 var firstJunctionsConnected = true;	//Used to put up text the first time a junction is connected.
@@ -98,6 +97,7 @@ var measurements = [];			// Array of measurement objects
 
 var calculatorEventHandler;		// (OTProgrammableCalculatorEventHandler)
 var calculatorListener;
+var answerObj;
 
 /**
  * This function is called when the script starts up
@@ -179,12 +179,12 @@ function setupCalculatorListener()
 		{
 			//System.out.println("ot change: "+evt.getDescription());
 			if (evt.getProperty().equals("selectedAnswer")){
-				var valObj = evt.getValue();
-				if (valObj != null){
-					var val = valObj.getValue();
+				answerObj = evt.getValue();
+				if (answerObj != null){
+					var val = answerObj.getValue();
 					if (!Float.isNaN(val)){
 						val = roundValue(val);
-						var txtValue = val + " " + valObj.getUnit();
+						var txtValue = val + " " + answerObj.getUnit();
 						answerBox.setText(txtValue);
 						
 						//TODO: Close the calculator window
@@ -587,7 +587,7 @@ function setupCircuitListener()
 				var random = randomGen.nextInt(2) + 7;
 				branch.setVoltageDrop(random);
 				//Different internal resistance
-				branch.setInternalResistance(5);
+//				branch.setInternalResistance(5);
 
 				//Disable options in the pop up menu
 				var menuComponent = cckCircuitNode.getBranchNode(branch).getMenu();
@@ -635,22 +635,7 @@ function setupAnswerButton()
 		 */ 
 		actionPerformed: function(evt)
 		{
-			var enteredText = answerBox.getText();
-			//System.out.println(enteredText);
-			var valuePosition = enteredText.search(/\d+(.\d*)?/);
-			var unitsPosition = enteredText.search(/ohms?/i);
-			var answerValue = "";
-			unitsGiven = false;
-			if (valuePosition > -1)
-			{
-				answerValue = enteredText.match(/\d+(.\d*)?/)[0];
-			}
-			if (unitsPosition > -1)
-			{
-				unitsGiven = true;
-			}
-			//infoArea.setText(valuePosition + ", " + unitsPosition + ", " + answer + ", " + unitsGiven);
-			checkAnswer(answerValue, enteredText);
+			checkAnswer();
 		}
 	}
 		
@@ -788,66 +773,109 @@ function findBranch(name)
 }
 
 /** Checks the answer and creates messages according to the answer submitted */
-function checkAnswer(answerValue, answerText)
+function checkAnswer()
 {
-	var strMsg = "Answer Submitted: "+answerText;
-
-	// Simply check that the value answered was right
-	var value = (new java.lang.Double(answerValue).doubleValue());
+	//The answer is at: 
+	//answerObj (OTValueUnit) and answerBox(JTextField)
+	if (answerObj == null) return;
+	
+	//Check value
+	var answerValueType = "";
+	var value = answerObj.getValue();
 	if (MathUtil.isApproxEqual(value, targetResistor.getResistance(), 0.1)){
-		answerType = 1;
-		strMsg = strMsg + " (Correct)";
+		answerValueType = "correct"
 	}
 	else{
-		answerType = 2;
-		strMsg = strMsg + " (Incorrect)";
+		if (MathUtil.isApproxEqual(value*1000, targetResistor.getResistance(), 0.1) ||
+				MathUtil.isApproxEqual(value/1000, targetResistor.getResistance(), 0.1)){
+			answerValueType = "correct in other unit"
+		}
+		else{
+			answerType = 2;
+			answerValueType = "incorrect"
+		}
 	}
 	//
-	
-	logInformation(strMsg);
-	
-	// Take into account short circuits? shortCircuitCounter
-
-	showSolution(answerType);
+	//Check unit
+	var answerUnitType = "";
+	var unit = answerObj.getUnit();
+	if (unit == null || unit.equals("")){
+		answerUnitType = "no unit"
+	}
+	else if (unit.equalsIgnoreCase("ohms")){
+		answerUnitType = "correct"
+	}
+	else if (unit.equalsIgnoreCase("mohms") || unit.equalsIgnoreCase("miliohms") ||
+			unit.equalsIgnoreCase("kohms") || unit.equalsIgnoreCase("kiloohms")){
+		answerUnitType = "incorrect but other good unit"
+	}
+	else {
+		answerUnitType = "incorrect"
+	}
+	//
+		
+	showSolution(answerValueType, answerUnitType);
 }
 
 /** Shows a message as feedback after submitting an answer */
-function showSolution(answerType, correctAmmeterMeasurements, correctVoltmeterMeasurements)
+function showSolution(answerValueType, answerUnitType)
 {
-	var solutionString = "";
+	var solutionMsg = "";
 	var shortCircuitMsg = "";
 	
-	if (answerType == 1){
-		solutionString = "Your answer is correct!";
+	if (answerValueType.equals("correct")){
+		if (answerUnitType.equals("no unit")){
+			solutionMsg = "Correct but no units supplied.";
+		}
+		else if (answerUnitType.equals("correct")){
+			solutionMsg = "Correct!";
+		}
+		else if (answerUnitType.equals("incorrect but other good unit")){
+			solutionMsg = "Correct numerically but unit supplied was not ohms.";
+		}
+		else if (answerUnitType.equals("incorrect")){
+			solutionMsg = "Correct numerically but inappropriate units supplied.";
+		}
 	}
-	else{
-		solutionString = "Sorry, incorrect answer.";
-	}	
+	else if (answerValueType.equals("correct in other unit")){
+		if (answerUnitType.equals("no unit")){
+			solutionMsg = "Correct but value not in ohms and no units supplied.";
+		}
+		else if (answerUnitType.equals("correct")){
+			solutionMsg = "Correct but not in ohms.";
+		}
+		else if (answerUnitType.equals("incorrect but other good unit")){
+			solutionMsg = "Correct but value not in ohms.";
+		}
+		else if (answerUnitType.equals("incorrect")){
+			solutionMsg = "Correct but value not in ohms and inappropriate unit supplied.";
+		}
+	}
+	else if (answerValueType.equals("incorrect")){
+		if (answerUnitType.equals("no unit")){
+			solutionMsg = "Incorrect and no units supplied.";
+		}
+		else if (answerUnitType.equals("correct")){
+			solutionMsg = "Incorrect value.";
+		}
+		else if (answerUnitType.equals("incorrect but other good unit")){
+			solutionMsg = "Incorrect and not in ohms.";
+		}
+		else if (answerUnitType.equals("incorrect")){
+			solutionMsg = "Incorrect and inappropriate units supplied.";
+		}
+	}
 
-	if (shortCircuitCounter!= 0)
-	{
-		shortCircuitCounter = "" + shortCircuitCounter + " short circuits.";
-/*
-		if (shortCircuitCounter == 1){
-			shortCircuitMsg = eval(shortCircuitMsg1);
-		}
-		else if (shortCircuitCounter == 2){
-			shortCircuitMsg = eval(shortCircuitMsg2);
-		}
-		else{
-			shortCircuitMsg = eval(shortCircuitMsg3);
-		}
-*/
-	}
-	
-	//Check for units reported
-	var unitsMsg = "You didn't report any units in your answer. ";					//unitsNotReported;
-	if (unitsGiven) unitsMsg = "";		//unitsReported;
-	var otxml = new OTXMLString(startHTML + solutionString + unitsMsg + shortCircuitMsg + endHTML);
-	// System.out.println("Solution message is: ");
-	// System.out.println(startHTML + solutionString + unitsMsg + shortCircuitMsg + endHTML);
+	//Show solution	
+	var otxml = new OTXMLString(startHTML + solutionMsg + shortCircuitMsg + endHTML);
 	solutionText.setText(otxml);
 	OTCardContainerView.setCurrentCard(otInfoAreaCards, "solutionText");
+	//
+
+	var strMsg = "Answer Submitted: "+answerBox.getText();
+	strMsg = strMsg + "  (Value:" + answerValueType + ", Unit:" + answerUnitType +"): "
+	strMsg = strMsg + solutionMsg
+	logInformation(strMsg);
 }
 
 /** Show and Hide Help button */
