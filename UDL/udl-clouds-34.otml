@@ -19,6 +19,7 @@
     <import class="org.concord.graph.util.state.OTDrawingShape" />
     <import class="org.concord.graph.util.state.OTDrawingTool2" />
     <import class="org.concord.graph.util.state.OTPointTextLabel" />
+    <import class="org.concord.otrunk.OTInclude"/>
     <import class="org.concord.otrunk.OTSystem" />
     <import class="org.concord.otrunk.overlay.OTOverlay" />
     <import class="org.concord.otrunk.script.ui.OTScriptObject" />
@@ -28,22 +29,21 @@
     <import class="org.concord.otrunk.script.js.OTJavascript" />
     <import class="org.concord.otrunk.script.OTScriptEngineBundle" />
     <import class="org.concord.otrunk.script.OTScriptEngineEntry" />
-    <import class="org.concord.otrunk.udl.OTUDLCharacter" />
-    <import class="org.concord.otrunk.udl.OTUDLCharacterGroup" />
-    <import class="org.concord.otrunk.udl.OTUDLCoachStatement" />
+    <import class="org.concord.otrunk.udl.coach.OTUDLCoach" />
+    <import class="org.concord.otrunk.udl.coach.OTUDLCoachGroup" />
+    <import class="org.concord.otrunk.udl.coach.OTUDLCoachStatement" />
     <import class="org.concord.otrunk.udl.OTUDLMenuRule" />
     <import class="org.concord.otrunk.udl.document.OTDefinition" />
+    <import class="org.concord.otrunk.udl.document.OTDefinitionList" />
     <import class="org.concord.otrunk.udl.document.OTDefinitionManager" />
     <import class="org.concord.otrunk.udl.document.OTUDLCompoundDoc" />
-    <import class="org.concord.otrunk.udl.document.OTUDLCSSModifier" />
-    <import class="org.concord.otrunk.udl.document.OTUDLCSSGroup" />
     <import class="org.concord.otrunk.udl.document.OTUDLDocumentViewConfig" />
-    <import class="org.concord.otrunk.udl.friction.OTFrictionModel" />
-    <import class="org.concord.otrunk.udl3.OTQuestion" />
+    <import class="org.concord.otrunk.udl.ui.OTDataCollectorViewConfig" />
+    <import class="org.concord.otrunk.udl.question.OTQuestion" />
+    <import class="org.concord.otrunk.udl.question.OTUDLQuestions" />
+    <import class="org.concord.otrunk.udl.question.OTUDLQuestionViewConfig" />
     <import class="org.concord.otrunk.udl3.OTUDLMenu" />
     <import class="org.concord.otrunk.udl3.OTUDLContainer" />
-    <import class="org.concord.otrunk.udl3.OTUDLQuestions" />
-    <import class="org.concord.otrunk.udl3.OTUDLQuestionViewConfig" />
     <import class="org.concord.otrunk.udl3.OTUDLSection" />
     <import class="org.concord.otrunk.ui.OTButton" />
     <import class="org.concord.otrunk.ui.OTCardContainer" />
@@ -70,10 +70,12 @@
     <import class="org.concord.sensor.state.OTSensorDataProxy" />
     <import class="org.concord.sensor.state.OTSensorRequest" />
     <import class="org.concord.sensor.state.OTZeroSensor" />
-    <import class="org.concord.otrunk.udl.question.OTQuestion" />
   </imports>
   <objects>
     <OTSystem local_id="system">
+      <includes>
+        <OTInclude href="global-imports/predefined-sensor-graphs.otml"/>
+      </includes>
       <bundles>
         <OTViewBundle showLeftPanel="false" currentMode="default">
           <modes>
@@ -96,7 +98,7 @@
                   <OTViewEntry objectClass="org.concord.data.state.OTDataTable" viewClass="org.concord.data.state.OTDataTableEditView" />
                 </entry>
                 <entry key="${character-group-view}">
-                  <OTViewEntry objectClass="org.concord.otrunk.udl.OTUDLCharacterGroup" viewClass="org.concord.otrunk.udl.OTUDLCharacterGroupEditView" />
+                  <OTViewEntry objectClass="org.concord.otrunk.udl.coach.OTUDLCoachGroup" viewClass="org.concord.otrunk.udl.coach.OTUDLCoachGroupEditView" />
                 </entry>
                 <entry key="${compound_doc_view}">
                   <OTObjectEditViewConfig objectClass="org.concord.otrunk.view.document.OTCompoundDoc" viewClass="org.concord.otrunk.view.document.OTCompoundDocEditView" usePopupEditWindows="true" copyNewObjectsByDefault="true">
@@ -110,6 +112,21 @@
                           <OTDataStore numberChannels="2" />
                         </dataStore>
                       </OTDataTable>
+                      <OTDataCollector name="Data graph" title="Data graph">
+                      	<source>
+							<OTDataGraphable name="Data Graph" connectPoints="true" controllable="true" yColumn="1" drawMarks="false" color="0xff0000" xColumn="0">
+								<dataStore>
+									<OTDataStore/>
+								</dataStore>
+							</OTDataGraphable>
+						</source>
+						<xDataAxis>
+							<OTDataAxis max="60" units="s" min="0" label="Time"/>
+						</xDataAxis>
+						<yDataAxis>
+							<OTDataAxis max="40.0" units="" min="0.0" label=""/>
+						</yDataAxis>
+					  </OTDataCollector>
                     </objectsToInsert>
                   </OTObjectEditViewConfig>
                 </entry>
@@ -118,6 +135,13 @@
                 </entry>
                 <entry key="${questions-on-off-view}">
                   <OTUDLQuestionViewConfig objectClass="org.concord.otrunk.udl.question.OTUDLQuestions" viewClass="org.concord.otrunk.udl.question.OTUDLQuestionsEditView" />
+                </entry>
+                <entry key="${data-collector-view}">
+                  <OTDataCollectorViewConfig viewClass="org.concord.otrunk.udl.ui.OTDataCollectorEditView" objectClass="org.concord.datagraph.state.OTDataCollector">
+                  	<predefinedGraphs>
+                  		<object refid="088786c2-8719-11dc-8314-0800200c9a66"/>
+                  	</predefinedGraphs>
+                  </OTDataCollectorViewConfig>
                 </entry>
               </map>
             </OTViewMode>
@@ -139,23 +163,22 @@
             <OTViewEntry objectClass="org.concord.otrunk.script.ui.OTScriptObject" viewClass="org.concord.otrunk.script.ui.OTScriptObjectView" />
             <OTViewEntry objectClass="org.concord.otrunk.ui.OTButton" viewClass="org.concord.otrunk.ui.swing.OTButtonView" />
             <OTViewEntry local_id="question-view" objectClass="org.concord.otrunk.udl.question.OTQuestion" viewClass="org.concord.otrunk.udl.question.OTQuestionView" />
-            <OTViewEntry local_id="character-group-view" objectClass="org.concord.otrunk.udl.OTUDLCharacterGroup" viewClass="org.concord.otrunk.udl.OTUDLCharacterGroupView" />
+            <OTViewEntry local_id="character-group-view" objectClass="org.concord.otrunk.udl.coach.OTUDLCoachGroup" viewClass="org.concord.otrunk.udl.coach.OTUDLCoachGroupView" />
             <OTViewEntry objectClass="org.concord.otrunk.udl3.OTUDLSection" viewClass="org.concord.otrunk.udl3.OTUDLSectionView" />
-            <OTViewEntry objectClass="org.concord.otrunk.udl3.OTUDLContainer" viewClass="org.concord.otrunk.udl3.OTUDLContainerView" />
-            <OTViewEntry objectClass="org.concord.otrunk.udl.document.OTUDLCSSModifier" viewClass="org.concord.otrunk.udl.document.OTUDLCSSModifierView" />
+            <OTViewEntry local_id="container_view" objectClass="org.concord.otrunk.udl3.OTUDLContainer" viewClass="org.concord.otrunk.udl3.OTUDLContainerView" />
             <OTViewEntry local_id="menu-vertical" objectClass="org.concord.otrunk.udl3.OTUDLMenu" viewClass="org.concord.otrunk.udl.ui.OTUDLMenuSectionView" />
             <OTViewEntry local_id="menu-horizontal-circle" objectClass="org.concord.otrunk.udl3.OTUDLMenu" viewClass="org.concord.otrunk.udl.ui.OTUDLMenuPageView" />
             <OTViewEntry local_id="menu-horizontal-book" objectClass="org.concord.otrunk.udl3.OTUDLMenu" viewClass="org.concord.otrunk.udl.ui.OTUDLMenuPageBookView" />
             <OTChoiceViewConfig local_id="choice-radio-view" objectClass="org.concord.otrunk.ui.OTChoice" viewClass="org.concord.otrunk.ui.swing.OTChoiceRadioButtonView" useViewsAsChoices="true" />
             <OTViewEntry local_id="choice-combo-view" objectClass="org.concord.otrunk.ui.OTChoice" viewClass="org.concord.otrunk.ui.swing.OTChoiceComboBoxView" />
-            <OTViewEntry objectClass="org.concord.otrunk.udl3.OTQuestion" viewClass="org.concord.otrunk.udl3.OTQuestionView" />
+            <OTViewEntry objectClass="org.concord.otrunk.udl.question.OTQuestion" viewClass="org.concord.otrunk.udl3.OTQuestionView" />
             <OTViewEntry objectClass="org.concord.otrunk.script.ui.OTScriptObject" viewClass="org.concord.otrunk.script.ui.OTScriptObjectView" />
             <OTViewEntry objectClass="org.concord.otrunk.ui.OTCardContainer" viewClass="org.concord.otrunk.ui.swing.OTCardContainerView" />
             <OTViewEntry objectClass="org.concord.otrunk.ui.OTBorderContainer" viewClass="org.concord.otrunk.ui.swing.OTBorderContainerView" />
             <OTViewEntry objectClass="org.concord.otrunk.ui.OTPlacementContainer" viewClass="org.concord.otrunk.ui.swing.OTPlacementContainerView" />
             <OTViewEntry local_id="text-edit" objectClass="org.concord.otrunk.ui.OTText" viewClass="org.concord.otrunk.ui.swing.OTTextEditView" />
             <OTViewEntry local_id="text-label" objectClass="org.concord.otrunk.ui.OTText" viewClass="org.concord.otrunk.ui.swing.OTTextView" />
-            <OTViewEntry viewClass="org.concord.datagraph.state.OTDataCollectorView" objectClass="org.concord.datagraph.state.OTDataCollector" />
+            <OTViewEntry local_id="data-collector-view" viewClass="org.concord.datagraph.state.OTDataCollectorView" objectClass="org.concord.datagraph.state.OTDataCollector" />
             <OTViewEntry viewClass="org.concord.datagraph.state.OTDataGraphView" objectClass="org.concord.datagraph.state.OTDataGraph" />
             <OTViewEntry viewClass="org.concord.data.state.OTDataFieldView" objectClass="org.concord.data.state.OTDataField" />
             <OTViewEntry viewClass="org.concord.datagraph.state.OTDataDrawingToolView" objectClass="org.concord.graph.util.state.OTDrawingTool" />
@@ -181,7 +204,7 @@
                     <OTOverlay local_id="small-text-overlay" name="Small text">
                       <deltaObjectMap>
                         <entry key="${css-font}">
-                          <OTCssText cssText="                body {                   font-size: 14;          FONT-STYLE: normal;               FONT-FAMILY: Verdana, Arial;               FONT-VARIANT: normal;              TEXT-DECORATION: none              }                a {                    text-decoration: none;                  }                DIV.body {                     FONT-WEIGHT: bolder;                   FONT-STYLE: normal;                    FONT-FAMILY: Verdana, Arial;                    FONT-VARIANT: normal;                   TEXT-DECORATION: none                  }                DIV.story {                 FONT-WEIGHT: bolder;                }                DIV.activity-title {                    font-size: 28;                    FONT-WEIGHT: bold;                }                  DIV.title {                   font-size: 25;                   FONT-WEIGHT: bold;                }                DIV.subtitle {                    font-size: 20;                    FONT-WEIGHT: bold;                }                DIV.subtitle-continue {                    FONT-WEIGHT: bold;                }" />
+                          <OTCssText src="css/otrunk-small-font.css" />
                         </entry>
                       </deltaObjectMap>
                     </OTOverlay>
@@ -189,7 +212,7 @@
                     <OTOverlay local_id="large-text-overlay" name="Large text">
                       <deltaObjectMap>
                         <entry key="${css-font}">
-                          <OTCssText cssText="                body {                   font-size: 24;       FONT-STYLE: normal;               FONT-FAMILY: Verdana, Arial;               FONT-VARIANT: normal;              TEXT-DECORATION: none                 }                a {                    text-decoration: none;                  }                DIV.body {                     FONT-WEIGHT: bolder;                   FONT-STYLE: normal;                    FONT-FAMILY: Verdana, Arial;                    FONT-VARIANT: normal;                   TEXT-DECORATION: none                  }                DIV.story {                 FONT-WEIGHT: bolder;                }                DIV.activity-title {                    font-size: 37;                    FONT-WEIGHT: bold;                }                  DIV.title {                   font-size: 34;                   FONT-WEIGHT: bold;                }                DIV.subtitle {                    font-size: 28;                    FONT-WEIGHT: bold;                }                DIV.subtitle-continue {                    FONT-WEIGHT: bold;                }" />
+                          <OTCssText src="css/otrunk-large-font.css" />
                         </entry>
                       </deltaObjectMap>
                     </OTOverlay>
@@ -249,7 +272,7 @@
         <object refid="${english-overlay}" />
       </overlays>
       <root>
-        <OTUDLContainer name="UDL Activity">
+        <OTUDLContainer name="UDL Clouds">
           <cssColor>
             <object refid="${css-color}" />
           </cssColor>
@@ -290,19 +313,19 @@
             </OTCompoundDoc>
           </topBar>
           <characters>
-            <OTUDLCharacterGroup local_id="character-group">
+            <OTUDLCoachGroup local_id="character-group">
               <topLevelCardContainer>
                 <object refid="${section-card-container}" />
               </topLevelCardContainer>
               <characters>
-                <OTUDLCharacter local_id="character_affective" inactiveImageURL="http://confluence.concord.org/download/attachments/12353/blah-head-small.png" />
-                <OTUDLCharacter local_id="character_strategic" inactiveImageURL="http://confluence.concord.org/download/attachments/12353/clunk-head-small.png" />
-                <OTUDLCharacter local_id="character_recognition" inactiveImageURL="http://confluence.concord.org/download/attachments/12353/roxy-head-small.png" />
-              </characters>
+                <OTUDLCoach local_id="character_affective" inactiveImageURL="http://udl.concord.org/share/shared-images/blah-head.png" activeImageURL="http://udl.concord.org/share/shared-images/blah-anim.gif" />
+                <OTUDLCoach local_id="character_strategic" inactiveImageURL="http://udl.concord.org/share/shared-images/clunk-head.png" activeImageURL="http://udl.concord.org/share/shared-images/clunk-anim.gif" />
+                <OTUDLCoach local_id="character_recognition" inactiveImageURL="http://udl.concord.org/share/shared-images/roxy-head.png" activeImageURL="http://udl.concord.org/share/shared-images/roxy-anim.gif" />
+               </characters>
               <speechFrame>
                 <OTFrame local_id="speech_frame" width="380" height="340" borderlessPopup="false" />
               </speechFrame>
-            </OTUDLCharacterGroup>
+            </OTUDLCoachGroup>
           </characters>
           <content>
             <OTCardContainer local_id="section-card-container" loadViewOnlyOnDemand="true">
@@ -323,9 +346,83 @@
                             <div class="buffer">
                               <div class="border">
                                 <div class="body">
-                                  <div class="subtitle">Pre-test</div>
-                                  Drag the following images to the correct group (water, no water), depending on whether the object represents something that has water or something that has no water:
-(ice, liquid water, snow, clouds, stones, glass).
+                                  <div class="subtitle-continued" />
+                                  Answer the following questions. When you have finished, press the
+                                  <b>Submit</b>
+                                  button. Warning: after you hit the Submit button, you will not be able to go back and change your answers.
+                                  <p />
+                                  1. A metal pan of water is left on a counter.  After a few days, there is less water in the pan.  What most likely happened?
+                                  <br />
+                                  <object refid="47512aa3-7db0-11dc-86ec-dfdfa7db0c92" />
+                                  <p />
+                                  2.  Where does water in a lake get most of its energy to evaporate?
+                                  <br />
+                                  <object refid="610b5163-7db0-11dc-86ec-dfdfa7db0c92" />
+                                  <p />
+                                  Explain your answer to question 2.
+                                  <br />
+                                  <object refid="cab88a6f-7db0-11dc-86ec-dfdfa7db0c92" />
+                                  <p />
+                                  Press the
+                                  <b>Right Arrow</b>
+                                  below to go to the next page.
+                                  <p />
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                          <documentRefs>
+                            <OTChoice id="47512aa3-7db0-11dc-86ec-dfdfa7db0c92" name="Choices">
+                              <choices>
+                                <OTCompoundDoc name="Some water became part of the pan.">
+                                  <bodyText>Some water became part of the pan.</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="Movement of the air pulled water out of the pan.">
+                                  <bodyText>Movement of the air pulled water out of the pan.</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="Some water turned into oxygen and hydrogen.">
+                                  <bodyText>Some water turned into oxygen and hydrogen.</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="Some water went into the air as a gas.">
+                                  <bodyText>Some water went into the air as a gas.</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="Some water no longer exists. ">
+                                  <bodyText>Some water no longer exists.</bodyText>
+                                </OTCompoundDoc>
+                              </choices>
+                            </OTChoice>
+                            <OTChoice id="610b5163-7db0-11dc-86ec-dfdfa7db0c92" name="Choices">
+                              <choices>
+                                <OTCompoundDoc name="The sun heating the lake.">
+                                  <bodyText>The sun heating the lake.</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="Green plants living in the lake.">
+                                  <bodyText>Green plants living in the lake.</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="Streams entering the lake.">
+                                  <bodyText>Streams entering the lake.</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="Cold springs under the lake.">
+                                  <bodyText>Cold springs under the lake.</bodyText>
+                                </OTCompoundDoc>
+                              </choices>
+                            </OTChoice>
+                            <OTText id="cab88a6f-7db0-11dc-86ec-dfdfa7db0c92" name="Text field" />
+                          </documentRefs>
+                        </OTUDLCompoundDoc>
+                        <OTUDLCompoundDoc name="%aab1fe4e-7db0-11dc-86ec-dfdfa7db0c92">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle-continued" />
+                                  3.  If you breathe on a mirror, part of the mirror clouds up.  What are you actually seeing when you see the mirror cloud up?
+                                  <br />
+                                  <object refid="ea956e80-7db0-11dc-86ec-dfdfa7db0c92" />
+                                  <p />
+                                  4.  If you were flying inside a puffy looking cloud, you would see:
+                                  <br />
+                                  <object refid="ec77ea21-7db0-11dc-86ec-dfdfa7db0c92" />
                                   <p />
                                   <table>
                                     <tr>
@@ -345,7 +442,42 @@
                             </div>
                           </bodyText>
                           <documentRefs>
-                          	<OTButton local_id="pretest-submit-button" name="Button" text="Submit" />
+                            <OTChoice id="ea956e80-7db0-11dc-86ec-dfdfa7db0c92" name="Choices">
+                              <choices>
+                                <OTCompoundDoc name="Water droplets that formed from cooled water vapor in your breath.">
+                                  <bodyText>Water droplets that formed from cooled water vapor in your breath.</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="Carbon dioxide that you are breathing out from your lungs.">
+                                  <bodyText>Carbon dioxide that you are breathing out from your lungs.</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="Oxygen that you are breathing out from your lungs.">
+                                  <bodyText>Oxygen that you are breathing out from your lungs.</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="Cooled nitrogen in the air around you.">
+                                  <bodyText>Cooled nitrogen in the air around you.</bodyText>
+                                </OTCompoundDoc>
+                              </choices>
+                            </OTChoice>
+                            <OTChoice id="ec77ea21-7db0-11dc-86ec-dfdfa7db0c92" name="Choices">
+                              <choices>
+                                <OTCompoundDoc name="Smoke.">
+                                  <bodyText>Smoke.</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="Fog.">
+                                  <bodyText>Fog.</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="Dust.">
+                                  <bodyText>Dust.</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="Cotton.">
+                                  <bodyText>Cotton.</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="All of the above are possible.">
+                                  <bodyText>All of the above are possible.</bodyText>
+                                </OTCompoundDoc>
+                              </choices>
+                            </OTChoice>
+                            <OTButton local_id="pretest-submit-button" name="Button" text="Submit" />
                             <OTScriptObject local_id="pretest-button-script">
                               <variables>
                                 <OTScriptVariable name="cardContainer">
@@ -375,6 +507,9 @@
                       <currentCard>
                         <object refid="${page-1}" />
                       </currentCard>
+                      <viewedCards>
+                        <object refid="${page-1}" />
+                      </viewedCards>
                     </OTCardContainer>
                   </content>
                   <footer>
@@ -484,8 +619,8 @@
                             <div class="buffer">
                               <div class="border">
                                 <div class="body">
-                                  <div class="subtitle">New page</div>
-                                  New page content
+                                  <div class="subtitle-continued" />
+                                  Go on an adventure and take a trip to a cloud!
                                 </div>
                               </div>
                             </div>
@@ -610,11 +745,16 @@
                                       </documentRefs>
                                       <bodyText>
                                         <object refid="af298a3c-7692-11dc-8925-31e85bbc495c" />
-                                        <p />
-                                        <div class="hint">Write your response in the box above.</div>
                                       </bodyText>
                                     </OTUDLCompoundDoc>
                                   </input>
+                                  <scaffolding>
+                                    <OTUDLCompoundDoc>
+                                      <bodyText>
+                                        <div class="hint">Write your response in the box above.</div>
+                                      </bodyText>
+                                    </OTUDLCompoundDoc>
+                                  </scaffolding>
                                 </OTQuestion>
                                 <OTQuestion name="L4">
                                   <prompt>
@@ -629,11 +769,16 @@
                                       </documentRefs>
                                       <bodyText>
                                         <object refid="24a3b29d-7693-11dc-8925-31e85bbc495c" />
-                                        <p />
-                                        <div class="hint">Try to describe the color and shape of the cloud and how it might feel.</div>
                                       </bodyText>
                                     </OTUDLCompoundDoc>
                                   </input>
+                                  <scaffolding>
+                                    <OTUDLCompoundDoc>
+                                      <bodyText>
+                                        <div class="hint">Try to describe the color and shape of the cloud and how it might feel.</div>
+                                      </bodyText>
+                                    </OTUDLCompoundDoc>
+                                  </scaffolding>
                                 </OTQuestion>
                                 <OTQuestion name="L3">
                                   <prompt>
@@ -658,6 +803,13 @@
                                       </bodyText>
                                     </OTUDLCompoundDoc>
                                   </input>
+                                  <scaffolding>
+                                    <OTUDLCompoundDoc>
+                                      <bodyText>
+                                        <div class="hint">Fill in the blanks above to complete the sentence.</div>
+                                      </bodyText>
+                                    </OTUDLCompoundDoc>
+                                  </scaffolding>
                                 </OTQuestion>
                                 <OTQuestion name="L2">
                                   <prompt>
@@ -689,6 +841,13 @@
                                       </bodyText>
                                     </OTUDLCompoundDoc>
                                   </input>
+                                  <scaffolding>
+                                    <OTUDLCompoundDoc>
+                                      <bodyText>
+                                        <div class="hint">Pick the best answer above to complete the sentence.</div>
+                                      </bodyText>
+                                    </OTUDLCompoundDoc>
+                                  </scaffolding>
                                 </OTQuestion>
                                 <OTQuestion name="L1">
                                   <prompt>
@@ -703,11 +862,16 @@
                                       </documentRefs>
                                       <bodyText>
                                         <object refid="7a302e17-7693-11dc-8925-31e85bbc495c" />
-                                        <p />
-                                        <div class="hint">An example answer might be: "The cloud is light and if you tried to touch it, your hand would go right through it."</div>
                                       </bodyText>
                                     </OTUDLCompoundDoc>
                                   </input>
+                                  <scaffolding>
+                                    <OTUDLCompoundDoc>
+                                      <bodyText>
+                                        <div class="hint">An example answer might be: "The cloud is light and if you tried to touch it, your hand would go right through it." Try placing this into your own words.</div>
+                                      </bodyText>
+                                    </OTUDLCompoundDoc>
+                                  </scaffolding>
                                 </OTQuestion>
                               </questions>
                             </OTUDLQuestions>
@@ -827,11 +991,9 @@
                                   <div class="subtitle">Engage</div>
                                   Now that we know there is water in clouds, how do you think it gets all the way up there?
                                   <p />
-                                  [Note: this starts with the phrase "Now that we know..."  But what if a student starts with this activity??!  We can't assume they'll "know" something already.]
-                                  <p />
                                   <img src="http://udl.concord.org/share/Clouds/Clouds46.jpg" />
                                   <p />
-                                  In this activity, you will [need description here].
+                                  In this activity, you will investigate what happens when water evaporates.
                                 </div>
                               </div>
                             </div>
@@ -848,7 +1010,7 @@
                                     <li>Warm water</li>
                                     <li>Cold water</li>
                                     <li>Plastic wrap</li>
-                                    <li>[Note: Do students need a thermometer or temperature probe?  They're asked to measure the temp. of the water!]</li>
+                                    <li>Temperature probe</li>
                                   </ul>
                                 </div>
                               </div>
@@ -867,9 +1029,22 @@
                                   <p />
                                   3. Measure the temperature of each bowl.
                                   <p />
-                                  Hot bowl temperature: [NUMBER BOX]
-                                  <br />
-                                  Cold bowl temperature: [NUMBER BOX]
+                                  <object refid="${temp_datacollector}" />
+                                  <p />
+                                  <table>
+                                    <tr>
+                                      <td>Hot bowl temperature:</td>
+                                      <td>
+                                        <object refid="${temp-box-1}" />
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>Cold bowl temperature:</td>
+                                      <td>
+                                        <object refid="${temp-box-2}" />
+                                      </td>
+                                    </tr>
+                                  </table>
                                   <p />
                                   4. Place a piece of clear plastic wrap over each of the bowls.
                                   <p />
@@ -880,6 +1055,39 @@
                             </div>
                           </bodyText>
                           <documentRefs>
+                            <OTText local_id="temp-box-1" />
+                            <OTText local_id="temp-box-2" />
+                            <OTDataCollector local_id="temp_datacollector" name="temp_datacollector" multipleGraphableEnabled="false" title="Temperature Sensor Graph" autoScaleEnabled="true">
+                              <source>
+                                <OTDataGraphable name="Sensor" connectPoints="true" yColumn="1" drawMarks="false" color="255" xColumn="0" lineWidth="2.0">
+                                  <dataProducer>
+                                    <OTSensorDataProxy local_id="dp_dc_id_1" name="dataproducer">
+                                      <request>
+                                        <OTExperimentRequest period="0.1">
+                                          <sensorRequests>
+                                            <OTSensorRequest stepSize="0.1" type="0" unit="degC" port="0" requiredMax="40.0" displayPrecision="-1" requiredMin="0.0" />
+                                          </sensorRequests>
+                                        </OTExperimentRequest>
+                                      </request>
+                                    </OTSensorDataProxy>
+                                  </dataProducer>
+                                  <dataStore>
+                                    <OTDataStore local_id="ds_dc_id_1" dt="0.1" numberChannels="1">
+                                      <channelDescriptions>
+                                        <OTDataChannelDescription name="dt" precision="2" numericData="true" />
+                                        <OTDataChannelDescription name="" unit="degC" precision="-1" numericData="true" />
+                                      </channelDescriptions>
+                                    </OTDataStore>
+                                  </dataStore>
+                                </OTDataGraphable>
+                              </source>
+                              <xDataAxis>
+                                <OTDataAxis max="60.0" units="s" min="0.0" label="Time" />
+                              </xDataAxis>
+                              <yDataAxis>
+                                <OTDataAxis max="40.0" units="degC" min="-0.0" label="Temperature" />
+                              </yDataAxis>
+                            </OTDataCollector>
                             <OTUDLQuestions id="c32df0c8-7693-11dc-8925-31e85bbc495c" name="Scaffolded questions">
                               <questions>
                                 <OTQuestion name="L5">
@@ -895,16 +1103,21 @@
                                       </documentRefs>
                                       <bodyText>
                                         <object refid="e9d4a7b8-7693-11dc-8925-31e85bbc495c" />
-                                        <p />
-                                        <div class="hint">Write your response in the box above.</div>
                                       </bodyText>
                                     </OTUDLCompoundDoc>
                                   </input>
+                                  <scaffolding>
+                                    <OTUDLCompoundDoc>
+                                      <bodyText>
+                                        <div class="hint">Write your answer in the box above.</div>
+                                      </bodyText>
+                                    </OTUDLCompoundDoc>
+                                  </scaffolding>
                                 </OTQuestion>
                                 <OTQuestion name="L4">
                                   <prompt>
                                     <OTUDLCompoundDoc>
-                                      <bodyText>Observe the changes to the plastic wrap. How are the hot and the cold water different?</bodyText>
+                                      <bodyText>Observe the plastic wrap carefully to see if there are any changes.</bodyText>
                                     </OTUDLCompoundDoc>
                                   </prompt>
                                   <input>
@@ -914,11 +1127,16 @@
                                       </documentRefs>
                                       <bodyText>
                                         <object refid="ff8999d9-7693-11dc-8925-31e85bbc495c" />
-                                        <p />
-                                        <div class="hint">Observe the plastic wrap carefully to see if there are any changes.</div>
                                       </bodyText>
                                     </OTUDLCompoundDoc>
                                   </input>
+                                  <scaffolding>
+                                    <OTUDLCompoundDoc>
+                                      <bodyText>
+                                        <div class="hint">Observe the plastic wrap carefully to see if there are any changes.</div>
+                                      </bodyText>
+                                    </OTUDLCompoundDoc>
+                                  </scaffolding>
                                 </OTQuestion>
                                 <OTQuestion name="L3">
                                   <prompt>
@@ -943,6 +1161,13 @@
                                       </bodyText>
                                     </OTUDLCompoundDoc>
                                   </input>
+                                  <scaffolding>
+                                    <OTUDLCompoundDoc>
+                                      <bodyText>
+                                        <div class="hint">Fill in the blanks above to complete the sentence.</div>
+                                      </bodyText>
+                                    </OTUDLCompoundDoc>
+                                  </scaffolding>
                                 </OTQuestion>
                                 <OTQuestion name="L2">
                                   <prompt>
@@ -955,30 +1180,31 @@
                                       <documentRefs>
                                         <OTChoice id="3c397d5c-7694-11dc-8925-31e85bbc495c" name="Choices">
                                           <choices>
-                                            <OTCompoundDoc name="The plastic wrap over the &lt;b&gt;hot&lt;/b&gt; water gets cloudy.">
-                                              <bodyText>
-                                                The plastic wrap over the
-                                                <b>hot</b>
-                                                water gets cloudy.
-                                              </bodyText>
+                                            <OTCompoundDoc name="hot">
+                                              <bodyText>hot</bodyText>
                                             </OTCompoundDoc>
-                                            <OTCompoundDoc name="The plastic wrap over the &lt;b&gt;cold&lt;/b&gt; water gets cloudy.">
-                                              <bodyText>
-                                                The plastic wrap over the
-                                                <b>cold</b>
-                                                water gets cloudy.
-                                              </bodyText>
+                                            <OTCompoundDoc name="cold">
+                                              <bodyText>cold</bodyText>
                                             </OTCompoundDoc>
                                           </choices>
                                         </OTChoice>
                                       </documentRefs>
                                       <bodyText>
-                                        Select the best answer:
-                                        <p />
+                                        The plasic wrap over the
+                                        <br />
                                         <object refid="3c397d5c-7694-11dc-8925-31e85bbc495c" />
+                                        <br />
+                                        water gets cloudy.
                                       </bodyText>
                                     </OTUDLCompoundDoc>
                                   </input>
+                                  <scaffolding>
+                                    <OTUDLCompoundDoc>
+                                      <bodyText>
+                                        <div class="hint">Pick the best answer above.</div>
+                                      </bodyText>
+                                    </OTUDLCompoundDoc>
+                                  </scaffolding>
                                 </OTQuestion>
                                 <OTQuestion name="L1">
                                   <prompt>
@@ -992,12 +1218,17 @@
                                         <OTText id="8dddc220-7694-11dc-8925-31e85bbc495c" name="Text field" />
                                       </documentRefs>
                                       <bodyText>
-                                        Does the plastic wrap over the hot water look cloudy? Describe.
-                                        <p />
                                         <object refid="8dddc220-7694-11dc-8925-31e85bbc495c" />
                                       </bodyText>
                                     </OTUDLCompoundDoc>
                                   </input>
+                                  <scaffolding>
+                                    <OTUDLCompoundDoc>
+                                      <bodyText>
+                                        <div class="hint">Does the plastic wrap over the hot water look misty? Compare a cloud to the mist on the plastic wrap.</div>
+                                      </bodyText>
+                                    </OTUDLCompoundDoc>
+                                  </scaffolding>
                                 </OTQuestion>
                               </questions>
                             </OTUDLQuestions>
@@ -1014,27 +1245,150 @@
                                   <object refid="70c6c750-71ca-11dc-9410-0f9c34fad6c2" />
                                   <p />
                                   7. The substance that makes the wrap look cloudy is water. Just like we saw in the clouds, there are tiny droplets of water on the plastic wrap.
-The plastic wrap never touched the water in the bowl. Where do you think the water came from?
-                                  <br />
-                                  <object refid="95bc72d1-71ca-11dc-9410-0f9c34fad6c2" />
+The plastic wrap never touched the water in the bowl.
                                   <p />
-                                  L5: Write your response in the box below.
-                                  <br />
-                                  L4: How could the water get from the bowl to the plastic wrap?
-                                  <br />
-                                  L3: The water that got on the plastic wrap came from the...
-                                  <br />
-                                  L2: The water on the plastic wrap came from the air near the plastic wrap. The water on the plastic wrap came from the plastic wrap itself. [Select one.]
-                                  <br />
-                                  L1: The water got from the bowl to the plastic wrap as a gas in the air. Describe how this happens.
-                                  <br />
+                                  <object refid="f1a04eea-7e5f-11dc-8959-1beb8deaa6ce" />
                                 </div>
                               </div>
                             </div>
                           </bodyText>
                           <documentRefs>
                             <OTText id="70c6c750-71ca-11dc-9410-0f9c34fad6c2" name="Text field" />
-                            <OTText id="95bc72d1-71ca-11dc-9410-0f9c34fad6c2" name="Text field" />
+                            <OTUDLQuestions id="f1a04eea-7e5f-11dc-8959-1beb8deaa6ce" name="Scaffolded questions">
+                              <questions>
+                                <OTQuestion name="L5">
+                                  <prompt>
+                                    <OTUDLCompoundDoc>
+                                      <bodyText>Where do you think the water came from?</bodyText>
+                                    </OTUDLCompoundDoc>
+                                  </prompt>
+                                  <input>
+                                    <OTUDLCompoundDoc>
+                                      <documentRefs>
+                                        <OTText id="108bce2f-7e60-11dc-8959-1beb8deaa6ce" name="Text field" />
+                                      </documentRefs>
+                                      <bodyText>
+                                        <object refid="108bce2f-7e60-11dc-8959-1beb8deaa6ce" />
+                                      </bodyText>
+                                    </OTUDLCompoundDoc>
+                                  </input>
+                                  <scaffolding>
+                                    <OTUDLCompoundDoc>
+                                      <bodyText>
+                                        <div class="hint">Write your response in the box above.</div>
+                                      </bodyText>
+                                    </OTUDLCompoundDoc>
+                                  </scaffolding>
+                                </OTQuestion>
+                                <OTQuestion name="L4">
+                                  <prompt>
+                                    <OTUDLCompoundDoc>
+                                      <bodyText>Where do you think the water came from?</bodyText>
+                                    </OTUDLCompoundDoc>
+                                  </prompt>
+                                  <input>
+                                    <OTUDLCompoundDoc>
+                                      <documentRefs>
+                                        <OTText id="1641e710-7e60-11dc-8959-1beb8deaa6ce" name="Text field" />
+                                      </documentRefs>
+                                      <bodyText>
+                                        <object refid="1641e710-7e60-11dc-8959-1beb8deaa6ce" />
+                                      </bodyText>
+                                    </OTUDLCompoundDoc>
+                                  </input>
+                                  <scaffolding>
+                                    <OTUDLCompoundDoc>
+                                      <bodyText>
+                                        <div class="hint">How could the water get from the bowl to the plastic wrap?</div>
+                                      </bodyText>
+                                    </OTUDLCompoundDoc>
+                                  </scaffolding>
+                                </OTQuestion>
+                                <OTQuestion name="L3">
+                                  <prompt>
+                                    <OTUDLCompoundDoc>
+                                      <bodyText>Where do you think the water came from?</bodyText>
+                                    </OTUDLCompoundDoc>
+                                  </prompt>
+                                  <input>
+                                    <OTUDLCompoundDoc>
+                                      <documentRefs>
+                                        <OTText id="20df7e31-7e60-11dc-8959-1beb8deaa6ce" name="Text field" text="The water that got on the plastic wrap came from the" />
+                                      </documentRefs>
+                                      <bodyText>
+                                        <object refid="20df7e31-7e60-11dc-8959-1beb8deaa6ce" />
+                                      </bodyText>
+                                    </OTUDLCompoundDoc>
+                                  </input>
+                                  <scaffolding>
+                                    <OTUDLCompoundDoc>
+                                      <bodyText>
+                                        <div class="hint">Complete the sentence above.</div>
+                                      </bodyText>
+                                    </OTUDLCompoundDoc>
+                                  </scaffolding>
+                                </OTQuestion>
+                                <OTQuestion name="L2">
+                                  <prompt>
+                                    <OTUDLCompoundDoc>
+                                      <bodyText>Where do you think the water came from?</bodyText>
+                                    </OTUDLCompoundDoc>
+                                  </prompt>
+                                  <input>
+                                    <OTUDLCompoundDoc>
+                                      <documentRefs>
+                                        <OTChoice id="37995d32-7e60-11dc-8959-1beb8deaa6ce" name="Choices">
+                                          <choices>
+                                            <OTCompoundDoc name="the air near the plastic wrap.">
+                                              <bodyText>the air near the plastic wrap.</bodyText>
+                                            </OTCompoundDoc>
+                                            <OTCompoundDoc name="the plastic wrap itself.">
+                                              <bodyText>the plastic wrap itself.</bodyText>
+                                            </OTCompoundDoc>
+                                          </choices>
+                                        </OTChoice>
+                                      </documentRefs>
+                                      <bodyText>
+                                        The water on the plastic wrap came from
+                                        <br />
+                                        <object refid="37995d32-7e60-11dc-8959-1beb8deaa6ce" />
+                                      </bodyText>
+                                    </OTUDLCompoundDoc>
+                                  </input>
+                                  <scaffolding>
+                                    <OTUDLCompoundDoc>
+                                      <bodyText>
+                                        <div class="hint">Select the best answer above to complete the sentence</div>
+                                      </bodyText>
+                                    </OTUDLCompoundDoc>
+                                  </scaffolding>
+                                </OTQuestion>
+                                <OTQuestion name="L1">
+                                  <prompt>
+                                    <OTUDLCompoundDoc>
+                                      <bodyText>Where do you think the water came from?</bodyText>
+                                    </OTUDLCompoundDoc>
+                                  </prompt>
+                                  <input>
+                                    <OTUDLCompoundDoc>
+                                      <documentRefs>
+                                        <OTText id="67bd4716-7e60-11dc-8959-1beb8deaa6ce" name="Text field" />
+                                      </documentRefs>
+                                      <bodyText>
+                                        <object refid="67bd4716-7e60-11dc-8959-1beb8deaa6ce" />
+                                      </bodyText>
+                                    </OTUDLCompoundDoc>
+                                  </input>
+                                  <scaffolding>
+                                    <OTUDLCompoundDoc>
+                                      <bodyText>
+                                        <div class="hint">The water moved from the bowl to the plastic wrap as a gas in the air. In your own words, describe how this happens.</div>
+                                      </bodyText>
+                                    </OTUDLCompoundDoc>
+                                  </scaffolding>
+                                </OTQuestion>
+                              </questions>
+                            </OTUDLQuestions>
                           </documentRefs>
                         </OTUDLCompoundDoc>
                         <OTUDLCompoundDoc name="9f8e0762-71ca-11dc-9410-0f9c34fad6c2">
@@ -1049,28 +1403,157 @@ The plastic wrap never touched the water in the bowl. Where do you think the wat
                                   <br />
                                   <object refid="abecd683-71ca-11dc-9410-0f9c34fad6c2" />
                                   <p />
-                                  Where did the water droplets go?
-                                  <br />
-                                  <object refid="d6cbdfe4-71ca-11dc-9410-0f9c34fad6c2" />
-                                  <p />
-                                  L5: Write your response in the box below.
-                                  <br />
-                                  L4: If the water droplets came from the air to the plastic wrap, where do you think they might go?
-                                  <br />
-                                  L3: The water changes into...and enters the...
-                                  <br />
-                                  L2: The water changes into a gas and enters the air. The water is absorbed by the plastic wrap. [Select one.]
-                                  <br />
-                                  L1: The water changes into a gas and enters the air. Explain.
-                                  <p />
-                                  [ANIMATED TIME LAPSE FROM REFERENCED ACTIVITY????]
+                                  <object refid="ce50e407-7e60-11dc-8959-1beb8deaa6ce" />
                                 </div>
                               </div>
                             </div>
                           </bodyText>
                           <documentRefs>
                             <OTText id="abecd683-71ca-11dc-9410-0f9c34fad6c2" name="Text field" />
-                            <OTText id="d6cbdfe4-71ca-11dc-9410-0f9c34fad6c2" name="Text field" />
+                            <OTUDLQuestions id="ce50e407-7e60-11dc-8959-1beb8deaa6ce" name="Scaffolded questions">
+                              <questions>
+                                <OTQuestion name="L5">
+                                  <prompt>
+                                    <OTUDLCompoundDoc>
+                                      <bodyText>Where did the water droplets go?</bodyText>
+                                    </OTUDLCompoundDoc>
+                                  </prompt>
+                                  <input>
+                                    <OTUDLCompoundDoc>
+                                      <documentRefs>
+                                        <OTText id="ebe6221c-7e60-11dc-8959-1beb8deaa6ce" name="Text field" />
+                                      </documentRefs>
+                                      <bodyText>
+                                        <object refid="ebe6221c-7e60-11dc-8959-1beb8deaa6ce" />
+                                        <p />
+                                      </bodyText>
+                                    </OTUDLCompoundDoc>
+                                  </input>
+                                  <scaffolding>
+                                    <OTUDLCompoundDoc>
+                                      <bodyText>
+                                        <div class="hint">Write your response in the box above.</div>
+                                      </bodyText>
+                                    </OTUDLCompoundDoc>
+                                  </scaffolding>
+                                </OTQuestion>
+                                <OTQuestion name="L4">
+                                  <prompt>
+                                    <OTUDLCompoundDoc>
+                                      <bodyText>Where did the water droplets go?</bodyText>
+                                    </OTUDLCompoundDoc>
+                                  </prompt>
+                                  <input>
+                                    <OTUDLCompoundDoc>
+                                      <documentRefs>
+                                        <OTText id="f21d9ffd-7e60-11dc-8959-1beb8deaa6ce" name="Text field" />
+                                      </documentRefs>
+                                      <bodyText>
+                                        <object refid="f21d9ffd-7e60-11dc-8959-1beb8deaa6ce" />
+                                        <p />
+                                      </bodyText>
+                                    </OTUDLCompoundDoc>
+                                  </input>
+                                  <scaffolding>
+                                    <OTUDLCompoundDoc>
+                                      <bodyText>
+                                        <div class="hint">If the water droplets move from the air to the plastic wrap, where do you think they might go?</div>
+                                      </bodyText>
+                                    </OTUDLCompoundDoc>
+                                  </scaffolding>
+                                </OTQuestion>
+                                <OTQuestion name="L3">
+                                  <prompt>
+                                    <OTUDLCompoundDoc>
+                                      <bodyText>Where did the water droplets go?</bodyText>
+                                    </OTUDLCompoundDoc>
+                                  </prompt>
+                                  <input>
+                                    <OTUDLCompoundDoc>
+                                      <documentRefs>
+                                        <OTText id="020b894e-7e61-11dc-8959-1beb8deaa6ce" name="Text field" />
+                                        <OTText id="0d821b4f-7e61-11dc-8959-1beb8deaa6ce" name="Text field" />
+                                      </documentRefs>
+                                      <bodyText>
+                                        The water changed into
+                                        <br />
+                                        <object refid="020b894e-7e61-11dc-8959-1beb8deaa6ce" />
+                                        <br />
+                                        and entered into the
+                                        <br />
+                                        <object refid="0d821b4f-7e61-11dc-8959-1beb8deaa6ce" />
+                                      </bodyText>
+                                    </OTUDLCompoundDoc>
+                                  </input>
+                                  <scaffolding>
+                                    <OTUDLCompoundDoc>
+                                      <bodyText>
+                                        <div class="hint">Fill in the blanks above to complete the sentence.</div>
+                                      </bodyText>
+                                    </OTUDLCompoundDoc>
+                                  </scaffolding>
+                                </OTQuestion>
+                                <OTQuestion name="L2">
+                                  <prompt>
+                                    <OTUDLCompoundDoc>
+                                      <bodyText>Where did the water droplets go?</bodyText>
+                                    </OTUDLCompoundDoc>
+                                  </prompt>
+                                  <input>
+                                    <OTUDLCompoundDoc>
+                                      <documentRefs>
+                                        <OTChoice id="1bcded60-7e61-11dc-8959-1beb8deaa6ce" name="Choices">
+                                          <choices>
+                                            <OTCompoundDoc name="The water changed into a gas and entered the air.">
+                                              <bodyText>The water changed into a gas and entered the air.</bodyText>
+                                            </OTCompoundDoc>
+                                            <OTCompoundDoc name="The water was absorbed by the plastic wrap.">
+                                              <bodyText>The water was absorbed by the plastic wrap.</bodyText>
+                                            </OTCompoundDoc>
+                                          </choices>
+                                        </OTChoice>
+                                      </documentRefs>
+                                      <bodyText>
+                                        <object refid="1bcded60-7e61-11dc-8959-1beb8deaa6ce" />
+                                        <p />
+                                      </bodyText>
+                                    </OTUDLCompoundDoc>
+                                  </input>
+                                  <scaffolding>
+                                    <OTUDLCompoundDoc>
+                                      <bodyText>
+                                        <div class="hint">Choose the best answer above.</div>
+                                      </bodyText>
+                                    </OTUDLCompoundDoc>
+                                  </scaffolding>
+                                </OTQuestion>
+                                <OTQuestion name="L1">
+                                  <prompt>
+                                    <OTUDLCompoundDoc>
+                                      <bodyText>Where did the water droplets go?</bodyText>
+                                    </OTUDLCompoundDoc>
+                                  </prompt>
+                                  <input>
+                                    <OTUDLCompoundDoc>
+                                      <documentRefs>
+                                        <OTText id="2c59c464-7e61-11dc-8959-1beb8deaa6ce" name="Text field" />
+                                      </documentRefs>
+                                      <bodyText>
+                                        <object refid="2c59c464-7e61-11dc-8959-1beb8deaa6ce" />
+                                        <p />
+                                      </bodyText>
+                                    </OTUDLCompoundDoc>
+                                  </input>
+                                  <scaffolding>
+                                    <OTUDLCompoundDoc>
+                                      <bodyText>
+                                        <div class="hint">The water changed into a gas and entered the air. Explain in your own words.</div>
+                                      </bodyText>
+                                    </OTUDLCompoundDoc>
+                                  </scaffolding>
+                                </OTQuestion>
+                              </questions>
+                            </OTUDLQuestions>
                           </documentRefs>
                         </OTUDLCompoundDoc>
                         <OTUDLCompoundDoc name="e231d015-71ca-11dc-9410-0f9c34fad6c2">
@@ -1079,27 +1562,159 @@ The plastic wrap never touched the water in the bowl. Where do you think the wat
                               <div class="border">
                                 <div class="body">
                                   <div class="subtitle">Explain</div>
-                                  Water evaporates, or changes from liquid to gas when you add energy. The water evaporated faster from the warm bowl. What does that tell you about the amount of energy in the warm water compared to that of the cold water?
-                                  <br />
-                                  <object refid="f12505b6-71ca-11dc-9410-0f9c34fad6c2" />
+                                  Water evaporates, or changes from liquid to gas when you add energy. The water evaporated faster from the warm bowl.
                                   <p />
-                                  L5: Write your response in the box below.
-                                  <br />
-                                  L4: Which bowl has more energy?
-                                  <br />
-                                  L3: There is more energy in the [fill in the blank] bowl.
-                                  <br />
-                                  L2: There is (*more, less) energy in the warm bowl.
- [Select one.]
-                                  <br />
-                                  L1: There is more energy in the warm bowl. How do you know?
-                                  <br />
+                                  <object refid="84b9d235-7e61-11dc-8959-1beb8deaa6ce" />
                                 </div>
                               </div>
                             </div>
                           </bodyText>
                           <documentRefs>
-                            <OTText id="f12505b6-71ca-11dc-9410-0f9c34fad6c2" name="Text field" />
+                            <OTUDLQuestions id="84b9d235-7e61-11dc-8959-1beb8deaa6ce" name="Scaffolded questions">
+                              <questions>
+                                <OTQuestion name="L5">
+                                  <prompt>
+                                    <OTUDLCompoundDoc>
+                                      <bodyText>What does that tell you about the amount of energy in the warm water compared to that of the cold water?</bodyText>
+                                    </OTUDLCompoundDoc>
+                                  </prompt>
+                                  <input>
+                                    <OTUDLCompoundDoc>
+                                      <documentRefs>
+                                        <OTText id="9c5314ca-7e61-11dc-8959-1beb8deaa6ce" name="Text field" />
+                                      </documentRefs>
+                                      <bodyText>
+                                        <object refid="9c5314ca-7e61-11dc-8959-1beb8deaa6ce" />
+                                      </bodyText>
+                                    </OTUDLCompoundDoc>
+                                  </input>
+                                  <scaffolding>
+                                    <OTUDLCompoundDoc>
+                                      <bodyText>
+                                        <div class="hint">Write your response in the box above.</div>
+                                      </bodyText>
+                                    </OTUDLCompoundDoc>
+                                  </scaffolding>
+                                </OTQuestion>
+                                <OTQuestion name="L4">
+                                  <prompt>
+                                    <OTUDLCompoundDoc>
+                                      <bodyText>What does that tell you about the amount of energy in the warm water compared to that of the cold water?</bodyText>
+                                    </OTUDLCompoundDoc>
+                                  </prompt>
+                                  <input>
+                                    <OTUDLCompoundDoc>
+                                      <documentRefs>
+                                        <OTText id="1413a9c2-7e62-11dc-8959-1beb8deaa6ce" name="Text field" />
+                                      </documentRefs>
+                                      <bodyText>
+                                        <object refid="1413a9c2-7e62-11dc-8959-1beb8deaa6ce" />
+                                      </bodyText>
+                                    </OTUDLCompoundDoc>
+                                  </input>
+                                  <scaffolding>
+                                    <OTUDLCompoundDoc>
+                                      <bodyText>
+                                        <div class="hint">Think about which bowl has more energy.</div>
+                                      </bodyText>
+                                    </OTUDLCompoundDoc>
+                                  </scaffolding>
+                                </OTQuestion>
+                                <OTQuestion name="L3">
+                                  <prompt>
+                                    <OTUDLCompoundDoc>
+                                      <bodyText>What does that tell you about the amount of energy in the warm water compared to that of the cold water?</bodyText>
+                                    </OTUDLCompoundDoc>
+                                  </prompt>
+                                  <input>
+                                    <OTUDLCompoundDoc>
+                                      <documentRefs>
+                                        <OTText id="b66100cc-7e61-11dc-8959-1beb8deaa6ce" name="Text field" />
+                                      </documentRefs>
+                                      <bodyText>
+                                        <table>
+                                          <tr>
+                                            <td>There is more energy in the</td>
+                                            <td>
+                                              <object refid="b66100cc-7e61-11dc-8959-1beb8deaa6ce" />
+                                            </td>
+                                            <td>bowl.</td>
+                                          </tr>
+                                        </table>
+                                      </bodyText>
+                                    </OTUDLCompoundDoc>
+                                  </input>
+                                  <scaffolding>
+                                    <OTUDLCompoundDoc>
+                                      <bodyText>
+                                        <div class="hint">Fill in the blank above to complete the sentence.</div>
+                                      </bodyText>
+                                    </OTUDLCompoundDoc>
+                                  </scaffolding>
+                                </OTQuestion>
+                                <OTQuestion name="L2">
+                                  <prompt>
+                                    <OTUDLCompoundDoc>
+                                      <bodyText>What does that tell you about the amount of energy in the warm water compared to that of the cold water?</bodyText>
+                                    </OTUDLCompoundDoc>
+                                  </prompt>
+                                  <input>
+                                    <OTUDLCompoundDoc>
+                                      <documentRefs>
+                                        <OTChoice id="dce9332d-7e61-11dc-8959-1beb8deaa6ce" name="Choices">
+                                          <choices>
+                                            <OTCompoundDoc name="more energy">
+                                              <bodyText>more energy</bodyText>
+                                            </OTCompoundDoc>
+                                            <OTCompoundDoc name="less energy">
+                                              <bodyText>less energy</bodyText>
+                                            </OTCompoundDoc>
+                                          </choices>
+                                        </OTChoice>
+                                      </documentRefs>
+                                      <bodyText>
+                                        There is
+                                        <br />
+                                        <object refid="dce9332d-7e61-11dc-8959-1beb8deaa6ce" />
+                                        <br />
+                                        in the warm bowl.
+                                      </bodyText>
+                                    </OTUDLCompoundDoc>
+                                  </input>
+                                  <scaffolding>
+                                    <OTUDLCompoundDoc>
+                                      <bodyText>
+                                        <div class="hint">Pick the best choice above to complete the sentence.</div>
+                                      </bodyText>
+                                    </OTUDLCompoundDoc>
+                                  </scaffolding>
+                                </OTQuestion>
+                                <OTQuestion name="L1">
+                                  <prompt>
+                                    <OTUDLCompoundDoc>
+                                      <bodyText>What does that tell you about the amount of energy in the warm water compared to that of the cold water?</bodyText>
+                                    </OTUDLCompoundDoc>
+                                  </prompt>
+                                  <input>
+                                    <OTUDLCompoundDoc>
+                                      <documentRefs>
+                                        <OTText id="ee954641-7e61-11dc-8959-1beb8deaa6ce" name="Text field" />
+                                      </documentRefs>
+                                      <bodyText>
+                                        <object refid="ee954641-7e61-11dc-8959-1beb8deaa6ce" />
+                                      </bodyText>
+                                    </OTUDLCompoundDoc>
+                                  </input>
+                                  <scaffolding>
+                                    <OTUDLCompoundDoc>
+                                      <bodyText>
+                                        <div class="hint">There is more energy in the warm bowl. How do you know?</div>
+                                      </bodyText>
+                                    </OTUDLCompoundDoc>
+                                  </scaffolding>
+                                </OTQuestion>
+                              </questions>
+                            </OTUDLQuestions>
                           </documentRefs>
                         </OTUDLCompoundDoc>
                         <OTUDLCompoundDoc name="15f15747-71cb-11dc-9410-0f9c34fad6c2">
@@ -1114,10 +1729,7 @@ The plastic wrap never touched the water in the bowl. Where do you think the wat
                                   <p />
                                   Watch
  this
-                                  <a href="http://blip.tv/file/333473">video</a>
-                                  .
-                                  <p />
-                                  Used with permission: http://creativecommons.org/licenses/by-nc-nd/2.0/
+                                  <a href="http://udl.concord.org/share/Clouds/boiling.html">video.</a>
                                   <p />
                                   How does water get into the air to form clouds?
                                   <br />
@@ -1138,6 +1750,9 @@ The plastic wrap never touched the water in the bowl. Where do you think the wat
                       <currentCard>
                         <object refid="b72aedb0-71c2-11dc-9410-0f9c34fad6c2" />
                       </currentCard>
+                      <viewedCards>
+                        <object refid="b72aedb0-71c2-11dc-9410-0f9c34fad6c2" />
+                      </viewedCards>
                     </OTCardContainer>
                   </content>
                   <header>
@@ -1197,7 +1812,7 @@ The plastic wrap never touched the water in the bowl. Where do you think the wat
                                   <p />
                                   <img src="http://udl.concord.org/share/Clouds/Sunlightoverlookingmount.jpg" />
                                   <p />
-                                  In this activity, you will [need description here].
+                                  In this activity, you will investigate condensation.
                                 </div>
                               </div>
                             </div>
@@ -1285,8 +1900,6 @@ The plastic wrap never touched the water in the bowl. Where do you think the wat
                                   <p />
                                   <object refid="639667af-71db-11dc-9410-0f9c34fad6c2" />
                                   <p />
-                                  [Note: Background image: Empty plastic cup and draw tool.]
-                                  <p />
                                   L5: Write your response in the box below.
                                   <br />
                                   L4: Does the cold cup look different than the cup at room temperature?
@@ -1314,8 +1927,6 @@ The plastic wrap never touched the water in the bowl. Where do you think the wat
                                   <div class="subtitle-continued" />
                                   5. From our previous experiment, what can you tell me the cloudiness is made of?
                                   <p />
-                                  [Note: Which previous experiment?  If it's in another activity, can we include that?]
-                                  <p />
                                   L5: Write your response in the box below.
                                   <br />
                                   L4: Think of why it looks "cloudy."
@@ -1338,8 +1949,6 @@ The plastic wrap never touched the water in the bowl. Where do you think the wat
                                 <div class="body">
                                   <div class="subtitle">Explain</div>
                                   The water vapor in the air can turn back into liquid water when it loses heat. When a substance turns from a gas to a liquid it is called condensation.
-                                  <p />
-                                  [Note: need animation or model on macro level of condensation.]
                                   <p />
                                   How does water get out of the air to form liquid droplets in clouds?
                                   <br />
@@ -1429,7 +2038,7 @@ The plastic wrap never touched the water in the bowl. Where do you think the wat
                                   <p />
                                   <img src="http://udl.concord.org/share/Clouds/IMG_5468_CS_small.jpg" />
                                   <p />
-                                  In this activity, you will [need text here].
+                                  In this activity, you will explore water in its three phases: solid, liquid, and gas.
                                 </div>
                               </div>
                             </div>
@@ -1444,8 +2053,6 @@ The plastic wrap never touched the water in the bowl. Where do you think the wat
                                   If you look all around you, you'll notice that water comes in many shapes and sizes.
                                   <p />
                                   Sometimes water is a solid. Here are some examples of solids.
-                                  <p />
-                                  [ART: table, book, rock]
                                   <p />
                                   What is water like when it is a solid?
                                   <br />
@@ -1464,8 +2071,6 @@ The plastic wrap never touched the water in the bowl. Where do you think the wat
                                   Write "solid" on the picture below where you see solid water.
                                   <br />
                                   <object refid="3beaed36-71ea-11dc-9410-0f9c34fad6c2" />
-                                  <p />
-                                  [Need Background image in DRAW TOOL of this image: http://udl.concord.org/share/Clouds/IMG_5468_CS_small.jpg]
                                 </div>
                               </div>
                             </div>
@@ -1514,14 +2119,10 @@ The plastic wrap never touched the water in the bowl. Where do you think the wat
                                   L2: Liquid water can be found in (*a glass of water, ice, water vapor)
                                   <br />
                                   L1: A glass of water is an example of liquid water.
-                                  <br />
-                                  [Note: Background image in DRAW TOOL with previous notation.]
                                   <p />
                                   Write "liquid" in a new color on the picture below where you see liquid water.
                                   <br />
                                   <object refid="3beaed36-71ea-11dc-9410-0f9c34fad6c2" />
-                                  <p />
-                                  [Need Background image in DRAW TOOL of this image: http://udl.concord.org/share/Clouds/IMG_5468_CS_small.jpg]
                                 </div>
                               </div>
                             </div>
@@ -1579,8 +2180,6 @@ The plastic wrap never touched the water in the bowl. Where do you think the wat
                               <div class="border">
                                 <div class="body">
                                   <div class="subtitle-continued" />
-                                  [Note: STAMP: ice]
-                                  <p />
                                   The stamp shown here represents all the liquid water on the Earth. Compared to the amount of liquid water, how much water do you think is solid on the Earth, in the form of ice?
                                   <br />
                                   <object refid="6b8dd88b-71f0-11dc-9410-0f9c34fad6c2" />
@@ -1594,6 +2193,8 @@ The plastic wrap never touched the water in the bowl. Where do you think the wat
                                   <img src="http://udl.concord.org/share/Clouds/icecaps_earth.png" />
                                   <p />
                                   How does the amount of ice compare to your predictions?
+                                  <br />
+                                  <object refid="0150e5f2-7daf-11dc-86ec-dfdfa7db0c92" />
                                   <p />
                                   L5: Write your response in the box below.
                                   <br />
@@ -1612,6 +2213,7 @@ The plastic wrap never touched the water in the bowl. Where do you think the wat
                           <documentRefs>
                             <OTText id="6b8dd88b-71f0-11dc-9410-0f9c34fad6c2" name="Text field" />
                             <OTDrawingTool2 id="93afbdbc-71f0-11dc-9410-0f9c34fad6c2" name="Draw tool" />
+                            <OTText id="0150e5f2-7daf-11dc-86ec-dfdfa7db0c92" name="Text field" />
                           </documentRefs>
                         </OTUDLCompoundDoc>
                         <OTUDLCompoundDoc name="b01fb59e-71f0-11dc-9410-0f9c34fad6c2">
@@ -1632,8 +2234,6 @@ The plastic wrap never touched the water in the bowl. Where do you think the wat
                                   <br />
                                   Author: Freddie Lindén
                                   <p />
-                                  [Note: did we get permission to use this?]
-                                  <p />
                                   When water is a gas, it is called water vapor or steam. What do you think water is like when it's a gas?
                                   <br />
                                   <object refid="17edebad-7284-11dc-82fc-4dc4c6a220f8" />
@@ -1651,8 +2251,6 @@ The plastic wrap never touched the water in the bowl. Where do you think the wat
                                   Write "gas" on the picture below where you see water vapor.
                                   <br />
                                   <object refid="e03d109e-7284-11dc-82fc-4dc4c6a220f8" />
-                                  <p />
-                                  [Need Background image in DRAW TOOL of this image: http://udl.concord.org/share/Clouds/IMG_5468_CS_small.jpg]
                                 </div>
                               </div>
                             </div>
@@ -1675,8 +2273,6 @@ The plastic wrap never touched the water in the bowl. Where do you think the wat
                                   In the water cycle, water changes from a liquid to a gas and back to a liquid or a solid. This is how water on the earth is recyled, and it is how we get rain and snow.
                                   <p />
                                   <img src="http://udl.concord.org/share/Clouds/watercycle.png" />
-                                  <p />
-                                  [Note: labelling needs to be researched.]
                                   <p />
                                   Water vapor, the form of water that is a gas, is released by plants (transpiration) and evaporates from lakes, the ocean and the surface of the Earth.
                                   <p />
@@ -1703,10 +2299,6 @@ The plastic wrap never touched the water in the bowl. Where do you think the wat
                                   Look at the water cycle below. Can you label the solid, liquid, and gas states of water?
                                   <br />
                                   <object refid="c4195ca0-7287-11dc-82fc-4dc4c6a220f8" />
-                                  <p />
-                                  [Note: drawing tool should have this as the background image:
-                                  <img src="http://udl.concord.org/share/Clouds/watercycle.jpg" />
-                                  ]
                                   <p />
                                   You have now completed the
                                   <b>Solid, liquid, gas</b>
@@ -1777,8 +2369,8 @@ The plastic wrap never touched the water in the bowl. Where do you think the wat
                             <div class="buffer">
                               <div class="border">
                                 <div class="body">
-                                  <div class="subtitle">New page</div>
-                                  New page content
+                                  <div class="subtitle-continued" />
+                                  Students complete offline math activity.
                                 </div>
                               </div>
                             </div>
@@ -1833,7 +2425,7 @@ The plastic wrap never touched the water in the bowl. Where do you think the wat
                     <object refid="f63397ef-71c3-11dc-9410-0f9c34fad6c2" />
                   </south>
                 </OTUDLSection>
-                <OTUDLSection local_id="section_9" name="Wrap-up" isComputerBased="false" isIntroduction="false" isMath="false" isPosttest="false" isPretest="false" isReading="false" isWrapup="true">
+                <OTUDLSection local_id="section_9" name="Wrapping up" isComputerBased="false" isIntroduction="false" isMath="false" isPosttest="false" isPretest="false" isReading="false" isWrapup="true">
                   <content>
                     <OTCardContainer id="082651f4-71c4-11dc-9410-0f9c34fad6c2" contentsMayScroll="true" loadViewOnlyOnDemand="true">
                       <cards>
@@ -1862,7 +2454,6 @@ The plastic wrap never touched the water in the bowl. Where do you think the wat
                                   Why do you think this is called a water cycle?
                                   <br />
                                   <object refid="20335433-727f-11dc-82fc-4dc4c6a220f8" />
-                                  
                                 </div>
                               </div>
                             </div>
@@ -1956,7 +2547,7 @@ The plastic wrap never touched the water in the bowl. Where do you think the wat
                                   L2: As the air cools, [note: drawings: the cloud becomes bigger, the water vapor condenses and it rains or snows, the water in the ground and in rivers evaporates.]
                                   <br />
                                   L1: As the air cools, water condenses, eventually forming precipitation like rain or snow. The water vapor condenses, and the clouds become smaller. [Select one.]
-                                	<p />
+                                  <p />
                                   Let your teacher know when you have completed the clouds unit. Your
 									teacher will then unlock the posttest for you.
                                   <p />
@@ -1979,7 +2570,7 @@ The plastic wrap never touched the water in the bowl. Where do you think the wat
                             </div>
                           </bodyText>
                           <documentRefs>
-                          <OTText local_id="password-field" isPassword="true" name="PasswordField" />
+                            <OTText local_id="password-field" isPassword="true" name="PasswordField" />
                             <OTText local_id="password" text="clouds" name="Password" />
                             <OTButton local_id="wrapup-submit-button" name="Button" text="Submit" />
                             <OTScriptObject local_id="wrapup-button-script">
@@ -2028,7 +2619,7 @@ The plastic wrap never touched the water in the bowl. Where do you think the wat
                   <header>
                     <OTUDLCompoundDoc id="08267905-71c4-11dc-9410-0f9c34fad6c2" name="08267905-71c4-11dc-9410-0f9c34fad6c2">
                       <bodyText>
-                        <div class="title">Wrap-up</div>
+                        <div class="title">Wrapping up</div>
                       </bodyText>
                     </OTUDLCompoundDoc>
                   </header>
@@ -2077,12 +2668,58 @@ The plastic wrap never touched the water in the bowl. Where do you think the wat
                             <div class="buffer">
                               <div class="border">
                                 <div class="body">
-                                  <div class="subtitle">New page</div>
-                                  New page content
+                                  <div class="subtitle-continued" />
+                                  Answer the following questions. When you have finished, press the
+                                  <b>Submit</b>
+                                  button. Warning: after you hit the Submit button, you will not be able to go back and change your answers.
+                                  <p />
+                                  1. A metal pan of water is left on a counter.  After a few days, there is less water in the pan.  What most likely happened?
+                                  <br />
+                                  <object refid="47512aa3-7db0-11dc-86ec-dfdfa7db0c92" />
+                                  <p />
+                                  2.  Where does water in a lake get most of its energy to evaporate?
+                                  <br />
+                                  <object refid="610b5163-7db0-11dc-86ec-dfdfa7db0c92" />
+                                  <p />
+                                  Explain your answer to question 2.
+                                  <br />
+                                  <object refid="cab88a6f-7db0-11dc-86ec-dfdfa7db0c92" />
+                                  <p />
+                                  Press the
+                                  <b>Right Arrow</b>
+                                  below to go to the next page.
+                                  <p />
                                 </div>
                               </div>
                             </div>
                           </bodyText>
+                          <documentRefs>
+                            <object refid="47512aa3-7db0-11dc-86ec-dfdfa7db0c92" />
+                            <object refid="610b5163-7db0-11dc-86ec-dfdfa7db0c92" />
+                            <object refid="cab88a6f-7db0-11dc-86ec-dfdfa7db0c92" />
+                          </documentRefs>
+                        </OTUDLCompoundDoc>
+                        <OTUDLCompoundDoc name="%23d6df4b-7db1-11dc-86ec-dfdfa7db0c92">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle-continued" />
+                                  3.  If you breathe on a mirror, part of the mirror clouds up.  What are you actually seeing when you see the mirror cloud up?
+                                  <br />
+                                  <object refid="ea956e80-7db0-11dc-86ec-dfdfa7db0c92" />
+                                  <p />
+                                  4.  If you were flying inside a puffy looking cloud, you would see:
+                                  <br />
+                                  <object refid="ec77ea21-7db0-11dc-86ec-dfdfa7db0c92" />
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                          <documentRefs>
+                            <object refid="ea956e80-7db0-11dc-86ec-dfdfa7db0c92" />
+                            <object refid="ec77ea21-7db0-11dc-86ec-dfdfa7db0c92" />
+                          </documentRefs>
                         </OTUDLCompoundDoc>
                       </cards>
                       <currentCard>
@@ -2137,6 +2774,9 @@ The plastic wrap never touched the water in the bowl. Where do you think the wat
               <currentCard>
                 <object refid="${section_1}" />
               </currentCard>
+              <viewedCards>
+                <object refid="${section_1}" />
+              </viewedCards>
             </OTCardContainer>
           </content>
           <script>
@@ -2145,11 +2785,6 @@ The plastic wrap never touched the water in the bowl. Where do you think the wat
                 <OTScriptVariable name="cardContainer">
                   <reference>
                     <object refid="${section-card-container}" />
-                  </reference>
-                </OTScriptVariable>
-                <OTScriptVariable name="system">
-                  <reference>
-                    <object refid="${system}" />
                   </reference>
                 </OTScriptVariable>
                 <OTScriptVariable name="menuPageRule">
@@ -2177,6 +2812,15 @@ The plastic wrap never touched the water in the bowl. Where do you think the wat
         </OTUDLContainer>
       </root>
       <library>
+        <OTDefinitionManager local_id="definition-manager">
+          <definitions>
+          	<OTDefinitionList src="glossary/common-glossary.txt"/>
+            <OTDefinitionList src="glossary/electricity-glossary.txt"/>
+          </definitions>
+          <frame>
+            <OTFrame local_id="definition_frame" width="280" height="150" borderlessPopup="true" />
+          </frame>
+        </OTDefinitionManager>
         <OTUDLMenu local_id="menu">
           <cardContainer>
             <object refid="${section-card-container}" />
@@ -2194,11 +2838,6 @@ The plastic wrap never touched the water in the bowl. Where do you think the wat
           </menuRule>
         </OTUDLMenu>
         <OTSnapshotAlbum local_id="album" />
-        <OTDefinitionManager local_id="definition-manager">
-          <frame>
-            <OTFrame local_id="definition_frame" width="280" height="150" borderlessPopup="true" />
-          </frame>
-        </OTDefinitionManager>
         <OTUDLMenuRule local_id="page-rule" jumpToViewedCard="true" stepAhead="true" />
         <OTUDLMenuRule local_id="section-rule">
           <rules>
@@ -2226,252 +2865,9 @@ The plastic wrap never touched the water in the bowl. Where do you think the wat
             </OTUDLMenuRule>
           </rules>
         </OTUDLMenuRule>
-        <OTJavascript local_id="change_page.js">
-          <script>importClass(Packages.java.awt.event.ActionListener);
-						importClass(Packages.java.util.Vector);
-						importClass(Packages.org.concord.otrunk.udl3.OTQuestionList);
-						importClass(Packages.org.concord.framework.otrunk.OTObjectList);
-						importClass(Packages.javax.swing.JOptionPane);
-						
-						var numCards;
-						var currentcard;
-						var passwordfield;
-
-						var buttonHandler =
-						{
-								actionPerformed: function(evt)
-								{
-									if (passwordfield != null){
-									var passwordAttempt = passwordfield.getText();
-									if (passwordAttempt.equalsIgnoreCase(password.getText())){
-										cardContainer.setCurrentCard(card);
-										return;
-									} else {
-										JOptionPane.showMessageDialog(null, "Sorry, that's not the correct password.");
-										return;
-									}
-								}
-										cardContainer.setCurrentCard(card);
-								}
-						};
-						var buttonListener = new ActionListener(buttonHandler);
-
-						function init() {
-							button.addActionListener(buttonListener);
-
-							return true;
-						}
-
-						function save() {
-							button.removeActionListener(buttonListener);
-							return true;
-						}</script>
-        </OTJavascript>
-        <OTJavascript local_id="show_message.js">
-          <script>importClass(Packages.java.awt.event.ActionListener);
-						importClass(Packages.java.util.Vector);
-						importClass(Packages.org.concord.otrunk.udl3.OTQuestionList);
-						importClass(Packages.org.concord.framework.otrunk.OTObjectList);
-						importClass(Packages.javax.swing.JOptionPane);
-
-						var buttonHandler =
-						{
-								actionPerformed: function(evt)
-								{
-									var messageString = message.getText();
-									JOptionPane.showMessageDialog(null, messageString);
-								}
-						};
-						var buttonListener = new ActionListener(buttonHandler);
-
-						function init() {
-							button.addActionListener(buttonListener);
-
-							return true;
-						}
-
-						function save() {
-							button.removeActionListener(buttonListener);
-							return true;
-						}</script>
-        </OTJavascript>
-        <OTJavascript local_id="authoring_script.js">
-          <script>importClass(Packages.org.concord.framework.otrunk.OTChangeEvent);
-						importClass(Packages.org.concord.framework.otrunk.OTChangeListener);
-						importClass(Packages.org.concord.framework.otrunk.OTObject);
-						importClass(Packages.org.concord.framework.otrunk.OTObjectList);
-						importClass(Packages.org.concord.otrunk.ui.OTCardContainer);
-						importClass(Packages.org.concord.otrunk.udl3.OTUDLMenu);
-						importClass(Packages.java.lang.System);
-					//	importClass(Packages.org.concord.framework.otrunk.OTObjectService);
-						importPackage(Packages.org.concord.framework.otrunk);
-						
-						
-						var pageHandler =
-						{
-							stateChanged: function(evt)
-							{
-								if (evt.getProperty().equalsIgnoreCase("coachStatements") &amp;&amp; evt.getOperation().equalsIgnoreCase("add")){
-									var statement = evt.getValue();
-									var statementDoc = statement.getStatement();
-									var statementText = statementDoc.getBodyText();
-									statementDoc.setBodyText("&lt;div class=\"buffer\"&gt;"+
-																"&lt;div class=\"border\"&gt;"+
-																	"&lt;div class=\"body\"&gt;"+
-																		statementText +
-																	"&lt;/div&gt;"+
-																"&lt;/div&gt;"+
-														"&lt;/div&gt;");
-								}
-							}
-						}
-						var pageListener = new OTChangeListener(pageHandler);
-						
-						var sectionHandler =
-						{
-							stateChanged: function(evt)
-							{
-								if (evt.getProperty().equalsIgnoreCase("name")){
-									var section = evt.getSource();
-									var header = section.getHeader();
-										
-										header.setBodyText("&lt;div class=\"title\"&gt;"+
-															section.getName() +
-														"&lt;/div&gt;");
-								}
-							}
-						}
-						
-						var sectionListener = new OTChangeListener(sectionHandler);
-						
-						var sectionContainerHandler =
-						{
-								stateChanged: function(evt)
-								{
-									if (evt.getProperty().equalsIgnoreCase("currentCard")){
-										var numCards = evt.getSource().getCards().size();
-										var section = evt.getSource().getCards().get(numCards-1);
-										section.getContent().addOTChangeListener(pageContainerListener);
-									}
-									if (evt.getProperty().equalsIgnoreCase("cards")) {
-										var numCards = evt.getSource().getCards().size();
-										var section = evt.getSource().getCards().get(numCards-1);
-										section.setName("Section "+numCards);
-										
-										var header = section.getHeader();
-										
-										header.setBodyText("&lt;div class=\"title\"&gt;"+
-															"Section " + numCards +
-														"&lt;/div&gt;");
-										
-										var doc = section.getContent().getCurrentCard();
-										
-										doc.setBodyText("&lt;div class=\"buffer\"&gt;"+
-															"&lt;div class=\"border\"&gt;"+
-																"&lt;div class=\"body\"&gt;"+
-																"&lt;div class=\"subtitle\"&gt;\n"+
-																		"New page"+
-																	"\n&lt;/div&gt;\n"+
-																	"New page content"+
-																"\n&lt;/div&gt;"+
-															"&lt;/div&gt;"+
-														"&lt;/div&gt;");
-										
-										pages.push(doc)	
-										pages[pages.length-1].addOTChangeListener(pageListener);
-														
-										var menu = doc.getOTObjectService().createObject(sampleMenu.otClass().getInstanceClass());
-										menu.setCardContainer(section.getContent());
-										menu.setMenuRule(menuPageRule);
-										
-										system.getLibrary().add(menu);
-										
-										var footer = section.getFooter();
-										
-										var otid = menu.getOTObjectService().getExternalID(menu);
-										var viewid = menu.getOTObjectService().getExternalID(menuHorizontalView);
-										
-										footer.setBodyText("&lt;div align=\"center\"&gt;" +
-															"&lt;table&gt;"+
-																	"&lt;tr&gt;"+
-																		"&lt;td&gt;"+
-																			"&lt;object refid=\""+otid+"\" viewid=\""+viewid+"\"/&gt;" +
-																		"&lt;/td&gt;"+
-																	"&lt;/tr&gt;"+
-															"&lt;/table&gt;"+
-															"&lt;/div&gt;");
-														
-										section.getContent().addOTChangeListener(pageContainerListener);
-										section.addOTChangeListener(sectionListener);
-									}
-								}
-						};
-						var sectionContainerListener = new OTChangeListener(sectionContainerHandler);
-						
-						var pageContainerHandler =
-						{
-								stateChanged: function(evt)
-								{
-									System.out.println(evt.getProperty());
-									if (evt.getProperty().equalsIgnoreCase("cards")) {
-										var numCards = evt.getSource().getCards().size();
-										var doc = evt.getSource().getCards().get(numCards-1);
-										doc.setBodyText("&lt;div class=\"buffer\"&gt;"+
-															"&lt;div class=\"border\"&gt;"+
-																"&lt;div class=\"body\"&gt;"+
-																"&lt;div class=\"subtitle\"&gt;\n"+
-																		"New page"+
-																	"\n&lt;/div&gt;\n"+
-																	"New page content"+
-																"\n&lt;/div&gt;"+
-															"&lt;/div&gt;"+
-														"&lt;/div&gt;");
-										pages.push(doc)	
-										pages[pages.length-1].addOTChangeListener(pageListener);
-									}
-								}
-						};
-						var pageContainerListener = new OTChangeListener(pageContainerHandler);
-						
-						var sections = [];
-						var sectionCardContainers = [];
-						var pages = [];
-						
-						function init() {
-							cardContainer.addOTChangeListener(sectionContainerListener);
-							
-							var pageIndex = 0;
-							for (var i = 0; i &lt; cardContainer.getCards().size(); i++){
-								sections[i] = cardContainer.getCards().get(i);
-								sections[i].addOTChangeListener(sectionListener);
-								
-								sectionCardContainers[i] = sections[i].getContent();
-								sectionCardContainers[i].addOTChangeListener(pageContainerListener);
-								
-								for (var j = 0; j &lt; sectionCardContainers[i].getCards().size(); j++){
-									pages[pageIndex] = sectionCardContainers[i].getCards().get(j);
-									pages[pageIndex].addOTChangeListener(pageListener);
-									pageIndex++;
-								}
-							}
-							
-							return true;
-						}
-
-						function save() {
-							cardContainer.removeOTChangeListener(sectionContainerListener);
-							return true;
-						}</script>
-        </OTJavascript>
-        <object refid="668183a7-71c2-11dc-9410-0f9c34fad6c2" />
-        <object refid="6ceeb78e-71c2-11dc-9410-0f9c34fad6c2" />
-        <object refid="b72d5db5-71c2-11dc-9410-0f9c34fad6c2" />
-        <object refid="cb54dc9c-71c3-11dc-9410-0f9c34fad6c2" />
-        <object refid="e9968743-71c3-11dc-9410-0f9c34fad6c2" />
-        <object refid="f26c2faa-71c3-11dc-9410-0f9c34fad6c2" />
-        <object refid="f6356cb1-71c3-11dc-9410-0f9c34fad6c2" />
-        <object refid="08284dc8-71c4-11dc-9410-0f9c34fad6c2" />
-        <object refid="0e60b60f-71c4-11dc-9410-0f9c34fad6c2" />
+        <OTJavascript local_id="change_page.js" src="scripts/change_page.js" />
+        <OTJavascript local_id="show_message.js" src="scripts/show_message.js" />
+        <OTJavascript local_id="authoring_script.js" src="scripts/authoring_script.js" />
       </library>
     </OTSystem>
   </objects>
