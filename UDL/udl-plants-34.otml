@@ -19,6 +19,7 @@
     <import class="org.concord.graph.util.state.OTDrawingShape" />
     <import class="org.concord.graph.util.state.OTDrawingTool2" />
     <import class="org.concord.graph.util.state.OTPointTextLabel" />
+    <import class="org.concord.otrunk.OTInclude" />
     <import class="org.concord.otrunk.OTSystem" />
     <import class="org.concord.otrunk.overlay.OTOverlay" />
     <import class="org.concord.otrunk.script.ui.OTScriptObject" />
@@ -28,22 +29,21 @@
     <import class="org.concord.otrunk.script.js.OTJavascript" />
     <import class="org.concord.otrunk.script.OTScriptEngineBundle" />
     <import class="org.concord.otrunk.script.OTScriptEngineEntry" />
-    <import class="org.concord.otrunk.udl.OTUDLCharacter" />
-    <import class="org.concord.otrunk.udl.OTUDLCharacterGroup" />
-    <import class="org.concord.otrunk.udl.OTUDLCoachStatement" />
+    <import class="org.concord.otrunk.udl.coach.OTUDLCoach" />
+    <import class="org.concord.otrunk.udl.coach.OTUDLCoachGroup" />
+    <import class="org.concord.otrunk.udl.coach.OTUDLCoachStatement" />
     <import class="org.concord.otrunk.udl.OTUDLMenuRule" />
     <import class="org.concord.otrunk.udl.document.OTDefinition" />
+    <import class="org.concord.otrunk.udl.document.OTDefinitionList" />
     <import class="org.concord.otrunk.udl.document.OTDefinitionManager" />
     <import class="org.concord.otrunk.udl.document.OTUDLCompoundDoc" />
-    <import class="org.concord.otrunk.udl.document.OTUDLCSSModifier" />
-    <import class="org.concord.otrunk.udl.document.OTUDLCSSGroup" />
     <import class="org.concord.otrunk.udl.document.OTUDLDocumentViewConfig" />
-    <import class="org.concord.otrunk.udl.friction.OTFrictionModel" />
-    <import class="org.concord.otrunk.udl3.OTQuestion" />
+    <import class="org.concord.otrunk.udl.ui.OTDataCollectorViewConfig" />
+    <import class="org.concord.otrunk.udl.question.OTQuestion" />
+    <import class="org.concord.otrunk.udl.question.OTUDLQuestions" />
+    <import class="org.concord.otrunk.udl.question.OTUDLQuestionViewConfig" />
     <import class="org.concord.otrunk.udl3.OTUDLMenu" />
     <import class="org.concord.otrunk.udl3.OTUDLContainer" />
-    <import class="org.concord.otrunk.udl3.OTUDLQuestions" />
-    <import class="org.concord.otrunk.udl3.OTUDLQuestionViewConfig" />
     <import class="org.concord.otrunk.udl3.OTUDLSection" />
     <import class="org.concord.otrunk.ui.OTButton" />
     <import class="org.concord.otrunk.ui.OTCardContainer" />
@@ -54,11 +54,12 @@
     <import class="org.concord.otrunk.ui.snapshot.OTSnapshotButton" />
     <import class="org.concord.otrunk.ui.snapshot.OTSnapshotAlbum" />
     <import class="org.concord.otrunk.ui.swing.OTChoiceViewConfig" />
+    <import class="org.concord.otrunk.view.OTFolderObject" />
     <import class="org.concord.otrunk.view.OTObjectEditViewConfig" />
     <import class="org.concord.otrunk.view.OTViewChild" />
     <import class="org.concord.otrunk.view.OTViewEntry" />
-    <import class="org.concord.otrunk.view.OTViewMode" />
     <import class="org.concord.otrunk.view.OTViewBundle" />
+    <import class="org.concord.otrunk.view.OTViewMode" />
     <import class="org.concord.otrunk.view.document.OTCompoundDoc" />
     <import class="org.concord.otrunk.view.document.OTCssText" />
     <import class="org.concord.otrunk.view.prototype.OTPrototypeViewEntry" />
@@ -73,14 +74,35 @@
   </imports>
   <objects>
     <OTSystem local_id="system">
+      <includes>
+        <OTInclude href="global-imports/predefined-sensor-graphs.otml"/>
+      </includes>
       <bundles>
         <OTViewBundle showLeftPanel="false" currentMode="default">
           <modes>
             <OTViewMode name="default" />
             <OTViewMode name="authoring">
               <map>
+                <entry key="${choice-radio-view}">
+                  <OTChoiceViewConfig objectClass="org.concord.otrunk.ui.OTChoice" viewClass="org.concord.otrunk.ui.swing.OTChoiceComboBoxEditView" useViewsAsChoices="true" />
+                </entry>
+                <entry key="${menu-horizontal-circle}">
+                  <OTViewEntry objectClass="org.concord.otrunk.udl3.OTUDLMenu" viewClass="org.concord.otrunk.udl.ui.OTUDLMenuPageEditView" />
+                </entry>
+                <entry key="${question-view}">
+                  <OTViewEntry objectClass="org.concord.otrunk.udl.question.OTQuestion" viewClass="org.concord.otrunk.udl.question.OTQuestionEditView" />
+                </entry>
+                <entry key="${menu-vertical}">
+                  <OTViewEntry objectClass="org.concord.otrunk.udl3.OTUDLMenu" viewClass="org.concord.otrunk.udl.ui.OTUDLMenuSectionEditView" />
+                </entry>
+                <entry key="${data-table-view}">
+                  <OTViewEntry objectClass="org.concord.data.state.OTDataTable" viewClass="org.concord.data.state.OTDataTableEditView" />
+                </entry>
+                <entry key="${character-group-view}">
+                  <OTViewEntry objectClass="org.concord.otrunk.udl.coach.OTUDLCoachGroup" viewClass="org.concord.otrunk.udl.coach.OTUDLCoachGroupEditView" />
+                </entry>
                 <entry key="${compound_doc_view}">
-                  <OTObjectEditViewConfig objectClass="org.concord.otrunk.view.document.OTCompoundDoc" viewClass="org.concord.otrunk.view.document.OTCompoundDocEditView" usePopupEditWindows="true" copyNewObjectsByDefault="true" viewContainerIsUpdateable="false">
+                  <OTObjectEditViewConfig objectClass="org.concord.otrunk.view.document.OTCompoundDoc" viewClass="org.concord.otrunk.view.document.OTCompoundDocEditView" usePopupEditWindows="true" copyNewObjectsByDefault="true">
                     <objectsToInsert>
                       <OTText name="Text field" />
                       <OTDrawingTool2 name="Draw tool" />
@@ -91,32 +113,36 @@
                           <OTDataStore numberChannels="2" />
                         </dataStore>
                       </OTDataTable>
+                      <OTDataCollector name="Data graph" title="Data graph">
+                        <source>
+							<OTDataGraphable name="Data Graph" connectPoints="true" controllable="true" yColumn="1" drawMarks="false" color="0xff0000" xColumn="0">
+                            <dataStore>
+                              <OTDataStore />
+                            </dataStore>
+                          </OTDataGraphable>
+                        </source>
+                        <xDataAxis>
+							<OTDataAxis max="60" units="s" min="0" label="Time"/>
+                        </xDataAxis>
+                        <yDataAxis>
+                          <OTDataAxis max="40.0" units="" min="0.0" label="" />
+                        </yDataAxis>
+                      </OTDataCollector>
                     </objectsToInsert>
                   </OTObjectEditViewConfig>
-                </entry>
-                <entry key="${questions-on-off-view}">
-                  <OTUDLQuestionViewConfig objectClass="org.concord.otrunk.udl.question.OTUDLQuestions" viewClass="org.concord.otrunk.udl.question.OTUDLQuestionsEditView" />
-                </entry>
-                <entry key="${data-table-view}">
-                  <OTViewEntry objectClass="org.concord.data.state.OTDataTable" viewClass="org.concord.data.state.OTDataTableEditView" />
                 </entry>
                 <entry key="${questions-card-view}">
                   <OTUDLQuestionViewConfig objectClass="org.concord.otrunk.udl.question.OTUDLQuestions" viewClass="org.concord.otrunk.udl.question.OTUDLQuestionsEditView" />
                 </entry>
-                <entry key="${menu-vertical}">
-                  <OTViewEntry objectClass="org.concord.otrunk.udl3.OTUDLMenu" viewClass="org.concord.otrunk.udl.ui.OTUDLMenuSectionEditView" />
+                <entry key="${questions-on-off-view}">
+                  <OTUDLQuestionViewConfig objectClass="org.concord.otrunk.udl.question.OTUDLQuestions" viewClass="org.concord.otrunk.udl.question.OTUDLQuestionsEditView" />
                 </entry>
-                <entry key="${choice-radio-view}">
-                  <OTChoiceViewConfig objectClass="org.concord.otrunk.ui.OTChoice" viewClass="org.concord.otrunk.ui.swing.OTChoiceComboBoxEditView" useViewsAsChoices="true" />
-                </entry>
-                <entry key="${character-group-view}">
-                  <OTViewEntry objectClass="org.concord.otrunk.udl.OTUDLCharacterGroup" viewClass="org.concord.otrunk.udl.OTUDLCharacterGroupEditView" />
-                </entry>
-                <entry key="${question-view}">
-                  <OTViewEntry objectClass="org.concord.otrunk.udl.question.OTQuestion" viewClass="org.concord.otrunk.udl.question.OTQuestionEditView" />
-                </entry>
-                <entry key="${menu-horizontal-circle}">
-                  <OTViewEntry objectClass="org.concord.otrunk.udl3.OTUDLMenu" viewClass="org.concord.otrunk.udl.ui.OTUDLMenuPageEditView" />
+                <entry key="${data-collector-view}">
+                  <OTDataCollectorViewConfig viewClass="org.concord.otrunk.udl.ui.OTDataCollectorEditView" objectClass="org.concord.datagraph.state.OTDataCollector">
+                    <predefinedGraphs>
+                      <object refid="088786c2-8719-11dc-8314-0800200c9a66" />
+                    </predefinedGraphs>
+                  </OTDataCollectorViewConfig>
                 </entry>
               </map>
             </OTViewMode>
@@ -138,35 +164,35 @@
             <OTViewEntry objectClass="org.concord.otrunk.script.ui.OTScriptObject" viewClass="org.concord.otrunk.script.ui.OTScriptObjectView" />
             <OTViewEntry objectClass="org.concord.otrunk.ui.OTButton" viewClass="org.concord.otrunk.ui.swing.OTButtonView" />
             <OTViewEntry local_id="question-view" objectClass="org.concord.otrunk.udl.question.OTQuestion" viewClass="org.concord.otrunk.udl.question.OTQuestionView" />
-            <OTViewEntry local_id="character-group-view" objectClass="org.concord.otrunk.udl.OTUDLCharacterGroup" viewClass="org.concord.otrunk.udl.OTUDLCharacterGroupView" />
+            <OTViewEntry local_id="character-group-view" objectClass="org.concord.otrunk.udl.coach.OTUDLCoachGroup" viewClass="org.concord.otrunk.udl.coach.OTUDLCoachGroupView" />
             <OTViewEntry objectClass="org.concord.otrunk.udl3.OTUDLSection" viewClass="org.concord.otrunk.udl3.OTUDLSectionView" />
             <OTViewEntry local_id="container_view" objectClass="org.concord.otrunk.udl3.OTUDLContainer" viewClass="org.concord.otrunk.udl3.OTUDLContainerView" />
-            <OTViewEntry objectClass="org.concord.otrunk.udl.document.OTUDLCSSModifier" viewClass="org.concord.otrunk.udl.document.OTUDLCSSModifierView" />
             <OTViewEntry local_id="menu-vertical" objectClass="org.concord.otrunk.udl3.OTUDLMenu" viewClass="org.concord.otrunk.udl.ui.OTUDLMenuSectionView" />
             <OTViewEntry local_id="menu-horizontal-circle" objectClass="org.concord.otrunk.udl3.OTUDLMenu" viewClass="org.concord.otrunk.udl.ui.OTUDLMenuPageView" />
+            <OTViewEntry local_id="menu-horizontal-book" objectClass="org.concord.otrunk.udl3.OTUDLMenu" viewClass="org.concord.otrunk.udl.ui.OTUDLMenuPageBookView" />
             <OTChoiceViewConfig local_id="choice-radio-view" objectClass="org.concord.otrunk.ui.OTChoice" viewClass="org.concord.otrunk.ui.swing.OTChoiceRadioButtonView" useViewsAsChoices="true" />
             <OTViewEntry local_id="choice-combo-view" objectClass="org.concord.otrunk.ui.OTChoice" viewClass="org.concord.otrunk.ui.swing.OTChoiceComboBoxView" />
-            <OTViewEntry objectClass="org.concord.otrunk.udl3.OTQuestion" viewClass="org.concord.otrunk.udl3.OTQuestionView" />
+            <OTViewEntry objectClass="org.concord.otrunk.udl.question.OTQuestion" viewClass="org.concord.otrunk.udl3.OTQuestionView" />
             <OTViewEntry objectClass="org.concord.otrunk.script.ui.OTScriptObject" viewClass="org.concord.otrunk.script.ui.OTScriptObjectView" />
             <OTViewEntry objectClass="org.concord.otrunk.ui.OTCardContainer" viewClass="org.concord.otrunk.ui.swing.OTCardContainerView" />
             <OTViewEntry objectClass="org.concord.otrunk.ui.OTBorderContainer" viewClass="org.concord.otrunk.ui.swing.OTBorderContainerView" />
             <OTViewEntry objectClass="org.concord.otrunk.ui.OTPlacementContainer" viewClass="org.concord.otrunk.ui.swing.OTPlacementContainerView" />
             <OTViewEntry local_id="text-edit" objectClass="org.concord.otrunk.ui.OTText" viewClass="org.concord.otrunk.ui.swing.OTTextEditView" />
             <OTViewEntry local_id="text-label" objectClass="org.concord.otrunk.ui.OTText" viewClass="org.concord.otrunk.ui.swing.OTTextView" />
-            <OTViewEntry viewClass="org.concord.datagraph.state.OTDataCollectorView" objectClass="org.concord.datagraph.state.OTDataCollector" />
+            <OTViewEntry local_id="data-collector-view" viewClass="org.concord.datagraph.state.OTDataCollectorView" objectClass="org.concord.datagraph.state.OTDataCollector" />
             <OTViewEntry viewClass="org.concord.datagraph.state.OTDataGraphView" objectClass="org.concord.datagraph.state.OTDataGraph" />
             <OTViewEntry viewClass="org.concord.data.state.OTDataFieldView" objectClass="org.concord.data.state.OTDataField" />
             <OTViewEntry viewClass="org.concord.datagraph.state.OTDataDrawingToolView" objectClass="org.concord.graph.util.state.OTDrawingTool" />
             <OTViewEntry viewClass="org.concord.datagraph.state.OTMultiDataGraphView" objectClass="org.concord.datagraph.state.OTMultiDataGraph" />
             <OTViewEntry local_id="data-table-view" objectClass="org.concord.data.state.OTDataTable" viewClass="org.concord.data.state.OTDataTableView" />
-            <OTUDLDocumentViewConfig local_id="compound_doc_view" objectClass="org.concord.otrunk.view.document.OTCompoundDoc" viewClass="org.concord.otrunk.udl.document.OTUDLDocumentView" viewContainerIsUpdateable="false">
+            <OTUDLDocumentViewConfig local_id="compound_doc_view" objectClass="org.concord.otrunk.view.document.OTCompoundDoc" viewClass="org.concord.otrunk.udl.document.OTUDLDocumentView">
               <definitionManager>
                 <object refid="${definition-manager}" />
               </definitionManager>
               <cssBlocks>
-                <OTCssText local_id="css-font" cssText="           body {              font-size: 18;     FONT-STYLE: normal;               FONT-FAMILY: Verdana, Arial;               FONT-VARIANT: normal;              TEXT-DECORATION: none              }           a {               text-decoration: none;             }           DIV.body {     FONT-STYLE: normal;               FONT-FAMILY: Verdana, Arial;               FONT-VARIANT: normal;              TEXT-DECORATION: none             }           DIV.story {            FONT-WEIGHT: bolder;           }           DIV.activity-title {               font-size: 29;               FONT-WEIGHT: bold;           }             DIV.title {              font-size: 30;              FONT-WEIGHT: bold;           }           DIV.subtitle {               font-size: 25;               FONT-WEIGHT: bold;           } DIV.subtitle-continue { FONT-WEIGHT: bold; }" />
-                <OTCssText local_id="css-color" cssText="           body {              BACKGROUND-COLOR: rgb(255, 255, 255);            }           DIV.body {                BACKGROUND-COLOR: rgb(250, 255, 255);           }           DIV.body-no-border {            BACKGROUND-COLOR: rgb(250, 255, 255);           }           DIV.story {            BORDER-COLOR: blue;            BACKGROUND-COLOR: rgb(210,230,255);            COLOR: rgb(0,0,0);           }           DIV.story-border {            BACKGROUND-COLOR: rgb(100, 130, 200);           }           DIV.activity-title {               COLOR: rgb(0,0,0);           }             DIV.title {              COLOR: rgb(0,0,0);           }           DIV.subtitle {               COLOR: rgb(0,0,0);           }           DIV.leftpanel {              BACKGROUND-COLOR: rgb(190, 190, 255);           }           DIV.buffer {              BACKGROUND-COLOR: rgb(255, 255, 255);           }             DIV.border {            BACKGROUND-COLOR: rgb(190, 190, 255);            }            DIV.definition-border {            BACKGROUND-COLOR: rgb(0, 0, 255);           }            DIV.question {             BACKGROUND-COLOR: rgb(230, 230, 250);            }           " />
-                <OTCssText local_id="css-layout" cssText="           DIV.body {                 MARGIN: 5px;                PADDING: 8px;               height: 100%;           }           DIV.story {             padding: 5px;           }           DIV.story-border {            padding: 1px;           }           DIV.activity-title {               MARGIN: 2px 10% 10px;           }             DIV.title {              PADDING-BOTTOM: 10px;               PADDING-LEFT: 20px;             PADDING-TOP: 10px;             MARGIN: 2px 10% 10px;           }           DIV.subtitle {               PADDING-BOTTOM: 10px;              PADDING-LEFT: 20px;             PADDING-TOP: 10px;             MARGIN: 2px 10% 10px;           }           DIV.buffer {              PADDING: 10px;           }             DIV.border {            PADDING: 3px;            }            DIV.definition-border {            PADDING: 3px;           }           DIV.top-menu {            TEXT-ALIGN: right;           }" />
+                <OTCssText local_id="css-font" src="css/otrunk-normal-font.css" />
+                <OTCssText local_id="css-color" src="css/otrunk-normal-color.css" />
+                <OTCssText local_id="css-layout" src="css/otrunk-normal-layout.css" />
               </cssBlocks>
             </OTUDLDocumentViewConfig>
             <OTPrototypeViewEntry local_id="textsize-choice-view" objectClass="org.concord.otrunk.OTSystem" viewClass="org.concord.otrunk.view.prototype.OTPrototypeView" copyPrototype="false">
@@ -179,7 +205,7 @@
                     <OTOverlay local_id="small-text-overlay" name="Small text">
                       <deltaObjectMap>
                         <entry key="${css-font}">
-                          <OTCssText cssText="                body {                   font-size: 14;         FONT-STYLE: normal;               FONT-FAMILY: Verdana, Arial;               FONT-VARIANT: normal;              TEXT-DECORATION: none               }                a {                    text-decoration: none;                  }                DIV.body {                     FONT-WEIGHT: bolder;                   FONT-STYLE: normal;                    FONT-FAMILY: Verdana, Arial;                    FONT-VARIANT: normal;                   TEXT-DECORATION: none                  }                DIV.story {                 FONT-WEIGHT: bolder;                }                DIV.activity-title {                    font-size: 28;                    FONT-WEIGHT: bold;                }                  DIV.title {                   font-size: 25;                   FONT-WEIGHT: bold;                }                DIV.subtitle {                    font-size: 20;                    FONT-WEIGHT: bold;                }  DIV.subtitle-continue { FONT-WEIGHT: bold; }" />
+                          <OTCssText src="css/otrunk-small-font.css" />
                         </entry>
                       </deltaObjectMap>
                     </OTOverlay>
@@ -187,7 +213,7 @@
                     <OTOverlay local_id="large-text-overlay" name="Large text">
                       <deltaObjectMap>
                         <entry key="${css-font}">
-                          <OTCssText cssText="                body {                   font-size: 24;       FONT-STYLE: normal;               FONT-FAMILY: Verdana, Arial;               FONT-VARIANT: normal;              TEXT-DECORATION: none                 }                a {                    text-decoration: none;                  }                DIV.body {                     FONT-WEIGHT: bolder;                   FONT-STYLE: normal;                    FONT-FAMILY: Verdana, Arial;                    FONT-VARIANT: normal;                   TEXT-DECORATION: none                  }                DIV.story {                 FONT-WEIGHT: bolder;                }                DIV.activity-title {                    font-size: 37;                    FONT-WEIGHT: bold;                }                  DIV.title {                   font-size: 34;                   FONT-WEIGHT: bold;                }                DIV.subtitle {                    font-size: 28;                    FONT-WEIGHT: bold;                }  DIV.subtitle-continue { FONT-WEIGHT: bold; }" />
+                          <OTCssText src="css/otrunk-large-font.css" />
                         </entry>
                       </deltaObjectMap>
                     </OTOverlay>
@@ -247,7 +273,7 @@
         <object refid="${english-overlay}" />
       </overlays>
       <root>
-        <OTUDLContainer name="UDL Activity">
+        <OTUDLContainer name="UDL Plants">
           <cssColor>
             <object refid="${css-color}" />
           </cssColor>
@@ -288,19 +314,19 @@
             </OTCompoundDoc>
           </topBar>
           <characters>
-            <OTUDLCharacterGroup local_id="character-group">
+            <OTUDLCoachGroup local_id="character-group">
               <topLevelCardContainer>
                 <object refid="${section-card-container}" />
               </topLevelCardContainer>
               <characters>
-                <OTUDLCharacter local_id="character_affective" inactiveImageURL="http://confluence.concord.org/download/attachments/12353/blah-head-small.png" />
-                <OTUDLCharacter local_id="character_strategic" inactiveImageURL="http://confluence.concord.org/download/attachments/12353/clunk-head-small.png" />
-                <OTUDLCharacter local_id="character_recognition" inactiveImageURL="http://confluence.concord.org/download/attachments/12353/roxy-head-small.png" />
-              </characters>
+                <OTUDLCoach local_id="character_affective" inactiveImageURL="http://udl.concord.org/share/shared-images/blah-head.png" activeImageURL="http://udl.concord.org/share/shared-images/blah-anim.gif" />
+                <OTUDLCoach local_id="character_strategic" inactiveImageURL="http://udl.concord.org/share/shared-images/clunk-head.png" activeImageURL="http://udl.concord.org/share/shared-images/clunk-anim.gif" />
+                <OTUDLCoach local_id="character_recognition" inactiveImageURL="http://udl.concord.org/share/shared-images/roxy-head.png" activeImageURL="http://udl.concord.org/share/shared-images/roxy-anim.gif" />
+               </characters>
               <speechFrame>
                 <OTFrame local_id="speech_frame" width="380" height="340" borderlessPopup="false" />
               </speechFrame>
-            </OTUDLCharacterGroup>
+            </OTUDLCoachGroup>
           </characters>
           <content>
             <OTCardContainer local_id="section-card-container" loadViewOnlyOnDemand="true">
@@ -321,7 +347,6 @@
                             <div class="buffer">
                               <div class="border">
                                 <div class="body">
-                                  <div class="subtitle-continued" />
                                   Answer the following questions. When you have finished, press the
                                   <b>Submit</b>
                                   button. Warning: after you hit the Submit button, you will not be able to go back and change your answers.
@@ -373,7 +398,6 @@
                             <div class="buffer">
                               <div class="border">
                                 <div class="body">
-                                  <div class="subtitle-continued" />
                                   3.  A girl has an idea that green plants need sand in the soil for healthy growth.  In order to test her idea she uses two pots of plants.  She sets up one pot of plants as shown below.
                                   <p />
                                   <img src="http://udl.concord.org/share/Plants/pretest34.q3a.jpg" />
@@ -451,9 +475,6 @@
                       <currentCard>
                         <object refid="${page-1}" />
                       </currentCard>
-                      <viewedCards>
-                        <object refid="${page-1}" />
-                      </viewedCards>
                     </OTCardContainer>
                   </content>
                   <footer>
@@ -531,7 +552,6 @@
                             <div class="buffer">
                               <div class="border">
                                 <div class="body">
-                                  <div class="subtitle-continued" />
                                   Tommy, "OK."
                                   <p />
                                   Sally, "Since a plant is also a living thing, then it should eat, too."
@@ -565,7 +585,6 @@
                             <div class="buffer">
                               <div class="border">
                                 <div class="body">
-                                  <div class="subtitle-continued" />
                                   Below are questions that you and the Green Team will be exploring further:
                                   <p />
                                   <ul>
@@ -694,7 +713,7 @@
                     <object refid="b91fca9d-7121-11dc-b75e-4b06cf421f29" />
                   </south>
                 </OTUDLSection>
-                <OTUDLSection local_id="section_3" name="Watch it grow!" isComputerBased="true" isIntroduction="false" isMath="false" isPosttest="false" isPretest="false" isReading="false" isWrapup="false">
+                <OTUDLSection local_id="section_3" name="Parts of a plant" isComputerBased="true" isIntroduction="false" isMath="false" isPosttest="false" isPretest="false" isReading="false" isWrapup="false">
                   <content>
                     <OTCardContainer id="56477d48-7120-11dc-b75e-4b06cf421f29" contentsMayScroll="true" loadViewOnlyOnDemand="true">
                       <cards>
@@ -708,11 +727,7 @@
                                   <p />
                                   <img src="http://udl.concord.org/share/Plants/radishsprouting.png" />
                                   <p />
-                                  In this activity, your job is to figure out two things.
-                                  <ol>
-                                    <li>Figure out the structures found in all plants.</li>
-                                    <li>The function of each of those structures.</li>
-                                  </ol>
+                                  In this activity, you will identify the structures found in plants and figure out how those structures help plants make food.
                                 </div>
                               </div>
                             </div>
@@ -743,17 +758,23 @@
                               <div class="border">
                                 <div class="body">
                                   <div class="subtitle">Engage</div>
-                                  Watch this
-                                  <a href="http://udl.concord.org/share/Plants/radishes.html">time-lapse movie.</a>
-                                  <p />
-                                  Note: close the window after watching the video.
-                                  <p />
-                                  <b>What is time lapse video?</b>
-                                  A video camera was filming the radish seeds day and night for 9 days.  That is 216 hours of radish seeds growing.  Radish seeds growing can take a long time, so the maker of this video made the video fast forward through all 216 hours of film.
-                                  <p />
-                                  Describe what you observed when you watched the movie.
-                                  <br />
+                                  A video camera filmed the radish seeds growing day and night for 9 days.  Radish seeds growing can take a long time, so the maker of this video made the video fast forward through all 216 hours of film.
+                                  <BR />
+                                  <BR />
+                                  While watching this
+                                  <a href="http://udl.concord.org/share/Plants/radishes.html">time-lapse movie,</a>
+                                  write a short story below describing what you observed as the radish plant grew from a seed. Be prepared to share your story with the class.
+                                  <BR />
+                                  <BR />
                                   <object refid="9c282818-7128-11dc-b75e-4b06cf421f29" />
+                                  <BR />
+                                  <B>
+                                    Technical Hint:
+                                    <BR />
+                                    Note:
+                                  </B>
+                                  Close the window after watching the video.
+                                  <p />
                                 </div>
                               </div>
                             </div>
@@ -767,33 +788,167 @@
                             <div class="buffer">
                               <div class="border">
                                 <div class="body">
-                                  <div class="subtitle-continued" />
-                                  Sometimes it is hard to catch all the details the first time you watch the movie. Watch the movie again, and look closely at the roots of the plant.
+                                  <div class="subtitle">Explore</div>
+                                  Use the tool below to draw the radish plant that you talked about in your story. Be sure to label the important parts of the plant.
+                                  <BR />
+                                  <BR />
+                                  <object refid="a61000a6-8260-11dc-986d-711f76d3ddc6" />
                                   <p />
-                                  <img src="http://confluence.concord.org/download/attachments/12520/ipecacuanha.jpg" />
-                                  <p />
-                                  Watch the
-                                  <a href="http://udl.concord.org/share/Plants/radishes.html">movie</a>
-                                  again, and this time only look at the stems of the plant.
- What do you observe?
-                                  <br />
-                                  <object refid="1a77b357-7cd6-11dc-97ca-8df8ad3f302d" />
-                                  <p />
-                                  <p />
-                                  Watch the
-                                  <a href="http://udl.concord.org/share/Plants/radishes.html">movie</a>
-                                  for one last time and look closely at the leaves on the plant.
- What do you observe?
-                                  <br />
-                                  <object refid="1a77b357-7cd6-11dc-97ca-8df8ad3f302d" />
+                                  Some times it is hard to catch all the details the first time you watch the movie. Watch the
+                                  <a href="http://udl.concord.org/share/Plants/radishes.html">time-lapse movie,</a>
+                                  again and closely focus on the
+                                  <B>roots</B>
+                                  .
+                                  <BR />
+                                  <BR />
+                                  In this movie, you may have noticed that roots became longer, branched, grew root hairs, and thickened over time. Now that you have viewed the movie again, make any changes to the roots in your drawing above.
                                   <p />
                                 </div>
                               </div>
                             </div>
                           </bodyText>
                           <documentRefs>
-                            <OTText id="1a77b357-7cd6-11dc-97ca-8df8ad3f302d" name="Text field" />
-                            <object refid="1a77b357-7cd6-11dc-97ca-8df8ad3f302d" />
+                            <OTDrawingTool2 id="a61000a6-8260-11dc-986d-711f76d3ddc6" name="Draw tool" />
+                          </documentRefs>
+                        </OTUDLCompoundDoc>
+                        <OTUDLCompoundDoc name="%29e17757-8262-11dc-986d-711f76d3ddc6">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle">Explore page 2</div>
+                                  Let's continue to investigate other parts of the plant.
+                                  <BR />
+                                  <BR />
+                                  Again watch the
+                                  <a href="http://udl.concord.org/share/Plants/radishes.html">time-lapse movie,</a>
+                                  and this time closely focus on the
+                                  <B>stem</B>
+                                  .
+                                  <BR />
+                                  <BR />
+                                  In this movie, you may have noticed that the stems started yellow and then turned red, lifted out of the soil, and grew upwards over time. Now that you have viewed the movie again, make any changes to the stems in your drawing below.
+                                  <BR />
+                                  <BR />
+                                  <object refid="a61000a6-8260-11dc-986d-711f76d3ddc6" />
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                          <documentRefs>
+                            <object refid="a61000a6-8260-11dc-986d-711f76d3ddc6" />
+                          </documentRefs>
+                        </OTUDLCompoundDoc>
+                        <OTUDLCompoundDoc name="%2ad1d55d-8263-11dc-986d-711f76d3ddc6">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle">Explore page 3</div>
+                                  Finally, let's investigate the leaves of the plant.
+                                  <BR />
+                                  <BR />
+                                  One more time,  rewatch the
+                                  <a href="http://udl.concord.org/share/Plants/radishes.html">time-lapse movie,</a>
+                                  and this time closely focus on the
+                                  <B>leaves</B>
+                                  .
+                                  <BR />
+                                  <BR />
+                                  In this movie, you may have noticed that the leaves start out below the soil, are green in color, and increase in size and numbers over time. Now that you have viewed the movie again, make any changes to the leaves in your drawing below.
+                                  <BR />
+                                  <BR />
+                                  <object refid="a61000a6-8260-11dc-986d-711f76d3ddc6" />
+                                  <p />
+                                  <p />
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                          <documentRefs>
+                            <object refid="a61000a6-8260-11dc-986d-711f76d3ddc6" />
+                          </documentRefs>
+                        </OTUDLCompoundDoc>
+                        <OTUDLCompoundDoc name="%d738a903-8263-11dc-986d-711f76d3ddc6">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle">Explain</div>
+                                  Now that you know the three major parts of the plant, let's try to determine the function of each part of your plant.
+                                  <BR />
+                                  <BR />
+                                  Below is a model of a typical plant. Use your cursor to scroll over the parts of the plant.
+                                  <BR />
+                                  <BR />
+                                  [Paul Burney's Scroll over Flash model: student will identify the parts of the plant and their functions.]
+                                  <BR />
+                                  <BR />
+                                  What did you learn from the model about the function of the roots?
+                                  <BR />
+                                  <object refid="55beeda2-835f-11dc-8d72-7d9f1944a673" />
+                                  <BR />
+                                  What did you learn from the model about the function of the stems?
+                                  <BR />
+                                  <object refid="762aa433-835f-11dc-8d72-7d9f1944a673" />
+                                  <BR />
+                                  What did you learn from the model about the function of the leaves?
+                                  <BR />
+                                  <object refid="7bcebbb4-835f-11dc-8d72-7d9f1944a673" />
+                                  <BR />
+                                  Explain how all of the parts of the plant work together?
+                                  <BR />
+                                  <object refid="e6dcbd35-835f-11dc-8d72-7d9f1944a673" />
+                                  <BR />
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                          <documentRefs>
+                            <OTText id="55beeda2-835f-11dc-8d72-7d9f1944a673" name="Text field" />
+                            <OTText id="762aa433-835f-11dc-8d72-7d9f1944a673" name="Text field" />
+                            <OTText id="7bcebbb4-835f-11dc-8d72-7d9f1944a673" name="Text field" />
+                            <OTText id="e6dcbd35-835f-11dc-8d72-7d9f1944a673" name="Text field" />
+                          </documentRefs>
+                        </OTUDLCompoundDoc>
+                        <OTUDLCompoundDoc name="%00857cd4-8268-11dc-986d-711f76d3ddc6">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle">Elaborate</div>
+                                  You have just looked at a common plant. In this model we will be looking closely at a cactus.
+                                  <BR />
+                                  <BR />
+                                  Cactus are found in very dry climates known as deserts. Cactus plants have specialized parts to help them survive in this environment.
+                                  <BR />
+                                  <BR />
+                                  Scroll over the model below to investigate their specialized parts.
+                                  <BR />
+                                  <BR />
+                                  [Paul Burney's Scroll over Flash Cactus model: student will identify the parts of the cactus plant and their functions.]
+                                  <BR />
+                                  <BR />
+                                  Where are the stomata located in the cactus plant?
+                                  <BR />
+                                  <object refid="e4d5d436-8360-11dc-8d72-7d9f1944a673" />
+                                  <BR />
+                                  Where is most of the water found in the cactus plant?
+                                  <BR />
+                                  <object refid="ee5ca427-8360-11dc-8d72-7d9f1944a673" />
+                                  <BR />
+                                  What did you learn that makes a cactus plant different from a common plant?
+                                  <BR />
+                                  <object refid="1270f058-8361-11dc-8d72-7d9f1944a673" />
+                                  <BR />
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                          <documentRefs>
+                            <OTText id="e4d5d436-8360-11dc-8d72-7d9f1944a673" name="Text field" />
+                            <OTText id="ee5ca427-8360-11dc-8d72-7d9f1944a673" name="Text field" />
+                            <OTText id="1270f058-8361-11dc-8d72-7d9f1944a673" name="Text field" />
                           </documentRefs>
                         </OTUDLCompoundDoc>
                       </cards>
@@ -805,7 +960,7 @@
                   <header>
                     <OTUDLCompoundDoc id="56477d49-7120-11dc-b75e-4b06cf421f29" name="56477d49-7120-11dc-b75e-4b06cf421f29">
                       <bodyText>
-                        <div class="title">Watch it grow!</div>
+                        <div class="title">Parts of a plant</div>
                       </bodyText>
                     </OTUDLCompoundDoc>
                   </header>
@@ -857,15 +1012,40 @@
                                   <div class="subtitle">Discovery question</div>
                                   Why do plants have stems, roots, and leaves?
                                   <p />
-                                  <img src="http://confluence.concord.org/download/thumbnails/12521/foilage.jpg" />
+                                  <img src="http://confluence.concord.org/download/thumbnails/12521/potato.jpg" />
                                   <img src="http://confluence.concord.org/download/thumbnails/12521/meadowgrass.jpg" />
                                   <img src="http://confluence.concord.org/download/thumbnails/12521/tree2.jpg" />
+                                  <p />
+                                  In this activity, your job is to figure out why plants have leaves, stems and roots.
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                        </OTUDLCompoundDoc>
+                        <OTUDLCompoundDoc local_id="stems-roots-leaves-page-2" name="4d68ebce-7131-11dc-b75e-4b06cf421f29">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle">Engage</div>
+                                  <table>
+                                    <tr>
+                                      <td>
+                                        <img src="http://confluence.concord.org/download/thumbnails/12521/potato.jpg" />
+                                      </td>
+                                      <td>
+                                        <img src="http://confluence.concord.org/download/thumbnails/12521/meadowgrass.jpg" />
+                                      </td>
+                                      <td>
+                                        <img src="http://confluence.concord.org/download/thumbnails/12521/tree2.jpg" />
+                                      </td>
+                                    </tr>
+                                  </table>
                                   <p />
                                   What do these three pictures of plants have in common?
                                   <br />
                                   <object refid="60846e5f-7131-11dc-b75e-4b06cf421f29" />
                                   <p />
-                                  In this activity, your job is to figure out why plants have leaves, stems and roots.
                                 </div>
                               </div>
                             </div>
@@ -874,20 +1054,39 @@
                             <OTText id="60846e5f-7131-11dc-b75e-4b06cf421f29" name="Text field" />
                           </documentRefs>
                         </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc local_id="stems-roots-leaves-page-2" name="4d68ebce-7131-11dc-b75e-4b06cf421f29">
+                        <OTUDLCompoundDoc local_id="stems-roots-leaves-page-3">
                           <bodyText>
                             <div class="buffer">
                               <div class="border">
                                 <div class="body">
-                                  <div class="subtitle">Engage</div>
+                                  <div class="subtitle">Materials</div>
+                                  <ul>
+                                    <li>newspaper to cover tables</li>
+                                    <li>house plants</li>
+                                    <li>hand lens (Leaves and Roots experts only)</li>
+                                    <li>scissors (Stem experts only)</li>
+                                    <li>celery stalk (optional for Stem experts only)</li>
+                                    <li>300 mlclear plastic cup or beaker (10 oz) (Root experts only)</li>
+                                    <li>240 ml water (8 oz) (Root experts only)</li>
+                                  </ul>
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                        </OTUDLCompoundDoc>
+                        <OTUDLCompoundDoc local_id="stems-roots-leaves-page-4">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
                                   Find two other people you want to work with. Your teacher may help you pick your partners and provide you with the materials.
                                   <p />
                                   Each of you will be investigating a separate part of the plant.  As a group, decide who will become the
-                                  <b>Leaf Expert</b>
+                                  <b>Leaf expert</b>
                                   , the
-                                  <b>Stem Expert</b>
+                                  <b>Stem expert</b>
                                   and the
-                                  <b>Root Expert</b>
+                                  <b>Root expert</b>
                                   .
                                   <p />
                                   <table>
@@ -930,47 +1129,47 @@
                             <OTButton local_id="root-expert-button" text="click here!" />
                             <OTScriptObject local_id="path-selection-script">
                               <variables>
-                                <OTScriptVariableComponent name="leafButton">
+                                <OTScriptVariableComponent name="button1">
                                   <reference>
                                     <object refid="${leaf-expert-button}" />
                                   </reference>
                                 </OTScriptVariableComponent>
-                                <OTScriptVariableComponent name="stemButton">
+                                <OTScriptVariableComponent name="button2">
                                   <reference>
                                     <object refid="${stem-expert-button}" />
                                   </reference>
                                 </OTScriptVariableComponent>
-                                <OTScriptVariableComponent name="rootButton">
+                                <OTScriptVariableComponent name="button3">
                                   <reference>
                                     <object refid="${root-expert-button}" />
                                   </reference>
                                 </OTScriptVariableComponent>
-                                <OTScriptVariable name="rootsSection">
-                                  <reference>
-                                    <object refid="${roots-section}" />
-                                  </reference>
-                                </OTScriptVariable>
-                                <OTScriptVariable name="leavesSection">
+                                <OTScriptVariable name="replacementObject1">
                                   <reference>
                                     <object refid="${leaves-section}" />
                                   </reference>
                                 </OTScriptVariable>
-                                <OTScriptVariable name="stemsSection">
+                                <OTScriptVariable name="replacementObject2">
                                   <reference>
                                     <object refid="${stems-section}" />
                                   </reference>
                                 </OTScriptVariable>
-                                <OTScriptVariable name="leavesFirstPage">
+                                <OTScriptVariable name="replacementObject3">
+                                  <reference>
+                                    <object refid="${roots-section}" />
+                                  </reference>
+                                </OTScriptVariable>
+                                <OTScriptVariable name="firstPage1">
                                   <reference>
                                     <object refid="${leaves-page-3}" />
                                   </reference>
                                 </OTScriptVariable>
-                                <OTScriptVariable name="stemsFirstPage">
+                                <OTScriptVariable name="firstPage2">
                                   <reference>
                                     <object refid="${stems-page-3}" />
                                   </reference>
                                 </OTScriptVariable>
-                                <OTScriptVariable name="rootsFirstPage">
+                                <OTScriptVariable name="firstPage3">
                                   <reference>
                                     <object refid="${roots-page-3}" />
                                   </reference>
@@ -982,51 +1181,7 @@
                                 </OTScriptVariableView>
                               </variables>
                               <script>
-                                <OTJavascript>
-                                  <script>importClass(Packages.java.awt.event.ActionListener);
-                          					importClass(Packages.java.lang.System);
-                          					
-                          					function init()
-                          					{
-                          						leafButton.addActionListener(leafButtonListener);
-                          						stemButton.addActionListener(stemButtonListener);
-                          						rootButton.addActionListener(rootButtonListener);
-                          						
-                          						return true;
-                          					}
-                          					
-                          					function save()
-                          					{
-                          						return true;
-                          					}
-                          					
-                          					var leafButtonListener = new ActionListener()
-                          					{
-                          						actionPerformed: function(evt) {
-                          							scriptView.getViewContainer().getUpdateableContainer().setCurrentObject(leavesSection);
-                          							leavesSection.getContent().setCurrentCard(leavesFirstPage);
-                          							
-                          						}
-                          					}
-                          					
-                          					var stemButtonListener = new ActionListener()
-                          					{
-                          						actionPerformed: function(evt) {
-                          							System.out.println(evt.getSource());
-                          							scriptView.getViewContainer().getUpdateableContainer().setCurrentObject(stemsSection);
-                          							stemsSection.getContent().setCurrentCard(stemsFirstPage);
-                          						}
-                          					}
-                          					
-                          					var rootButtonListener = new ActionListener()
-                          					{
-                          						actionPerformed: function(evt) {
-                          							System.out.println(evt.getSource());
-                          							scriptView.getViewContainer().getUpdateableContainer().setCurrentObject(rootsSection);
-                          							rootsSection.getContent().setCurrentCard(rootsFirstPage);
-                          						}
-                          					}</script>
-                                </OTJavascript>
+                                <object refid="${branching.js}" />
                               </script>
                               <scriptState />
                             </OTScriptObject>
@@ -1036,6 +1191,9 @@
                       <currentCard>
                         <object refid="${stems-roots-leaves-page-1}" />
                       </currentCard>
+                      <viewedCards>
+                        <object refid="${stems-roots-leaves-page-1}" />
+                      </viewedCards>
                     </OTCardContainer>
                   </content>
                   <header>
@@ -1081,23 +1239,356 @@
                     <object refid="9b7e5781-7121-11dc-b75e-4b06cf421f29" />
                   </south>
                 </OTUDLSection>
-                <OTUDLSection local_id="section_4" name="Water and sunlight" isComputerBased="true" isIntroduction="false" isMath="false" isPosttest="false" isPretest="false" isReading="false" isWrapup="false">
+                <OTUDLSection local_id="section_4" name="Water and sunlight" viewContainerIsUpdateable="true" isComputerBased="true" isIntroduction="false" isMath="false" isPosttest="false" isPretest="false" isReading="false" isWrapup="false">
                   <content>
                     <OTCardContainer id="a217a476-7121-11dc-b75e-4b06cf421f29" contentsMayScroll="true" loadViewOnlyOnDemand="true">
                       <cards>
-                        <OTUDLCompoundDoc id="a217a475-7121-11dc-b75e-4b06cf421f29" name="a217a475-7121-11dc-b75e-4b06cf421f29">
+                        <OTUDLCompoundDoc local_id="water-sunlight-page-1">
                           <bodyText>
                             <div class="buffer">
                               <div class="border">
                                 <div class="body">
                                   <div class="subtitle">Discovery question</div>
                                   Can plants survive without water and sunlight?
-                                  <p />
+                                  <BR />
+                                  <BR />
+                                  <img src="http://confluence.concord.org/download/attachments/12522/grass.jpg" />
+                                  <BR />
+                                  <BR />
                                   In this activity, your job is to figure out if vine plants need water and sunlight to survive.  You will also be exploring what happens to plants if they don't get water and sunlight.
                                 </div>
                               </div>
                             </div>
                           </bodyText>
+                        </OTUDLCompoundDoc>
+                        <OTUDLCompoundDoc local_id="water-sunlight-page-2">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle">Engage</div>
+                                  If a plant gets
+                                  <B>lots of water</B>
+                                  and
+                                  <B>lots of sunlight</B>
+                                  , write your prediction for each of the following. What do you think will happen to the:
+                                  <UL>
+                                    <Li>color of leaves</Li>
+                                    <BR />
+                                    <object refid="8a457007-867e-11dc-8b7a-938f34d32f42" />
+                                    <BR />
+                                    <BR />
+                                    <Li>number of new leaves</Li>
+                                    <BR />
+                                    <object refid="9370d988-867e-11dc-8b7a-938f34d32f42" />
+                                    <BR />
+                                    <BR />
+                                    <Li>strength of stem</Li>
+                                    <BR />
+                                    <object refid="9d6d0089-867e-11dc-8b7a-938f34d32f42" />
+                                    <BR />
+                                    <BR />
+                                    <Li>growth of vine</Li>
+                                    <BR />
+                                    <object refid="aeb665ba-867f-11dc-8b7a-938f34d32f42" />
+                                  </UL>
+                                  If a plant gets
+                                  <B>lots of water</B>
+                                  and
+                                  <B>no sunlight</B>
+                                  , write your prediction for each of the following. What do you think will happen to the:
+                                  <UL>
+                                    <Li>color of leaves</Li>
+                                    <BR />
+                                    <object refid="8a457007-867e-11dc-8b7a-938f34d32f42" />
+                                    <BR />
+                                    <BR />
+                                    <Li>number of new leaves</Li>
+                                    <BR />
+                                    <object refid="9370d988-867e-11dc-8b7a-938f34d32f42" />
+                                    <BR />
+                                    <BR />
+                                    <Li>strength of stem</Li>
+                                    <BR />
+                                    <object refid="9d6d0089-867e-11dc-8b7a-938f34d32f42" />
+                                    <BR />
+                                    <BR />
+                                    <Li>growth of vine</Li>
+                                    <BR />
+                                    <object refid="c4fac69b-867f-11dc-8b7a-938f34d32f42" />
+                                  </UL>
+                                  If a plant gets
+                                  <B>no water</B>
+                                  and
+                                  <B>lots of sunlight</B>
+                                  , write your prediction for each of the following. What do you think will happen to the:
+                                  <UL>
+                                    <Li>color of leaves</Li>
+                                    <BR />
+                                    <object refid="8a457007-867e-11dc-8b7a-938f34d32f42" />
+                                    <BR />
+                                    <BR />
+                                    <Li>number of new leaves</Li>
+                                    <BR />
+                                    <object refid="9370d988-867e-11dc-8b7a-938f34d32f42" />
+                                    <BR />
+                                    <BR />
+                                    <Li>strength of stem</Li>
+                                    <BR />
+                                    <object refid="9d6d0089-867e-11dc-8b7a-938f34d32f42" />
+                                    <BR />
+                                    <BR />
+                                    <Li>growth of vine</Li>
+                                    <BR />
+                                    <object refid="1b80480f-8680-11dc-8b7a-938f34d32f42" />
+                                  </UL>
+                                  If a plant gets
+                                  <B>no water</B>
+                                  and
+                                  <B>no sunlight</B>
+                                  , write your prediction for each of the following. What do you think will happen to the:
+                                  <UL>
+                                    <Li>color of leaves</Li>
+                                    <BR />
+                                    <object refid="8a457007-867e-11dc-8b7a-938f34d32f42" />
+                                    <BR />
+                                    <BR />
+                                    <Li>number of new leaves</Li>
+                                    <BR />
+                                    <object refid="9370d988-867e-11dc-8b7a-938f34d32f42" />
+                                    <BR />
+                                    <BR />
+                                    <Li>strength of stem</Li>
+                                    <BR />
+                                    <object refid="9d6d0089-867e-11dc-8b7a-938f34d32f42" />
+                                    <BR />
+                                    <BR />
+                                    <Li>growth of vine</Li>
+                                    <BR />
+                                    <object refid="699105d0-8680-11dc-8b7a-938f34d32f42" />
+                                  </UL>
+                                  You just created what scientists call an
+                                  <B>hypothesis</B>
+                                  .  You made a prediction on how the plant would be behave if we changed the different conditions.
+                                  <BR />
+                                  <BR />
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                          <documentRefs>
+                            <OTText id="8a457007-867e-11dc-8b7a-938f34d32f42" name="Text field" />
+                            <OTText id="9370d988-867e-11dc-8b7a-938f34d32f42" name="Text field" />
+                            <OTText id="9d6d0089-867e-11dc-8b7a-938f34d32f42" name="Text field" />
+                            <OTText id="aeb665ba-867f-11dc-8b7a-938f34d32f42" name="Text field" />
+                            <object refid="8a457007-867e-11dc-8b7a-938f34d32f42" />
+                            <object refid="9370d988-867e-11dc-8b7a-938f34d32f42" />
+                            <object refid="9d6d0089-867e-11dc-8b7a-938f34d32f42" />
+                            <OTText id="c4fac69b-867f-11dc-8b7a-938f34d32f42" name="Text field" />
+                            <object refid="8a457007-867e-11dc-8b7a-938f34d32f42" />
+                            <object refid="9370d988-867e-11dc-8b7a-938f34d32f42" />
+                            <object refid="9d6d0089-867e-11dc-8b7a-938f34d32f42" />
+                            <OTText id="1b80480f-8680-11dc-8b7a-938f34d32f42" name="Text field" />
+                            <object refid="8a457007-867e-11dc-8b7a-938f34d32f42" />
+                            <object refid="9370d988-867e-11dc-8b7a-938f34d32f42" />
+                            <object refid="9d6d0089-867e-11dc-8b7a-938f34d32f42" />
+                            <OTText id="699105d0-8680-11dc-8b7a-938f34d32f42" name="Text field" />
+                          </documentRefs>
+                        </OTUDLCompoundDoc>
+                        <OTUDLCompoundDoc local_id="water-sunlight-page-3">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle">Materials</div>
+                                  <ul>
+                                    <li>4 light probes</li>
+                                    <li>4 small potted house plants (preferably vines)</li>
+                                    <li>tape measure or meter stick</li>
+                                    <li>metric measuring cup or 250 ml beaker</li>
+                                    <li>permenant marker to label plants</li>
+                                    <li>scissors to cut off vines</li>
+                                    <li>access to water</li>
+                                    <li>dark place where no sun comes</li>
+                                  </ul>
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                        </OTUDLCompoundDoc>
+                        <OTUDLCompoundDoc local_id="water-sunlight-page-4">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle">Explore</div>
+                                  Let's test your hypotheses with real plants.
+                                  <BR />
+                                  <BR />
+                                  <img src="http://confluence.concord.org/download/attachments/12522/plant.jpg" />
+                                  <BR />
+                                  <BR />
+                                  Find three other people you want to work with.  Your teacher may help you pick your partners.  Your teacher will also provide you with your materials.
+                                  <BR />
+                                  <BR />
+                                  Your group has been given four plants.  Each person in your group will have one plant.
+                                  <BR />
+                                  <BR />
+                                  Using the permenant marker, label the four plant pots as # 1, # 2, # 3, and # 4.
+                                  <BR />
+                                  <BR />
+                                  Pick the longest vine on your plant.  Carefully, cut off all the other vines off.  Place the cut vines in the garbage.
+                                  <BR />
+                                  <BR />
+                                  Each of you will be investigating a separate plant.
+                                  <BR />
+                                  <BR />
+                                  As a group, decide who will monitor and select one of the following:
+                                  <BR />
+                                  <UL>
+                                    <Li>
+                                      Plant #1:
+                                      <B>plant with lots of water and lots of sunlight</B>
+                                      <BR />
+                                      <table>
+                                        <tr>
+                                          <td>
+                                            <object refid="${plant-1-button}" />
+                                          </td>
+                                          <td>if you will monitor plant 1.</td>
+                                        </tr>
+                                      </table>
+                                      <BR />
+                                      <BR />
+                                    </Li>
+                                    <Li>
+                                      Plant #2:
+                                      <B>plant with no water and lots of sunlight</B>
+                                      <BR />
+                                      <table>
+                                        <tr>
+                                          <td>
+                                            <object refid="${plant-2-button}" />
+                                          </td>
+                                          <td>if you will monitor plant 2.</td>
+                                        </tr>
+                                      </table>
+                                      <BR />
+                                      <BR />
+                                    </Li>
+                                    <Li>
+                                      Plant #3:
+                                      <B>plant with lots of water and no sunlight</B>
+                                      <BR />
+                                      <table>
+                                        <tr>
+                                          <td>
+                                            <object refid="${plant-3-button}" />
+                                          </td>
+                                          <td>if you will monitor plant 3.</td>
+                                        </tr>
+                                      </table>
+                                      <BR />
+                                      <BR />
+                                    </Li>
+                                    <Li>
+                                      Plant #4:
+                                      <B>plant no water and no sunlight</B>
+                                      <BR />
+                                      <table>
+                                        <tr>
+                                          <td>
+                                            <object refid="${plant-4-button}" />
+                                          </td>
+                                          <td>if you will monitor plant 4.</td>
+                                        </tr>
+                                      </table>
+                                    </Li>
+                                  </UL>
+                                </div>
+                              </div>
+                            </div>
+                            <object refid="${four-plants-path-selection-script}" />
+                          </bodyText>
+                          <documentRefs>
+                            <OTButton local_id="plant-1-button" text="Click here" />
+                            <OTButton local_id="plant-2-button" text="Click here" />
+                            <OTButton local_id="plant-3-button" text="Click here" />
+                            <OTButton local_id="plant-4-button" text="Click here" />
+                            <OTScriptObject local_id="four-plants-path-selection-script">
+                              <variables>
+                                <OTScriptVariableComponent name="button1">
+                                  <reference>
+                                    <object refid="${plant-1-button}" />
+                                  </reference>
+                                </OTScriptVariableComponent>
+                                <OTScriptVariableComponent name="button2">
+                                  <reference>
+                                    <object refid="${plant-2-button}" />
+                                  </reference>
+                                </OTScriptVariableComponent>
+                                <OTScriptVariableComponent name="button3">
+                                  <reference>
+                                    <object refid="${plant-3-button}" />
+                                  </reference>
+                                </OTScriptVariableComponent>
+                                <OTScriptVariableComponent name="button4">
+                                  <reference>
+                                    <object refid="${plant-4-button}" />
+                                  </reference>
+                                </OTScriptVariableComponent>
+                                <OTScriptVariable name="replacementObject1">
+                                  <reference>
+                                    <object refid="${plant-1-section}" />
+                                  </reference>
+                                </OTScriptVariable>
+                                <OTScriptVariable name="replacementObject2">
+                                  <reference>
+                                    <object refid="${plant-2-section}" />
+                                  </reference>
+                                </OTScriptVariable>
+                                <OTScriptVariable name="replacementObject3">
+                                  <reference>
+                                    <object refid="${plant-3-section}" />
+                                  </reference>
+                                </OTScriptVariable>
+                                <OTScriptVariable name="replacementObject4">
+                                  <reference>
+                                    <object refid="${plant-4-section}" />
+                                  </reference>
+                                </OTScriptVariable>
+                                <OTScriptVariable name="firstPage1">
+                                  <reference>
+                                    <object refid="${plant-1-page-1}" />
+                                  </reference>
+                                </OTScriptVariable>
+                                <OTScriptVariable name="firstPage2">
+                                  <reference>
+                                    <object refid="${plant-2-page-1}" />
+                                  </reference>
+                                </OTScriptVariable>
+                                <OTScriptVariable name="firstPage3">
+                                  <reference>
+                                    <object refid="${plant-3-page-1}" />
+                                  </reference>
+                                </OTScriptVariable>
+                                <OTScriptVariable name="firstPage4">
+                                  <reference>
+                                    <object refid="${plant-4-page-1}" />
+                                  </reference>
+                                </OTScriptVariable>
+                                <OTScriptVariableView name="scriptView">
+                                  <reference>
+                                    <object refid="${four-plants-path-selection-script}" />
+                                  </reference>
+                                </OTScriptVariableView>
+                              </variables>
+                              <script>
+                                <object refid="${branching.js}" />
+                              </script>
+                              <scriptState />
+                            </OTScriptObject>
+                          </documentRefs>
                         </OTUDLCompoundDoc>
                       </cards>
                       <currentCard>
@@ -1106,14 +1597,14 @@
                     </OTCardContainer>
                   </content>
                   <header>
-                    <OTUDLCompoundDoc id="a217a477-7121-11dc-b75e-4b06cf421f29" name="a217a477-7121-11dc-b75e-4b06cf421f29">
+                    <OTUDLCompoundDoc local_id="water-sunlight-header">
                       <bodyText>
                         <div class="title">Water and sunlight</div>
                       </bodyText>
                     </OTUDLCompoundDoc>
                   </header>
                   <footer>
-                    <OTUDLCompoundDoc id="a217a478-7121-11dc-b75e-4b06cf421f29" name="a217a478-7121-11dc-b75e-4b06cf421f29">
+                    <OTUDLCompoundDoc local_id="water-sunglight-footer">
                       <documentRefs>
                         <OTUDLMenu id="a21a157a-7121-11dc-b75e-4b06cf421f29">
                           <cardContainer>
@@ -1160,7 +1651,19 @@
                                   <div class="subtitle">Discovery question</div>
                                   Do plants eat?
                                   <p />
-                                  In previous activities, you learned that plants have leaves that take in sunlight and oxygen and roots that take up water.  In this activity, your job is to figure out how the plant uses these materials.
+                                  In this activity, your job is to figure out how the plant uses their leaves to take in sunlight and oxygen and roots to take up water.
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                        </OTUDLCompoundDoc>
+                        <OTUDLCompoundDoc name="%16971b24-868b-11dc-8b7a-938f34d32f42">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle">New page</div>
+                                  New page content
                                 </div>
                               </div>
                             </div>
@@ -1224,10 +1727,24 @@
                             <div class="buffer">
                               <div class="border">
                                 <div class="body">
-                                  <div class="subtitle">Graph 1: Sun and water</div>
+                                  <div class="subtitle">Graph 1: Lots of sun and lots of water</div>
+                                  The following data was collected over nine days for a plant that had lots of sun and lots of water.
+                                  <BR />
+                                  <BR />
+                                  The table below shows how the length of the vine increased each day.
+                                  <BR />
+                                  <BR />
                                   <object refid="${g1_data_table1}" />
                                   <br />
+                                  The bar graph below displays the data from the table.
+                                  <BR />
+                                  <BR />
                                   <object refid="${g1_bar_graph1}" />
+                                  <BR />
+                                  <BR />
+                                  Does the graph show that the length:
+                                  <object refid="0f1a2e8b-8697-11dc-8b7a-938f34d32f42" />
+                                  over time?
                                 </div>
                               </div>
                             </div>
@@ -1306,6 +1823,19 @@
                                 <OTDataAxis min="-0.0" max="40.0" label="Length (cm)" />
                               </yDataAxis>
                             </OTDataGraph>
+                            <OTChoice id="0f1a2e8b-8697-11dc-8b7a-938f34d32f42" name="Choices">
+                              <choices>
+                                <OTCompoundDoc name="increases">
+                                  <bodyText>increases</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="decreases">
+                                  <bodyText>decreases</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="stays the same">
+                                  <bodyText>stays the same</bodyText>
+                                </OTCompoundDoc>
+                              </choices>
+                            </OTChoice>
                           </documentRefs>
                         </OTUDLCompoundDoc>
                         <OTUDLCompoundDoc name="b2c84193-7121-11dc-b75e-4b06cf421f29">
@@ -1313,10 +1843,24 @@
                             <div class="buffer">
                               <div class="border">
                                 <div class="body">
-                                  <div class="subtitle">Graph 2: Sun, no water</div>
+                                  <div class="subtitle">Graph 2: Lots of sun and no water</div>
+                                  The following data was collected over nine days for a plant that had lots of sun and no water.
+                                  <BR />
+                                  <BR />
+                                  The table below shows how the length of the vine increased each day.
+                                  <BR />
+                                  <BR />
                                   <object refid="${g2_data_table1}" />
                                   <br />
+                                  The bar graph below displays the data from the table.
+                                  <BR />
+                                  <BR />
                                   <object refid="${g2_bar_graph1}" />
+                                  <BR />
+                                  Does the graph show that the length:
+                                  <object refid="e06632f6-8697-11dc-8b7a-938f34d32f42" />
+                                  <BR />
+                                  over time?
                                 </div>
                               </div>
                             </div>
@@ -1395,6 +1939,19 @@
                                 <OTDataAxis min="-0.0" max="40.0" label="Length (cm)" />
                               </yDataAxis>
                             </OTDataGraph>
+                            <OTChoice id="e06632f6-8697-11dc-8b7a-938f34d32f42" name="Choices">
+                              <choices>
+                                <OTCompoundDoc name="increase">
+                                  <bodyText>increase</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="decreases">
+                                  <bodyText>decreases</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="stays the same">
+                                  <bodyText>stays the same</bodyText>
+                                </OTCompoundDoc>
+                              </choices>
+                            </OTChoice>
                           </documentRefs>
                         </OTUDLCompoundDoc>
                         <OTUDLCompoundDoc name="b2c84193-7121-11dc-b75e-4b06cf421f29">
@@ -1402,10 +1959,21 @@
                             <div class="buffer">
                               <div class="border">
                                 <div class="body">
-                                  <div class="subtitle">Graph 3: No sun and water</div>
+                                  <div class="subtitle">Graph 3: No sun and lots of water</div>
+                                  The following data was collected over nine days for a plant that had no sun and lots of water.
+                                  <BR />
+                                  <BR />
+                                  The table below shows how the length of the vine increased each day.
+                                  <BR />
+                                  <BR />
                                   <object refid="${g3_data_table1}" />
                                   <br />
                                   <object refid="${g3_bar_graph1}" />
+                                  <BR />
+                                  Does the graph show that the length:
+                                  <object refid="62a4ca1a-8698-11dc-8b7a-938f34d32f42" />
+                                  <BR />
+                                  over time?
                                 </div>
                               </div>
                             </div>
@@ -1484,6 +2052,19 @@
                                 <OTDataAxis min="-0.0" max="40.0" label="Length (cm)" />
                               </yDataAxis>
                             </OTDataGraph>
+                            <OTChoice id="62a4ca1a-8698-11dc-8b7a-938f34d32f42" name="Choices">
+                              <choices>
+                                <OTCompoundDoc name="increase">
+                                  <bodyText>increase</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="decreases">
+                                  <bodyText>decreases</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="stays the same">
+                                  <bodyText>stays the same</bodyText>
+                                </OTCompoundDoc>
+                              </choices>
+                            </OTChoice>
                           </documentRefs>
                         </OTUDLCompoundDoc>
                         <OTUDLCompoundDoc name="b2c84193-7121-11dc-b75e-4b06cf421f29">
@@ -1492,9 +2073,23 @@
                               <div class="border">
                                 <div class="body">
                                   <div class="subtitle">Graph 4: No sun and no water</div>
+                                  The following data was collected over nine days for a plant that had no sun and no water.
+                                  <BR />
+                                  <BR />
+                                  The table below shows how the length of the vine increased each day.
+                                  <BR />
+                                  <BR />
                                   <object refid="${g4_data_table1}" />
                                   <br />
+                                  The bar graph below displays the data from the table.
+                                  <BR />
+                                  <BR />
                                   <object refid="${g4_bar_graph1}" />
+                                  <BR />
+                                  Does the graph show that the length:
+                                  <object refid="a2dbb17e-8698-11dc-8b7a-938f34d32f42" />
+                                  <BR />
+                                  over time?
                                 </div>
                               </div>
                             </div>
@@ -1513,43 +2108,43 @@
                                   </channelDescriptions>
                                   <values>
                                     <float>3.0</float>
-                                    <float>27.94</float>
+                                    <float>23.94</float>
                                     <string>dark green</string>
                                     <string>1</string>
                                     <string>8</string>
                                     <string>strong stem</string>
                                     <float>4.0</float>
-                                    <float>27.94</float>
+                                    <float>23.94</float>
                                     <string>top-dark green, bottom-light green</string>
                                     <string>1</string>
                                     <string>8</string>
                                     <string>strong stem</string>
                                     <float>5.0</float>
-                                    <float>27.94</float>
+                                    <float>23.94</float>
                                     <string>green</string>
                                     <string>1</string>
                                     <string>8</string>
                                     <string>strong stem</string>
                                     <float>6.0</float>
-                                    <float>27.94</float>
+                                    <float>23.94</float>
                                     <string>green</string>
                                     <string>1</string>
                                     <string>8</string>
                                     <string>weak stem</string>
                                     <float>7.0</float>
-                                    <float>27.94</float>
+                                    <float>23.94</float>
                                     <string>green/leathery</string>
                                     <string>1</string>
                                     <string>8</string>
                                     <string>weak stem</string>
                                     <float>8.0</float>
-                                    <float>27.94</float>
+                                    <float>23.94</float>
                                     <string>green/leathery</string>
                                     <string>1</string>
                                     <string>8</string>
                                     <string>weak stem</string>
                                     <float>9.0</float>
-                                    <float>27.94</float>
+                                    <float>23.94</float>
                                     <string>green/leathery</string>
                                     <string>1</string>
                                     <string>8</string>
@@ -1573,6 +2168,19 @@
                                 <OTDataAxis min="-0.0" max="40.0" label="Length (cm)" />
                               </yDataAxis>
                             </OTDataGraph>
+                            <OTChoice id="a2dbb17e-8698-11dc-8b7a-938f34d32f42" name="Choices">
+                              <choices>
+                                <OTCompoundDoc name="increase">
+                                  <bodyText>increase</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="decreases">
+                                  <bodyText>decreases</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="stays the same">
+                                  <bodyText>stays the same</bodyText>
+                                </OTCompoundDoc>
+                              </choices>
+                            </OTChoice>
                           </documentRefs>
                         </OTUDLCompoundDoc>
                         <OTUDLCompoundDoc name="%321bf49f-7bfc-11dc-b7c6-5d3af76a492c">
@@ -1580,25 +2188,48 @@
                             <div class="buffer">
                               <div class="border">
                                 <div class="body">
-                                  <div class="subtitle">Four graphs</div>
+                                  <div class="subtitle">Comparing all four graphs</div>
+                                  Now lets compare all four graphs to determine which plant grew the most over the nine days.
+                                  <BR />
+                                  <BR />
+                                  Keep in mind:
+                                  <UL>
+                                    <Li>that each plant started with a vine of different length.</Li>
+                                    <Li>that growth is shown from day to day by the heigth of the bar.</Li>
+                                    <Li>increase rate of growth would result in increased heigth of the bars over time.</Li>
+                                  </UL>
                                   <table>
                                     <tr>
                                       <td>
+                                        Graph 1: Lots of sun and lots of water
                                         <object refid="${g1_bar_graph1}" />
                                       </td>
                                       <td>
+                                        Graph 2: Lots of sun and no water
                                         <object refid="${g2_bar_graph1}" />
                                       </td>
                                     </tr>
                                     <tr>
                                       <td>
+                                        Graph 3: No sun and lots of water
                                         <object refid="${g3_bar_graph1}" />
                                       </td>
                                       <td>
+                                        Graph 4: No sun and no water
                                         <object refid="${g4_bar_graph1}" />
                                       </td>
                                     </tr>
                                   </table>
+                                  <BR />
+                                  Based on the graphs, which plant grew better over time?
+                                  <object refid="908f53e2-869a-11dc-8b7a-938f34d32f42" />
+                                  <BR />
+                                  <BR />
+                                  In your own words, explain why the plant selected had the greatest growth. Be prepared to share your answer with the class.
+                                  <BR />
+                                  <BR />
+                                  <object refid="f37181a8-869a-11dc-8b7a-938f34d32f42" />
+                                  <p />
                                 </div>
                               </div>
                             </div>
@@ -1608,6 +2239,23 @@
                             <object refid="${g2_bar_graph1}" />
                             <object refid="${g3_bar_graph1}" />
                             <object refid="${g4_bar_graph1}" />
+                            <OTChoice id="908f53e2-869a-11dc-8b7a-938f34d32f42" name="Choices">
+                              <choices>
+                                <OTCompoundDoc name="Lots of sun and lots of water">
+                                  <bodyText>Lots of sun and lots of water</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="Lots of sun and no water">
+                                  <bodyText>Lots of sun and no water</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="No sun and lots of water">
+                                  <bodyText>No sun and lots of water</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="No sun and no water">
+                                  <bodyText>No sun and no water</bodyText>
+                                </OTCompoundDoc>
+                              </choices>
+                            </OTChoice>
+                            <OTText id="f37181a8-869a-11dc-8b7a-938f34d32f42" name="Text field" />
                           </documentRefs>
                         </OTUDLCompoundDoc>
                       </cards>
@@ -1668,7 +2316,6 @@
                             <div class="buffer">
                               <div class="border">
                                 <div class="body">
-                                  <div class="subtitle-continued" />
                                   In this section, you will review what you learned in this unit.
                                   <p />
                                   Let your teacher know when you have completed the plants unit. Your
@@ -1789,7 +2436,6 @@
                             <div class="buffer">
                               <div class="border">
                                 <div class="body">
-                                  <div class="subtitle-continued" />
                                   Answer the following questions. When you have finished, press the
                                   <b>Submit</b>
                                   button. Warning: after you hit the Submit button, you will not be able to go back and change your answers.
@@ -1826,7 +2472,6 @@
                             <div class="buffer">
                               <div class="border">
                                 <div class="body">
-                                  <div class="subtitle-continued" />
                                   3.  A girl has an idea that green plants need sand in the soil for healthy growth.  In order to test her idea she uses two pots of plants.  She sets up one pot of plants as shown below.
                                   <p />
                                   <img src="http://udl.concord.org/share/Plants/pretest34.q3a.jpg" />
@@ -2035,489 +2680,1020 @@
             </OTUDLMenuRule>
           </rules>
         </OTUDLMenuRule>
-        <OTUDLSection local_id="roots-section" viewContainerIsUpdateable="true" name="Stems, roots, leaves" isComputerBased="true" isIntroduction="false" isMath="false" isPosttest="false" isPretest="false" isReading="false" isWrapup="false">
-          <content>
-            <OTCardContainer local_id="roots-card-container" contentsMayScroll="true" loadViewOnlyOnDemand="true">
-              <cards>
-                <object refid="${stems-roots-leaves-page-1}" />
-                <object refid="${stems-roots-leaves-page-2}" />
-                <OTUDLCompoundDoc local_id="roots-page-3">
-                  <bodyText>
-                    <div class="buffer">
-                      <div class="border">
-                        <div class="body">
-                          <div class="subtitle">Roots</div>
-                          Roots page one.
-                          <p />
-                          <img src="http://confluence.concord.org/download/attachments/12521/mangrove.jpg" />
+        <OTFolderObject name="All replacement sections for branches">
+          <children>
+            <OTFolderObject name="Stems-roots-leaves sections">
+              <children>
+                <OTUDLSection local_id="roots-section" viewContainerIsUpdateable="true" name="Stems, roots, leaves" isComputerBased="true" isIntroduction="false" isMath="false" isPosttest="false" isPretest="false" isReading="false" isWrapup="false">
+                  <content>
+                    <OTCardContainer local_id="roots-card-container" contentsMayScroll="true" loadViewOnlyOnDemand="true">
+                      <cards>
+                        <object refid="${stems-roots-leaves-page-1}" />
+                        <object refid="${stems-roots-leaves-page-2}" />
+                        <object refid="${stems-roots-leaves-page-3}" />
+                        <object refid="${stems-roots-leaves-page-4}" />
+                        <OTUDLCompoundDoc local_id="roots-page-3">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle">Roots</div>
+                                  Take your plant and carefully pull it out of it's pot. Lay the plant on the newspaper.
+                                  <BR />
+                                  <BR />
+                                  <img src="http://confluence.concord.org/download/attachments/12521/unpot_plant.jpg" />
+                                  <BR />
+                                  <BR />
+                                  Carefully brush away the soil from the roots.
+                                  <BR />
+                                  <BR />
+                                  <img src="http://confluence.concord.org/download/attachments/12521/cleaning_roots.jpg" />
+                                  <BR />
+                                  <BR />
+                                  Depending on the type of plant, you may have multiple plants in one pot. You will only need one. Carefully separate one from the rest. Don't pull too hard because you will rip the roots apart.
+                                  <BR />
+                                  <BR />
+                                  <img src="http://confluence.concord.org/download/attachments/12521/separate_roots.jpg" />
+                                  <BR />
+                                  <BR />
+                                  When you have removed most of the soil by gently brushing the roots, place your plant in a cup of water. If your plant has lots of soil still around the roots, swish your roots around in the cup of water to remove more of the soil. Dump the water and obtain clean water in your cup. Place your plant in the cup.
+                                  <BR />
+                                  <BR />
+                                  <img src="http://confluence.concord.org/download/attachments/12521/plant_in_glass.jpg" />
+                                  <BR />
+                                  <BR />
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                        </OTUDLCompoundDoc>
+                        <OTUDLCompoundDoc local_id="roots-page-4">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle">Explore Roots page 2</div>
+                                  Use your hand lens to take a closer look at the roots. Draw below what you see and label any interesting features.
+                                  <BR />
+                                  <BR />
+                                  <object refid="c2642887-8658-11dc-a2ac-bf90d5b1c581" />
+                                  <BR />
+                                  <BR />
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                          <documentRefs>
+                            <OTDrawingTool2 id="c2642887-8658-11dc-a2ac-bf90d5b1c581" name="Draw tool" />
+                          </documentRefs>
+                        </OTUDLCompoundDoc>
+                        <OTUDLCompoundDoc local_id="roots-page-5">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle">Explore Roots page 3</div>
+                                  Roots main function is to take up water and nutrients from the soil. There are two different types of root systems.
+                                  <BR />
+                                  <BR />
+                                  <ul>
+                                    <li>The portion that we eat in a carrot plant is really the main root of the plant. This type of plant has a large main root with smaller hairs growing off of it.</li>
+                                    <BR />
+                                    <BR />
+                                    [holder for unshaved carrot picture]
+                                    <BR />
+                                    <BR />
+                                    <li>Another type of root has a number of roots that branch off each other. No single root growth is thicker of longer then the other. This type of root also has small root hairs to take in additional water and nutrients from the soil. Grasses and some trees have this type of root.</li>
+                                    <BR />
+                                    <img src="http://confluence.concord.org/download/attachments/12521/herb2.jpg" />
+                                  </ul>
+                                  <BR />
+                                  Make observation about your plant by answering the questions.
+                                  <BR />
+                                  <BR />
+                                  What color are the roots?
+                                  <BR />
+                                  <BR />
+                                  <object refid="7afe6399-865b-11dc-a2ac-bf90d5b1c581" />
+                                  <BR />
+                                  <BR />
+                                  What root system does your plant have?
+                                  <BR />
+                                  <BR />
+                                  <object refid="80e9bd4a-865b-11dc-a2ac-bf90d5b1c581" />
+                                  <BR />
+                                  <BR />
+                                  Can you see root hairs?
+                                  <BR />
+                                  <BR />
+                                  <object refid="8de4302b-865b-11dc-a2ac-bf90d5b1c581" />
+                                  <BR />
+                                  <BR />
+                                  Describe the type of root that your plant has below. Is it more like a carrot or like grass?
+                                  <BR />
+                                  <BR />
+                                  <object refid="2401dd68-865b-11dc-a2ac-bf90d5b1c581" />
+                                  <BR />
+                                  <BR />
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                          <documentRefs>
+                            <OTText id="7afe6399-865b-11dc-a2ac-bf90d5b1c581" name="Text field" />
+                            <OTText id="80e9bd4a-865b-11dc-a2ac-bf90d5b1c581" name="Text field" />
+                            <OTText id="8de4302b-865b-11dc-a2ac-bf90d5b1c581" name="Text field" />
+                            <OTText id="2401dd68-865b-11dc-a2ac-bf90d5b1c581" name="Text field" />
+                          </documentRefs>
+                        </OTUDLCompoundDoc>
+                        <OTUDLCompoundDoc name="%4e38e023-8678-11dc-8b7a-938f34d32f42">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle">Explain Roots</div>
+                                  Below is the drawing of your root.
+                                  <BR />
+                                  <BR />
+                                  <object refid="c2642887-8658-11dc-a2ac-bf90d5b1c581" />
+                                  <BR />
+                                  <BR />
+                                  Below is another plant. Use your plant drawing to help answer the questions about this new plant.
+                                  <BR />
+                                  <BR />
+                                  <img src="http://confluence.concord.org/download/attachments/12521/ipecacuanha.jpg" />
+                                  <BR />
+                                  <BR />
+                                  <UL>
+                                    <Li>Why are roots found in the ground?</Li>
+                                    <BR />
+                                    <object refid="70aff12e-8670-11dc-97fd-673c6d6954f2" />
+                                    <BR />
+                                    <BR />
+                                    <Li>What materials travel through the roots?</Li>
+                                    <BR />
+                                    <object refid="76215fef-8670-11dc-97fd-673c6d6954f2" />
+                                  </UL>
+                                  <BR />
+                                  <BR />
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                          <documentRefs>
+                            <object refid="c2642887-8658-11dc-a2ac-bf90d5b1c581" />
+                            <object refid="70aff12e-8670-11dc-97fd-673c6d6954f2" />
+                            <object refid="76215fef-8670-11dc-97fd-673c6d6954f2" />
+                          </documentRefs>
+                        </OTUDLCompoundDoc>
+                        <OTUDLCompoundDoc local_id="stems-roots-leaves-elaborate">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle">Elaborate</div>
+                                  Label the following on the diagram below: leaves, stems, and roots.
+                                  <BR />
+                                  <BR />
+                                  [Need a black line background stamp for the drawing from Meridith]
+                                  <BR />
+                                  <BR />
+                                  <object refid="5908bff5-867a-11dc-8b7a-938f34d32f42" />
+                                  <BR />
+                                  <BR />
+                                  Using a blue color show:
+                                  <UL>
+                                    <Li>water entering the plant</Li>
+                                    <Li>water entering the plant</Li>
+                                    <Li>water entering the plant</Li>
+                                  </UL>
+                                  <BR />
+                                  Using a yellow color show:
+                                  <UL>
+                                    <Li>how the sunlight enters the plant</Li>
+                                  </UL>
+                                  <BR />
+                                  Using a gray color show:
+                                  <UL>
+                                    <Li>how carbon dioxide enters the plant</Li>
+                                    <Li>how oxygen exits the plant</Li>
+                                  </UL>
+                                  <BR />
+                                  <BR />
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                          <documentRefs>
+                            <OTDrawingTool2 id="5908bff5-867a-11dc-8b7a-938f34d32f42" name="Draw tool" />
+                          </documentRefs>
+                        </OTUDLCompoundDoc>
+                      </cards>
+                      <currentCard>
+                        <object refid="${roots-page-3}" />
+                      </currentCard>
+                      <viewedCards>
+                        <object refid="${stems-roots-leaves-page-1}" />
+                        <object refid="${stems-roots-leaves-page-2}" />
+                        <object refid="${stems-roots-leaves-page-3}" />
+                        <object refid="${stems-roots-leaves-page-4}" />
+                      </viewedCards>
+                    </OTCardContainer>
+                  </content>
+                  <header>
+                    <OTUDLCompoundDoc id="2767fe20-6c7d-11dc-8314-0800200c9a66!/roots-section/header" name="9b7e3070-7121-11dc-b75e-4b06cf421f29">
+                      <bodyText>
+                        <div class="title">Roots expert</div>
+                      </bodyText>
+                    </OTUDLCompoundDoc>
+                  </header>
+                  <footer>
+                    <OTCompoundDoc id="2767fe20-6c7d-11dc-8314-0800200c9a66!/roots-section/footer">
+                      <bodyText>
+                        <div align="center">
+                          <table>
+                            <tr>
+                              <td>
+                                <object refid="${section-roots-menu}" viewid="${menu-horizontal-circle}" />
+                              </td>
+                            </tr>
+                          </table>
                         </div>
-                      </div>
-                    </div>
-                  </bodyText>
-                </OTUDLCompoundDoc>
-                <OTUDLCompoundDoc local_id="roots-page-4">
-                  <bodyText>
-                    <div class="buffer">
-                      <div class="border">
-                        <div class="body">
-                          <div class="subtitle">Roots 2</div>
-                          Roots page two.
-                          <p />
-                          <img src="http://confluence.concord.org/download/attachments/12521/potato.jpg" />
+                      </bodyText>
+                    </OTCompoundDoc>
+                  </footer>
+                  <north>
+                    <object refid="2767fe20-6c7d-11dc-8314-0800200c9a66!/roots-section/header" />
+                  </north>
+                  <center>
+                    <object refid="${roots-card-container}" />
+                  </center>
+                  <south>
+                    <object refid="2767fe20-6c7d-11dc-8314-0800200c9a66!/roots-section/footer" />
+                  </south>
+                </OTUDLSection>
+                <OTUDLSection local_id="leaves-section" viewContainerIsUpdateable="true" name="Stems, roots, leaves" isComputerBased="true" isIntroduction="false" isMath="false" isPosttest="false" isPretest="false" isReading="false" isWrapup="false">
+                  <content>
+                    <OTCardContainer local_id="leaves-card-container" contentsMayScroll="true" loadViewOnlyOnDemand="true">
+                      <cards>
+                        <object refid="${stems-roots-leaves-page-1}" />
+                        <object refid="${stems-roots-leaves-page-2}" />
+                        <object refid="${stems-roots-leaves-page-3}" />
+                        <object refid="${stems-roots-leaves-page-4}" />
+                        <OTUDLCompoundDoc local_id="leaves-page-3">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle">Explore Leaves</div>
+                                  Make observations about your plant by making the following questions.
+                                  <BR />
+                                  <BR />
+                                  How many leaves are on the plant?
+                                  <BR />
+                                  <object refid="dd0d6e71-8366-11dc-8d72-7d9f1944a673" />
+                                  <BR />
+                                  <BR />
+                                  Are all of the leaves the same size?
+                                  <BR />
+                                  <object refid="883c7ace-8366-11dc-8d72-7d9f1944a673" />
+                                  <BR />
+                                  <BR />
+                                  Where are the biggest leaves found on the plant?
+                                  <BR />
+                                  <object refid="e3a49882-8366-11dc-8d72-7d9f1944a673" />
+                                  <BR />
+                                  <BR />
+                                  Where are the smallest leaves found on the plant?
+                                  <BR />
+                                  <object refid="eabb2bc3-8366-11dc-8d72-7d9f1944a673" />
+                                  <BR />
+                                  <BR />
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                          <documentRefs>
+                            <OTText id="dd0d6e71-8366-11dc-8d72-7d9f1944a673" name="Text field" />
+                            <OTChoice id="883c7ace-8366-11dc-8d72-7d9f1944a673" name="Choices">
+                              <choices>
+                                <OTCompoundDoc name="yes">
+                                  <bodyText>yes</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="no">
+                                  <bodyText>no</bodyText>
+                                </OTCompoundDoc>
+                              </choices>
+                            </OTChoice>
+                            <OTText id="e3a49882-8366-11dc-8d72-7d9f1944a673" name="Text field" />
+                            <OTText id="eabb2bc3-8366-11dc-8d72-7d9f1944a673" name="Text field" />
+                          </documentRefs>
+                        </OTUDLCompoundDoc>
+                        <OTUDLCompoundDoc local_id="leaves-page-4">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle">Explore Leaves page 2</div>
+                                  Using a pair of scissors, cut off one of the biggest leaves of the plant. Make sure to pick it where it attaches to the stem as shown below.
+                                  <BR />
+                                  <p />
+                                  <img src="http://confluence.concord.org/download/attachments/12521/clipping_leaf_small.jpg" />
+                                  <p />
+                                  Draw the leaf you picked and make sure to include the details in your drawing like color, shape, and size. Label any interesting features.
+                                  <BR />
+                                  <BR />
+                                  <object refid="cc8a7444-836a-11dc-8d72-7d9f1944a673" />
+                                  <BR />
+                                  <BR />
+                                  Leaves are generally green. The leaf captures the energy from the sun.
+                                  <BR />
+                                  <BR />
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                          <documentRefs>
+                            <OTDrawingTool2 id="cc8a7444-836a-11dc-8d72-7d9f1944a673" name="Draw tool">
+                              <graphables>
+                                <OTDrawingShape type="" fillType="clear" x="0.0" y="0.0" width="0.0" height="0.0" color="0x000000" />
+                              </graphables>
+                            </OTDrawingTool2>
+                          </documentRefs>
+                        </OTUDLCompoundDoc>
+                        <OTUDLCompoundDoc name="%c1e8f664-865e-11dc-a2ac-bf90d5b1c581">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle">Explore Leaves page 3</div>
+                                  Use a hand lens to look at top side of your leaf. Describe and record what you see.
+                                  <BR />
+                                  <object refid="7ac1fe50-836d-11dc-8a7b-9f9002ae967c" />
+                                  <BR />
+                                  <BR />
+                                  Use a hand lens to look at bottom side of your leaf. Describe and record what you see.
+                                  <BR />
+                                  <object refid="8fcef0a1-836d-11dc-8a7b-9f9002ae967c" />
+                                  <BR />
+                                  <BR />
+                                  Air is made of many different gases. One of them is called carbon dioxide. Plants need carbon dioxide. It is one of the materials they take in to make food. Carbon dioxide enters the plant through a hole on the underside of the leaf. This hole is called the stomata. Plants take in carbon dioxide and let go of oxygen through their stomata.
+                                  <BR />
+                                  <BR />
+                                  <img src="http://teemss2.concord.org/artwork/Teemss2_images/Units/u08_i01/stoma/U8stoma.png" />
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                          <documentRefs>
+                            <OTText id="7ac1fe50-836d-11dc-8a7b-9f9002ae967c" name="Text field" />
+                            <OTText id="8fcef0a1-836d-11dc-8a7b-9f9002ae967c" name="Text field" />
+                          </documentRefs>
+                        </OTUDLCompoundDoc>
+                        <OTUDLCompoundDoc name="%350cf9c5-865f-11dc-a2ac-bf90d5b1c581">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle">Explain Leaves</div>
+                                  Below is the drawing of your leaf.
+                                  <BR />
+                                  <BR />
+                                  <object refid="cc8a7444-836a-11dc-8d72-7d9f1944a673" />
+                                  <BR />
+                                  <BR />
+                                  Below is another plant. Use your plant drawing to help answer the questions about this new plant.
+                                  <BR />
+                                  <BR />
+                                  <img src="http://confluence.concord.org/download/attachments/12521/ipecacuanha.jpg" />
+                                  <BR />
+                                  <BR />
+                                  <UL>
+                                    <Li>Why are all the leaves on the outer part of the plant?</Li>
+                                    <BR />
+                                    <object refid="70aff12e-8670-11dc-97fd-673c6d6954f2" />
+                                    <BR />
+                                    <BR />
+                                    <Li>What materials enter the plant through the leaves?</Li>
+                                    <BR />
+                                    <object refid="76215fef-8670-11dc-97fd-673c6d6954f2" />
+                                    <BR />
+                                    <BR />
+                                    <Li>What materials leave the plant through the leaves?</Li>
+                                    <BR />
+                                    <object refid="79ff3660-8670-11dc-97fd-673c6d6954f2" />
+                                  </UL>
+                                  <BR />
+                                  <BR />
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                          <documentRefs>
+                            <object refid="cc8a7444-836a-11dc-8d72-7d9f1944a673" />
+                            <OTText id="70aff12e-8670-11dc-97fd-673c6d6954f2" name="Text field" />
+                            <OTText id="76215fef-8670-11dc-97fd-673c6d6954f2" name="Text field" />
+                            <OTText id="79ff3660-8670-11dc-97fd-673c6d6954f2" name="Text field" />
+                          </documentRefs>
+                        </OTUDLCompoundDoc>
+                        <object refid="${stems-roots-leaves-elaborate}" />
+                      </cards>
+                      <currentCard>
+                        <object refid="${leaves-page-3}" />
+                      </currentCard>
+                      <viewedCards>
+                        <object refid="${stems-roots-leaves-page-1}" />
+                        <object refid="${stems-roots-leaves-page-2}" />
+                        <object refid="${stems-roots-leaves-page-3}" />
+                        <object refid="${stems-roots-leaves-page-4}" />
+                      </viewedCards>
+                    </OTCardContainer>
+                  </content>
+                  <header>
+                    <OTUDLCompoundDoc id="2767fe20-6c7d-11dc-8314-0800200c9a66!/leaves-section/header">
+                      <bodyText>
+                        <div class="title">Leaf expert</div>
+                      </bodyText>
+                    </OTUDLCompoundDoc>
+                  </header>
+                  <footer>
+                    <OTCompoundDoc id="2767fe20-6c7d-11dc-8314-0800200c9a66!/leaves-section/footer">
+                      <bodyText>
+                        <div align="center">
+                          <table>
+                            <tr>
+                              <td>
+                                <object refid="${section-leaves-menu}" viewid="${menu-horizontal-circle}" />
+                              </td>
+                            </tr>
+                          </table>
                         </div>
-                      </div>
-                    </div>
-                  </bodyText>
-                </OTUDLCompoundDoc>
-                <OTUDLCompoundDoc local_id="roots-page-5">
-                  <bodyText>
-                    <div class="buffer">
-                      <div class="border">
-                        <div class="body">
-                          <div class="subtitle">Roots 3</div>
-                          Roots page three.
-                          <p />
-                          <img src="http://confluence.concord.org/download/attachments/12521/mangrove.jpg" />
+                      </bodyText>
+                    </OTCompoundDoc>
+                  </footer>
+                  <north>
+                    <object refid="2767fe20-6c7d-11dc-8314-0800200c9a66!/leaves-section/header" />
+                  </north>
+                  <center>
+                    <object refid="${leaves-card-container}" />
+                  </center>
+                  <south>
+                    <object refid="2767fe20-6c7d-11dc-8314-0800200c9a66!/leaves-section/footer" />
+                  </south>
+                </OTUDLSection>
+                <OTUDLSection local_id="stems-section" viewContainerIsUpdateable="true" name="Stems, roots, leaves" isComputerBased="true" isIntroduction="false" isMath="false" isPosttest="false" isPretest="false" isReading="false" isWrapup="false">
+                  <content>
+                    <OTCardContainer local_id="stems-card-container" contentsMayScroll="true" loadViewOnlyOnDemand="true">
+                      <cards>
+                        <object refid="${stems-roots-leaves-page-1}" />
+                        <object refid="${stems-roots-leaves-page-2}" />
+                        <object refid="${stems-roots-leaves-page-3}" />
+                        <object refid="${stems-roots-leaves-page-4}" />
+                        <OTUDLCompoundDoc local_id="stems-page-3">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle">Explore Stems</div>
+                                  Make observation about your plant by answering the questions.
+                                  <BR />
+                                  <BR />
+                                  How many stems does your plant have?
+                                  <BR />
+                                  <BR />
+                                  <object refid="0c59cdf5-8370-11dc-8a7b-9f9002ae967c" />
+                                  <BR />
+                                  <BR />
+                                  How many branches does your plant have?
+                                  <BR />
+                                  <BR />
+                                  <object refid="ce6762e7-8370-11dc-8a7b-9f9002ae967c" />
+                                  <BR />
+                                  <BR />
+                                  Are there any new buds on your plant?
+                                  <BR />
+                                  <BR />
+                                  <object refid="e0d1da62-836f-11dc-8a7b-9f9002ae967c" />
+                                  <BR />
+                                  <BR />
+                                  Where are those buds found on the stem?
+                                  <BR />
+                                  <BR />
+                                  <object refid="dc15bc78-8370-11dc-8a7b-9f9002ae967c" />
+                                  <BR />
+                                  <BR />
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                          <documentRefs>
+                            <OTText id="0c59cdf5-8370-11dc-8a7b-9f9002ae967c" name="Text field" />
+                            <OTText id="ce6762e7-8370-11dc-8a7b-9f9002ae967c" name="Text field" />
+                            <OTChoice id="e0d1da62-836f-11dc-8a7b-9f9002ae967c" name="Choices">
+                              <choices>
+                                <OTCompoundDoc name="yes">
+                                  <bodyText>yes</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="no">
+                                  <bodyText>no</bodyText>
+                                </OTCompoundDoc>
+                              </choices>
+                            </OTChoice>
+                            <OTText id="dc15bc78-8370-11dc-8a7b-9f9002ae967c" name="Text field" />
+                          </documentRefs>
+                        </OTUDLCompoundDoc>
+                        <OTUDLCompoundDoc local_id="stems-page-4">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle">Explore Stems page 2</div>
+                                  Using your scissors, cut off one stem at the base of the plant.
+                                  <BR />
+                                  <BR />
+                                  Draw what you see and make sure to include details in your drawing below like shape, color, and number of leaves on the stem. Label any interesting features.
+                                  <BR />
+                                  <BR />
+                                  <object refid="27dbbc56-8370-11dc-8a7b-9f9002ae967c" />
+                                  <BR />
+                                  <BR />
+                                  Carefully remove all the leaves as shown below.
+                                  <BR />
+                                  <BR />
+                                  <img src="http://confluence.concord.org/download/attachments/12521/stem_without_leaves.jpg" />
+                                  <BR />
+                                  <BR />
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                          <documentRefs>
+                            <OTDrawingTool2 id="27dbbc56-8370-11dc-8a7b-9f9002ae967c" name="Draw tool">
+                              <graphables>
+                                <OTDrawingShape type="" fillType="clear" x="0.0" y="0.0" width="0.0" height="0.0" color="0x000000" />
+                              </graphables>
+                            </OTDrawingTool2>
+                          </documentRefs>
+                        </OTUDLCompoundDoc>
+                        <OTUDLCompoundDoc name="%10e8fe01-8676-11dc-8b7a-938f34d32f42">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle">Explore Stems page 3</div>
+                                  [holder for a picture of the celery cross-section...]
+                                  <BR />
+                                  <BR />
+                                  Obtain a a cross-section piece of celery stalk from your teacher. Look closely at the cross-section of celery shown above. Draw below what you see and label any interesting features.
+                                  <BR />
+                                  <BR />
+                                  <object refid="9271ef46-8653-11dc-a2ac-bf90d5b1c581" />
+                                  <BR />
+                                  <BR />
+                                  Inside the stem of a plant is a channel system that runs the length of the stem. Some of these channels move water from the roots to the leaves of the plant. Other channels move nutrients and sugars around in the plant.
+                                  <BR />
+                                  <BR />
+                                  Take the bottom of your plant stem and split the stem in half with your fingers. Describe what you observe inside your stem.  How is the inside of your stem similar to the inside of the celery stalk?
+                                  <BR />
+                                  <BR />
+                                  <object refid="b59f2c45-8652-11dc-a2ac-bf90d5b1c581" />
+                                  <BR />
+                                  <BR />
+                                  [holder for a picture of the stem...]
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                          <documentRefs>
+                            <OTDrawingTool2 id="9271ef46-8653-11dc-a2ac-bf90d5b1c581" name="Draw tool" />
+                            <OTText id="b59f2c45-8652-11dc-a2ac-bf90d5b1c581" name="Text field" />
+                          </documentRefs>
+                        </OTUDLCompoundDoc>
+                        <OTUDLCompoundDoc name="%bfdd5a52-8676-11dc-8b7a-938f34d32f42">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle">Explain Stems</div>
+                                  Below is the drawing of your stem.
+                                  <BR />
+                                  <BR />
+                                  <object refid="27dbbc56-8370-11dc-8a7b-9f9002ae967c" />
+                                  <BR />
+                                  <BR />
+                                  Below is another plant. Use your plant drawing to help answer the questions about this new plant.
+                                  <BR />
+                                  <BR />
+                                  <img src="http://confluence.concord.org/download/attachments/12521/ipecacuanha.jpg" />
+                                  <BR />
+                                  <BR />
+                                  <UL>
+                                    <Li>Explain why a stem needs to be strong and upright?</Li>
+                                    <BR />
+                                    <object refid="70aff12e-8670-11dc-97fd-673c6d6954f2" />
+                                    <BR />
+                                    <BR />
+                                    <Li>What materials travel through a stem?</Li>
+                                    <BR />
+                                    <object refid="76215fef-8670-11dc-97fd-673c6d6954f2" />
+                                  </UL>
+                                  <BR />
+                                  <BR />
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                          <documentRefs>
+                            <object refid="27dbbc56-8370-11dc-8a7b-9f9002ae967c" />
+                            <object refid="70aff12e-8670-11dc-97fd-673c6d6954f2" />
+                            <object refid="76215fef-8670-11dc-97fd-673c6d6954f2" />
+                          </documentRefs>
+                        </OTUDLCompoundDoc>
+                        <object refid="${stems-roots-leaves-elaborate}" />
+                      </cards>
+                      <currentCard>
+                        <object refid="${stems-page-3}" />
+                      </currentCard>
+                      <viewedCards>
+                        <object refid="${stems-roots-leaves-page-1}" />
+                        <object refid="${stems-roots-leaves-page-2}" />
+                        <object refid="${stems-roots-leaves-page-3}" />
+                        <object refid="${stems-roots-leaves-page-4}" />
+                      </viewedCards>
+                    </OTCardContainer>
+                  </content>
+                  <header>
+                    <OTUDLCompoundDoc id="2767fe20-6c7d-11dc-8314-0800200c9a66!/stems-section/header">
+                      <bodyText>
+                        <div class="title">Stems expert</div>
+                      </bodyText>
+                    </OTUDLCompoundDoc>
+                  </header>
+                  <footer>
+                    <OTCompoundDoc id="2767fe20-6c7d-11dc-8314-0800200c9a66!/stems-section/footer">
+                      <bodyText>
+                        <div align="center">
+                          <table>
+                            <tr>
+                              <td>
+                                <object refid="${section-stems-menu}" viewid="${menu-horizontal-circle}" />
+                              </td>
+                            </tr>
+                          </table>
                         </div>
-                      </div>
-                    </div>
-                  </bodyText>
-                </OTUDLCompoundDoc>
-              </cards>
-              <currentCard>
-                <object refid="${roots-page-3}" />
-              </currentCard>
-              <viewedCards>
-                <object refid="${stems-roots-leaves-page-1}" />
-                <object refid="${stems-roots-leaves-page-2}" />
-                <object refid="${roots-page-3}" />
-              </viewedCards>
-            </OTCardContainer>
-          </content>
-          <header>
-            <OTUDLCompoundDoc name="9b7e3070-7121-11dc-b75e-4b06cf421f29">
-              <bodyText>
-                <div class="title">Stems, roots, leaves: Roots</div>
-              </bodyText>
-            </OTUDLCompoundDoc>
-          </header>
-          <footer>
-            <OTCompoundDoc>
-              <bodyText>
-                <div align="center">
-                  <table>
-                    <tr>
-                      <td>
-                        <object refid="${section-roots-menu}" viewid="${menu-horizontal-circle}" />
-                      </td>
-                    </tr>
-                  </table>
-                </div>
-              </bodyText>
-            </OTCompoundDoc>
-          </footer>
-        </OTUDLSection>
-        <OTUDLSection local_id="leaves-section" viewContainerIsUpdateable="true" name="Stems, roots, leaves" isComputerBased="true" isIntroduction="false" isMath="false" isPosttest="false" isPretest="false" isReading="false" isWrapup="false">
-          <content>
-            <OTCardContainer local_id="leaves-card-container" contentsMayScroll="true" loadViewOnlyOnDemand="true">
-              <cards>
-                <object refid="${stems-roots-leaves-page-1}" />
-                <object refid="${stems-roots-leaves-page-2}" />
-                <OTUDLCompoundDoc local_id="leaves-page-3">
-                  <bodyText>
-                    <div class="buffer">
-                      <div class="border">
-                        <div class="body">
-                          <div class="subtitle">Leaves</div>
-                          Leaves page one.
-                          <p />
-                          <img src="http://confluence.concord.org/download/attachments/12521/mangrove.jpg" />
+                      </bodyText>
+                    </OTCompoundDoc>
+                  </footer>
+                  <north>
+                    <object refid="2767fe20-6c7d-11dc-8314-0800200c9a66!/stems-section/header" />
+                  </north>
+                  <center>
+                    <object refid="${stems-card-container}" />
+                  </center>
+                  <south>
+                    <object refid="2767fe20-6c7d-11dc-8314-0800200c9a66!/stems-section/footer" />
+                  </south>
+                </OTUDLSection>
+              </children>
+            </OTFolderObject>
+            <OTFolderObject name="plants-1-4-sections">
+              <children>
+                <OTUDLSection local_id="plant-1-section" viewContainerIsUpdateable="true">
+                  <content>
+                    <OTCardContainer local_id="plant-1-cards" contentsMayScroll="true" loadViewOnlyOnDemand="true">
+                      <cards>
+                        <object refid="${water-sunlight-page-1}" />
+                        <object refid="${water-sunlight-page-2}" />
+                        <object refid="${water-sunlight-page-3}" />
+                        <object refid="${water-sunlight-page-4}" />
+                        <OTUDLCompoundDoc local_id="plant-1-page-1">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle">Engage page 2</div>
+                                  If a plant gets lots of water and lots of sunlight, what do you think will happen to the following:
+                                  <BR />
+                                  <BR />
+                                  1) color of leaves
+                                  <BR />
+                                  <BR />
+                                  <object refid="6e69ebaf-880d-11dc-8ad5-cf5661529fbc" />
+                                  <BR />
+                                  <BR />
+                                  2) number of new leaves
+                                  <BR />
+                                  <BR />
+                                  <object refid="acaf3c40-880d-11dc-8ad5-cf5661529fbc" />
+                                  <BR />
+                                  <BR />
+                                  3) strength of the stem
+                                  <BR />
+                                  <BR />
+                                  <object refid="c6f79931-880d-11dc-8ad5-cf5661529fbc" />
+                                  <BR />
+                                  <BR />
+                                  4) growth of vine
+                                  <BR />
+                                  <BR />
+                                  <object refid="bb81dfa7-880f-11dc-8ad5-cf5661529fbc" />
+                                  <BR />
+                                  <BR />
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                          <documentRefs>
+                            <OTText id="6e69ebaf-880d-11dc-8ad5-cf5661529fbc" name="Text field" />
+                            <OTText id="acaf3c40-880d-11dc-8ad5-cf5661529fbc" name="Text field" />
+                            <OTText id="c6f79931-880d-11dc-8ad5-cf5661529fbc" name="Text field" />
+                            <OTText id="bb81dfa7-880f-11dc-8ad5-cf5661529fbc" name="Text field" />
+                          </documentRefs>
+                        </OTUDLCompoundDoc>
+                        <OTUDLCompoundDoc id="009bc352-880e-11dc-8ad5-cf5661529fbc" name="%009bc352-880e-11dc-8ad5-cf5661529fbc">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle">Engage page 3</div>
+                                  If a plant gets lots of water and no sunlight, what do you think will happen to the following:
+                                  <BR />
+                                  <BR />
+                                  1) color of leaves
+                                  <BR />
+                                  <BR />
+                                  <object refid="3baf1863-880f-11dc-8ad5-cf5661529fbc" />
+                                  <BR />
+                                  <BR />
+                                  2) number of new leaves
+                                  <BR />
+                                  <BR />
+                                  <object refid="485d6714-880f-11dc-8ad5-cf5661529fbc" />
+                                  <BR />
+                                  <BR />
+                                  3) strength of the stem
+                                  <BR />
+                                  <BR />
+                                  <object refid="56769065-880f-11dc-8ad5-cf5661529fbc" />
+                                  <BR />
+                                  <BR />
+                                  4) growth of vine
+                                  <BR />
+                                  <BR />
+                                  <object refid="78aa83d6-880f-11dc-8ad5-cf5661529fbc" />
+                                  <BR />
+                                  <BR />
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                          <documentRefs>
+                            <OTText id="3baf1863-880f-11dc-8ad5-cf5661529fbc" name="Text field" />
+                            <OTText id="485d6714-880f-11dc-8ad5-cf5661529fbc" name="Text field" />
+                            <OTText id="56769065-880f-11dc-8ad5-cf5661529fbc" name="Text field" />
+                            <OTText id="78aa83d6-880f-11dc-8ad5-cf5661529fbc" name="Text field" />
+                          </documentRefs>
+                        </OTUDLCompoundDoc>
+                      </cards>
+                      <viewedCards>
+                        <object refid="${water-sunlight-page-1}" />
+                        <object refid="${water-sunlight-page-2}" />
+                        <object refid="${water-sunlight-page-3}" />
+                        <object refid="${water-sunlight-page-4}" />
+                      </viewedCards>
+                    </OTCardContainer>
+                  </content>
+                  <header>
+                    <OTUDLCompoundDoc id="2767fe20-6c7d-11dc-8314-0800200c9a66!/plant-1-section/header">
+                      <bodyText>
+                        <div class="title">Water and sunlight: Plant #1</div>
+                      </bodyText>
+                    </OTUDLCompoundDoc>
+                  </header>
+                  <footer>
+                    <OTUDLCompoundDoc id="2767fe20-6c7d-11dc-8314-0800200c9a66!/plant-1-section/footer">
+                      <documentRefs>
+                        <OTUDLMenu local_id="plant-1-menu">
+                          <cardContainer>
+                            <object refid="${plant-1-cards}" />
+                          </cardContainer>
+                          <menuRule>
+                            <object refid="${page-rule}" />
+                          </menuRule>
+                        </OTUDLMenu>
+                        <object refid="${menu-horizontal-circle}" />
+                      </documentRefs>
+                      <bodyText>
+                        <div align="center">
+                          <table>
+                            <tr>
+                              <td>
+                                <object refid="${plant-1-menu}" viewid="${menu-horizontal-circle}" />
+                              </td>
+                            </tr>
+                          </table>
                         </div>
-                      </div>
-                    </div>
-                  </bodyText>
-                </OTUDLCompoundDoc>
-                <OTUDLCompoundDoc local_id="leaves-page-4">
-                  <bodyText>
-                    <div class="buffer">
-                      <div class="border">
-                        <div class="body">
-                          <div class="subtitle">Leaves 2</div>
-                          Leaves page two.
-                          <p />
-                          <img src="http://confluence.concord.org/download/attachments/12521/potato.jpg" />
+                      </bodyText>
+                    </OTUDLCompoundDoc>
+                  </footer>
+                </OTUDLSection>
+                <OTUDLSection local_id="plant-2-section" viewContainerIsUpdateable="true">
+                  <content>
+                    <OTCardContainer local_id="plant-2-cards" contentsMayScroll="true" loadViewOnlyOnDemand="true">
+                      <cards>
+                        <object refid="${water-sunlight-page-1}" />
+                        <object refid="${water-sunlight-page-2}" />
+                        <object refid="${water-sunlight-page-3}" />
+                        <object refid="${water-sunlight-page-4}" />
+                        <OTUDLCompoundDoc local_id="plant-2-page-1">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle">Plant 2</div>
+                                  Plant 2 content
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                        </OTUDLCompoundDoc>
+                      </cards>
+                      <viewedCards>
+                        <object refid="${water-sunlight-page-1}" />
+                        <object refid="${water-sunlight-page-2}" />
+                        <object refid="${water-sunlight-page-3}" />
+                        <object refid="${water-sunlight-page-4}" />
+                      </viewedCards>
+                    </OTCardContainer>
+                  </content>
+                  <header>
+                    <OTUDLCompoundDoc>
+                      <bodyText>
+                        <div class="title">Water and sunlight: Plant 2</div>
+                      </bodyText>
+                    </OTUDLCompoundDoc>
+                  </header>
+                  <footer>
+                    <OTUDLCompoundDoc>
+                      <documentRefs>
+                        <OTUDLMenu local_id="plant-2-menu">
+                          <cardContainer>
+                            <object refid="${plant-2-cards}" />
+                          </cardContainer>
+                          <menuRule>
+                            <object refid="${page-rule}" />
+                          </menuRule>
+                        </OTUDLMenu>
+                        <object refid="${menu-horizontal-circle}" />
+                      </documentRefs>
+                      <bodyText>
+                        <div align="center">
+                          <table>
+                            <tr>
+                              <td>
+                                <object refid="${plant-2-menu}" viewid="${menu-horizontal-circle}" />
+                              </td>
+                            </tr>
+                          </table>
                         </div>
-                      </div>
-                    </div>
-                  </bodyText>
-                </OTUDLCompoundDoc>
-              </cards>
-              <currentCard>
-                <object refid="${leaves-page-3}" />
-              </currentCard>
-              <viewedCards>
-                <object refid="${stems-roots-leaves-page-1}" />
-                <object refid="${stems-roots-leaves-page-2}" />
-                <object refid="${leaves-page-3}" />
-              </viewedCards>
-            </OTCardContainer>
-          </content>
-          <header>
-            <OTUDLCompoundDoc>
-              <bodyText>
-                <div class="title">Stems, roots, leaves: Leaves</div>
-              </bodyText>
-            </OTUDLCompoundDoc>
-          </header>
-          <footer>
-            <OTCompoundDoc>
-              <bodyText>
-                <div align="center">
-                  <table>
-                    <tr>
-                      <td>
-                        <object refid="${section-leaves-menu}" viewid="${menu-horizontal-circle}" />
-                      </td>
-                    </tr>
-                  </table>
-                </div>
-              </bodyText>
-            </OTCompoundDoc>
-          </footer>
-        </OTUDLSection>
-        <OTUDLSection local_id="stems-section" viewContainerIsUpdateable="true" name="Stems, roots, leaves" isComputerBased="true" isIntroduction="false" isMath="false" isPosttest="false" isPretest="false" isReading="false" isWrapup="false">
-          <content>
-            <OTCardContainer local_id="stems-card-container" contentsMayScroll="true" loadViewOnlyOnDemand="true">
-              <cards>
-                <object refid="${stems-roots-leaves-page-1}" />
-                <object refid="${stems-roots-leaves-page-2}" />
-                <OTUDLCompoundDoc local_id="stems-page-3">
-                  <bodyText>
-                    <div class="buffer">
-                      <div class="border">
-                        <div class="body">
-                          <div class="subtitle">Stems</div>
-                          Stems page one.
-                          <p />
-                          <img src="http://confluence.concord.org/download/attachments/12521/mangrove.jpg" />
+                      </bodyText>
+                    </OTUDLCompoundDoc>
+                  </footer>
+                </OTUDLSection>
+                <OTUDLSection local_id="plant-3-section" viewContainerIsUpdateable="true">
+                  <content>
+                    <OTCardContainer local_id="plants-3-cards" contentsMayScroll="true" loadViewOnlyOnDemand="true">
+                      <cards>
+                        <object refid="${water-sunlight-page-1}" />
+                        <object refid="${water-sunlight-page-2}" />
+                        <object refid="${water-sunlight-page-3}" />
+                        <object refid="${water-sunlight-page-4}" />
+                        <OTUDLCompoundDoc local_id="plant-3-page-1">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle">Plant 3</div>
+                                  Plant 3 content
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                        </OTUDLCompoundDoc>
+                      </cards>
+                      <viewedCards>
+                        <object refid="${water-sunlight-page-1}" />
+                        <object refid="${water-sunlight-page-2}" />
+                        <object refid="${water-sunlight-page-3}" />
+                        <object refid="${water-sunlight-page-4}" />
+                      </viewedCards>
+                    </OTCardContainer>
+                  </content>
+                  <header>
+                    <OTUDLCompoundDoc>
+                      <bodyText>
+                        <div class="title">Water and sunlight: Plant 3</div>
+                      </bodyText>
+                    </OTUDLCompoundDoc>
+                  </header>
+                  <footer>
+                    <OTUDLCompoundDoc>
+                      <documentRefs>
+                        <OTUDLMenu local_id="plant-3-menu">
+			                          <cardContainer>
+			                            <object refid="${plant-3-cards}" />
+			                          </cardContainer>
+                          <menuRule>
+                            <object refid="${page-rule}" />
+                          </menuRule>
+                        </OTUDLMenu>
+                        <object refid="${menu-horizontal-circle}" />
+                      </documentRefs>
+                      <bodyText>
+                        <div align="center">
+                          <table>
+                            <tr>
+                              <td>
+                                <object refid="${plant-3-menu}" viewid="${menu-horizontal-circle}" />
+                              </td>
+                            </tr>
+                          </table>
                         </div>
-                      </div>
-                    </div>
-                  </bodyText>
-                </OTUDLCompoundDoc>
-                <OTUDLCompoundDoc local_id="stems-page-4">
-                  <bodyText>
-                    <div class="buffer">
-                      <div class="border">
-                        <div class="body">
-                          <div class="subtitle">Stems 2</div>
-                          Stems page two.
-                          <p />
-                          <img src="http://confluence.concord.org/download/attachments/12521/potato.jpg" />
+                      </bodyText>
+                    </OTUDLCompoundDoc>
+                  </footer>
+                </OTUDLSection>
+                <OTUDLSection local_id="plant-4-section" viewContainerIsUpdateable="true">
+                  <content>
+                    <OTCardContainer local_id="plant-4-cards" contentsMayScroll="true" loadViewOnlyOnDemand="true">
+                      <cards>
+                        <object refid="${water-sunlight-page-1}" />
+                        <object refid="${water-sunlight-page-2}" />
+                        <object refid="${water-sunlight-page-3}" />
+                        <object refid="${water-sunlight-page-4}" />
+                        <OTUDLCompoundDoc local_id="plant-4-page-1">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle">Plant 4</div>
+                                  Plant 4 content
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                        </OTUDLCompoundDoc>
+                      </cards>
+                      <viewedCards>
+                        <object refid="${water-sunlight-page-1}" />
+                        <object refid="${water-sunlight-page-2}" />
+                        <object refid="${water-sunlight-page-3}" />
+                        <object refid="${water-sunlight-page-4}" />
+                      </viewedCards>
+                    </OTCardContainer>
+                  </content>
+                  <header>
+                    <OTUDLCompoundDoc>
+                      <bodyText>
+                        <div class="title">Water and sunlight: Plant 4</div>
+                      </bodyText>
+                    </OTUDLCompoundDoc>
+                  </header>
+                  <footer>
+                    <OTUDLCompoundDoc>
+                      <documentRefs>
+                        <OTUDLMenu local_id="plant-4-menu">
+                          <cardContainer>
+                            <object refid="${plant-4-cards}" />
+                          </cardContainer>
+                          <menuRule>
+                            <object refid="${page-rule}" />
+                          </menuRule>
+                        </OTUDLMenu>
+                        <object refid="${menu-horizontal-circle}" />
+                      </documentRefs>
+                      <bodyText>
+                        <div align="center">
+                          <table>
+                            <tr>
+                              <td>
+                                <object refid="${plant-4-menu}" viewid="${menu-horizontal-circle}" />
+                              </td>
+                            </tr>
+                          </table>
                         </div>
-                      </div>
-                    </div>
-                  </bodyText>
-                </OTUDLCompoundDoc>
-              </cards>
-              <currentCard>
-                <object refid="${stems-page-3}" />
-              </currentCard>
-              <viewedCards>
-                <object refid="${stems-roots-leaves-page-1}" />
-                <object refid="${stems-roots-leaves-page-2}" />
-                <object refid="${stems-page-3}" />
-              </viewedCards>
-            </OTCardContainer>
-          </content>
-          <header>
-            <OTUDLCompoundDoc>
-              <bodyText>
-                <div class="title">Stems, roots, leaves: Stems</div>
-              </bodyText>
-            </OTUDLCompoundDoc>
-          </header>
-          <footer>
-            <OTCompoundDoc>
-              <bodyText>
-                <div align="center">
-                  <table>
-                    <tr>
-                      <td>
-                        <object refid="${section-stems-menu}" viewid="${menu-horizontal-circle}" />
-                      </td>
-                    </tr>
-                  </table>
-                </div>
-              </bodyText>
-            </OTCompoundDoc>
-          </footer>
-        </OTUDLSection>
-        <OTJavascript local_id="change_page.js">
-          <script>importClass(Packages.java.awt.event.ActionListener);
-						importClass(Packages.java.util.Vector);
-						importClass(Packages.org.concord.otrunk.udl3.OTQuestionList);
-						importClass(Packages.org.concord.framework.otrunk.OTObjectList);
-						importClass(Packages.javax.swing.JOptionPane);
-						
-						var numCards;
-						var currentcard;
-						var passwordfield;
-
-						var buttonHandler =
-						{
-								actionPerformed: function(evt)
-								{
-									if (passwordfield != null){
-									var passwordAttempt = passwordfield.getText();
-									if (passwordAttempt.equalsIgnoreCase(password.getText())){
-										cardContainer.setCurrentCard(card);
-										return;
-									} else {
-										JOptionPane.showMessageDialog(null, "Sorry, that's not the correct password.");
-										return;
-									}
-								}
-										cardContainer.setCurrentCard(card);
-								}
-						};
-						var buttonListener = new ActionListener(buttonHandler);
-
-						function init() {
-							button.addActionListener(buttonListener);
-
-							return true;
-						}
-
-						function save() {
-							button.removeActionListener(buttonListener);
-							return true;
-						}</script>
-        </OTJavascript>
-        <OTJavascript local_id="show_message.js">
-          <script>importClass(Packages.java.awt.event.ActionListener);
-						importClass(Packages.java.util.Vector);
-						importClass(Packages.org.concord.otrunk.udl3.OTQuestionList);
-						importClass(Packages.org.concord.framework.otrunk.OTObjectList);
-						importClass(Packages.javax.swing.JOptionPane);
-
-						var buttonHandler =
-						{
-								actionPerformed: function(evt)
-								{
-									var messageString = message.getText();
-									JOptionPane.showMessageDialog(null, messageString);
-								}
-						};
-						var buttonListener = new ActionListener(buttonHandler);
-
-						function init() {
-							button.addActionListener(buttonListener);
-
-							return true;
-						}
-
-						function save() {
-							button.removeActionListener(buttonListener);
-							return true;
-						}</script>
-        </OTJavascript>
-        <OTJavascript local_id="authoring_script.js">
-          <script>importClass(Packages.org.concord.framework.otrunk.OTChangeEvent);
-						importClass(Packages.org.concord.framework.otrunk.OTChangeListener);
-						importClass(Packages.org.concord.framework.otrunk.OTObject);
-						importClass(Packages.org.concord.framework.otrunk.OTObjectList);
-						importClass(Packages.org.concord.otrunk.ui.OTCardContainer);
-						importClass(Packages.org.concord.otrunk.udl3.OTUDLMenu);
-						importClass(Packages.java.lang.System);
-						importClass(Packages.org.concord.framework.otrunk.OTObjectList);
-						
-						
-						var pageHandler =
-						{
-							stateChanged: function(evt)
-							{
-								if (evt.getProperty().equalsIgnoreCase("coachStatements") &amp;&amp; evt.getOperation().equalsIgnoreCase("add")){
-									var statement = evt.getValue();
-									var statementDoc = statement.getStatement();
-									var statementText = statementDoc.getBodyText();
-									statementDoc.setBodyText("&lt;div class=\"buffer\"&gt;"+
-																"&lt;div class=\"border\"&gt;"+
-																	"&lt;div class=\"body\"&gt;"+
-																		statementText +
-																	"&lt;/div&gt;"+
-																"&lt;/div&gt;"+
-														"&lt;/div&gt;");
-								}
-							}
-						}
-						var pageListener = new OTChangeListener(pageHandler);
-						
-						var sectionHandler =
-						{
-							stateChanged: function(evt)
-							{
-								if (evt.getProperty().equalsIgnoreCase("name")){
-									var section = evt.getSource();
-									var header = section.getHeader();
-										
-										header.setBodyText("&lt;div class=\"title\"&gt;"+
-															section.getName() +
-														"&lt;/div&gt;");
-								}
-							}
-						}
-						
-						var sectionListener = new OTChangeListener(sectionHandler);
-						
-						var sectionContainerHandler =
-						{
-								stateChanged: function(evt)
-								{
-									if (evt.getProperty().equalsIgnoreCase("currentCard")){
-										var numCards = evt.getSource().getCards().size();
-										var section = evt.getSource().getCards().get(numCards-1);
-										section.getContent().addOTChangeListener(pageContainerListener);
-									}
-									if (evt.getProperty().equalsIgnoreCase("cards")) {
-										var numCards = evt.getSource().getCards().size();
-										var section = evt.getSource().getCards().get(numCards-1);
-										section.setName("Section "+numCards);
-										
-										var header = section.getHeader();
-										
-										header.setBodyText("&lt;div class=\"title\"&gt;"+
-															"Section " + numCards +
-														"&lt;/div&gt;");
-										
-										var doc = section.getContent().getCurrentCard();
-										
-										doc.setBodyText("&lt;div class=\"buffer\"&gt;"+
-															"&lt;div class=\"border\"&gt;"+
-																"&lt;div class=\"body\"&gt;"+
-																"&lt;div class=\"subtitle\"&gt;\n"+
-																		"New page"+
-																	"\n&lt;/div&gt;\n"+
-																	"New page content"+
-																"\n&lt;/div&gt;"+
-															"&lt;/div&gt;"+
-														"&lt;/div&gt;");
-										
-										pages.push(doc)	
-										pages[pages.length-1].addOTChangeListener(pageListener);
-														
-										var menu = doc.getOTObjectService().createObject(sampleMenu.otClass().getInstanceClass());
-										menu.setCardContainer(section.getContent());
-										menu.setMenuRule(menuPageRule);
-										
-										system.getLibrary().add(menu);
-										
-										var footer = section.getFooter();
-										
-										footer.setBodyText("&lt;div align=\"center\"&gt;" +
-															"&lt;table&gt;"+
-																	"&lt;tr&gt;"+
-																		"&lt;td&gt;"+
-																			"&lt;object refid=\""+menu.getGlobalId()+"\" viewid=\""+menuHorizontalView.getGlobalId()+"\"/&gt;" +
-																		"&lt;/td&gt;"+
-																	"&lt;/tr&gt;"+
-															"&lt;/table&gt;"+
-															"&lt;/div&gt;");
-														
-										section.getContent().addOTChangeListener(pageContainerListener);
-										section.addOTChangeListener(sectionListener);
-									}
-								}
-						};
-						var sectionContainerListener = new OTChangeListener(sectionContainerHandler);
-						
-						var pageContainerHandler =
-						{
-								stateChanged: function(evt)
-								{
-									if (evt.getProperty().equalsIgnoreCase("cards")) {
-										var numCards = evt.getSource().getCards().size();
-										var doc = evt.getSource().getCards().get(numCards-1);
-										doc.setBodyText("&lt;div class=\"buffer\"&gt;"+
-															"&lt;div class=\"border\"&gt;"+
-																"&lt;div class=\"body\"&gt;"+
-																"&lt;div class=\"subtitle\"&gt;\n"+
-																		"New page"+
-																	"\n&lt;/div&gt;\n"+
-																	"New page content"+
-																"\n&lt;/div&gt;"+
-															"&lt;/div&gt;"+
-														"&lt;/div&gt;");
-										pages.push(doc)	
-										pages[pages.length-1].addOTChangeListener(pageListener);
-									}
-								}
-						};
-						var pageContainerListener = new OTChangeListener(pageContainerHandler);
-						
-						var sections = [];
-						var sectionCardContainers = [];
-						var pages = [];
-						
-						function init() {
-							cardContainer.addOTChangeListener(sectionContainerListener);
-							
-							var pageIndex = 0;
-							for (var i = 0; i &lt; cardContainer.getCards().size(); i++){
-								sections[i] = cardContainer.getCards().get(i);
-								sections[i].addOTChangeListener(sectionListener);
-								
-								sectionCardContainers[i] = sections[i].getContent();
-								sectionCardContainers[i].addOTChangeListener(pageContainerListener);
-								
-								for (var j = 0; j &lt; sectionCardContainers[i].getCards().size(); j++){
-									pages[pageIndex] = sectionCardContainers[i].getCards().get(j);
-									pages[pageIndex].addOTChangeListener(pageListener);
-									pageIndex++;
-								}
-							}
-							
-							leavesSection.addOTChangeListener(sectionListener);
-							var leavesCardContainer = leavesSection.getContent();
-							leavesCardContainer.addOTChangeListener(pageContainerListener);
-							for (var j = 0; j &lt; leavesCardContainer.getCards().size(); j++){
-									var page = leavesCardContainer.getCards().get(j);
-									page.addOTChangeListener(pageListener);
-							}
-							
-							stemsSection.addOTChangeListener(sectionListener);
-							var stemsCardContainer = stemsSection.getContent();
-							stemsCardContainer.addOTChangeListener(pageContainerListener);
-							for (var j = 0; j &lt; stemsCardContainer.getCards().size(); j++){
-									var page = stemsCardContainer.getCards().get(j);
-									page.addOTChangeListener(pageListener);
-							}
-							
-							rootsSection.addOTChangeListener(sectionListener);
-							var rootsCardContainer = rootsSection.getContent();
-							rootsCardContainer.addOTChangeListener(pageContainerListener);
-							for (var j = 0; j &lt; rootsCardContainer.getCards().size(); j++){
-									var page = rootsCardContainer.getCards().get(j);
-									page.addOTChangeListener(pageListener);
-							}
-							
-							return true;
-						}
-
-						function save() {
-							cardContainer.removeOTChangeListener(sectionContainerListener);
-							return true;
-						}</script>
-        </OTJavascript>
-        <object refid="390fc895-7120-11dc-b75e-4b06cf421f29" />
-        <object refid="564b26cc-7120-11dc-b75e-4b06cf421f29" />
-        <object refid="9b8164c3-7121-11dc-b75e-4b06cf421f29" />
-        <object refid="a21a157a-7121-11dc-b75e-4b06cf421f29" />
-        <object refid="a966ace1-7121-11dc-b75e-4b06cf421f29" />
-        <object refid="b2ca6478-7121-11dc-b75e-4b06cf421f29" />
-        <object refid="b9223b9f-7121-11dc-b75e-4b06cf421f29" />
-        <object refid="bec0d4e6-7121-11dc-b75e-4b06cf421f29" />
-        <object refid="c723973d-7121-11dc-b75e-4b06cf421f29" />
+                      </bodyText>
+                    </OTUDLCompoundDoc>
+                  </footer>
+                </OTUDLSection>
+              </children>
+            </OTFolderObject>
+          </children>
+        </OTFolderObject>
+        <OTJavascript local_id="change_page.js" src="scripts/change_page.js" />
+        <OTJavascript local_id="show_message.js" src="scripts/show_message.js" />
+        <OTJavascript local_id="authoring_script.js" src="scripts/authoring_script.js" />
+        <OTJavascript local_id="branching.js" src="scripts/branching.js" />
       </library>
     </OTSystem>
   </objects>

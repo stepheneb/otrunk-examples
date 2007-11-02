@@ -4,12 +4,14 @@
     <import class="org.concord.data.state.OTDataStore" />
     <import class="org.concord.data.state.OTDataChannelDescription" />
     <import class="org.concord.data.state.OTDataField" />
+    <import class="org.concord.data.state.OTDataTable" />
     <import class="org.concord.datagraph.state.OTDataGraph" />
     <import class="org.concord.datagraph.state.OTDataAxis" />
     <import class="org.concord.datagraph.state.OTDataGraphable" />
     <import class="org.concord.datagraph.state.OTDataCollector" />
     <import class="org.concord.datagraph.state.OTMultiDataGraph" />
     <import class="org.concord.datagraph.state.OTPluginView" />
+    <import class="org.concord.datagraph.state.OTDataBarGraphable" />
     <import class="org.concord.framework.otrunk.view.OTFrame" />
     <import class="org.concord.graph.util.state.OTDrawingTool" />
     <import class="org.concord.graph.util.state.OTDrawingStamp" />
@@ -17,30 +19,31 @@
     <import class="org.concord.graph.util.state.OTDrawingShape" />
     <import class="org.concord.graph.util.state.OTDrawingTool2" />
     <import class="org.concord.graph.util.state.OTPointTextLabel" />
+    <import class="org.concord.otrunk.OTInclude"/>
     <import class="org.concord.otrunk.OTSystem" />
     <import class="org.concord.otrunk.overlay.OTOverlay" />
     <import class="org.concord.otrunk.script.ui.OTScriptObject" />
     <import class="org.concord.otrunk.script.ui.OTScriptVariable" />
     <import class="org.concord.otrunk.script.ui.OTScriptVariableComponent" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariableView" />
     <import class="org.concord.otrunk.script.js.OTJavascript" />
     <import class="org.concord.otrunk.script.OTScriptEngineBundle" />
     <import class="org.concord.otrunk.script.OTScriptEngineEntry" />
-    <import class="org.concord.otrunk.udl.OTUDLCharacter" />
-    <import class="org.concord.otrunk.udl.OTUDLCharacterGroup" />
-    <import class="org.concord.otrunk.udl.OTUDLCoachStatement" />
+    <import class="org.concord.otrunk.udl.coach.OTUDLCoach" />
+    <import class="org.concord.otrunk.udl.coach.OTUDLCoachGroup" />
+    <import class="org.concord.otrunk.udl.coach.OTUDLCoachStatement" />
     <import class="org.concord.otrunk.udl.OTUDLMenuRule" />
     <import class="org.concord.otrunk.udl.document.OTDefinition" />
+    <import class="org.concord.otrunk.udl.document.OTDefinitionList" />
     <import class="org.concord.otrunk.udl.document.OTDefinitionManager" />
     <import class="org.concord.otrunk.udl.document.OTUDLCompoundDoc" />
-    <import class="org.concord.otrunk.udl.document.OTUDLCSSModifier" />
-    <import class="org.concord.otrunk.udl.document.OTUDLCSSGroup" />
     <import class="org.concord.otrunk.udl.document.OTUDLDocumentViewConfig" />
-    <import class="org.concord.otrunk.udl.friction.OTFrictionModel" />
-    <import class="org.concord.otrunk.udl3.OTQuestion" />
+    <import class="org.concord.otrunk.udl.ui.OTDataCollectorViewConfig" />
+    <import class="org.concord.otrunk.udl.question.OTQuestion" />
+    <import class="org.concord.otrunk.udl.question.OTUDLQuestions" />
+    <import class="org.concord.otrunk.udl.question.OTUDLQuestionViewConfig" />
     <import class="org.concord.otrunk.udl3.OTUDLMenu" />
     <import class="org.concord.otrunk.udl3.OTUDLContainer" />
-    <import class="org.concord.otrunk.udl3.OTUDLQuestions" />
-    <import class="org.concord.otrunk.udl3.OTUDLQuestionViewConfig" />
     <import class="org.concord.otrunk.udl3.OTUDLSection" />
     <import class="org.concord.otrunk.ui.OTButton" />
     <import class="org.concord.otrunk.ui.OTCardContainer" />
@@ -54,120 +57,92 @@
     <import class="org.concord.otrunk.view.OTObjectEditViewConfig" />
     <import class="org.concord.otrunk.view.OTViewChild" />
     <import class="org.concord.otrunk.view.OTViewEntry" />
-    <import class="org.concord.otrunk.view.OTViewMode" />
     <import class="org.concord.otrunk.view.OTViewBundle" />
+    <import class="org.concord.otrunk.view.OTViewMode" />
     <import class="org.concord.otrunk.view.document.OTCompoundDoc" />
     <import class="org.concord.otrunk.view.document.OTCssText" />
     <import class="org.concord.otrunk.view.prototype.OTPrototypeViewEntry" />
     <import class="org.concord.otrunk.view.prototype.OTPrototypeEventController" />
     <import class="org.concord.otrunk.view.prototype.OTPrototypeMapEntry" />
+    <import class="org.concord.otrunkphet.balloons.OTPhetBalloonsModel" />
     <import class="org.concord.sensor.state.OTDeviceConfig" />
     <import class="org.concord.sensor.state.OTExperimentRequest" />
     <import class="org.concord.sensor.state.OTInterfaceManager" />
     <import class="org.concord.sensor.state.OTSensorDataProxy" />
     <import class="org.concord.sensor.state.OTSensorRequest" />
     <import class="org.concord.sensor.state.OTZeroSensor" />
-    <import class="org.concord.otrunk.udl.question.OTQuestion" />
-    <import class="org.concord.otrunkphet.balloons.OTPhetBalloonsModel"/>
   </imports>
   <objects>
     <OTSystem local_id="system">
+      <includes>
+        <OTInclude href="global-imports/predefined-sensor-graphs.otml"/>
+      </includes>
       <bundles>
         <OTViewBundle showLeftPanel="false" currentMode="default">
           <modes>
             <OTViewMode name="default" />
             <OTViewMode name="authoring">
               <map>
+                <entry key="${choice-radio-view}">
+                  <OTChoiceViewConfig objectClass="org.concord.otrunk.ui.OTChoice" viewClass="org.concord.otrunk.ui.swing.OTChoiceComboBoxEditView" useViewsAsChoices="true" />
+                </entry>
+                <entry key="${menu-horizontal-circle}">
+                  <OTViewEntry objectClass="org.concord.otrunk.udl3.OTUDLMenu" viewClass="org.concord.otrunk.udl.ui.OTUDLMenuPageEditView" />
+                </entry>
+                <entry key="${question-view}">
+                  <OTViewEntry objectClass="org.concord.otrunk.udl.question.OTQuestion" viewClass="org.concord.otrunk.udl.question.OTQuestionEditView" />
+                </entry>
+                <entry key="${menu-vertical}">
+                  <OTViewEntry objectClass="org.concord.otrunk.udl3.OTUDLMenu" viewClass="org.concord.otrunk.udl.ui.OTUDLMenuSectionEditView" />
+                </entry>
+                <entry key="${data-table-view}">
+                  <OTViewEntry objectClass="org.concord.data.state.OTDataTable" viewClass="org.concord.data.state.OTDataTableEditView" />
+                </entry>
+                <entry key="${character-group-view}">
+                  <OTViewEntry objectClass="org.concord.otrunk.udl.coach.OTUDLCoachGroup" viewClass="org.concord.otrunk.udl.coach.OTUDLCoachGroupEditView" />
+                </entry>
                 <entry key="${compound_doc_view}">
                   <OTObjectEditViewConfig objectClass="org.concord.otrunk.view.document.OTCompoundDoc" viewClass="org.concord.otrunk.view.document.OTCompoundDocEditView" usePopupEditWindows="true" copyNewObjectsByDefault="true">
                     <objectsToInsert>
                       <OTText name="Text field" />
                       <OTDrawingTool2 name="Draw tool" />
                       <OTChoice name="Choices" />
-                      <OTUDLQuestions name="Scaffolded questions">
-                        <questions>
-                          <OTQuestion name="L5">
-                            <prompt>
-                              <OTUDLCompoundDoc>
-                                <bodyText>Insert prompt here</bodyText>
-                              </OTUDLCompoundDoc>
-                            </prompt>
-                            <input>
-                              <OTUDLCompoundDoc>
-                                <bodyText>Insert input here</bodyText>
-                              </OTUDLCompoundDoc>
-                            </input>
-                          </OTQuestion>
-                          <OTQuestion name="L4">
-                            <prompt>
-                              <OTUDLCompoundDoc>
-                                <bodyText>Insert prompt here</bodyText>
-                              </OTUDLCompoundDoc>
-                            </prompt>
-                            <input>
-                              <OTUDLCompoundDoc>
-                                <bodyText>Insert input here</bodyText>
-                              </OTUDLCompoundDoc>
-                            </input>
-                          </OTQuestion>
-                          <OTQuestion name="L3">
-                            <prompt>
-                              <OTUDLCompoundDoc>
-                                <bodyText>Insert prompt here</bodyText>
-                              </OTUDLCompoundDoc>
-                            </prompt>
-                            <input>
-                              <OTUDLCompoundDoc>
-                                <bodyText>Insert input here</bodyText>
-                              </OTUDLCompoundDoc>
-                            </input>
-                          </OTQuestion>
-                          <OTQuestion name="L2">
-                            <prompt>
-                              <OTUDLCompoundDoc>
-                                <bodyText>Insert prompt here</bodyText>
-                              </OTUDLCompoundDoc>
-                            </prompt>
-                            <input>
-                              <OTUDLCompoundDoc>
-                                <bodyText>Insert input here</bodyText>
-                              </OTUDLCompoundDoc>
-                            </input>
-                          </OTQuestion>
-                          <OTQuestion name="L1">
-                            <prompt>
-                              <OTUDLCompoundDoc>
-                                <bodyText>Insert prompt here</bodyText>
-                              </OTUDLCompoundDoc>
-                            </prompt>
-                            <input>
-                              <OTUDLCompoundDoc>
-                                <bodyText>Insert input here</bodyText>
-                              </OTUDLCompoundDoc>
-                            </input>
-                          </OTQuestion>
-                        </questions>
-                      </OTUDLQuestions>
+                      <OTUDLQuestions name="Scaffolded questions" />
+                      <OTDataTable name="Data table" showLastRowForAddingNew="true">
+                        <dataStore>
+                          <OTDataStore numberChannels="2" />
+                        </dataStore>
+                      </OTDataTable>
+                      <OTDataCollector name="Data graph" title="Data graph">
+                      	<source>
+							<OTDataGraphable name="Data Graph" connectPoints="true" controllable="true" yColumn="1" drawMarks="false" color="0xff0000" xColumn="0">
+								<dataStore>
+									<OTDataStore/>
+								</dataStore>
+							</OTDataGraphable>
+						</source>
+						<xDataAxis>
+							<OTDataAxis max="60" units="s" min="0" label="Time"/>
+						</xDataAxis>
+						<yDataAxis>
+							<OTDataAxis max="40.0" units="" min="0.0" label=""/>
+						</yDataAxis>
+					  </OTDataCollector>
                     </objectsToInsert>
                   </OTObjectEditViewConfig>
-                </entry>
-                <entry key="${menu-vertical}">
-                  <OTViewEntry objectClass="org.concord.otrunk.udl3.OTUDLMenu" viewClass="org.concord.otrunk.udl.ui.OTUDLMenuSectionEditView" />
                 </entry>
                 <entry key="${questions-card-view}">
                   <OTUDLQuestionViewConfig objectClass="org.concord.otrunk.udl.question.OTUDLQuestions" viewClass="org.concord.otrunk.udl.question.OTUDLQuestionsEditView" />
                 </entry>
-                <entry key="${choice-radio-view}">
-                  <OTChoiceViewConfig objectClass="org.concord.otrunk.ui.OTChoice" viewClass="org.concord.otrunk.ui.swing.OTChoiceComboBoxEditView" useViewsAsChoices="true" />
+                <entry key="${questions-on-off-view}">
+                  <OTUDLQuestionViewConfig objectClass="org.concord.otrunk.udl.question.OTUDLQuestions" viewClass="org.concord.otrunk.udl.question.OTUDLQuestionsEditView" />
                 </entry>
-                <entry key="${character-group-view}">
-                  <OTViewEntry objectClass="org.concord.otrunk.udl.OTUDLCharacterGroup" viewClass="org.concord.otrunk.udl.OTUDLCharacterGroupEditView" />
-                </entry>
-                <entry key="${question-view}">
-                  <OTViewEntry objectClass="org.concord.otrunk.udl.question.OTQuestion" viewClass="org.concord.otrunk.udl.question.OTQuestionEditView" />
-                </entry>
-                <entry key="${menu-horizontal-circle}">
-                  <OTViewEntry objectClass="org.concord.otrunk.udl3.OTUDLMenu" viewClass="org.concord.otrunk.udl.ui.OTUDLMenuPageEditView" />
+                <entry key="${data-collector-view}">
+                  <OTDataCollectorViewConfig viewClass="org.concord.otrunk.udl.ui.OTDataCollectorEditView" objectClass="org.concord.datagraph.state.OTDataCollector">
+                  	<predefinedGraphs>
+                  		<object refid="088786c2-8719-11dc-8314-0800200c9a66"/>
+                  	</predefinedGraphs>
+                  </OTDataCollectorViewConfig>
                 </entry>
               </map>
             </OTViewMode>
@@ -181,6 +156,7 @@
 						  such as "L1", "L2", etc. -->
             <OTUDLQuestionViewConfig local_id="questions-card-view" isLevelFrozen="false" defaultScaffoldLevel="0" objectClass="org.concord.otrunk.udl.question.OTUDLQuestions" viewClass="org.concord.otrunk.udl.question.OTUDLQuestionsCardView" />
             <OTViewEntry objectClass="org.concord.otrunk.ui.OTImage" viewClass="org.concord.otrunk.ui.swing.OTImageView" />
+            <OTUDLQuestionViewConfig local_id="questions-on-off-view" isLevelFrozen="false" defaultScaffoldLevel="1" objectClass="org.concord.otrunk.udl.question.OTUDLQuestions" viewClass="org.concord.otrunk.udl.question.OTUDLQuestionsOnOffView" />
             <OTViewEntry local_id="snapshot_button_view" objectClass="org.concord.otrunk.ui.snapshot.OTSnapshotButton" viewClass="org.concord.otrunk.ui.snapshot.OTSnapshotButtonView" />
             <OTViewEntry objectClass="org.concord.otrunk.ui.snapshot.OTSnapshotAlbum" viewClass="org.concord.otrunk.ui.snapshot.OTSnapshotAlbumView" />
             <OTViewEntry objectClass="org.concord.otrunk.udl.friction.OTFrictionModel" viewClass="org.concord.otrunk.udl.friction.OTFrictionModelView" />
@@ -188,27 +164,28 @@
             <OTViewEntry objectClass="org.concord.otrunk.script.ui.OTScriptObject" viewClass="org.concord.otrunk.script.ui.OTScriptObjectView" />
             <OTViewEntry objectClass="org.concord.otrunk.ui.OTButton" viewClass="org.concord.otrunk.ui.swing.OTButtonView" />
             <OTViewEntry local_id="question-view" objectClass="org.concord.otrunk.udl.question.OTQuestion" viewClass="org.concord.otrunk.udl.question.OTQuestionView" />
-            <OTViewEntry local_id="character-group-view" objectClass="org.concord.otrunk.udl.OTUDLCharacterGroup" viewClass="org.concord.otrunk.udl.OTUDLCharacterGroupView" />
+            <OTViewEntry local_id="character-group-view" objectClass="org.concord.otrunk.udl.coach.OTUDLCoachGroup" viewClass="org.concord.otrunk.udl.coach.OTUDLCoachGroupView" />
             <OTViewEntry objectClass="org.concord.otrunk.udl3.OTUDLSection" viewClass="org.concord.otrunk.udl3.OTUDLSectionView" />
             <OTViewEntry local_id="container_view" objectClass="org.concord.otrunk.udl3.OTUDLContainer" viewClass="org.concord.otrunk.udl3.OTUDLContainerView" />
-            <OTViewEntry objectClass="org.concord.otrunk.udl.document.OTUDLCSSModifier" viewClass="org.concord.otrunk.udl.document.OTUDLCSSModifierView" />
             <OTViewEntry local_id="menu-vertical" objectClass="org.concord.otrunk.udl3.OTUDLMenu" viewClass="org.concord.otrunk.udl.ui.OTUDLMenuSectionView" />
             <OTViewEntry local_id="menu-horizontal-circle" objectClass="org.concord.otrunk.udl3.OTUDLMenu" viewClass="org.concord.otrunk.udl.ui.OTUDLMenuPageView" />
-            <OTViewEntry objectClass="org.concord.otrunk.udl3.OTQuestion" viewClass="org.concord.otrunk.udl3.OTQuestionView" />
+            <OTViewEntry local_id="menu-horizontal-book" objectClass="org.concord.otrunk.udl3.OTUDLMenu" viewClass="org.concord.otrunk.udl.ui.OTUDLMenuPageBookView" />
             <OTChoiceViewConfig local_id="choice-radio-view" objectClass="org.concord.otrunk.ui.OTChoice" viewClass="org.concord.otrunk.ui.swing.OTChoiceRadioButtonView" useViewsAsChoices="true" />
             <OTViewEntry local_id="choice-combo-view" objectClass="org.concord.otrunk.ui.OTChoice" viewClass="org.concord.otrunk.ui.swing.OTChoiceComboBoxView" />
+            <OTViewEntry objectClass="org.concord.otrunk.udl.question.OTQuestion" viewClass="org.concord.otrunk.udl3.OTQuestionView" />
             <OTViewEntry objectClass="org.concord.otrunk.script.ui.OTScriptObject" viewClass="org.concord.otrunk.script.ui.OTScriptObjectView" />
             <OTViewEntry objectClass="org.concord.otrunk.ui.OTCardContainer" viewClass="org.concord.otrunk.ui.swing.OTCardContainerView" />
             <OTViewEntry objectClass="org.concord.otrunk.ui.OTBorderContainer" viewClass="org.concord.otrunk.ui.swing.OTBorderContainerView" />
             <OTViewEntry objectClass="org.concord.otrunk.ui.OTPlacementContainer" viewClass="org.concord.otrunk.ui.swing.OTPlacementContainerView" />
             <OTViewEntry local_id="text-edit" objectClass="org.concord.otrunk.ui.OTText" viewClass="org.concord.otrunk.ui.swing.OTTextEditView" />
             <OTViewEntry local_id="text-label" objectClass="org.concord.otrunk.ui.OTText" viewClass="org.concord.otrunk.ui.swing.OTTextView" />
-            <OTViewEntry viewClass="org.concord.datagraph.state.OTDataCollectorView" objectClass="org.concord.datagraph.state.OTDataCollector" />
+            <OTViewEntry local_id="data-collector-view" viewClass="org.concord.datagraph.state.OTDataCollectorView" objectClass="org.concord.datagraph.state.OTDataCollector" />
             <OTViewEntry viewClass="org.concord.datagraph.state.OTDataGraphView" objectClass="org.concord.datagraph.state.OTDataGraph" />
             <OTViewEntry viewClass="org.concord.data.state.OTDataFieldView" objectClass="org.concord.data.state.OTDataField" />
             <OTViewEntry viewClass="org.concord.datagraph.state.OTDataDrawingToolView" objectClass="org.concord.graph.util.state.OTDrawingTool" />
             <OTViewEntry viewClass="org.concord.datagraph.state.OTMultiDataGraphView" objectClass="org.concord.datagraph.state.OTMultiDataGraph" />
-            <OTViewEntry objectClass="org.concord.otrunkphet.balloons.OTPhetBalloonsModel" viewClass="org.concord.otrunkphet.balloons.OTPhetBalloonsModelView" />            
+            <OTViewEntry objectClass="org.concord.otrunkphet.balloons.OTPhetBalloonsModel" viewClass="org.concord.otrunkphet.balloons.OTPhetBalloonsModelView" />
+            <OTViewEntry local_id="data-table-view" objectClass="org.concord.data.state.OTDataTable" viewClass="org.concord.data.state.OTDataTableView" />
             <OTUDLDocumentViewConfig local_id="compound_doc_view" objectClass="org.concord.otrunk.view.document.OTCompoundDoc" viewClass="org.concord.otrunk.udl.document.OTUDLDocumentView">
               <definitionManager>
                 <object refid="${definition-manager}" />
@@ -243,7 +220,7 @@
                     </OTOverlay>
                   </choices>
                   <currentChoice>
-                    <object refid="${large-text-overlay}" />
+                    <object refid="${normal-text-overlay}" />
                   </currentChoice>
                 </OTChoice>
               </prototype>
@@ -293,11 +270,11 @@
         </OTInterfaceManager>
       </bundles>
       <overlays>
-        <object refid="${large-text-overlay}" />
+        <object refid="${normal-text-overlay}" />
         <object refid="${english-overlay}" />
       </overlays>
       <root>
-        <OTUDLContainer name="UDL Activity">
+        <OTUDLContainer name="UDL Electricity">
           <cssColor>
             <object refid="${css-color}" />
           </cssColor>
@@ -307,7 +284,7 @@
                 <div class="leftpanel">
                   <img src="http://udl.concord.org/share/udl-tree-only.png" width="70" height="73" />
                   <br />
-                  <div class="activity-title">UDL Activity</div>
+                  <div class="activity-title">UDL Electricity</div>
                 </div>
               </bodyText>
             </OTCompoundDoc>
@@ -338,19 +315,19 @@
             </OTCompoundDoc>
           </topBar>
           <characters>
-            <OTUDLCharacterGroup local_id="character-group">
+            <OTUDLCoachGroup local_id="character-group">
               <topLevelCardContainer>
                 <object refid="${section-card-container}" />
               </topLevelCardContainer>
               <characters>
-                <OTUDLCharacter local_id="character_affective" inactiveImageURL="http://confluence.concord.org/download/attachments/12353/blah-head-small.png" activeImageURL="http://confluence.concord.org/download/attachments/12353/blah-head.png" />
-                <OTUDLCharacter local_id="character_strategic" inactiveImageURL="http://confluence.concord.org/download/attachments/12353/clunk-head-small.png" activeImageURL="http://confluence.concord.org/download/attachments/12353/clunk-head.png" />
-                <OTUDLCharacter local_id="character_recognition" inactiveImageURL="http://confluence.concord.org/download/attachments/12353/roxy-head-small.png" activeImageURL="http://confluence.concord.org/download/attachments/11818/roxy-large.gif" />
-              </characters>
+                <OTUDLCoach local_id="character_affective" inactiveImageURL="http://udl.concord.org/share/shared-images/blah-head.png" activeImageURL="http://udl.concord.org/share/shared-images/blah-anim.gif" />
+                <OTUDLCoach local_id="character_strategic" inactiveImageURL="http://udl.concord.org/share/shared-images/clunk-head.png" activeImageURL="http://udl.concord.org/share/shared-images/clunk-anim.gif" />
+                <OTUDLCoach local_id="character_recognition" inactiveImageURL="http://udl.concord.org/share/shared-images/roxy-head.png" activeImageURL="http://udl.concord.org/share/shared-images/roxy-anim.gif" />
+               </characters>
               <speechFrame>
                 <OTFrame local_id="speech_frame" width="380" height="340" borderlessPopup="false" />
               </speechFrame>
-            </OTUDLCharacterGroup>
+            </OTUDLCoachGroup>
           </characters>
           <content>
             <OTCardContainer local_id="section-card-container" loadViewOnlyOnDemand="true">
@@ -371,7 +348,6 @@
                             <div class="buffer">
                               <div class="border">
                                 <div class="body">
-                                  <div class="subtitle-continue" />
                                   Answer the following questions. When you have finished, press the
                                   <b>Submit</b>
                                   button. Warning: after you hit the Submit button, you will not be able to go back and change your answers.
@@ -436,12 +412,11 @@
                             <OTText id="b4b228e7-7761-11dc-88e0-f91e4efaa30a" name="Text field" />
                           </documentRefs>
                         </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc id="2767fe20-6c7d-11dc-8314-0800200c9a66!/section-1-card-container/cards[1]" name="%f2fe0928-7761-11dc-88e0-f91e4efaa30a">
+                        <OTUDLCompoundDoc name="%f2fe0928-7761-11dc-88e0-f91e4efaa30a">
                           <bodyText>
                             <div class="buffer">
                               <div class="border">
                                 <div class="body">
-                                  <div class="subtitle-continue" />
                                   3. There are 100 positive charges and 98 negative charges on a piece of metal.  What is the result?
                                   <p />
                                   <object refid="2d203cea-7762-11dc-88e0-f91e4efaa30a" />
@@ -453,15 +428,49 @@
                                   4. When you rub a balloon with wool, what happens?
                                   <p />
                                   <object refid="48ab2c05-7762-11dc-88e0-f91e4efaa30a" />
-                                  <p />
-                                  Press the
-                                  <b>Submit</b>
-                                  button when you are done.
+                                  <p/>
+                                  <table>
+                                    <tr>
+                                      <td>
+                                        Press the
+                                        <b>Submit</b>
+                                        button when you are done.
+                                      </td>
+                                      <td>
+                                        <object refid="${pretest-submit-button}" />
+                                      </td>
+                                    </tr>
+                                  </table>
+                                  <object refid="${pretest-button-script}" />
                                 </div>
                               </div>
                             </div>
                           </bodyText>
                           <documentRefs>
+                          	<OTButton local_id="pretest-submit-button" name="Button" text="Submit" />
+                            <OTScriptObject local_id="pretest-button-script">
+                              <variables>
+                                <OTScriptVariable name="cardContainer">
+                                  <reference>
+                                    <object refid="${section-card-container}" />
+                                  </reference>
+                                </OTScriptVariable>
+                                <OTScriptVariableComponent name="button">
+                                  <reference>
+                                    <object refid="${pretest-submit-button}" />
+                                  </reference>
+                                </OTScriptVariableComponent>
+                                <OTScriptVariable name="card">
+                                  <reference>
+                                    <object refid="${section_2}" />
+                                  </reference>
+                                </OTScriptVariable>
+                              </variables>
+                              <script>
+                                <object refid="${change_page.js}" />
+                              </script>
+                              <scriptState />
+                            </OTScriptObject>
                             <OTChoice id="2d203cea-7762-11dc-88e0-f91e4efaa30a" name="Choices">
                               <choices>
                                 <OTCompoundDoc name="The charge of the metal is 198.">
@@ -499,11 +508,10 @@
                         </OTUDLCompoundDoc>
                       </cards>
                       <currentCard>
-                        <object refid="2767fe20-6c7d-11dc-8314-0800200c9a66!/section-1-card-container/cards[1]" />
+                        <object refid="${page-1}" />
                       </currentCard>
                       <viewedCards>
                         <object refid="${page-1}" />
-                        <object refid="2767fe20-6c7d-11dc-8314-0800200c9a66!/section-1-card-container/cards[1]" />
                       </viewedCards>
                     </OTCardContainer>
                   </content>
@@ -532,7 +540,7 @@
                     <object refid="2767fe20-6c7d-11dc-8314-0800200c9a66!/section_1/footer" />
                   </south>
                 </OTUDLSection>
-                <OTUDLSection name="Introduction" isComputerBased="false" isIntroduction="true" isMath="false" isPosttest="false" isPretest="false" isReading="false" isWrapup="false">
+                <OTUDLSection local_id="section_2" name="Introduction" isComputerBased="false" isIntroduction="true" isMath="false" isPosttest="false" isPretest="false" isReading="false" isWrapup="false">
                   <content>
                     <OTCardContainer id="163543bf-775f-11dc-88e0-f91e4efaa30a" contentsMayScroll="true" loadViewOnlyOnDemand="true">
                       <cards>
@@ -578,6 +586,9 @@
                       <currentCard>
                         <object refid="163543be-775f-11dc-88e0-f91e4efaa30a" />
                       </currentCard>
+                      <viewedCards>
+                        <object refid="163543be-775f-11dc-88e0-f91e4efaa30a" />
+                      </viewedCards>
                     </OTCardContainer>
                   </content>
                   <header>
@@ -623,7 +634,74 @@
                     <object refid="16356ad1-775f-11dc-88e0-f91e4efaa30a" />
                   </south>
                 </OTUDLSection>
-                <OTUDLSection id="2767fe20-6c7d-11dc-8314-0800200c9a66!/section-card-container/cards[2]" name="Charged balloons" isComputerBased="true" isIntroduction="false" isMath="false" isPosttest="false" isPretest="false" isReading="false" isWrapup="false">
+                <OTUDLSection local_id="section_3" name="Electrical adventure" isComputerBased="false" isIntroduction="false" isMath="false" isPosttest="false" isPretest="false" isReading="true" isWrapup="false">
+                  <content>
+                    <OTCardContainer id="2b9ab66d-775f-11dc-88e0-f91e4efaa30a" contentsMayScroll="true" loadViewOnlyOnDemand="true">
+                      <cards>
+                        <OTUDLCompoundDoc id="2b9ab66c-775f-11dc-88e0-f91e4efaa30a" name="%2b9ab66c-775f-11dc-88e0-f91e4efaa30a">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle">Read the story!</div>
+                                  Download the story of "Maria and Eduardo's Electrical Adventure" by clicking
+                                  <a href="http://udl.concord.org/share/Electricity/ElectricalAdventure_v2.pdf">here</a>
+                                  .
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                        </OTUDLCompoundDoc>
+                      </cards>
+                      <currentCard>
+                        <object refid="2b9ab66c-775f-11dc-88e0-f91e4efaa30a" />
+                      </currentCard>
+                    </OTCardContainer>
+                  </content>
+                  <header>
+                    <OTUDLCompoundDoc id="2b9ab66e-775f-11dc-88e0-f91e4efaa30a" name="%2b9ab66e-775f-11dc-88e0-f91e4efaa30a">
+                      <bodyText>
+                        <div class="title">Electrical adventure</div>
+                      </bodyText>
+                    </OTUDLCompoundDoc>
+                  </header>
+                  <footer>
+                    <OTUDLCompoundDoc id="2b9ab66f-775f-11dc-88e0-f91e4efaa30a" name="%2b9ab66f-775f-11dc-88e0-f91e4efaa30a">
+                      <bodyText>
+                        <div align="center">
+                          <table>
+                            <tr>
+                              <td>
+                                <object refid="2b9adc80-775f-11dc-88e0-f91e4efaa30a" viewid="${menu-horizontal-circle}" />
+                              </td>
+                            </tr>
+                          </table>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                        <OTUDLMenu id="2b9adc80-775f-11dc-88e0-f91e4efaa30a">
+                          <cardContainer>
+                            <object refid="2b9ab66d-775f-11dc-88e0-f91e4efaa30a" />
+                          </cardContainer>
+                          <menuRule>
+                            <object refid="${page-rule}" />
+                          </menuRule>
+                        </OTUDLMenu>
+                        <object refid="${menu-horizontal-circle}" />
+                      </documentRefs>
+                    </OTUDLCompoundDoc>
+                  </footer>
+                  <north>
+                    <object refid="2b9ab66e-775f-11dc-88e0-f91e4efaa30a" />
+                  </north>
+                  <center>
+                    <object refid="2b9ab66d-775f-11dc-88e0-f91e4efaa30a" />
+                  </center>
+                  <south>
+                    <object refid="2b9ab66f-775f-11dc-88e0-f91e4efaa30a" />
+                  </south>
+                </OTUDLSection>
+                <OTUDLSection local_id="section_4" name="Charged balloons" isComputerBased="true" isIntroduction="false" isMath="false" isPosttest="false" isPretest="false" isReading="false" isWrapup="false">
                   <content>
                     <OTCardContainer id="1b062cc5-775f-11dc-88e0-f91e4efaa30a" contentsMayScroll="true" loadViewOnlyOnDemand="true">
                       <cards>
@@ -643,7 +721,7 @@
                             </div>
                           </bodyText>
                         </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc id="1b062cc5-775f-11dc-88e0-f91e4efaa30a/cards[1]" name="%5d742e70-781a-11dc-a365-9554a3cf1337">
+                        <OTUDLCompoundDoc name="%5d742e70-781a-11dc-a365-9554a3cf1337">
                           <bodyText>
                             <div class="buffer">
                               <div class="border">
@@ -662,12 +740,12 @@
                             </div>
                           </bodyText>
                         </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc id="1b062cc5-775f-11dc-88e0-f91e4efaa30a/cards[2]" name="%f82b1d82-781a-11dc-a365-9554a3cf1337">
+                        <OTUDLCompoundDoc name="%f82b1d82-781a-11dc-a365-9554a3cf1337">
                           <bodyText>
                             <div class="buffer">
                               <div class="border">
                                 <div class="body">
-                                  <div class="subtitle-continue">Engage (part 2)</div>
+                                  <div class="subtitle-continued">Engage (part 2)</div>
                                   Draw a balloon and a wool sweater. Using the Stamp tool, put 10 (+) signs and 10 (-) signs on the balloon. Also put 10 (+) signs and 10 (-) signs on the wool sweater.
                                   <p />
                                   <object refid="81c20131-781a-11dc-a365-9554a3cf1337" />
@@ -736,7 +814,7 @@
                             <OTText id="f0bbe2f1-781a-11dc-a365-9554a3cf1337" name="Text field" />
                           </documentRefs>
                         </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc id="1b062cc5-775f-11dc-88e0-f91e4efaa30a/cards[3]" name="%05ebc693-781b-11dc-a365-9554a3cf1337">
+                        <OTUDLCompoundDoc name="%05ebc693-781b-11dc-a365-9554a3cf1337">
                           <bodyText>
                             <div class="buffer">
                               <div class="border">
@@ -755,7 +833,7 @@
                             </div>
                           </bodyText>
                         </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc id="1b062cc5-775f-11dc-88e0-f91e4efaa30a/cards[4]" name="%2af2d734-781b-11dc-a365-9554a3cf1337">
+                        <OTUDLCompoundDoc name="%2af2d734-781b-11dc-a365-9554a3cf1337">
                           <bodyText>
                             <div class="buffer">
                               <div class="border">
@@ -783,7 +861,7 @@
                             <OTText id="711bcf07-781b-11dc-a365-9554a3cf1337" name="Text field" />
                           </documentRefs>
                         </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc id="1b062cc5-775f-11dc-88e0-f91e4efaa30a/cards[5]" name="%93e3c518-781b-11dc-a365-9554a3cf1337">
+                        <OTUDLCompoundDoc name="%93e3c518-781b-11dc-a365-9554a3cf1337">
                           <bodyText>
                             <div class="buffer">
                               <div class="border">
@@ -837,15 +915,15 @@
                                   <bodyText>positively</bodyText>
                                 </OTCompoundDoc>
                               </choices>
-                            </OTChoice>                          
+                            </OTChoice>
                           </documentRefs>
                         </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc id="1b062cc5-775f-11dc-88e0-f91e4efaa30a/cards[6]" name="%93e3c518-781b-11dc-a365-9554a3cf1337">
+                        <OTUDLCompoundDoc name="%93e3c518-781b-11dc-a365-9554a3cf1337">
                           <bodyText>
                             <div class="buffer">
                               <div class="border">
                                 <div class="body">
-                                  <div class="subtitle-continue">Explain (part 2)</div>
+                                  <div class="subtitle-continued">Explain (part 2)</div>
                                   Based on your observations, answer these questions with
                                   <b>true</b>
                                   or
@@ -905,7 +983,7 @@
                             </OTChoice>
                           </documentRefs>
                         </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc id="1b062cc5-775f-11dc-88e0-f91e4efaa30a/cards[7]" name="%d19af397-781d-11dc-a365-9554a3cf1337">
+                        <OTUDLCompoundDoc name="%d19af397-781d-11dc-a365-9554a3cf1337">
                           <bodyText>
                             <div class="buffer">
                               <div class="border">
@@ -948,7 +1026,7 @@
                             <OTText id="2a631209-781e-11dc-a365-9554a3cf1337" name="Text field" />
                           </documentRefs>
                         </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc id="1b062cc5-775f-11dc-88e0-f91e4efaa30a/cards[8]" name="%1750fdff-7821-11dc-a365-9554a3cf1337">
+                        <OTUDLCompoundDoc name="%1750fdff-7821-11dc-a365-9554a3cf1337">
                           <bodyText>
                             <div class="buffer">
                               <div class="border">
@@ -976,18 +1054,10 @@
                         </OTUDLCompoundDoc>
                       </cards>
                       <currentCard>
-                        <object refid="1b062cc5-775f-11dc-88e0-f91e4efaa30a/cards[8]" />
+                        <object refid="1b062cc4-775f-11dc-88e0-f91e4efaa30a" />
                       </currentCard>
                       <viewedCards>
                         <object refid="1b062cc4-775f-11dc-88e0-f91e4efaa30a" />
-                        <object refid="1b062cc5-775f-11dc-88e0-f91e4efaa30a/cards[1]" />
-                        <object refid="1b062cc5-775f-11dc-88e0-f91e4efaa30a/cards[2]" />
-                        <object refid="1b062cc5-775f-11dc-88e0-f91e4efaa30a/cards[3]" />
-                        <object refid="1b062cc5-775f-11dc-88e0-f91e4efaa30a/cards[4]" />
-                        <object refid="1b062cc5-775f-11dc-88e0-f91e4efaa30a/cards[5]" />
-                        <object refid="1b062cc5-775f-11dc-88e0-f91e4efaa30a/cards[6]" />
-                        <object refid="1b062cc5-775f-11dc-88e0-f91e4efaa30a/cards[7]" />
-                        <object refid="1b062cc5-775f-11dc-88e0-f91e4efaa30a/cards[8]" />
                       </viewedCards>
                     </OTCardContainer>
                   </content>
@@ -1034,7 +1104,7 @@
                     <object refid="1b0653d7-775f-11dc-88e0-f91e4efaa30a" />
                   </south>
                 </OTUDLSection>
-                <OTUDLSection id="2767fe20-6c7d-11dc-8314-0800200c9a66!/section-card-container/cards[3]" name="Model balloons" isComputerBased="true" isIntroduction="false" isMath="false" isPosttest="false" isPretest="false" isReading="false" isWrapup="false">
+                <OTUDLSection local_id="section_5" name="Model balloons" isComputerBased="true" isIntroduction="false" isMath="false" isPosttest="false" isPretest="false" isReading="false" isWrapup="false">
                   <content>
                     <OTCardContainer id="1f24dccb-775f-11dc-88e0-f91e4efaa30a" contentsMayScroll="true" loadViewOnlyOnDemand="true">
                       <cards>
@@ -1054,12 +1124,12 @@
                             </div>
                           </bodyText>
                         </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc id="1f24dccb-775f-11dc-88e0-f91e4efaa30a/cards[1]" name="%789387a4-7830-11dc-ab7e-6d2f34ff62a8">
+                        <OTUDLCompoundDoc name="%789387a4-7830-11dc-ab7e-6d2f34ff62a8">
                           <bodyText>
                             <div class="buffer">
                               <div class="border">
                                 <div class="body">
-                                  <div class="subtitle-continue">Engage-2</div>
+                                  <div class="subtitle-continued">Engage-2</div>
                                   Electric charges are everywhere. They are very small - even smaller than atoms! - so you can't see them. There are two kinds of electric charge, called positive  and negative.
                                   <p />
                                   Every object has a
@@ -1073,12 +1143,12 @@
                             </div>
                           </bodyText>
                         </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc id="1f24dccb-775f-11dc-88e0-f91e4efaa30a/cards[2]" name="%bb4ea8ec-7830-11dc-ab7e-6d2f34ff62a8">
+                        <OTUDLCompoundDoc name="%bb4ea8ec-7830-11dc-ab7e-6d2f34ff62a8">
                           <bodyText>
                             <div class="buffer">
                               <div class="border">
                                 <div class="body">
-                                  <div class="subtitle-continue">Engage-3</div>
+                                  <div class="subtitle-continued">Engage-3</div>
                                   Draw a balloon and a wool sweater. Using the Stamp tool, put 10 plus signs and 10 negative signs on the balloon. Also put 10 plus signs and 10 negative signs on the wool sweater.
                                   <br />
                                   <object refid="a4f00945-7830-11dc-ab7e-6d2f34ff62a8" />
@@ -1142,7 +1212,7 @@
                             <OTText id="ff9f103c-7830-11dc-ab7e-6d2f34ff62a8" name="Text field" />
                           </documentRefs>
                         </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc id="1f24dccb-775f-11dc-88e0-f91e4efaa30a/cards[3]" name="%2aae515d-7831-11dc-ab7e-6d2f34ff62a8">
+                        <OTUDLCompoundDoc name="%2aae515d-7831-11dc-ab7e-6d2f34ff62a8">
                           <bodyText>
                             <div class="buffer">
                               <div class="border">
@@ -1150,7 +1220,7 @@
                                   <div class="subtitle">Explore</div>
                                   Here is a model with a balloon and a wool sweater. It shows positive and negative charges on each object. To start with, the charges are paired up. Each object has equal numbers of positive and negative charges.
                                   <p />
-                                  <object refid="${balloons_model}"/>
+                                  <object refid="${balloons_model}" />
                                   <p />
                                   Use the mouse to drag the balloon and move it up and down over the wool sweater. What happens?
                                   <br />
@@ -1180,10 +1250,10 @@
                             <OTText id="54a321cf-7831-11dc-ab7e-6d2f34ff62a8" name="Text field" />
                             <OTText id="5a8bbc60-7831-11dc-ab7e-6d2f34ff62a8" name="Text field" />
                             <OTText id="71a2af81-7831-11dc-ab7e-6d2f34ff62a8" name="Text field" />
-                            <OTPhetBalloonsModel local_id="balloons_model" />
+                            <null />
                           </documentRefs>
                         </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc id="1f24dccb-775f-11dc-88e0-f91e4efaa30a/cards[4]" name="%92509f32-7831-11dc-ab7e-6d2f34ff62a8">
+                        <OTUDLCompoundDoc name="%92509f32-7831-11dc-ab7e-6d2f34ff62a8">
                           <bodyText>
                             <div class="buffer">
                               <div class="border">
@@ -1239,13 +1309,13 @@
                             </OTChoice>
                           </documentRefs>
                         </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc id="1f24dccb-775f-11dc-88e0-f91e4efaa30a/cards[5]" name="%ce88457f-7831-11dc-ab7e-6d2f34ff62a8">
+                        <OTUDLCompoundDoc name="%ce88457f-7831-11dc-ab7e-6d2f34ff62a8">
                           <bodyText>
                             <div class="buffer">
                               <div class="border">
                                 <div class="body">
                                   <div class="subtitle">Elaborate</div>
-                                  <object refid="${balloons_model}"/>                                  
+                                  <object refid="${balloons_model}" />
                                   <p />
                                   Reset the model. Uncheck the
                                   <b>Show Sweater</b>
@@ -1366,11 +1436,6 @@
                       </currentCard>
                       <viewedCards>
                         <object refid="1f24dcca-775f-11dc-88e0-f91e4efaa30a" />
-                        <object refid="1f24dccb-775f-11dc-88e0-f91e4efaa30a/cards[1]" />
-                        <object refid="1f24dccb-775f-11dc-88e0-f91e4efaa30a/cards[2]" />
-                        <object refid="1f24dccb-775f-11dc-88e0-f91e4efaa30a/cards[3]" />
-                        <object refid="1f24dccb-775f-11dc-88e0-f91e4efaa30a/cards[4]" />
-                        <object refid="1f24dccb-775f-11dc-88e0-f91e4efaa30a/cards[5]" />
                       </viewedCards>
                     </OTCardContainer>
                   </content>
@@ -1417,7 +1482,7 @@
                     <object refid="1f2503dd-775f-11dc-88e0-f91e4efaa30a" />
                   </south>
                 </OTUDLSection>
-                <OTUDLSection id="2767fe20-6c7d-11dc-8314-0800200c9a66!/section-card-container/cards[4]" name="Circuit model" isComputerBased="true" isIntroduction="false" isMath="false" isPosttest="false" isPretest="false" isReading="false" isWrapup="false">
+                <OTUDLSection local_id="section_6" name="Circuit model" isComputerBased="true" isIntroduction="false" isMath="false" isPosttest="false" isPretest="false" isReading="false" isWrapup="false">
                   <content>
                     <OTCardContainer id="236e6d61-775f-11dc-88e0-f91e4efaa30a" contentsMayScroll="true" loadViewOnlyOnDemand="true">
                       <cards>
@@ -1437,7 +1502,7 @@
                             </div>
                           </bodyText>
                         </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc id="236e6d61-775f-11dc-88e0-f91e4efaa30a/cards[1]" name="%81055e0c-7833-11dc-ab7e-6d2f34ff62a8">
+                        <OTUDLCompoundDoc name="%81055e0c-7833-11dc-ab7e-6d2f34ff62a8">
                           <bodyText>
                             <div class="buffer">
                               <div class="border">
@@ -1457,7 +1522,7 @@
                             </div>
                           </bodyText>
                         </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc id="236e6d61-775f-11dc-88e0-f91e4efaa30a/cards[2]" name="%a7a07c2d-7833-11dc-ab7e-6d2f34ff62a8">
+                        <OTUDLCompoundDoc name="%a7a07c2d-7833-11dc-ab7e-6d2f34ff62a8">
                           <bodyText>
                             <div class="buffer">
                               <div class="border">
@@ -1475,7 +1540,7 @@
                             </div>
                           </bodyText>
                         </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc id="236e6d61-775f-11dc-88e0-f91e4efaa30a/cards[3]" name="%cbff17ce-7833-11dc-ab7e-6d2f34ff62a8">
+                        <OTUDLCompoundDoc name="%cbff17ce-7833-11dc-ab7e-6d2f34ff62a8">
                           <bodyText>
                             <div class="buffer">
                               <div class="border">
@@ -1496,12 +1561,12 @@
                             </div>
                           </bodyText>
                         </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc id="236e6d61-775f-11dc-88e0-f91e4efaa30a/cards[4]" name="%cbff17ce-7833-11dc-ab7e-6d2f34ff62a8">
+                        <OTUDLCompoundDoc name="%cbff17ce-7833-11dc-ab7e-6d2f34ff62a8">
                           <bodyText>
                             <div class="buffer">
                               <div class="border">
                                 <div class="body">
-                                  <div class="subtitle-continue">Explore (part 2)</div>
+                                  <div class="subtitle-continued">Explore (part 2)</div>
                                   Pull the string to make it go around the loop. This is what a battery does. It forces the electric charges along the wire. Draw a
                                   <b>picture</b>
                                   of a battery on a piece of paper and stick it to the cardboard.
@@ -1539,7 +1604,7 @@
                             </OTChoice>
                           </documentRefs>
                         </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc id="236e6d61-775f-11dc-88e0-f91e4efaa30a/cards[5]" name="%0e1f3190-7834-11dc-ab7e-6d2f34ff62a8">
+                        <OTUDLCompoundDoc name="%0e1f3190-7834-11dc-ab7e-6d2f34ff62a8">
                           <bodyText>
                             <div class="buffer">
                               <div class="border">
@@ -1561,7 +1626,7 @@
                             <OTText id="98444bb0-7c2c-11dc-a42b-09251e424683" name="Text field" />
                           </documentRefs>
                         </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc id="236e6d61-775f-11dc-88e0-f91e4efaa30a/cards[6]" name="%40ea94c1-7834-11dc-ab7e-6d2f34ff62a8">
+                        <OTUDLCompoundDoc name="%40ea94c1-7834-11dc-ab7e-6d2f34ff62a8">
                           <bodyText>
                             <div class="buffer">
                               <div class="border">
@@ -1580,7 +1645,7 @@
                             <OTText id="49b58ec2-7834-11dc-ab7e-6d2f34ff62a8" name="Text field" />
                           </documentRefs>
                         </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc id="236e6d61-775f-11dc-88e0-f91e4efaa30a/cards[7]" name="%70e599e3-7834-11dc-ab7e-6d2f34ff62a8">
+                        <OTUDLCompoundDoc name="%70e599e3-7834-11dc-ab7e-6d2f34ff62a8">
                           <bodyText>
                             <div class="buffer">
                               <div class="border">
@@ -1684,17 +1749,10 @@
                         </OTUDLCompoundDoc>
                       </cards>
                       <currentCard>
-                        <object refid="236e6d61-775f-11dc-88e0-f91e4efaa30a/cards[7]" />
+                        <object refid="236e6d60-775f-11dc-88e0-f91e4efaa30a" />
                       </currentCard>
                       <viewedCards>
                         <object refid="236e6d60-775f-11dc-88e0-f91e4efaa30a" />
-                        <object refid="236e6d61-775f-11dc-88e0-f91e4efaa30a/cards[1]" />
-                        <object refid="236e6d61-775f-11dc-88e0-f91e4efaa30a/cards[2]" />
-                        <object refid="236e6d61-775f-11dc-88e0-f91e4efaa30a/cards[3]" />
-                        <object refid="236e6d61-775f-11dc-88e0-f91e4efaa30a/cards[4]" />
-                        <object refid="236e6d61-775f-11dc-88e0-f91e4efaa30a/cards[5]" />
-                        <object refid="236e6d61-775f-11dc-88e0-f91e4efaa30a/cards[6]" />
-                        <object refid="236e6d61-775f-11dc-88e0-f91e4efaa30a/cards[7]" />
                       </viewedCards>
                     </OTCardContainer>
                   </content>
@@ -1741,7 +1799,7 @@
                     <object refid="236e6d63-775f-11dc-88e0-f91e4efaa30a" />
                   </south>
                 </OTUDLSection>
-                <OTUDLSection id="2767fe20-6c7d-11dc-8314-0800200c9a66!/section-card-container/cards[5]" name="Light a bulb!" isComputerBased="true" isIntroduction="false" isMath="false" isPosttest="false" isPretest="false" isReading="false" isWrapup="false">
+                <OTUDLSection local_id="section_7" name="Light a bulb!" isComputerBased="true" isIntroduction="false" isMath="false" isPosttest="false" isPretest="false" isReading="false" isWrapup="false">
                   <content>
                     <OTCardContainer id="27c8ede7-775f-11dc-88e0-f91e4efaa30a" contentsMayScroll="true" loadViewOnlyOnDemand="true">
                       <cards>
@@ -1761,7 +1819,7 @@
                             </div>
                           </bodyText>
                         </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc id="27c8ede7-775f-11dc-88e0-f91e4efaa30a/cards[1]" name="%d41dafc4-7834-11dc-ab7e-6d2f34ff62a8">
+                        <OTUDLCompoundDoc name="%d41dafc4-7834-11dc-ab7e-6d2f34ff62a8">
                           <bodyText>
                             <div class="buffer">
                               <div class="border">
@@ -1797,7 +1855,7 @@
                             <object refid="ea573b35-7834-11dc-ab7e-6d2f34ff62a8" />
                           </documentRefs>
                         </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc id="27c8ede7-775f-11dc-88e0-f91e4efaa30a/cards[2]" name="%0cd2bef6-7835-11dc-ab7e-6d2f34ff62a8">
+                        <OTUDLCompoundDoc name="%0cd2bef6-7835-11dc-ab7e-6d2f34ff62a8">
                           <bodyText>
                             <div class="buffer">
                               <div class="border">
@@ -1814,7 +1872,7 @@
                             </div>
                           </bodyText>
                         </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc id="27c8ede7-775f-11dc-88e0-f91e4efaa30a/cards[3]" name="%35785317-7835-11dc-ab7e-6d2f34ff62a8">
+                        <OTUDLCompoundDoc name="%35785317-7835-11dc-ab7e-6d2f34ff62a8">
                           <bodyText>
                             <div class="buffer">
                               <div class="border">
@@ -1836,12 +1894,12 @@
                             <OTText id="3fb66518-7835-11dc-ab7e-6d2f34ff62a8" name="Text field" />
                           </documentRefs>
                         </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc id="27c8ede7-775f-11dc-88e0-f91e4efaa30a/cards[4]" name="%49a063a9-7835-11dc-ab7e-6d2f34ff62a8">
+                        <OTUDLCompoundDoc name="%49a063a9-7835-11dc-ab7e-6d2f34ff62a8">
                           <bodyText>
                             <div class="buffer">
                               <div class="border">
                                 <div class="body">
-                                  <div class="subtitle-continue">Explore-2</div>
+                                  <div class="subtitle-continued">Explore-2</div>
                                   Here is a picture of a light bulb and a battery. Using the pencil tool, draw where you think you should run wires to make the bulb light up.
                                   <br />
                                   <object refid="5d88d32a-7835-11dc-ab7e-6d2f34ff62a8" />
@@ -1901,11 +1959,44 @@
                                   Test several materials. For example, try a paper clip, a plastic pen, a penny, or a wood pencil.
 Mark whether they are a conductor or an insulator.
                                   <p />
-                                  [add TABLE:
-                                  <br />
-                                  material	conductor	insulator
-                                  <br />
-                                  4 rows, 3 fillable columns]
+                                  <table border="1">
+                                    <tr>
+                                      <th>Material</th>
+                                      <th>Conductor or insulator?</th>
+                                    </tr>
+                                    <tr>
+                                      <td>
+                                        <object refid="048528ce-7e6e-11dc-8fc3-c5193b11fc8e" />
+                                      </td>
+                                      <td>
+                                        <object refid="26e3aeb2-7e6e-11dc-8fc3-c5193b11fc8e" />
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>
+                                        <object refid="10fc3adf-7e6e-11dc-8fc3-c5193b11fc8e" />
+                                      </td>
+                                      <td>
+                                        <object refid="37e48ea3-7e6e-11dc-8fc3-c5193b11fc8e" />
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>
+                                        <object refid="17a650b0-7e6e-11dc-8fc3-c5193b11fc8e" />
+                                      </td>
+                                      <td>
+                                        <object refid="563358a4-7e6e-11dc-8fc3-c5193b11fc8e" />
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>
+                                        <object refid="20592ed1-7e6e-11dc-8fc3-c5193b11fc8e" />
+                                      </td>
+                                      <td>
+                                        <object refid="5fdd8f15-7e6e-11dc-8fc3-c5193b11fc8e" />
+                                      </td>
+                                    </tr>
+                                  </table>
                                   <br />
                                 </div>
                               </div>
@@ -1919,6 +2010,50 @@ Mark whether they are a conductor or an insulator.
                                 <OTDrawingShape type="" fillType="clear" x="0.0" y="0.0" width="0.0" height="0.0" color="0x000000" />
                               </graphables>
                             </OTDrawingTool2>
+                            <OTText id="048528ce-7e6e-11dc-8fc3-c5193b11fc8e" name="Text field" />
+                            <OTChoice id="26e3aeb2-7e6e-11dc-8fc3-c5193b11fc8e" name="Choices">
+                              <choices>
+                                <OTCompoundDoc name="Conductor">
+                                  <bodyText>Conductor</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="Insulator">
+                                  <bodyText>Insulator</bodyText>
+                                </OTCompoundDoc>
+                              </choices>
+                            </OTChoice>
+                            <OTText id="10fc3adf-7e6e-11dc-8fc3-c5193b11fc8e" name="Text field" />
+                            <OTChoice id="37e48ea3-7e6e-11dc-8fc3-c5193b11fc8e" name="Choices">
+                              <choices>
+                                <OTCompoundDoc name="Conductor">
+                                  <bodyText>Conductor</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="Insulator">
+                                  <bodyText>Insulator</bodyText>
+                                </OTCompoundDoc>
+                              </choices>
+                            </OTChoice>
+                            <OTText id="17a650b0-7e6e-11dc-8fc3-c5193b11fc8e" name="Text field" />
+                            <OTChoice id="563358a4-7e6e-11dc-8fc3-c5193b11fc8e" name="Choices">
+                              <choices>
+                                <OTCompoundDoc name="Conductor">
+                                  <bodyText>Conductor</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="Insulator">
+                                  <bodyText>Insulator</bodyText>
+                                </OTCompoundDoc>
+                              </choices>
+                            </OTChoice>
+                            <OTText id="20592ed1-7e6e-11dc-8fc3-c5193b11fc8e" name="Text field" />
+                            <OTChoice id="5fdd8f15-7e6e-11dc-8fc3-c5193b11fc8e" name="Choices">
+                              <choices>
+                                <OTCompoundDoc name="Conductor">
+                                  <bodyText>Conductor</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="Insulator">
+                                  <bodyText>Insulator</bodyText>
+                                </OTCompoundDoc>
+                              </choices>
+                            </OTChoice>
                           </documentRefs>
                         </OTUDLCompoundDoc>
                         <OTUDLCompoundDoc name="%d4d4602f-7835-11dc-ab7e-6d2f34ff62a8">
@@ -1944,14 +2079,10 @@ Mark whether they are a conductor or an insulator.
                         </OTUDLCompoundDoc>
                       </cards>
                       <currentCard>
-                        <object refid="27c8ede7-775f-11dc-88e0-f91e4efaa30a/cards[4]" />
+                        <object refid="27c8ede6-775f-11dc-88e0-f91e4efaa30a" />
                       </currentCard>
                       <viewedCards>
                         <object refid="27c8ede6-775f-11dc-88e0-f91e4efaa30a" />
-                        <object refid="27c8ede7-775f-11dc-88e0-f91e4efaa30a/cards[1]" />
-                        <object refid="27c8ede7-775f-11dc-88e0-f91e4efaa30a/cards[2]" />
-                        <object refid="27c8ede7-775f-11dc-88e0-f91e4efaa30a/cards[3]" />
-                        <object refid="27c8ede7-775f-11dc-88e0-f91e4efaa30a/cards[4]" />
                       </viewedCards>
                     </OTCardContainer>
                   </content>
@@ -1998,74 +2129,7 @@ Mark whether they are a conductor or an insulator.
                     <object refid="27c8ede9-775f-11dc-88e0-f91e4efaa30a" />
                   </south>
                 </OTUDLSection>
-                <OTUDLSection name="Electrical adventure" isComputerBased="false" isIntroduction="false" isMath="false" isPosttest="false" isPretest="false" isReading="true" isWrapup="false">
-                  <content>
-                    <OTCardContainer id="2b9ab66d-775f-11dc-88e0-f91e4efaa30a" contentsMayScroll="true" loadViewOnlyOnDemand="true">
-                      <cards>
-                        <OTUDLCompoundDoc id="2b9ab66c-775f-11dc-88e0-f91e4efaa30a" name="%2b9ab66c-775f-11dc-88e0-f91e4efaa30a">
-                          <bodyText>
-                            <div class="buffer">
-                              <div class="border">
-                                <div class="body">
-                                  <div class="subtitle">Read the story!</div>
-                                  Download the story of "Maria and Eduardo's Electrical Adventure" by clicking
-                                  <a href="http://udl.concord.org/share/Electricity/ElectricalAdventure_v2.pdf">here</a>
-                                  .
-                                </div>
-                              </div>
-                            </div>
-                          </bodyText>
-                        </OTUDLCompoundDoc>
-                      </cards>
-                      <currentCard>
-                        <object refid="2b9ab66c-775f-11dc-88e0-f91e4efaa30a" />
-                      </currentCard>
-                    </OTCardContainer>
-                  </content>
-                  <header>
-                    <OTUDLCompoundDoc id="2b9ab66e-775f-11dc-88e0-f91e4efaa30a" name="%2b9ab66e-775f-11dc-88e0-f91e4efaa30a">
-                      <bodyText>
-                        <div class="title">Electrical adventure</div>
-                      </bodyText>
-                    </OTUDLCompoundDoc>
-                  </header>
-                  <footer>
-                    <OTUDLCompoundDoc id="2b9ab66f-775f-11dc-88e0-f91e4efaa30a" name="%2b9ab66f-775f-11dc-88e0-f91e4efaa30a">
-                      <bodyText>
-                        <div align="center">
-                          <table>
-                            <tr>
-                              <td>
-                                <object refid="2b9adc80-775f-11dc-88e0-f91e4efaa30a" viewid="${menu-horizontal-circle}" />
-                              </td>
-                            </tr>
-                          </table>
-                        </div>
-                      </bodyText>
-                      <documentRefs>
-                        <OTUDLMenu id="2b9adc80-775f-11dc-88e0-f91e4efaa30a">
-                          <cardContainer>
-                            <object refid="2b9ab66d-775f-11dc-88e0-f91e4efaa30a" />
-                          </cardContainer>
-                          <menuRule>
-                            <object refid="${page-rule}" />
-                          </menuRule>
-                        </OTUDLMenu>
-                        <object refid="${menu-horizontal-circle}" />
-                      </documentRefs>
-                    </OTUDLCompoundDoc>
-                  </footer>
-                  <north>
-                    <object refid="2b9ab66e-775f-11dc-88e0-f91e4efaa30a" />
-                  </north>
-                  <center>
-                    <object refid="2b9ab66d-775f-11dc-88e0-f91e4efaa30a" />
-                  </center>
-                  <south>
-                    <object refid="2b9ab66f-775f-11dc-88e0-f91e4efaa30a" />
-                  </south>
-                </OTUDLSection>
-                <OTUDLSection name="Math" isComputerBased="false" isIntroduction="false" isMath="true" isPosttest="false" isPretest="false" isReading="false" isWrapup="false">
+                <OTUDLSection local_id="section_8" name="Math" isComputerBased="false" isIntroduction="false" isMath="true" isPosttest="false" isPretest="false" isReading="false" isWrapup="false">
                   <content>
                     <OTCardContainer id="34fe6d03-775f-11dc-88e0-f91e4efaa30a" contentsMayScroll="true" loadViewOnlyOnDemand="true">
                       <cards>
@@ -2130,7 +2194,7 @@ Mark whether they are a conductor or an insulator.
                     <object refid="34fe6d05-775f-11dc-88e0-f91e4efaa30a" />
                   </south>
                 </OTUDLSection>
-                <OTUDLSection name="Wrapping up" isComputerBased="false" isIntroduction="false" isMath="false" isPosttest="false" isPretest="false" isReading="false" isWrapup="true">
+                <OTUDLSection local_id="section_9" name="Wrapping up" isComputerBased="false" isIntroduction="false" isMath="false" isPosttest="false" isPretest="false" isReading="false" isWrapup="true">
                   <content>
                     <OTCardContainer id="3ec88789-775f-11dc-88e0-f91e4efaa30a" contentsMayScroll="true" loadViewOnlyOnDemand="true">
                       <cards>
@@ -2139,12 +2203,67 @@ Mark whether they are a conductor or an insulator.
                             <div class="buffer">
                               <div class="border">
                                 <div class="body">
-                                  <div class="subtitle">New page</div>
-                                  New page content
+                                  Wrapping up.
+                                  <p />
+                                  Let your teacher know when you have completed the electricity unit. Your
+									teacher will then unlock the posttest for you.
+                                  <p />
+                                  <table>
+                                    <tr>
+                                      <td>Teacher password</td>
+                                      <td>
+                                        <object refid="${password-field}" />
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>
+                                        <object refid="${wrapup-submit-button}" />
+                                      </td>
+                                    </tr>
+                                  </table>
+                                  <object refid="${wrapup-button-script}" />
                                 </div>
                               </div>
                             </div>
                           </bodyText>
+                          <documentRefs>
+                          	<OTText local_id="password-field" isPassword="true" name="PasswordField" />
+                            <OTText local_id="password" text="electricity" name="Password" />
+                            <OTButton local_id="wrapup-submit-button" name="Button" text="Submit" />
+                            <OTScriptObject local_id="wrapup-button-script">
+                              <variables>
+                                <OTScriptVariable name="cardContainer">
+                                  <reference>
+                                    <object refid="${section-card-container}" />
+                                  </reference>
+                                </OTScriptVariable>
+                                <OTScriptVariableComponent name="button">
+                                  <reference>
+                                    <object refid="${wrapup-submit-button}" />
+                                  </reference>
+                                </OTScriptVariableComponent>
+                                <OTScriptVariable name="card">
+                                  <reference>
+                                    <object refid="${section_10}" />
+                                  </reference>
+                                </OTScriptVariable>
+                                <OTScriptVariableComponent name="passwordfield">
+                                  <reference>
+                                    <object refid="${password-field}" />
+                                  </reference>
+                                </OTScriptVariableComponent>
+                                <OTScriptVariable name="password">
+                                  <reference>
+                                    <object refid="${password}" />
+                                  </reference>
+                                </OTScriptVariable>
+                              </variables>
+                              <script>
+                                <object refid="${change_page.js}" />
+                              </script>
+                              <scriptState />
+                            </OTScriptObject>
+                          </documentRefs>
                         </OTUDLCompoundDoc>
                       </cards>
                       <currentCard>
@@ -2195,7 +2314,7 @@ Mark whether they are a conductor or an insulator.
                     <object refid="3ec8878b-775f-11dc-88e0-f91e4efaa30a" />
                   </south>
                 </OTUDLSection>
-                <OTUDLSection name="Post-test" isComputerBased="false" isIntroduction="false" isMath="false" isPosttest="true" isPretest="false" isReading="false" isWrapup="false">
+                <OTUDLSection local_id="section_10" name="Post-test" isComputerBased="false" isIntroduction="false" isMath="false" isPosttest="true" isPretest="false" isReading="false" isWrapup="false">
                   <content>
                     <OTCardContainer id="46f14e1f-775f-11dc-88e0-f91e4efaa30a" contentsMayScroll="true" loadViewOnlyOnDemand="true">
                       <cards>
@@ -2204,7 +2323,6 @@ Mark whether they are a conductor or an insulator.
                             <div class="buffer">
                               <div class="border">
                                 <div class="body">
-                                  <div class="subtitle-continue" />
                                   Answer the following questions. When you have finished, press the
                                   <b>Submit</b>
                                   button. Warning: after you hit the Submit button, you will not be able to go back and change your answers.
@@ -2240,7 +2358,6 @@ Mark whether they are a conductor or an insulator.
                             <div class="buffer">
                               <div class="border">
                                 <div class="body">
-                                  <div class="subtitle-continue" />
                                   3. There are 100 positive charges and 98 negative charges on a piece of metal.  What is the result?
                                   <p />
                                   <object refid="2d203cea-7762-11dc-88e0-f91e4efaa30a" />
@@ -2252,10 +2369,6 @@ Mark whether they are a conductor or an insulator.
                                   4. When you rub a balloon with wool, what happens?
                                   <p />
                                   <object refid="48ab2c05-7762-11dc-88e0-f91e4efaa30a" />
-                                  <p />
-                                  Press the
-                                  <b>Submit</b>
-                                  button when you are done.
                                 </div>
                               </div>
                             </div>
@@ -2270,6 +2383,9 @@ Mark whether they are a conductor or an insulator.
                       <currentCard>
                         <object refid="46f1270e-775f-11dc-88e0-f91e4efaa30a" />
                       </currentCard>
+                      <viewedCards>
+                        <object refid="46f1270e-775f-11dc-88e0-f91e4efaa30a" />
+                      </viewedCards>
                     </OTCardContainer>
                   </content>
                   <header>
@@ -2317,14 +2433,10 @@ Mark whether they are a conductor or an insulator.
                 </OTUDLSection>
               </cards>
               <currentCard>
-                <object refid="2767fe20-6c7d-11dc-8314-0800200c9a66!/section-card-container/cards[5]" />
+                <object refid="${section_1}" />
               </currentCard>
               <viewedCards>
                 <object refid="${section_1}" />
-                <object refid="2767fe20-6c7d-11dc-8314-0800200c9a66!/section-card-container/cards[2]" />
-                <object refid="2767fe20-6c7d-11dc-8314-0800200c9a66!/section-card-container/cards[3]" />
-                <object refid="2767fe20-6c7d-11dc-8314-0800200c9a66!/section-card-container/cards[4]" />
-                <object refid="2767fe20-6c7d-11dc-8314-0800200c9a66!/section-card-container/cards[5]" />
               </viewedCards>
             </OTCardContainer>
           </content>
@@ -2366,368 +2478,15 @@ Mark whether they are a conductor or an insulator.
         </OTUDLContainer>
       </root>
       <library>
-      	<OTDefinitionManager local_id="definition-manager">
+        <OTDefinitionManager local_id="definition-manager">
           <definitions>
-            <OTDefinition>
-              <word>computer model</word>
-              <definition>
-                <OTCompoundDoc>
-                  <bodyText>
-                    <div class="buffer">
-                      <div class="definition-border">
-                        <div class="body">
-                          A
-                          <b>computer model</b>
-                          is a program that runs on a computer and imitates the real world in some way.
-                        </div>
-                      </div>
-                    </div>
-                  </bodyText>
-                </OTCompoundDoc>
-              </definition>
-            </OTDefinition>
-            <OTDefinition>
-              <word>evidence</word>
-              <definition>
-                <OTCompoundDoc>
-                  <bodyText>
-                    <div class="buffer">
-                      <div class="definition-border">
-                        <div class="body">
-                          <b>Evidence</b>
-                          is what you observe or measure to support an idea.
-                        </div>
-                      </div>
-                    </div>
-                  </bodyText>
-                </OTCompoundDoc>
-              </definition>
-            </OTDefinition>
-	          <OTDefinition>
-	              <word>analogy</word>
-	              <definition>
-	                <OTCompoundDoc>
-	                  <bodyText>
-	                    <div class="buffer">
-	                      <div class="definition-border">
-	                        <div class="body">
-	                          An <b>analogy</b> is a comparison between two situations or things that alike in some ways but different in others.
-	                        </div>
-	                      </div>
-	                    </div>
-	                  </bodyText>
-	                </OTCompoundDoc>
-	              </definition>
-	            </OTDefinition>
-	            <OTDefinition>
-	              <word>attraction</word>
-	              <definition>
-	                <OTCompoundDoc>
-	                  <bodyText>
-	                    <div class="buffer">
-	                      <div class="definition-border">
-	                        <div class="body">
-	                        <b>Attraction</b> is when two things pull toward each other
-	                        </div>
-	                      </div>
-	                    </div>
-	                  </bodyText>
-	                </OTCompoundDoc>
-	              </definition>
-	            </OTDefinition>
-	            <OTDefinition>
-	              <word>circuit</word>
-	              <definition>
-	                <OTCompoundDoc>
-	                  <bodyText>
-	                    <div class="buffer">
-	                      <div class="definition-border">
-	                        <div class="body">
-	                        	A <b>circuit</b> is a loop of conductive material that allows electric current to flow.
-	                        </div>
-	                      </div>
-	                    </div>
-	                  </bodyText>
-	                </OTCompoundDoc>
-	              </definition>
-	            </OTDefinition>
-	            <OTDefinition>
-	              <word>capacitor</word>
-	              <definition>
-	                <OTCompoundDoc>
-	                  <bodyText>
-	                    <div class="buffer">
-	                      <div class="definition-border">
-	                        <div class="body">
-	                        	A <b>capacitor</b> is a device that can store charge.
-	                        </div>
-	                      </div>
-	                    </div>
-	                  </bodyText>
-	                </OTCompoundDoc>
-	              </definition>
-	            </OTDefinition>
-	            <OTDefinition>
-	              <word>conductor</word>
-	              <definition>
-	                <OTCompoundDoc>
-	                  <bodyText>
-	                    <div class="buffer">
-	                      <div class="definition-border">
-	                        <div class="body">
-	                        	A <b>conductor</b> is a material that allows the free passage of charges. Most conductors are metals like iron, copper, and aluminum.
-	                        </div>
-	                      </div>
-	                    </div>
-	                  </bodyText>
-	                </OTCompoundDoc>
-	              </definition>
-	            </OTDefinition>
-	            <OTDefinition>
-	              <word>charge</word>
-	              <definition>
-	                <OTCompoundDoc>
-	                  <bodyText>
-	                    <div class="buffer">
-	                      <div class="definition-border">
-	                        <div class="body">
-	                        	<b>Electric charge</b> is a basic property of matter. Particles can have positive, negative, or no charge. 
-	                        </div>
-	                      </div>
-	                    </div>
-	                  </bodyText>
-	                </OTCompoundDoc>
-	              </definition>
-	            </OTDefinition>
-	            <OTDefinition>
-	              <word>current</word>
-	              <definition>
-	                <OTCompoundDoc>
-	                  <bodyText>
-	                    <div class="buffer">
-	                      <div class="definition-border">
-	                        <div class="body">
-	                        	<b>Electric current</b> is the flow of electric charge
-	                        </div>
-	                      </div>
-	                    </div>
-	                  </bodyText>
-	                </OTCompoundDoc>
-	              </definition>
-	            </OTDefinition>
-	            <OTDefinition>
-	              <word>electron</word>
-	              <definition>
-	                <OTCompoundDoc>
-	                  <bodyText>
-	                    <div class="buffer">
-	                      <div class="definition-border">
-	                        <div class="body">
-	                        	An <b>electron</b> is a basic particle with a negative charge
-	                        </div>
-	                      </div>
-	                    </div>
-	                  </bodyText>
-	                </OTCompoundDoc>
-	              </definition>
-	            </OTDefinition>
-	            <OTDefinition>
-	              <word>generator</word>
-	              <definition>
-	                <OTCompoundDoc>
-	                  <bodyText>
-	                    <div class="buffer">
-	                      <div class="definition-border">
-	                        <div class="body">
-	                        	A <b>generator</b> is a device that converts mechanical energy to electrical energy.
-	                        </div>
-	                      </div>
-	                    </div>
-	                  </bodyText>
-	                </OTCompoundDoc>
-	              </definition>
-	            </OTDefinition>
-	            <OTDefinition>
-	              <word>motor</word>
-	              <definition>
-	                <OTCompoundDoc>
-	                  <bodyText>
-	                    <div class="buffer">
-	                      <div class="definition-border">
-	                        <div class="body">
-	                        	A <b>motor</b> is a device that converts electrical energy to mechanical energy. 
-	                        </div>
-	                      </div>
-	                    </div>
-	                  </bodyText>
-	                </OTCompoundDoc>
-	              </definition>
-	            </OTDefinition>
-	            <OTDefinition>
-	              <word>insulator</word>
-	              <definition>
-	                <OTCompoundDoc>
-	                  <bodyText>
-	                    <div class="buffer">
-	                      <div class="definition-border">
-	                        <div class="body">
-	                        	An <b>insulator</b> is a material that does not allow the passage of charges. Most non-metals are insulators, such as wood, plastic, air, stone, stone, glass, and clay. 
-	                        </div>
-	                      </div>
-	                    </div>
-	                  </bodyText>
-	                </OTCompoundDoc>
-	              </definition>
-	            </OTDefinition>
-	            <OTDefinition>
-	              <word>lightning</word>
-	              <definition>
-	                <OTCompoundDoc>
-	                  <bodyText>
-	                    <div class="buffer">
-	                      <div class="definition-border">
-	                        <div class="body">
-	                        	<b>Lightning</b> is the flow of charges through the air from cloud to cloud or from cloud to ground. 
-	                        </div>
-	                      </div>
-	                    </div>
-	                  </bodyText>
-	                </OTCompoundDoc>
-	              </definition>
-	            </OTDefinition>
-	            <OTDefinition>
-	              <word>net charge</word>
-	              <definition>
-	                <OTCompoundDoc>
-	                  <bodyText>
-	                    <div class="buffer">
-	                      <div class="definition-border">
-	                        <div class="body">
-	                        	<b>Net charge</b> is the difference between positive and negative charges. If they are equal, the net charge is zero and the object is electrically neutral.
-	                        </div>
-	                      </div>
-	                    </div>
-	                  </bodyText>
-	                </OTCompoundDoc>
-	              </definition>
-	            </OTDefinition>
-	            <OTDefinition>
-	              <word>neutral</word>
-	              <definition>
-	                <OTCompoundDoc>
-	                  <bodyText>
-	                    <div class="buffer">
-	                      <div class="definition-border">
-	                        <div class="body">
-	                        	<b>Neutral</b> means having no net electrical charge, because the number of positive and negative charges is equal.
-	                        </div>
-	                      </div>
-	                    </div>
-	                  </bodyText>
-	                </OTCompoundDoc>
-	              </definition>
-	            </OTDefinition>
-	            <OTDefinition>
-	              <word>positively charged</word>
-	              <definition>
-	                <OTCompoundDoc>
-	                  <bodyText>
-	                    <div class="buffer">
-	                      <div class="definition-border">
-	                        <div class="body">
-	                        	<b>Positively charged</b> means having more positive than negative charges, so that the net charge is positive.
-	                        </div>
-	                      </div>
-	                    </div>
-	                  </bodyText>
-	                </OTCompoundDoc>
-	              </definition>
-	            </OTDefinition>
-	            <OTDefinition>
-	              <word>negatively charged</word>
-	              <definition>
-	                <OTCompoundDoc>
-	                  <bodyText>
-	                    <div class="buffer">
-	                      <div class="definition-border">
-	                        <div class="body">
-	                        	<b>Negatively charged</b> means having more negative than positive charges, so that the net charge is negative.
-	                        </div>
-	                      </div>
-	                    </div>
-	                  </bodyText>
-	                </OTCompoundDoc>
-	              </definition>
-	            </OTDefinition>
-	            <OTDefinition>
-	              <word>proton</word>
-	              <definition>
-	                <OTCompoundDoc>
-	                  <bodyText>
-	                    <div class="buffer">
-	                      <div class="definition-border">
-	                        <div class="body">
-	                        	A <b>proton</b> is a basic particle with positive charge.
-	                        </div>
-	                      </div>
-	                    </div>
-	                  </bodyText>
-	                </OTCompoundDoc>
-	              </definition>
-	            </OTDefinition>
-	            <OTDefinition>
-	              <word>repulsion</word>
-	              <definition>
-	                <OTCompoundDoc>
-	                  <bodyText>
-	                    <div class="buffer">
-	                      <div class="definition-border">
-	                        <div class="body">
-	                        	<b>Repulsion</b> is when two things  push away from each other.
-	                        </div>
-	                      </div>
-	                    </div>
-	                  </bodyText>
-	                </OTCompoundDoc>
-	              </definition>
-	            </OTDefinition>
-	            <OTDefinition>
-	              <word>repel</word>
-	              <definition>
-	                <OTCompoundDoc>
-	                  <bodyText>
-	                    <div class="buffer">
-	                      <div class="definition-border">
-	                        <div class="body">
-	                        	<b>Repulsion</b> is when two things  push away from each other.
-	                        </div>
-	                      </div>
-	                    </div>
-	                  </bodyText>
-	                </OTCompoundDoc>
-	              </definition>
-            </OTDefinition>
-            <OTDefinition>
-              <word>static</word>
-              <definition>
-                <OTCompoundDoc>
-                  <bodyText>
-                    <div class="buffer">
-                      <div class="definition-border">
-                        <div class="body">
-                        	<b>Static electricity</b> is electric charges that aren't moving. 
-                        </div>
-                      </div>
-                    </div>
-                  </bodyText>
-                </OTCompoundDoc>
-              </definition>
-            </OTDefinition>
-            </definitions>
+          	<OTDefinitionList src="glossary/common-glossary.txt"/>
+            <OTDefinitionList src="glossary/electricity-glossary.txt"/>
+          </definitions>
           <frame>
             <OTFrame local_id="definition_frame" width="280" height="150" borderlessPopup="true" />
           </frame>
-		</OTDefinitionManager>
+        </OTDefinitionManager>
         <OTUDLMenu local_id="menu">
           <cardContainer>
             <object refid="${section-card-container}" />
@@ -2746,252 +2505,35 @@ Mark whether they are a conductor or an insulator.
         </OTUDLMenu>
         <OTSnapshotAlbum local_id="album" />
         <OTUDLMenuRule local_id="page-rule" jumpToViewedCard="true" stepAhead="true" />
-        <OTUDLMenuRule local_id="section-rule" jumpToAnyCard="true" />
-        <OTJavascript local_id="change_page.js">
-          <script>importClass(Packages.java.awt.event.ActionListener);
-						importClass(Packages.java.util.Vector);
-						importClass(Packages.org.concord.otrunk.udl3.OTQuestionList);
-						importClass(Packages.org.concord.framework.otrunk.OTObjectList);
-						importClass(Packages.javax.swing.JOptionPane);
-						
-						var numCards;
-						var currentcard;
-						var passwordfield;
-
-						var buttonHandler =
-						{
-								actionPerformed: function(evt)
-								{
-									if (passwordfield != null){
-									var passwordAttempt = passwordfield.getText();
-									if (passwordAttempt.equalsIgnoreCase(password.getText())){
-										cardContainer.setCurrentCard(card);
-										return;
-									} else {
-										JOptionPane.showMessageDialog(null, "Sorry, that's not the correct password.");
-										return;
-									}
-								}
-										cardContainer.setCurrentCard(card);
-								}
-						};
-						var buttonListener = new ActionListener(buttonHandler);
-
-						function init() {
-							button.addActionListener(buttonListener);
-
-							return true;
-						}
-
-						function save() {
-							button.removeActionListener(buttonListener);
-							return true;
-						}</script>
-        </OTJavascript>
-        <OTJavascript local_id="show_message.js">
-          <script>importClass(Packages.java.awt.event.ActionListener);
-						importClass(Packages.java.util.Vector);
-						importClass(Packages.org.concord.otrunk.udl3.OTQuestionList);
-						importClass(Packages.org.concord.framework.otrunk.OTObjectList);
-						importClass(Packages.javax.swing.JOptionPane);
-
-						var buttonHandler =
-						{
-								actionPerformed: function(evt)
-								{
-									var messageString = message.getText();
-									JOptionPane.showMessageDialog(null, messageString);
-								}
-						};
-						var buttonListener = new ActionListener(buttonHandler);
-
-						function init() {
-							button.addActionListener(buttonListener);
-
-							return true;
-						}
-
-						function save() {
-							button.removeActionListener(buttonListener);
-							return true;
-						}</script>
-        </OTJavascript>
-        <OTJavascript local_id="authoring_script.js">
-          <script>importClass(Packages.org.concord.framework.otrunk.OTChangeEvent);
-						importClass(Packages.org.concord.framework.otrunk.OTChangeListener);
-						importClass(Packages.org.concord.framework.otrunk.OTObject);
-						importClass(Packages.org.concord.framework.otrunk.OTObjectList);
-						importClass(Packages.org.concord.otrunk.ui.OTCardContainer);
-						importClass(Packages.org.concord.otrunk.udl3.OTUDLMenu);
-						importClass(Packages.java.lang.System);
-						importClass(Packages.org.concord.framework.otrunk.OTObjectList);
-						
-						
-						var pageHandler =
-						{
-							stateChanged: function(evt)
-							{
-								if (evt.getProperty().equalsIgnoreCase("coachStatements") &amp;&amp; evt.getOperation().equalsIgnoreCase("add")){
-									var statement = evt.getValue();
-									var statementDoc = statement.getStatement();
-									var statementText = statementDoc.getBodyText();
-									statementDoc.setBodyText("&lt;div class=\"buffer\"&gt;"+
-																"&lt;div class=\"border\"&gt;"+
-																	"&lt;div class=\"body\"&gt;"+
-																		statementText +
-																	"&lt;/div&gt;"+
-																"&lt;/div&gt;"+
-														"&lt;/div&gt;");
-								}
-							}
-						}
-						var pageListener = new OTChangeListener(pageHandler);
-						
-						var sectionHandler =
-						{
-							stateChanged: function(evt)
-							{
-								if (evt.getProperty().equalsIgnoreCase("name")){
-									var section = evt.getSource();
-									var header = section.getHeader();
-										
-										header.setBodyText("&lt;div class=\"title\"&gt;"+
-															section.getName() +
-														"&lt;/div&gt;");
-								}
-							}
-						}
-						
-						var sectionListener = new OTChangeListener(sectionHandler);
-						
-						var sectionContainerHandler =
-						{
-								stateChanged: function(evt)
-								{
-									if (evt.getProperty().equalsIgnoreCase("currentCard")){
-										var numCards = evt.getSource().getCards().size();
-										var section = evt.getSource().getCards().get(numCards-1);
-										section.getContent().addOTChangeListener(pageContainerListener);
-									}
-									if (evt.getProperty().equalsIgnoreCase("cards")) {
-										var numCards = evt.getSource().getCards().size();
-										var section = evt.getSource().getCards().get(numCards-1);
-										section.setName("Section "+numCards);
-										
-										var header = section.getHeader();
-										
-										header.setBodyText("&lt;div class=\"title\"&gt;"+
-															"Section " + numCards +
-														"&lt;/div&gt;");
-										
-										var doc = section.getContent().getCurrentCard();
-										
-										doc.setBodyText("&lt;div class=\"buffer\"&gt;"+
-															"&lt;div class=\"border\"&gt;"+
-																"&lt;div class=\"body\"&gt;"+
-																"&lt;div class=\"subtitle\"&gt;\n"+
-																		"New page"+
-																	"\n&lt;/div&gt;\n"+
-																	"New page content"+
-																"\n&lt;/div&gt;"+
-															"&lt;/div&gt;"+
-														"&lt;/div&gt;");
-										
-										pages.push(doc)	
-										pages[pages.length-1].addOTChangeListener(pageListener);
-														
-										var menu = doc.getOTObjectService().createObject(sampleMenu.otClass().getInstanceClass());
-										menu.setCardContainer(section.getContent());
-										menu.setMenuRule(menuPageRule);
-										
-										system.getLibrary().add(menu);
-										
-										var footer = section.getFooter();
-										
-										var otid = menu.getOTObjectService().getExternalID(menu);
-										var viewid = menu.getOTObjectService().getExternalID(menuHorizontalView);
-										
-										footer.setBodyText("&lt;div align=\"center\"&gt;" +
-															"&lt;table&gt;"+
-																	"&lt;tr&gt;"+
-																		"&lt;td&gt;"+
-																			"&lt;object refid=\""+otid+"\" viewid=\""+viewid+"\"/&gt;" +
-																		"&lt;/td&gt;"+
-																	"&lt;/tr&gt;"+
-															"&lt;/table&gt;"+
-															"&lt;/div&gt;");
-														
-										section.getContent().addOTChangeListener(pageContainerListener);
-										section.addOTChangeListener(sectionListener);
-									}
-								}
-						};
-						var sectionContainerListener = new OTChangeListener(sectionContainerHandler);
-						
-						var pageContainerHandler =
-						{
-								stateChanged: function(evt)
-								{
-									System.out.println(evt.getProperty());
-									if (evt.getProperty().equalsIgnoreCase("cards")) {
-										var numCards = evt.getSource().getCards().size();
-										var doc = evt.getSource().getCards().get(numCards-1);
-										doc.setBodyText("&lt;div class=\"buffer\"&gt;"+
-															"&lt;div class=\"border\"&gt;"+
-																"&lt;div class=\"body\"&gt;"+
-																"&lt;div class=\"subtitle\"&gt;\n"+
-																		"New page"+
-																	"\n&lt;/div&gt;\n"+
-																	"New page content"+
-																"\n&lt;/div&gt;"+
-															"&lt;/div&gt;"+
-														"&lt;/div&gt;");
-										pages.push(doc)	
-										pages[pages.length-1].addOTChangeListener(pageListener);
-									}
-								}
-						};
-						var pageContainerListener = new OTChangeListener(pageContainerHandler);
-						
-						var sections = [];
-						var sectionCardContainers = [];
-						var pages = [];
-						
-						function init() {
-							cardContainer.addOTChangeListener(sectionContainerListener);
-							
-							var pageIndex = 0;
-							for (var i = 0; i &lt; cardContainer.getCards().size(); i++){
-								sections[i] = cardContainer.getCards().get(i);
-								sections[i].addOTChangeListener(sectionListener);
-								
-								sectionCardContainers[i] = sections[i].getContent();
-								sectionCardContainers[i].addOTChangeListener(pageContainerListener);
-								
-								for (var j = 0; j &lt; sectionCardContainers[i].getCards().size(); j++){
-									pages[pageIndex] = sectionCardContainers[i].getCards().get(j);
-									pages[pageIndex].addOTChangeListener(pageListener);
-									pageIndex++;
-								}
-							}
-							
-							return true;
-						}
-
-						function save() {
-							cardContainer.removeOTChangeListener(sectionContainerListener);
-							return true;
-						}</script>
-        </OTJavascript>
-        <object refid="1636ca62-775f-11dc-88e0-f91e4efaa30a" />
-        <object refid="1b067ae8-775f-11dc-88e0-f91e4efaa30a" />
-        <object refid="1f2551fe-775f-11dc-88e0-f91e4efaa30a" />
-        <object refid="236e9474-775f-11dc-88e0-f91e4efaa30a" />
-        <object refid="27c9ff5a-775f-11dc-88e0-f91e4efaa30a" />
-        <object refid="2b9adc80-775f-11dc-88e0-f91e4efaa30a" />
-        <object refid="34fe9416-775f-11dc-88e0-f91e4efaa30a" />
-        <object refid="3ec8d5ac-775f-11dc-88e0-f91e4efaa30a" />
-        <object refid="46f17532-775f-11dc-88e0-f91e4efaa30a" />
+        <OTUDLMenuRule local_id="section-rule">
+          <rules>
+            <OTUDLMenuRule remainInScope="true">
+              <scope>
+                <object refid="${section_1}" />
+              </scope>
+            </OTUDLMenuRule>
+            <OTUDLMenuRule remainInScope="true" jumpToAnyCard="true">
+              <scope>
+                <object refid="${section_2}" />
+                <object refid="${section_3}" />
+                <object refid="${section_4}" />
+                <object refid="${section_5}" />
+                <object refid="${section_6}" />
+                <object refid="${section_7}" />
+                <object refid="${section_8}" />
+                <object refid="${section_9}" />
+              </scope>
+            </OTUDLMenuRule>
+            <OTUDLMenuRule remainInScope="true">
+              <scope>
+                <object refid="${section_10}" />
+              </scope>
+            </OTUDLMenuRule>
+          </rules>
+        </OTUDLMenuRule>
+        <OTJavascript local_id="change_page.js" src="scripts/change_page.js" />
+        <OTJavascript local_id="show_message.js" src="scripts/show_message.js" />
+        <OTJavascript local_id="authoring_script.js" src="scripts/authoring_script.js" />
       </library>
     </OTSystem>
   </objects>

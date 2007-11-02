@@ -19,6 +19,7 @@
     <import class="org.concord.graph.util.state.OTDrawingShape" />
     <import class="org.concord.graph.util.state.OTDrawingTool2" />
     <import class="org.concord.graph.util.state.OTPointTextLabel" />
+    <import class="org.concord.otrunk.OTInclude"/>
     <import class="org.concord.otrunk.OTSystem" />
     <import class="org.concord.otrunk.overlay.OTOverlay" />
     <import class="org.concord.otrunk.script.ui.OTScriptObject" />
@@ -28,22 +29,22 @@
     <import class="org.concord.otrunk.script.js.OTJavascript" />
     <import class="org.concord.otrunk.script.OTScriptEngineBundle" />
     <import class="org.concord.otrunk.script.OTScriptEngineEntry" />
-    <import class="org.concord.otrunk.udl.OTUDLCharacter" />
-    <import class="org.concord.otrunk.udl.OTUDLCharacterGroup" />
-    <import class="org.concord.otrunk.udl.OTUDLCoachStatement" />
+    <import class="org.concord.otrunk.udl.coach.OTUDLCoach" />
+    <import class="org.concord.otrunk.udl.coach.OTUDLCoachGroup" />
+    <import class="org.concord.otrunk.udl.coach.OTUDLCoachStatement" />
     <import class="org.concord.otrunk.udl.OTUDLMenuRule" />
     <import class="org.concord.otrunk.udl.document.OTDefinition" />
+    <import class="org.concord.otrunk.udl.document.OTDefinitionList" />
     <import class="org.concord.otrunk.udl.document.OTDefinitionManager" />
     <import class="org.concord.otrunk.udl.document.OTUDLCompoundDoc" />
-    <import class="org.concord.otrunk.udl.document.OTUDLCSSModifier" />
-    <import class="org.concord.otrunk.udl.document.OTUDLCSSGroup" />
     <import class="org.concord.otrunk.udl.document.OTUDLDocumentViewConfig" />
     <import class="org.concord.otrunk.udl.friction.OTFrictionModel" />
-    <import class="org.concord.otrunk.udl3.OTQuestion" />
+    <import class="org.concord.otrunk.udl.ui.OTDataCollectorViewConfig" />
+    <import class="org.concord.otrunk.udl.question.OTQuestion" />
+    <import class="org.concord.otrunk.udl.question.OTUDLQuestions" />
+    <import class="org.concord.otrunk.udl.question.OTUDLQuestionViewConfig" />
     <import class="org.concord.otrunk.udl3.OTUDLMenu" />
     <import class="org.concord.otrunk.udl3.OTUDLContainer" />
-    <import class="org.concord.otrunk.udl3.OTUDLQuestions" />
-    <import class="org.concord.otrunk.udl3.OTUDLQuestionViewConfig" />
     <import class="org.concord.otrunk.udl3.OTUDLSection" />
     <import class="org.concord.otrunk.ui.OTButton" />
     <import class="org.concord.otrunk.ui.OTCardContainer" />
@@ -74,6 +75,9 @@
   </imports>
   <objects>
     <OTSystem local_id="system">
+      <includes>
+        <OTInclude href="global-imports/predefined-sensor-graphs.otml"/>
+      </includes>
       <bundles>
         <OTViewBundle showLeftPanel="false" currentMode="default">
           <modes>
@@ -96,7 +100,7 @@
                   <OTViewEntry objectClass="org.concord.data.state.OTDataTable" viewClass="org.concord.data.state.OTDataTableEditView" />
                 </entry>
                 <entry key="${character-group-view}">
-                  <OTViewEntry objectClass="org.concord.otrunk.udl.OTUDLCharacterGroup" viewClass="org.concord.otrunk.udl.OTUDLCharacterGroupEditView" />
+                  <OTViewEntry objectClass="org.concord.otrunk.udl.coach.OTUDLCoachGroup" viewClass="org.concord.otrunk.udl.coach.OTUDLCoachGroupEditView" />
                 </entry>
                 <entry key="${compound_doc_view}">
                   <OTObjectEditViewConfig objectClass="org.concord.otrunk.view.document.OTCompoundDoc" viewClass="org.concord.otrunk.view.document.OTCompoundDocEditView" usePopupEditWindows="true" copyNewObjectsByDefault="true">
@@ -110,6 +114,21 @@
                           <OTDataStore numberChannels="2" />
                         </dataStore>
                       </OTDataTable>
+                      <OTDataCollector name="Data graph" title="Data graph">
+                      	<source>
+							<OTDataGraphable name="Data Graph" connectPoints="true" controllable="true" yColumn="1" drawMarks="false" color="0xff0000" xColumn="0">
+								<dataStore>
+									<OTDataStore/>
+								</dataStore>
+							</OTDataGraphable>
+						</source>
+						<xDataAxis>
+							<OTDataAxis max="60" units="s" min="0" label="Time"/>
+						</xDataAxis>
+						<yDataAxis>
+							<OTDataAxis max="40.0" units="" min="0.0" label=""/>
+						</yDataAxis>
+					  </OTDataCollector>
                     </objectsToInsert>
                   </OTObjectEditViewConfig>
                 </entry>
@@ -118,6 +137,13 @@
                 </entry>
                 <entry key="${questions-on-off-view}">
                   <OTUDLQuestionViewConfig objectClass="org.concord.otrunk.udl.question.OTUDLQuestions" viewClass="org.concord.otrunk.udl.question.OTUDLQuestionsEditView" />
+                </entry>
+                <entry key="${data-collector-view}">
+                  <OTDataCollectorViewConfig viewClass="org.concord.otrunk.udl.ui.OTDataCollectorEditView" objectClass="org.concord.datagraph.state.OTDataCollector">
+                  	<predefinedGraphs>
+                  		<object refid="088786c2-8719-11dc-8314-0800200c9a66"/>
+                  	</predefinedGraphs>
+                  </OTDataCollectorViewConfig>
                 </entry>
               </map>
             </OTViewMode>
@@ -139,23 +165,22 @@
             <OTViewEntry objectClass="org.concord.otrunk.script.ui.OTScriptObject" viewClass="org.concord.otrunk.script.ui.OTScriptObjectView" />
             <OTViewEntry objectClass="org.concord.otrunk.ui.OTButton" viewClass="org.concord.otrunk.ui.swing.OTButtonView" />
             <OTViewEntry local_id="question-view" objectClass="org.concord.otrunk.udl.question.OTQuestion" viewClass="org.concord.otrunk.udl.question.OTQuestionView" />
-            <OTViewEntry local_id="character-group-view" objectClass="org.concord.otrunk.udl.OTUDLCharacterGroup" viewClass="org.concord.otrunk.udl.OTUDLCharacterGroupView" />
+            <OTViewEntry local_id="character-group-view" objectClass="org.concord.otrunk.udl.coach.OTUDLCoachGroup" viewClass="org.concord.otrunk.udl.coach.OTUDLCoachGroupView" />
             <OTViewEntry objectClass="org.concord.otrunk.udl3.OTUDLSection" viewClass="org.concord.otrunk.udl3.OTUDLSectionView" />
-            <OTViewEntry objectClass="org.concord.otrunk.udl3.OTUDLContainer" viewClass="org.concord.otrunk.udl3.OTUDLContainerView" />
-            <OTViewEntry objectClass="org.concord.otrunk.udl.document.OTUDLCSSModifier" viewClass="org.concord.otrunk.udl.document.OTUDLCSSModifierView" />
+            <OTViewEntry local_id="container_view" objectClass="org.concord.otrunk.udl3.OTUDLContainer" viewClass="org.concord.otrunk.udl3.OTUDLContainerView" />
             <OTViewEntry local_id="menu-vertical" objectClass="org.concord.otrunk.udl3.OTUDLMenu" viewClass="org.concord.otrunk.udl.ui.OTUDLMenuSectionView" />
             <OTViewEntry local_id="menu-horizontal-circle" objectClass="org.concord.otrunk.udl3.OTUDLMenu" viewClass="org.concord.otrunk.udl.ui.OTUDLMenuPageView" />
             <OTViewEntry local_id="menu-horizontal-book" objectClass="org.concord.otrunk.udl3.OTUDLMenu" viewClass="org.concord.otrunk.udl.ui.OTUDLMenuPageBookView" />
             <OTChoiceViewConfig local_id="choice-radio-view" objectClass="org.concord.otrunk.ui.OTChoice" viewClass="org.concord.otrunk.ui.swing.OTChoiceRadioButtonView" useViewsAsChoices="true" />
             <OTViewEntry local_id="choice-combo-view" objectClass="org.concord.otrunk.ui.OTChoice" viewClass="org.concord.otrunk.ui.swing.OTChoiceComboBoxView" />
-            <OTViewEntry objectClass="org.concord.otrunk.udl3.OTQuestion" viewClass="org.concord.otrunk.udl3.OTQuestionView" />
+            <OTViewEntry objectClass="org.concord.otrunk.udl.question.OTQuestion" viewClass="org.concord.otrunk.udl3.OTQuestionView" />
             <OTViewEntry objectClass="org.concord.otrunk.script.ui.OTScriptObject" viewClass="org.concord.otrunk.script.ui.OTScriptObjectView" />
             <OTViewEntry objectClass="org.concord.otrunk.ui.OTCardContainer" viewClass="org.concord.otrunk.ui.swing.OTCardContainerView" />
             <OTViewEntry objectClass="org.concord.otrunk.ui.OTBorderContainer" viewClass="org.concord.otrunk.ui.swing.OTBorderContainerView" />
             <OTViewEntry objectClass="org.concord.otrunk.ui.OTPlacementContainer" viewClass="org.concord.otrunk.ui.swing.OTPlacementContainerView" />
             <OTViewEntry local_id="text-edit" objectClass="org.concord.otrunk.ui.OTText" viewClass="org.concord.otrunk.ui.swing.OTTextEditView" />
             <OTViewEntry local_id="text-label" objectClass="org.concord.otrunk.ui.OTText" viewClass="org.concord.otrunk.ui.swing.OTTextView" />
-            <OTViewEntry viewClass="org.concord.datagraph.state.OTDataCollectorView" objectClass="org.concord.datagraph.state.OTDataCollector" />
+            <OTViewEntry local_id="data-collector-view" viewClass="org.concord.datagraph.state.OTDataCollectorView" objectClass="org.concord.datagraph.state.OTDataCollector" />
             <OTViewEntry viewClass="org.concord.datagraph.state.OTDataGraphView" objectClass="org.concord.datagraph.state.OTDataGraph" />
             <OTViewEntry viewClass="org.concord.data.state.OTDataFieldView" objectClass="org.concord.data.state.OTDataField" />
             <OTViewEntry viewClass="org.concord.datagraph.state.OTDataDrawingToolView" objectClass="org.concord.graph.util.state.OTDrawingTool" />
@@ -181,7 +206,7 @@
                     <OTOverlay local_id="small-text-overlay" name="Small text">
                       <deltaObjectMap>
                         <entry key="${css-font}">
-                          <OTCssText cssText=" body { font-size: 14; FONT-STYLE: normal; FONT-FAMILY: Verdana, Arial; FONT-VARIANT: normal; TEXT-DECORATION: none } a { text-decoration: none; } DIV.body { FONT-WEIGHT: bolder; FONT-STYLE: normal; FONT-FAMILY: Verdana, Arial; FONT-VARIANT: normal; TEXT-DECORATION: none } DIV.story { FONT-WEIGHT: bolder; } DIV.activity-title { font-size: 28; FONT-WEIGHT: bold; } DIV.title { font-size: 25; FONT-WEIGHT: bold; } DIV.subtitle { font-size: 20; FONT-WEIGHT: bold; }  DIV.subtitle-continue { padding-left: 20px; padding-top: 8px; padding-bottom: 8px; FONT-WEIGHT: bold; } DIV.todo { padding-top: 10px; padding-bottom: 10px; color: red; font-size: 22; } " />
+                          <OTCssText src="css/otrunk-small-font.css" />
                         </entry>
                       </deltaObjectMap>
                     </OTOverlay>
@@ -189,7 +214,7 @@
                     <OTOverlay local_id="large-text-overlay" name="Large text">
                       <deltaObjectMap>
                         <entry key="${css-font}">
-                          <OTCssText cssText="    body { font-size: 24; FONT-STYLE: normal; FONT-FAMILY: Verdana, Arial; FONT-VARIANT: normal; TEXT-DECORATION: none } a { text-decoration: none; }  DIV.body { FONT-WEIGHT: bolder; FONT-STYLE: normal; FONT-FAMILY: Verdana, Arial; FONT-VARIANT: normal; TEXT-DECORATION: none } DIV.story { FONT-WEIGHT: bolder; } DIV.activity-title { font-size: 37; FONT-WEIGHT: bold; } DIV.title {font-size: 34; FONT-WEIGHT: bold; } DIV.subtitle { font-size: 28; FONT-WEIGHT: bold; }  DIV.subtitle-continue { FONT-WEIGHT: bold; }  DIV.todo { padding-top: 10px; padding-top: 10px; color: red; font-size: 22; } " />
+                          <OTCssText src="css/otrunk-large-font.css" />
                         </entry>
                       </deltaObjectMap>
                     </OTOverlay>
@@ -215,31 +240,31 @@
                 <OTChoice>
                   <choices>
                     <OTOverlay local_id="english-overlay" name="English" />
-                    <OTOverlay local_id="spanish-overlay" name="Espa√±ol">
+                    <OTOverlay local_id="spanish-overlay" name="Español">
                       <deltaObjectMap>
                         <entry key="${section_exploration5}">
-                          <OTUDLSection name="Ilustrar la fricci√≥n">
+                          <OTUDLSection name="Ilustrar la fricción">
                             <header>
                               <OTCompoundDoc>
                                 <bodyText>
-                                  <div class="title">Ilustrar la fricci√≥n</div>
+                                  <div class="title">Ilustrar la fricción</div>
                                 </bodyText>
                               </OTCompoundDoc>
                             </header>
                           </OTUDLSection>
                         </entry>
                         <entry key="${introduction-1}">
-                          <OTUDLCompoundDoc name="Cuesti√≥n Central">
+                          <OTUDLCompoundDoc name="Cuestión Central">
                             <bodyText>
                               <div class="buffer">
                                 <div class="border">
                                   <div class="body">
-                                    <div class="subtitle">Cuesti√≥n Central</div>
-                                    ¬øQu√© pasarr√≠a si no fuera la fricci√≥n?
+                                    <div class="subtitle">Cuestión Central</div>
+                                    ¿Qué pasarría si no fuera la fricción?
                                     <p />
                                     <img src="http://udl.concord.org/share/Friction/Winter%20Activities%20155.png" border="1" />
                                     <p />
-                                    Este tema explora el papel de la fricci√≥n en la vida cotidiana.
+                                    Este tema explora el papel de la fricción en la vida cotidiana.
                                   </div>
                                 </div>
                               </div>
@@ -247,11 +272,11 @@
                           </OTUDLCompoundDoc>
                         </entry>
                         <entry key="${section_exploration1}">
-                          <OTUDLSection name="Deliz√°ndose">
+                          <OTUDLSection name="Delizándose">
                             <header>
                               <OTCompoundDoc>
                                 <bodyText>
-                                  <div class="title">Deliz√°ndose</div>
+                                  <div class="title">Delizándose</div>
                                 </bodyText>
                               </OTCompoundDoc>
                             </header>
@@ -263,7 +288,7 @@
                               <div class="leftpanel">
                                 <img src="http://udl.concord.org/share/udl-tree-only.png" width="70" height="73" />
                                 <br />
-                                <div class="activity-title">Fricci√≥n UDL</div>
+                                <div class="activity-title">Fricción UDL</div>
                               </div>
                             </bodyText>
                           </OTCompoundDoc>
@@ -285,25 +310,25 @@
                               <div class="buffer">
                                 <div class="border">
                                   <div class="body">
-                                    Responde a las preguntas siguientes. Cuando has terminado, empuja el bot√≥n de
+                                    Responde a las preguntas siguientes. Cuando has terminado, empuja el botón de
                                     <b>someter</b>
-                                    . Atenci√≥n: despu√©s de empuja el bot√≥n, no podr√°s regresar a cambriar las respuestas.
+                                    . Atención: después de empuja el botón, no podrás regresar a cambriar las respuestas.
                                     <ol>
                                       <li>
-                                        ¬øEn qu√© superficie se delizar√° mejor un trineo?
+                                        ¿En qué superficie se delizará mejor un trineo?
                                         <br />
                                         <object refid="${question1-56-sp}" />
                                         <p />
                                       </li>
                                       <li>
-                                        ¬øEn qu√© superficie se delizar√° peor un trineo?
+                                        ¿En qué superficie se delizará peor un trineo?
                                         <br />
                                         <object refid="${question2-56-sp}" />
                                         <p />
                                       </li>
                                     </ol>
                                     <p />
-                                    Para ir a la p√°gina siguiente, empuje la
+                                    Para ir a la página siguiente, empuje la
                                     <b>flecha derecha</b>
                                     .
                                   </div>
@@ -353,11 +378,11 @@
                           </OTUDLCompoundDoc>
                         </entry>
                         <entry key="${section_wrapup}">
-                          <OTUDLSection name="Conclusi√≥n">
+                          <OTUDLSection name="Conclusión">
                             <header>
                               <OTCompoundDoc>
                                 <bodyText>
-                                  <div class="title">Conclusi√≥n</div>
+                                  <div class="title">Conclusión</div>
                                 </bodyText>
                               </OTCompoundDoc>
                             </header>
@@ -382,13 +407,13 @@
                                   <div class="body">
                                     <ol start="3">
                                       <li>
-                                        Lo m√°s pegajoso la superficie...
+                                        Lo más pegajoso la superficie...
                                         <br />
                                         <object refid="${question3-56-sp}" />
                                         <p />
                                       </li>
                                       <li>
-                                        ¬øCu√°l de las opciones siguientes es un ejemplo de intentar a augmentar la fricci√≥n?
+                                        ¿Cuál de las opciones siguientes es un ejemplo de intentar a augmentar la fricción?
                                         <br />
                                         <object refid="${question4-56-sp}" />
                                         <p />
@@ -398,7 +423,7 @@
                                     <table>
                                       <tr>
                                         <td>
-                                          Cuando has terminado, empuja el bot√≥n de
+                                          Cuando has terminado, empuja el botón de
                                           <b>someter</b>
                                           .
                                         </td>
@@ -440,17 +465,17 @@
                                 <choices>
                                   <OTCompoundDoc>
                                     <bodyText>
-                                      <div class="body-no-border">Lo m√°s la fricci√≥n</div>
+                                      <div class="body-no-border">Lo más la fricción</div>
                                     </bodyText>
                                   </OTCompoundDoc>
                                   <OTCompoundDoc>
                                     <bodyText>
-                                      <div class="body-no-border">Lo menos la fricci√≥n</div>
+                                      <div class="body-no-border">Lo menos la fricción</div>
                                     </bodyText>
                                   </OTCompoundDoc>
                                   <OTCompoundDoc>
                                     <bodyText>
-                                      <div class="body-no-border">Un nivel egual de fricci√≥n</div>
+                                      <div class="body-no-border">Un nivel egual de fricción</div>
                                     </bodyText>
                                   </OTCompoundDoc>
                                 </choices>
@@ -469,7 +494,7 @@
                                   </OTCompoundDoc>
                                   <OTCompoundDoc>
                                     <bodyText>
-                                      <div class="body-no-border">Poner la cera debajo de los esqu√≠s</div>
+                                      <div class="body-no-border">Poner la cera debajo de los esquís</div>
                                     </bodyText>
                                   </OTCompoundDoc>
                                 </choices>
@@ -478,11 +503,11 @@
                           </OTUDLCompoundDoc>
                         </entry>
                         <entry key="${section_exploration3}">
-                          <OTUDLSection name="Zapatos de fricci√≥n">
+                          <OTUDLSection name="Zapatos de fricción">
                             <header>
                               <OTCompoundDoc>
                                 <bodyText>
-                                  <div class="title">Zapatos de fricci√≥n</div>
+                                  <div class="title">Zapatos de fricción</div>
                                 </bodyText>
                               </OTCompoundDoc>
                             </header>
@@ -506,17 +531,17 @@
                                 <div class="border">
                                   <div class="body">
                                     <div class="subtitle">Interesar</div>
-                                    ¬øC√≥mo puedes medir la capacidad de delizaci√≥n?
+                                    ¿Cómo puedes medir la capacidad de delización?
                                     <p />
                                     <img src="http://udl.concord.org/share/Friction/slide-Children-1348.jpg" width="222" height="250" />
                                     <p />
-                                    En esta actividad, vas a medir la cantidad de la fricci√≥n de superficies diferentes.
+                                    En esta actividad, vas a medir la cantidad de la fricción de superficies diferentes.
                                     <p />
                                     <div class="story-border">
-                                      <div class="story">Eduardo y Mar√≠a decidieron inventar una manera de medir la fricci√≥n de los ojectos. Quer√≠an un m√©todo  sencillo para que pudieran transportar su equipo de prueba desde un lugar a otro, incluyendo Mundo Resbaladizo, Mundo Pegajoso, y su propio mundo. T√∫ puedes probar su m√©todo, que fue crear un tobog√°n y ver que nivel de inclinaci√≥n se necesita para mover el ojecto.</div>
+                                      <div class="story">Eduardo y María decidieron inventar una manera de medir la fricción de los ojectos. Querían un método  sencillo para que pudieran transportar su equipo de prueba desde un lugar a otro, incluyendo Mundo Resbaladizo, Mundo Pegajoso, y su propio mundo. Tú puedes probar su método, que fue crear un tobogán y ver que nivel de inclinación se necesita para mover el ojecto.</div>
                                     </div>
                                     <p />
-                                    Dibuje un tobog√°n de un patio de recreo con una persona lista a bajar. Patios de recreo diferentes tienen ‚Äúslides‚Äù creados de materiales diferentes. Asegurate de describir el tipo de material de la superficie de tu tobog√°n.
+                                    Dibuje un tobogán de un patio de recreo con una persona lista a bajar. Patios de recreo diferentes tienen “slides” creados de materiales diferentes. Asegurate de describir el tipo de material de la superficie de tu tobogán.
                                     <p />
                                     <object refid="${act1-eng-ques1-es}" />
                                   </div>
@@ -533,7 +558,7 @@
                                     <bodyText>
                                       <div class="buffer">
                                         <div class="border">
-                                          <div class="body">Recuerdete la √∫ltima vez que bajaste de un tobog√°n. ¬øFuiste r√°pido o lentamente? ¬øRecuerdas el material del tobog√°n? ¬øC√≥mo piensas podr√≠as medir la fricci√≥n de las superficies diferentes?</div>
+                                          <div class="body">Recuerdete la última vez que bajaste de un tobogán. ¿Fuiste rápido o lentamente? ¿Recuerdas el material del tobogán? ¿Cómo piensas podrías medir la fricción de las superficies diferentes?</div>
                                         </div>
                                       </div>
                                     </bodyText>
@@ -565,7 +590,7 @@
                                     <bodyText>
                                       <div class="buffer">
                                         <div class="border">
-                                          <div class="body">Veo a una chica desliz√°ndose por el tobog√°n.   Me pregunto si su velocidad relaciona a la fricci√≥n.</div>
+                                          <div class="body">Veo a una chica deslizándose por el tobogán.   Me pregunto si su velocidad relaciona a la fricción.</div>
                                         </div>
                                       </div>
                                     </bodyText>
@@ -625,11 +650,11 @@
                           </OTUDLCompoundDoc>
                         </entry>
                         <entry key="${section_intro}">
-                          <OTUDLSection name="Introduci√≥n">
+                          <OTUDLSection name="Introdución">
                             <header>
                               <OTCompoundDoc>
                                 <bodyText>
-                                  <div class="title">Introduci√≥n</div>
+                                  <div class="title">Introdución</div>
                                 </bodyText>
                               </OTCompoundDoc>
                             </header>
@@ -647,11 +672,11 @@
                           </OTUDLSection>
                         </entry>
                         <entry key="${section_explorationx}">
-                          <OTUDLSection name="Emp√∫jelo">
+                          <OTUDLSection name="Empújelo">
                             <header>
                               <OTCompoundDoc>
                                 <bodyText>
-                                  <div class="title">Emp√∫jelo</div>
+                                  <div class="title">Empújelo</div>
                                 </bodyText>
                               </OTCompoundDoc>
                             </header>
@@ -737,24 +762,24 @@
             </OTCompoundDoc>
           </topBar>
           <characters>
-            <OTUDLCharacterGroup local_id="character-group">
+            <OTUDLCoachGroup local_id="character-group">
               <topLevelCardContainer>
                 <object refid="${section-card-container}" />
               </topLevelCardContainer>
               <characters>
-                <OTUDLCharacter local_id="character_affective" inactiveImageURL="http://confluence.concord.org/download/attachments/12353/blah-head-small.png" activeImageURL="http://confluence.concord.org/download/attachments/12353/blah-head.png" />
-                <OTUDLCharacter local_id="character_strategic" inactiveImageURL="http://confluence.concord.org/download/attachments/12353/clunk-head-small.png" activeImageURL="http://confluence.concord.org/download/attachments/12353/clunk-head.png" />
-                <OTUDLCharacter local_id="character_recognition" inactiveImageURL="http://confluence.concord.org/download/attachments/12353/roxy-head-small.png" activeImageURL="http://confluence.concord.org/download/attachments/11818/roxy-large.gif" />
-              </characters>
+                <OTUDLCoach local_id="character_affective" inactiveImageURL="http://udl.concord.org/share/shared-images/blah-head.png" activeImageURL="http://udl.concord.org/share/shared-images/blah-anim.gif" />
+                <OTUDLCoach local_id="character_strategic" inactiveImageURL="http://udl.concord.org/share/shared-images/clunk-head.png" activeImageURL="http://udl.concord.org/share/shared-images/clunk-anim.gif" />
+                <OTUDLCoach local_id="character_recognition" inactiveImageURL="http://udl.concord.org/share/shared-images/roxy-head.png" activeImageURL="http://udl.concord.org/share/shared-images/roxy-anim.gif" />
+               </characters>
               <speechFrame>
                 <OTFrame local_id="speech_frame" width="380" height="340" borderlessPopup="false" />
               </speechFrame>
-            </OTUDLCharacterGroup>
+            </OTUDLCoachGroup>
           </characters>
           <content>
             <OTCardContainer local_id="section-card-container" loadViewOnlyOnDemand="true">
               <cards>
-                <OTUDLSection local_id="section_pretest" name="Pretest" isPretest="true">
+                <OTUDLSection local_id="section_pretest" name="Pre-test" isPretest="true" isComputerBased="false" isIntroduction="false" isMath="false" isPosttest="false" isReading="false" isWrapup="false">
                   <header>
                     <OTCompoundDoc id="678b5190-0bcf-012a-b542-0017f2cc694e!/section_pretest/header">
                       <bodyText>
@@ -1032,7 +1057,15 @@
                             </div>
                           </bodyText>
                           <documentRefs>
-                            <OTText local_id="introtext1" rows="2" />
+                            <OTText local_id="introtext1" rows="2">
+                              <text>eee
+e
+e
+ew
+e
+e
+e</text>
+                            </OTText>
                             <OTText local_id="introtext2" />
                             <OTDrawingTool2 local_id="introdrawing1" />
                           </documentRefs>
@@ -1042,7 +1075,7 @@
                             <div class="buffer">
                               <div class="border">
                                 <div class="body">
-                                  <div class="subtitle-continue">Exploring the question 2</div>
+                                  <div class="subtitle-continued">Exploring the question 2</div>
                                   Albert lives in a world that is just the opposite. Everything is very sticky. All of the surfaces have a large amount of friction.
                                   <p />
                                   <table>
@@ -1069,7 +1102,11 @@
                           </bodyText>
                           <documentRefs>
                             <OTText local_id="introtext3" rows="2" />
-                            <OTDrawingTool2 local_id="introdrawing2" />
+                            <OTDrawingTool2 local_id="introdrawing2">
+                              <graphables>
+                                <OTDrawingShape type="" fillType="clear" x="0.0" y="0.0" width="0.0" height="0.0" color="0x000000" />
+                              </graphables>
+                            </OTDrawingTool2>
                             <OTText local_id="introtext4" />
                           </documentRefs>
                         </OTUDLCompoundDoc>
@@ -1106,7 +1143,7 @@
                 </OTUDLSection>
                 <OTUDLSection local_id="section_exploration4" name="Frictional adventure" isReading="true">
                   <header>
-                    <OTCompoundDoc>
+                    <OTCompoundDoc id="678b5190-0bcf-012a-b542-0017f2cc694e!/section_exploration4/header">
                       <bodyText>
                         <div class="title">A Frictional Adventure</div>
                       </bodyText>
@@ -1121,9 +1158,10 @@
                               <div class="border">
                                 <div class="body">
                                   Download the story of "Maria and Eduardo's Wonderful Summer: 
-                                  A Frictional Adventure" by clicking 
+                                  A Frictional Adventure" by clicking
                                   <a href="http://udl.concord.org/share/Friction/FrictionalAdventure_v1.pdf">here</a>
-                                  <p/>
+                                  .
+                                  <p />
                                   Or read the story by using the forward and back buttons below.
                                 </div>
                               </div>
@@ -1214,7 +1252,7 @@
                             </OTUDLCoachStatement>
                           </coachStatements>
                         </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc id="3e7bdc76-7c1e-11dc-98f7-298451e9d565" name="%3e7bdc76-7c1e-11dc-98f7-298451e9d565">
+                        <OTUDLCompoundDoc name="%3e7bdc76-7c1e-11dc-98f7-298451e9d565">
                           <bodyText>
                             <div class="buffer">
                               <div class="border">
@@ -1286,7 +1324,7 @@
                             </OTUDLCoachStatement>
                           </coachStatements>
                         </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc id="5428da6d-7c55-11dc-be7c-3d676782c86f" name="%5428da6d-7c55-11dc-be7c-3d676782c86f">
+                        <OTUDLCompoundDoc name="%5428da6d-7c55-11dc-be7c-3d676782c86f">
                           <bodyText>
                             <div class="buffer">
                               <div class="border">
@@ -1358,7 +1396,7 @@
                             </OTUDLCoachStatement>
                           </coachStatements>
                         </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc id="90d6c224-7c55-11dc-be7c-3d676782c86f" name="%90d6c224-7c55-11dc-be7c-3d676782c86f">
+                        <OTUDLCompoundDoc name="%90d6c224-7c55-11dc-be7c-3d676782c86f">
                           <bodyText>
                             <div class="buffer">
                               <div class="border">
@@ -1384,7 +1422,7 @@
                             </div>
                           </bodyText>
                         </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc id="bb53ae55-7c55-11dc-be7c-3d676782c86f" name="%bb53ae55-7c55-11dc-be7c-3d676782c86f">
+                        <OTUDLCompoundDoc name="%bb53ae55-7c55-11dc-be7c-3d676782c86f">
                           <bodyText>
                             <div class="buffer">
                               <div class="border">
@@ -1460,7 +1498,7 @@
                             </OTUDLCoachStatement>
                           </coachStatements>
                         </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc id="e32e9f7c-7c55-11dc-be7c-3d676782c86f" name="%e32e9f7c-7c55-11dc-be7c-3d676782c86f">
+                        <OTUDLCompoundDoc name="%e32e9f7c-7c55-11dc-be7c-3d676782c86f">
                           <bodyText>
                             <div class="buffer">
                               <div class="border">
@@ -1534,7 +1572,7 @@
                             </OTUDLCoachStatement>
                           </coachStatements>
                         </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc id="2129c7b3-7c56-11dc-be7c-3d676782c86f" name="%2129c7b3-7c56-11dc-be7c-3d676782c86f">
+                        <OTUDLCompoundDoc name="%2129c7b3-7c56-11dc-be7c-3d676782c86f">
                           <bodyText>
                             <div class="buffer">
                               <div class="border">
@@ -1606,7 +1644,7 @@
                             </OTUDLCoachStatement>
                           </coachStatements>
                         </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc id="5539dfea-7c56-11dc-be7c-3d676782c86f" name="%5539dfea-7c56-11dc-be7c-3d676782c86f">
+                        <OTUDLCompoundDoc name="%5539dfea-7c56-11dc-be7c-3d676782c86f">
                           <bodyText>
                             <div class="buffer">
                               <div class="border">
@@ -1678,7 +1716,7 @@
                             </OTUDLCoachStatement>
                           </coachStatements>
                         </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc id="94099631-7c56-11dc-be7c-3d676782c86f" name="%94099631-7c56-11dc-be7c-3d676782c86f">
+                        <OTUDLCompoundDoc name="%94099631-7c56-11dc-be7c-3d676782c86f">
                           <bodyText>
                             <div class="buffer">
                               <div class="border">
@@ -1757,7 +1795,7 @@
                     </OTCardContainer>
                   </content>
                   <footer>
-                    <OTCompoundDoc>
+                    <OTCompoundDoc id="678b5190-0bcf-012a-b542-0017f2cc694e!/section_exploration4/footer">
                       <bodyText>
                         <div align="center">
                           <table>
@@ -1771,6 +1809,15 @@
                       </bodyText>
                     </OTCompoundDoc>
                   </footer>
+                  <north>
+                    <object refid="678b5190-0bcf-012a-b542-0017f2cc694e!/section_exploration4/header" />
+                  </north>
+                  <center>
+                    <object refid="${exploration4-card-container}" />
+                  </center>
+                  <south>
+                    <object refid="678b5190-0bcf-012a-b542-0017f2cc694e!/section_exploration4/footer" />
+                  </south>
                 </OTUDLSection>
                 <OTUDLSection local_id="section_exploration1" name="Slip sliding away" isComputerBased="true">
                   <header>
@@ -2086,7 +2133,7 @@
                             <div class="buffer">
                               <div class="border">
                                 <div class="body">
-                                  <div class="subtitle-continue">Explore (part 2)</div>
+                                  <div class="subtitle-continued">Explore  2</div>
                                   <ol>
                                     <li>
                                       Collect several materials that you can attach to your block of wood to test how slippery they are when they are placed on your slide.
@@ -2130,13 +2177,19 @@
                               </div>
                             </div>
                           </bodyText>
+                          <documentRefs>
+                            <object refid="${act1-elab-text1}" />
+                            <object refid="${act1-elab-text2}" />
+                            <object refid="${act1-elab-text3}" />
+                            <object refid="${act1-elab-text4}" />
+                          </documentRefs>
                         </OTUDLCompoundDoc>
                         <OTUDLCompoundDoc local_id="slipsliding_explore3" name="Explore_part_3">
                           <bodyText>
                             <div class="buffer">
                               <div class="border">
                                 <div class="body">
-                                  <div class="subtitle-continue">Explore (part 3)</div>
+                                  <div class="subtitle-continued">Explore  3</div>
                                   <ol start="3">
                                     <li>
                                       Now test out each material on your cardboard slide. Attach each material below the block and again measure the height needed to make the block slide as shown.
@@ -2251,7 +2304,7 @@
                             <OTText local_id="act1-elab-text3" />
                             <object refid="${text-label}" />
                             <OTText local_id="act1-elab-text7" />
-                            <OTText local_id="act1-elab-text4" />
+                            <OTText local_id="act1-elab-text4" text="" />
                             <object refid="${text-label}" />
                             <OTText local_id="act1-elab-text8" />
                           </documentRefs>
@@ -2268,25 +2321,6 @@
                                     </li>
                                     <li>
                                       <object refid="${act1-explain-ques2}" />
-                                    </li>
-                                  </ol>
-                                </div>
-                              </div>
-                            </div>
-                          </bodyText>
-                        </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc local_id="slipsliding_explain_2" name="Explain-2">
-                          <bodyText>
-                            <div class="buffer">
-                              <div class="border">
-                                <div class="body">
-                                  <div class="subtitle-continue">Explain (part 2)</div>
-                                  <ol start="3">
-                                    <li>
-                                      <object refid="${act1-explain-ques3}" viewid="${questions-on-off-view}" />
-                                    </li>
-                                    <li>
-                                      <object refid="${act1-explain-ques4}" viewid="${questions-on-off-view}" />
                                     </li>
                                   </ol>
                                 </div>
@@ -2622,6 +2656,27 @@
                                 </OTQuestion>
                               </questions>
                             </OTUDLQuestions>
+                          </documentRefs>
+                        </OTUDLCompoundDoc>
+                        <OTUDLCompoundDoc local_id="slipsliding_explain_2" name="Explain-2">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle-continued">Explain 2</div>
+                                  <ol start="3">
+                                    <li>
+                                      <object refid="${act1-explain-ques3}" viewid="${questions-on-off-view}" />
+                                    </li>
+                                    <li>
+                                      <object refid="${act1-explain-ques4}" viewid="${questions-on-off-view}" />
+                                    </li>
+                                  </ol>
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                          <documentRefs>
                             <OTUDLQuestions local_id="act1-explain-ques3">
                               <questions>
                                 <OTQuestion local_id="act1-explain-ques3-5" name="L5">
@@ -2633,7 +2688,14 @@
                                     </OTUDLCompoundDoc>
                                   </prompt>
                                   <input>
-                                    <OTText />
+                                    <OTUDLCompoundDoc id="678b5190-0bcf-012a-b542-0017f2cc694e!/act1-explain-ques3-5/input">
+                                      <documentRefs>
+                                        <null />
+                                      </documentRefs>
+                                      <bodyText>
+                                        <object refid="678b5190-0bcf-012a-b542-0017f2cc694e!/act1-explain-ques3-5/input" />
+                                      </bodyText>
+                                    </OTUDLCompoundDoc>
                                   </input>
                                   <scaffolding>
                                     <OTUDLCompoundDoc>
@@ -2764,6 +2826,7 @@
                                 </OTQuestion>
                               </questions>
                             </OTUDLQuestions>
+                            <object refid="${questions-on-off-view}" />
                             <OTUDLQuestions local_id="act1-explain-ques4">
                               <questions>
                                 <OTQuestion local_id="act1-explain-ques4-5" name="L5">
@@ -2775,7 +2838,14 @@
                                     </OTUDLCompoundDoc>
                                   </prompt>
                                   <input>
-                                    <OTText />
+                                    <OTUDLCompoundDoc id="678b5190-0bcf-012a-b542-0017f2cc694e!/act1-explain-ques4-5/input">
+                                      <documentRefs>
+                                        <null />
+                                      </documentRefs>
+                                      <bodyText>
+                                        <object refid="678b5190-0bcf-012a-b542-0017f2cc694e!/act1-explain-ques4-5/input" />
+                                      </bodyText>
+                                    </OTUDLCompoundDoc>
                                   </input>
                                   <scaffolding>
                                     <OTUDLCompoundDoc>
@@ -2951,6 +3021,7 @@
                                 </OTQuestion>
                               </questions>
                             </OTUDLQuestions>
+                            <object refid="${questions-on-off-view}" />
                           </documentRefs>
                         </OTUDLCompoundDoc>
                         <OTUDLCompoundDoc local_id="exploration1-6" name="Elaborate">
@@ -3034,7 +3105,14 @@
                                     </OTUDLCompoundDoc>
                                   </prompt>
                                   <input>
-                                    <OTText />
+                                    <OTUDLCompoundDoc id="678b5190-0bcf-012a-b542-0017f2cc694e!/act1-ext-ques1-5/input">
+                                      <documentRefs>
+                                        <null />
+                                      </documentRefs>
+                                      <bodyText>
+                                        <object refid="678b5190-0bcf-012a-b542-0017f2cc694e!/act1-ext-ques1-5/input" />
+                                      </bodyText>
+                                    </OTUDLCompoundDoc>
                                   </input>
                                   <scaffolding>
                                     <OTUDLCompoundDoc>
@@ -3051,7 +3129,14 @@
                                     </OTUDLCompoundDoc>
                                   </prompt>
                                   <input>
-                                    <OTText />
+                                    <OTUDLCompoundDoc id="678b5190-0bcf-012a-b542-0017f2cc694e!/act1-ext-ques1-4/input">
+                                      <documentRefs>
+                                        <null />
+                                      </documentRefs>
+                                      <bodyText>
+                                        <object refid="678b5190-0bcf-012a-b542-0017f2cc694e!/act1-ext-ques1-4/input" />
+                                      </bodyText>
+                                    </OTUDLCompoundDoc>
                                   </input>
                                   <scaffolding>
                                     <OTUDLCompoundDoc>
@@ -3070,7 +3155,14 @@
                                     </OTUDLCompoundDoc>
                                   </prompt>
                                   <input>
-                                    <OTText text="I would sit on a slippery piece of...." />
+                                    <OTUDLCompoundDoc id="678b5190-0bcf-012a-b542-0017f2cc694e!/act1-ext-ques1-3/input">
+                                      <documentRefs>
+                                        <null />
+                                      </documentRefs>
+                                      <bodyText>
+                                        <object refid="678b5190-0bcf-012a-b542-0017f2cc694e!/act1-ext-ques1-3/input" />
+                                      </bodyText>
+                                    </OTUDLCompoundDoc>
                                   </input>
                                   <scaffolding>
                                     <OTUDLCompoundDoc>
@@ -3089,20 +3181,14 @@
                                     </OTUDLCompoundDoc>
                                   </prompt>
                                   <input>
-                                    <OTChoice>
-                                      <choices>
-                                        <OTCompoundDoc>
-                                          <bodyText>
-                                            <div class="body-no-border">I would sit on a piece of notebook paper</div>
-                                          </bodyText>
-                                        </OTCompoundDoc>
-                                        <OTCompoundDoc>
-                                          <bodyText>
-                                            <div class="body-no-border">I would sit on a piece of wax paper</div>
-                                          </bodyText>
-                                        </OTCompoundDoc>
-                                      </choices>
-                                    </OTChoice>
+                                    <OTUDLCompoundDoc id="678b5190-0bcf-012a-b542-0017f2cc694e!/act1-ext-ques1-2/input">
+                                      <documentRefs>
+                                        <null />
+                                      </documentRefs>
+                                      <bodyText>
+                                        <object refid="678b5190-0bcf-012a-b542-0017f2cc694e!/act1-ext-ques1-2/input" />
+                                      </bodyText>
+                                    </OTUDLCompoundDoc>
                                   </input>
                                   <scaffolding>
                                     <OTUDLCompoundDoc>
@@ -3121,7 +3207,14 @@
                                     </OTUDLCompoundDoc>
                                   </prompt>
                                   <input>
-                                    <OTText text="" />
+                                    <OTUDLCompoundDoc id="678b5190-0bcf-012a-b542-0017f2cc694e!/act1-ext-ques1-1/input">
+                                      <documentRefs>
+                                        <null />
+                                      </documentRefs>
+                                      <bodyText>
+                                        <object refid="678b5190-0bcf-012a-b542-0017f2cc694e!/act1-ext-ques1-1/input" />
+                                      </bodyText>
+                                    </OTUDLCompoundDoc>
                                   </input>
                                   <scaffolding>
                                     <OTUDLCompoundDoc>
@@ -3142,7 +3235,14 @@
                                 </OTUDLCompoundDoc>
                               </prompt>
                               <input>
-                                <OTText />
+                                <OTUDLCompoundDoc id="678b5190-0bcf-012a-b542-0017f2cc694e!/act1-ext-ques2/input">
+                                  <documentRefs>
+                                    <null />
+                                  </documentRefs>
+                                  <bodyText>
+                                    <object refid="678b5190-0bcf-012a-b542-0017f2cc694e!/act1-ext-ques2/input" />
+                                  </bodyText>
+                                </OTUDLCompoundDoc>
                               </input>
                               <scaffolding>
                                 <OTUDLCompoundDoc>
@@ -3157,7 +3257,7 @@
                             <div class="buffer">
                               <div class="border">
                                 <div class="body">
-                                  <div class="subtitle-continue">Elaborate (part 2)</div>
+                                  <div class="subtitle-continued">Elaborate 2</div>
                                   <ol start="3">
                                     <li>
                                       <object refid="${act1-ext-ques3}" />
@@ -3232,7 +3332,14 @@
                                     </OTUDLCompoundDoc>
                                   </prompt>
                                   <input>
-                                    <OTText />
+                                    <OTUDLCompoundDoc id="678b5190-0bcf-012a-b542-0017f2cc694e!/act1-ext-ques3-5/input">
+                                      <documentRefs>
+                                        <null />
+                                      </documentRefs>
+                                      <bodyText>
+                                        <object refid="678b5190-0bcf-012a-b542-0017f2cc694e!/act1-ext-ques3-5/input" />
+                                      </bodyText>
+                                    </OTUDLCompoundDoc>
                                   </input>
                                   <scaffolding>
                                     <OTUDLCompoundDoc>
@@ -3249,7 +3356,14 @@
                                     </OTUDLCompoundDoc>
                                   </prompt>
                                   <input>
-                                    <OTText />
+                                    <OTUDLCompoundDoc id="678b5190-0bcf-012a-b542-0017f2cc694e!/act1-ext-ques3-4/input">
+                                      <documentRefs>
+                                        <null />
+                                      </documentRefs>
+                                      <bodyText>
+                                        <object refid="678b5190-0bcf-012a-b542-0017f2cc694e!/act1-ext-ques3-4/input" />
+                                      </bodyText>
+                                    </OTUDLCompoundDoc>
                                   </input>
                                   <scaffolding>
                                     <OTUDLCompoundDoc>
@@ -3268,7 +3382,14 @@
                                     </OTUDLCompoundDoc>
                                   </prompt>
                                   <input>
-                                    <OTText text="I would sit on a sticky piece of...." />
+                                    <OTUDLCompoundDoc id="678b5190-0bcf-012a-b542-0017f2cc694e!/act1-ext-ques3-3/input">
+                                      <documentRefs>
+                                        <null />
+                                      </documentRefs>
+                                      <bodyText>
+                                        <object refid="678b5190-0bcf-012a-b542-0017f2cc694e!/act1-ext-ques3-3/input" />
+                                      </bodyText>
+                                    </OTUDLCompoundDoc>
                                   </input>
                                   <scaffolding>
                                     <OTUDLCompoundDoc>
@@ -3287,20 +3408,14 @@
                                     </OTUDLCompoundDoc>
                                   </prompt>
                                   <input>
-                                    <OTChoice>
-                                      <choices>
-                                        <OTCompoundDoc>
-                                          <bodyText>
-                                            <div class="body-no-border">I would sit on a piece of notebook paper</div>
-                                          </bodyText>
-                                        </OTCompoundDoc>
-                                        <OTCompoundDoc>
-                                          <bodyText>
-                                            <div class="body-no-border">I would sit on a piece of sand paper</div>
-                                          </bodyText>
-                                        </OTCompoundDoc>
-                                      </choices>
-                                    </OTChoice>
+                                    <OTUDLCompoundDoc id="678b5190-0bcf-012a-b542-0017f2cc694e!/act1-ext-ques3-2/input">
+                                      <documentRefs>
+                                        <null />
+                                      </documentRefs>
+                                      <bodyText>
+                                        <object refid="678b5190-0bcf-012a-b542-0017f2cc694e!/act1-ext-ques3-2/input" />
+                                      </bodyText>
+                                    </OTUDLCompoundDoc>
                                   </input>
                                   <scaffolding>
                                     <OTUDLCompoundDoc>
@@ -3319,7 +3434,14 @@
                                     </OTUDLCompoundDoc>
                                   </prompt>
                                   <input>
-                                    <OTText text="" />
+                                    <OTUDLCompoundDoc id="678b5190-0bcf-012a-b542-0017f2cc694e!/act1-ext-ques3-1/input">
+                                      <documentRefs>
+                                        <null />
+                                      </documentRefs>
+                                      <bodyText>
+                                        <object refid="678b5190-0bcf-012a-b542-0017f2cc694e!/act1-ext-ques3-1/input" />
+                                      </bodyText>
+                                    </OTUDLCompoundDoc>
                                   </input>
                                   <scaffolding>
                                     <OTUDLCompoundDoc>
@@ -3340,7 +3462,14 @@
                                 </OTUDLCompoundDoc>
                               </prompt>
                               <input>
-                                <OTText />
+                                <OTUDLCompoundDoc id="678b5190-0bcf-012a-b542-0017f2cc694e!/act1-ext-ques4/input">
+                                  <documentRefs>
+                                    <null />
+                                  </documentRefs>
+                                  <bodyText>
+                                    <object refid="678b5190-0bcf-012a-b542-0017f2cc694e!/act1-ext-ques4/input" />
+                                  </bodyText>
+                                </OTUDLCompoundDoc>
                               </input>
                               <scaffolding>
                                 <OTUDLCompoundDoc>
@@ -3404,9 +3533,6 @@
                                   <p />
                                   In this activity, you will compare different surface materials for a slide.
                                   <p />
-                                  <div class="story-border">
-                                    <div class="story">When they returned from Sticky World and Slippery World, Maria and Eduardo wanted to explain to their friends what it was like. They decided to use a computer model where you could change the amount of friction.</div>
-                                  </div>
                                 </div>
                               </div>
                             </div>
@@ -3478,7 +3604,7 @@
                             <div class="buffer">
                               <div class="border">
                                 <div class="body">
-                                  <div class="subtitle-continue">Engage (part 2)</div>
+                                  <div class="subtitle-continued">Engage 2</div>
                                   Write in the boxes below the surface materials
 (steel, wood, ice, carpet) in order from the most sticky to the most slippery.
                                   <table>
@@ -3591,7 +3717,7 @@
                             <div class="buffer">
                               <div class="border">
                                 <div class="body">
-                                  <div class="subtitle-continue">Explore (part 2)</div>
+                                  <div class="subtitle-continued">Explore 2</div>
                                   <table>
                                     <tr>
                                       <td colspan="2">
@@ -3646,7 +3772,6 @@
                             </div>
                           </bodyText>
                           <documentRefs>
-                            <OTText local_id="act2-exp3-text1" />
                             <OTFrictionModel local_id="act2-exp3-fr_model" showGraph="false" showPushButtons="false" showSlider="false" rampAngle="0" />
                             <OTSnapshotButton local_id="act2-exp3-fr1_snapshot_button">
                               <target>
@@ -3659,7 +3784,7 @@
                             <object refid="${album}" />
                             <object refid="${act2-exp2-text1}" />
                             <object refid="${text-label}" />
-                            <null />
+                            <OTText local_id="act2-exp3-text1" />
                           </documentRefs>
                         </OTUDLCompoundDoc>
                         <OTUDLCompoundDoc local_id="exploration3-5" name="explore3">
@@ -3667,7 +3792,7 @@
                             <div class="buffer">
                               <div class="border">
                                 <div class="body">
-                                  <div class="subtitle-continue">Explore (part 3)</div>
+                                  <div class="subtitle-continued">Explore 3</div>
                                   <table>
                                     <tr>
                                       <td colspan="2">
@@ -3750,7 +3875,7 @@
                             <div class="buffer">
                               <div class="border">
                                 <div class="body">
-                                  <div class="subtitle-continue">Explore (part 4)</div>
+                                  <div class="subtitle-continued">Explore 4</div>
                                   <table>
                                     <tr>
                                       <td colspan="2">
@@ -3813,7 +3938,6 @@
                             </div>
                           </bodyText>
                           <documentRefs>
-                            <OTText local_id="act2-exp5-text1" />
                             <OTFrictionModel local_id="act2-exp5-fr_model" showGraph="false" showPushButtons="false" showSlider="false" rampAngle="0" />
                             <OTSnapshotButton local_id="act2-exp5-fr1_snapshot_button">
                               <target>
@@ -3830,7 +3954,7 @@
                             <object refid="${text-label}" />
                             <object refid="${act2-exp4-text1}" />
                             <object refid="${text-label}" />
-                            <null />
+                            <OTText local_id="act2-exp5-text1" />
                           </documentRefs>
                         </OTUDLCompoundDoc>
                         <OTUDLCompoundDoc local_id="exploration3-7" name="explain">
@@ -3903,12 +4027,19 @@
                                   <prompt>
                                     <OTUDLCompoundDoc>
                                       <bodyText>
-                                        <div class="body-no-border">Did the kid slide on all of the surface materials?</div>
+                                        <div class="body-no-border">Did the child slide on all of the surface materials?</div>
                                       </bodyText>
                                     </OTUDLCompoundDoc>
                                   </prompt>
                                   <input>
-                                    <OTText />
+                                    <OTUDLCompoundDoc id="678b5190-0bcf-012a-b542-0017f2cc694e!/act2-explain-ques1-5/input">
+                                      <documentRefs>
+                                        <null />
+                                      </documentRefs>
+                                      <bodyText>
+                                        <object refid="678b5190-0bcf-012a-b542-0017f2cc694e!/act2-explain-ques1-5/input" />
+                                      </bodyText>
+                                    </OTUDLCompoundDoc>
                                   </input>
                                   <scaffolding>
                                     <OTUDLCompoundDoc>
@@ -3920,12 +4051,19 @@
                                   <prompt>
                                     <OTUDLCompoundDoc>
                                       <bodyText>
-                                        <div class="body-no-border">Did the kid slide on all of the surface materials?</div>
+                                        <div class="body-no-border">Did the child slide on all of the surface materials?</div>
                                       </bodyText>
                                     </OTUDLCompoundDoc>
                                   </prompt>
                                   <input>
-                                    <OTText />
+                                    <OTUDLCompoundDoc id="678b5190-0bcf-012a-b542-0017f2cc694e!/act2-explain-ques1-4/input">
+                                      <documentRefs>
+                                        <null />
+                                      </documentRefs>
+                                      <bodyText>
+                                        <object refid="678b5190-0bcf-012a-b542-0017f2cc694e!/act2-explain-ques1-4/input" />
+                                      </bodyText>
+                                    </OTUDLCompoundDoc>
                                   </input>
                                   <scaffolding>
                                     <OTUDLCompoundDoc>
@@ -3937,12 +4075,19 @@
                                   <prompt>
                                     <OTUDLCompoundDoc>
                                       <bodyText>
-                                        <div class="body-no-border">Did the kid slide on all of the surface materials?</div>
+                                        <div class="body-no-border">Did the child slide on all of the surface materials?</div>
                                       </bodyText>
                                     </OTUDLCompoundDoc>
                                   </prompt>
                                   <input>
-                                    <OTText />
+                                    <OTUDLCompoundDoc id="678b5190-0bcf-012a-b542-0017f2cc694e!/act2-explain-ques1-3/input">
+                                      <documentRefs>
+                                        <null />
+                                      </documentRefs>
+                                      <bodyText>
+                                        <object refid="678b5190-0bcf-012a-b542-0017f2cc694e!/act2-explain-ques1-3/input" />
+                                      </bodyText>
+                                    </OTUDLCompoundDoc>
                                   </input>
                                   <scaffolding>
                                     <OTUDLCompoundDoc>
@@ -3956,7 +4101,7 @@
                                   <prompt>
                                     <OTUDLCompoundDoc>
                                       <bodyText>
-                                        <div class="body-no-border">Did the kid slide on all of the surface materials?</div>
+                                        <div class="body-no-border">Did the child slide on all of the surface materials?</div>
                                       </bodyText>
                                     </OTUDLCompoundDoc>
                                   </prompt>
@@ -3992,12 +4137,19 @@
                                   <prompt>
                                     <OTUDLCompoundDoc>
                                       <bodyText>
-                                        <div class="body-no-border">Did the kid slide on all of the surface materials?</div>
+                                        <div class="body-no-border">Did the child slide on all of the surface materials?</div>
                                       </bodyText>
                                     </OTUDLCompoundDoc>
                                   </prompt>
                                   <input>
-                                    <OTText />
+                                    <OTUDLCompoundDoc id="678b5190-0bcf-012a-b542-0017f2cc694e!/act2-explain-ques1-1/input">
+                                      <documentRefs>
+                                        <null />
+                                      </documentRefs>
+                                      <bodyText>
+                                        <object refid="678b5190-0bcf-012a-b542-0017f2cc694e!/act2-explain-ques1-1/input" />
+                                      </bodyText>
+                                    </OTUDLCompoundDoc>
                                   </input>
                                   <scaffolding>
                                     <OTUDLCompoundDoc>
@@ -4089,20 +4241,14 @@
                                 </OTUDLCompoundDoc>
                               </prompt>
                               <input>
-                                <OTChoice>
-                                  <choices>
-                                    <OTCompoundDoc>
-                                      <bodyText>
-                                        <div class="body-no-border">Yes</div>
-                                      </bodyText>
-                                    </OTCompoundDoc>
-                                    <OTCompoundDoc>
-                                      <bodyText>
-                                        <div class="body-no-border">No</div>
-                                      </bodyText>
-                                    </OTCompoundDoc>
-                                  </choices>
-                                </OTChoice>
+                                <OTUDLCompoundDoc id="678b5190-0bcf-012a-b542-0017f2cc694e!/act2-elab-ques1/input">
+                                  <documentRefs>
+                                    <null />
+                                  </documentRefs>
+                                  <bodyText>
+                                    <object refid="678b5190-0bcf-012a-b542-0017f2cc694e!/act2-elab-ques1/input" />
+                                  </bodyText>
+                                </OTUDLCompoundDoc>
                               </input>
                               <scaffolding>
                                 <OTUDLCompoundDoc>
@@ -4274,9 +4420,6 @@ The more slippery the material on the slide, _______.</bodyText>
                       <currentCard>
                         <object refid="${exploration3-1}" />
                       </currentCard>
-                      <viewedCards>
-                        <object refid="${exploration3-1}" />
-                      </viewedCards>
                     </OTCardContainer>
                   </content>
                   <footer>
@@ -4320,16 +4463,13 @@ The more slippery the material on the slide, _______.</bodyText>
                             <div class="buffer">
                               <div class="border">
                                 <div class="body">
-                                  <div class="subtitle">Engage</div>
+                                  <div class="subtitle">Discovery question</div>
                                   <p>How do shoes help you walk?</p>
                                   <p>
                                     <img src="http://udl.concord.org/share/Friction/sneaker-pair.png" width="360" height="267" />
                                   </p>
                                   <p>Explore the friction values of the bottoms of shoes.</p>
                                   <br />
-                                  <div class="story-border">
-                                    <div class="story">Maria and Eduardo wondered how they could show their friends what it was like in Sticky World and Slippery World. "If we had sticky shoes and slippery shoes, they could wear the shoes and then they would know what it feels like!" Maria proposed. "That's a great idea," said Eduardo, "but which shoes should we pick?"</div>
-                                  </div>
                                 </div>
                               </div>
                             </div>
@@ -4352,6 +4492,20 @@ The more slippery the material on the slide, _______.</bodyText>
                               </statement>
                             </OTUDLCoachStatement>
                           </coachStatements>
+                        </OTUDLCompoundDoc>
+                        <OTUDLCompoundDoc name="%977711ba-81a2-11dc-8ec9-9576d3963eeb">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle">Engage</div>
+                                  <div class="story-border">
+                                    <div class="story">Maria and Eduardo wondered how they could show their friends what it was like in Sticky World and Slippery World. "If we had sticky shoes and slippery shoes, they could wear the shoes and then they would know what it feels like!" Maria proposed. "That's a great idea," said Eduardo, "but which shoes should we pick?"</div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
                         </OTUDLCompoundDoc>
                         <OTUDLCompoundDoc local_id="exploration2-2" name="materials">
                           <bodyText>
@@ -4508,7 +4662,7 @@ The more slippery the material on the slide, _______.</bodyText>
                           <documentRefs>
                             <OTDataCollector local_id="dc_id_1" name="datacollector" multipleGraphableEnabled="false" title="Force (5N) Sensor Graph" autoScaleEnabled="true">
                               <source>
-                                <OTDataGraphable name="Sensor" connectPoints="true" yColumn="1" drawMarks="false" color="255" xColumn="0">
+                                <OTDataGraphable name="Sensor" connectPoints="true" yColumn="1" drawMarks="false" color="255" xColumn="0" controllable="false" lineWidth="2.0">
                                   <dataProducer>
                                     <OTSensorDataProxy local_id="dp_dc_id_1" name="dataproducer">
                                       <request>
@@ -4524,7 +4678,12 @@ The more slippery the material on the slide, _______.</bodyText>
                                     </OTSensorDataProxy>
                                   </dataProducer>
                                   <dataStore>
-                                    <OTDataStore local_id="ds_dc_id_1" />
+                                    <OTDataStore local_id="ds_dc_id_1" dt="0.01" numberChannels="1">
+                                      <channelDescriptions>
+                                        <OTDataChannelDescription name="dt" precision="2" numericData="true" />
+                                        <OTDataChannelDescription name="" unit="N" precision="-2" numericData="true" />
+                                      </channelDescriptions>
+                                    </OTDataStore>
                                   </dataStore>
                                 </OTDataGraphable>
                               </source>
@@ -4532,14 +4691,10 @@ The more slippery the material on the slide, _______.</bodyText>
                                 <OTDataAxis max="60.0" units="s" min="0.0" label="Time" />
                               </xDataAxis>
                               <yDataAxis>
-                                <OTDataAxis max="4.0" units="N" min="-4.0" label="Forc-e (5N)" />
+                                <OTDataAxis max="4.0" units="N" min="-4.0" label="Force (5N)" />
                               </yDataAxis>
                             </OTDataCollector>
-                            <OTButton local_id="forc_zero_button_dc_id_1" text="Zero Force">
-                              <action>
-                                <object refid="${forc_zero_dc_id_1}" />
-                              </action>
-                            </OTButton>
+                            <OTButton local_id="forc_zero_button_dc_id_1" text="Zero Force" />
                           </documentRefs>
                         </OTUDLCompoundDoc>
                         <OTUDLCompoundDoc local_id="exploration2-5" name="explore3">
@@ -4707,6 +4862,9 @@ The more slippery the material on the slide, _______.</bodyText>
                       <currentCard>
                         <object refid="${exploration2-1}" />
                       </currentCard>
+                      <viewedCards>
+                        <object refid="${exploration2-1}" />
+                      </viewedCards>
                     </OTCardContainer>
                   </content>
                   <footer>
@@ -4736,7 +4894,7 @@ The more slippery the material on the slide, _______.</bodyText>
                 </OTUDLSection>
                 <OTUDLSection local_id="section_explorationx" name="Push it" isComputerBased="true">
                   <header>
-                    <OTCompoundDoc>
+                    <OTCompoundDoc id="678b5190-0bcf-012a-b542-0017f2cc694e!/section_explorationx/header">
                       <bodyText>
                         <div class="title">Push it</div>
                       </bodyText>
@@ -4824,7 +4982,26 @@ The more slippery the material on the slide, _______.</bodyText>
                                   <p />
                                   Look at the graph. How far did the box go before it stopped moving?
                                   <br />
-                                  NEED TO THINK ABOUT THE RESPONSE - LABEL? TEXT? HINTS ABOUT READING THE GRAPH?
+                                  <object refid="ffcefddb-81a3-11dc-8ec9-9576d3963eeb" />
+                                  <p />
+                                  Which material has more friction, steel or woood? Explain how you can tell this from the graphs.
+                                  <br />
+                                  <object refid="a1f32bac-81a4-11dc-8ec9-9576d3963eeb" />
+                                  <p />
+                                  Switch to the "carpet" graph. Run the model again. How far did the box go before it stopped moving?
+                                  <br />
+                                  <object refid="a6db945d-81a4-11dc-8ec9-9576d3963eeb" />
+                                  <p />
+                                  ANSWERBOX
+
+Switch to the "ice" graph. Run the model again. What did the box do this time?
+                                  <br />
+                                  <object refid="ada3445e-81a4-11dc-8ec9-9576d3963eeb" />
+                                  <p />
+                                  What did the graph do?
+                                  <br />
+                                  <object refid="b3832c6f-81a4-11dc-8ec9-9576d3963eeb" />
+                                  <p />
                                 </div>
                               </div>
                             </div>
@@ -4832,6 +5009,75 @@ The more slippery the material on the slide, _______.</bodyText>
                           <documentRefs>
                             <OTFrictionModel local_id="pushit-slide-model" isSlideSimulation="false" showMoveRampButtons="false" showGraph="true" showPushButtons="false" showSlider="false" rampAngle="0" />
                             <OTText id="e3f7accd-71f8-11dc-a254-59bf9c4a2b53" name="Text field" />
+                            <OTText id="ffcefddb-81a3-11dc-8ec9-9576d3963eeb" name="Text field" />
+                            <OTText id="a1f32bac-81a4-11dc-8ec9-9576d3963eeb" name="Text field" />
+                            <OTText id="a6db945d-81a4-11dc-8ec9-9576d3963eeb" name="Text field" />
+                            <OTText id="ada3445e-81a4-11dc-8ec9-9576d3963eeb" name="Text field" />
+                            <OTText id="b3832c6f-81a4-11dc-8ec9-9576d3963eeb" name="Text field" />
+                          </documentRefs>
+                        </OTUDLCompoundDoc>
+                        <OTUDLCompoundDoc name="%f1e0e730-81a4-11dc-8ec9-9576d3963eeb">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle">Explain</div>
+                                  Which of the four materials has the most friction? Explain how you can tell this from the graph.
+                                  <br />
+                                  <object refid="00b8f3c1-81a5-11dc-8ec9-9576d3963eeb" />
+                                  <p />
+                                  Which material has the least friction? Explain how you can tell this from the graph.
+                                  <br />
+                                  <object refid="066ff712-81a5-11dc-8ec9-9576d3963eeb" />
+                                  <p />
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                          <documentRefs>
+                            <OTText id="00b8f3c1-81a5-11dc-8ec9-9576d3963eeb" name="Text field" />
+                            <OTText id="066ff712-81a5-11dc-8ec9-9576d3963eeb" name="Text field" />
+                          </documentRefs>
+                        </OTUDLCompoundDoc>
+                        <OTUDLCompoundDoc name="%1535b333-81a5-11dc-8ec9-9576d3963eeb">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle">Elaborate</div>
+                                  Using the drawing tool below, draw what you think the graph would look like if the surface had lots of friction.
+                                  <br />
+                                  <object refid="25a1f454-81a5-11dc-8ec9-9576d3963eeb" />
+                                  <p />
+                                  Draw another line to show the graph if there were no friction at all.
+[DRAWING TOOL WITH GRAPH IMAGE AS BACKGROUND
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                          <documentRefs>
+                            <OTDrawingTool2 id="25a1f454-81a5-11dc-8ec9-9576d3963eeb" name="Draw tool" backgroundImage="http://udl.concord.org/share/Friction/udl_time_length_graph.png">
+                              <graphables>
+                                <OTDrawingShape type="" fillType="clear" x="0.0" y="0.0" width="0.0" height="0.0" color="0x000000" />
+                              </graphables>
+                            </OTDrawingTool2>
+                          </documentRefs>
+                        </OTUDLCompoundDoc>
+                        <OTUDLCompoundDoc name="%8960c67a-81a5-11dc-8ec9-9576d3963eeb">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle">Evaluate</div>
+                                  Now the model has a slider to change the amount of friction. Adjust the friction until the model goes exactly 10 m and then stops. Run the model as many times as you like. When you get the right amount of friction, take a snapshot of your graph.
+                                  <BR />
+                                  <object refid="${pushit-model-2}" />
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                          <documentRefs>
+                            <OTFrictionModel local_id="pushit-model-2" isSlideSimulation="false" showMoveRampButtons="false" showGraph="true" showPushButtons="false" showSlider="true" showMaterialButtons="false" rampAngle="0" />
                           </documentRefs>
                         </OTUDLCompoundDoc>
                       </cards>
@@ -4841,7 +5087,7 @@ The more slippery the material on the slide, _______.</bodyText>
                     </OTCardContainer>
                   </content>
                   <footer>
-                    <OTCompoundDoc>
+                    <OTCompoundDoc id="678b5190-0bcf-012a-b542-0017f2cc694e!/section_explorationx/footer">
                       <bodyText>
                         <div align="center">
                           <table>
@@ -4858,35 +5104,39 @@ The more slippery the material on the slide, _______.</bodyText>
                   <center>
                     <object refid="${explorationx-card-container}" />
                   </center>
+                  <north>
+                    <object refid="678b5190-0bcf-012a-b542-0017f2cc694e!/section_explorationx/header" />
+                  </north>
+                  <south>
+                    <object refid="678b5190-0bcf-012a-b542-0017f2cc694e!/section_explorationx/footer" />
+                  </south>
                 </OTUDLSection>
                 <OTUDLSection local_id="section_exploration5" name="Graphing Friction" isMath="true">
                   <header>
-                    <OTCompoundDoc>
+                    <OTCompoundDoc id="678b5190-0bcf-012a-b542-0017f2cc694e!/section_exploration5/header">
                       <bodyText>Exploration 5</bodyText>
                     </OTCompoundDoc>
                   </header>
                   <content>
                     <OTCardContainer local_id="exploration5-card-container" contentsMayScroll="true" loadViewOnlyOnDemand="true">
                       <cards>
-                        <OTUDLCompoundDoc>
+                        <OTUDLCompoundDoc id="678b5190-0bcf-012a-b542-0017f2cc694e!/exploration5-card-container/cards[0]">
                           <bodyText>
                             <div class="buffer">
                               <div class="border">
-                                <div class="body">
-                                  In this activity, you will make a bar graph of the amount of friction of different surfaces.
-                                </div>
+                                <div class="body">In this activity, you will make a bar graph of the amount of friction of different surfaces.</div>
                               </div>
                             </div>
                           </bodyText>
                         </OTUDLCompoundDoc>
                       </cards>
                       <currentCard>
-                        <object refid="${exploration5-1}" />
+                        <object refid="678b5190-0bcf-012a-b542-0017f2cc694e!/exploration5-card-container/cards[0]" />
                       </currentCard>
                     </OTCardContainer>
                   </content>
                   <footer>
-                    <OTCompoundDoc>
+                    <OTCompoundDoc id="678b5190-0bcf-012a-b542-0017f2cc694e!/section_exploration5/footer">
                       <bodyText>
                         <div align="center">
                           <table>
@@ -4900,6 +5150,15 @@ The more slippery the material on the slide, _______.</bodyText>
                       </bodyText>
                     </OTCompoundDoc>
                   </footer>
+                  <north>
+                    <object refid="678b5190-0bcf-012a-b542-0017f2cc694e!/section_exploration5/header" />
+                  </north>
+                  <center>
+                    <object refid="${exploration5-card-container}" />
+                  </center>
+                  <south>
+                    <object refid="678b5190-0bcf-012a-b542-0017f2cc694e!/section_exploration5/footer" />
+                  </south>
                 </OTUDLSection>
                 <OTUDLSection local_id="section_wrapup" name="Wrapping up">
                   <header>
@@ -5087,9 +5346,9 @@ The more slippery the material on the slide, _______.</bodyText>
                     </OTCompoundDoc>
                   </footer>
                 </OTUDLSection>
-                <OTUDLSection local_id="section_posttest" name="Posttest" isPosttest="true">
+                <OTUDLSection local_id="section_posttest" name="Post-test" isPosttest="true" isComputerBased="false" isIntroduction="false" isMath="false" isPretest="false" isReading="false" isWrapup="false">
                   <header>
-                    <OTCompoundDoc>
+                    <OTCompoundDoc id="678b5190-0bcf-012a-b542-0017f2cc694e!/section_posttest/header">
                       <bodyText>
                         <div class="title">Post-test</div>
                       </bodyText>
@@ -5164,6 +5423,7 @@ The more slippery the material on the slide, _______.</bodyText>
                               <script>
                                 <object refid="${show_message.js}" />
                               </script>
+                              <scriptState />
                             </OTScriptObject>
                             <OTChoice local_id="question1-56b">
                               <choices>
@@ -5250,7 +5510,7 @@ The more slippery the material on the slide, _______.</bodyText>
                     </OTCardContainer>
                   </content>
                   <footer>
-                    <OTCompoundDoc>
+                    <OTCompoundDoc id="678b5190-0bcf-012a-b542-0017f2cc694e!/section_posttest/footer">
                       <bodyText>
                         <div align="center">
                           <table>
@@ -5264,6 +5524,15 @@ The more slippery the material on the slide, _______.</bodyText>
                       </bodyText>
                     </OTCompoundDoc>
                   </footer>
+                  <north>
+                    <object refid="678b5190-0bcf-012a-b542-0017f2cc694e!/section_posttest/header" />
+                  </north>
+                  <center>
+                    <object refid="${posttest-card-container}" />
+                  </center>
+                  <south>
+                    <object refid="678b5190-0bcf-012a-b542-0017f2cc694e!/section_posttest/footer" />
+                  </south>
                 </OTUDLSection>
               </cards>
               <currentCard>
@@ -5397,162 +5666,8 @@ The more slippery the material on the slide, _______.</bodyText>
         <OTSnapshotAlbum local_id="album" beingListenedTo="true" />
         <OTDefinitionManager local_id="definition-manager">
           <definitions>
-            <OTDefinition>
-              <word>friction</word>
-              <definition>
-                <OTCompoundDoc>
-                  <bodyText>
-                    <div class="buffer">
-                      <div class="definition-border">
-                        <div class="body">
-                          <b>Friction</b>
-                          is a force that slows the motion of objects that are touching.
-                        </div>
-                      </div>
-                    </div>
-                  </bodyText>
-                </OTCompoundDoc>
-              </definition>
-            </OTDefinition>
-            <OTDefinition>
-              <word>sliding</word>
-              <definition>
-                <OTCompoundDoc>
-                  <bodyText>
-                    <div class="buffer">
-                      <div class="definition-border">
-                        <div class="body">
-                          <b>Sliding</b>
-                          is moving smoothly over a surface.
-                        </div>
-                      </div>
-                    </div>
-                  </bodyText>
-                </OTCompoundDoc>
-              </definition>
-            </OTDefinition>
-            <OTDefinition>
-              <word>force</word>
-              <definition>
-                <OTCompoundDoc>
-                  <bodyText>
-                    <div class="buffer">
-                      <div class="definition-border">
-                        <div class="body">
-                          A
-                          <b>force</b>
-                          is a push or pull that tends to make an object move, stop, or change direction.
-                        </div>
-                      </div>
-                    </div>
-                  </bodyText>
-                </OTCompoundDoc>
-              </definition>
-            </OTDefinition>
-            <OTDefinition>
-              <word>surface</word>
-              <definition>
-                <OTCompoundDoc>
-                  <bodyText>
-                    <div class="buffer">
-                      <div class="definition-border">
-                        <div class="body">
-                          A
-                          <b>surface</b>
-                          is the outside of an object or body.
-                        </div>
-                      </div>
-                    </div>
-                  </bodyText>
-                </OTCompoundDoc>
-              </definition>
-            </OTDefinition>
-            <OTDefinition>
-              <word>computer model</word>
-              <definition>
-                <OTCompoundDoc>
-                  <bodyText>
-                    <div class="buffer">
-                      <div class="definition-border">
-                        <div class="body">
-                          A
-                          <b>computer model</b>
-                          is a program that runs on a computer and imitates the real world in some way.
-                        </div>
-                      </div>
-                    </div>
-                  </bodyText>
-                </OTCompoundDoc>
-              </definition>
-            </OTDefinition>
-            <OTDefinition>
-              <word>evidence</word>
-              <definition>
-                <OTCompoundDoc>
-                  <bodyText>
-                    <div class="buffer">
-                      <div class="definition-border">
-                        <div class="body">
-                          <b>Evidence</b>
-                          is what you observe or measure to support an idea.
-                        </div>
-                      </div>
-                    </div>
-                  </bodyText>
-                </OTCompoundDoc>
-              </definition>
-            </OTDefinition>
-            <OTDefinition>
-              <word>fricci√≥n</word>
-              <definition>
-                <OTCompoundDoc>
-                  <bodyText>
-                    <div class="buffer">
-                      <div class="definition-border">
-                        <div class="body">
-                          <b>Fricci√≥n:</b>
-                          La fuerza que hace decelerar a un objeto cuando se pasa sobre alg√∫na superficie.
-                        </div>
-                      </div>
-                    </div>
-                  </bodyText>
-                </OTCompoundDoc>
-              </definition>
-            </OTDefinition>
-            <OTDefinition>
-              <word>superficie</word>
-              <definition>
-                <OTCompoundDoc>
-                  <bodyText>
-                    <div class="buffer">
-                      <div class="definition-border">
-                        <div class="body">
-                          <b>Superficie:</b>
-                          La superficie es la parte externa de un objeto.
-                        </div>
-                      </div>
-                    </div>
-                  </bodyText>
-                </OTCompoundDoc>
-              </definition>
-            </OTDefinition>
-            <OTDefinition>
-              <word>fuerza</word>
-              <definition>
-                <OTCompoundDoc>
-                  <bodyText>
-                    <div class="buffer">
-                      <div class="definition-border">
-                        <div class="body">
-                          <b>Fuerza:</b>
-                          Un empuje o un jal√≥n que hace mover, parar, o cambiar direcci√≥n a un objeto.
-                        </div>
-                      </div>
-                    </div>
-                  </bodyText>
-                </OTCompoundDoc>
-              </definition>
-            </OTDefinition>
+            <OTDefinitionList src="http://continuum.concord.org/otrunk/examples/UDL/glossary/common-glossary.txt" />
+            <OTDefinitionList src="http://continuum.concord.org/otrunk/examples/UDL/glossary/friction-glossary.txt" />
           </definitions>
           <frame>
             <OTFrame local_id="definition_frame" width="280" height="150" borderlessPopup="true" />
@@ -5585,243 +5700,9 @@ The more slippery the material on the slide, _______.</bodyText>
             </OTUDLMenuRule>
           </rules>
         </OTUDLMenuRule>
-        <OTJavascript local_id="change_page.js">
-          <script>importClass(Packages.java.awt.event.ActionListener);
-						importClass(Packages.java.util.Vector);
-						importClass(Packages.org.concord.otrunk.udl3.OTQuestionList);
-						importClass(Packages.org.concord.framework.otrunk.OTObjectList);
-						importClass(Packages.javax.swing.JOptionPane);
-						
-						var numCards;
-						var currentcard;
-						var passwordfield;
-
-						var buttonHandler =
-						{
-								actionPerformed: function(evt)
-								{
-									if (passwordfield != null){
-									var passwordAttempt = passwordfield.getText();
-									if (passwordAttempt.equalsIgnoreCase(password.getText())){
-										cardContainer.setCurrentCard(card);
-										return;
-									} else {
-										JOptionPane.showMessageDialog(null, "Sorry, that's not the correct password.");
-										return;
-									}
-								}
-										cardContainer.setCurrentCard(card);
-								}
-						};
-						var buttonListener = new ActionListener(buttonHandler);
-
-						function init() {
-							button.addActionListener(buttonListener);
-
-							return true;
-						}
-
-						function save() {
-							button.removeActionListener(buttonListener);
-							return true;
-						}</script>
-        </OTJavascript>
-        <OTJavascript local_id="show_message.js">
-          <script>importClass(Packages.java.awt.event.ActionListener);
-						importClass(Packages.java.util.Vector);
-						importClass(Packages.org.concord.otrunk.udl3.OTQuestionList);
-						importClass(Packages.org.concord.framework.otrunk.OTObjectList);
-						importClass(Packages.javax.swing.JOptionPane);
-
-						var buttonHandler =
-						{
-								actionPerformed: function(evt)
-								{
-									var messageString = message.getText();
-									JOptionPane.showMessageDialog(null, messageString);
-								}
-						};
-						var buttonListener = new ActionListener(buttonHandler);
-
-						function init() {
-							button.addActionListener(buttonListener);
-
-							return true;
-						}
-
-						function save() {
-							button.removeActionListener(buttonListener);
-							return true;
-						}</script>
-        </OTJavascript>
-        <OTJavascript local_id="authoring_script.js">
-          <script>importClass(Packages.org.concord.framework.otrunk.OTChangeEvent);
-						importClass(Packages.org.concord.framework.otrunk.OTChangeListener);
-						importClass(Packages.org.concord.framework.otrunk.OTObject);
-						importClass(Packages.org.concord.framework.otrunk.OTObjectList);
-						importClass(Packages.org.concord.otrunk.ui.OTCardContainer);
-						importClass(Packages.org.concord.otrunk.udl3.OTUDLMenu);
-						importClass(Packages.java.lang.System);
-						importClass(Packages.org.concord.framework.otrunk.OTObjectList);
-						importClass(Packages.org.concord.framework.otrunk.OTObjectService);
-						
-						
-						var pageHandler =
-						{
-							stateChanged: function(evt)
-							{
-								if (evt.getProperty().equalsIgnoreCase("coachStatements") &amp;&amp; evt.getOperation().equalsIgnoreCase("add")){
-									var statement = evt.getValue();
-									var statementDoc = statement.getStatement();
-									var statementText = statementDoc.getBodyText();
-									statementDoc.setBodyText("&lt;div class=\"buffer\"&gt;"+
-																"&lt;div class=\"border\"&gt;"+
-																	"&lt;div class=\"body\"&gt;"+
-																		statementText +
-																	"&lt;/div&gt;"+
-																"&lt;/div&gt;"+
-														"&lt;/div&gt;");
-								}
-							}
-						}
-						var pageListener = new OTChangeListener(pageHandler);
-						
-						var sectionHandler =
-						{
-							stateChanged: function(evt)
-							{
-								if (evt.getProperty().equalsIgnoreCase("name")){
-									var section = evt.getSource();
-									var header = section.getHeader();
-										
-										header.setBodyText("&lt;div class=\"title\"&gt;"+
-															section.getName() +
-														"&lt;/div&gt;");
-								}
-							}
-						}
-						
-						var sectionListener = new OTChangeListener(sectionHandler);
-						
-						var sectionContainerHandler =
-						{
-								stateChanged: function(evt)
-								{
-									if (evt.getProperty().equalsIgnoreCase("currentCard")){
-										var numCards = evt.getSource().getCards().size();
-										var section = evt.getSource().getCards().get(numCards-1);
-										section.getContent().addOTChangeListener(pageContainerListener);
-									}
-									if (evt.getProperty().equalsIgnoreCase("cards")) {
-										var numCards = evt.getSource().getCards().size();
-										var section = evt.getSource().getCards().get(numCards-1);
-										section.setName("Section "+numCards);
-										
-										var header = section.getHeader();
-										
-										header.setBodyText("&lt;div class=\"title\"&gt;"+
-															"Section " + numCards +
-														"&lt;/div&gt;");
-										
-										var doc = section.getContent().getCurrentCard();
-										
-										doc.setBodyText("&lt;div class=\"buffer\"&gt;"+
-															"&lt;div class=\"border\"&gt;"+
-																"&lt;div class=\"body\"&gt;"+
-																"&lt;div class=\"subtitle\"&gt;\n"+
-																		"New page"+
-																	"\n&lt;/div&gt;\n"+
-																	"New page content"+
-																"\n&lt;/div&gt;"+
-															"&lt;/div&gt;"+
-														"&lt;/div&gt;");
-										
-										pages.push(doc)	
-										pages[pages.length-1].addOTChangeListener(pageListener);
-														
-										var menu = doc.getOTObjectService().createObject(sampleMenu.otClass().getInstanceClass());
-										menu.setCardContainer(section.getContent());
-										menu.setMenuRule(menuPageRule);
-										
-										system.getLibrary().add(menu);
-										
-										var footer = section.getFooter();
-										
-										var otid = menu.getOTObjectService().getExternalID(menu);
-										var viewid = menu.getOTObjectService().getExternalID(menuHorizontalView);
-										
-										footer.setBodyText("&lt;div align=\"center\"&gt;" +
-															"&lt;table&gt;"+
-																	"&lt;tr&gt;"+
-																		"&lt;td&gt;"+
-																			"&lt;object refid=\""+otid+"\" viewid=\""+viewid+"\"/&gt;" +
-																		"&lt;/td&gt;"+
-																	"&lt;/tr&gt;"+
-															"&lt;/table&gt;"+
-															"&lt;/div&gt;");
-														
-										section.getContent().addOTChangeListener(pageContainerListener);
-										section.addOTChangeListener(sectionListener);
-									}
-								}
-						};
-						var sectionContainerListener = new OTChangeListener(sectionContainerHandler);
-						
-						var pageContainerHandler =
-						{
-								stateChanged: function(evt)
-								{
-									System.out.println(evt.getProperty());
-									if (evt.getProperty().equalsIgnoreCase("cards")) {
-										var numCards = evt.getSource().getCards().size();
-										var doc = evt.getSource().getCards().get(numCards-1);
-										doc.setBodyText("&lt;div class=\"buffer\"&gt;"+
-															"&lt;div class=\"border\"&gt;"+
-																"&lt;div class=\"body\"&gt;"+
-																"&lt;div class=\"subtitle\"&gt;\n"+
-																		"New page"+
-																	"\n&lt;/div&gt;\n"+
-																	"New page content"+
-																"\n&lt;/div&gt;"+
-															"&lt;/div&gt;"+
-														"&lt;/div&gt;");
-										pages.push(doc)	
-										pages[pages.length-1].addOTChangeListener(pageListener);
-									}
-								}
-						};
-						var pageContainerListener = new OTChangeListener(pageContainerHandler);
-						
-						var sections = [];
-						var sectionCardContainers = [];
-						var pages = [];
-						
-						function init() {
-							cardContainer.addOTChangeListener(sectionContainerListener);
-							
-							var pageIndex = 0;
-							for (var i = 0; i &lt; cardContainer.getCards().size(); i++){
-								sections[i] = cardContainer.getCards().get(i);
-								sections[i].addOTChangeListener(sectionListener);
-								
-								sectionCardContainers[i] = sections[i].getContent();
-								sectionCardContainers[i].addOTChangeListener(pageContainerListener);
-								
-								for (var j = 0; j &lt; sectionCardContainers[i].getCards().size(); j++){
-									pages[pageIndex] = sectionCardContainers[i].getCards().get(j);
-									pages[pageIndex].addOTChangeListener(pageListener);
-									pageIndex++;
-								}
-							}
-							
-							return true;
-						}
-
-						function save() {
-							cardContainer.removeOTChangeListener(sectionContainerListener);
-							return true;
-						}</script>
-        </OTJavascript>
+        <OTJavascript local_id="change_page.js" src="scripts/change_page.js" />
+        <OTJavascript local_id="show_message.js" src="scripts/show_message.js" />
+        <OTJavascript local_id="authoring_script.js" src="scripts/authoring_script.js" />
       </library>
     </OTSystem>
   </objects>
