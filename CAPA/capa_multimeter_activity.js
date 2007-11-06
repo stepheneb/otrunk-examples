@@ -870,16 +870,25 @@ function logAnswerAssessment(answer, correctAnswer, answerValueType, answerUnitT
 		answerAssess.setUnitCorrect(3);
 	}
 	
+	//How long did the student take completing this step
 	answerAssess.setTime((System.currentTimeMillis() - timeStepStarted)/1000);
+	
+	//How many measurements did the student make in this step
 	answerAssess.setNumberMeasurements(measurements.length - measurementIndexStepStarted);
 	
 	answerAssess.setMultimeterSetting(0);
 	answerAssess.setValueMatchesMeasurement(0);
 	var measurement = findMeasurement(answer);
 	if (measurement != null){
-	
+		//The answer the student provided matches some measurmement they made
+		//Note: we are not checking that it matches a measurement that they did DURING this specific step
+		//      (maybe they got the answer in the step before and they wrote it down or something...)
+		//      We are also assuming this was the measurement the student paid attention when copying the value
+		//      It it not guaranteed, since more measurements could give the same value but could measure different things
+		//      We are assuming this activity is simple enough that that won't happen.
 		answerAssess.setValueMatchesMeasurement(1);
 		if (answerAssess.getAnswerType().equalsIgnoreCase(measurement.type)){
+			//The multimeter was in the correct setting when measured
 			answerAssess.setMultimeterSetting(1);
 		}
 	}
