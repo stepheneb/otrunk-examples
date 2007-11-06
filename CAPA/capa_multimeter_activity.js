@@ -138,7 +138,6 @@ function save()
 	
 	//Save state variables
 	saveStateVariable("initialSetupDone", new java.lang.Boolean(true));	//Marks that the initial setup is done
-	saveStateVariable("shortCircuitCounter", new java.lang.Integer(shortCircuitCounter));
 	//
 	
 	//Log measurements
@@ -161,9 +160,7 @@ function saveStateVariable(name, value)
 /** Initial set up if the GUI. This stuff eventually could be moved to the otml file */
 function setupGUI()
 {
-	answerBox.setBackground(new Color(1,1,0.7));
-	
-	reportButton.setVisible(false);
+	answerBox.setBackground(new Color(1,1,0.7));	
 }
 
 /** 
@@ -219,6 +216,7 @@ function setupActivityInitial()
 	
 	answerBox.setText("");
 	answerObj = null;
+	reportButton.setVisible(false);
 	
 	deleteNotebookData();
 
