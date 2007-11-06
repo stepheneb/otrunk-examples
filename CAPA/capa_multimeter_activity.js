@@ -52,6 +52,7 @@ importClass(Packages.org.concord.otrunk.ui.swing.OTCardContainerView);
 importClass(Packages.org.concord.otrunk.ui.OTText);
 importClass(Packages.org.concord.framework.otrunk.view.OTActionContext);
 importClass(Packages.org.concord.otrunkcapa.OTMultimeterAnswerAssessment);
+importClass(Packages.org.concord.otrunkcapa.OTMultimeterAssessment);
 
 var startHTML = "<html><blockquote>";
 var endHTML = "</blockquote></html>";
@@ -92,6 +93,7 @@ var answerObj;
 var solutionObj;
 var battery = null;				// (Branch) Battery 
 var solutionMessage = "";
+var otAssessment;
 
 var currentStep = 1;
 var lastStep = 3;
@@ -258,6 +260,11 @@ function initLogging()
 	xmlText.setText("CAPA - Measuring Resistance 2.0\n");
 	//Put logging information into the otContents of the script object
 	otContents.add(xmlText);
+	
+	//Create assessment object
+	otAssessment = otObjectService.createObject(OTMultimeterAssessment);
+	otContents.add(otAssessment);
+	//
 	
 	logInformation("Activity started");
 }
@@ -832,7 +839,7 @@ function logAnswerAssessment(answer, correctAnswer, answerValueType, answerUnitT
 {
 	var answerAssess = otObjectService.createObject(OTMultimeterAnswerAssessment);
 	
-	answerAssess.setMeasurementType(getCurrentMeasurementType());
+	answerAssess.setAnswerType(getCurrentMeasurementType());
 	answerAssess.setAnswerValue(answer);
 	answerAssess.setCorrectValue(correctAnswer);
 	
@@ -867,12 +874,12 @@ function logAnswerAssessment(answer, correctAnswer, answerValueType, answerUnitT
 	if (measurement != null){
 	
 		answerAssess.setValueMatchesMeasurement(1);
-		if (answerAssess.getMeasurementType().equalsIgnoreCase(measurement.type)){
+		if (answerAssess.getAnswerType().equalsIgnoreCase(measurement.type)){
 			answerAssess.setMultimeterSetting(1);
 		}
 	}
 		
-	otContents.add(answerAssess);
+	otAssessment.getAnswers().add(answerAssess);
 }
 
 function findMeasurement(valueObj)
