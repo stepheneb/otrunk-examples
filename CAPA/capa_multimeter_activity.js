@@ -97,8 +97,8 @@ var otAssessment;
 
 var currentStep = 1;
 var lastStep = 3;
-var timeStepStarted;
-var measurementIndexStepStarted;
+var timeStepStarted = 0;
+var measurementIndexStepStarted = 0;
 //
 
 /**
