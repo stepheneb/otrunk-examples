@@ -215,7 +215,7 @@ function setupActivity()
 function setupActivityInitial()
 {
 	//Show initial text
-	showInstructions(currentStep);
+	startStep(currentStep);
 	
 	answerBox.setText("");
 	answerObj = null;
@@ -284,12 +284,17 @@ function finalizeLogging()
 	logFile.close();	
 }
 
-function showInstructions(step)
+function startStep(step)
 {
 	timeStepStarted = System.currentTimeMillis();
 	measurementIndexStepStarted = measurements.length;
+	
+	//Show instructions for the current step
 	var strCardID = "step" + step + "Text";
 	OTCardContainerView.setCurrentCard(otInfoAreaCards, strCardID);
+	//
+	
+	answerBox.setText("");
 }
 
 function setupApparatusPanel()
@@ -753,13 +758,13 @@ function checkAnswer()
 	/////
 	//Get correct answer
 	var correctAnswerObj = null;
-	if (getCurrentMeasurementType().equalsIgnoreCase("voltage")){
+	if (getCurrentAnswerType().equalsIgnoreCase("voltage")){
 		correctAnswerObj = solutionObj.voltage;
 	}
-	else if (getCurrentMeasurementType().equalsIgnoreCase("current")){
+	else if (getCurrentAnswerType().equalsIgnoreCase("current")){
 		correctAnswerObj = solutionObj.current;
 	}
-	else if (getCurrentMeasurementType().equalsIgnoreCase("resistance")){
+	else if (getCurrentAnswerType().equalsIgnoreCase("resistance")){
 		correctAnswerObj = solutionObj.resistance;
 	}
 	/////
@@ -768,7 +773,7 @@ function checkAnswer()
 
 	currentStep++;
 	if (currentStep <= lastStep){
-		showInstructions(currentStep);
+		startStep(currentStep);
 		return;
 	}
 	
@@ -839,7 +844,7 @@ function logAnswerAssessment(answer, correctAnswer, answerValueType, answerUnitT
 {
 	var answerAssess = otObjectService.createObject(OTMultimeterAnswerAssessment);
 	
-	answerAssess.setAnswerType(getCurrentMeasurementType());
+	answerAssess.setAnswerType(getCurrentAnswerType());
 	answerAssess.setAnswerValue(answer);
 	answerAssess.setCorrectValue(correctAnswer);
 	
@@ -882,11 +887,15 @@ function logAnswerAssessment(answer, correctAnswer, answerValueType, answerUnitT
 	otAssessment.getAnswers().add(answerAssess);
 }
 
+/**
+ * From all the measurements made, finds the first one that has a value close enough to 
+ * the value provided (with a threshold, ignoring the sign and the unit) 
+ */
 function findMeasurement(valueObj)
 {
 	for (var i = 0; i < measurements.length; i++){
 		var measurement = measurements[i];
-		if (MathUtil.isApproxEqual(measurement.value, valueObj.getValue(), 0.1)){
+		if (MathUtil.isApproxEqual(Math.abs(measurement.value), Math.abs(valueObj.getValue()), 0.1)){
 			return measurement;
 		}
 	}
@@ -978,7 +987,7 @@ function showSolution(answerValueType, answerUnitType, bShowNow)
 	}
 
 	//Show solution	
-	var strPrefix = getCurrentMeasurementType() + " answer: ";
+	var strPrefix = getCurrentAnswerType() + " answer: ";
 	
 	solutionMessage = solutionMessage + "<br/>" + strPrefix + solutionMsg + shortCircuitMsg;
 	if (bShowNow){
@@ -986,13 +995,13 @@ function showSolution(answerValueType, answerUnitType, bShowNow)
 	}
 	//
 
-	var strMsg = "Answer Submitted: "+answerBox.getText();
+	var strMsg = "Answer Submitted (" + getCurrentAnswerType() + "): "+answerBox.getText();
 	strMsg = strMsg + "  (Value:" + answerValueType + ", Unit:" + answerUnitType +"): "
 	strMsg = strMsg + solutionMsg
 	logInformation(strMsg);
 }
 
-function getCurrentMeasurementType()
+function getCurrentAnswerType()
 {
 	if (currentStep == 1){
 		return "voltage"
