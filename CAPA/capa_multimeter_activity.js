@@ -241,10 +241,10 @@ function setupActivityLoaded()
 
 function getLogFilename()
 {
-	return "capa_resistance_activity_log";
+	return "capa_multimeter_activity_log";
 }
 
-/** Creates a text file in the Desktop with logging information. File is called studentName.txt */
+/** Creates a text file in the Desktop with logging information. */
 function initLogging()
 {
 	var studentName = getLogFilename();
@@ -255,7 +255,7 @@ function initLogging()
 	
 	//Create an OTText
 	xmlText = otObjectService.createObject(OTText);
-	xmlText.setText("CAPA - Measuring Resistance 2.0\n");
+	xmlText.setText("CAPA - Using the digital multimeter\n");
 	//Put logging information into the otContents of the script object
 	otContents.add(xmlText);
 	
