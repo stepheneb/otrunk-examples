@@ -484,31 +484,35 @@ function analyzeMultimeterLeads(extra)
 	var redLead = 0;
 	var blackLead = 0;
 	
-	if (circuitAnalyzer.isBetween(redConn.getJunction(), targetResistor, circuitBattery)){
-		System.out.println("read lead is between resistor and battery");
-		redLead = 1;
+	if (redConn != null){
+		if (circuitAnalyzer.isBetween(redConn.getJunction(), targetResistor, circuitBattery)){
+			System.out.println("read lead is between resistor and battery");
+			redLead = 1;
+		}
+		if (circuitAnalyzer.isBetween(redConn.getJunction(), circuitBattery, circuitSwitch)){
+			System.out.println("read lead is between battery and switch");
+			redLead = 3;
+		}
+		if (circuitAnalyzer.isBetween(redConn.getJunction(), circuitSwitch, targetResistor)){
+			System.out.println("read lead is between switch and resistor");
+			redLead = 2;
+		}
 	}
-	if (circuitAnalyzer.isBetween(redConn.getJunction(), circuitBattery, circuitSwitch)){
-		System.out.println("read lead is between battery and switch");
-		redLead = 3;
+	if (blackConn != null){
+		if (circuitAnalyzer.isBetween(blackConn.getJunction(), targetResistor, circuitBattery)){
+			System.out.println("black lead is between resistor and battery");
+			blackLead = 1;
+		}
+		if (circuitAnalyzer.isBetween(blackConn.getJunction(), circuitBattery, circuitSwitch)){
+			System.out.println("black lead is between battery and switch");
+			blackLead = 3;
+		}
+		if (circuitAnalyzer.isBetween(blackConn.getJunction(), circuitSwitch, targetResistor)){
+			System.out.println("black lead is between switch and resistor");
+			blackLead = 2;
+		}
 	}
-	if (circuitAnalyzer.isBetween(redConn.getJunction(), circuitSwitch, targetResistor)){
-		System.out.println("read lead is between switch and resistor");
-		redLead = 2;
-	}
-	if (circuitAnalyzer.isBetween(blackConn.getJunction(), targetResistor, circuitBattery)){
-		System.out.println("black lead is between resistor and battery");
-		blackLead = 1;
-	}
-	if (circuitAnalyzer.isBetween(blackConn.getJunction(), circuitBattery, circuitSwitch)){
-		System.out.println("black lead is between battery and switch");
-		blackLead = 3;
-	}
-	if (circuitAnalyzer.isBetween(blackConn.getJunction(), circuitSwitch, targetResistor)){
-		System.out.println("black lead is between switch and resistor");
-		blackLead = 2;
-	}
-	
+		
 	extra.redLead = redLead;
 	extra.blackLead = blackLead;
 }
