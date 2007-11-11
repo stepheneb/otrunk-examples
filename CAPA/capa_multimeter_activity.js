@@ -19,6 +19,7 @@
  * submitAnswerButton	(JButton) 					// Actual swing button used to submit the answer
  * answerBox			(JTextArea)					// Swing text component where the user writes the answer
  * solutionText			(OTTextPane)				// OT Text Pane that holds the text with the solution
+ * reportButton			(JButton)					// Button used to show report
  */
 
 importPackage(Packages.java.lang);
@@ -53,6 +54,8 @@ importClass(Packages.org.concord.otrunk.ui.OTText);
 importClass(Packages.org.concord.framework.otrunk.view.OTActionContext);
 importClass(Packages.org.concord.otrunkcapa.OTMultimeterAnswerAssessment);
 importClass(Packages.org.concord.otrunkcapa.OTMultimeterAssessment);
+importClass(Packages.org.concord.otrunkcck.CCKCircuitAnalyzer);
+importClass(Packages.org.concord.otrunkcapa.CAPAUnitUtil);
 
 var startHTML = "<html><blockquote>";
 var endHTML = "</blockquote></html>";
@@ -88,12 +91,14 @@ var helpEnabled = false;		// Help button ??
 
 // Activity Variables
 var targetResistor = null;		// (Branch) Resistor that needs to be solved by the user 
+var circuitBattery = null;		// (Branch) Battery in the circuit
+var circuitSwitch = null;		// (Switch) Switch in the circuit
 var measurements = [];			// Array of measurement objects
 var answerObj;
 var solutionObj;
-var battery = null;				// (Branch) Battery 
 var solutionMessage = "";
 var otAssessment;
+var circuitAnalyzer;			// (CCKCircuitAnalyzer)
 
 var currentStep = 1;
 var lastStep = 3;
@@ -123,6 +128,8 @@ function init()
 	setupAnswerButton();
 	
 	setupActivity();
+	
+	setupCircuitAnalyzer();
     
 	initializationDone = true;
         
@@ -163,6 +170,11 @@ function setupGUI()
 	answerBox.setBackground(new Color(1,1,0.7));	
 }
 
+function setupCircuitAnalyzer()
+{
+	circuitAnalyzer = new CCKCircuitAnalyzer(cckCircuit, false);
+}
+
 /** 
  * Specific things to set up in this activity. 
  * Checks if the activity has been loaded or if it's run for the first time 
@@ -190,9 +202,16 @@ function setupActivity()
 	}
 	//
 	//Find the battery in the circuit
-	battery = findBranch("#Battery");
-	if (battery == null){	
+	circuitBattery = findBranch("#Battery");
+	if (circuitBattery == null){	
 		System.err.println("Error, battery not found!");
+		return;
+	}
+	//	
+	//Find the switch in the circuit
+	circuitSwitch = findBranch("#Switch");
+	if (circuitSwitch == null){	
+		System.err.println("Error, switch not found!");
 		return;
 	}
 	//	
@@ -216,7 +235,7 @@ function setupActivityInitial()
 	
 	answerBox.setText("");
 	answerObj = null;
-	reportButton.setVisible(false);
+//	reportButton.setVisible(false);
 	
 	deleteNotebookData();
 
@@ -395,7 +414,7 @@ function setupMultimeter()
 				}
 				else if (state == MultimeterModel.OHMMETER_STATE) {
 					type = "resistance";
-					units = units + "Ω";
+					units = units + "Ohms";
 					logInformation("Multimeter measurement (Ohmmeter mode): " + roundedValue + " " + units);
 				}
 				else if (state == MultimeterModel.VOLTMETER_STATE) {
@@ -430,8 +449,13 @@ function setupMultimeter()
 				lastMMStateViable = true;
 				solverFinishedOnce = true;
 				
+				var extra = new Object();
+				analyzeMultimeterLeads(extra);
+				
 				//Record the measurement, including the voltage and current of the target resistor
-				var m = addMeasurement(type, roundedValue, units, {'resistorVoltage':targetResistorVoltageString, 'resistorCurrent':targetResistorCurrentString} );
+				extra.resistorVoltage = targetResistorVoltageString;
+				extra.resistorCurrent = targetResistorCurrentString;
+				var m = addMeasurement(type, roundedValue, units, extra);
 				//
 				
 				//more debug info
@@ -446,6 +470,48 @@ function setupMultimeter()
 	cckMultimeter.addListener(multimeterListener);
 
 }// end of setupMultimeter()
+
+function analyzeMultimeterLeads(extra)
+{
+	//Analyze circuit
+	circuitAnalyzer.analyzeCircuit();
+	circuitAnalyzer.simplifyCircuit();
+	
+	//Check where the leads are connected to
+	//Get multimeter connections
+	var redConn = cckMultimeter.getRedLeadModel().getConnection();
+	var blackConn = cckMultimeter.getBlackLeadModel().getConnection();
+	var redLead = 0;
+	var blackLead = 0;
+	
+	if (circuitAnalyzer.isBetween(redConn.getJunction(), targetResistor, circuitBattery)){
+		System.out.println("read lead is between resistor and battery");
+		redLead = 1;
+	}
+	if (circuitAnalyzer.isBetween(redConn.getJunction(), circuitBattery, circuitSwitch)){
+		System.out.println("read lead is between battery and switch");
+		redLead = 3;
+	}
+	if (circuitAnalyzer.isBetween(redConn.getJunction(), circuitSwitch, targetResistor)){
+		System.out.println("read lead is between switch and resistor");
+		redLead = 2;
+	}
+	if (circuitAnalyzer.isBetween(blackConn.getJunction(), targetResistor, circuitBattery)){
+		System.out.println("black lead is between resistor and battery");
+		blackLead = 1;
+	}
+	if (circuitAnalyzer.isBetween(blackConn.getJunction(), circuitBattery, circuitSwitch)){
+		System.out.println("black lead is between battery and switch");
+		blackLead = 3;
+	}
+	if (circuitAnalyzer.isBetween(blackConn.getJunction(), circuitSwitch, targetResistor)){
+		System.out.println("black lead is between switch and resistor");
+		blackLead = 2;
+	}
+	
+	extra.redLead = redLead;
+	extra.blackLead = blackLead;
+}
 
 function showFirstMeasurementMessage()
 {
@@ -792,16 +858,27 @@ function checkAnswerValue(answer, correctAnswer)
 	var value = answer.getValue();
 	var correctValue = correctAnswer.getValue();
 	if (MathUtil.isApproxEqual(value, correctValue, 0.1)){
-		answerValueType = "correct"
+		answerValueType = "correct";
+	}
+	else if (MathUtil.isApproxEqual(value, -correctValue, 0.1)){
+		answerValueType = "correct wrong sign";
+	}
+	else if (CAPAUnitUtil.compareValues(answer, correctAnswer)){
+		//Answer given in different units but still correct
+		answerValueType = "correct";
+	}
+	else if (CAPAUnitUtil.compareValues(answer, correctAnswer, true, false)){
+		//Answer given in different units but still correct but wrong sign
+		answerValueType = "correct wrong sign";
 	}
 	else{
 		if (correctValue != 0 && value != 0 && 
 				(MathUtil.isApproxEqual(value*1000, correctValue, 0.1) ||
 				MathUtil.isApproxEqual(value/1000, correctValue, 0.1))){
-			answerValueType = "correct in other unit"
+			answerValueType = "correct in other unit";
 		}
 		else{
-			answerValueType = "incorrect"
+			answerValueType = "incorrect";
 		}
 	}
 	//
@@ -814,8 +891,16 @@ function checkAnswerValue(answer, correctAnswer)
 	else if (unit.equalsIgnoreCase(correctAnswer.getUnit())){
 		answerUnitType = "correct"
 	}
-	else if (unit.equalsIgnoreCase("mohms") || unit.equalsIgnoreCase("miliohms") ||
-			unit.equalsIgnoreCase("kohms") || unit.equalsIgnoreCase("kiloohms")){
+	else if (answerValueType == "correct" || answerValueType == "correct wrong sign"){
+		//If they specified units and the units are not the same as the answer units
+		//but the value was considered correct, is because the units had to be correct too
+		//For example, let's say the correct answer was 1.2 A. If the value answer was considered 
+		//correct but they did specify units (meaning the answer wasn't simply "1.2") AND their units
+		//were not "A", then it means that the whole value+unit answer had to be considered correct,
+		//so their answer was either 1200 mA or 0.0012 kA. In this case, the units are considered correct 
+		answerUnitType = "correct"
+	}
+	else if (CAPAUnitUtil.isUnitCompatible(answer, correctAnswer)){
 		answerUnitType = "incorrect but other good unit"
 	}
 	else {
@@ -849,12 +934,16 @@ function logAnswerAssessment(answer, correctAnswer, answerValueType, answerUnitT
 	if (answerValueType.equals("correct")){
 		answerAssess.setValueCorrect(1);
 	}
-	else if (answerValueType.equals("correct in other unit")){
+	else if (answerValueType.equals("correct wrong sign")){
 		answerAssess.setValueCorrect(2);
+	}
+	else if (answerValueType.equals("correct in other unit")){
+		answerAssess.setValueCorrect(3);
 	}
 	else if (answerValueType.equals("incorrect")){
 		answerAssess.setValueCorrect(0);
 	}
+	
 	if (answerUnitType.equals("no unit")){
 		answerAssess.setUnitCorrect(0);
 	}
@@ -889,6 +978,50 @@ function logAnswerAssessment(answer, correctAnswer, answerValueType, answerUnitT
 			//The multimeter was in the correct setting when measured
 			answerAssess.setMultimeterSetting(1);
 		}
+		
+		//Correct lead placement?
+		if (getCurrentAnswerType().equalsIgnoreCase("voltage")){
+			//To measure voltage correctly, the leads have to placed in zone 1 and 2
+			//Give values of 0 (really bad), 1 (bad), 2 (not bad), 3 (good)
+			if (	 (measurement.extra.redLead == 1 && measurement.extra.blackLead == 2) ||
+					 (measurement.extra.redLead == 2 && measurement.extra.blackLead == 1)){
+				answerAssess.setLeadPlacement(3);
+			}
+			else if ((measurement.extra.redLead == 1 && measurement.extra.blackLead == 3) ||
+					 (measurement.extra.redLead == 3 && measurement.extra.blackLead == 1)){
+				answerAssess.setLeadPlacement(2);
+			}
+			else if ((measurement.extra.redLead == 2 && measurement.extra.blackLead == 3) ||
+					 (measurement.extra.redLead == 3 && measurement.extra.blackLead == 2)){
+				answerAssess.setLeadPlacement(1);
+			}
+			else if ((measurement.extra.redLead == measurement.extra.blackLead)){
+				answerAssess.setLeadPlacement(0);
+			}
+		}
+		else if (getCurrentAnswerType().equalsIgnoreCase("current")){
+			//To measure voltage correctly, the leads have to placed in zone 2 and 3
+			if ((measurement.extra.redLead == 2 && measurement.extra.blackLead == 3) ||
+					 (measurement.extra.redLead == 3 && measurement.extra.blackLead == 2)){
+				answerAssess.setLeadPlacement(3);
+			}
+			else{
+				answerAssess.setLeadPlacement(0);
+			}
+		}
+		else if (getCurrentAnswerType().equalsIgnoreCase("resistance")){
+			//To measure voltage correctly, the leads have to placed in zone 1 and 2
+			if (	 (measurement.extra.redLead == 1 && measurement.extra.blackLead == 2) ||
+					 (measurement.extra.redLead == 2 && measurement.extra.blackLead == 1)){
+				answerAssess.setLeadPlacement(3);
+			}
+			else{
+				answerAssess.setLeadPlacement(0);
+			}
+		}
+		//
+		
+		
 	}
 		
 	otAssessment.getAnswers().add(answerAssess);
@@ -897,12 +1030,18 @@ function logAnswerAssessment(answer, correctAnswer, answerValueType, answerUnitT
 /**
  * From all the measurements made, finds the first one that has a value close enough to 
  * the value provided (with a threshold, ignoring the sign and the unit) 
+ * Also, consider unit conversion
  */
 function findMeasurement(valueObj)
 {
+	var measurementValueObj = otObjectService.createObject(OTUnitValue);
+	
 	for (var i = 0; i < measurements.length; i++){
 		var measurement = measurements[i];
-		if (MathUtil.isApproxEqual(Math.abs(measurement.value), Math.abs(valueObj.getValue()), 0.1)){
+		measurementValueObj.setValue(measurement.value);
+		measurementValueObj.setUnit(measurement.unit);
+		
+		if (CAPAUnitUtil.compareValues(measurementValueObj, valueObj, true, true)){
 			return measurement;
 		}
 	}
@@ -917,7 +1056,7 @@ function calculateSolution()
 	
 	//Calculate current using battery voltage and total resistance
 	valueObj = otObjectService.createObject(OTUnitValue);
-	var current = battery.getVoltageDrop() / (targetResistor.getResistance() + battery.getResistance());
+	var current = circuitBattery.getVoltageDrop() / (targetResistor.getResistance() + circuitBattery.getResistance());
 	valueObj.setValue(current);
 	valueObj.setUnit("A");
 	solutionObj.current = valueObj;
@@ -958,38 +1097,52 @@ function showSolution(answerValueType, answerUnitType, bShowNow)
 			solutionMsg = "Correct!";
 		}
 		else if (answerUnitType.equals("incorrect but other good unit")){
-			solutionMsg = "Correct numerically but unit supplied was not ohms.";
+			solutionMsg = "Correct numerically but unit supplied is incorrect.";
 		}
 		else if (answerUnitType.equals("incorrect")){
-			solutionMsg = "Correct numerically but inappropriate units supplied.";
+			solutionMsg = "Correct numerically but unit supplied is inappropriate (incompatible).";
+		}
+	}
+	else if (answerValueType.equals("correct wrong sign")){
+		if (answerUnitType.equals("no unit")){	
+			solutionMsg = "Correct but wrong sign and no units supplied.";
+		}
+		else if (answerUnitType.equals("correct")){
+			solutionMsg = "Correct but wrong sign";
+		}
+		else if (answerUnitType.equals("incorrect but other good unit")){
+			solutionMsg = "Correct numerically but wrong sign and unit supplied is incorrect.";
+		}
+		else if (answerUnitType.equals("incorrect")){
+			solutionMsg = "Correct numerically but wrong sign and unit supplied is inappropriate (incompatible).";
 		}
 	}
 	else if (answerValueType.equals("correct in other unit")){
 		if (answerUnitType.equals("no unit")){
-			solutionMsg = "Correct but value not in ohms and no units supplied.";
+			solutionMsg = "Value is correct but no units supplied.";
 		}
 		else if (answerUnitType.equals("correct")){
-			solutionMsg = "Correct but not in ohms.";
+			solutionMsg = "Value correct but not in conjunction with the unit supplied.";
 		}
 		else if (answerUnitType.equals("incorrect but other good unit")){
-			solutionMsg = "Correct but value not in ohms.";
+			solutionMsg = "Value correct but not in conjunction with the unit supplied.";
 		}
 		else if (answerUnitType.equals("incorrect")){
-			solutionMsg = "Correct but value not in ohms and inappropriate unit supplied.";
+			solutionMsg = "Value correct but unit supplied is inappropriate (incompatible).";
 		}
 	}
 	else if (answerValueType.equals("incorrect")){
 		if (answerUnitType.equals("no unit")){
-			solutionMsg = "Incorrect and no units supplied.";
+			solutionMsg = "Incorrect value and no units supplied.";
 		}
 		else if (answerUnitType.equals("correct")){
 			solutionMsg = "Incorrect value.";
 		}
 		else if (answerUnitType.equals("incorrect but other good unit")){
-			solutionMsg = "Incorrect and not in ohms.";
+			solutionMsg = "Incorrect value.";
 		}
 		else if (answerUnitType.equals("incorrect")){
-			solutionMsg = "Incorrect and inappropriate units supplied.";
+			solutionMsg = "Incorrect value and unit supplied is inappropriate (incompatible).";
 		}
 	}
 
