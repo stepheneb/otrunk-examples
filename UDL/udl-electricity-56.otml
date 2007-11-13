@@ -90,7 +90,7 @@
                   <OTChoiceViewConfig objectClass="org.concord.otrunk.ui.OTChoice" viewClass="org.concord.otrunk.ui.swing.OTChoiceRadioButtonPrintView" useViewsAsChoices="true" />
                 </entry>
                 <entry key="${text-edit}">
-                  <OTViewEntry objectClass="org.concord.otrunk.ui.OTText" viewClass="org.concord.otrunk.ui.swing.OTTextPrintView" />
+                  <OTViewEntry objectClass="org.concord.otrunk.ui.OTText" viewClass="org.concord.otrunk.ui.swing.OTTextEditView" />
                 </entry>
               </map>
             </OTViewMode>
@@ -119,7 +119,16 @@
                     <objectsToInsert>
                       <OTText name="Text field" />
                       <OTDrawingTool2 name="Draw tool" />
-                      <OTChoice name="Choices" />
+                      <OTChoice name="Choices">
+                        <choices>
+                          <OTCompoundDoc name="tape">
+                            <bodyText>tape</bodyText>
+                          </OTCompoundDoc>
+                          <OTCompoundDoc name="foil">
+                            <bodyText>foil</bodyText>
+                          </OTCompoundDoc>
+                        </choices>
+                      </OTChoice>
                       <OTQuestion name="Question">
                         <prompt>
                           <OTUDLCompoundDoc>
@@ -1318,7 +1327,7 @@
                                     <li>Clear tape</li>
                                     <li>Aluminum foil (small piece)</li>
                                     <li>Rubber band</li>
-                                    <li>Paper clamp</li>
+                                    <li>Paper binder clip</li>
                                     <li>Extra wire (The leads on the holiday light may not be long enough to connect to two batteries.)</li>
                                   </ul>
                                 </div>
@@ -1342,7 +1351,7 @@
                                   <p />
                                   Attach the temperature sensor to the computer. Choose the "clear" dataset. Start recording temperature. Let it run for ten seconds.
                                   <p />
-                                  TEMPERATURE SENSOR - multiple dataset with two created datasets: "clear" and "foil".
+                                  <object refid="b447cab2-8fa2-11dc-b242-b1d730a414e0" />
                                   <p />
                                   After exactly ten seconds, hold the two leads from the holiday light against the two ends of the battery.
                                   <p />
@@ -1353,6 +1362,58 @@
                               </div>
                             </div>
                           </bodyText>
+                          <documentRefs>
+                            <OTDataCollector id="b447cab2-8fa2-11dc-b242-b1d730a414e0" name="Temperature" title="Temperature Sensor Graph" multipleGraphableEnabled="true" autoScaleEnabled="true">
+                              <source>
+                                <OTDataGraphable name="clear" connectPoints="true" yColumn="1" drawMarks="false" color="255" xColumn="0" lineWidth="2.0">
+                                  <dataProducer>
+                                    <OTSensorDataProxy name="dataproducer">
+                                      <request>
+                                        <OTExperimentRequest id="bba6fff3-8fa2-11dc-b242-b1d730a414e0" period="0.1">
+                                          <sensorRequests>
+                                            <OTSensorRequest stepSize="0.1" type="0" unit="degC" port="0" requiredMax="40.0" displayPrecision="-1" requiredMin="0.0" />
+                                          </sensorRequests>
+                                        </OTExperimentRequest>
+                                      </request>
+                                    </OTSensorDataProxy>
+                                  </dataProducer>
+                                  <dataStore>
+                                    <OTDataStore dt="0.1" numberChannels="1">
+                                      <channelDescriptions>
+                                        <OTDataChannelDescription name="dt" precision="2" numericData="true" />
+                                        <OTDataChannelDescription name="" unit="degC" precision="-1" numericData="true" />
+                                      </channelDescriptions>
+                                    </OTDataStore>
+                                  </dataStore>
+                                </OTDataGraphable>
+                              </source>
+                              <xDataAxis>
+                                <OTDataAxis max="80.0" units="s" min="0.0" label="Time" />
+                              </xDataAxis>
+                              <yDataAxis>
+                                <OTDataAxis max="40.0" units="degC" min="-0.0" label="Temperature" />
+                              </yDataAxis>
+                              <graphables>
+                                <OTDataGraphable drawMarks="false" color="65535" connectPoints="true" xColumn="0" yColumn="1" name="foil" lineWidth="2.0">
+                                  <dataProducer>
+                                    <OTSensorDataProxy>
+                                      <request>
+                                        <object refid="bba6fff3-8fa2-11dc-b242-b1d730a414e0" />
+                                      </request>
+                                    </OTSensorDataProxy>
+                                  </dataProducer>
+                                  <dataStore>
+                                    <OTDataStore dt="0.1" numberChannels="1">
+                                      <channelDescriptions>
+                                        <OTDataChannelDescription name="dt" precision="2" numericData="true" />
+                                        <OTDataChannelDescription name="" unit="degC" precision="-1" numericData="true" />
+                                      </channelDescriptions>
+                                    </OTDataStore>
+                                  </dataStore>
+                                </OTDataGraphable>
+                              </graphables>
+                            </OTDataCollector>
+                          </documentRefs>
                         </OTUDLCompoundDoc>
                         <OTUDLCompoundDoc name="%717bba38-8d7b-11dc-92de-d3015639f7a6">
                           <bodyText>
@@ -1361,6 +1422,9 @@
                                 <div class="body">
                                   <div class="subtitle-continued">Explore 2</div>
                                   Expand the graph so that you can see how much the temperature rose while the battery was attached and how much it decreased after you stopped.
+                                  <br />
+                                  <object refid="b447cab2-8fa2-11dc-b242-b1d730a414e0" />
+                                  <p />
                                   <p />
                                   How many degrees did the bulb heat up in 30 seconds?
                                   <br />
@@ -1370,24 +1434,12 @@
                                   <br />
                                   <object refid="86a73176-8d7b-11dc-92de-d3015639f7a6" />
                                   <p />
-                                  Repeat your experiment, but this time wrap the holiday light with aluminum foil. Remove the tape from your first experiment. Wrap a small piece of foil around the entire bulb. Hold the foil in place with a short piece of clear tape.
-                                  <p />
-                                  Slide the tip of the temperature probe in between the bulb and the aluminum foil.
-                                  <p />
-                                  <img src="http://teemss1.concord.org/imageste/WEB_06b_he.gif" />
-                                  Get ready to connect the two leads of the light to the two ends of the battery, but don't do it yet.
-                                  <p />
-                                  Attach the temperature sensor to the computer. Choose the "foil" dataset. Start recording temperature. Let it run for ten seconds.
-                                  <p />
-                                  TEMPERATURE SENSOR - multiple dataset – same as the previous one.
-                                  <p />
-                                  After exactly ten seconds, hold the two leads from the holiday light against the two ends of the battery.
-                                  <p />
                                 </div>
                               </div>
                             </div>
                           </bodyText>
                           <documentRefs>
+                            <object refid="b447cab2-8fa2-11dc-b242-b1d730a414e0" />
                             <OTText id="8124364f-8d7b-11dc-92de-d3015639f7a6" name="Text field" />
                             <OTText id="86a73176-8d7b-11dc-92de-d3015639f7a6" name="Text field" />
                           </documentRefs>
@@ -1398,30 +1450,27 @@
                               <div class="border">
                                 <div class="body">
                                   <div class="subtitle-continued">Explore 3</div>
+                                  Repeat your experiment, but this time wrap the holiday light with aluminum foil. Remove the tape from your first experiment. Wrap a small piece of foil around the entire bulb. Hold the foil in place with a short piece of clear tape.
+                                  <p />
+                                  Slide the tip of the temperature probe in between the bulb and the aluminum foil.
+                                  <p />
+                                  <img src="http://teemss1.concord.org/imageste/WEB_06b_he.gif" />
+                                  Get ready to connect the two leads of the light to the two ends of the battery, but don't do it yet.
+                                  <p />
+                                  Attach the temperature sensor to the computer. Choose the "foil" dataset. Start recording temperature. Let it run for ten seconds.
+                                  <br />
+                                  <object refid="b447cab2-8fa2-11dc-b242-b1d730a414e0" />
+                                  <p />
+                                  After exactly ten seconds, hold the two leads from the holiday light against the two ends of the battery.
+                                  <p />
                                   Watch the temperature plot. Let it run for 30 seconds, then disconnect leads from the battery and let it run for another 30 seconds. Stop recording the data.
-                                  <p />
-                                  Expand the graph so that you can see how much the temperature rose while the battery was attached and how much it decreased after you stopped.
-                                  <p />
-                                  How many degrees did the bulb heat up in 30 seconds?
-                                  <br />
-                                  <object refid="b5d2ff5a-8d7b-11dc-92de-d3015639f7a6" />
-                                  <p />
-                                  How many degrees did the bulb cool down in 30 seconds?
-                                  <br />
-                                  <object refid="ba5fdab1-8d7b-11dc-92de-d3015639f7a6" />
-                                  <p />
-                                  Compare the measurement with tape and the measurement with foil. Which one produced more heating of the bulb?
-                                  <br />
-                                  <object refid="bf9774f8-8d7b-11dc-92de-d3015639f7a6" />
                                   <p />
                                 </div>
                               </div>
                             </div>
                           </bodyText>
                           <documentRefs>
-                            <OTText id="b5d2ff5a-8d7b-11dc-92de-d3015639f7a6" name="Text field" />
-                            <OTText id="ba5fdab1-8d7b-11dc-92de-d3015639f7a6" name="Text field" />
-                            <OTText id="bf9774f8-8d7b-11dc-92de-d3015639f7a6" name="Text field" />
+                            <object refid="b447cab2-8fa2-11dc-b242-b1d730a414e0" />
                           </documentRefs>
                         </OTUDLCompoundDoc>
                         <OTUDLCompoundDoc name="%c64d22f5-8d7b-11dc-92de-d3015639f7a6">
@@ -1445,12 +1494,6 @@
                                   Explain why.
                                   <br />
                                   <object refid="eedc96eb-8d7b-11dc-92de-d3015639f7a6" />
-                                  <p />
-                                  Here is how an incandescent light works. The tiny wire inside the glass (called a filament) resists the flow of charges through the circuit. This resistance heats up the wire until it glows. If it is very hot, about 2500 C (4500 F), it glows "white-hot" and gives off white light. If there is less flow of electric charge, the filament is cooler and glows "red-hot."
-                                  <p />
-                                  In this experiment, what was the color of your filament?
-                                  <br />
-                                  <object refid="fcc05892-8d7b-11dc-92de-d3015639f7a6" />
                                   <p />
                                 </div>
                               </div>
@@ -1479,19 +1522,6 @@
                               </choices>
                             </OTChoice>
                             <OTText id="eedc96eb-8d7b-11dc-92de-d3015639f7a6" name="Text field" />
-                            <OTChoice id="fcc05892-8d7b-11dc-92de-d3015639f7a6" name="Choices">
-                              <choices>
-                                <OTCompoundDoc name="red">
-                                  <bodyText>red</bodyText>
-                                </OTCompoundDoc>
-                                <OTCompoundDoc name="orange">
-                                  <bodyText>orange</bodyText>
-                                </OTCompoundDoc>
-                                <OTCompoundDoc name="white">
-                                  <bodyText>white</bodyText>
-                                </OTCompoundDoc>
-                              </choices>
-                            </OTChoice>
                           </documentRefs>
                         </OTUDLCompoundDoc>
                         <OTUDLCompoundDoc name="%2bacd455-8d7c-11dc-92de-d3015639f7a6">
@@ -1500,9 +1530,13 @@
                               <div class="border">
                                 <div class="body">
                                   <div class="subtitle">Elaborate</div>
-                                  Which one cooled off more when the battery was disconnected?
+                                  Look at your data again.
                                   <br />
-                                  <object refid="3435946c-8d7c-11dc-92de-d3015639f7a6" />
+                                  <object refid="b447cab2-8fa2-11dc-b242-b1d730a414e0" />
+                                  <p />
+                                  Look at the part of the graph where the light is cooling down.  Which one cooled off faster when the battery was disconnected?
+                                  <br />
+                                  <object refid="151bcf0d-8ede-11dc-8fa3-671309adea67" />
                                   <p />
                                   Why do you think clear tape would be different from foil?
                                   <br />
@@ -1513,7 +1547,17 @@
                             </div>
                           </bodyText>
                           <documentRefs>
-                            <OTText id="3435946c-8d7c-11dc-92de-d3015639f7a6" name="Text field" />
+                            <object refid="b447cab2-8fa2-11dc-b242-b1d730a414e0" />
+                            <OTChoice id="151bcf0d-8ede-11dc-8fa3-671309adea67" name="Choices">
+                              <choices>
+                                <OTCompoundDoc name="tape">
+                                  <bodyText>tape</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="foil">
+                                  <bodyText>foil</bodyText>
+                                </OTCompoundDoc>
+                              </choices>
+                            </OTChoice>
                             <OTText id="3990e353-8d7c-11dc-92de-d3015639f7a6" name="Text field" />
                           </documentRefs>
                         </OTUDLCompoundDoc>
@@ -1572,6 +1616,174 @@
                               </choices>
                             </OTChoice>
                             <OTText id="6df18cd8-8d7c-11dc-92de-d3015639f7a6" name="Text field" />
+                          </documentRefs>
+                        </OTUDLCompoundDoc>
+                        <OTUDLCompoundDoc name="%9f732eb7-8edb-11dc-8fa3-671309adea67">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle-continued">Explore 4</div>
+                                  Expand the graph so that you can see how much the temperature rose while the battery was attached and how much it decreased after you stopped.
+                                  <br />
+                                  <object refid="b447cab2-8fa2-11dc-b242-b1d730a414e0" />
+                                  <p />
+                                  How many degrees did the bulb heat up in 30 seconds?
+                                  <br />
+                                  <object refid="b5d2ff5a-8d7b-11dc-92de-d3015639f7a6" />
+                                  <p />
+                                  How many degrees did the bulb cool down in 30 seconds?
+                                  <br />
+                                  <object refid="ba5fdab1-8d7b-11dc-92de-d3015639f7a6" />
+                                  <p />
+                                  Compare the measurement with tape and the measurement with foil. Which one produced more heating of the bulb?
+                                  <br />
+                                  <object refid="bf9774f8-8d7b-11dc-92de-d3015639f7a6" />
+                                  <p />
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                          <documentRefs>
+                            <object refid="b447cab2-8fa2-11dc-b242-b1d730a414e0" />
+                            <OTText id="b5d2ff5a-8d7b-11dc-92de-d3015639f7a6" name="Text field" />
+                            <OTText id="ba5fdab1-8d7b-11dc-92de-d3015639f7a6" name="Text field" />
+                            <OTText id="bf9774f8-8d7b-11dc-92de-d3015639f7a6" name="Text field" />
+                          </documentRefs>
+                        </OTUDLCompoundDoc>
+                        <OTUDLCompoundDoc name="%e43a567a-8edc-11dc-8fa3-671309adea67">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle-continued">Explain 2</div>
+                                  Here is how an incandescent light works. The tiny wire inside the glass (called a filament) resists the flow of charges through the circuit. This resistance heats up the wire until it glows. If it is very hot, about 2500 C (4500 F), it glows "white-hot" and gives off white light. If there is less flow of electric charge, the filament is cooler and glows "red-hot."
+                                  <p />
+                                  In this experiment, what was the color of your filament?
+                                  <br />
+                                  <object refid="fcc05892-8d7b-11dc-92de-d3015639f7a6" />
+                                  <p />
+                                  Do you think it's possible for the filament to heat up but still give off no light?
+                                  <br />
+                                  <object refid="2a913cbd-8edd-11dc-8fa3-671309adea67" />
+                                  <p />
+                                  List any electrical devices you can think of that heat up but don't give off light.
+                                  <object refid="71014f1d-8edd-11dc-8fa3-671309adea67" />
+                                  <p />
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                          <documentRefs>
+                            <OTChoice id="fcc05892-8d7b-11dc-92de-d3015639f7a6" name="Choices">
+                              <choices>
+                                <OTCompoundDoc name="red">
+                                  <bodyText>red</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="orange">
+                                  <bodyText>orange</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="white">
+                                  <bodyText>white</bodyText>
+                                </OTCompoundDoc>
+                              </choices>
+                            </OTChoice>
+                            <OTChoice id="2a913cbd-8edd-11dc-8fa3-671309adea67" name="Choices">
+                              <choices>
+                                <OTCompoundDoc name="Yes">
+                                  <bodyText>Yes</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="No">
+                                  <bodyText>No</bodyText>
+                                </OTCompoundDoc>
+                              </choices>
+                            </OTChoice>
+                            <OTText id="71014f1d-8edd-11dc-8fa3-671309adea67" name="Text field" />
+                          </documentRefs>
+                        </OTUDLCompoundDoc>
+                        <OTUDLCompoundDoc name="%8cb99dae-8ee2-11dc-8fa3-671309adea67">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle-continued">Elaborate 2</div>
+                                  Try your experiment again. You can choose either foil or clear tape. 
+This time, use
+                                  <b>two</b>
+                                  batteries in series to light the bulb. You can use a binder clip to hold them together.
+                                  <br />
+                                  <img src="http://teemss2.concord.org/artwork/Teemss2_images/Units/u02_i01/picture01/u02_i01_web_picture01.png" />
+                                  <br />
+                                  Follow the same procedure:
+                                  <ul>
+                                    <li>Get ready to connect the two leads of the light to the ends of the two batteries, but don't do it yet. Use extra wire so that you can reach the ends of the batteries.</li>
+                                    <li>Attach the temperature sensor to the computer. Choose the "clear" dataset. Start recording temperature. Let it run for ten seconds.</li>
+                                    <br />
+                                    <object refid="f7f354fc-8fa4-11dc-b242-b1d730a414e0" />
+                                    <p />
+                                    <li>After exactly ten seconds, hold the two leads from the holiday light against the two ends of the batteries.</li>
+                                    <li>Watch the temperature plot. Let it run for 30 seconds, then disconnect leads from the battery and let it run for another 30 seconds. Stop recording the data.</li>
+                                  </ul>
+                                  Discuss the differences that you notice with two batteries instead of one. What color was the light? How fast did the bulb heat up?
+                                  <br />
+                                  <object refid="fe3436a7-8ee2-11dc-8fa3-671309adea67" />
+                                  <p />
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                          <documentRefs>
+                            <OTDataCollector id="f7f354fc-8fa4-11dc-b242-b1d730a414e0" name="Temperature" title="Temperature Sensor Graph" multipleGraphableEnabled="true" autoScaleEnabled="true">
+                              <source>
+                                <OTDataGraphable name="clear" connectPoints="true" yColumn="1" drawMarks="false" color="255" xColumn="0" lineWidth="2.0">
+                                  <dataProducer>
+                                    <OTSensorDataProxy name="dataproducer">
+                                      <request>
+                                        <OTExperimentRequest id="2bf6751d-8fa5-11dc-b242-b1d730a414e0" period="0.1">
+                                          <sensorRequests>
+                                            <OTSensorRequest stepSize="0.1" type="0" unit="degC" port="0" requiredMax="40.0" displayPrecision="-1" requiredMin="0.0" />
+                                          </sensorRequests>
+                                        </OTExperimentRequest>
+                                      </request>
+                                    </OTSensorDataProxy>
+                                  </dataProducer>
+                                  <dataStore>
+                                    <OTDataStore dt="0.1" numberChannels="1">
+                                      <channelDescriptions>
+                                        <OTDataChannelDescription name="dt" precision="2" numericData="true" />
+                                        <OTDataChannelDescription name="" unit="degC" precision="-1" numericData="true" />
+                                      </channelDescriptions>
+                                    </OTDataStore>
+                                  </dataStore>
+                                </OTDataGraphable>
+                              </source>
+                              <xDataAxis>
+                                <OTDataAxis max="80.0" units="s" min="0.0" label="Time" />
+                              </xDataAxis>
+                              <yDataAxis>
+                                <OTDataAxis max="50.0" units="degC" min="10.0" label="Temperature" />
+                              </yDataAxis>
+                              <graphables>
+                                <OTDataGraphable drawMarks="false" color="65535" connectPoints="true" xColumn="0" yColumn="1" name="foil" lineWidth="2.0">
+                                  <dataProducer>
+                                    <OTSensorDataProxy>
+                                      <request>
+                                        <object refid="2bf6751d-8fa5-11dc-b242-b1d730a414e0" />
+                                      </request>
+                                    </OTSensorDataProxy>
+                                  </dataProducer>
+                                  <dataStore>
+                                    <OTDataStore dt="0.1" numberChannels="1">
+                                      <channelDescriptions>
+                                        <OTDataChannelDescription name="dt" precision="2" numericData="true" />
+                                        <OTDataChannelDescription name="" unit="degC" precision="-1" numericData="true" />
+                                      </channelDescriptions>
+                                    </OTDataStore>
+                                  </dataStore>
+                                </OTDataGraphable>
+                              </graphables>
+                            </OTDataCollector>
+                            <OTText id="fe3436a7-8ee2-11dc-8fa3-671309adea67" name="Text field" />
                           </documentRefs>
                         </OTUDLCompoundDoc>
                       </cards>
@@ -1738,12 +1950,6 @@
                                   <br />
                                   <object refid="c546f38b-8e63-11dc-b79d-6992dac7dee1" />
                                   <p />
-                                  Clear and restart the voltage sensor. Crank the Genecon again, but this time have one person disconnect the capacitor while another is cranking.
-                                  <p />
-                                  Connect the holiday light across the capacitor. Keep it connected for at least 10 seconds. What happens? Why?
-                                  <br />
-                                  <object refid="d33b2ff2-8e63-11dc-b79d-6992dac7dee1" />
-                                  <p />
                                 </div>
                               </div>
                             </div>
@@ -1752,7 +1958,6 @@
                             <object refid="59f190e3-8ecf-11dc-9471-8deab6aa93e5" />
                             <OTText id="be942af4-8e63-11dc-b79d-6992dac7dee1" name="Text field" />
                             <OTText id="c546f38b-8e63-11dc-b79d-6992dac7dee1" name="Text field" />
-                            <OTText id="d33b2ff2-8e63-11dc-b79d-6992dac7dee1" name="Text field" />
                           </documentRefs>
                         </OTUDLCompoundDoc>
                         <OTUDLCompoundDoc name="%daadec29-8e63-11dc-b79d-6992dac7dee1">
@@ -1813,38 +2018,95 @@
                               <div class="border">
                                 <div class="body">
                                   <div class="subtitle">Elaborate</div>
-                                  Charge up the capacitor again and disconnect it from the Genecon.
+                                  Now compare the way a capacitor stores energy with the way a battery stores energy.
+                                  <br />
+                                  Charge up the capacitor again with the Genecon and then disconnect it.
                                   <p />
                                   Connect the voltage sensor to the light bulb.
                                   <p />
                                   Start collecting data. Light the bulb with the capacitor. Leave it connected for 20 seconds. Observe what happens.
+ Stop collecting. Do
+                                  <b>not</b>
+                                  clear the data.
                                   <p />
-                                  Light the bulb with the AA battery. Leave it connected for 20 seconds. Observe what happens.
+                                  <object refid="894c8d8e-8faa-11dc-b242-b1d730a414e0" />
                                   <p />
-                                  What is the difference between what the capacitor does and what the battery does?
+                                  Switch to the "battery" dataset on the left. Start collecting data. A new line should appear. Light the bulb with the AA battery. Leave it connected for 20 seconds. Observe what happens.
+                                  <p />
+                                  What is the difference between what the capacitor does and what the battery does to the
+                                  <b>bulb</b>
+                                  ?
                                   <br />
                                   <object refid="5a7df44d-8e64-11dc-b79d-6992dac7dee1" />
+                                  <p />
+                                  What is the difference between what the capacitor does and what the battery does to the
+                                  <b>voltage graph</b>
+                                  ?
+                                  <br />
+                                  <object refid="159dbd99-8eeb-11dc-ab32-31c874c327b2" />
                                   <p />
                                   Why do you think they are different?
                                   <br />
                                   <object refid="5fc85344-8e64-11dc-b79d-6992dac7dee1" />
-                                  <p />
-                                  Join up with another team. See if you can run one Genecon with another.
-                                  <p />
-                                  Crank one Genecon 10 times and record how many times the other one goes around.
-                                  <p />
-                                  Why does the second Genecon go around fewer times than the first one?
-                                  <br />
-                                  <object refid="7270c8eb-8e64-11dc-b79d-6992dac7dee1" />
                                   <p />
                                 </div>
                               </div>
                             </div>
                           </bodyText>
                           <documentRefs>
+                            <OTDataCollector id="894c8d8e-8faa-11dc-b242-b1d730a414e0" name="Voltage" title="Voltage Sensor Graph" multipleGraphableEnabled="true" autoScaleEnabled="true">
+                              <source>
+                                <OTDataGraphable name="capacitor" connectPoints="true" yColumn="1" drawMarks="false" color="255" xColumn="0" lineWidth="2.0">
+                                  <dataProducer>
+                                    <OTSensorDataProxy name="dataproducer">
+                                      <request>
+                                        <OTExperimentRequest id="b501fa3d-8faa-11dc-b242-b1d730a414e0" period="0.1">
+                                          <sensorRequests>
+                                            <OTSensorRequest stepSize="0.1" type="4" unit="V" port="0" requiredMax="10.0" displayPrecision="-2" requiredMin="-10.0" />
+                                          </sensorRequests>
+                                        </OTExperimentRequest>
+                                      </request>
+                                    </OTSensorDataProxy>
+                                  </dataProducer>
+                                  <dataStore>
+                                    <OTDataStore dt="0.1" numberChannels="1">
+                                      <channelDescriptions>
+                                        <OTDataChannelDescription name="dt" precision="2" numericData="true" />
+                                        <OTDataChannelDescription name="" unit="V" precision="-2" numericData="true" />
+                                      </channelDescriptions>
+                                    </OTDataStore>
+                                  </dataStore>
+                                </OTDataGraphable>
+                              </source>
+                              <xDataAxis>
+                                <OTDataAxis max="40.0" units="s" min="0.0" label="Time" />
+                              </xDataAxis>
+                              <yDataAxis>
+                                <OTDataAxis max="10.0" units="V" min="-10.0" label="Voltage" />
+                              </yDataAxis>
+                              <graphables>
+                                <OTDataGraphable drawMarks="false" color="65535" connectPoints="true" xColumn="0" yColumn="1" name="battery" lineWidth="2.0">
+                                  <dataProducer>
+                                    <OTSensorDataProxy>
+                                      <request>
+                                        <object refid="b501fa3d-8faa-11dc-b242-b1d730a414e0" />
+                                      </request>
+                                    </OTSensorDataProxy>
+                                  </dataProducer>
+                                  <dataStore>
+                                    <OTDataStore dt="0.1" numberChannels="1">
+                                      <channelDescriptions>
+                                        <OTDataChannelDescription name="dt" precision="2" numericData="true" />
+                                        <OTDataChannelDescription name="" unit="V" precision="-2" numericData="true" />
+                                      </channelDescriptions>
+                                    </OTDataStore>
+                                  </dataStore>
+                                </OTDataGraphable>
+                              </graphables>
+                            </OTDataCollector>
                             <OTText id="5a7df44d-8e64-11dc-b79d-6992dac7dee1" name="Text field" />
+                            <OTText id="159dbd99-8eeb-11dc-ab32-31c874c327b2" name="Text field" />
                             <OTText id="5fc85344-8e64-11dc-b79d-6992dac7dee1" name="Text field" />
-                            <OTText id="7270c8eb-8e64-11dc-b79d-6992dac7dee1" name="Text field" />
                           </documentRefs>
                         </OTUDLCompoundDoc>
                         <OTUDLCompoundDoc name="%7b0a52e2-8e64-11dc-b79d-6992dac7dee1">
@@ -1877,8 +2139,82 @@
                             </div>
                           </bodyText>
                           <documentRefs>
-                            <OTDrawingTool2 id="05886c50-8e65-11dc-b79d-6992dac7dee1" name="Draw tool" />
-                            <OTDrawingTool2 id="03a07339-8e65-11dc-b79d-6992dac7dee1" name="Draw tool" />
+                            <OTDrawingTool2 id="05886c50-8e65-11dc-b79d-6992dac7dee1" name="Draw tool">
+                              <graphables>
+                                <OTDrawingShape type="" fillType="clear" x="0.0" y="0.0" width="0.0" height="0.0" color="0x000000" />
+                              </graphables>
+                            </OTDrawingTool2>
+                            <OTDrawingTool2 id="03a07339-8e65-11dc-b79d-6992dac7dee1" name="Draw tool">
+                              <graphables>
+                                <OTDrawingShape type="" fillType="clear" x="0.0" y="0.0" width="0.0" height="0.0" color="0x000000" />
+                              </graphables>
+                            </OTDrawingTool2>
+                          </documentRefs>
+                        </OTUDLCompoundDoc>
+                        <OTUDLCompoundDoc name="%64c37efc-8ee9-11dc-ab32-31c874c327b2">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle">New page</div>
+                                  New page content
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                        </OTUDLCompoundDoc>
+                        <OTUDLCompoundDoc name="%663537a3-8ee9-11dc-ab32-31c874c327b2">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle-continued">Explore 3</div>
+                                  Clear and restart the voltage sensor. Crank the Genecon again, but this time have one person disconnect the capacitor while another is cranking.
+Leave the voltage sensor attached across the capacitor.
+                                  <p />
+                                  <object refid="59f190e3-8ecf-11dc-9471-8deab6aa93e5" />
+                                  <p />
+                                  Connect the holiday light across the capacitor. Keep it connected for at least 10 seconds. What happens? Why?
+                                  <br />
+                                  <object refid="d33b2ff2-8e63-11dc-b79d-6992dac7dee1" />
+                                  <p />
+                                  Describe the voltage graph.
+                                  <br />
+                                  <object refid="4a8ab2bf-8ee9-11dc-ab32-31c874c327b2" />
+                                  <p />
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                          <documentRefs>
+                            <object refid="59f190e3-8ecf-11dc-9471-8deab6aa93e5" />
+                            <OTText id="d33b2ff2-8e63-11dc-b79d-6992dac7dee1" name="Text field" />
+                            <OTText id="4a8ab2bf-8ee9-11dc-ab32-31c874c327b2" name="Text field" />
+                          </documentRefs>
+                        </OTUDLCompoundDoc>
+                        <OTUDLCompoundDoc name="%aede3948-8eeb-11dc-ab32-31c874c327b2">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle-continued">Elaborate 2</div>
+                                  Join up with another team. See if you can run one Genecon with another.
+                                  <p />
+                                  Crank one Genecon 10 times and record how many times the other one goes around.
+                                  <br />
+                                  <object refid="ccfccaf5-8eeb-11dc-ab32-31c874c327b2" />
+                                  <p />
+                                  Why does the second Genecon go around fewer times than the first one?
+                                  <br />
+                                  <object refid="7270c8eb-8e64-11dc-b79d-6992dac7dee1" />
+                                  <p />
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                          <documentRefs>
+                            <OTText id="ccfccaf5-8eeb-11dc-ab32-31c874c327b2" name="Text field" />
+                            <OTText id="7270c8eb-8e64-11dc-b79d-6992dac7dee1" name="Text field" />
                           </documentRefs>
                         </OTUDLCompoundDoc>
                       </cards>
@@ -2356,3 +2692,4 @@
     </OTSystem>
   </objects>
 </otrunk>
+
