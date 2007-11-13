@@ -450,6 +450,12 @@ function setupMultimeter()
 				solverFinishedOnce = true;
 				
 				var extra = new Object();
+				
+				
+				//Analyze circuit
+				circuitAnalyzer.analyzeCircuit();
+				analyzeCircuitSetting(type, extra);
+				circuitAnalyzer.simplifyCircuit();
 				analyzeMultimeterLeads(extra);
 				
 				//Record the measurement, including the voltage and current of the target resistor
@@ -472,11 +478,7 @@ function setupMultimeter()
 }// end of setupMultimeter()
 
 function analyzeMultimeterLeads(extra)
-{
-	//Analyze circuit
-	circuitAnalyzer.analyzeCircuit();
-	circuitAnalyzer.simplifyCircuit();
-	
+{	
 	//Check where the leads are connected to
 	//Get multimeter connections
 	var redConn = cckMultimeter.getRedLeadModel().getConnection();
@@ -515,6 +517,28 @@ function analyzeMultimeterLeads(extra)
 		
 	extra.redLead = redLead;
 	extra.blackLead = blackLead;
+}
+
+/**
+ * Determines details about the circuit when a measurement is made
+ * (whether it was closed, open, etc)
+ * Assumes that the circuit analyzer has already analyzed the circuit 
+ */
+function analyzeCircuitSetting(type, extra)
+{
+	var redConn = cckMultimeter.getRedLeadModel().getConnection();
+	var blackConn = cckMultimeter.getBlackLeadModel().getConnection();
+	
+	//Check that the leads in the DMM are connected to each other
+	extra.leadsConnected = circuitAnalyzer.isConnectedInCircuit(redConn.getJunction(), blackConn.getJunction());
+	System.out.println("-------- leadsConnected: "+extra.leadsConnected);
+
+	//Check that the resistor is in the circuit measured by the DMM
+//	extra.targetResistorConnected = circuitAnalyzer.isConnectedInCircuit(targetResistor, redConn.getJunction(), blackConn.getJunction());
+//	System.out.println("-------- targetResistorConnected: "+extra.targetResistorConnected);
+	
+	//Check if the switch is closed
+	extra.switchClosed = circuitSwitch.isClosed();
 }
 
 function showFirstMeasurementMessage()
@@ -803,6 +827,10 @@ function checkAnswer()
 	//The answer is at: 
 	//answerBox(JTextField)
 	var strAnswer = answerBox.getText();
+	//Get rid of return char
+	strAnswer = strAnswer.replaceAll("\n", "");
+	answerBox.setText(strAnswer);
+	
 	//Separate the value from the unit (space separator)
 	var answerParts = strAnswer.split(" ", 2);
 	var val = 0;
@@ -837,7 +865,7 @@ function checkAnswer()
 	}
 	/////
 
-	checkAnswerValue(answerObj, correctAnswerObj);
+	checkAnswerValue(correctAnswerObj);
 
 	currentStep++;
 	if (currentStep <= lastStep){
@@ -850,16 +878,16 @@ function checkAnswer()
 }
 
 /** Checks the answer and creates messages according to the answer submitted */
-function checkAnswerValue(answer, correctAnswer)
+function checkAnswerValue(correctAnswer)
 {
-	if (answer == null || correctAnswer == null) return;
+	if (answerObj == null || correctAnswer == null) return;
 	
-	System.out.println("Checking answer " + answer.getValue() + " " + answer.getUnit() +
+	System.out.println("Checking answer " + answerObj.getValue() + " " + answerObj.getUnit() +
 		"    Correct answer is " + correctAnswer.getValue() + " " + correctAnswer.getUnit());
 	
 	//Check value
 	var answerValueType = "";
-	var value = answer.getValue();
+	var value = answerObj.getValue();
 	var correctValue = correctAnswer.getValue();
 	if (MathUtil.isApproxEqual(value, correctValue, 0.1)){
 		answerValueType = "correct";
@@ -867,11 +895,11 @@ function checkAnswerValue(answer, correctAnswer)
 	else if (MathUtil.isApproxEqual(value, -correctValue, 0.1)){
 		answerValueType = "correct wrong sign";
 	}
-	else if (CAPAUnitUtil.compareValues(answer, correctAnswer)){
+	else if (CAPAUnitUtil.compareValues(answerObj, correctAnswer)){
 		//Answer given in different units but still correct
 		answerValueType = "correct";
 	}
-	else if (CAPAUnitUtil.compareValues(answer, correctAnswer, true, false)){
+	else if (CAPAUnitUtil.compareValues(answerObj, correctAnswer, true, false)){
 		//Answer given in different units but still correct but wrong sign
 		answerValueType = "correct wrong sign";
 	}
@@ -888,33 +916,37 @@ function checkAnswerValue(answer, correctAnswer)
 	//
 	//Check unit
 	var answerUnitType = "";
-	var unit = answer.getUnit();
+	var unit = answerObj.getUnit();
 	if (unit == null || unit.equals("")){
-		answerUnitType = "no unit"
+		answerUnitType = "no unit";
 	}
 	else if (unit.equalsIgnoreCase(correctAnswer.getUnit())){
-		answerUnitType = "correct"
+		answerUnitType = "correct";
+		//Fix case of unit
+		answerObj.setUnit(correctAnswer.getUnit());
 	}
-	else if (answerValueType == "correct" || answerValueType == "correct wrong sign"){
-		//If they specified units and the units are not the same as the answer units
-		//but the value was considered correct, is because the units had to be correct too
-		//For example, let's say the correct answer was 1.2 A. If the value answer was considered 
-		//correct but they did specify units (meaning the answer wasn't simply "1.2") AND their units
-		//were not "A", then it means that the whole value+unit answer had to be considered correct,
-		//so their answer was either 1200 mA or 0.0012 kA. In this case, the units are considered correct 
-		answerUnitType = "correct"
-	}
-	else if (CAPAUnitUtil.isUnitCompatible(answer, correctAnswer)){
-		answerUnitType = "incorrect but other good unit"
+	else if (CAPAUnitUtil.isUnitCompatible(answerObj, correctAnswer)){
+		if (answerValueType == "correct" || answerValueType == "correct wrong sign"){
+			//If they specified units and the units are not the same as the answer units
+			//but the value was considered correct, is because the units had to be correct too
+			//For example, let's say the correct answer was 1.2 A. If the value answer was considered 
+			//correct but they did specify units (meaning the answer wasn't simply "1.2") AND their units
+			//were not "A", then it means that the whole value+unit answer had to be considered correct,
+			//so their answer was either 1200 mA or 0.0012 kA. In this case, the units are considered correct 
+			answerUnitType = "correct";
+		}
+		else{
+			answerUnitType = "incorrect but other good unit";
+		}
 	}
 	else {
-		answerUnitType = "incorrect"
+		answerUnitType = "incorrect";
 	}
 	//
 		
 	showSolution(answerValueType, answerUnitType, false);
 	
-	logAnswerAssessment(answer, correctAnswer, answerValueType, answerUnitType);
+	logAnswerAssessment(answerObj, correctAnswer, answerValueType, answerUnitType);
 }
 
 function endActivity()
@@ -967,8 +999,6 @@ function logAnswerAssessment(answer, correctAnswer, answerValueType, answerUnitT
 	//How many measurements did the student make in this step
 	answerAssess.setNumberMeasurements(measurements.length - measurementIndexStepStarted);
 	
-	answerAssess.setMultimeterSetting(0);
-	answerAssess.setValueMatchesMeasurement(0);
 	var measurement = findMeasurement(answer);
 	if (measurement != null){
 		//The answer the student provided matches some measurmement they made
@@ -982,6 +1012,9 @@ function logAnswerAssessment(answer, correctAnswer, answerValueType, answerUnitT
 			//The multimeter was in the correct setting when measured
 			answerAssess.setMultimeterSetting(1);
 		}
+		else{
+			answerAssess.setMultimeterSetting(0);
+		}		
 		
 		//Correct lead placement?
 		if (getCurrentAnswerType().equalsIgnoreCase("voltage")){
@@ -1023,9 +1056,13 @@ function logAnswerAssessment(answer, correctAnswer, answerValueType, answerUnitT
 				answerAssess.setLeadPlacement(0);
 			}
 		}
-		//
-		
-		
+		//		
+	}
+	else{
+		answerAssess.setValueMatchesMeasurement(0);
+		// When the value doesn't match a measurement, the following indicators are N/A
+		answerAssess.setMultimeterSetting(-2);
+		answerAssess.setLeadPlacement(-2);
 	}
 		
 	otAssessment.getAnswers().add(answerAssess);
