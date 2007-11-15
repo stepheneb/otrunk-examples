@@ -11,7 +11,6 @@
 
 importClass(Packages.java.awt.event.ActionListener);
 importClass(Packages.java.util.Vector);
-importClass(Packages.org.concord.otrunk.udl3.OTQuestionList);
 importClass(Packages.org.concord.framework.otrunk.OTObjectList);
 importClass(Packages.javax.swing.JOptionPane);
 
