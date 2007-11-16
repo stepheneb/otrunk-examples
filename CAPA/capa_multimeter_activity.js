@@ -1155,7 +1155,7 @@ function findMeasurement(valueObj)
 	}
 	//Then look in the previous measurements
 	if (measurement == null){
-		findMeasurementInRange(valueObj, 0, measurementIndexStepStarted);
+		measurement = findMeasurementInRange(valueObj, 0, measurementIndexStepStarted);
 	}
 	return measurement;
 }
@@ -1170,9 +1170,12 @@ function findMeasurementInRange(valueObj, startIndex, endIndex)
 		measurementValueObj.setUnit(measurement.unit);
 		
 		if (CAPAUnitUtil.compareValues(measurementValueObj, valueObj, true, true)){
+			logInformation("Answer matches measurement "+i);
 			return measurement;
 		}
 	}
+	
+	return null;
 }
 
 function calculateSolution()

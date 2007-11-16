@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<otrunk id="253d9474-9401-11dc-8314-0800200c9a66">
+	<imports>
+		<import class="org.concord.otrunk.OTSystem" />
+		<import class="org.concord.otrunk.view.OTViewEntry" />
+		<import class="org.concord.otrunk.view.OTViewBundle" />
+		
+		<import class="org.concord.otrunkcapa.OTMultimeterRubric" />
+		<import class="org.concord.otrunkcapa.rubric.OTRubric" />
+		<import class="org.concord.otrunkcapa.rubric.OTRubricIndicator" />
+		<import class="org.concord.otrunkcapa.rubric.OTRubricIndicatorValue" />
+		<import class="org.concord.otrunkcapa.rubric.OTRubricIndicatorRange" />
+	</imports>
+	<objects>
+		<OTSystem>
+			<bundles>
+			</bundles>
+			<root>
+				<OTMultimeterRubric id="502664d6-9401-11dc-8314-0800200c9a66">
+					<voltageRubric>
+						<object refid="${default_rubric}"/>
+					</voltageRubric>
+					<currentRubric>
+						<object refid="${default_rubric}"/>
+					</currentRubric>
+					<resistanceRubric>
+						<object refid="${default_rubric}"/>
+					</resistanceRubric>
+				</OTMultimeterRubric>
+			</root>
+			<library>
+				<OTRubric local_id="default_rubric">
+					<indicators>
+						<OTRubricIndicator name="valueCorrect" description="Whether the value submitted is correct or not">
+							<possibleValues>
+								<OTRubricIndicatorValue local_id="value_0" value="0" category="Bad" description="Incorrect" points="0"/>
+								<OTRubricIndicatorValue local_id="value_1" value="1" category="Good" description="Correct" points="40"/>
+								<OTRubricIndicatorValue local_id="value_2" value="2" category="Ok" description="Correct but wrong sign" points="32"/>
+								<OTRubricIndicatorValue local_id="value_3" value="3" category="Ok" description="Correct in other unit" points="24"/>
+							</possibleValues>
+						</OTRubricIndicator>
+						<OTRubricIndicator name="unitCorrect" description="Whether the value submitted is correct or not">
+							<possibleValues>
+								<OTRubricIndicatorValue local_id="unit_0" value="0" category="Bad" description="No unit" points="0"/>
+								<OTRubricIndicatorValue local_id="unit_1" value="1" category="Good" description="Correct" points="20"/>
+								<OTRubricIndicatorValue local_id="unit_2" value="2" category="Ok" description="Incorrect but compatible unit" points="5"/>
+								<OTRubricIndicatorValue local_id="unit_3" value="3" category="Ok" description="Incorrect and incompatible unit" points="0"/>
+							</possibleValues>
+						</OTRubricIndicator>
+						<OTRubricIndicator name="valueMatchesMeasurement" description="Whether the value submitted was taken from a measurement or not">
+							<possibleValues>
+								<OTRubricIndicatorValue local_id="match_0" value="0" category="Bad" description="No unit" points="0"/>
+								<OTRubricIndicatorValue local_id="match_1" value="1" category="Good" description="Correct" points="10"/>
+							</possibleValues>
+						</OTRubricIndicator>
+						<OTRubricIndicator name="time" description="Time the student took to complete the step (in seconds)">
+							<possibleRanges>
+							<!--    range means min < x <= max    -->
+								<OTRubricIndicatorRange               maxValue="60"  points="10"/>
+								<OTRubricIndicatorRange minValue="60" maxValue="300" points="8"/>
+								<OTRubricIndicatorRange minValue="300"               points="2"/>
+							</possibleRanges>
+						</OTRubricIndicator>
+						<OTRubricIndicator name="leadPlacement" description="Whether the DMM leads are placed in the right place">
+							<possibleValues>
+								<OTRubricIndicatorValue local_id="leads_0" value="0" category="Bad" description="Incorrect and really bad" points="0"/>
+								<OTRubricIndicatorValue local_id="leads_1" value="1" category="Bad" description="Incorrect" points="0"/>
+								<OTRubricIndicatorValue local_id="leads_2" value="2" category="Ok" description="Correct but not ideal" points="8"/>
+								<OTRubricIndicatorValue local_id="leads_3" value="3" category="Good" description="Correct" points="10"/>
+							</possibleValues>
+						</OTRubricIndicator>
+						<OTRubricIndicator name="circuitSetting" description="Whether the circuit set up was correct">
+							<possibleValues>
+								<OTRubricIndicatorValue local_id="circuit_0" value="0" category="Bad" description="Incorrect" points="0"/>
+								<OTRubricIndicatorValue local_id="circuit_1" value="1" category="Good" description="Correct" points="10"/>
+							</possibleValues>
+						</OTRubricIndicator>
+						<OTRubricIndicator name="numberMeasurements" description="Number of measurements the student made in this step" />
+					</indicators>
+				</OTRubric>
+			</library>
+		</OTSystem>
+	</objects>
+</otrunk>
