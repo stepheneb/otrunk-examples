@@ -15,6 +15,7 @@
  * cckModelView			(OTCCKCAPAModelView)		// CCK model view object
  * apparatusPanel		(JPanel)					// Swing panel that contains the CCKPanel (useful to take the screenshot)
  * otNotebookObject		(OTNotebook) 				// OT Notebook object to use to keep track of measurements
+ * otInstAreaCards		(OTCardContainer)			// OT card container for the instructons area of the activity. Used to switch between messages by switching to a different card.
  * otInfoAreaCards		(OTCardContainer)			// OT card container for the information area of the activity. Used to switch between messages by switching to a different card.
  * submitAnswerButton	(JButton) 					// Actual swing button used to submit the answer
  * answerBox			(JTextArea)					// Swing text component where the user writes the answer
@@ -57,8 +58,8 @@ importClass(Packages.org.concord.otrunkcapa.OTMultimeterAssessment);
 importClass(Packages.org.concord.otrunkcck.CCKCircuitAnalyzer);
 importClass(Packages.org.concord.otrunkcapa.CAPAUnitUtil);
 
-var startHTML = "<html><blockquote>";
-var endHTML = "</blockquote></html>";
+var startHTML = "<html><blockquote><p><font size=\"4\" face=\"Verdana\">";
+var endHTML = "</font></p></blockquote></html>";
 
 //CCK handy objects 
 var cckModule = cckModelView.getModule();	// (CCKPiccoloModule)
@@ -308,7 +309,7 @@ function startStep(step)
 	
 	//Show instructions for the current step
 	var strCardID = "step" + step + "Text";
-	OTCardContainerView.setCurrentCard(otInfoAreaCards, strCardID);
+	OTCardContainerView.setCurrentCard(otInstAreaCards, strCardID);
 	//
 	
 	answerBox.setText("");
@@ -458,6 +459,8 @@ function setupMultimeter()
 				circuitAnalyzer.simplifyCircuit();
 				analyzeMultimeterLeads(extra);
 				
+				System.out.println(extra.toSource());
+				
 				//Record the measurement, including the voltage and current of the target resistor
 				extra.resistorVoltage = targetResistorVoltageString;
 				extra.resistorCurrent = targetResistorCurrentString;
@@ -488,29 +491,23 @@ function analyzeMultimeterLeads(extra)
 	
 	if (redConn != null){
 		if (circuitAnalyzer.isBetween(redConn.getJunction(), targetResistor, circuitBattery)){
-			System.out.println("read lead is between resistor and battery");
 			redLead = 1;
 		}
 		if (circuitAnalyzer.isBetween(redConn.getJunction(), circuitBattery, circuitSwitch)){
-			System.out.println("read lead is between battery and switch");
 			redLead = 3;
 		}
 		if (circuitAnalyzer.isBetween(redConn.getJunction(), circuitSwitch, targetResistor)){
-			System.out.println("read lead is between switch and resistor");
 			redLead = 2;
 		}
 	}
 	if (blackConn != null){
 		if (circuitAnalyzer.isBetween(blackConn.getJunction(), targetResistor, circuitBattery)){
-			System.out.println("black lead is between resistor and battery");
 			blackLead = 1;
 		}
 		if (circuitAnalyzer.isBetween(blackConn.getJunction(), circuitBattery, circuitSwitch)){
-			System.out.println("black lead is between battery and switch");
 			blackLead = 3;
 		}
 		if (circuitAnalyzer.isBetween(blackConn.getJunction(), circuitSwitch, targetResistor)){
-			System.out.println("black lead is between switch and resistor");
 			blackLead = 2;
 		}
 	}
@@ -531,14 +528,45 @@ function analyzeCircuitSetting(type, extra)
 	
 	//Check that the leads in the DMM are connected to each other
 	extra.leadsConnected = circuitAnalyzer.isConnectedInCircuit(redConn.getJunction(), blackConn.getJunction());
-	System.out.println("-------- leadsConnected: "+extra.leadsConnected);
 
-	//Check that the resistor is in the circuit measured by the DMM
-//	extra.targetResistorConnected = circuitAnalyzer.isConnectedInCircuit(targetResistor, redConn.getJunction(), blackConn.getJunction());
-//	System.out.println("-------- targetResistorConnected: "+extra.targetResistorConnected);
+	//Check if the resistor is in the circuit measured by the DMM
+	if (circuitAnalyzer.isConnectedInCircuit(targetResistor, redConn.getJunction()) &&
+		circuitAnalyzer.isConnectedInCircuit(targetResistor, blackConn.getJunction())){
+		extra.targetResistorConnected = true;
+	}
+	else{
+		extra.targetResistorConnected = false;
+	}
+	
+	//Check if the battery is in the circuit measured by the DMM
+	if (circuitAnalyzer.isConnectedInCircuit(targetResistor, redConn.getJunction()) &&
+		circuitAnalyzer.isConnectedInCircuit(targetResistor, blackConn.getJunction())){
+		extra.batteryConnected = true;
+	}
+	else{
+		extra.batteryConnected = false;
+	}
+	
+	//Check if the switch is in the circuit measured by the DMM
+	if (circuitAnalyzer.isConnectedInCircuit(targetResistor, redConn.getJunction()) &&
+		circuitAnalyzer.isConnectedInCircuit(targetResistor, blackConn.getJunction())){
+		extra.switchConnected = true;
+	}
+	else{
+		extra.switchConnected = false;
+	}
 	
 	//Check if the switch is closed
 	extra.switchClosed = circuitSwitch.isClosed();
+	
+	System.out.println("checking now...");
+	//Check if the circuit is closed
+	if (circuitAnalyzer.isConnectedInCircuit(targetResistor, targetResistor)){
+		extra.circuitClosed = true;
+	}
+	else{
+		extra.circuitClosed = false;
+	}
 }
 
 function showFirstMeasurementMessage()
@@ -953,7 +981,7 @@ function endActivity()
 {
 	submitAnswerButton.setVisible(false);
 	answerBox.setVisible(false);
-	//OTCardContainerView.setCurrentCard(otInfoAreaCards, "endText");
+	//OTCardContainerView.setCurrentCard(otInstAreaCards, "endText");
 	showSolutionMessage();
 	
 	reportButton.setVisible(true);
@@ -1056,13 +1084,58 @@ function logAnswerAssessment(answer, correctAnswer, answerValueType, answerUnitT
 				answerAssess.setLeadPlacement(0);
 			}
 		}
-		//		
+		//	
+		
+		//Circuit setting
+		//FIXME: This is still temporary.
+		//Right now it assumes that the circuit cannot be broken
+		if (getCurrentAnswerType().equalsIgnoreCase("voltage")){
+			answerAssess.setCircuitSetting(0);
+			
+			//Check that the resistor and battery are included
+			if (measurement.extra.leadsConnected && 
+					measurement.extra.targetResistorConnected && measurement.extra.batteryConnected){
+				//Check that the circuit is closed
+				//Assuming the only way to open it is by opening it the switch
+				if (measurement.extra.switchConnected && measurement.extra.switchClosed){
+					answerAssess.setCircuitSetting(1);
+				}
+			}
+		}
+		else if (getCurrentAnswerType().equalsIgnoreCase("current")){
+			answerAssess.setCircuitSetting(0);
+
+			//Check that the resistor and battery are included
+			if (measurement.extra.leadsConnected && 
+					measurement.extra.targetResistorConnected && measurement.extra.batteryConnected){
+				//Check that the circuit is open
+				//Assuming the only way to open it is by opening it the switch
+				if (measurement.extra.switchConnected && !measurement.extra.switchClosed){
+					answerAssess.setCircuitSetting(1);
+				}
+			}
+		}
+		else if (getCurrentAnswerType().equalsIgnoreCase("resistance")){
+			answerAssess.setCircuitSetting(0);
+			
+			//Check that the resistor is included
+			if (measurement.extra.leadsConnected && 
+					measurement.extra.targetResistorConnected){
+				//Check that the circuit is open
+				//Assuming the only way to open it is by opening it the switch
+				if (measurement.extra.switchConnected && !measurement.extra.switchClosed){
+					answerAssess.setCircuitSetting(1);
+				}
+			}
+		}
+		//
 	}
 	else{
 		answerAssess.setValueMatchesMeasurement(0);
 		// When the value doesn't match a measurement, the following indicators are N/A
 		answerAssess.setMultimeterSetting(-2);
 		answerAssess.setLeadPlacement(-2);
+		answerAssess.setCircuitSetting(-2);
 	}
 		
 	otAssessment.getAnswers().add(answerAssess);
@@ -1075,9 +1148,23 @@ function logAnswerAssessment(answer, correctAnswer, answerValueType, answerUnitT
  */
 function findMeasurement(valueObj)
 {
+	var measurement = null;
+	//Look in the last measurements first
+	if (measurement == null){
+		measurement = findMeasurementInRange(valueObj, measurementIndexStepStarted, measurements.length);
+	}
+	//Then look in the previous measurements
+	if (measurement == null){
+		findMeasurementInRange(valueObj, 0, measurementIndexStepStarted);
+	}
+	return measurement;
+}
+
+function findMeasurementInRange(valueObj, startIndex, endIndex)
+{
 	var measurementValueObj = otObjectService.createObject(OTUnitValue);
 	
-	for (var i = 0; i < measurements.length; i++){
+	for (var i = 0; i < endIndex; i++){
 		var measurement = measurements[i];
 		measurementValueObj.setValue(measurement.value);
 		measurementValueObj.setUnit(measurement.unit);
@@ -1086,7 +1173,6 @@ function findMeasurement(valueObj)
 			return measurement;
 		}
 	}
-	return null;
 }
 
 function calculateSolution()
