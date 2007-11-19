@@ -934,7 +934,7 @@ function checkAnswerValue(correctAnswer)
 	else{
 		if (correctValue != 0 && value != 0 && 
 				(MathUtil.isApproxEqual(value*1000, correctValue, 0.1) ||
-				MathUtil.isApproxEqual(value/1000, correctValue, 0.1))){
+				MathUtil.isApproxEqual(value/1000, correctValue, 0.001))){
 			answerValueType = "correct in other unit";
 		}
 		else{
