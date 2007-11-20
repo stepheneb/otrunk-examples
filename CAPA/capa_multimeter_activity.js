@@ -574,7 +574,7 @@ function showFirstMeasurementMessage()
 	if (firstMeasurement)
 	{
 		firstMeasurement = false;
-		OTCardContainerView.setCurrentCard(otInfoAreaCards, "firstMeasurementText");
+//		OTCardContainerView.setCurrentCard(otInfoAreaCards, "firstMeasurementText");
 	}
 }
 
@@ -981,7 +981,7 @@ function endActivity()
 {
 	submitAnswerButton.setVisible(false);
 	answerBox.setVisible(false);
-	//OTCardContainerView.setCurrentCard(otInstAreaCards, "endText");
+	OTCardContainerView.setCurrentCard(otInfoAreaCards, "endText");
 	showSolutionMessage();
 	
 	reportButton.setVisible(true);
@@ -1308,7 +1308,7 @@ function showSolutionMessage()
 {
 	var otxml = new OTXMLString(startHTML + solutionMessage + endHTML);
 	solutionText.setText(otxml);
-	OTCardContainerView.setCurrentCard(otInfoAreaCards, "solutionText");
+	OTCardContainerView.setCurrentCard(otInstAreaCards, "solutionText");
 }
 
 /** Show and Hide Help button */
