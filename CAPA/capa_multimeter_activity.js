@@ -526,6 +526,9 @@ function analyzeCircuitSetting(type, extra)
 	var redConn = cckMultimeter.getRedLeadModel().getConnection();
 	var blackConn = cckMultimeter.getBlackLeadModel().getConnection();
 	
+	//Handle null pointer exception (shouldn't happen)
+	if (redConn == null || blackConn == null) return;
+	
 	//Check that the leads in the DMM are connected to each other
 	extra.leadsConnected = circuitAnalyzer.isConnectedInCircuit(redConn.getJunction(), blackConn.getJunction());
 
