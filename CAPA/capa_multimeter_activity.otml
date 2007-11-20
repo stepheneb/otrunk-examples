@@ -26,6 +26,7 @@
 		<import class="org.concord.otrunk.ui.notebook.OTNotebookMeasurement" />
 		<import class="org.concord.otrunk.ui.notebook.OTNotebook" />
 		<import class="org.concord.otrunk.ui.OTCardContainer" />
+	    <import class="org.concord.otrunk.ui.OTChoice"/>
 
 		<import class="org.concord.otrunk.script.ui.OTScriptObject" />
 		<import class="org.concord.otrunk.script.ui.OTScriptVariable" />
@@ -38,6 +39,7 @@
 		<import class="org.concord.otrunkcapa.OTMultimeterAssessment" />
 		<import class="org.concord.otrunkcapa.OTMultimeterAnswerAssessment" />
 		<import class="org.concord.otrunkcapa.OTMultimeterAssessmentViewConfig" />
+		<import class="org.concord.otrunkcapa.OTUnit" />
 	</imports>
 	<objects>
 		<OTSystem>
@@ -104,6 +106,9 @@
 								<object refid="502664d6-9401-11dc-8314-0800200c9a66"/>
 							</rubric>
 						</OTMultimeterAssessmentViewConfig>
+			            <OTViewEntry
+			              objectClass="org.concord.otrunk.ui.OTChoice" 
+			              viewClass="org.concord.otrunk.ui.swing.OTChoiceComboBoxView"/>
 					</viewEntries>
 					<frame>
 						<OTFrame width="940" height="680" />
@@ -140,7 +145,9 @@
 						<OTPlacement component="${instructions_area}"
 							height="200" width="380" x="660" y="410" />
 						<OTPlacement component="${answerBox}"
-							height="35" width="100" x="680" y="610" />
+							height="28" width="60" x="670" y="610" />
+						<OTPlacement component="${unit_choice}"
+							height="28" width="100" x="730" y="610" />
 						<OTPlacement component="${cck_model}"
 							height="600" width="650" x="10" y="10" />
 						<OTPlacement component="${reportButton}"
@@ -186,6 +193,25 @@
 						<object refid="${script_report_view}"/>
 					</viewid>
 				</OTViewChild>
+				<OTUnit name="Units?" abbreviation="" local_id="empty_unit_choice"/>
+		        <OTChoice local_id="unit_choice">
+		        	<choices>
+		        		<OTUnit name="Meters" abbreviation="m"/>
+		        		<OTUnit name="Volts" abbreviation="V"/>
+		        		<OTUnit name="miliVolts" abbreviation="mV"/>
+		        		<OTUnit name="kiloVolts" abbreviation="kV"/>
+		        		<OTUnit name="Amps" abbreviation="A"/>
+		        		<OTUnit name="miliAmps" abbreviation="mA"/>
+		        		<OTUnit name="kiloAmps" abbreviation="kA"/>
+		        		<OTUnit name="Kilograms" abbreviation="kg"/>
+		        		<OTUnit name="Ohms" abbreviation="Ohms"/>
+		        		<OTUnit name="miliOhms" abbreviation="mOhms"/>
+		        		<OTUnit name="kiloOhms" abbreviation="kOhms"/>
+		        	</choices>
+		        	<currentChoice>
+		        		<object refid="${empty_unit_choice}"/>
+		        	</currentChoice>
+		        </OTChoice>
 				<OTButton local_id="submitAnswerButton"	text="Submit Answer" />
 				<OTScriptObject local_id="activity_script">
 					<variables>
@@ -198,6 +224,9 @@
 						<OTScriptVariableComponent name="answerBox" reference="${answerBox}" />
 						<OTScriptVariable name="solutionText" reference="${solutionText}" />
 						<OTScriptVariableComponent name="reportButton" reference="${reportButton}" />
+						<OTScriptVariableComponent name="unitComboBox" reference="${unit_choice}"/>
+						<OTScriptVariable name="unitChoice" reference="${unit_choice}"/>
+						<OTScriptVariable name="emptyUnitChoice" reference="${empty_unit_choice}"/>
 					</variables>
 					<script>
 						<OTJavascript src="capa_multimeter_activity.js"  />

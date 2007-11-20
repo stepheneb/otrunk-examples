@@ -21,6 +21,9 @@
  * answerBox			(JTextArea)					// Swing text component where the user writes the answer
  * solutionText			(OTTextPane)				// OT Text Pane that holds the text with the solution
  * reportButton			(JButton)					// Button used to show report
+ * unitComboBox			(JComboBox)					// Swing combo box with all units 
+ * unitChoice			(OTChoice)					// OT Choice object with all the units that can be selected
+ * emptyUnitChoice		(OTUnit)					// Empty unit indicating there is no selection 
  */
 
 importPackage(Packages.java.lang);
@@ -168,7 +171,8 @@ function saveStateVariable(name, value)
 /** Initial set up if the GUI. This stuff eventually could be moved to the otml file */
 function setupGUI()
 {
-	answerBox.setBackground(new Color(1,1,0.7));	
+	answerBox.setBackground(new Color(1,1,0.7));
+	unitComboBox.setBackground(new Color(1,1,0.7));
 }
 
 function setupCircuitAnalyzer()
@@ -235,6 +239,8 @@ function setupActivityInitial()
 	startStep(currentStep);
 	
 	answerBox.setText("");
+	unitChoice.setCurrentChoice(emptyUnitChoice);
+	
 	answerObj = null;
 //	reportButton.setVisible(false);
 	
@@ -313,6 +319,7 @@ function startStep(step)
 	//
 	
 	answerBox.setText("");
+	unitChoice.setCurrentChoice(emptyUnitChoice);
 }
 
 function setupApparatusPanel()
@@ -857,24 +864,25 @@ function checkAnswer()
 	//Get answer
 	//The answer is at: 
 	//answerBox(JTextField)
+	//unitChoice(OTChoice)
 	var strAnswer = answerBox.getText();
 	//Get rid of return char
 	strAnswer = strAnswer.replaceAll("\n", "");
 	answerBox.setText(strAnswer);
 	
-	//Separate the value from the unit (space separator)
-	var answerParts = strAnswer.split(" ", 2);
 	var val = 0;
-	var unit = answerParts[1];
-	if (unit == undefined){
-		unit = "";
-	}
+	var unit = "";
 	try{
-		val = Float.valueOf(answerParts[0]).floatValue();
+		val = Float.valueOf(strAnswer).floatValue();
 	}
 	catch(ex){
 		JOptionPane.showMessageDialog(null, "Value invalid: " + strAnswer + ".\n" + "Please try again.");
 		return;
+	}
+	
+	var otUnit = unitChoice.getCurrentChoice();
+	if (otUnit != null){
+		unit = otUnit.getAbbreviation();
 	}
 	
 	answerObj = otObjectService.createObject(OTUnitValue);
@@ -984,6 +992,7 @@ function endActivity()
 {
 	submitAnswerButton.setVisible(false);
 	answerBox.setVisible(false);
+	unitComboBox.setVisible(false);
 	OTCardContainerView.setCurrentCard(otInfoAreaCards, "endText");
 	showSolutionMessage();
 	
@@ -1288,7 +1297,7 @@ function showSolution(answerValueType, answerUnitType, bShowNow)
 	}
 	//
 
-	var strMsg = "Answer Submitted (" + getCurrentAnswerType() + "): "+answerBox.getText();
+	var strMsg = "Answer Submitted (" + getCurrentAnswerType() + "): "+answerObj.getValue()+" "+answerObj.getUnit();
 	strMsg = strMsg + "  (Value:" + answerValueType + ", Unit:" + answerUnitType +"): "
 	strMsg = strMsg + solutionMsg
 	logInformation(strMsg);
