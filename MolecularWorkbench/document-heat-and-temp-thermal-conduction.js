@@ -30,7 +30,7 @@ var temp_pl = 0;
 var temp_nt = 0;
 
 var a = 0.02; // what part of the current actual temperature to use in the smoothed temp
-var f = 20; // K.E. scale factor
+var f = 5; // K.E. scale factor
 var n = (1.6/1.38 * 10000.00);
 var b = 0; // base temperature - 0 KE will equal this
 var m1 = 1;
