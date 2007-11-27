@@ -93,8 +93,6 @@
         <OTCompoundDoc>
           <bodyText>
             <center>
-            <object refid="${titlePane}" /><br/>
-            <object refid="${textPane}" /><br/>
             <object refid="${model}" /><br/>
             <object refid="${graph}" /><br/>
             <object refid="${script}" />
@@ -102,86 +100,14 @@
           </bodyText>
           <documentRefs>
             <OTModelerPage local_id="model"
-              authoredDataURL="http://mw2.concord.org/model/114bcc40e9a/ht.cml" />
-            <!-- <OTPlacementContainer width="900" height="680" local_id="placementContainer">
-              <placements>                                                                                                                                   
-                  <OTPlacement component="${textPane}" height="320" width="490" x="410" y="70"/>
-                  <OTPlacement component="${graph}" height="290" width="490" x="390" y="390"/>
-                  <OTPlacement component="${model}" height="670" width="350" x="15" y="10"/>
-                  <OTPlacement component="${titlePane}" height="50"  width="490" x="390" y="10"/>
-                  <OTPlacement component="${script}" height="0" width="0" x="0" y="0" />
-              </placements>
-            </OTPlacementContainer> -->
-            <OTTextPane local_id="textPane">
-              <text>
-                <p>
-					The visualization shows molecules from the cup and counter at the instant they touch.<br/>
-					<table cellspacing='0' cellpadding='1'>
-						<tr>
-							<td rowspan='4' width='20'> </td>
-							<td>Green molecule:</td>
-							<td rowspan='4' width='20'> </td>
-							<td>cup</td>
-						</tr>
-						<tr>
-							<td>Blue molecule:</td>
-							<td>counter</td>
-						</tr>
-						<tr>
-							<td>Arrow on molecules:</td>
-							<td>speed and direction of that molecule. (The speed of the molecule is its kinetic energy.)</td>
-						</tr>
-					</table>
-				</p>
-				<p>
-					The graph shows the temperature of the cup and the counter over time.
-				</p>
-				<p>
-					Use these tools to explore the visualization:<br/>
-					<table cellspacing='0' cellpadding='1'>
-						<tr>
-							<td rowspan='4' width='20'> </td>
-							<td>Sun:</td>
-							<td rowspan='4' width='20'> </td>
-							<td>Heats the molecules.</td>
-						</tr>
-						<tr>
-							<td>Run:</td>
-							<td>Starts the visualization.</td>
-						</tr>
-						<tr>
-							<td>Reset:</td>
-							<td>Resets the visualization.</td>
-						</tr>
-						<tr>
-							<td>K.E. Shading<br/>check box:</td>
-							<td>Shows each molecule’s kinetic energy. Red represents high kinetic energy and white represents low kinetic energy.</td>
-						</tr>
-					</table>
-				</p>
-				<p>
-					Procedure
-					<ol>
-					<li>Select the sun-shaped tool and click it on the molecules from the cup (the green molecules). Heat the cup molecules to about 60 degrees. (You can check the current temperature on the graph.) </li> 
-					<li>Make a prediction</li>
-					<li>Run the visualization and observe the motion of the molecules</li>
-					<li>Repeat with higher or lower temperatures for the cup.</li>
-					</ol>
-				</p>
-              </text>
-            </OTTextPane>
-            <OTTextPane local_id="titlePane">
-              <text>
-                <center><h1>Connecting the molecular view and the temperature graph for the cup and the counter</h1></center>
-              </text>
-            </OTTextPane>
+              authoredDataURL="http://wise.berkeley.edu/upload/28865/thermo_main.cml" />
             <OTDataCollector name="Model Data" local_id="graph" multipleGraphableEnabled="false" autoScaleEnabled="false">
               <graphables>
-                <OTDataGraphable local_id="atom1"
+                <OTDataGraphable local_id="atom_ck"
                   connectPoints="true" color="0x5d970c" drawMarks="false"
                   name="Ck Temp" xColumn="0" yColumn="1">
                   <dataStore>
-                    <OTDataStore local_id="atom1_datastore" numberChannels="2">
+                    <OTDataStore local_id="atom_ck_datastore" numberChannels="2">
                       <channelDescriptions>
                         <OTDataChannelDescription precision="0" unit="s"/>
                         <OTDataChannelDescription precision="-2" unit="degC"/>
@@ -190,11 +116,37 @@
                     </OTDataStore>
                   </dataStore>
                 </OTDataGraphable>
-                <OTDataGraphable local_id="atom2"
+                <OTDataGraphable local_id="atom_ws"
                   connectPoints="true" color="0x787cbc" drawMarks="false"
                   name="Ws Temp" xColumn="0" yColumn="1">
                   <dataStore>
-                    <OTDataStore local_id="atom2_datastore" numberChannels="2">
+                    <OTDataStore local_id="atom_ws_datastore" numberChannels="2">
+                      <channelDescriptions>
+                        <OTDataChannelDescription precision="0" unit="s"/>
+                        <OTDataChannelDescription precision="-2" unit="degC"/>
+                      </channelDescriptions>
+                      <valuesString></valuesString>
+                    </OTDataStore>
+                  </dataStore>
+                </OTDataGraphable>
+                <OTDataGraphable local_id="atom_pl"
+                  connectPoints="true" color="0x787cff" drawMarks="false"
+                  name="Pl Temp" xColumn="0" yColumn="1">
+                  <dataStore>
+                    <OTDataStore local_id="atom_pl_datastore" numberChannels="2">
+                      <channelDescriptions>
+                        <OTDataChannelDescription precision="0" unit="s"/>
+                        <OTDataChannelDescription precision="-2" unit="degC"/>
+                      </channelDescriptions>
+                      <valuesString></valuesString>
+                    </OTDataStore>
+                  </dataStore>
+                </OTDataGraphable>
+                <OTDataGraphable local_id="atom_nt"
+                  connectPoints="true" color="0xff7cbc" drawMarks="false"
+                  name="Nt Temp" xColumn="0" yColumn="1">
+                  <dataStore>
+                    <OTDataStore local_id="atom_nt_datastore" numberChannels="2">
                       <channelDescriptions>
                         <OTDataChannelDescription precision="0" unit="s"/>
                         <OTDataChannelDescription precision="-2" unit="degC"/>
@@ -207,32 +159,35 @@
               <xDataAxis>
                 <OTDataAxis min="-1" max="56" label="Time" units="s" local_id="xAxis">
                   <graphables>
-                    <object refid="${atom1}"/>
-                    <object refid="${atom2}"/>
+                    <object refid="${atom_ck}"/>
+                    <object refid="${atom_ws}"/>
+                    <object refid="${atom_pl}"/>
+                    <object refid="${atom_nt}"/>
                   </graphables>
                 </OTDataAxis>
               </xDataAxis>
               <yDataAxis>
                 <OTDataAxis min="-10" max="100" label="Temperature" units="degC" local_id="yAxis">
                   <graphables>
-                    <object refid="${atom1}"/>
-                    <object refid="${atom2}"/>
+                    <object refid="${atom_ck}"/>
+                    <object refid="${atom_ws}"/>
+                    <object refid="${atom_pl}"/>
+                    <object refid="${atom_nt}"/>
                   </graphables>
                 </OTDataAxis>
               </yDataAxis>              
               </OTDataCollector>
             <OTScriptObject local_id="script">
               <variables>
-                <OTScriptVariable name="otObject" reference="${graph}" />
-                <OTScriptVariable name="datastore2" reference="${atom2_datastore}" />
-                <OTScriptVariable name="datastore1" reference="${atom1_datastore}" />
-                <OTScriptVariable name="yAxis" reference="${yAxis}" />
-                <OTScriptVariable name="xAxis" reference="${xAxis}" />
+                <OTScriptVariable name="datastore_ck" reference="${atom_ck_datastore}" />
+                <OTScriptVariable name="datastore_ws" reference="${atom_ws_datastore}" />
+                <OTScriptVariable name="datastore_pl" reference="${atom_pl_datastore}" />
+                <OTScriptVariable name="datastore_nt" reference="${atom_nt_datastore}" />
                 <OTScriptVariableComponent name="modelComponent" reference="${model}" />
                 <OTScriptVariableComponent name="graph" reference="${graph}" />
               </variables>
               <script>
-                <OTJavascript src="http://rails.dev.concord.org/wisediy/scripts/document-heat-and-temp.js" />
+                <OTJavascript src="document-heat-and-temp-thermal-conduction.js" />
               </script>
             </OTScriptObject>
           </documentRefs>
