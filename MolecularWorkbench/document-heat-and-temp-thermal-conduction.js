@@ -45,57 +45,6 @@ var xMin = -2;
 var page = modelComponent.getComponent(0);
 var model;
 
-var runButtonHandler =
-{
-	actionPerformed :function(evt)
-	{
-		// System.err.println("Start action recieved");
-		if (! timer.isRunning()) {
-			if (timeCounter == 0)
-			{
-					temp_ck = getCurrentTempForType(Element.ID_CK);
-					temp_ws = getCurrentTempForType(Element.ID_WS);
-					temp_pl = getCurrentTempForType(Element.ID_PL);
-					temp_nt = getCurrentTempForType(Element.ID_NT);
-					graphHeater(temp_ck, temp_ws, temp_pl, temp_nt);
-			}
-			
-			// System.err.println("Starting timer");
-			timer.start();
-		}
-	}
-}
-var runButtonListener = new ActionListener(runButtonHandler);
-
-var stopButtonHandler =
-{
-	actionPerformed :function(evt)
-	{
-		// System.err.println("Stop action recieved");
-			if (timer.isRunning())
-			{
-				// System.err.println("Stopping timer");
-				timer.stop();
-			}
-	}
-}
-var stopButtonListener = new ActionListener(stopButtonHandler);
-
-var resetButtonHandler =
-{
-	actionPerformed :function(evt)
-	{
-		// System.err.println("Reset action recieved");
-			if (timer.isRunning())
-			{
-				// System.err.println("Stopping timer");
-				timer.stop();
-			}
-			resetGraph();
-	}
-}
-var resetButtonListener = new ActionListener(resetButtonHandler);
-
 var pageListener = new PageListener() {
 	pageUpdate: function(event) {
 		if (event.getType() == PageEvent.PAGE_READ_END) {
@@ -104,6 +53,41 @@ var pageListener = new PageListener() {
 	}
 }
 page.addPageListener(pageListener);
+
+var modelListener = new ModelListener() {
+	modelUpdate: function(event) {
+		if (event.getID() == ModelEvent.MODEL_RESET) {
+			System.err.println("Reset action recieved");
+			if (timer.isRunning())
+			{
+				// System.err.println("Stopping timer");
+				timer.stop();
+			}
+			resetGraph();
+		} else if (event.getID() == ModelEvent.MODEL_RUN) {
+			System.err.println("Start action recieved");
+			if (! timer.isRunning()) {
+				if (timeCounter == 0) {
+						temp_ck = getCurrentTempForType(Element.ID_CK);
+						temp_ws = getCurrentTempForType(Element.ID_WS);
+						temp_pl = getCurrentTempForType(Element.ID_PL);
+						temp_nt = getCurrentTempForType(Element.ID_NT);
+						graphHeater(temp_ck, temp_ws, temp_pl, temp_nt);
+				}
+				
+				// System.err.println("Starting timer");
+				timer.start();
+			}
+		} else if (event.getID() == ModelEvent.MODEL_STOP) {
+			System.err.println("Stop action recieved");
+			if (timer.isRunning())
+			{
+				// System.err.println("Stopping timer");
+				timer.stop();
+			}
+		}
+	}
+}
 
 var timerHandler =
 { 
@@ -118,53 +102,30 @@ var timerHandler =
 
 		// graph.repaint()
 		timeCounter += 0.5;
-		//if (timeCounter>30)
-		// if ((Math.round(temp_ck) == Math.round(temp_ws))) {
-		//  if (Math.round(temp_ck) !=1*b)
-		// {
-		// 	model.stop();
-		// 	timer.stop();
-			//currentNode.next();
-		// }
-		// }
+		if (timeCounter>30) {
+			if (  (Math.round(temp_ck) <= Math.round(temp_ws)) ||
+				  (Math.round(temp_ck) <= Math.round(temp_pl)) ||
+				  (Math.round(temp_ck) <= Math.round(temp_nt)) ) {
+					model.stop();
+					timer.stop();
+			}
+		}
 	}
 }
 var timerListener = new ActionListener(timerHandler);
 
 function init() {
 	timer = new Timer(500, timerListener);
-	// modelComponent.addMouseListener(mouseListener);
-	// page.addMouseListener(mouseListener);
+
 	return true;
 }
 
 function postMWInit() {
-	// System.err.println("Model comp is: " + model.getComponent(0));
-				var pageComps = page.getEmbeddedComponent(Class.forName("org.concord.modeler.PageButton")).values().toArray();
-				// System.err.println("Page comps are (" + pageComps.length +"): " + pageComps);
-				if (pageComps != null) {
-					for (var i = 0; i < pageComps.length; i++) {
-						var obj = pageComps[i];
-						// System.err.println(obj.getText());
-						if (obj.getText().equals("Run")) {
-							runButton = obj;
-						}
-						else if (obj.getText().equals("Stop")) {
-							stopButton = obj;
-						}
-						else if (obj.getText().equals("Reset")) {
-							resetButton = obj;
-						}
-					}
-				}
-				runButton.addActionListener(runButtonListener);
-				stopButton.addActionListener(stopButtonListener);
-				resetButton.addActionListener(resetButtonListener);
-				
 				var models = page.getEmbeddedComponent(Class.forName("org.concord.modeler.ModelCanvas")).values().toArray();
 				if (models != null) {
 					for (var i = 0; i < models.length; i++) {
 						model = models[i].getContainer().getModel();
+						model.addModelListener(modelListener);
 					}
 				}
 	
@@ -236,12 +197,18 @@ function graphValues(t_ck, t_ws, t_pl, t_nt)
 
 function resizeGraph(t1, t2, t3, t4) {
 	var max = maximum(t1, t2);
+	System.err.println("==================================");
+	System.err.println("v1: " + t1 + ", v2: " + t2 + ", max: " + max);
+	System.err.print("v1: " + max);
 	max = maximum(max, t3);
+	System.err.println(", v2: " + t3 + ", max: " + max);
+	System.err.print("v1: " + max);
 	max = maximum(max, t4);
+	System.err.println(", v2: " + t4 + ", max: " + max);
 	
 	if (max > (yMax-5)) {
 		// System.err.println("resizing y axis: " + (t2+5));
-		yMax = (t2+5);
+		yMax = (max+5);
 	}
 	
 	if (timeCounter > (xMax - 5)) {
