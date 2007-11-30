@@ -118,6 +118,10 @@ var timerHandler =
 	actionPerformed:function(evt)
 	{
 		// System.err.println("timer run: " + timeCounter);
+		if (! model.isRunning()) {
+			timer.stop();
+		}
+		
 		if (timeCounter == 0) {
 			// for some reason the temp recorded here is always substantially lower than the temp the sliders are set to
 			// so using our first recording, calculate a scaling factor
