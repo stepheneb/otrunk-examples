@@ -29,18 +29,26 @@ var temp_ws = 0;
 var temp_pl = 0;
 var temp_nt = 0;
 
+var temp_ck_scaler = 1;
+var temp_ws_scaler = 1;
+var temp_pl_scaler = 1;
+var temp_nt_scaler = 1;
+
 var a = 0.02; // what part of the current actual temperature to use in the smoothed temp
 var f = 5; // K.E. scale factor
-var n = (1.6/1.38 * 10000.00);
-var b = 0; // base temperature - 0 KE will equal this
+var n = (1.6/1.38 * 10000.00); // ~ number of deg K in 1 eV
+var b = 0; // increment degC by this amount
 var m1 = 1;
 var m2 = 0.002;
 var constant = 0;   // 273
 var timeCounter = 0;
-var xMax = 56;
-var yMax = 105;
-var yMin = -5;
+var xMax = 60;
+var yMax = 50;
+var yMin = -2;
 var xMin = -2;
+
+var stepTime = 500;
+var counterIncrement = stepTime/1000;
 
 var page = modelComponent.getComponent(0);
 var model;
@@ -57,7 +65,7 @@ page.addPageListener(pageListener);
 var modelListener = new ModelListener() {
 	modelUpdate: function(event) {
 		if (event.getID() == ModelEvent.MODEL_RESET) {
-			System.err.println("Reset action recieved");
+			// System.err.println("Reset action recieved");
 			if (timer.isRunning())
 			{
 				// System.err.println("Stopping timer");
@@ -65,21 +73,22 @@ var modelListener = new ModelListener() {
 			}
 			resetGraph();
 		} else if (event.getID() == ModelEvent.MODEL_RUN) {
-			System.err.println("Start action recieved");
+			// System.err.println("Start action recieved");
 			if (! timer.isRunning()) {
 				if (timeCounter == 0) {
+					  // record the temperature now -- this is what the sliders are set to
 						temp_ck = getCurrentTempForType(Element.ID_CK);
 						temp_ws = getCurrentTempForType(Element.ID_WS);
 						temp_pl = getCurrentTempForType(Element.ID_PL);
 						temp_nt = getCurrentTempForType(Element.ID_NT);
-						graphHeater(temp_ck, temp_ws, temp_pl, temp_nt);
+						// graphHeater(temp_ck, temp_ws, temp_pl, temp_nt);
 				}
 				
 				// System.err.println("Starting timer");
 				timer.start();
 			}
 		} else if (event.getID() == ModelEvent.MODEL_STOP) {
-			System.err.println("Stop action recieved");
+			// System.err.println("Stop action recieved");
 			if (timer.isRunning())
 			{
 				// System.err.println("Stopping timer");
@@ -93,29 +102,54 @@ var timerHandler =
 { 
 	actionPerformed:function(evt)
 	{
-		// System.err.println("timer run");
-		temp_ck = a*getCurrentTempForType(Element.ID_CK)+(1-a)*temp_ck;
-		temp_ws = a*getCurrentTempForType(Element.ID_WS)+(1-a)*temp_ws;
-		temp_pl = a*getCurrentTempForType(Element.ID_PL)+(1-a)*temp_pl;
-		temp_nt = a*getCurrentTempForType(Element.ID_NT)+(1-a)*temp_nt;
-		graphValues(temp_ck, temp_ws, temp_pl, temp_nt);
-
+		// System.err.println("timer run: " + timeCounter);
+		if (timeCounter == 0) {
+			// for some reason the temp recorded here is always substantially lower than the temp the sliders are set to
+			// so using our first recording, calculate a scaling factor
+			temp_ck_scaler = (temp_ck/getCurrentTempForType(Element.ID_CK));
+			temp_ws_scaler = (temp_ws/getCurrentTempForType(Element.ID_WS));
+			temp_pl_scaler = (temp_pl/getCurrentTempForType(Element.ID_PL));
+			temp_nt_scaler = (temp_nt/getCurrentTempForType(Element.ID_NT));
+			
+			if (temp_ck_scaler <= 0)
+			  temp_ck_scaler = 1;
+			if (temp_pl_scaler <= 0)
+			  temp_pl_scaler = 1;
+			if (temp_nt_scaler <= 0)
+			  temp_nt_scaler = 1;
+			if (temp_ws_scaler <= 0)
+			  temp_ws_scaler = 1;
+		
+			temp_ck = getCurrentTempForType(Element.ID_CK) * temp_ck_scaler;
+			temp_ws = getCurrentTempForType(Element.ID_WS) * temp_ws_scaler;
+			temp_pl = getCurrentTempForType(Element.ID_PL) * temp_pl_scaler;
+			temp_nt = getCurrentTempForType(Element.ID_NT) * temp_nt_scaler;
+			graphHeater(temp_ck, temp_ws, temp_pl, temp_nt);
+		} else {
+			// calculate the exponential moving average
+			temp_ck = a*(getCurrentTempForType(Element.ID_CK)*temp_ck_scaler)+(1-a)*temp_ck;
+			temp_ws = a*(getCurrentTempForType(Element.ID_WS)*temp_ws_scaler)+(1-a)*temp_ws;
+			temp_pl = a*(getCurrentTempForType(Element.ID_PL)*temp_pl_scaler)+(1-a)*temp_pl;
+			temp_nt = a*(getCurrentTempForType(Element.ID_NT)*temp_nt_scaler)+(1-a)*temp_nt;
+			graphValues(temp_ck, temp_ws, temp_pl, temp_nt);
+		}
+		
 		// graph.repaint()
-		timeCounter += 0.5;
-		if (timeCounter>30) {
+		timeCounter += counterIncrement;
+		// if (timeCounter>30) {
 			if (  (Math.round(temp_ck) <= Math.round(temp_ws)) ||
 				  (Math.round(temp_ck) <= Math.round(temp_pl)) ||
 				  (Math.round(temp_ck) <= Math.round(temp_nt)) ) {
 					model.stop();
 					timer.stop();
 			}
-		}
+		// }
 	}
 }
 var timerListener = new ActionListener(timerHandler);
 
 function init() {
-	timer = new Timer(500, timerListener);
+	timer = new Timer(stepTime, timerListener);
 
 	return true;
 }
@@ -138,7 +172,7 @@ function save() {
 }
 
 function getCurrentTempForType(type) {
-	// System.err.println("Kin for type " + type + ": " + model.getKinForType(type));
+	// System.err.println(System.currentTimeMillis() + "," + type + "," + ((1*m2)*(n*f*model.getKinForType(type)-constant)+b*1));
 	return ((1*m2)*(n*f*model.getKinForType(type)-constant)+b*1);
 }
 
@@ -170,15 +204,15 @@ function resetGraph() {
 
 function graphValues(t_ck, t_ws, t_pl, t_nt)
 {
-	// System.err.println("adding v1: " + timeCounter + ", " + t1);
+	// System.err.println(timeCounter + " -- ck: " + t_ck + ", ws: " + t_ws + ", pl: " + t_pl + ", nt: " + t_nt);
 	if (t_ck != b) {
 		ck_values.add(new Float(timeCounter));
 		ck_values.add(new Float(t_ck));
 	}
-	// System.err.println("adding v2: " + timeCounter + ", " + t2);
+
 	if (t_ws != b) {
-	ws_values.add(new Float(timeCounter));
-	ws_values.add(new Float(t_ws));
+		ws_values.add(new Float(timeCounter));
+		ws_values.add(new Float(t_ws));
 	}
 	
 	if (t_pl != b) {
@@ -197,14 +231,14 @@ function graphValues(t_ck, t_ws, t_pl, t_nt)
 
 function resizeGraph(t1, t2, t3, t4) {
 	var max = maximum(t1, t2);
-	System.err.println("==================================");
-	System.err.println("v1: " + t1 + ", v2: " + t2 + ", max: " + max);
-	System.err.print("v1: " + max);
+	// System.err.println("==================================");
+	// System.err.println("v1: " + t1 + ", v2: " + t2 + ", max: " + max);
+	// System.err.print("pmax: " + max);
 	max = maximum(max, t3);
-	System.err.println(", v2: " + t3 + ", max: " + max);
-	System.err.print("v1: " + max);
+	// System.err.println(", v2: " + t3 + ", max: " + max);
+	// System.err.print("omax: " + max);
 	max = maximum(max, t4);
-	System.err.println(", v2: " + t4 + ", max: " + max);
+	// System.err.println(", v2: " + t4 + ", max: " + max);
 	
 	if (max > (yMax-5)) {
 		// System.err.println("resizing y axis: " + (t2+5));
