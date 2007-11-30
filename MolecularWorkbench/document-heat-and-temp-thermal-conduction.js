@@ -11,6 +11,8 @@ importPackage(Packages.org.concord.framework.data.stream);
 var runButton;
 var stopButton;
 var resetButton;
+var timeSlider;
+var stopTime;
 
 ////
 //
@@ -90,6 +92,7 @@ var modelListener = new ModelListener() {
 		} else if (event.getID() == ModelEvent.MODEL_RUN) {
 			// System.err.println("Start action recieved");
 			if (! timer.isRunning()) {
+				stopTime = timeSlider.getValue();
 				if (timeCounter == 0) {
 					  // record the temperature now -- this is what the sliders are set to
 						temp_ck = getCurrentTempForType(Element.ID_CK);
@@ -155,13 +158,17 @@ var timerHandler =
 		
 		// graph.repaint()
 		timeCounter += counterIncrement;
+		if (timeCounter > stopTime) {
+			timer.stop();
+			model.stop();
+		}
 		// if (timeCounter>30) {
-			if (  (Math.round(temp_ck) <= Math.round(temp_ws)) ||
+			/* if (  (Math.round(temp_ck) <= Math.round(temp_ws)) ||
 				  (Math.round(temp_ck) <= Math.round(temp_pl)) ||
 				  (Math.round(temp_ck) <= Math.round(temp_nt)) ) {
 					model.stop();
 					timer.stop();
-			}
+			} */
 		// }
 	}
 }
@@ -185,6 +192,17 @@ function postMWInit() {
 		}
 	}
 	resetButton.addActionListener(resetButtonListener);
+	
+	var sliderComps = page.getEmbeddedComponent(Class.forName("org.concord.modeler.PageSlider")).values().toArray();
+	if (sliderComps != null) {
+		for (var i = 0; i < sliderComps.length; i++) {
+			var obj = sliderComps[i];
+			System.err.println(obj.getText());
+			if (obj.getText().equals("Reset")) {
+				timeSlider = obj;
+			}
+		}
+	}
 	
 	var models = page.getEmbeddedComponent(Class.forName("org.concord.modeler.ModelCanvas")).values().toArray();
 	if (models != null) {
