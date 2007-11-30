@@ -62,6 +62,21 @@ var pageListener = new PageListener() {
 }
 page.addPageListener(pageListener);
 
+var resetButtonHandler =
+{
+	actionPerformed :function(evt)
+	{
+		// System.err.println("Reset action recieved");
+			if (timer.isRunning())
+			{
+				// System.err.println("Stopping timer");
+				timer.stop();
+			}
+			resetGraph();
+	}
+}
+var resetButtonListener = new ActionListener(resetButtonHandler);
+
 var modelListener = new ModelListener() {
 	modelUpdate: function(event) {
 		if (event.getID() == ModelEvent.MODEL_RESET) {
@@ -155,13 +170,25 @@ function init() {
 }
 
 function postMWInit() {
-				var models = page.getEmbeddedComponent(Class.forName("org.concord.modeler.ModelCanvas")).values().toArray();
-				if (models != null) {
-					for (var i = 0; i < models.length; i++) {
-						model = models[i].getContainer().getModel();
-						model.addModelListener(modelListener);
-					}
-				}
+	
+	var pageComps = page.getEmbeddedComponent(Class.forName("org.concord.modeler.PageButton")).values().toArray();
+	if (pageComps != null) {
+		for (var i = 0; i < pageComps.length; i++) {
+			var obj = pageComps[i];
+			if (obj.getText().equals("Reset")) {
+				resetButton = obj;
+			}
+		}
+	}
+	resetButton.addActionListener(resetButtonListener);
+	
+	var models = page.getEmbeddedComponent(Class.forName("org.concord.modeler.ModelCanvas")).values().toArray();
+	if (models != null) {
+		for (var i = 0; i < models.length; i++) {
+			model = models[i].getContainer().getModel();
+			model.addModelListener(modelListener);
+		}
+	}
 	
 	initialGraph();
 	resetGraph();
