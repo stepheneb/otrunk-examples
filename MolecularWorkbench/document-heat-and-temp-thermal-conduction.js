@@ -92,7 +92,8 @@ var modelListener = new ModelListener() {
 		} else if (event.getID() == ModelEvent.MODEL_RUN) {
 			// System.err.println("Start action recieved");
 			if (! timer.isRunning()) {
-				stopTime = timeSlider.getValue();
+				stopTime = timeSlider.getValue()*60;
+				// System.err.println("Stop time is: " + stopTime);
 				if (timeCounter == 0) {
 					  // record the temperature now -- this is what the sliders are set to
 						temp_ck = getCurrentTempForType(Element.ID_CK);
@@ -197,8 +198,8 @@ function postMWInit() {
 	if (sliderComps != null) {
 		for (var i = 0; i < sliderComps.length; i++) {
 			var obj = sliderComps[i];
-			System.err.println(obj.getText());
-			if (obj.getText().equals("Reset")) {
+			// System.err.println(obj.getTitle());
+			if (obj.getTitle().equals("Observation Time (Minute)")) {
 				timeSlider = obj;
 			}
 		}
