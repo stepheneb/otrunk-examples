@@ -37,7 +37,7 @@ var temp_pl_scaler = 1;
 var temp_nt_scaler = 1;
 
 var a = 0.02; // what part of the current actual temperature to use in the smoothed temp
-var f = 5; // K.E. scale factor
+var f = 10; // K.E. scale factor
 var n = (1.6/1.38 * 10000.00); // ~ number of deg K in 1 eV
 var b = 0; // increment degC by this amount
 var m1 = 1;
@@ -164,12 +164,12 @@ var timerHandler =
 			model.stop();
 		}
 		// if (timeCounter>30) {
-			/* if (  (Math.round(temp_ck) <= Math.round(temp_ws)) ||
+			if (  (Math.round(temp_ck) <= Math.round(temp_ws)) ||
 				  (Math.round(temp_ck) <= Math.round(temp_pl)) ||
 				  (Math.round(temp_ck) <= Math.round(temp_nt)) ) {
 					model.stop();
 					timer.stop();
-			} */
+			}
 		// }
 	}
 }
