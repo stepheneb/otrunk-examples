@@ -73,7 +73,9 @@ var runButtonHandler =
 					temp2 =(1*m2)*(n*f*model.getKinForType(Element.ID_WS)-constant)+b*1;
 					graphHeater(temp, temp2);
 			}
-			
+			start_run();
+			log_ci("Cup Temperature", temp + "");
+			log_ci("Counter Temperature", temp2 + "");
 			// System.err.println("Starting timer");
 			timer.start();
 		}
@@ -88,6 +90,7 @@ var stopButtonHandler =
 		// System.err.println("Stop action recieved");
 			if (timer.isRunning())
 			{
+				end_run();
 				// System.err.println("Stopping timer");
 				timer.stop();
 			}
@@ -102,6 +105,7 @@ var resetButtonHandler =
 		// System.err.println("Reset action recieved");
 			if (timer.isRunning())
 			{
+				end_run();
 				// System.err.println("Stopping timer");
 				timer.stop();
 			}
@@ -134,6 +138,7 @@ var timerHandler =
 		if ((Math.round(temp) == Math.round(temp2))) {
 		 if (Math.round(temp) !=1*b)
 		{
+			end_run();
 			model.stop();
 			timer.stop();
 			//currentNode.next();
@@ -147,6 +152,7 @@ function init() {
 	timer = new Timer(500, timerListener);
 	// modelComponent.addMouseListener(mouseListener);
 	// page.addMouseListener(mouseListener);
+	init_logging();
 	return true;
 }
 
@@ -190,6 +196,7 @@ function postMWInit() {
 }
 
 function save() {
+	finalize_logging()
 	return true;
 }
 
@@ -250,4 +257,108 @@ function graphHeater(t1,t2)
 	graph.reset();
 	graphValues(t1, t2);
 	graph.repaint();
+}
+
+//////////
+// Logging stuff
+//////////
+
+// for logging
+var mad;
+var modelruns;
+var current_run;
+var ci_array = new Object();
+var ra_array = new Object();
+
+function init_logging() {
+	// set up MAD
+	mad = context.getOTObject("org.concord.otrunk.modelactivitydata.OTModelActivityData");
+	otContents.add(mad);
+	
+    mad.setName("Thermodynamics Temperature Conductivity Model");
+    modelruns = mad.getModelRuns();
+    
+    mad.setStartTime(now());
+	// set up CI's
+	  add_computational_input("Cup Temperature", "degC", "0", "100");
+	  add_computational_input("Counter Temperature", "degC", "0", "100");
+	// set up RA's
+}
+
+function add_computational_input(ci_name, units, min, max) {
+	var comp_inputs = mad.getComputationalInputs();
+    // new comp_input
+    var ci = context.getOTObject("org.concord.otrunk.modelactivitydata.OTComputationalInput");
+    ci.setName(ci_name);
+    ci.setUnits(units);
+    var range = context.getOTObject("org.concord.otrunk.modelactivitydata.OTRange");
+    range.setMinValue(min);
+    range.setMaxValue(max);
+    ci.setRange(range);
+    // add to comp_inputs
+    comp_inputs.add(ci);
+    
+    // add to ci_array
+    ci_array[ci_name] = ci;
+}
+
+function add_representational_attribute(ra_name, values) {
+	var ras = mad.getRepresentationalAttributes();
+	var ra = context.getOTObject("org.concord.otrunk.modelactivitydata.OTRepresentationalAttribute");
+	ra.setName(ra_name);
+	if (values != null) {
+		var vals = ra.getValueList();
+		for (i=0; i<values.length; i++) {
+			// FIXME: skip for now
+			// vals.add(values[i]);
+		}
+	}
+	ras.add(ra);
+	ra_array[ra_name] = ra;
+}
+
+function start_run() {
+	if (current_run == null) {
+		current_run = context.getOTObject("org.concord.otrunk.modelactivitydata.OTModelRun");
+		modelruns.add(current_run);
+	  	current_run.setStartTime(now());
+	}
+}
+
+function end_run() {
+	if (current_run != null) {
+		current_run.setEndTime(now());
+		current_run = null;
+	}
+}
+
+function log_ci(ci_idx, value) {
+	if (current_run == null) { start_run(); }
+	
+	var ci = ci_array[ci_idx];
+	var civ = context.getOTObject("org.concord.otrunk.modelactivitydata.OTComputationalInputValue");
+	civ.setTime(now());
+	civ.setValue(value);
+	civ.setReference(ci);
+	current_run.getComputationalInputValues().add(civ);
+}
+
+function log_ra(ra_idx, value) {
+	if (current_run == null) { start_run(); }
+	
+	var ra = ra_array[ra_idx];
+	var rav = context.getOTObject("org.concord.otrunk.modelactivitydata.OTRepresentationalAttributeValue");
+	rav.setTime(now());
+	rav.setValue(value);
+	rav.setReference(ra);
+	current_run.getRepresentationalAttributeValues().add(rav);
+}
+
+function finalize_logging() {
+	end_run();
+	mad.setEndTime(now());
+}
+
+function now() {
+	return System.currentTimeMillis();
 }
