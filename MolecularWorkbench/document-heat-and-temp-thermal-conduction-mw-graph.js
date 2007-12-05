@@ -67,10 +67,10 @@ var modelListener = new ModelListener() {
 			}
 		} else if (event.getID() == ModelEvent.MODEL_RUN) {
 			// System.err.println("Start action recieved");
+			stopTime = timeSlider.getValue()*60;
 			if (! timer.isRunning()) {
 				if (timeCounter == 0) {
 					// only start a run if reset has been clicked
-					stopTime = timeSlider.getValue()*60;
 					// System.err.println("Stop time is: " + stopTime);
 					start_run();
 					log_all_cis();
