@@ -72,6 +72,7 @@ var resetButtonHandler =
 			if (timer.isRunning())
 			{
 				// System.err.println("Stopping timer");
+				end_run();
 				timer.stop();
 			}
 			resetGraph();
@@ -86,6 +87,7 @@ var modelListener = new ModelListener() {
 			if (timer.isRunning())
 			{
 				// System.err.println("Stopping timer");
+				end_run();
 				timer.stop();
 			}
 			resetGraph();
@@ -104,6 +106,7 @@ var modelListener = new ModelListener() {
 				}
 				
 				// System.err.println("Starting timer");
+				start_run();
 				timer.start();
 			}
 		} else if (event.getID() == ModelEvent.MODEL_STOP) {
@@ -111,6 +114,7 @@ var modelListener = new ModelListener() {
 			if (timer.isRunning())
 			{
 				// System.err.println("Stopping timer");
+				end_run();
 				timer.stop();
 			}
 		}
@@ -123,6 +127,7 @@ var timerHandler =
 	{
 		// System.err.println("timer run: " + timeCounter);
 		if (! model.isRunning()) {
+			end_run();
 			timer.stop();
 		}
 		
@@ -160,6 +165,7 @@ var timerHandler =
 		// graph.repaint()
 		timeCounter += counterIncrement;
 		if (timeCounter > stopTime) {
+			end_run();
 			timer.stop();
 			model.stop();
 		}
@@ -167,6 +173,7 @@ var timerHandler =
 			if (  (Math.round(temp_ck) <= Math.round(temp_ws)) ||
 				  (Math.round(temp_ck) <= Math.round(temp_pl)) ||
 				  (Math.round(temp_ck) <= Math.round(temp_nt)) ) {
+					end_run();
 					model.stop();
 					timer.stop();
 			}
@@ -315,4 +322,48 @@ function graphHeater(t_ck,t_ws,t_pl,t_nt)
 	graph.reset();
 	graphValues(t_ck, t_ws, t_pl, t_nt);
 	graph.repaint();
+}
+
+// for logging
+var mad;
+var modelruns;
+var current_run;
+var ci_array = new Object();
+var ra_array = new Object();
+
+function init_logging() {
+	// set up MAD
+	mad = context.getOTObject("org.concord.otrunk.modelactivitydata.OTModelActivityData");
+	otContents.add(mad);
+	
+    mad.setName("Thermodynamics Temperature Conductivity Model");
+    modelruns = mad.getModelRuns();
+    
+    mad.setStartTime(now());
+	// set up CI's
+	// set up RA's
+}
+
+function start_run() {
+	if (current_run == null) {
+		current_run = context.getOTObject("org.concord.otrunk.modelactivitydata.OTModelRun");
+		modelruns.add(current_run);
+	  	current_run.setStartTime(now());
+	}
+}
+
+function end_run() {
+	if (current_run != null) {
+		current_run.setEndTime(now());
+		current_run = null;
+	}
+}
+
+function finalize_logging() {
+	end_run();
+	mad.setEndTime(now());
+}
+
+function now() {
+	return System.currentTimeMillis();
 }
