@@ -49,6 +49,7 @@ var resetButtonHandler =
 			{
 				timer.stop();
 				end_run();
+				timeCounter = 0;
 			}
 	}
 }
@@ -86,6 +87,12 @@ var modelListener = new ModelListener() {
 				timer.stop();
 				end_run();
 			}
+		}
+		else if (event.getID() == ModelEvent.MODEL_INPUT) {
+			// also end the run and reset the timer if the model file is reloaded
+			timeCounter = 0;
+			end_run();
+			current_run = null;
 		}
 	}
 }
@@ -243,9 +250,12 @@ function start_run() {
 	if (current_run != null) {
 		end_run();
 	}
+	
+	if (timeCounter == 0) {
 		current_run = context.getOTObject("org.concord.otrunk.modelactivitydata.OTModelRun");
 		modelruns.add(current_run);
 	  	current_run.setStartTime(now());
+	}
 }
 
 function end_run() {
