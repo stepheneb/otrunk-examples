@@ -63,14 +63,18 @@ var modelListener = new ModelListener() {
 				// System.err.println("Stopping timer");
 				timer.stop();
 				end_run();
+				timeCounter = 0;
 			}
 		} else if (event.getID() == ModelEvent.MODEL_RUN) {
 			// System.err.println("Start action recieved");
 			if (! timer.isRunning()) {
-				stopTime = timeSlider.getValue()*60;
-				// System.err.println("Stop time is: " + stopTime);
-				start_run();
-				log_all_cis();
+				if (timeCounter == 0) {
+					// only start a run if reset has been clicked
+					stopTime = timeSlider.getValue()*60;
+					// System.err.println("Stop time is: " + stopTime);
+					start_run();
+					log_all_cis();
+				}
 				// System.err.println("Starting timer");
 				timer.start();
 			}
@@ -236,17 +240,18 @@ function add_representational_attribute(ra_name, values) {
 }
 
 function start_run() {
-	if (current_run == null) {
+	if (current_run != null) {
+		end_run();
+	}
 		current_run = context.getOTObject("org.concord.otrunk.modelactivitydata.OTModelRun");
 		modelruns.add(current_run);
 	  	current_run.setStartTime(now());
-	}
 }
 
 function end_run() {
 	if (current_run != null) {
 		current_run.setEndTime(now());
-		current_run = null;
+		// current_run = null;
 	}
 }
 
