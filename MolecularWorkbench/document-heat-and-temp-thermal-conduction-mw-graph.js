@@ -283,7 +283,7 @@ function now() {
 
 function log_all_cis() {
 	log_ci("Cup Temperature", (cupSlider.getValue() * tempSliderScale) + "");
-	log_ci("Counter Temperature", (counterSlider().getValue() * tempSliderScale) + "");
+	log_ci("Counter Temperature", (counterSlider.getValue() * tempSliderScale) + "");
 	log_ci("Counter Type", getCounterType());
 }
 
