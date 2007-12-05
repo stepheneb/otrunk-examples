@@ -185,6 +185,7 @@ var timerListener = new ActionListener(timerHandler);
 function init() {
 	timer = new Timer(stepTime, timerListener);
 
+	init_logging();
 	return true;
 }
 
@@ -225,6 +226,7 @@ function postMWInit() {
 }
 
 function save() {
+	finalize_logging();
 	return true;
 }
 
