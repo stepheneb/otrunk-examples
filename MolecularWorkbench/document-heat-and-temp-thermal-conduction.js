@@ -103,10 +103,10 @@ var modelListener = new ModelListener() {
 						temp_pl = getCurrentTempForType(Element.ID_PL);
 						temp_nt = getCurrentTempForType(Element.ID_NT);
 						// graphHeater(temp_ck, temp_ws, temp_pl, temp_nt);
+						start_run();
 				}
 				
 				// System.err.println("Starting timer");
-				start_run();
 				timer.start();
 			}
 		} else if (event.getID() == ModelEvent.MODEL_STOP) {
@@ -347,17 +347,18 @@ function init_logging() {
 }
 
 function start_run() {
-	if (current_run == null) {
+	if (current_run != null) {
+		end_run();
+	}
 		current_run = context.getOTObject("org.concord.otrunk.modelactivitydata.OTModelRun");
 		modelruns.add(current_run);
 	  	current_run.setStartTime(now());
-	}
 }
 
 function end_run() {
 	if (current_run != null) {
 		current_run.setEndTime(now());
-		current_run = null;
+		// current_run = null;
 	}
 }
 
