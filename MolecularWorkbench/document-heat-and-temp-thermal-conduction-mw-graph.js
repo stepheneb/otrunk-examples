@@ -131,7 +131,7 @@ function postMWInit() {
 			else if (obj.getTitle().equals("Cup Temperature (degree C)")) {
 				cupSlider = obj;
 			}
-			else if (obj.getTitle().equals("Observation Time (Minute)")) {
+			else if (obj.getTitle().equals("Counter Temperature (degree C)")) {
 				counterSlider = obj;
 			}
 		}
