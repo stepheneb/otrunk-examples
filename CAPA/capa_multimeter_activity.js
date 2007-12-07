@@ -92,6 +92,7 @@ var aTolerance = 0.01;			// Tolerance for current
 var vTolerance = 0.01;			// Tolerance for voltage
 
 var helpEnabled = false;		// Help button ??
+var notebookEnabled = false;
 
 // Activity Variables
 var targetResistor = null;		// (Branch) Resistor that needs to be solved by the user 
@@ -104,10 +105,12 @@ var solutionMessage = "";
 var otAssessment;
 var circuitAnalyzer;			// (CCKCircuitAnalyzer)
 
+var activityInitialized;
 var currentStep = 1;
 var lastStep = 3;
 var timeStepStarted = 0;
 var measurementIndexStepStarted = 0;
+var activityDone = false;
 //
 
 /**
@@ -133,6 +136,8 @@ function init()
 	
 	setupActivity();
 	
+	setupAsessmentLogging();
+	
 	setupCircuitAnalyzer();
     
 	initializationDone = true;
@@ -149,6 +154,9 @@ function save()
 	
 	//Save state variables
 	saveStateVariable("initialSetupDone", new java.lang.Boolean(true));	//Marks that the initial setup is done
+	saveStateVariable("activityDone", new java.lang.Boolean(activityDone));	//Marks if the activity was done
+	saveStateVariable("resistorResistance", new java.lang.Float(targetResistor.getResistance()));	//Saves the resistance
+	saveStateVariable("currentStep", new java.lang.Integer(currentStep));	//Saves the current step
 	//
 	
 	//Log measurements
@@ -161,6 +169,13 @@ function save()
 function getStateVariable(name)
 {
 	return scriptState.get(name);
+}
+
+function getStateVariableBln(name)
+{
+	var bVar = getStateVariable(name);
+	if (bVar == null) return false;
+	else return bVar.booleanValue();
 }
 
 function saveStateVariable(name, value)
@@ -187,17 +202,11 @@ function setupCircuitAnalyzer()
 function setupActivity()
 {
 	//Find out if the activity has been run already
-	var bInitialSetupDone = getStateVariable("initialSetupDone");
-	if (bInitialSetupDone == null) bInitialSetupDone = false;
-	else bInitialSetupDone = true;
+	var bInitialSetupDone = getStateVariableBln("initialSetupDone");
 	
-	var bLoadedDone = false;
-	
-	if (bInitialSetupDone){
-	
-		bLoadedDone = setupActivityLoaded();
-	}
-	
+	//Check whether the activity has been completed before or not
+	var bActivityDone = getStateVariableBln("activityDone");
+		
 	//Find the target resistor in the circuit
 	targetResistor = findBranch("#Ringless Resistor");
 	if (targetResistor == null){	
@@ -221,9 +230,19 @@ function setupActivity()
 	}
 	//	
 	
-	if (!bInitialSetupDone || !bLoadedDone){
+	var bLoadedDone = false;	
+	if (bInitialSetupDone && !bActivityDone){
+	
+		bLoadedDone = setupActivityLoaded();
+	}
+	
+	if (!bInitialSetupDone || !bLoadedDone || bActivityDone){
 	
 		setupActivityInitial();
+		activityInitialized = true;
+	}
+	else{
+		activityInitialized = false;
 	}
 	
 	calculateSolution();
@@ -235,6 +254,9 @@ function setupActivity()
  */
 function setupActivityInitial()
 {
+	//Show initial text
+	OTCardContainerView.setCurrentCard(otInfoAreaCards, "introText");
+	
 	//Show initial text
 	startStep(currentStep);
 	
@@ -252,7 +274,7 @@ function setupActivityInitial()
 
 	targetResistor.setResistance(java.lang.Double(random));
 
-	logInformation("The target resistor's resistance is " + targetResistor.getResistance() + " ohms");	
+	logInformation("The new target resistor's resistance is " + targetResistor.getResistance() + " ohms");	
 }
 
 /** 
@@ -262,6 +284,14 @@ function setupActivityInitial()
  */
 function setupActivityLoaded()
 {
+	currentStep = getStateVariable("currentStep").intValue();
+	initStep();
+
+	var resVal = getStateVariable("resistorResistance").doubleValue();
+	targetResistor.setResistance(resVal);
+	
+	logInformation("The target resistor's resistance is " + targetResistor.getResistance() + " ohms");	
+	
 	return true;
 }
 
@@ -284,13 +314,32 @@ function initLogging()
 	xmlText.setText("CAPA - Using the digital multimeter\n");
 	//Put logging information into the otContents of the script object
 	otContents.add(xmlText);
-	
-	//Create assessment object
-	otAssessment = otObjectService.createObject(OTMultimeterAssessment);
-	otContents.add(otAssessment);
-	//
-	
+		
 	logInformation("Activity started");
+}
+
+function setupAsessmentLogging()
+{
+	if (activityInitialized) {
+		//Create assessment object
+		otAssessment = otObjectService.createObject(OTMultimeterAssessment);
+		otContents.add(otAssessment);
+	}
+	else{
+		//If the activity was already run, take the last assessment object, copy it and continue it
+		var otLastAssessment = null;
+		for (var i = otContents.size() - 1; i >= 0; i--){
+			var obj = otContents.get(i);
+			if (obj instanceof OTMultimeterAssessment){
+				otLastAssessment = obj;
+				break;
+			}
+		}
+		if (otLastAssessment != null){
+			otAssessment = otObjectService.copyObject(otLastAssessment, -1);
+			otContents.add(otAssessment);
+		}
+	}
 }
 
 function logInformation(info)
@@ -308,10 +357,15 @@ function finalizeLogging()
 	logFile.close();	
 }
 
-function startStep(step)
+function initStep()
 {
 	timeStepStarted = System.currentTimeMillis();
 	measurementIndexStepStarted = measurements.length;
+}
+
+function startStep(step)
+{
+	initStep();
 	
 	//Show instructions for the current step
 	var strCardID = "step" + step + "Text";
@@ -800,6 +854,8 @@ function rangeValue(value)
 /** Logs a measurement in the notebook */
 function logNotebook(value, unit) 
 {
+	if (!notebookEnabled) return;
+
 	var list = otNotebookObject.getEntries(); //OTObjectList
 	var measurement = null; //OTNotebookMeasurement
 	var image = null; //OTImage
@@ -990,6 +1046,7 @@ function checkAnswerValue(correctAnswer)
 
 function endActivity()
 {
+	activityDone = true;
 	submitAnswerButton.setVisible(false);
 	answerBox.setVisible(false);
 	unitComboBox.setVisible(false);
