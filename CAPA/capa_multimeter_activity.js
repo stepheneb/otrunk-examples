@@ -1,6 +1,6 @@
 /**
- * This is the script for the CAPA resistance activity.
- * It was copied from the original Pedagogica activity and modified to 
+ * This is the script for the CAPA multimeter activity.
+ * It was copied from the original Pedagogica resistance activity and modified to 
  * integrate it with the OTrunk environment.
  * 
  * Authors:
