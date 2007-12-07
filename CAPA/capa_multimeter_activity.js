@@ -623,7 +623,6 @@ function analyzeCircuitSetting(type, extra)
 	//Check if the switch is closed
 	extra.switchClosed = circuitSwitch.isClosed();
 	
-	System.out.println("checking now...");
 	//Check if the circuit is closed
 	if (circuitAnalyzer.isConnectedInCircuit(targetResistor, targetResistor)){
 		extra.circuitClosed = true;
