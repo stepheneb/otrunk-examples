@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<otrunk id="9ddf1254-a4da-11dc-96ee-0155390dc58c">
+  <imports>
+    <import class="org.concord.otrunk.OTSystem" />
+    <import class="org.concord.otrunk.OTInclude" />
+    <import class="org.concord.otrunk.view.OTViewBundle" />
+    <import class="org.concord.otrunk.view.OTViewEntry" />
+    <import class="org.concord.otrunk.view.document.OTCompoundDoc" />
+    <import class="org.concord.otrunk.ui.OTButton" />
+    <import class="org.concord.otrunk.ui.OTText" />
+    <import class="org.concord.otrunk.ui.OTPlacement" />
+    <import class="org.concord.otrunk.ui.OTPlacementContainer" />
+    <import class="org.concord.otrunk.script.OTScriptEngineBundle" />
+    <import class="org.concord.otrunk.script.OTScriptEngineEntry" />
+    <import class="org.concord.otrunk.script.ui.OTScriptObject" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariable" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariableComponent" />
+    <import class="org.concord.otrunk.script.js.OTJavascript" />
+    <import class="org.concord.otrunk.labview.OTLabviewMonitor" />
+  </imports>
+  <objects>
+    <OTSystem local_id="system">
+      <bundles>
+        <OTViewBundle showLeftPanel="false">
+          <views>
+            <OTViewEntry objectClass="org.concord.otrunk.view.document.OTDocument" viewClass="org.concord.otrunk.view.document.OTDocumentView" />
+            <OTViewEntry objectClass="org.concord.otrunk.ui.OTButton" viewClass="org.concord.otrunk.ui.swing.OTButtonView" />
+            <OTViewEntry objectClass="org.concord.otrunk.ui.OTText" viewClass="org.concord.otrunk.ui.swing.OTTextEditView" />            
+            <OTViewEntry objectClass="org.concord.otrunk.ui.OTPlacementContainer" viewClass="org.concord.otrunk.ui.swing.OTPlacementContainerView" />
+            <OTViewEntry objectClass="org.concord.otrunk.script.ui.OTScriptObject" viewClass="org.concord.otrunk.script.ui.OTScriptObjectView" />
+            <OTViewEntry objectClass="org.concord.otrunk.labview.OTLabviewMonitor" viewClass="org.concord.otrunk.labview.OTLabviewMonitorView" />
+          </views>
+        </OTViewBundle>
+        <OTScriptEngineBundle>
+          <engines>
+            <OTScriptEngineEntry objectClass="org.concord.otrunk.script.js.OTJavascript" engineClass="org.concord.otrunk.script.js.OTJavascriptEngine" />
+          </engines>
+        </OTScriptEngineBundle>
+      </bundles>
+      <root>
+        <OTCompoundDoc name="Labview Activity">
+          <bodyText>
+          <h1>LabView Test</h1>
+          Click on the <i>Launch Scope</i> button to launch the Oscilloscope.
+          <p>
+            <object refid="${labview_monitor_button}"/>
+          </p>
+          <p>
+            <object refid="${submit_button}"/>
+          </p>
+          <p>
+            <object refid="${report_button}"/>
+            <object refid="${clear_button}"/>
+          </p>
+          <p>
+            <object refid="${reports_text}"/>
+          </p>
+            <object refid="${activity_script}"/>
+          </bodyText>
+        </OTCompoundDoc>
+      </root>
+      <library>
+        <OTLabviewMonitor local_id="labview_monitor_button">
+          <portNum>7004</portNum>
+          <!-- just a dummy for now -->
+          <viPath>SCOPE.vi</viPath>
+          <monitorPath>c:\Program Files\CC\monitor\monitor.exe</monitorPath>
+          <reportPath>c:\Program Files\CC\monitor\data\report.xml</reportPath>
+          <exclusionPath>c:\Program Files\CC\monitor\data\exclusions.txt</exclusionPath>
+        </OTLabviewMonitor>
+        <OTButton local_id="submit_button" name="Submit Button" text="Submit" />
+        <OTButton local_id="report_button" name="Report Button" text="Show Reports" />
+        <OTButton local_id="clear_button" name="Clear Button" text="Clear Reports" />
+        <OTScriptObject local_id="activity_script">
+          <variables>
+            <OTScriptVariableComponent name="submitButton">
+              <reference>
+                <object refid="${submit_button}" />
+              </reference>
+            </OTScriptVariableComponent>
+            <OTScriptVariableComponent name="reportButton">
+              <reference>
+                <object refid="${report_button}" />
+              </reference>
+            </OTScriptVariableComponent>
+            <OTScriptVariableComponent name="clearButton">
+              <reference>
+                <object refid="${clear_button}" />
+              </reference>
+            </OTScriptVariableComponent>
+            <OTScriptVariable name="monitor">
+              <reference>
+                <object refid="${labview_monitor_button}" />
+              </reference>
+            </OTScriptVariable>
+            <OTScriptVariable name="reportsText">
+              <reference>
+                <object refid="${reports_text}" />
+              </reference>
+            </OTScriptVariable>
+          </variables>
+          <script>
+            <OTJavascript src="capa_labview_activity.js" />
+          </script>
+          <scriptState />
+        </OTScriptObject>
+        <OTText local_id="reports_text"/>
+      </library>
+    </OTSystem>
+  </objects>
+</otrunk>
+
