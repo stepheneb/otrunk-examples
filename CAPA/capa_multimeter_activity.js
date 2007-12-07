@@ -1406,35 +1406,3 @@ function setupHelpButton()
 	var helpButtonListener = new ActionListener(helpButtonHandler);
 	helpButton.addActionListener(helpButtonListener);
 }
-
-/** Convenience mathod (copied from Pedagogica) to substitute variables on a string */
-function substitute(text, map) 
-{
-	var prefix = "$";
-	var suffix = "$";
-	var keys = map.keySet().iterator();
-	
-	while (keys.hasNext())
-	{
-		var variable = keys.next();
-		var value = map.get(variable);
-		
-		//System.out.println("variable map: "+ variable+": "+value);
-		
-		text = replaceAll(new Packages.java.lang.String(text), new Packages.java.lang.String(prefix + variable + suffix), new Packages.java.lang.String(value));
-	}
-    return text;
-}
-
-/** Convenience mathod (copied from Pedagogica) to substitute variables on a string */
-function replaceAll(text, searchValue, replaceValue)
-{
-	if (replaceValue.indexOf(searchValue) > -1) return text;
-		
-	var n = searchValue.length();
-	for (var i = text.indexOf(searchValue); i > -1; i = text.indexOf(searchValue, i + 1))
-	{
-		text = text.substring(0, i) + replaceValue + text.substring(i + n);
-	}
-	return text;
-}
