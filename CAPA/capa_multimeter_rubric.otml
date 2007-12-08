@@ -18,7 +18,9 @@
 					<viewEntries>
 						<OTViewEntry
 							objectClass="org.concord.otrunkcapa.rubric.OTRubric"
-							viewClass="org.concord.otrunkcapa.rubric.view.OTRubricView" />
+			                viewClass="org.concord.otrunk.ui.swing.OTTreeSplitPaneView"/>
+<!-- 						viewClass="org.concord.otrunkcapa.rubric.view.OTRubricView" />
+-->
 						<OTViewEntry
 							objectClass="org.concord.otrunkcapa.rubric.OTRubricIndicator"
 							viewClass="org.concord.otrunkcapa.rubric.view.OTRubricIndicatorView" />
@@ -47,8 +49,12 @@
 					</resistanceRubric>
 				</OTMultimeterRubric>
 				<OTRubric local_id="default_rubric" name="Default multimeter rubric">
+					<defaultIndicatorValues>
+						<OTRubricIndicatorValue local_id="def_0" value="-1" category="Unknown" label="?" description="Value undefined or unknown" points="0"/>
+						<OTRubricIndicatorValue local_id="def_1" value="-2" category="Invalid" label="N/A" description="Value doesn't apply" points="0"/>
+					</defaultIndicatorValues>
 					<indicators>
-						<OTRubricIndicator name="time" label="Time (s)" description="Time the student took to complete the step (in seconds)">
+						<OTRubricIndicator name="time" label="Time (s)" description="Time the student took to complete the step (in seconds)" showValue="true">
 							<possibleRanges>
 							<!--    range means min < x <= max    -->
 								<OTRubricIndicatorRange local_id="time_0"                maxValue="60"  category="Good" label="" description="Step completed under a minute" points="5"/>
@@ -72,7 +78,15 @@
 								<OTRubricIndicatorValue local_id="unit_3" value="3" category="Bad" label="Bad" description="Incorrect and incompatible unit" points="0"/>
 							</possibleValues>
 						</OTRubricIndicator>
-						<OTRubricIndicator name="numberMeasurements" label="# Measurements" description="Number of measurements the student made in this step" />
+						<OTRubricIndicator name="numberMeasurements" label="# Measurements" description="Number of measurements the student made in this step" showValue="true">
+							<possibleRanges>
+							<!--    range means min < x <= max    -->
+								<OTRubricIndicatorRange local_id="num_0"                maxValue="0"  category="Bad" label="" description="No measurements made" points="0"/>
+								<OTRubricIndicatorRange local_id="num_1" minValue="0"   maxValue="1"  category="Good" label="" description="One measurement made" points="0"/>
+								<OTRubricIndicatorRange local_id="num_2" minValue="1"   maxValue="2"  category="Good" label="" description="Two measurements made" points="0"/>
+								<OTRubricIndicatorRange local_id="num_3" minValue="2"                 category="Ok" label="" description="More than two measurements made" points="0"/>
+							</possibleRanges>
+						</OTRubricIndicator>
 						<OTRubricIndicator name="valueMatchesMeasurement" label="Answer was measurement?" description="Whether the value submitted was taken from a measurement or not">
 							<possibleValues>
 								<OTRubricIndicatorValue local_id="match_0" value="0" category="Bad" label="No" description="Answer doesn't match any of the measurements made" points="0"/>

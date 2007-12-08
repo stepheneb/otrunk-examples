@@ -1060,40 +1060,44 @@ function logAnswerAssessment(answer, correctAnswer, answerValueType, answerUnitT
 	var answerAssess = otObjectService.createObject(OTMultimeterAnswerAssessment);
 	
 	answerAssess.setAnswerType(getCurrentAnswerType());
+	answerAssess.setLabel(getCurrentAnswerTypeLabel());
 	answerAssess.setAnswerValue(answer);
 	answerAssess.setCorrectValue(correctAnswer);
 	
+	var answerAssessIndicators = answerAssess.getIndicatorValues();
+	
 	if (answerValueType.equals("correct")){
-		answerAssess.setValueCorrect(1);
+		answerAssessIndicators.put("valueCorrect", new java.lang.Integer(1));
 	}
 	else if (answerValueType.equals("correct wrong sign")){
-		answerAssess.setValueCorrect(2);
+		answerAssessIndicators.put("valueCorrect", new java.lang.Integer(2));
 	}
 	else if (answerValueType.equals("correct in other unit")){
-		answerAssess.setValueCorrect(3);
+		answerAssessIndicators.put("valueCorrect", new java.lang.Integer(3));
 	}
 	else if (answerValueType.equals("incorrect")){
-		answerAssess.setValueCorrect(0);
+		answerAssessIndicators.put("valueCorrect", new java.lang.Integer(0));
 	}
 	
 	if (answerUnitType.equals("no unit")){
-		answerAssess.setUnitCorrect(0);
+		answerAssessIndicators.put("unitCorrect", new java.lang.Integer(0));
 	}
 	else if (answerUnitType.equals("correct")){
-		answerAssess.setUnitCorrect(1);
+		answerAssessIndicators.put("unitCorrect", new java.lang.Integer(1));
 	}
 	else if (answerUnitType.equals("incorrect but other good unit")){
-		answerAssess.setUnitCorrect(2);
+		answerAssessIndicators.put("unitCorrect", new java.lang.Integer(2));
 	}
 	else if (answerUnitType.equals("incorrect")){
-		answerAssess.setUnitCorrect(3);
+		answerAssessIndicators.put("unitCorrect", new java.lang.Integer(3));
 	}
 	
-	//How long did the student take completing this step
-	answerAssess.setTime((System.currentTimeMillis() - timeStepStarted)/1000);
+	//How long did the student take completing this step (in seconds, rounded so it shows 1 decimal)
+	var time = (System.currentTimeMillis() - timeStepStarted) / 1000;
+	answerAssessIndicators.put("time", Math.round(time * 10) / 10);
 	
 	//How many measurements did the student make in this step
-	answerAssess.setNumberMeasurements(measurements.length - measurementIndexStepStarted);
+	answerAssessIndicators.put("numberMeasurements", new java.lang.Integer(measurements.length - measurementIndexStepStarted));
 	
 	var measurement = findMeasurement(answer);
 	if (measurement != null){
@@ -1103,13 +1107,13 @@ function logAnswerAssessment(answer, correctAnswer, answerValueType, answerUnitT
 		//      We are also assuming this was the measurement the student paid attention when copying the value
 		//      It it not guaranteed, since more measurements could give the same value but could measure different things
 		//      We are assuming this activity is simple enough that that won't happen.
-		answerAssess.setValueMatchesMeasurement(1);
+		answerAssessIndicators.put("valueMatchesMeasurement", new java.lang.Integer(1));
 		if (answerAssess.getAnswerType().equalsIgnoreCase(measurement.type)){
 			//The multimeter was in the correct setting when measured
-			answerAssess.setMultimeterSetting(1);
+			answerAssessIndicators.put("multimeterSetting", new java.lang.Integer(1));
 		}
 		else{
-			answerAssess.setMultimeterSetting(0);
+			answerAssessIndicators.put("multimeterSetting", new java.lang.Integer(0));
 		}		
 		
 		//Correct lead placement?
@@ -1118,38 +1122,38 @@ function logAnswerAssessment(answer, correctAnswer, answerValueType, answerUnitT
 			//Give values of 0 (really bad), 1 (bad), 2 (not bad), 3 (good)
 			if (	 (measurement.extra.redLead == 1 && measurement.extra.blackLead == 2) ||
 					 (measurement.extra.redLead == 2 && measurement.extra.blackLead == 1)){
-				answerAssess.setLeadPlacement(3);
+				answerAssessIndicators.put("leadPlacement", new java.lang.Integer(3));
 			}
 			else if ((measurement.extra.redLead == 1 && measurement.extra.blackLead == 3) ||
 					 (measurement.extra.redLead == 3 && measurement.extra.blackLead == 1)){
-				answerAssess.setLeadPlacement(2);
+				answerAssessIndicators.put("leadPlacement", new java.lang.Integer(2));
 			}
 			else if ((measurement.extra.redLead == 2 && measurement.extra.blackLead == 3) ||
 					 (measurement.extra.redLead == 3 && measurement.extra.blackLead == 2)){
-				answerAssess.setLeadPlacement(1);
+				answerAssessIndicators.put("leadPlacement", new java.lang.Integer(1));
 			}
 			else if ((measurement.extra.redLead == measurement.extra.blackLead)){
-				answerAssess.setLeadPlacement(0);
+				answerAssessIndicators.put("leadPlacement", new java.lang.Integer(0));
 			}
 		}
 		else if (getCurrentAnswerType().equalsIgnoreCase("current")){
 			//To measure voltage correctly, the leads have to placed in zone 2 and 3
 			if ((measurement.extra.redLead == 2 && measurement.extra.blackLead == 3) ||
 					 (measurement.extra.redLead == 3 && measurement.extra.blackLead == 2)){
-				answerAssess.setLeadPlacement(3);
+				answerAssessIndicators.put("leadPlacement", new java.lang.Integer(3));
 			}
 			else{
-				answerAssess.setLeadPlacement(0);
+				answerAssessIndicators.put("leadPlacement", new java.lang.Integer(0));
 			}
 		}
 		else if (getCurrentAnswerType().equalsIgnoreCase("resistance")){
 			//To measure voltage correctly, the leads have to placed in zone 1 and 2
 			if (	 (measurement.extra.redLead == 1 && measurement.extra.blackLead == 2) ||
 					 (measurement.extra.redLead == 2 && measurement.extra.blackLead == 1)){
-				answerAssess.setLeadPlacement(3);
+				answerAssessIndicators.put("leadPlacement", new java.lang.Integer(3));
 			}
 			else{
-				answerAssess.setLeadPlacement(0);
+				answerAssessIndicators.put("leadPlacement", new java.lang.Integer(0));
 			}
 		}
 		//	
@@ -1158,7 +1162,7 @@ function logAnswerAssessment(answer, correctAnswer, answerValueType, answerUnitT
 		//FIXME: This is still temporary.
 		//Right now it assumes that the circuit cannot be broken
 		if (getCurrentAnswerType().equalsIgnoreCase("voltage")){
-			answerAssess.setCircuitSetting(0);
+			answerAssessIndicators.put("circuitSetting", new java.lang.Integer(0));
 			
 			//Check that the resistor and battery are included
 			if (measurement.extra.leadsConnected && 
@@ -1166,12 +1170,12 @@ function logAnswerAssessment(answer, correctAnswer, answerValueType, answerUnitT
 				//Check that the circuit is closed
 				//Assuming the only way to open it is by opening it the switch
 				if (measurement.extra.switchConnected && measurement.extra.switchClosed){
-					answerAssess.setCircuitSetting(1);
+					answerAssessIndicators.put("circuitSetting", new java.lang.Integer(1));
 				}
 			}
 		}
 		else if (getCurrentAnswerType().equalsIgnoreCase("current")){
-			answerAssess.setCircuitSetting(0);
+			answerAssessIndicators.put("circuitSetting", new java.lang.Integer(0));
 
 			//Check that the resistor and battery are included
 			if (measurement.extra.leadsConnected && 
@@ -1179,12 +1183,12 @@ function logAnswerAssessment(answer, correctAnswer, answerValueType, answerUnitT
 				//Check that the circuit is open
 				//Assuming the only way to open it is by opening it the switch
 				if (measurement.extra.switchConnected && !measurement.extra.switchClosed){
-					answerAssess.setCircuitSetting(1);
+					answerAssessIndicators.put("circuitSetting", new java.lang.Integer(1));
 				}
 			}
 		}
 		else if (getCurrentAnswerType().equalsIgnoreCase("resistance")){
-			answerAssess.setCircuitSetting(0);
+			answerAssessIndicators.put("circuitSetting", new java.lang.Integer(0));
 			
 			//Check that the resistor is included
 			if (measurement.extra.leadsConnected && 
@@ -1192,18 +1196,18 @@ function logAnswerAssessment(answer, correctAnswer, answerValueType, answerUnitT
 				//Check that the circuit is open
 				//Assuming the only way to open it is by opening it the switch
 				if (measurement.extra.switchConnected && !measurement.extra.switchClosed){
-					answerAssess.setCircuitSetting(1);
+					answerAssessIndicators.put("circuitSetting", new java.lang.Integer(1));
 				}
 			}
 		}
 		//
 	}
 	else{
-		answerAssess.setValueMatchesMeasurement(0);
+		answerAssessIndicators.put("valueMatchesMeasurement", new java.lang.Integer(0));
 		// When the value doesn't match a measurement, the following indicators are N/A
-		answerAssess.setMultimeterSetting(-2);
-		answerAssess.setLeadPlacement(-2);
-		answerAssess.setCircuitSetting(-2);
+		answerAssessIndicators.put("multimeterSetting", new java.lang.Integer(-2));
+		answerAssessIndicators.put("leadPlacement", new java.lang.Integer(-2));
+		answerAssessIndicators.put("circuitSetting", new java.lang.Integer(-2));
 	}
 		
 	otAssessment.getAnswers().add(answerAssess);
@@ -1369,6 +1373,19 @@ function getCurrentAnswerType()
 	}
 	else if (currentStep == 3){
 		return "resistance"
+	}
+}
+
+function getCurrentAnswerTypeLabel()
+{
+	if (currentStep == 1){
+		return "1. Voltage"
+	}
+	else if (currentStep == 2){
+		return "2. Current"
+	}
+	else if (currentStep == 3){
+		return "3. Resistance"
 	}
 }
 
