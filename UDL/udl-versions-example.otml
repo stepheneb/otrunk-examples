@@ -1,0 +1,857 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<otrunk id="2767fe20-6c7d-11dc-8314-0800200c9a66">
+  <imports>
+    <import class="org.concord.data.state.OTDataStore" />
+    <import class="org.concord.data.state.OTDataChannelDescription" />
+    <import class="org.concord.data.state.OTDataField" />
+    <import class="org.concord.data.state.OTDataTable" />
+    <import class="org.concord.datagraph.state.OTDataGraph" />
+    <import class="org.concord.datagraph.state.OTDataAxis" />
+    <import class="org.concord.datagraph.state.OTDataGraphable" />
+    <import class="org.concord.datagraph.state.OTDataCollector" />
+    <import class="org.concord.datagraph.state.OTMultiDataGraph" />
+    <import class="org.concord.datagraph.state.OTPluginView" />
+    <import class="org.concord.datagraph.state.OTDataBarGraphable" />
+    <import class="org.concord.framework.otrunk.view.OTFrame" />
+    <import class="org.concord.graph.util.state.OTDrawingTool" />
+    <import class="org.concord.graph.util.state.OTDrawingStamp" />
+    <import class="org.concord.graph.util.state.OTDrawingImageIcon" />
+    <import class="org.concord.graph.util.state.OTDrawingShape" />
+    <import class="org.concord.graph.util.state.OTDrawingTool2" />
+    <import class="org.concord.graph.util.state.OTPointTextLabel" />
+    <import class="org.concord.otrunk.OTInclude" />
+    <import class="org.concord.otrunk.OTSystem" />
+    <import class="org.concord.otrunk.overlay.OTOverlay" />
+    <import class="org.concord.otrunk.script.ui.OTScriptObject" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariable" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariableComponent" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariableView" />
+    <import class="org.concord.otrunk.script.js.OTJavascript" />
+    <import class="org.concord.otrunk.script.OTScriptEngineBundle" />
+    <import class="org.concord.otrunk.script.OTScriptEngineEntry" />
+    <import class="org.concord.otrunk.udl.OTUDLVersionContainer" />
+    <import class="org.concord.otrunk.udl.OTUDLVersionContainerViewConfig" />
+    <import class="org.concord.otrunk.udl.OTUDLVersionedObject" />
+    <import class="org.concord.otrunk.udl.coach.OTUDLCoach" />
+    <import class="org.concord.otrunk.udl.coach.OTUDLCoachGroup" />
+    <import class="org.concord.otrunk.udl.coach.OTUDLCoachStatement" />
+    <import class="org.concord.otrunk.udl.OTUDLMenuRule" />
+    <import class="org.concord.otrunk.udl.document.OTDefinition" />
+    <import class="org.concord.otrunk.udl.document.OTDefinitionList" />
+    <import class="org.concord.otrunk.udl.document.OTDefinitionManager" />
+    <import class="org.concord.otrunk.udl.document.OTUDLCompoundDoc" />
+    <import class="org.concord.otrunk.udl.document.OTUDLDocumentViewConfig" />
+    <import class="org.concord.otrunk.udl.ui.OTDataCollectorViewConfig" />
+    <import class="org.concord.otrunk.udl.question.OTQuestion" />
+    <import class="org.concord.otrunk.udl.question.OTUDLQuestions" />
+    <import class="org.concord.otrunk.udl.question.OTUDLQuestionViewConfig" />
+    <import class="org.concord.otrunk.udl3.OTUDLMenu" />
+    <import class="org.concord.otrunk.udl3.OTUDLContainer" />
+    <import class="org.concord.otrunk.udl3.OTUDLSection" />
+    <import class="org.concord.otrunk.ui.OTButton" />
+    <import class="org.concord.otrunk.ui.OTCardContainer" />
+    <import class="org.concord.otrunk.ui.OTChoice" />
+    <import class="org.concord.otrunk.ui.OTImage" />
+    <import class="org.concord.otrunk.ui.OTText" />
+    <import class="org.concord.otrunk.ui.snapshot.OTSnapshot" />
+    <import class="org.concord.otrunk.ui.snapshot.OTSnapshotButton" />
+    <import class="org.concord.otrunk.ui.snapshot.OTSnapshotAlbum" />
+    <import class="org.concord.otrunk.ui.swing.OTChoiceViewConfig" />
+    <import class="org.concord.otrunk.view.OTObjectEditViewConfig" />
+    <import class="org.concord.otrunk.view.OTViewChild" />
+    <import class="org.concord.otrunk.view.OTViewEntry" />
+    <import class="org.concord.otrunk.view.OTViewBundle" />
+    <import class="org.concord.otrunk.view.OTViewMode" />
+    <import class="org.concord.otrunk.view.document.OTCompoundDoc" />
+    <import class="org.concord.otrunk.view.document.OTCssText" />
+    <import class="org.concord.otrunk.view.prototype.OTPrototypeViewEntry" />
+    <import class="org.concord.otrunk.view.prototype.OTPrototypeEventController" />
+    <import class="org.concord.otrunk.view.prototype.OTPrototypeMapEntry" />
+    <import class="org.concord.sensor.state.OTDeviceConfig" />
+    <import class="org.concord.sensor.state.OTExperimentRequest" />
+    <import class="org.concord.sensor.state.OTInterfaceManager" />
+    <import class="org.concord.sensor.state.OTSensorDataProxy" />
+    <import class="org.concord.sensor.state.OTSensorRequest" />
+    <import class="org.concord.sensor.state.OTZeroSensor" />
+  </imports>
+  <objects>
+    <OTSystem local_id="system">
+      <includes>
+        <OTInclude href="global-imports/predefined-sensor-graphs.otml" />
+      </includes>
+      <bundles>
+        <OTViewBundle showLeftPanel="false" currentMode="default">
+          <modes>
+            <OTViewMode name="default" />
+            <OTViewMode name="printing">
+              <map>
+                <entry key="${questions-card-view}">
+                  <OTUDLQuestionViewConfig objectClass="org.concord.otrunk.udl.question.OTUDLQuestions" viewClass="org.concord.otrunk.udl.question.OTUDLQuestionsPrintView" />
+                </entry>
+                <entry key="${choice-radio-view}">
+                  <OTChoiceViewConfig objectClass="org.concord.otrunk.ui.OTChoice" viewClass="org.concord.otrunk.ui.swing.OTChoiceRadioButtonPrintView" useViewsAsChoices="true" />
+                </entry>
+                <entry key="${text-edit}">
+                  <OTViewEntry objectClass="org.concord.otrunk.ui.OTText" viewClass="org.concord.otrunk.ui.swing.OTTextPrintView" />
+                </entry>
+              </map>
+            </OTViewMode>
+            <OTViewMode name="reporting">
+              <map>
+                <entry key="${menu-vertical}">
+                  <OTViewEntry objectClass="org.concord.otrunk.udl3.OTUDLMenu" viewClass="org.concord.otrunk.udl.ui.OTUDLMenuSectionReportView" />
+                </entry>
+              </map>
+            </OTViewMode>
+            <OTViewMode name="authoring">
+              <map>
+                <entry key="${choice-radio-view}">
+                  <OTChoiceViewConfig objectClass="org.concord.otrunk.ui.OTChoice" viewClass="org.concord.otrunk.ui.swing.OTChoiceComboBoxEditView" useViewsAsChoices="true" />
+                </entry>
+                <entry key="${menu-horizontal-circle}">
+                  <OTViewEntry objectClass="org.concord.otrunk.udl3.OTUDLMenu" viewClass="org.concord.otrunk.udl.ui.OTUDLMenuPageEditView" />
+                </entry>
+                <entry key="${question-view}">
+                  <OTViewEntry objectClass="org.concord.otrunk.udl.question.OTQuestion" viewClass="org.concord.otrunk.udl.question.OTQuestionEditView" />
+                </entry>
+                <entry key="${menu-vertical}">
+                  <OTViewEntry objectClass="org.concord.otrunk.udl3.OTUDLMenu" viewClass="org.concord.otrunk.udl.ui.OTUDLMenuSectionEditView" />
+                </entry>
+                <entry key="${data-table-view}">
+                  <OTViewEntry objectClass="org.concord.data.state.OTDataTable" viewClass="org.concord.data.state.OTDataTableEditView" />
+                </entry>
+                <entry key="${character-group-view}">
+                  <OTViewEntry objectClass="org.concord.otrunk.udl.coach.OTUDLCoachGroup" viewClass="org.concord.otrunk.udl.coach.OTUDLCoachGroupEditView" />
+                </entry>
+                <entry key="${compound_doc_view}">
+                  <OTObjectEditViewConfig objectClass="org.concord.otrunk.view.document.OTCompoundDoc" viewClass="org.concord.otrunk.view.document.OTCompoundDocEditView" usePopupEditWindows="true" copyNewObjectsByDefault="true">
+                    <objectsToInsert>
+                      <OTText name="Text field" />
+                      <OTDrawingTool2 name="Draw tool" />
+                      <OTChoice name="Choices" />
+                      <OTQuestion name="Question"/>
+                      <OTUDLQuestions name="Scaffolded questions" />
+                      <OTDataTable name="Data table" showLastRowForAddingNew="true">
+                        <dataStore>
+                          <OTDataStore numberChannels="2" />
+                        </dataStore>
+                      </OTDataTable>
+                      <OTDataCollector name="Data graph" title="Data graph">
+                        <source>
+                          <OTDataGraphable name="Data Graph" connectPoints="true" controllable="true" yColumn="1" drawMarks="false" color="16711680" xColumn="0">
+                            <dataStore>
+                              <OTDataStore />
+                            </dataStore>
+                          </OTDataGraphable>
+                        </source>
+                        <xDataAxis>
+                          <OTDataAxis max="60.0" units="s" min="0.0" label="Time" />
+                        </xDataAxis>
+                        <yDataAxis>
+                          <OTDataAxis max="40.0" units="" min="0.0" label="" />
+                        </yDataAxis>
+                      </OTDataCollector>
+                    </objectsToInsert>
+                  </OTObjectEditViewConfig>
+                </entry>
+                <entry key="${questions-card-view}">
+                  <OTUDLQuestionViewConfig objectClass="org.concord.otrunk.udl.question.OTUDLQuestions" viewClass="org.concord.otrunk.udl.question.OTUDLQuestionsEditView" />
+                </entry>
+                <entry key="${questions-on-off-view}">
+                  <OTUDLQuestionViewConfig objectClass="org.concord.otrunk.udl.question.OTUDLQuestions" viewClass="org.concord.otrunk.udl.question.OTUDLQuestionsEditView" />
+                </entry>
+                <entry key="${data-collector-view}">
+                  <OTDataCollectorViewConfig viewClass="org.concord.otrunk.udl.ui.OTDataCollectorEditView" objectClass="org.concord.datagraph.state.OTDataCollector">
+                    <predefinedGraphs>
+                      <object refid="088786c2-8719-11dc-8314-0800200c9a66" />
+                    </predefinedGraphs>
+                  </OTDataCollectorViewConfig>
+                </entry>
+                <entry key="${drawing-view}">
+                  <OTViewEntry viewClass="org.concord.datagraph.state.OTDataDrawingToolEditView" objectClass="org.concord.graph.util.state.OTDrawingTool" />
+                </entry>
+              </map>
+            </OTViewMode>
+          </modes>
+          <frame>
+            <OTFrame useScrollPane="false" width="850" height="600" />
+          </frame>
+          <views>
+            <!-- The OTUDLQuestionViewConfig can be used to set the default scaffolding level, and whether the student can navigate through the levels.
+						  The default scaffolding level just uses the order of the items inside OTUDLQuestions/questions. It is not aware of the names
+						  such as "L1", "L2", etc. -->
+            <OTUDLQuestionViewConfig local_id="questions-card-view" isLevelFrozen="false" defaultScaffoldLevel="0" objectClass="org.concord.otrunk.udl.question.OTUDLQuestions" viewClass="org.concord.otrunk.udl.question.OTUDLQuestionsCardView" />
+            <OTViewEntry objectClass="org.concord.otrunk.ui.OTImage" viewClass="org.concord.otrunk.ui.swing.OTImageView" />
+            <OTUDLQuestionViewConfig local_id="questions-on-off-view" isLevelFrozen="false" defaultScaffoldLevel="1" objectClass="org.concord.otrunk.udl.question.OTUDLQuestions" viewClass="org.concord.otrunk.udl.question.OTUDLQuestionsOnOffView" />
+            <OTViewEntry local_id="snapshot_button_view" objectClass="org.concord.otrunk.ui.snapshot.OTSnapshotButton" viewClass="org.concord.otrunk.ui.snapshot.OTSnapshotButtonView" />
+            <OTViewEntry objectClass="org.concord.otrunk.ui.snapshot.OTSnapshotAlbum" viewClass="org.concord.otrunk.ui.snapshot.OTSnapshotAlbumView" />
+            <OTViewEntry objectClass="org.concord.otrunk.udl.friction.OTFrictionModel" viewClass="org.concord.otrunk.udl.friction.OTFrictionModelView" />
+            <OTViewEntry objectClass="org.concord.otrunk.ui.OTButton" viewClass="org.concord.otrunk.ui.swing.OTButtonView" />
+            <OTViewEntry objectClass="org.concord.otrunk.script.ui.OTScriptObject" viewClass="org.concord.otrunk.script.ui.OTScriptObjectView" />
+            <OTViewEntry objectClass="org.concord.otrunk.ui.OTButton" viewClass="org.concord.otrunk.ui.swing.OTButtonView" />
+            <OTViewEntry local_id="question-view" objectClass="org.concord.otrunk.udl.question.OTQuestion" viewClass="org.concord.otrunk.udl.question.OTQuestionView" />
+            <OTViewEntry local_id="character-group-view" objectClass="org.concord.otrunk.udl.coach.OTUDLCoachGroup" viewClass="org.concord.otrunk.udl.coach.OTUDLCoachGroupView" />
+            <OTViewEntry objectClass="org.concord.otrunk.udl3.OTUDLSection" viewClass="org.concord.otrunk.udl3.OTUDLSectionView" />
+            <OTViewEntry local_id="container_view" objectClass="org.concord.otrunk.udl3.OTUDLContainer" viewClass="org.concord.otrunk.udl3.OTUDLContainerView" />
+            <OTViewEntry local_id="menu-vertical" objectClass="org.concord.otrunk.udl3.OTUDLMenu" viewClass="org.concord.otrunk.udl.ui.OTUDLMenuSectionView" />
+            <OTViewEntry local_id="menu-horizontal-circle" objectClass="org.concord.otrunk.udl3.OTUDLMenu" viewClass="org.concord.otrunk.udl.ui.OTUDLMenuPageView" />
+            <OTViewEntry local_id="menu-horizontal-book" objectClass="org.concord.otrunk.udl3.OTUDLMenu" viewClass="org.concord.otrunk.udl.ui.OTUDLMenuPageBookView" />
+            <OTChoiceViewConfig local_id="choice-radio-view" objectClass="org.concord.otrunk.ui.OTChoice" viewClass="org.concord.otrunk.ui.swing.OTChoiceRadioButtonView" useViewsAsChoices="true" />
+            <OTViewEntry local_id="choice-combo-view" objectClass="org.concord.otrunk.ui.OTChoice" viewClass="org.concord.otrunk.ui.swing.OTChoiceComboBoxView" />
+            <OTViewEntry objectClass="org.concord.otrunk.script.ui.OTScriptObject" viewClass="org.concord.otrunk.script.ui.OTScriptObjectView" />
+            <OTViewEntry objectClass="org.concord.otrunk.ui.OTCardContainer" viewClass="org.concord.otrunk.ui.swing.OTCardContainerView" />
+            <OTViewEntry objectClass="org.concord.otrunk.ui.OTBorderContainer" viewClass="org.concord.otrunk.ui.swing.OTBorderContainerView" />
+            <OTViewEntry objectClass="org.concord.otrunk.ui.OTPlacementContainer" viewClass="org.concord.otrunk.ui.swing.OTPlacementContainerView" />
+            <OTViewEntry local_id="text-edit" objectClass="org.concord.otrunk.ui.OTText" viewClass="org.concord.otrunk.ui.swing.OTTextEditView" />
+            <OTViewEntry local_id="text-label" objectClass="org.concord.otrunk.ui.OTText" viewClass="org.concord.otrunk.ui.swing.OTTextView" />
+            <OTViewEntry local_id="data-collector-view" viewClass="org.concord.datagraph.state.OTDataCollectorView" objectClass="org.concord.datagraph.state.OTDataCollector" />
+            <OTViewEntry viewClass="org.concord.datagraph.state.OTDataGraphView" objectClass="org.concord.datagraph.state.OTDataGraph" />
+            <OTViewEntry viewClass="org.concord.data.state.OTDataFieldView" objectClass="org.concord.data.state.OTDataField" />
+            <OTViewEntry local_id="drawing-view" viewClass="org.concord.datagraph.state.OTDataDrawingToolView" objectClass="org.concord.graph.util.state.OTDrawingTool" />
+            <OTViewEntry viewClass="org.concord.datagraph.state.OTMultiDataGraphView" objectClass="org.concord.datagraph.state.OTMultiDataGraph" />
+            <OTViewEntry viewClass="org.concord.datagraph.state.OTMultiDataGraphView" objectClass="org.concord.datagraph.state.OTMultiDataGraph" />
+            <OTViewEntry local_id="data-table-view" objectClass="org.concord.data.state.OTDataTable" viewClass="org.concord.data.state.OTDataTableView" />
+            <OTUDLVersionContainerViewConfig local_id="version-config" objectClass="org.concord.otrunk.udl.OTUDLVersionContainer" viewClass="org.concord.otrunk.udl.OTUDLVersionContainerView" currentVersion="easy" />
+            <OTUDLDocumentViewConfig local_id="compound_doc_view" objectClass="org.concord.otrunk.view.document.OTCompoundDoc" viewClass="org.concord.otrunk.udl.document.OTUDLDocumentView">
+              <definitionManager>
+                <object refid="${definition-manager}" />
+              </definitionManager>
+              <cssBlocks>
+                <OTCssText local_id="css-font" src="css/otrunk-normal-font.css" />
+                <OTCssText local_id="css-color" src="css/otrunk-34-color.css" />
+                <OTCssText local_id="css-layout" src="css/otrunk-normal-layout.css" />
+              </cssBlocks>
+            </OTUDLDocumentViewConfig>
+            <OTPrototypeViewEntry local_id="textsize-choice-view" objectClass="org.concord.otrunk.OTSystem" viewClass="org.concord.otrunk.view.prototype.OTPrototypeView" copyPrototype="false">
+              <viewEntry>
+                <object refid="${choice-combo-view}" />
+              </viewEntry>
+              <prototype>
+                <OTChoice>
+                  <choices>
+                    <OTOverlay local_id="small-text-overlay" name="Small text">
+                      <deltaObjectMap>
+                        <entry key="${css-font}">
+                          <OTCssText src="css/otrunk-small-font.css" />
+                        </entry>
+                      </deltaObjectMap>
+                    </OTOverlay>
+                    <OTOverlay local_id="normal-text-overlay" name="Normal text" />
+                    <OTOverlay local_id="large-text-overlay" name="Large text">
+                      <deltaObjectMap>
+                        <entry key="${css-font}">
+                          <OTCssText src="css/otrunk-large-font.css" />
+                        </entry>
+                      </deltaObjectMap>
+                    </OTOverlay>
+                  </choices>
+                  <currentChoice>
+                    <object refid="${normal-text-overlay}" />
+                  </currentChoice>
+                </OTChoice>
+              </prototype>
+              <controller>
+                <OTPrototypeEventController>
+                  <mapping>
+                    <OTPrototypeMapEntry modelProperty="overlays[0]" prototypeProperty="currentChoice" />
+                  </mapping>
+                </OTPrototypeEventController>
+              </controller>
+            </OTPrototypeViewEntry>
+            <OTPrototypeViewEntry local_id="language-choice-view" objectClass="org.concord.otrunk.OTSystem" viewClass="org.concord.otrunk.view.prototype.OTPrototypeView" copyPrototype="false">
+              <viewEntry>
+                <object refid="${choice-combo-view}" />
+              </viewEntry>
+              <prototype>
+                <OTChoice>
+                  <choices>
+                    <OTOverlay local_id="english-overlay" name="English" />
+                    <OTOverlay local_id="spanish-overlay" name="Español" />
+                  </choices>
+                  <currentChoice>
+                    <object refid="${english-overlay}" />
+                  </currentChoice>
+                </OTChoice>
+              </prototype>
+              <controller>
+                <OTPrototypeEventController>
+                  <mapping>
+                    <OTPrototypeMapEntry modelProperty="overlays[1]" prototypeProperty="currentChoice" />
+                  </mapping>
+                </OTPrototypeEventController>
+              </controller>
+            </OTPrototypeViewEntry>
+            <OTViewEntry objectClass="org.concord.graph.util.state.OTDrawingTool2" viewClass="org.concord.datagraph.state.OTDataDrawingToolView" />
+          </views>
+        </OTViewBundle>
+        <OTScriptEngineBundle>
+          <engines>
+            <OTScriptEngineEntry objectClass="org.concord.otrunk.script.js.OTJavascript" engineClass="org.concord.otrunk.script.js.OTJavascriptEngine" />
+          </engines>
+        </OTScriptEngineBundle>
+        <OTInterfaceManager>
+          <deviceConfigs>
+            <OTDeviceConfig configString="none" deviceId="10" />
+          </deviceConfigs>
+        </OTInterfaceManager>
+      </bundles>
+      <overlays>
+        <object refid="${normal-text-overlay}" />
+        <object refid="${english-overlay}" />
+      </overlays>
+      <root>
+        <OTUDLContainer name="UDL Activity">
+          <cssColor>
+            <object refid="${css-color}" />
+          </cssColor>
+          <title>
+            <OTCompoundDoc local_id="title">
+              <bodyText>
+                <div class="leftpanel">
+                  <img src="http://udl.concord.org/share/udl-tree-only.png" width="70" height="73" />
+                  <br />
+                  <div class="activity-title">UDL Math</div>
+                </div>
+              </bodyText>
+            </OTCompoundDoc>
+          </title>
+          <menu>
+            <OTViewChild useScrollPane="true" scrollPanelHasBorder="false">
+              <object>
+                <object refid="${menu}" />
+              </object>
+            </OTViewChild>
+          </menu>
+          <topBar>
+            <OTCompoundDoc>
+              <bodyText>
+                <div class="top-menu">
+                  <table>
+                    <tr>
+                      <td>
+                        <object refid="${system}" viewid="${language-choice-view}" />
+                      </td>
+                      <td>
+                        <object refid="${system}" viewid="${textsize-choice-view}" />
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+              </bodyText>
+            </OTCompoundDoc>
+          </topBar>
+          <characters>
+            <OTUDLCoachGroup local_id="character-group">
+              <topLevelCardContainer>
+                <object refid="${section-card-container}" />
+              </topLevelCardContainer>
+              <characters>
+                <OTUDLCoach local_id="character_affective" inactiveImageURL="http://udl.concord.org/share/shared-images/blah-head.png" activeImageURL="http://udl.concord.org/share/shared-images/blah-anim.gif" />
+                <OTUDLCoach local_id="character_strategic" inactiveImageURL="http://udl.concord.org/share/shared-images/clunk-head.png" activeImageURL="http://udl.concord.org/share/shared-images/clunk-anim.gif" />
+                <OTUDLCoach local_id="character_recognition" inactiveImageURL="http://udl.concord.org/share/shared-images/roxy-head.png" activeImageURL="http://udl.concord.org/share/shared-images/roxy-anim.gif" />
+              </characters>
+              <speechFrame>
+                <OTFrame local_id="speech_frame" width="380" height="340" borderlessPopup="false" />
+              </speechFrame>
+            </OTUDLCoachGroup>
+          </characters>
+          <content>
+            <OTCardContainer local_id="section-card-container" loadViewOnlyOnDemand="true" closeViewOnExit="true">
+              <cards>
+                <OTUDLSection local_id="section_1" name="Pretest" isComputerBased="false" isIntroduction="false" isMath="false" isPosttest="false" isPretest="true" isReading="false" isWrapup="false">
+                  <header>
+                    <OTCompoundDoc id="2767fe20-6c7d-11dc-8314-0800200c9a66!/section_1/header">
+                      <bodyText>
+                        <div class="title">Pretest</div>
+                      </bodyText>
+                    </OTCompoundDoc>
+                  </header>
+                  <content>
+                    <OTCardContainer local_id="section-1-card-container" contentsMayScroll="true" loadViewOnlyOnDemand="true">
+                      <cards>
+                        <OTUDLCompoundDoc local_id="page-1" name="1">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <object refid="3176e063-a4f1-11dc-a208-bf10bae498b9" />
+                                  <p />
+                                  <object refid="350c3bb8-a4f1-11dc-a208-bf10bae498b9" />
+                                  <p />
+                                  <object refid="3b69e00d-a4f1-11dc-a208-bf10bae498b9" />
+                                  <p />
+                                  <table>
+                                    <tr>
+                                      <td>
+                                        Press the
+                                        <b>Submit</b>
+                                        button when you are done.
+                                      </td>
+                                      <td>
+                                        <object refid="${pretest-submit-button}" />
+                                      </td>
+                                    </tr>
+                                  </table>
+                                  <object refid="${pretest-button-script}" />
+                                  <object refid="${content-changing-script}" />
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                          <documentRefs>
+                          	<OTButton local_id="pretest-submit-button" name="Button" text="Submit" />
+                          	<OTScriptObject local_id="content-changing-script">
+                          		<variables>
+                          			<OTScriptVariableComponent name="button">
+	                                  <reference>
+	                                    <object refid="${pretest-submit-button}" />
+	                                  </reference>
+                                	</OTScriptVariableComponent>
+                                	<OTScriptVariable name="q1">
+	                                  <reference>
+	                                    <object refid="3176e063-a4f1-11dc-a208-bf10bae498b9" />
+	                                  </reference>
+                                	</OTScriptVariable>
+                                	<OTScriptVariable name="q2">
+	                                  <reference>
+	                                    <object refid="350c3bb8-a4f1-11dc-a208-bf10bae498b9" />
+	                                  </reference>
+                                	</OTScriptVariable>
+                                	<OTScriptVariable name="q3">
+	                                  <reference>
+	                                    <object refid="3b69e00d-a4f1-11dc-a208-bf10bae498b9" />
+	                                  </reference>
+                                	</OTScriptVariable>
+                                	<OTScriptVariable name="versionConfig">
+	                                  <reference>
+	                                    <object refid="${version-config}" />
+	                                  </reference>
+                                	</OTScriptVariable>
+                          		</variables>
+                          		<script>
+                          			<OTJavascript>
+                          				<script>
+                          					importClass(Packages.java.awt.event.ActionListener);
+											
+											var buttonHandler =
+											{
+													actionPerformed: function(evt)
+													{
+														correct = checkAnswers();
+														if (correct) {
+															versionConfig.setCurrentVersion("hard");
+														}
+													}
+											};
+											var buttonListener = new ActionListener(buttonHandler);
+											
+											function checkAnswers() {
+												q1Answer = q1.getInput().getCurrentChoice().getBodyText();
+												q1Correct = q1.getCorrectAnswer().getBodyText();
+												
+												if (q1Correct.equals(q1Answer)) {
+													return true;
+												} else {
+													return false;
+												}
+											}
+
+											function init() {
+												button.addActionListener(buttonListener);
+											
+												return true;
+											}
+											
+											function save() {
+												button.removeActionListener(buttonListener);
+												return true;
+											}
+                          				</script>
+                          			</OTJavascript>
+                          		</script>
+                          	</OTScriptObject>
+                            <OTScriptObject local_id="pretest-button-script">
+                              <variables>
+                                <OTScriptVariable name="cardContainer">
+                                  <reference>
+                                    <object refid="${section-card-container}" />
+                                  </reference>
+                                </OTScriptVariable>
+                                <OTScriptVariableComponent name="button">
+                                  <reference>
+                                    <object refid="${pretest-submit-button}" />
+                                  </reference>
+                                </OTScriptVariableComponent>
+                                <OTScriptVariable name="card">
+                                  <reference>
+                                    <object refid="${activity_1}" />
+                                  </reference>
+                                </OTScriptVariable>
+                              </variables>
+                              <script>
+                                <object refid="${change_page.js}" />
+                              </script>
+                              <scriptState />
+                            </OTScriptObject>
+                            <OTQuestion id="3176e063-a4f1-11dc-a208-bf10bae498b9" name="Question">
+                              <prompt>
+                                <OTUDLCompoundDoc>
+                                  <bodyText>What is 1+1?</bodyText>
+                                </OTUDLCompoundDoc>
+                              </prompt>
+                              <input>
+                                    <OTChoice id="5426e1f2-a4f1-11dc-a208-bf10bae498b9" name="Choices">
+                                      <choices>
+                                        <OTCompoundDoc name="1">
+                                          <bodyText>1</bodyText>
+                                        </OTCompoundDoc>
+                                        <OTCompoundDoc local_id="q1-correct" name="2">
+                                          <bodyText>2</bodyText>
+                                        </OTCompoundDoc>
+                                        <OTCompoundDoc name="3">
+                                          <bodyText>3</bodyText>
+                                        </OTCompoundDoc>
+                                      </choices>
+                                    </OTChoice>
+                              </input>
+                              <scaffolding>
+                                <OTUDLCompoundDoc>
+                                  <bodyText />
+                                </OTUDLCompoundDoc>
+                              </scaffolding>
+                              <correctAnswer>
+                                <object refid="${q1-correct}"/>
+                              </correctAnswer>
+                            </OTQuestion>
+                            <OTQuestion id="350c3bb8-a4f1-11dc-a208-bf10bae498b9" name="Question">
+                              <prompt>
+                                <OTUDLCompoundDoc>
+                                  <bodyText>What is 2x2?</bodyText>
+                                </OTUDLCompoundDoc>
+                              </prompt>
+                              <input>
+                                <OTUDLCompoundDoc>
+                                  <documentRefs>
+                                    <OTChoice id="645e56e9-a4f1-11dc-a208-bf10bae498b9" name="Choices">
+                                      <choices>
+                                        <OTCompoundDoc name="2">
+                                          <bodyText>2</bodyText>
+                                        </OTCompoundDoc>
+                                        <OTCompoundDoc local_id="q2-correct" name="4">
+                                          <bodyText>4</bodyText>
+                                        </OTCompoundDoc>
+                                        <OTCompoundDoc name="8">
+                                          <bodyText>8</bodyText>
+                                        </OTCompoundDoc>
+                                      </choices>
+                                    </OTChoice>
+                                  </documentRefs>
+                                  <bodyText>
+                                    <object refid="645e56e9-a4f1-11dc-a208-bf10bae498b9" />
+                                    <p />
+                                  </bodyText>
+                                </OTUDLCompoundDoc>
+                              </input>
+                              <scaffolding>
+                                <OTUDLCompoundDoc>
+                                  <bodyText />
+                                </OTUDLCompoundDoc>
+                              </scaffolding>
+                              <correctAnswer>
+                                <object refid="${q2-correct}"/>
+                              </correctAnswer>
+                            </OTQuestion>
+                            <OTQuestion id="3b69e00d-a4f1-11dc-a208-bf10bae498b9" name="Question">
+                              <prompt>
+                                <OTUDLCompoundDoc>
+                                  <bodyText>3 x 3 =</bodyText>
+                                </OTUDLCompoundDoc>
+                              </prompt>
+                              <input>
+                                <OTUDLCompoundDoc>
+                                  <documentRefs>
+                                    <OTText id="7db660f0-a4f1-11dc-a208-bf10bae498b9" name="Text field" />
+                                  </documentRefs>
+                                  <bodyText>
+                                    <object refid="7db660f0-a4f1-11dc-a208-bf10bae498b9" />
+                                    <p />
+                                  </bodyText>
+                                </OTUDLCompoundDoc>
+                              </input>
+                              <scaffolding>
+                                <OTUDLCompoundDoc>
+                                  <bodyText />
+                                </OTUDLCompoundDoc>
+                              </scaffolding>
+                              <correctAnswer>
+                                <OTCompoundDoc bodyText="9"/>
+                              </correctAnswer>
+                            </OTQuestion>
+                          </documentRefs>
+                        </OTUDLCompoundDoc>
+                      </cards>
+                      <currentCard>
+                        <object refid="${page-1}" />
+                      </currentCard>
+                    </OTCardContainer>
+                  </content>
+                  <footer>
+                    <OTCompoundDoc id="2767fe20-6c7d-11dc-8314-0800200c9a66!/section_1/footer">
+                      <bodyText>
+                        <div align="center">
+                          <table>
+                            <tr>
+                              <td>
+                                <object refid="${section-1-menu}" viewid="${menu-horizontal-circle}" />
+                              </td>
+                            </tr>
+                          </table>
+                        </div>
+                      </bodyText>
+                    </OTCompoundDoc>
+                  </footer>
+                  <north>
+                    <object refid="2767fe20-6c7d-11dc-8314-0800200c9a66!/section_1/header" />
+                  </north>
+                  <center>
+                    <object refid="${section-1-card-container}" />
+                  </center>
+                  <south>
+                    <object refid="2767fe20-6c7d-11dc-8314-0800200c9a66!/section_1/footer" />
+                  </south>
+                </OTUDLSection>
+                <OTUDLSection local_id="activity_1" name="Activity 1" isComputerBased="true" isIntroduction="false" isMath="false" isPosttest="false" isPretest="false" isReading="false" isWrapup="false">
+                  <content>
+                    <OTCardContainer id="fdc00bf8-a4f0-11dc-a208-bf10bae498b9" contentsMayScroll="true" loadViewOnlyOnDemand="true">
+                      <cards>
+                        <OTUDLCompoundDoc id="fdbfe4e7-a4f0-11dc-a208-bf10bae498b9">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle">Activity one</div>
+                                  <object refid="${version-example}" />
+                                  <p />
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                          <documentRefs>
+                            <OTUDLVersionContainer local_id="version-example">
+                              <versions>
+                                <OTUDLVersionedObject versionName="easy">
+                                  <otObject>
+                                    <OTUDLCompoundDoc>
+                                      <bodyText>
+                                        Since it doesn't look like you're very good at math, we're going to start from the beginning.
+                                        <p />
+                                        Please count out loud:
+                                        <b>1 ...
+												2 ...
+												3 ...
+												4 ...
+												5</b>
+                                      </bodyText>
+                                    </OTUDLCompoundDoc>
+                                  </otObject>
+                                </OTUDLVersionedObject>
+                                <OTUDLVersionedObject versionName="hard">
+                                  <otObject>
+                                    <OTUDLCompoundDoc>
+                                      <documentRefs>
+                                        <OTText id="1ffc3566-a4f4-11dc-a208-bf10bae498b9" name="Text field" />
+                                        <OTText id="29a66be7-a4f4-11dc-a208-bf10bae498b9" name="Text field" />
+                                      </documentRefs>
+                                      <bodyText>
+                                        Good job! You're a real mathematician!
+                                        <p />
+                                        Now let's get on to more interesting stuff...
+                                        <p />
+                                        <ol>
+                                          <li>
+                                            The sum
+                                            <i>Sn</i>
+                                            of the first
+                                            <i>n</i>
+                                            terms of the sequence
+                                            <i>a1, a2, ...</i>
+                                            of positive real numbers satisfies the equation
+                                            <i>an + (1/an) = 2Sn</i>
+                                            for
+                                            <i>n</i>
+                                            = 1, 2,... Find a formula for the general term
+                                            <i>an</i>
+                                            .
+                                            <br />
+                                            <object refid="1ffc3566-a4f4-11dc-a208-bf10bae498b9" />
+                                            <p />
+                                          </li>
+                                          <li>
+                                            Let
+                                            <i>P</i>
+                                            be a point on the bisector of an angle
+                                            <i>BAC</i>
+                                            . Let
+                                            <i>l</i>
+                                            be any line passing though
+                                            <i>P</i>
+                                            . Assume that
+                                            <i>l</i>
+                                            intersects the rays
+                                            <i>AB</i>
+                                            and
+                                            <i>AC</i>
+                                            and
+                                            <i>X</i>
+                                            and
+                                            <i>Y</i>
+                                            , respectively. Show the quantity 1/(
+                                            <i>AX</i>
+                                            ) and 1/(
+                                            <i>AY</i>
+                                            ) does not depend on the choice of
+                                            <i>l</i>
+                                            .
+                                            <br />
+                                            <object refid="29a66be7-a4f4-11dc-a208-bf10bae498b9" />
+                                          </li>
+                                        </ol>
+                                      </bodyText>
+                                    </OTUDLCompoundDoc>
+                                  </otObject>
+                                </OTUDLVersionedObject>
+                              </versions>
+                            </OTUDLVersionContainer>
+                          </documentRefs>
+                        </OTUDLCompoundDoc>
+                      </cards>
+                      <currentCard>
+                        <object refid="fdbfe4e7-a4f0-11dc-a208-bf10bae498b9" />
+                      </currentCard>
+                    </OTCardContainer>
+                  </content>
+                  <header>
+                    <OTUDLCompoundDoc id="fdc00bf9-a4f0-11dc-a208-bf10bae498b9" name="%fdc00bf9-a4f0-11dc-a208-bf10bae498b9">
+                      <bodyText>
+                        <div class="title">Activity 1</div>
+                      </bodyText>
+                    </OTUDLCompoundDoc>
+                  </header>
+                  <footer>
+                    <OTUDLCompoundDoc id="fdc00bfa-a4f0-11dc-a208-bf10bae498b9" name="%fdc00bfa-a4f0-11dc-a208-bf10bae498b9">
+                      <bodyText>
+                        <div align="center">
+                          <table>
+                            <tr>
+                              <td>
+                                <object refid="fdc16b8b-a4f0-11dc-a208-bf10bae498b9" viewid="${menu-horizontal-circle}" />
+                              </td>
+                            </tr>
+                          </table>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                        <OTUDLMenu id="fdc16b8b-a4f0-11dc-a208-bf10bae498b9">
+                          <cardContainer>
+                            <object refid="fdc00bf8-a4f0-11dc-a208-bf10bae498b9" />
+                          </cardContainer>
+                          <menuRule>
+                            <object refid="${page-rule}" />
+                          </menuRule>
+                        </OTUDLMenu>
+                        <object refid="${menu-horizontal-circle}" />
+                      </documentRefs>
+                    </OTUDLCompoundDoc>
+                  </footer>
+                  <north>
+                    <object refid="fdc00bf9-a4f0-11dc-a208-bf10bae498b9" />
+                  </north>
+                  <center>
+                    <object refid="fdc00bf8-a4f0-11dc-a208-bf10bae498b9" />
+                  </center>
+                  <south>
+                    <object refid="fdc00bfa-a4f0-11dc-a208-bf10bae498b9" />
+                  </south>
+                </OTUDLSection>
+              </cards>
+              <currentCard>
+                <object refid="${section_1}" />
+              </currentCard>
+            </OTCardContainer>
+          </content>
+          <script>
+            <OTScriptObject>
+              <variables>
+                <OTScriptVariable name="cardContainer">
+                  <reference>
+                    <object refid="${section-card-container}" />
+                  </reference>
+                </OTScriptVariable>
+                <OTScriptVariable name="system">
+                  <reference>
+                    <object refid="${system}" />
+                  </reference>
+                </OTScriptVariable>
+                <OTScriptVariable name="menuPageRule">
+                  <reference>
+                    <object refid="${page-rule}" />
+                  </reference>
+                </OTScriptVariable>
+                <OTScriptVariable name="sampleMenu">
+                  <reference>
+                    <object refid="${menu}" />
+                  </reference>
+                </OTScriptVariable>
+                <OTScriptVariable name="menuHorizontalView">
+                  <reference>
+                    <object refid="${menu-horizontal-circle}" />
+                  </reference>
+                </OTScriptVariable>
+              </variables>
+              <script>
+                <object refid="${authoring_script.js}" />
+              </script>
+              <scriptState />
+            </OTScriptObject>
+          </script>
+        </OTUDLContainer>
+      </root>
+      <library>
+        <OTUDLMenu local_id="menu">
+          <cardContainer>
+            <object refid="${section-card-container}" />
+          </cardContainer>
+          <menuRule>
+            <object refid="${section-rule}" />
+          </menuRule>
+          <css>
+            <object refid="${css-color}" />
+          </css>
+        </OTUDLMenu>
+        <OTUDLMenu local_id="section-1-menu">
+          <cardContainer>
+            <object refid="${section-1-card-container}" />
+          </cardContainer>
+          <menuRule>
+            <object refid="${page-rule}" />
+          </menuRule>
+        </OTUDLMenu>
+        <OTSnapshotAlbum local_id="album" />
+        <OTDefinitionManager local_id="definition-manager">
+          <definitions>
+            <OTDefinitionList src="glossary/common-glossary.txt" />
+          </definitions>
+          <frame>
+            <OTFrame local_id="definition_frame" width="300" height="190" borderlessPopup="true" />
+          </frame>
+        </OTDefinitionManager>
+        <OTUDLMenuRule local_id="page-rule" jumpToViewedCard="true" stepAhead="true" />
+        <OTUDLMenuRule local_id="section-rule" jumpToAnyCard="true" />
+        <OTJavascript local_id="change_page.js" src="scripts/change_page.js" />
+        <OTJavascript local_id="show_message.js" src="scripts/show_message.js" />
+        <OTJavascript local_id="authoring_script.js" src="scripts/authoring_script.js" />
+      </library>
+    </OTSystem>
+  </objects>
+</otrunk>
+
