@@ -29,6 +29,7 @@
     <import class="org.concord.otrunk.script.js.OTJavascript" />
     <import class="org.concord.otrunk.script.OTScriptEngineBundle" />
     <import class="org.concord.otrunk.script.OTScriptEngineEntry" />
+    <import class="org.concord.otrunk.udl.OTTip" />
     <import class="org.concord.otrunk.udl.OTUDLVersionContainer" />
     <import class="org.concord.otrunk.udl.OTUDLVersionContainerViewConfig" />
     <import class="org.concord.otrunk.udl.OTUDLVersionedObject" />
@@ -212,6 +213,7 @@
             <OTViewEntry viewClass="org.concord.datagraph.state.OTMultiDataGraphView" objectClass="org.concord.datagraph.state.OTMultiDataGraph" />
             <OTViewEntry local_id="data-table-view" objectClass="org.concord.data.state.OTDataTable" viewClass="org.concord.data.state.OTDataTableView" />
             <OTUDLVersionContainerViewConfig local_id="version-config" objectClass="org.concord.otrunk.udl.OTUDLVersionContainer" viewClass="org.concord.otrunk.udl.OTUDLVersionContainerView" currentVersion="easy" />
+            <OTViewEntry objectClass="org.concord.otrunk.udl.OTTip" viewClass="org.concord.otrunk.udl.OTTipView"/>
             <OTUDLDocumentViewConfig local_id="compound_doc_view" objectClass="org.concord.otrunk.view.document.OTCompoundDoc" viewClass="org.concord.otrunk.udl.document.OTUDLDocumentView">
               <definitionManager>
                 <object refid="${definition-manager}" />
@@ -399,6 +401,11 @@
                             </div>
                           </bodyText>
                           <documentRefs>
+                          	<OTTip local_id="eg-tip">
+                          		<tip>
+                          			<OTCompoundDoc bodyText="blah blah blah"/>
+                          		</tip>
+                          	</OTTip>
                           	<OTButton local_id="pretest-submit-button" name="Button" text="Submit" />
                           	<OTScriptObject local_id="content-changing-script">
                           		<variables>
@@ -440,6 +447,8 @@
 														correct = checkAnswers();
 														if (correct) {
 															versionConfig.setCurrentVersion("hard");
+														} else {
+															versionConfig.setCurrentVersion("easy");
 														}
 													}
 											};
