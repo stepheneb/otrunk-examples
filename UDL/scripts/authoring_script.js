@@ -22,6 +22,7 @@ importClass(Packages.org.concord.framework.otrunk.OTObjectList);
 importClass(Packages.org.concord.otrunk.ui.OTCardContainer);
 importClass(Packages.org.concord.otrunk.udl3.OTUDLMenu);
 importPackage(Packages.org.concord.framework.otrunk);
+importClass(Packages.java.lang.System);
 
 
 var pageHandler =
@@ -127,7 +128,8 @@ var pageContainerHandler =
 {
 		stateChanged: function(evt)
 		{
-			if (evt.getProperty().equalsIgnoreCase("cards")) {
+			if (evt.getProperty().equalsIgnoreCase("cards") &&
+				evt.getOperation().equals(OTChangeEvent.OP_ADD)) {
 				var numCards = evt.getSource().getCards().size();
 				var doc = evt.getSource().getCards().get(numCards-1);
 				doc.setBodyText("<div class=\"buffer\">"+
