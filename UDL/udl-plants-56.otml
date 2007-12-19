@@ -48,7 +48,6 @@
     <import class="org.concord.otrunk.ui.OTButton" />
     <import class="org.concord.otrunk.ui.OTCardContainer" />
     <import class="org.concord.otrunk.ui.OTChoice" />
-    <import class="org.concord.otrunk.ui.OTChoiceMultiple" />
     <import class="org.concord.otrunk.ui.OTImage" />
     <import class="org.concord.otrunk.ui.OTModeSwitcher" />
     <import class="org.concord.otrunk.ui.OTText" />
@@ -82,7 +81,9 @@
       <bundles>
         <OTViewBundle showLeftPanel="false" currentMode="student">
           <modes>
-            <OTViewMode name="student" />
+            <OTViewMode name="student">
+              <map />
+            </OTViewMode>
             <OTViewMode name="printing">
               <map>
                 <entry key="${questions-card-view}">
@@ -90,9 +91,6 @@
                 </entry>
                 <entry key="${choice-radio-view}">
                   <OTChoiceViewConfig objectClass="org.concord.otrunk.ui.OTChoice" viewClass="org.concord.otrunk.ui.swing.OTChoiceRadioButtonPrintView" useViewsAsChoices="true" />
-                </entry>
-                <entry key="${choice-checkbox-view}">
-                  <OTChoiceViewConfig objectClass="org.concord.otrunk.ui.OTChoiceMultiple" viewClass="org.concord.otrunk.ui.swing.OTChoiceRadioButtonPrintView" useViewsAsChoices="true" />
                 </entry>
                 <entry key="${text-edit}">
                   <OTViewEntry objectClass="org.concord.otrunk.ui.OTText" viewClass="org.concord.otrunk.ui.swing.OTTextPrintView" />
@@ -113,9 +111,6 @@
                 </entry>
                 <entry key="${choice-radio-view}">
                   <OTChoiceViewConfig objectClass="org.concord.otrunk.ui.OTChoice" viewClass="org.concord.otrunk.ui.swing.OTChoiceComboBoxEditView" useViewsAsChoices="true" />
-                </entry>
-                <entry key="${choice-checkbox-view}">
-                  <OTChoiceViewConfig objectClass="org.concord.otrunk.ui.OTChoiceMultiple" viewClass="org.concord.otrunk.ui.swing.OTChoiceComboBoxEditView" useViewsAsChoices="true" />
                 </entry>
                 <entry key="${menu-horizontal-circle}">
                   <OTViewEntry objectClass="org.concord.otrunk.udl3.OTUDLMenu" viewClass="org.concord.otrunk.udl.ui.OTUDLMenuPageEditView" />
@@ -140,8 +135,7 @@
                     <objectsToInsert>
                       <OTText name="Text field" />
                       <OTDrawingTool2 name="Draw tool" />
-                      <OTChoice name="Multiple-choice (single answer)" />
-                      <OTChoiceMultiple name="Multiple-choice (check boxes)"/>
+                      <OTChoice name="Choices" />
                       <OTQuestion name="Question" showConvertButton="true" />
                       <OTUDLQuestions name="Leveled questions" />
                       <OTDataTable name="Data table" showLastRowForAddingNew="true">
@@ -256,6 +250,37 @@
                       <object refid="${line-graph-2}" />
                       <object refid="${line-graph-3}" />
                       <object refid="${line-graph-4}" />
+                      <OTDataCollector id="6f1b9110-ae70-11dc-99f9-f77b3759dd95" name="Paper Humidity" title="Humidity Sensor Graph" autoScaleEnabled="true">
+                        <source>
+                          <OTDataGraphable name="Paper leaf" connectPoints="true" yColumn="1" drawMarks="false" color="255" xColumn="0" lineWidth="2.0">
+                            <dataProducer>
+                              <OTSensorDataProxy id="81490a4b-ae70-11dc-99f9-f77b3759dd95" name="dataproducer">
+                                <request>
+                                  <OTExperimentRequest period="0.1">
+                                    <sensorRequests>
+                                      <OTSensorRequest stepSize="0.1" type="7" unit="percentage" port="0" requiredMax="90.0" displayPrecision="-1" requiredMin="10.0" />
+                                    </sensorRequests>
+                                  </OTExperimentRequest>
+                                </request>
+                              </OTSensorDataProxy>
+                            </dataProducer>
+                            <dataStore>
+                              <OTDataStore id="81490a4c-ae70-11dc-99f9-f77b3759dd95" dt="0.1" numberChannels="1">
+                                <channelDescriptions>
+                                  <OTDataChannelDescription name="dt" precision="2" numericData="true" />
+                                  <OTDataChannelDescription name="" unit="percentage" precision="-1" numericData="true" />
+                                </channelDescriptions>
+                              </OTDataStore>
+                            </dataStore>
+                          </OTDataGraphable>
+                        </source>
+                        <xDataAxis>
+                          <OTDataAxis max="307.77777" units="s" min="0.0" label="Time" />
+                        </xDataAxis>
+                        <yDataAxis>
+                          <OTDataAxis max="90.0" units="percentage" min="10.0" label="Relative Humidity" />
+                        </yDataAxis>
+                      </OTDataCollector>
                     </sharedGraphs>
                   </OTDataCollectorViewConfig>
                 </entry>
@@ -640,9 +665,6 @@
                       <currentCard>
                         <object refid="fcb6477b-87ca-11dc-a57f-8bcc557bc796" />
                       </currentCard>
-                      <viewedCards>
-                        <object refid="fcb6477b-87ca-11dc-a57f-8bcc557bc796" />
-                      </viewedCards>
                     </OTCardContainer>
                   </content>
                   <header>
@@ -1250,7 +1272,7 @@ Sonny had indeed popped. Overnight, it seemed, the sunflower had grown until it 
                             </div>
                           </bodyText>
                         </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc id="0848ed08-87cb-11dc-a57f-8bcc557bc796/cards[2]" name="%5f81839c-8bef-11dc-936b-9b53963fb53c">
+                        <OTUDLCompoundDoc name="%5f81839c-8bef-11dc-936b-9b53963fb53c">
                           <bodyText>
                             <div class="buffer">
                               <div class="border">
@@ -1277,7 +1299,7 @@ Sonny had indeed popped. Overnight, it seemed, the sunflower had grown until it 
                             </div>
                           </bodyText>
                         </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc id="0848ed08-87cb-11dc-a57f-8bcc557bc796/cards[3]" name="%21aa8c7a-8dbe-11dc-8dfc-adc6e5606308">
+                        <OTUDLCompoundDoc name="%21aa8c7a-8dbe-11dc-8dfc-adc6e5606308">
                           <bodyText>
                             <div class="buffer">
                               <div class="border">
@@ -1303,7 +1325,7 @@ Sonny had indeed popped. Overnight, it seemed, the sunflower had grown until it 
                             </div>
                           </bodyText>
                         </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc id="0848ed08-87cb-11dc-a57f-8bcc557bc796/cards[4]" name="%016a93ff-accc-11dc-ada3-b34d44783674">
+                        <OTUDLCompoundDoc name="%016a93ff-accc-11dc-ada3-b34d44783674">
                           <bodyText>
                             <div class="buffer">
                               <div class="border">
@@ -1370,7 +1392,7 @@ Sonny had indeed popped. Overnight, it seemed, the sunflower had grown until it 
                             </div>
                           </bodyText>
                         </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc id="0848ed08-87cb-11dc-a57f-8bcc557bc796/cards[5]" name="%695628cd-8dc5-11dc-8dfc-adc6e5606308">
+                        <OTUDLCompoundDoc name="%695628cd-8dc5-11dc-8dfc-adc6e5606308">
                           <bodyText>
                             <div class="buffer">
                               <div class="border">
@@ -1411,7 +1433,7 @@ Sonny had indeed popped. Overnight, it seemed, the sunflower had grown until it 
                             </div>
                           </bodyText>
                         </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc id="0848ed08-87cb-11dc-a57f-8bcc557bc796/cards[6]" name="%7bb8ed0e-8dc6-11dc-8dfc-adc6e5606308">
+                        <OTUDLCompoundDoc name="%7bb8ed0e-8dc6-11dc-8dfc-adc6e5606308">
                           <bodyText>
                             <div class="buffer">
                               <div class="border">
@@ -1618,7 +1640,7 @@ Sonny had indeed popped. Overnight, it seemed, the sunflower had grown until it 
                             </OTDataTable>
                           </documentRefs>
                         </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc id="0848ed08-87cb-11dc-a57f-8bcc557bc796/cards[7]" name="%dd3940c9-925e-11dc-8697-f35abbf4ef42">
+                        <OTUDLCompoundDoc name="%dd3940c9-925e-11dc-8697-f35abbf4ef42">
                           <bodyText>
                             <div class="buffer">
                               <div class="border">
@@ -1650,7 +1672,7 @@ Sonny had indeed popped. Overnight, it seemed, the sunflower had grown until it 
                             </OTDataGraph>
                           </documentRefs>
                         </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc id="0848ed08-87cb-11dc-a57f-8bcc557bc796/cards[8]" name="%dd3940c9-925e-11dc-8697-f35abbf4ef42">
+                        <OTUDLCompoundDoc name="%dd3940c9-925e-11dc-8697-f35abbf4ef42">
                           <bodyText>
                             <div class="buffer">
                               <div class="border">
@@ -1682,7 +1704,7 @@ Sonny had indeed popped. Overnight, it seemed, the sunflower had grown until it 
                             </OTDataGraph>
                           </documentRefs>
                         </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc id="0848ed08-87cb-11dc-a57f-8bcc557bc796/cards[9]" name="%dd3940c9-925e-11dc-8697-f35abbf4ef42">
+                        <OTUDLCompoundDoc name="%dd3940c9-925e-11dc-8697-f35abbf4ef42">
                           <bodyText>
                             <div class="buffer">
                               <div class="border">
@@ -1714,7 +1736,7 @@ Sonny had indeed popped. Overnight, it seemed, the sunflower had grown until it 
                             </OTDataGraph>
                           </documentRefs>
                         </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc id="0848ed08-87cb-11dc-a57f-8bcc557bc796/cards[10]" name="%dd3940c9-925e-11dc-8697-f35abbf4ef42">
+                        <OTUDLCompoundDoc name="%dd3940c9-925e-11dc-8697-f35abbf4ef42">
                           <bodyText>
                             <div class="buffer">
                               <div class="border">
@@ -1737,7 +1759,7 @@ Sonny had indeed popped. Overnight, it seemed, the sunflower had grown until it 
                             </div>
                           </bodyText>
                         </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc id="0848ed08-87cb-11dc-a57f-8bcc557bc796/cards[11]" name="%dd3940c9-925e-11dc-8697-f35abbf4ef42">
+                        <OTUDLCompoundDoc name="%dd3940c9-925e-11dc-8697-f35abbf4ef42">
                           <bodyText>
                             <div class="buffer">
                               <div class="border">
@@ -1772,7 +1794,7 @@ Sonny had indeed popped. Overnight, it seemed, the sunflower had grown until it 
                             </div>
                           </bodyText>
                         </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc id="0848ed08-87cb-11dc-a57f-8bcc557bc796/cards[12]" name="%efc585bc-925f-11dc-8697-f35abbf4ef42">
+                        <OTUDLCompoundDoc name="%efc585bc-925f-11dc-8697-f35abbf4ef42">
                           <bodyText>
                             <div class="buffer">
                               <div class="border">
@@ -1828,7 +1850,7 @@ Sonny had indeed popped. Overnight, it seemed, the sunflower had grown until it 
                             </OTDataGraph>
                           </documentRefs>
                         </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc id="0848ed08-87cb-11dc-a57f-8bcc557bc796/cards[13]" name="%425079a7-9263-11dc-8697-f35abbf4ef42">
+                        <OTUDLCompoundDoc name="%425079a7-9263-11dc-8697-f35abbf4ef42">
                           <bodyText>
                             <div class="buffer">
                               <div class="border">
@@ -1880,7 +1902,7 @@ Sonny had indeed popped. Overnight, it seemed, the sunflower had grown until it 
                             <OTText id="728aafbd-9841-11dc-9306-41e7de565cb6" name="Text field" />
                           </documentRefs>
                         </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc id="0848ed08-87cb-11dc-a57f-8bcc557bc796/cards[14]" name="%f53a5dce-9264-11dc-8697-f35abbf4ef42">
+                        <OTUDLCompoundDoc name="%f53a5dce-9264-11dc-8697-f35abbf4ef42">
                           <bodyText>
                             <div class="buffer">
                               <div class="border">
@@ -1980,24 +2002,8 @@ Sonny had indeed popped. Overnight, it seemed, the sunflower had grown until it 
                         </OTUDLCompoundDoc>
                       </cards>
                       <currentCard>
-                        <object refid="0848ed08-87cb-11dc-a57f-8bcc557bc796/cards[12]" />
-                      </currentCard>
-                      <viewedCards>
                         <object refid="0848ed07-87cb-11dc-a57f-8bcc557bc796" />
-                        <object refid="0848ed08-87cb-11dc-a57f-8bcc557bc796/cards[13]" />
-                        <object refid="0848ed08-87cb-11dc-a57f-8bcc557bc796/cards[12]" />
-                        <object refid="0848ed08-87cb-11dc-a57f-8bcc557bc796/cards[11]" />
-                        <object refid="0848ed08-87cb-11dc-a57f-8bcc557bc796/cards[5]" />
-                        <object refid="0848ed08-87cb-11dc-a57f-8bcc557bc796/cards[4]" />
-                        <object refid="0848ed08-87cb-11dc-a57f-8bcc557bc796/cards[3]" />
-                        <object refid="0848ed08-87cb-11dc-a57f-8bcc557bc796/cards[2]" />
-                        <object refid="0848ed08-87cb-11dc-a57f-8bcc557bc796/cards[6]" />
-                        <object refid="0848ed08-87cb-11dc-a57f-8bcc557bc796/cards[7]" />
-                        <object refid="0848ed08-87cb-11dc-a57f-8bcc557bc796/cards[8]" />
-                        <object refid="0848ed08-87cb-11dc-a57f-8bcc557bc796/cards[9]" />
-                        <object refid="0848ed08-87cb-11dc-a57f-8bcc557bc796/cards[10]" />
-                        <object refid="0848ed08-87cb-11dc-a57f-8bcc557bc796/cards[14]" />
-                      </viewedCards>
+                      </currentCard>
                     </OTCardContainer>
                   </content>
                   <header>
@@ -2067,7 +2073,7 @@ Sonny had indeed popped. Overnight, it seemed, the sunflower had grown until it 
                             </div>
                           </bodyText>
                         </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc id="0d742b0e-87cb-11dc-a57f-8bcc557bc796/cards[1]" name="%ced355a9-9308-11dc-81be-c306cc585be5">
+                        <OTUDLCompoundDoc name="%ced355a9-9308-11dc-81be-c306cc585be5">
                           <bodyText>
                             <div class="buffer">
                               <div class="border">
@@ -2107,7 +2113,7 @@ Sonny had indeed popped. Overnight, it seemed, the sunflower had grown until it 
                             </div>
                           </bodyText>
                         </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc id="0d742b0e-87cb-11dc-a57f-8bcc557bc796/cards[3]" name="%1ed46a16-930c-11dc-81be-c306cc585be5">
+                        <OTUDLCompoundDoc name="%1ed46a16-930c-11dc-81be-c306cc585be5">
                           <bodyText>
                             <div class="buffer">
                               <div class="border">
@@ -2131,7 +2137,7 @@ Sonny had indeed popped. Overnight, it seemed, the sunflower had grown until it 
                             <OTNLogoModel id="501e02f5-a8c5-11dc-ac56-bd7645c83487" name="NetLogo model" authoredDataURL="http://udl.concord.org/share/models/netlogo/leaf-macro-v40c.nlogo" />
                           </documentRefs>
                         </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc id="0d742b0e-87cb-11dc-a57f-8bcc557bc796/cards[4]" name="%7163364f-930c-11dc-81be-c306cc585be5">
+                        <OTUDLCompoundDoc name="%7163364f-930c-11dc-81be-c306cc585be5">
                           <bodyText>
                             <div class="buffer">
                               <div class="border">
@@ -2176,7 +2182,7 @@ Sonny had indeed popped. Overnight, it seemed, the sunflower had grown until it 
                             </div>
                           </bodyText>
                         </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc id="0d742b0e-87cb-11dc-a57f-8bcc557bc796/cards[5]" name="%3c5c9d78-930e-11dc-81be-c306cc585be5">
+                        <OTUDLCompoundDoc name="%3c5c9d78-930e-11dc-81be-c306cc585be5">
                           <bodyText>
                             <div class="buffer">
                               <div class="border">
@@ -2228,7 +2234,7 @@ Click on the
                             </div>
                           </bodyText>
                         </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc id="0d742b0e-87cb-11dc-a57f-8bcc557bc796/cards[6]" name="%4eb0bbed-930f-11dc-81be-c306cc585be5">
+                        <OTUDLCompoundDoc name="%4eb0bbed-930f-11dc-81be-c306cc585be5">
                           <bodyText>
                             <div class="buffer">
                               <div class="border">
@@ -2251,7 +2257,7 @@ Click on the
                             </div>
                           </bodyText>
                         </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc id="0d742b0e-87cb-11dc-a57f-8bcc557bc796/cards[7]" name="%9b347c54-9310-11dc-81be-c306cc585be5">
+                        <OTUDLCompoundDoc name="%9b347c54-9310-11dc-81be-c306cc585be5">
                           <bodyText>
                             <div class="buffer">
                               <div class="border">
@@ -2295,7 +2301,7 @@ Click on the
                             <OTText id="9957d7a9-9311-11dc-81be-c306cc585be5" name="Text field" />
                           </documentRefs>
                         </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc id="0d742b0e-87cb-11dc-a57f-8bcc557bc796/cards[8]" name="%ccc0d9b8-9311-11dc-81be-c306cc585be5">
+                        <OTUDLCompoundDoc name="%ccc0d9b8-9311-11dc-81be-c306cc585be5">
                           <bodyText>
                             <div class="buffer">
                               <div class="border">
@@ -2341,7 +2347,7 @@ Click on the
                             <OTText id="5abefd35-9313-11dc-81be-c306cc585be5" name="Text field" />
                           </documentRefs>
                         </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc id="0d742b0e-87cb-11dc-a57f-8bcc557bc796/cards[9]" name="%210b6990-9313-11dc-81be-c306cc585be5">
+                        <OTUDLCompoundDoc name="%210b6990-9313-11dc-81be-c306cc585be5">
                           <bodyText>
                             <div class="buffer">
                               <div class="border">
@@ -2441,19 +2447,8 @@ Click on the
                         </OTUDLCompoundDoc>
                       </cards>
                       <currentCard>
-                        <object refid="0d742b0e-87cb-11dc-a57f-8bcc557bc796/cards[4]" />
-                      </currentCard>
-                      <viewedCards>
                         <object refid="0d742b0d-87cb-11dc-a57f-8bcc557bc796" />
-                        <object refid="0d742b0e-87cb-11dc-a57f-8bcc557bc796/cards[4]" />
-                        <object refid="0d742b0e-87cb-11dc-a57f-8bcc557bc796/cards[5]" />
-                        <object refid="0d742b0e-87cb-11dc-a57f-8bcc557bc796/cards[6]" />
-                        <object refid="0d742b0e-87cb-11dc-a57f-8bcc557bc796/cards[7]" />
-                        <object refid="0d742b0e-87cb-11dc-a57f-8bcc557bc796/cards[8]" />
-                        <object refid="0d742b0e-87cb-11dc-a57f-8bcc557bc796/cards[9]" />
-                        <object refid="0d742b0e-87cb-11dc-a57f-8bcc557bc796/cards[1]" />
-                        <object refid="0d742b0e-87cb-11dc-a57f-8bcc557bc796/cards[3]" />
-                      </viewedCards>
+                      </currentCard>
                     </OTCardContainer>
                   </content>
                   <header>
@@ -2929,10 +2924,10 @@ Describe the evidence collected in your model for your answer.
                               <div class="border">
                                 <div class="body">
                                   <div class="subtitle">Discovery question</div>
-                                  How does the 24-hour day/night cycle affect the release of water vapor by plants?
+                                  What elements are exchanged with the air by the leaves?
                                   <BR />
                                   <BR />
-                                  <img src="http://udl.concord.org/artwork/plant_56/pl56_dayandnight.png" />
+                                  <img src="http://www.stillriverdesign.com/udl/plant_56/intro/pl_56_intro_bw.png" />
                                   <BR />
                                   <BR />
                                   In this activity, students investigate the importance of breathing for a living plant.
@@ -3097,7 +3092,7 @@ Describe the evidence collected in your model for your answer.
                                   Hold the sensor in front of you, with the end of the wand facing the ceiling.
                                   <BR />
                                   <BR />
-                                  <img src="http://udl.concord.org/artwork/plant_56/pl56_air_humidty_sensor.jpg" />
+                                  <img src="http://www.stillriverdesign.com/udl/plant_56/air_humidity_sensor/pl_56_air_humidity_sensor_bw.png" />
                                   <BR />
                                   <BR />
                                   Start the sensor. (Technical Hint needed)
@@ -3134,7 +3129,7 @@ Describe the evidence collected in your model for your answer.
                                   Now move the sensor in front of your mouth. Cup your hand around the end of the wand, facing towards your mouth.
                                   <BR />
                                   <BR />
-                                  <img src="http://udl.concord.org/artwork/plant_56/pl56_breathing_humidity_sensor.jpg" />
+                                  <img src="http://www.stillriverdesign.com/udl/plant_56/breathing_humidity_sensor/pl_56_breathing_humidity_sensor_bw.png" />
                                   <BR />
                                   <BR />
                                   Make sure the breath label is selected and start the sensor. (Technical Hint needed)
@@ -3226,16 +3221,248 @@ Describe the evidence collected in your model for your answer.
                                   Obtain a small potted plant with broad leaves from your teacher.
                                   <BR />
                                   <BR />
+                                  <img src="http://www.stillriverdesign.com/udl/plant_56/tracingleaf/pl_56_tracingleaf_bw.png" />
+                                  <BR />
+                                  <BR />
                                   Use one of the leaves to trace a pattern of the leaf on construction paper.
+                                  <BR />
+                                  <BR />
+                                  Obtain a resealable bag and place your paper leaf in the bag with the humidity sensor. It is not necessary to completely seal the bag.
+                                  <BR />
+                                  <BR />
+                                  <img src="http://www.stillriverdesign.com/udl/plant_56/paper_leaf_humidity_sensor/pl_56_paper_leaf_humidity_sensor.png" />
+                                  <BR />
+                                  <BR />
                                 </div>
                               </div>
                             </div>
                           </bodyText>
                         </OTUDLCompoundDoc>
+                        <OTUDLCompoundDoc name="%ee8616f5-ae6f-11dc-99f9-f77b3759dd95">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle">Explore page 6</div>
+                                  Start the humidity sensor by clicking on the Start button below the graph.
+                                  <BR />
+                                  <BR />
+                                  <object refid="6f1b9110-ae70-11dc-99f9-f77b3759dd95" />
+                                  <BR />
+                                  <BR />
+                                  Stop collecting data after 300 seconds (5 minutes).
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                          <documentRefs>
+                            <object refid="6f1b9110-ae70-11dc-99f9-f77b3759dd95" />
+                          </documentRefs>
+                        </OTUDLCompoundDoc>
+                        <OTUDLCompoundDoc name="%c84557b1-ae70-11dc-99f9-f77b3759dd95">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle">Explore page 7</div>
+                                  Obtain a small plant with broad leaves from your teacher.
+                                  <BR />
+                                  <BR />
+                                  <img src="http://www.stillriverdesign.com/udl/plant_56/real_leaf_humidity_sensor/pl_56_real_leaf_humidity_sensor.png" />
+                                  <BR />
+                                  <BR />
+                                  Bag a live leaf while it is still on the plant with a relative humidity sensor.
+                                  <BR />
+                                  <BR />
+                                  Start the humidity sensor by clicking on the Start button below the graph.
+                                  <BR />
+                                  <BR />
+                                  <object refid="d7cfc45c-ae70-11dc-99f9-f77b3759dd95" />
+                                  <BR />
+                                  <BR />
+                                  Stop collecting data after 300 seconds (5 minutes).
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                          <documentRefs>
+                            <OTDataCollector id="d7cfc45c-ae70-11dc-99f9-f77b3759dd95" name="Relative Humidity" title="Relative Humidity Sensor Graph" autoScaleEnabled="true">
+                              <source>
+                                <OTDataGraphable name="Live leaf" connectPoints="true" yColumn="1" drawMarks="false" color="16711680" xColumn="0" lineWidth="2.0">
+                                  <dataProducer>
+                                    <OTSensorDataProxy name="dataproducer">
+                                      <request>
+                                        <OTExperimentRequest period="0.1">
+                                          <sensorRequests>
+                                            <OTSensorRequest stepSize="0.1" type="7" unit="percentage" port="0" requiredMax="90.0" displayPrecision="-1" requiredMin="10.0" />
+                                          </sensorRequests>
+                                        </OTExperimentRequest>
+                                      </request>
+                                    </OTSensorDataProxy>
+                                  </dataProducer>
+                                  <dataStore>
+                                    <OTDataStore dt="0.1" numberChannels="1">
+                                      <channelDescriptions>
+                                        <OTDataChannelDescription name="dt" precision="2" numericData="true" />
+                                        <OTDataChannelDescription name="" unit="percentage" precision="-1" numericData="true" />
+                                      </channelDescriptions>
+                                    </OTDataStore>
+                                  </dataStore>
+                                </OTDataGraphable>
+                              </source>
+                              <xDataAxis>
+                                <OTDataAxis max="315.18073" units="s" min="0.0" label="Time" />
+                              </xDataAxis>
+                              <yDataAxis>
+                                <OTDataAxis max="90.0" units="percentage" min="10.0" label="Relative Humidity" />
+                              </yDataAxis>
+                              <graphables>
+                                <OTDataGraphable name="Paper leaf" connectPoints="true" yColumn="1" drawMarks="false" color="255" xColumn="0" lineWidth="2.0" locked="true">
+                                  <dataProducer>
+                                    <object refid="81490a4b-ae70-11dc-99f9-f77b3759dd95" />
+                                  </dataProducer>
+                                  <dataStore>
+                                    <object refid="81490a4c-ae70-11dc-99f9-f77b3759dd95" />
+                                  </dataStore>
+                                </OTDataGraphable>
+                              </graphables>
+                            </OTDataCollector>
+                          </documentRefs>
+                        </OTUDLCompoundDoc>
+                        <OTUDLCompoundDoc name="%b0e5d7c9-ae72-11dc-99f9-f77b3759dd95">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle">Explain page 1</div>
+                                  Here are your data from comparing the humidity around a paper leaf and a living leaf.
+                                  <BR />
+                                  <BR />
+                                  <object refid="d7cfc45c-ae70-11dc-99f9-f77b3759dd95" />
+                                  <BR />
+                                  <BR />
+                                  Compare the two humidity graphs. Based on this data, do you think that plants "breathe" or exchange gases with the environment?
+                                  <object refid="2a6ed1c4-ae73-11dc-99f9-f77b3759dd95" />
+                                  <BR />
+                                  <BR />
+                                  Explain.
+                                  <BR />
+                                  <BR />
+                                  <object refid="4282e9b9-ae73-11dc-99f9-f77b3759dd95" />
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                          <documentRefs>
+                            <object refid="d7cfc45c-ae70-11dc-99f9-f77b3759dd95" />
+                            <OTChoice id="2a6ed1c4-ae73-11dc-99f9-f77b3759dd95" name="Choices">
+                              <choices>
+                                <OTCompoundDoc name="yes">
+                                  <bodyText>yes</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="no">
+                                  <bodyText>no</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="maybe">
+                                  <bodyText>maybe</bodyText>
+                                </OTCompoundDoc>
+                              </choices>
+                            </OTChoice>
+                            <OTText id="4282e9b9-ae73-11dc-99f9-f77b3759dd95" name="Text field" />
+                          </documentRefs>
+                        </OTUDLCompoundDoc>
+                        <OTUDLCompoundDoc name="%ab834126-ae73-11dc-99f9-f77b3759dd95">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle">Explain page 2</div>
+                                  How is the breathing of animals (respiration) and the breathing of plants during photosynthesis (transpiration)  the same?
+                                  <BR />
+                                  <BR />
+                                  <object refid="f8ddf571-ae73-11dc-99f9-f77b3759dd95" />
+                                  <BR />
+                                  <BR />
+                                  How is respiration of animals and transpiration of plants  different?
+                                  <BR />
+                                  <BR />
+                                  <object refid="0349a73c-ae74-11dc-99f9-f77b3759dd95" />
+                                  <BR />
+                                  <BR />
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                          <documentRefs>
+                            <OTText id="f8ddf571-ae73-11dc-99f9-f77b3759dd95" name="Text field" />
+                            <OTText id="0349a73c-ae74-11dc-99f9-f77b3759dd95" name="Text field" />
+                          </documentRefs>
+                        </OTUDLCompoundDoc>
+                        <OTUDLCompoundDoc name="%6f478665-ae74-11dc-99f9-f77b3759dd95">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle">Elaborate</div>
+                                  Design a method to investigate the releasing of moisture by other living things (trees, grass, insects, etc.).
+                                  <BR />
+                                  <BR />
+                                  <object refid="88b70fa0-ae74-11dc-99f9-f77b3759dd95" />
+                                  <BR />
+                                  <BR />
+                                  Collect data for each by clicking and on the New button and labeling the type of plant.
+                                  <BR />
+                                  <BR />
+                                  What type of plants display the release of more water during photosynthesis?
+                                  <BR />
+                                  <BR />
+                                  <object refid="d98a21e3-ae74-11dc-99f9-f77b3759dd95" />
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                          <documentRefs>
+                            <OTDataCollector id="88b70fa0-ae74-11dc-99f9-f77b3759dd95" name="Relative Humidity" title="Humidity Sensor Graph" autoScaleEnabled="true" multipleGraphableEnabled="true">
+                              <source>
+                                <OTDataGraphable name="Sensor" connectPoints="true" yColumn="1" drawMarks="false" color="255" xColumn="0" lineWidth="2.0">
+                                  <dataProducer>
+                                    <OTSensorDataProxy name="dataproducer">
+                                      <request>
+                                        <OTExperimentRequest period="0.1">
+                                          <sensorRequests>
+                                            <OTSensorRequest stepSize="0.1" type="7" unit="percentage" port="0" requiredMax="90.0" displayPrecision="-1" requiredMin="10.0" />
+                                          </sensorRequests>
+                                        </OTExperimentRequest>
+                                      </request>
+                                    </OTSensorDataProxy>
+                                  </dataProducer>
+                                  <dataStore>
+                                    <OTDataStore dt="0.1" numberChannels="1">
+                                      <channelDescriptions>
+                                        <OTDataChannelDescription name="dt" precision="2" numericData="true" />
+                                        <OTDataChannelDescription name="" unit="percentage" precision="-1" numericData="true" />
+                                      </channelDescriptions>
+                                    </OTDataStore>
+                                  </dataStore>
+                                </OTDataGraphable>
+                              </source>
+                              <xDataAxis>
+                                <OTDataAxis max="60.0" units="s" min="0.0" label="Time" />
+                              </xDataAxis>
+                              <yDataAxis>
+                                <OTDataAxis max="90.0" units="percentage" min="10.0" label="Relative Humidity" />
+                              </yDataAxis>
+                            </OTDataCollector>
+                            <OTText id="d98a21e3-ae74-11dc-99f9-f77b3759dd95" name="Text field" />
+                          </documentRefs>
+                        </OTUDLCompoundDoc>
                       </cards>
                       <currentCard>
                         <object refid="19a95229-87cb-11dc-a57f-8bcc557bc796" />
                       </currentCard>
+                      <viewedCards>
+                        <object refid="19a95229-87cb-11dc-a57f-8bcc557bc796" />
+                      </viewedCards>
                     </OTCardContainer>
                   </content>
                   <header>
@@ -4155,13 +4382,10 @@ Describe the evidence collected in your model for your answer.
                 </OTUDLSection>
               </cards>
               <currentCard>
-                <object refid="${section_5}" />
+                <object refid="${section_1}" />
               </currentCard>
               <viewedCards>
                 <object refid="${section_1}" />
-                <object refid="${section_4}" />
-                <object refid="${section_2}" />
-                <object refid="${section_5}" />
               </viewedCards>
             </OTCardContainer>
           </content>
