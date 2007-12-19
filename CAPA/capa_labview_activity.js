@@ -1,13 +1,112 @@
 importClass(Packages.java.lang.System)
+importClass(Packages.java.awt.Color)
 importClass(Packages.java.awt.event.ActionListener)
 importClass(Packages.javax.swing.JOptionPane)
 
+importClass(Packages.org.concord.otrunk.ui.swing.OTCardContainerView)
+importClass(Packages.org.concord.otrunkcapa.rubric.OTAssessment)
+importClass(Packages.org.concord.otrunk.labview.LabviewActivityLog)
 
+
+/**
+ * Variables from otml
+ */
 var otMonitor
-var submitButton;
-var reportButton;
-var clearButton;
-var reportsText; // reports are shown here when "show report" has been selected
+var otInstAreaCards
+var otAnswerBox
+var otUnitChoice
+var otEmptyUnitChoice
+var otUnitComboBox
+var submitButton
+var reportButton
+var clearButton
+var reportsText // reports are shown here when "show report" has been selected
+
+/**
+ * 
+ */
+var otAssessment
+var initializationDone = false
+//var activityInitialized = false
+var activityInitialized = true
+var timeStepStarted = 0
+
+/**
+ * This function is called when the script starts up
+ * It returns a boolean indicating whether the initialization 
+ * was successful or not.
+ */
+function init() {
+	System.out.println("-------------------------- init --------------------------------")
+	setupGUI()
+	//initLogging()
+	//setupMultimeter()
+	//setupCircuitListener()
+	//setupAnswerButton()
+	//setupActivity()
+	setupAsessmentLogging()
+	//setupCircuitAnalyzer()
+	initializationDone = true
+        
+	//submitButton.addActionListener(submitButtonListener)
+	//clearButton.addActionListener(clearButtonListener)
+	// 	
+	return initializationDone;
+}
+
+function save() {
+	submitButton.removeActionListener(submitButtonListener)
+	submitButton.removeActionListener(clearButtonListener)
+	return true;
+}
+
+function setupGUI() {
+	otAnswerBox.setBackground(new Color(1,1,0.7))
+	otUnitComboBox.setBackground(new Color(1,1,0.7))
+}
+
+function setupAsessmentLogging() {
+	if (activityInitialized) {
+		//Create assessment object
+		otAssessment = otObjectService.createObject(OTAssessment)
+		otContents.add(otAssessment)
+	}
+	else{
+		//If the activity was already run, take the last assessment object, copy it and continue it
+		var otLastAssessment = null
+		for (var i = otContents.size() - 1; i >= 0; i--) {
+			var obj = otContents.get(i)
+			if (obj instanceof OTLabviewOScopeAssessment) {
+				otLastAssessment = obj
+				break
+			}
+		}
+		if (otLastAssessment != null) {
+			otAssessment = otObjectService.copyObject(otLastAssessment, -1)
+			otContents.add(otAssessment)
+		}
+	}
+	//////////
+	otAssessment.getIndicatorValues().put("amplitudeCorrect", new java.lang.Float(0.01))
+	otAssessment.getIndicatorValues().put("frequencyCorrect", new java.lang.Float(0.04))
+	//////////
+}
+
+function initStep() {
+	timeStepStarted = System.currentTimeMillis()
+}
+
+function startStep(step) {
+	initStep()
+	
+	//Show instructions for the current step
+	var strCardID = "step" + step + "_text"
+	OTCardContainerView.setCurrentCard(otInstAreaCards, strCardID)
+	//
+	
+	otAnswerBox.setText("")
+	otUnitChoice.setCurrentChoice(otEmptyUnitChoice)
+}
 
 function setReportText() {
 	var logs = otMonitor.getLogs()
@@ -22,7 +121,7 @@ function setReportText() {
 		}
 	}
 		
-	System.out.println(text);
+	System.out.println(text)
 	reportsText.setText(text)
 }
 
@@ -30,7 +129,7 @@ var submitButtonHandler = {
 	actionPerformed: function(evt) {
 		var monitor = controllerService.getRealObject(otMonitor)
 		if (monitor.processIsRunning()) {
-			JOptionPane.showMessageDialog(null, "Please close the LabVIEW session first and try SUBMIT again.");
+			JOptionPane.showMessageDialog(null, "Please close the LabVIEW session first and try SUBMIT again.")
 			System.out.println("Process running. Try when finished")
 			return
 		}
@@ -47,18 +146,6 @@ var clearButtonHandler = {
 };
 
 
-var submitButtonListener = new ActionListener(submitButtonHandler);
-var clearButtonListener = new ActionListener(clearButtonHandler);
+var submitButtonListener = new ActionListener(submitButtonHandler)
 
 
-function init() {
-	submitButton.addActionListener(submitButtonListener);
-	clearButton.addActionListener(clearButtonListener);	
-	return true;
-}
-
-function save() {
-	submitButton.removeActionListener(submitButtonListener);
-	submitButton.removeActionListener(clearButtonListener);		
-	return true;
-}
