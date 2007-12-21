@@ -73,18 +73,18 @@
           <portNum>7004</portNum>
           <viPath>SCOPE.vi</viPath>
           <monitorPath>c:\Program Files\Concord Consortium\CAPA LabVIEW\Monitor\monitor.exe</monitorPath>
-          <reportPath>c:\Program Files\Concord Consortium\CAPA LabVIEW\Monitor\data\report.xml</reportPath>
+          <!-- <reportPath>c:\Program Files\Concord Consortium\CAPA LabVIEW\Monitor\data\report.xml</reportPath>-->
+          <reportPath>/Users/skim/report.xml</reportPath>          
           <exclusionPath>c:\Program Files\Concord Consortium\CAPA LabVIEW\Monitor\data\exclusions.txt</exclusionPath>
         </OTLabviewMonitor>
 		<OTPlacementContainer width="800" height="600" local_id="capa_labview_placement_view" name="LabVIEW">
 		  <placements>
-			<OTPlacement component="${information_area}" height="380" width="610" x="10" y="10"/>
-			<OTPlacement component="${instructions_area}" height="200" width="610" x="10" y="400"/>
-			<OTPlacement component="${report_button}" height="40" width="150" x="630" y="10"/>
+			<OTPlacement component="${information_area}" height="180" width="610" x="10" y="10"/>
+			<OTPlacement component="${instructions_area}" height="260" width="610" x="10" y="200"/>
+			<OTPlacement component="${answers_area}" height="140" width="520" x="100" y="460"/>			
+			<OTPlacement component="${report_button}" height="40" width="150" x="630" y="40"/>
 			<OTPlacement component="${labview_monitor_button}" height="40" width="160" x="630" y="400"/>
-			<OTPlacement component="${answer_box}" height="28" width="60" x="630" y="470"/>
-			<OTPlacement component="${unit_choice}"	height="28" width="100" x="700" y="470" />
-			<OTPlacement component="${submit_answer_button}" height="40" width="160" x="630" y="510"/>
+			<OTPlacement component="${submit_answer_button}" height="40" width="160" x="630" y="480"/>
 			<OTPlacement component="${activity_script}"	height="0" width="0" x="0" y="0"/>
 		  </placements>
 		</OTPlacementContainer>
@@ -95,15 +95,30 @@
 		  </cards>
 		</OTCardContainer>
 		<OTCompoundDoc local_id="instructions_area">
-		  <bodyText>
-			<object refid="${instructions_cards}"/>
-		  </bodyText>
+		  	<bodyText>
+				<object refid="${instructions_cards}"/>
+		  	</bodyText>
 		</OTCompoundDoc>
 		<OTCompoundDoc local_id="information_area">
-		  <bodyText>
-			<p align="center"><img src="http://capa.concord.org/capa.gif"/></p>
-			<object refid="${info_cards}"/>
-		  </bodyText>
+		  	<bodyText>
+				<p align="center"><img src="http://capa.concord.org/capa.gif"/></p>
+				<object refid="${info_cards}"/>
+		  	</bodyText>
+		</OTCompoundDoc>
+		<OTCompoundDoc local_id="answers_area">
+			<bodyText>
+				<table>
+					<tr>
+						<td></td><td width="100"><center>Answer</center></td><td><center>Unit</center></td>
+					</tr>
+					<tr>
+						<td>Amplitude:</td><td width="100"><object refid="${answer_box_amp}"/></td><td><object refid="${unit_choice_amp}"/></td>
+					</tr>
+					<tr>
+						<td>Frequency:</td><td width="100"><object refid="${answer_box_frq}"/></td><td><object refid="${unit_choice_frq}"/></td>
+					</tr>
+				</table>
+			</bodyText>
 		</OTCompoundDoc>
 		<OTCardContainer local_id="info_cards">
    		  <cards>
@@ -144,7 +159,13 @@ You can close the window now.
 			  <blockquote>
 				<p>
 				  <font size="4" face="Verdana">
-<b>Task number 1</b>: Click on <font color="#ff9000">Launch LabVIEW</font> button to open the Oscilloscope.
+<b>Task</b>:<br/>
+
+<p>1. Click on <font color="#f08000">Launch LabVIEW</font> button to open the oscilloscope window.</p>
+<p>2. Use the oscilloscope to find out the amplitude and frequency, and fill out the answers.</p>
+<p>3. Close the oscilloscope window by clicking on the <font color="#f08000">EXIT</font> button.</p>
+<p>4. Click on the <font color="#f08000">Submit Answer</font> button to finish.</p>
+
 				  </font>
 				</p>
 			  </blockquote>
@@ -155,20 +176,36 @@ You can close the window now.
 		  <text>
 		  </text>
 		</OTTextPane>
- 	    <OTText local_id="answer_box"/>
+ 	    <OTText local_id="answer_box_amp"/>
+ 	    <OTText local_id="answer_box_frq"/> 	    
 		<OTUnit name="Units?" abbreviation="" local_id="empty_unit_choice"/>
-		<OTChoice local_id="unit_choice">
+		<OTChoice local_id="unit_choice_amp">
 		  <choices>
-		     <OTUnit name="millivolts" abbreviation="mV"/>
-		     <OTUnit name="volts" abbreviation="V"/>
-		     <OTUnit name="kilovolts" abbreviation="kV"/>
+		     <OTUnit name="Hz" abbreviation="Hz"/>
+  		     <OTUnit name="KHz" abbreviation="kHz"/>		  
+  		     <OTUnit name="MHz" abbreviation="MHz"/>		    		     
+		     <OTUnit name="mV" abbreviation="mV"/>
+		     <OTUnit name="V" abbreviation="V"/>
+		     <OTUnit name="kV" abbreviation="kV"/>
 		     <OTUnit name="microseconds" abbreviation="micro-s"/>
 		     <OTUnit name="milliseconds" abbreviation="ms"/>
 		     <OTUnit name="seconds" abbreviation="s"/>
 		  </choices>
 		</OTChoice>
-        <OTButton local_id="submit_button" name="Submit Button" text="Submit" />
-		<OTButton local_id="submit_answer_button"	text="Submit Answer" />
+		<OTChoice local_id="unit_choice_frq">
+		  <choices>
+		     <OTUnit name="Hz" abbreviation="Hz"/>
+  		     <OTUnit name="KHz" abbreviation="kHz"/>		  
+  		     <OTUnit name="MHz" abbreviation="MHz"/>		    		     
+		     <OTUnit name="mV" abbreviation="mV"/>
+		     <OTUnit name="V" abbreviation="V"/>
+		     <OTUnit name="kV" abbreviation="kV"/>
+		     <OTUnit name="microseconds" abbreviation="micro-s"/>
+		     <OTUnit name="milliseconds" abbreviation="ms"/>
+		     <OTUnit name="seconds" abbreviation="s"/>
+		  </choices>
+		</OTChoice>
+		<OTButton local_id="submit_answer_button"	text="Submit Answer"/>
         <OTButton local_id="report_button" name="Report Button" text="Show Reports">
        		<action>
 				<object refid="${show_report_action}"/>
@@ -182,7 +219,6 @@ You can close the window now.
 				<object refid="${script_report_object}"/>
 			</objectToDisplay>
 		</OTFrameDisplayAction>
-        <OTButton local_id="clear_button" name="Clear Button" text="Clear Reports" />
 		<OTViewChild local_id="script_report_object" useScrollPane="true">
 		  <object>
 		    <object refid="${activity_script}"/>
@@ -193,21 +229,15 @@ You can close the window now.
 		</OTViewChild>
 		<OTScriptObject local_id="activity_script">
 		  <variables>
-			<OTScriptVariable name="otInstAreaCards" reference="${instructions_cards}" />
-            <OTScriptVariable name="otMonitor">
-              <reference>
-                <object refid="${labview_monitor_button}" />
-              </reference>
-            </OTScriptVariable>
-			<OTScriptVariableComponent name="otAnswerBox" reference="${answer_box}" />
-            <OTScriptVariableComponent name="submitButton">
-              <reference>
-                <object refid="${submit_answer_button}" />
-              </reference>
-            </OTScriptVariableComponent>
+			<OTScriptVariable name="otInstAreaCards" reference="${instructions_cards}"/>
+            <OTScriptVariable name="otMonitor" reference="${labview_monitor_button}"/>
+			<OTScriptVariable name="otAnswerBoxAmp" reference="${answer_box_amp}"/>
+			<OTScriptVariable name="otAnswerBoxFrq" reference="${answer_box_frq}" />			
+			<OTScriptVariable name="otUnitChoiceAmp" reference="${unit_choice_amp}"/>
+			<OTScriptVariable name="otUnitComboBoxAmp" reference="${unit_choice_amp}"/>
+			<OTScriptVariable name="otUnitChoiceFrq" reference="${unit_choice_frq}"/>	
+			<OTScriptVariable name="otUnitComboBoxFrq" reference="${unit_choice_frq}"/>
 			<OTScriptVariableComponent name="submitAnswerButton" reference="${submit_answer_button}" />
-			<OTScriptVariable name="otUnitChoice" reference="${unit_choice}"/>
-			<OTScriptVariableComponent name="otUnitComboBox" reference="${unit_choice}"/>
 			<OTScriptVariable name="otEmptyUnitChoice" reference="${empty_unit_choice}"/>
 			<OTScriptVariableComponent name="otReportButton" reference="${report_button}" />
 		  </variables>
@@ -215,7 +245,6 @@ You can close the window now.
 			<OTJavascript src="capa_labview_activity.js"  />
 		  </script>
 		</OTScriptObject>
-        <OTText local_id="reports_text" text="" />
       </library>
     </OTSystem>
   </objects>

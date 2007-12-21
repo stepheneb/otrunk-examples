@@ -1,35 +1,61 @@
+/*
+ *  Copyright (C) 2007  The Concord Consortium, Inc.,
+ *  10 Concord Crossing, Concord, MA 01742
+ *
+ *  Web Site: http://www.concord.org
+ *  Email: info@concord.org
+ *
+ *  This library is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU Lesser General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2.1 of the License, or (at your option) any later version.
+ *
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with this library; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * END LICENSE */
+
+
 importClass(Packages.java.lang.System)
+importClass(Packages.java.lang.Double)
 importClass(Packages.java.awt.Color)
 importClass(Packages.java.awt.event.ActionListener)
 importClass(Packages.javax.swing.JOptionPane)
 
 importClass(Packages.org.concord.otrunk.ui.swing.OTCardContainerView)
+importClass(Packages.org.concord.otrunk.labview.LabviewReportConverter)
 importClass(Packages.org.concord.otrunkcapa.rubric.OTAssessment)
-importClass(Packages.org.concord.otrunk.labview.LabviewActivityLog)
 
 
-/**
+/*
  * Variables from otml
+ * ===================
+ * otMonitor
+ * otInstAreaCards
+ * otAnswerBoxAmp
+ * otAnswerBoxFrq
+ * otUnitChoiceAmp
+ * otUnitComboBoxAmp
+ * otUnitChoiceFrq
+ * otUnitComboBoxFrq 
+ * otEmptyUnitChoice
+ * submitAnswerButton
+ * reportButton
  */
-var otMonitor
-var otInstAreaCards
-var otAnswerBox
-var otUnitChoice
-var otEmptyUnitChoice
-var otUnitComboBox
-var submitButton
-var reportButton
-var clearButton
-var reportsText // reports are shown here when "show report" has been selected
-
-/**
+ 
+/*
  * 
  */
 var otAssessment
-var initializationDone = false
-//var activityInitialized = false
-var activityInitialized = true
 var timeStepStarted = 0
+
+var g_unitIndicator = 0; // 0: wrong answer, 1: correct answer but suboptimal unit, 2: correct unit
 
 /**
  * This function is called when the script starts up
@@ -39,57 +65,29 @@ var timeStepStarted = 0
 function init() {
 	System.out.println("-------------------------- init --------------------------------")
 	setupGUI()
-	//initLogging()
-	//setupMultimeter()
-	//setupCircuitListener()
-	//setupAnswerButton()
-	//setupActivity()
 	setupAsessmentLogging()
-	//setupCircuitAnalyzer()
-	initializationDone = true
-        
-	//submitButton.addActionListener(submitButtonListener)
-	//clearButton.addActionListener(clearButtonListener)
-	// 	
-	return initializationDone;
+	submitAnswerButton.addActionListener(submitAnswerButtonListener)
+	return true;
 }
 
 function save() {
-	submitButton.removeActionListener(submitButtonListener)
-	submitButton.removeActionListener(clearButtonListener)
+	submitAnswerButton.removeActionListener(submitAnswerButtonListener)
 	return true;
 }
 
 function setupGUI() {
-	otAnswerBox.setBackground(new Color(1,1,0.7))
-	otUnitComboBox.setBackground(new Color(1,1,0.7))
+	/* 
+	otAnswerBoxAmp.setBackground(new Color(1,1,0.7))
+	otAnswerBoxFrq.setBackground(new Color(1,1,0.7))	
+	otUnitComboBoxAmp.setBackground(new Color(1,1,0.7))
+	otUnitComboBoxFrq.setBackground(new Color(1,1,0.7))* 
+	*/	
 }
 
 function setupAsessmentLogging() {
-	if (activityInitialized) {
-		//Create assessment object
-		otAssessment = otObjectService.createObject(OTAssessment)
-		otContents.add(otAssessment)
-	}
-	else{
-		//If the activity was already run, take the last assessment object, copy it and continue it
-		var otLastAssessment = null
-		for (var i = otContents.size() - 1; i >= 0; i--) {
-			var obj = otContents.get(i)
-			if (obj instanceof OTLabviewOScopeAssessment) {
-				otLastAssessment = obj
-				break
-			}
-		}
-		if (otLastAssessment != null) {
-			otAssessment = otObjectService.copyObject(otLastAssessment, -1)
-			otContents.add(otAssessment)
-		}
-	}
-	//////////
-	otAssessment.getIndicatorValues().put("amplitudeCorrect", new java.lang.Float(0.01))
-	otAssessment.getIndicatorValues().put("frequencyCorrect", new java.lang.Float(0.04))
-	//////////
+	// Create assessment object
+	otAssessment = otObjectService.createObject(OTAssessment)
+	otContents.add(otAssessment)
 }
 
 function initStep() {
@@ -104,28 +102,126 @@ function startStep(step) {
 	OTCardContainerView.setCurrentCard(otInstAreaCards, strCardID)
 	//
 	
-	otAnswerBox.setText("")
-	otUnitChoice.setCurrentChoice(otEmptyUnitChoice)
+	otAnswerBoxAmp.setText("")
+	otAnswerBoxFrq.setText("")	
+	otUnitChoiceAmp.setCurrentChoice(otEmptyUnitChoice)
+	otUnitChoiceFrq.setCurrentChoice(otEmptyUnitChoice)	
 }
 
-function setReportText() {
-	var logs = otMonitor.getLogs()
-	var text = ""
-	var size = logs.size()
-		
-	for (var i = 0; i < size; ++i) {
-		var report = logs.get(i)
-		text += report.getText()
-		if (i < size - 1) {
-			text += "\n=======================================================================\n\n"
+function assess() {
+	var amplitude = 0.0
+	var frequency = 0.0
+	
+	var converter = new LabviewReportConverter(otMonitor)
+	converter.markEndTime()
+	var mad = converter.getOTModelActivityData()
+	
+	//converter.dumpMAD()
+	
+	var cis = mad.getComputationalInputs().getVector()
+	for (var i = 0; i < cis.size(); ++i) {
+		var ci = cis.get(i)
+		var name = ci.getName()
+		if (name == "amplitude") {
+			amplitude = Double.parseDouble(ci.getInitialValue())
+			System.out.println("amplitude=" + amplitude)
+		}
+		else if (name == "frequency") {
+			frequency = Double.parseDouble(ci.getInitialValue())
+			System.out.println("frequency=" + frequency)
 		}
 	}
-		
-	System.out.println(text)
-	reportsText.setText(text)
+	
+	var ampAnswer = otAnswerBoxAmp.getText()
+	var frqAnswer = otAnswerBoxFrq.getText()
+	
+	var ampUnitAnswer = otUnitChoiceAmp.getCurrentChoice() 
+    var frqUnitAnswer = otUnitChoiceFrq.getCurrentChoice() 	
+	
+	var ampIndicator = checkAmplitude(amplitude, ampAnswer, ampUnitAnswer)
+	var frqIndicator = checkFrequency(frequency, frqAnswer, frqUnitAnswer) 
+	
+	otAssessment.getIndicatorValues().put("amplitudeCorrect", ampIndicator)
+	otAssessment.getIndicatorValues().put("frequencyCorrect", frqIndicator)
 }
 
-var submitButtonHandler = {
+function checkAmplitude(correctValue, answer, unitAnswer) {
+	var unit = "";
+	var answerValue = 0.0;
+
+	if (unitAnswer == null) {
+		return 1.0; // totally wrong
+	}
+	else {
+		unit = unitAnswer.getAbbreviation();
+	}
+	System.out.println("unit=" + unit)
+	
+	if (answer == null) {
+		return 1.0; // totally wrong
+	}
+	else {
+		answerValue = Double.parseDouble(answer) 
+	}
+	
+	if (unit == "mV") {
+		answerValue *= 0.001		
+		
+	}
+	else if (unit == "kV") {
+		answerValue *= 1000
+	}
+	else if (unit != "V") {
+		return 1.0; // totally wrong
+	}
+	
+	System.out.println("amp answer=" + answerValue)
+	
+	var diff =  Math.abs(answerValue - correctValue) / correctValue
+	
+	System.out.println("diff=" + diff)
+	return diff	
+}
+
+function checkFrequency(correctValue, answer, unitAnswer) {
+	var unit = "";
+	var answerValue = 0.0;
+
+	if (unitAnswer == null) {
+		return 1.0; // totally wrong
+	}
+	else {
+		unit = unitAnswer.getAbbreviation();
+	}
+	System.out.println("unit=" + unit)
+	
+	if (answer == null) {
+		return 1.0; // totally wrong
+	}
+	else {
+		answerValue = Double.parseDouble(answer) 
+	}
+	
+	if (unit == "kHz") {
+		answerValue *= 1000		
+		
+	}
+	else if (unit == "MHz") {
+		answerValue *= 1.0e6
+	}
+	else if (unit != "Hz") {
+		return 1.0; // totally wrong
+	}
+	
+	System.out.println("frq answer=" + answerValue)
+	
+	var diff =  Math.abs(answerValue - correctValue) / correctValue
+	
+	System.out.println("diff=" + diff)
+	return diff	
+}
+
+var submitAnswerButtonHandler = {
 	actionPerformed: function(evt) {
 		var monitor = controllerService.getRealObject(otMonitor)
 		if (monitor.processIsRunning()) {
@@ -133,19 +229,10 @@ var submitButtonHandler = {
 			System.out.println("Process running. Try when finished")
 			return
 		}
-		monitor.report()
-		setReportText()
+		assess();
 	}
 };
 
-var clearButtonHandler = {
-	actionPerformed: function(evt) {
-		otMonitor.getLogs().removeAll()
-		reportsText.setText("")
-	}
-};
-
-
-var submitButtonListener = new ActionListener(submitButtonHandler)
+var submitAnswerButtonListener = new ActionListener(submitAnswerButtonHandler)
 
 
