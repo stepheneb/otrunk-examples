@@ -23,6 +23,7 @@
 
 
 importClass(Packages.java.lang.System)
+importClass(Packages.java.lang.Integer)
 importClass(Packages.java.lang.Double)
 importClass(Packages.java.awt.Color)
 importClass(Packages.java.awt.event.ActionListener)
@@ -52,10 +53,12 @@ importClass(Packages.org.concord.otrunkcapa.rubric.OTAssessment)
 /*
  * 
  */
-var otAssessment
-var timeStepStarted = 0
+var g_otAssessment
+var g_timeStepStarted = 0
 
-var g_unitIndicator = 0; // 0: wrong answer, 1: correct answer but suboptimal unit, 2: correct unit
+var g_cis = {} // hash {reference : name} to store OTComputationalInput references 
+
+var g_unitIndicator = 0 // 0: wrong answer, 1: correct answer but suboptimal unit, 2: correct unit
 
 /**
  * This function is called when the script starts up
@@ -67,12 +70,12 @@ function init() {
 	setupGUI()
 	setupAsessmentLogging()
 	submitAnswerButton.addActionListener(submitAnswerButtonListener)
-	return true;
+	return true
 }
 
 function save() {
 	submitAnswerButton.removeActionListener(submitAnswerButtonListener)
-	return true;
+	return true
 }
 
 function setupGUI() {
@@ -86,12 +89,12 @@ function setupGUI() {
 
 function setupAsessmentLogging() {
 	// Create assessment object
-	otAssessment = otObjectService.createObject(OTAssessment)
-	otContents.add(otAssessment)
+	g_otAssessment = otObjectService.createObject(OTAssessment)
+	otContents.add(g_otAssessment)
 }
 
 function initStep() {
-	timeStepStarted = System.currentTimeMillis()
+	g_timeStepStarted = System.currentTimeMillis()
 }
 
 function startStep(step) {
@@ -111,6 +114,7 @@ function startStep(step) {
 function assess() {
 	var amplitude = 0.0
 	var frequency = 0.0
+	var numChanges = 0
 	
 	var converter = new LabviewReportConverter(otMonitor)
 	converter.markEndTime()
@@ -122,6 +126,9 @@ function assess() {
 	for (var i = 0; i < cis.size(); ++i) {
 		var ci = cis.get(i)
 		var name = ci.getName()
+		
+		g_cis[ci] = name //save reference for later use
+		
 		if (name == "amplitude") {
 			amplitude = Double.parseDouble(ci.getInitialValue())
 			System.out.println("amplitude=" + amplitude)
@@ -132,17 +139,33 @@ function assess() {
 		}
 	}
 	
+	var mruns = mad.getModelRuns()
+	for (var i = 0; i < mruns.size(); ++i) {
+		var mrun = mruns.get(i)
+		var civs = mrun.getComputationalInputValues();
+		for (var j = 0; j < civs.size(); ++j) {
+			var civ = civs.get(j)
+			var ci = civ.getReference()
+			var ciName = g_cis[ci]
+			if (ciName == "numChanges") {
+				numChanges = civ.getValue()
+			}
+		}
+	}
+	
 	var ampAnswer = otAnswerBoxAmp.getText()
 	var frqAnswer = otAnswerBoxFrq.getText()
 	
 	var ampUnitAnswer = otUnitChoiceAmp.getCurrentChoice() 
-    var frqUnitAnswer = otUnitChoiceFrq.getCurrentChoice() 	
-	
+    var frqUnitAnswer = otUnitChoiceFrq.getCurrentChoice()
+    
 	var ampIndicator = checkAmplitude(amplitude, ampAnswer, ampUnitAnswer)
 	var frqIndicator = checkFrequency(frequency, frqAnswer, frqUnitAnswer) 
+	var numChangesIndicator = checkNumChanges(numChanges);
 	
-	otAssessment.getIndicatorValues().put("amplitudeCorrect", ampIndicator)
-	otAssessment.getIndicatorValues().put("frequencyCorrect", frqIndicator)
+	g_otAssessment.getIndicatorValues().put("amplitudeCorrect", ampIndicator)
+	g_otAssessment.getIndicatorValues().put("frequencyCorrect", frqIndicator)
+	g_otAssessment.getIndicatorValues().put("numChanges", numChangesIndicator)	
 }
 
 function checkAmplitude(correctValue, answer, unitAnswer) {
@@ -219,6 +242,12 @@ function checkFrequency(correctValue, answer, unitAnswer) {
 	
 	System.out.println("diff=" + diff)
 	return diff	
+}
+
+function checkNumChanges(numChanges) {
+	var ret = Integer.parseInt(numChanges)
+	System.out.println("js: checkNumChanges: numChanges=" + ret)	
+	return ret
 }
 
 var submitAnswerButtonHandler = {
