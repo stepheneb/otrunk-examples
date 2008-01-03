@@ -7,12 +7,26 @@
     <import class="org.concord.otrunk.script.OTScriptEngineBundle" />
     <import class="org.concord.otrunk.script.OTScriptEngineEntry" />
     <import class="org.concord.otrunk.view.document.OTCompoundDoc"/>
+    <import class="org.concord.otrunk.view.document.OTTextObject"/>
     <import class="org.concord.otrunkmw.OTModelerPage"/>
+    <import class="org.concord.otrunk.ui.OTText"/>
+    <import class="org.concord.otrunk.ui.snapshot.OTSnapshot"/>
+    <import class="org.concord.otrunk.ui.snapshot.OTSnapshotButton"/>
+    <import class="org.concord.otrunk.ui.snapshot.OTSnapshotAlbum"/>
     <import class="org.concord.otrunk.view.document.OTDocumentViewConfig"/>
     <import class="org.concord.otrunk.script.ui.OTScriptObject" />
     <import class="org.concord.otrunk.script.ui.OTScriptVariable" />
     <import class="org.concord.otrunk.script.ui.OTScriptVariableComponent" />
     <import class="org.concord.otrunk.script.js.OTJavascript" />
+    <import class="org.concord.datagraph.state.OTDataGraph"/>
+    <import class="org.concord.datagraph.state.OTDataCollector"/>
+    <import class="org.concord.datagraph.state.OTDataAxis"/>
+    <import class="org.concord.datagraph.state.OTDataGraphable"/>
+    <import class="org.concord.data.state.OTDataStore"/>
+    <import class="org.concord.data.state.OTDataChannelDescription"/>
+    <import class="org.concord.otrunk.ui.OTTextPane"/>
+    <import class="org.concord.otrunk.ui.OTPlacementContainer"/>
+    <import class="org.concord.otrunk.ui.OTPlacement"/>
     <import class="org.concord.framework.otrunk.view.OTFrame" />
   </imports>
   <objects>
@@ -23,6 +37,12 @@
             <OTViewEntry
               objectClass="org.concord.otrunkmw.OTModelerPage" 
                 viewClass="org.concord.otrunkmw.OTModelerPageView" />
+            <OTViewEntry
+              objectClass="org.concord.otrunk.ui.OTTextPane"
+              viewClass="org.concord.otrunk.ui.swing.OTTextPaneView"/>
+            <OTViewEntry
+              objectClass="org.concord.otrunk.ui.OTPlacementContainer"
+                viewClass="org.concord.otrunk.ui.swing.OTPlacementContainerView"/>
             <OTViewEntry
               objectClass="org.concord.otrunk.script.ui.OTScriptObject"
               viewClass="org.concord.otrunk.script.ui.OTScriptObjectView" />
@@ -44,6 +64,18 @@
                 }
               </css>
             </OTDocumentViewConfig>
+            <OTViewEntry
+              objectClass="org.concord.otrunk.ui.snapshot.OTSnapshotButton" 
+                viewClass="org.concord.otrunk.ui.snapshot.OTSnapshotButtonView"/>
+            <OTViewEntry
+              objectClass="org.concord.otrunk.ui.snapshot.OTSnapshotAlbum" 
+                viewClass="org.concord.otrunk.ui.snapshot.OTSnapshotAlbumView"/>
+            <OTViewEntry 
+              objectClass="org.concord.datagraph.state.OTDataGraph" 
+              viewClass="org.concord.datagraph.state.OTDataGraphView"/>
+            <OTViewEntry 
+              objectClass="org.concord.datagraph.state.OTDataCollector" 
+              viewClass="org.concord.datagraph.state.OTDataCollectorNonEditableView"/>
           </views>
           <frame>
             <OTFrame width="850" height="640" />
@@ -60,21 +92,108 @@
       <root>
         <OTCompoundDoc>
           <bodyText>
+          <p><center><font size='6'><b>
+          Cup and Counter: Molecular Model and Temperature Graph
+          </b></font></center></p>    
+          <p><font size='4'>
+			The model represents molecules from the cup and counter at the instant they touch. You can change the following to set up your experiment: (1) a metal, glass or wood counter; (2) the cup temperature; (3) the counter temperature; (4) the observation time.
+			</font></p>
             <center>
-            <object refid="${model}" /><br/>
+            <object refid="${model}" />
+            <object refid="${graph}" /><br/>
             <object refid="${script}" />
           </center>
           </bodyText>
           <documentRefs>
             <OTModelerPage local_id="model"
               authoredDataURL="http://svn.concord.org/svn/projects/trunk/common/java/otrunk/otrunk-examples/MolecularWorkbench/thermal-conduction-models/thermo_main-01.cml" />
-            
+            <OTDataCollector name="Model Data" local_id="graph" multipleGraphableEnabled="false" autoScaleEnabled="false">
+              <graphables>
+                <OTDataGraphable local_id="atom_ck"
+                  connectPoints="true" color="0x6f9400" drawMarks="false"
+                  name="Ck Temp" xColumn="0" yColumn="1">
+                  <dataStore>
+                    <OTDataStore local_id="atom_ck_datastore" numberChannels="2">
+                      <channelDescriptions>
+                        <OTDataChannelDescription precision="0" unit="s"/>
+                        <OTDataChannelDescription precision="-2" unit="degC"/>
+                      </channelDescriptions>
+                      <valuesString></valuesString>
+                    </OTDataStore>
+                  </dataStore>
+                </OTDataGraphable>
+                <OTDataGraphable local_id="atom_ws"
+                  connectPoints="true" color="0xc900c9" drawMarks="false"
+                  name="Ws Temp" xColumn="0" yColumn="1">
+                  <dataStore>
+                    <OTDataStore local_id="atom_ws_datastore" numberChannels="2">
+                      <channelDescriptions>
+                        <OTDataChannelDescription precision="0" unit="s"/>
+                        <OTDataChannelDescription precision="-2" unit="degC"/>
+                      </channelDescriptions>
+                      <valuesString></valuesString>
+                    </OTDataStore>
+                  </dataStore>
+                </OTDataGraphable>
+                <OTDataGraphable local_id="atom_pl"
+                  connectPoints="true" color="0x6f9400" drawMarks="false"
+                  name="Pl Temp" xColumn="0" yColumn="1">
+                  <dataStore>
+                    <OTDataStore local_id="atom_pl_datastore" numberChannels="2">
+                      <channelDescriptions>
+                        <OTDataChannelDescription precision="0" unit="s"/>
+                        <OTDataChannelDescription precision="-2" unit="degC"/>
+                      </channelDescriptions>
+                      <valuesString></valuesString>
+                    </OTDataStore>
+                  </dataStore>
+                </OTDataGraphable>
+                <OTDataGraphable local_id="atom_nt"
+                  connectPoints="true" color="0xa9a9a9" drawMarks="false"
+                  name="Nt Temp" xColumn="0" yColumn="1">
+                  <dataStore>
+                    <OTDataStore local_id="atom_nt_datastore" numberChannels="2">
+                      <channelDescriptions>
+                        <OTDataChannelDescription precision="0" unit="s"/>
+                        <OTDataChannelDescription precision="-2" unit="degC"/>
+                      </channelDescriptions>
+                      <valuesString></valuesString>
+                    </OTDataStore>
+                  </dataStore>
+                </OTDataGraphable>
+              </graphables>
+              <xDataAxis>
+                <OTDataAxis min="-1" max="56" label="Time" units="s" local_id="xAxis">
+                  <graphables>
+                    <object refid="${atom_ck}"/>
+                    <object refid="${atom_ws}"/>
+                    <object refid="${atom_pl}"/>
+                    <object refid="${atom_nt}"/>
+                  </graphables>
+                </OTDataAxis>
+              </xDataAxis>
+              <yDataAxis>
+                <OTDataAxis min="-10" max="100" label="Temperature" units="degC" local_id="yAxis">
+                  <graphables>
+                    <object refid="${atom_ck}"/>
+                    <object refid="${atom_ws}"/>
+                    <object refid="${atom_pl}"/>
+                    <object refid="${atom_nt}"/>
+                  </graphables>
+                </OTDataAxis>
+              </yDataAxis>              
+              </OTDataCollector>
             <OTScriptObject local_id="script">
               <variables>
+                <OTScriptVariable name="datastore_ck" reference="${atom_ck_datastore}" />
+                <OTScriptVariable name="datastore_ws" reference="${atom_ws_datastore}" />
+                <OTScriptVariable name="datastore_pl" reference="${atom_pl_datastore}" />
+                <OTScriptVariable name="datastore_nt" reference="${atom_nt_datastore}" />
                 <OTScriptVariableComponent name="modelComponent" reference="${model}" />
+                <OTScriptVariableComponent name="graph" reference="${graph}" />
               </variables>
               <script>
-                <OTJavascript src="http://svn.concord.org/svn/projects/trunk/common/java/otrunk/otrunk-examples/MolecularWorkbench/document-heat-and-temp-thermal-conduction-mw-graph.js" />
+                <OTJavascript src="http://svn.concord.org/svn/projects/trunk/common/java/otrunk/otrunk-examples/MolecularWorkbench/document-heat-and-temp-thermal-conduction.js" />
               </script>
             </OTScriptObject>
           </documentRefs>
