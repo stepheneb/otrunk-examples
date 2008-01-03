@@ -12,6 +12,11 @@ var runButton;
 var stopButton;
 var resetButton;
 var timeSlider;
+var cupTempSlider;
+var counterTempSlider;
+var glassRadioBtn;
+var metalRadioBtn;
+var woodRadioBtn;
 var stopTime;
 
 ////
@@ -21,27 +26,21 @@ var stopTime;
 ////
 var timer;
 
-var ck_values = datastore_ck.getValues();
 var ws_values = datastore_ws.getValues();
 var pl_values = datastore_pl.getValues();
-var nt_values = datastore_nt.getValues();
 
-var temp_ck = 0;
 var temp_ws = 0;
 var temp_pl = 0;
-var temp_nt = 0;
 
-var temp_ck_scaler = 1;
 var temp_ws_scaler = 1;
 var temp_pl_scaler = 1;
-var temp_nt_scaler = 1;
 
-var a = 0.02; // what part of the current actual temperature to use in the smoothed temp
-var f = 10; // K.E. scale factor
+var a = 0.15; // what part of the current actual temperature to use in the smoothed temp
+var f = 7; // K.E. scale factor
 var n = (1.6/1.38 * 10000.00); // ~ number of deg K in 1 eV
 var b = 0; // increment degC by this amount
 var m1 = 1;
-var m2 = 0.002;
+var m2 = 0.02;
 var constant = 0;   // 273
 var timeCounter = 0;
 var xMax = 60;
@@ -82,7 +81,7 @@ var resetButtonListener = new ActionListener(resetButtonHandler);
 
 var modelListener = new ModelListener() {
 	modelUpdate: function(event) {
-		if (event.getID() == ModelEvent.MODEL_RESET) {
+		if (event.getID() == ModelEvent.MODEL_RESET || event.getID() == ModelEvent.MODEL_INPUT) {
 			// System.err.println("Reset action recieved");
 			if (timer.isRunning())
 			{
@@ -97,11 +96,8 @@ var modelListener = new ModelListener() {
 				stopTime = timeSlider.getValue()*60;
 				// System.err.println("Stop time is: " + stopTime);
 				if (timeCounter == 0) {
-					  // record the temperature now -- this is what the sliders are set to
-						temp_ck = getCurrentTempForType(Element.ID_CK);
 						temp_ws = getCurrentTempForType(Element.ID_WS);
 						temp_pl = getCurrentTempForType(Element.ID_PL);
-						temp_nt = getCurrentTempForType(Element.ID_NT);
 						// graphHeater(temp_ck, temp_ws, temp_pl, temp_nt);
 						start_run();
 				}
@@ -134,32 +130,22 @@ var timerHandler =
 		if (timeCounter == 0) {
 			// for some reason the temp recorded here is always substantially lower than the temp the sliders are set to
 			// so using our first recording, calculate a scaling factor
-			temp_ck_scaler = (temp_ck/getCurrentTempForType(Element.ID_CK));
-			temp_ws_scaler = (temp_ws/getCurrentTempForType(Element.ID_WS));
-			temp_pl_scaler = (temp_pl/getCurrentTempForType(Element.ID_PL));
-			temp_nt_scaler = (temp_nt/getCurrentTempForType(Element.ID_NT));
+			/* temp_ws_scaler = ((counterTempSlider.getValue()*10)/getCurrentTempForType(Element.ID_WS));
+			temp_pl_scaler = ((cupTempSlider.getValue()*10)/getCurrentTempForType(Element.ID_PL));
 			
-			if (temp_ck_scaler <= 0)
-			  temp_ck_scaler = 1;
 			if (temp_pl_scaler <= 0)
 			  temp_pl_scaler = 1;
-			if (temp_nt_scaler <= 0)
-			  temp_nt_scaler = 1;
 			if (temp_ws_scaler <= 0)
 			  temp_ws_scaler = 1;
-		
-			temp_ck = getCurrentTempForType(Element.ID_CK) * temp_ck_scaler;
+		*/
 			temp_ws = getCurrentTempForType(Element.ID_WS) * temp_ws_scaler;
 			temp_pl = getCurrentTempForType(Element.ID_PL) * temp_pl_scaler;
-			temp_nt = getCurrentTempForType(Element.ID_NT) * temp_nt_scaler;
-			graphHeater(temp_ck, temp_ws, temp_pl, temp_nt);
+			graphHeater(temp_ws, temp_pl);
 		} else {
 			// calculate the exponential moving average
-			temp_ck = a*(getCurrentTempForType(Element.ID_CK)*temp_ck_scaler)+(1-a)*temp_ck;
 			temp_ws = a*(getCurrentTempForType(Element.ID_WS)*temp_ws_scaler)+(1-a)*temp_ws;
 			temp_pl = a*(getCurrentTempForType(Element.ID_PL)*temp_pl_scaler)+(1-a)*temp_pl;
-			temp_nt = a*(getCurrentTempForType(Element.ID_NT)*temp_nt_scaler)+(1-a)*temp_nt;
-			graphValues(temp_ck, temp_ws, temp_pl, temp_nt);
+			graphValues(temp_ws, temp_pl);
 		}
 		
 		// graph.repaint()
@@ -170,9 +156,7 @@ var timerHandler =
 			model.stop();
 		}
 		// if (timeCounter>30) {
-			if (  (Math.round(temp_ck) <= Math.round(temp_ws)) ||
-				  (Math.round(temp_ck) <= Math.round(temp_pl)) ||
-				  (Math.round(temp_ck) <= Math.round(temp_nt)) ) {
+			if (Math.round(temp_pl) <= Math.round(temp_ws)) {
 					end_run();
 					model.stop();
 					timer.stop();
@@ -209,6 +193,28 @@ function postMWInit() {
 			// System.err.println(obj.getTitle());
 			if (obj.getTitle().equals("Observation Time (Minute)")) {
 				timeSlider = obj;
+			}
+			else if (obj.getTitle().equals("Cup Temperature (degree C)")) {
+				cupTempSlider = obj;
+			}
+			else if (obj.getTitle().equals("Counter Temperature (degree C)")) {
+				counterTempSlider = obj;
+			}
+		}
+	}
+	
+	var radioButtons = page.getEmbeddedComponent(Class.forName("org.concord.modeler.PageRadioButton")).values().toArray();
+	if (radioButtons != null) {
+		for (var i = 0; i < radioButtons.length; i++) {
+			var radio = radioButtons[i];
+			if (radio.getText().equals("Metal Counter")) {
+				metalRadioBtn = radio;
+			}
+			else if (radio.getText().equals("Glass Counter")) {
+				glassRadioBtn = radio;
+			}
+			else if (radio.getText().equals("Wood Counter")) {
+				woodRadioBtn = radio;
 			}
 		}
 	}
@@ -249,11 +255,9 @@ function resetGraph() {
 	
 	graph.reset();
 	
-	temp_ck = getCurrentTempForType(Element.ID_CK);
 	temp_ws = getCurrentTempForType(Element.ID_WS);
 	temp_pl = getCurrentTempForType(Element.ID_PL);
-	temp_nt = getCurrentTempForType(Element.ID_NT);
-	graphHeater(temp_ck, temp_ws, temp_pl, temp_nt);
+	graphHeater(temp_ws, temp_pl);
 	
 	timeCounter = 0;
 	yMax = 100;
@@ -261,13 +265,9 @@ function resetGraph() {
 	graph.setLimitsAxisWorld(xMin,xMax,yMin,yMax);
 }
 
-function graphValues(t_ck, t_ws, t_pl, t_nt)
+function graphValues(t_ws, t_pl)
 {
 	// System.err.println(timeCounter + " -- ck: " + t_ck + ", ws: " + t_ws + ", pl: " + t_pl + ", nt: " + t_nt);
-	if (t_ck != b) {
-		ck_values.add(new Float(timeCounter));
-		ck_values.add(new Float(t_ck));
-	}
 
 	if (t_ws != b) {
 		ws_values.add(new Float(timeCounter));
@@ -279,24 +279,19 @@ function graphValues(t_ck, t_ws, t_pl, t_nt)
 		pl_values.add(new Float(t_pl));
 	}
 	
-	if (t_nt != b) {
-		nt_values.add(new Float(timeCounter));
-		nt_values.add(new Float(t_nt));
-	}
-	
-	resizeGraph(t_ck, t_ws, t_pl, t_nt);
+	resizeGraph(t_ws, t_pl);
 	graph.repaint();
 }
 
-function resizeGraph(t1, t2, t3, t4) {
+function resizeGraph(t1, t2) {
 	var max = maximum(t1, t2);
 	// System.err.println("==================================");
 	// System.err.println("v1: " + t1 + ", v2: " + t2 + ", max: " + max);
 	// System.err.print("pmax: " + max);
-	max = maximum(max, t3);
+	// max = maximum(max, t3);
 	// System.err.println(", v2: " + t3 + ", max: " + max);
 	// System.err.print("omax: " + max);
-	max = maximum(max, t4);
+	// max = maximum(max, t4);
 	// System.err.println(", v2: " + t4 + ", max: " + max);
 	
 	if (max > (yMax-5)) {
@@ -319,10 +314,10 @@ function maximum(v1, v2) {
 	return v1;
 }
 
-function graphHeater(t_ck,t_ws,t_pl,t_nt)
+function graphHeater(t_ws,t_pl)
 {
 	graph.reset();
-	graphValues(t_ck, t_ws, t_pl, t_nt);
+	graphValues(t_ws, t_pl);
 	graph.repaint();
 }
 
@@ -342,7 +337,17 @@ function init_logging() {
     modelruns = mad.getModelRuns();
     
     mad.setStartTime(now());
+    
 	// set up CI's
+	// counter temp
+	add_computational_input("Counter Temperature", "degC", "0", "100");
+	// cup temp
+	add_computational_input("Cup Temperature", "degC", "0", "100");
+	// observation time
+	add_computational_input("Observation Time", "min", "0", "15");
+	// counter type
+	add_computational_input("Counter Type", "", "", "");
+	
 	// set up RA's
 }
 
@@ -353,6 +358,24 @@ function start_run() {
 		current_run = context.getOTObject("org.concord.otrunk.modelactivitydata.OTModelRun");
 		modelruns.add(current_run);
 	  	current_run.setStartTime(now());
+	  	
+	  	// log all the ci's
+	  	log_ci("Counter Temperature", counterTempSlider.getValue()*10);
+		log_ci("Cup Temperature", cupTempSlider.getValue()*10);
+		log_ci("Observation Time", timeSlider.getValue());
+		log_ci("Counter Type", getCurrentlySelectedCounter());
+}
+
+function getCurrentlySelectedCounter() {
+	if (glassRadioBtn.isSelected()) {
+		return "Glass";
+	} else if (metalRadioBtn.isSelected()) {
+		return "Metal";
+	} else if (woodRadioBtn.isSelected()) {
+		return "Wood";
+	} else {
+		return "unknown";
+	}
 }
 
 function end_run() {
@@ -360,6 +383,36 @@ function end_run() {
 		current_run.setEndTime(now());
 		// current_run = null;
 	}
+}
+
+function add_computational_input(ci_name, units, min, max) {
+	var comp_inputs = mad.getComputationalInputs();
+    // new comp_input
+    var ci = context.getOTObject("org.concord.otrunk.modelactivitydata.OTComputationalInput");
+    ci.setName(ci_name);
+    ci.setUnits(units);
+
+	var range = context.getOTObject("org.concord.otrunk.modelactivitydata.OTRange");
+	range.setMinValue(min); // lower case
+	range.setMaxValue(max); // upper case
+	ci.setRange(range);
+    
+    // add to comp_inputs
+    comp_inputs.add(ci);
+    
+    // add to ci_array
+    ci_array[ci_name] = ci;
+}
+
+function log_ci(ci_idx, value) {
+	if (current_run == null) { start_run(); }
+	
+	var ci = ci_array[ci_idx];
+	var civ = context.getOTObject("org.concord.otrunk.modelactivitydata.OTComputationalInputValue");
+	civ.setTime(now());
+	civ.setValue(value);
+	civ.setReference(ci);
+	current_run.getComputationalInputValues().add(civ);
 }
 
 function finalize_logging() {
