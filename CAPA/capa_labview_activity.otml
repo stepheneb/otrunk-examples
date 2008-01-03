@@ -73,15 +73,22 @@
           <portNum>7004</portNum>
           <viPath>SCOPE.vi</viPath>
           <monitorPath>c:\Program Files\Concord Consortium\CAPA LabVIEW\Monitor\monitor.exe</monitorPath>
-          <reportPath>c:\Program Files\Concord Consortium\CAPA LabVIEW\Monitor\data\report.xml</reportPath>
-          <!--<reportPath>/Users/skim/report.xml</reportPath>-->          
+          <!-- <reportPath>c:\Program Files\Concord Consortium\CAPA LabVIEW\Monitor\data\report.xml</reportPath>-->
+          <reportPath>/Users/skim/report.xml</reportPath>
           <exclusionPath>c:\Program Files\Concord Consortium\CAPA LabVIEW\Monitor\data\exclusions.txt</exclusionPath>
         </OTLabviewMonitor>
 		<OTPlacementContainer width="800" height="600" local_id="capa_labview_placement_view" name="LabVIEW">
 		  <placements>
 			<OTPlacement component="${information_area}" height="180" width="610" x="10" y="10"/>
 			<OTPlacement component="${instructions_area}" height="260" width="610" x="10" y="200"/>
-			<OTPlacement component="${answers_area}" height="140" width="520" x="100" y="460"/>			
+			<OTPlacement component="${label_amplitude}" height="26" width="85" x="104" y="495"/>
+			<OTPlacement component="${label_frequency}" height="26" width="85" x="104" y="525"/>			
+			<OTPlacement component="${label_value}" height="26" width="100" x="230" y="460"/>			
+			<OTPlacement component="${label_unit}" height="26" width="100" x="340" y="460"/>			
+			<OTPlacement component="${answer_box_amp}" height="26" width="100" x="200" y="490"/>
+			<OTPlacement component="${answer_box_frq}" height="26" width="100" x="200" y="520"/>			
+			<OTPlacement component="${unit_choice_amp}" height="26" width="120" x="310" y="490"/>						
+			<OTPlacement component="${unit_choice_frq}" height="26" width="120" x="310" y="520"/>									
 			<OTPlacement component="${report_button}" height="40" width="150" x="630" y="40"/>
 			<OTPlacement component="${labview_monitor_button}" height="40" width="160" x="630" y="400"/>
 			<OTPlacement component="${submit_answer_button}" height="40" width="160" x="630" y="480"/>
@@ -104,21 +111,6 @@
 				<p align="center"><img src="http://capa.concord.org/capa.gif"/></p>
 				<object refid="${info_cards}"/>
 		  	</bodyText>
-		</OTCompoundDoc>
-		<OTCompoundDoc local_id="answers_area">
-			<bodyText>
-				<table>
-					<tr>
-						<td></td><td width="100"><center>Answer</center></td><td><center>Unit</center></td>
-					</tr>
-					<tr>
-						<td>Amplitude:</td><td width="100"><object refid="${answer_box_amp}"/></td><td><object refid="${unit_choice_amp}"/></td>
-					</tr>
-					<tr>
-						<td>Frequency:</td><td width="100"><object refid="${answer_box_frq}"/></td><td><object refid="${unit_choice_frq}"/></td>
-					</tr>
-				</table>
-			</bodyText>
 		</OTCompoundDoc>
 		<OTCardContainer local_id="info_cards">
    		  <cards>
@@ -176,6 +168,18 @@ You can close the window now.
 		  <text>
 		  </text>
 		</OTTextPane>
+        <OTCompoundDoc local_id="label_amplitude">
+ 	      <bodyText>Amplitude</bodyText>
+	    </OTCompoundDoc>
+        <OTCompoundDoc local_id="label_frequency">
+ 	      <bodyText>Frequency</bodyText>
+	    </OTCompoundDoc>
+        <OTCompoundDoc local_id="label_value">
+ 	      <bodyText>Value</bodyText>
+	    </OTCompoundDoc>          
+        <OTCompoundDoc local_id="label_unit">
+ 	      <bodyText>Unit</bodyText>
+	    </OTCompoundDoc>          
  	    <OTText local_id="answer_box_amp"/>
  	    <OTText local_id="answer_box_frq"/> 	    
 		<OTUnit name="Units?" abbreviation="" local_id="empty_unit_choice"/>
@@ -227,19 +231,26 @@ You can close the window now.
 			<object refid="${script_report_view}"/>
 		  </viewid>
 		</OTViewChild>
+		<OTButton local_id="hoho" text="haha"/>
 		<OTScriptObject local_id="activity_script">
 		  <variables>
+			<OTScriptVariable name="otInfoAreaCards" reference="${info_cards}"/>		  
 			<OTScriptVariable name="otInstAreaCards" reference="${instructions_cards}"/>
             <OTScriptVariable name="otMonitor" reference="${labview_monitor_button}"/>
-			<OTScriptVariable name="otAnswerBoxAmp" reference="${answer_box_amp}"/>
-			<OTScriptVariable name="otAnswerBoxFrq" reference="${answer_box_frq}" />			
+			<OTScriptVariableComponent name="submitAnswerButton" reference="${submit_answer_button}"/>
+			<OTScriptVariableComponent name="reportButton" reference="${report_button}"/>
+			<OTScriptVariableComponent name="answerBoxAmp" reference="${answer_box_amp}"/>
+			<OTScriptVariableComponent name="answerBoxFrq" reference="${answer_box_frq}" />			
 			<OTScriptVariable name="otUnitChoiceAmp" reference="${unit_choice_amp}"/>
-			<OTScriptVariable name="otUnitComboBoxAmp" reference="${unit_choice_amp}"/>
-			<OTScriptVariable name="otUnitChoiceFrq" reference="${unit_choice_frq}"/>	
-			<OTScriptVariable name="otUnitComboBoxFrq" reference="${unit_choice_frq}"/>
-			<OTScriptVariableComponent name="submitAnswerButton" reference="${submit_answer_button}" />
+			<OTScriptVariable name="otUnitChoiceFrq" reference="${unit_choice_frq}"/>
+			<OTScriptVariableComponent name="unitComboBoxAmp" reference="${unit_choice_amp}"/>				
+			<OTScriptVariableComponent name="unitComboBoxFrq" reference="${unit_choice_frq}"/>
 			<OTScriptVariable name="otEmptyUnitChoice" reference="${empty_unit_choice}"/>
-			<OTScriptVariableComponent name="otReportButton" reference="${report_button}" />
+			<OTScriptVariableComponent name="ampLabel" reference="${label_amplitude}"/>
+			<OTScriptVariableComponent name="frqLabel" reference="${label_frequency}"/>
+			<OTScriptVariableComponent name="valueLabel" reference="${label_value}"/>						
+			<OTScriptVariableComponent name="unitLabel" reference="${label_unit}"/>									
+			<OTScriptVariableComponent name="launchButton" reference="${labview_monitor_button}"/>												
 		  </variables>
 		  <script>
 			<OTJavascript src="capa_labview_activity.js"  />
