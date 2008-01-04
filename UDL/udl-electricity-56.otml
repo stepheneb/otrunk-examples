@@ -48,6 +48,7 @@
     <import class="org.concord.otrunk.ui.OTButton" />
     <import class="org.concord.otrunk.ui.OTCardContainer" />
     <import class="org.concord.otrunk.ui.OTChoice" />
+    <import class="org.concord.otrunk.ui.OTChoiceMultiple" />
     <import class="org.concord.otrunk.ui.OTImage" />
     <import class="org.concord.otrunk.ui.OTModeSwitcher" />
     <import class="org.concord.otrunk.ui.OTText" />
@@ -65,6 +66,7 @@
     <import class="org.concord.otrunk.view.prototype.OTPrototypeViewEntry" />
     <import class="org.concord.otrunk.view.prototype.OTPrototypeEventController" />
     <import class="org.concord.otrunk.view.prototype.OTPrototypeMapEntry" />
+    <import class="org.concord.otrunknl4.OTNLogoModel" />
     <import class="org.concord.otrunkcck.OTCCKModel" />
     <import class="org.concord.sensor.state.OTDeviceConfig" />
     <import class="org.concord.sensor.state.OTExperimentRequest" />
@@ -92,6 +94,9 @@
                 <entry key="${choice-radio-view}">
                   <OTChoiceViewConfig objectClass="org.concord.otrunk.ui.OTChoice" viewClass="org.concord.otrunk.ui.swing.OTChoiceRadioButtonPrintView" useViewsAsChoices="true" />
                 </entry>
+                <entry key="${choice-checkbox-view}">
+                  <OTChoiceViewConfig objectClass="org.concord.otrunk.ui.OTChoiceMultiple" viewClass="org.concord.otrunk.ui.swing.OTChoiceRadioButtonPrintView" useViewsAsChoices="true" />
+                </entry>
                 <entry key="${text-edit}">
                   <OTViewEntry objectClass="org.concord.otrunk.ui.OTText" viewClass="org.concord.otrunk.ui.swing.OTTextPrintView" />
                 </entry>
@@ -112,6 +117,9 @@
                 <entry key="${choice-radio-view}">
                   <OTChoiceViewConfig objectClass="org.concord.otrunk.ui.OTChoice" viewClass="org.concord.otrunk.ui.swing.OTChoiceComboBoxEditView" useViewsAsChoices="true" />
                 </entry>
+                <entry key="${choice-checkbox-view}">
+                  <OTChoiceViewConfig objectClass="org.concord.otrunk.ui.OTChoiceMultiple" viewClass="org.concord.otrunk.ui.swing.OTChoiceComboBoxEditView" useViewsAsChoices="true" />
+                </entry>
                 <entry key="${menu-horizontal-circle}">
                   <OTViewEntry objectClass="org.concord.otrunk.udl3.OTUDLMenu" viewClass="org.concord.otrunk.udl.ui.OTUDLMenuPageEditView" />
                 </entry>
@@ -127,23 +135,18 @@
                 <entry key="${character-group-view}">
                   <OTViewEntry objectClass="org.concord.otrunk.udl.coach.OTUDLCoachGroup" viewClass="org.concord.otrunk.udl.coach.OTUDLCoachGroupEditView" />
                 </entry>
+                <entry key="${netlogo-view}">
+                  <OTViewEntry viewClass="org.concord.otrunknl4.OTNLogoModelEditView" objectClass="org.concord.otrunknl4.OTNLogoModel" />
+                </entry>
                 <entry key="${compound_doc_view}">
                   <OTObjectEditViewConfig objectClass="org.concord.otrunk.view.document.OTCompoundDoc" viewClass="org.concord.otrunk.view.document.OTCompoundDocEditView" usePopupEditWindows="true" copyNewObjectsByDefault="true">
                     <objectsToInsert>
                       <OTText name="Text field" />
                       <OTDrawingTool2 name="Draw tool" />
-                      <OTChoice name="Choices" />
-                      <OTQuestion name="Question">
-                        <prompt>
-                          <OTUDLCompoundDoc>
-                            <bodyText>Insert question here</bodyText>
-                          </OTUDLCompoundDoc>
-                        </prompt>
-                        <input>
-                          <OTChoice name="Multiple choice" />
-                        </input>
-                      </OTQuestion>
-                      <OTUDLQuestions name="Scaffolded questions" />
+                      <OTChoice name="Multiple-choice (single answer)" />
+                      <OTChoiceMultiple name="Multiple-choice (check boxes)" />
+                      <OTQuestion name="Question" showConvertButton="true" />
+                      <OTUDLQuestions name="Leveled questions" />
                       <OTDataTable name="Data table" showLastRowForAddingNew="true">
                         <dataStore>
                           <OTDataStore numberChannels="2">
@@ -169,6 +172,7 @@
                           <OTDataAxis max="40.0" units="" min="-0.0" label="" />
                         </yDataAxis>
                       </OTDataCollector>
+                      <OTNLogoModel name="NetLogo model" />
                     </objectsToInsert>
                   </OTObjectEditViewConfig>
                 </entry>
@@ -423,6 +427,7 @@
             <OTViewEntry local_id="menu-vertical" objectClass="org.concord.otrunk.udl3.OTUDLMenu" viewClass="org.concord.otrunk.udl.ui.OTUDLMenuSectionView" />
             <OTViewEntry local_id="menu-horizontal-circle" objectClass="org.concord.otrunk.udl3.OTUDLMenu" viewClass="org.concord.otrunk.udl.ui.OTUDLMenuPageView" />
             <OTViewEntry local_id="menu-horizontal-book" objectClass="org.concord.otrunk.udl3.OTUDLMenu" viewClass="org.concord.otrunk.udl.ui.OTUDLMenuPageBookView" />
+             <OTChoiceViewConfig local_id="choice-checkbox-view" objectClass="org.concord.otrunk.ui.OTChoiceMultiple" viewClass="org.concord.otrunk.ui.swing.OTChoiceCheckBoxView" useViewsAsChoices="true" />
             <OTChoiceViewConfig local_id="choice-radio-view" objectClass="org.concord.otrunk.ui.OTChoice" viewClass="org.concord.otrunk.ui.swing.OTChoiceRadioButtonView" useViewsAsChoices="true" />
             <OTViewEntry local_id="choice-combo-view" objectClass="org.concord.otrunk.ui.OTChoice" viewClass="org.concord.otrunk.ui.swing.OTChoiceComboBoxView" />
             <OTViewEntry objectClass="org.concord.otrunk.script.ui.OTScriptObject" viewClass="org.concord.otrunk.script.ui.OTScriptObjectView" />
@@ -435,6 +440,7 @@
             <OTViewEntry viewClass="org.concord.datagraph.state.OTDataGraphView" objectClass="org.concord.datagraph.state.OTDataGraph" />
             <OTViewEntry viewClass="org.concord.data.state.OTDataFieldView" objectClass="org.concord.data.state.OTDataField" />
             <OTViewEntry local_id="drawing-view" viewClass="org.concord.datagraph.state.OTDataDrawingToolView" objectClass="org.concord.graph.util.state.OTDrawingTool" />
+            <OTViewEntry local_id="netlogo-view" viewClass="org.concord.otrunknl4.OTNLogoModelView" objectClass="org.concord.otrunknl4.OTNLogoModel" />
             <OTViewEntry viewClass="org.concord.datagraph.state.OTMultiDataGraphView" objectClass="org.concord.datagraph.state.OTMultiDataGraph" />
             <OTViewEntry objectClass="org.concord.otrunkcck.OTCCKModel" viewClass="org.concord.otrunkcck.OTCCKModelView" />
             <OTViewEntry local_id="data-table-view" objectClass="org.concord.data.state.OTDataTable" viewClass="org.concord.data.state.OTDataTableView" />
