@@ -36,7 +36,7 @@ var temp_ws_scaler = 1;
 var temp_pl_scaler = 1;
 
 var a = 0.15; // what part of the current actual temperature to use in the smoothed temp
-var f = 7; // K.E. scale factor
+var f = 7/2.8; // K.E. scale factor
 var n = (1.6/1.38 * 10000.00); // ~ number of deg K in 1 eV
 var b = 0; // increment degC by this amount
 var m1 = 1;
@@ -96,9 +96,8 @@ var modelListener = new ModelListener() {
 				stopTime = timeSlider.getValue()*60;
 				// System.err.println("Stop time is: " + stopTime);
 				if (timeCounter == 0) {
-						temp_ws = getCurrentTempForType(Element.ID_WS);
-						temp_pl = getCurrentTempForType(Element.ID_PL);
-						// graphHeater(temp_ck, temp_ws, temp_pl, temp_nt);
+						resetGraph();
+						System.err.println("Time at start: " + now());
 						start_run();
 				}
 				
@@ -126,8 +125,8 @@ var timerHandler =
 			end_run();
 			timer.stop();
 		}
-		
-		if (timeCounter == 0) {
+		timeCounter += counterIncrement;
+//  		if (timeCounter == 0) {
 			// for some reason the temp recorded here is always substantially lower than the temp the sliders are set to
 			// so using our first recording, calculate a scaling factor
 			/* temp_ws_scaler = ((counterTempSlider.getValue()*10)/getCurrentTempForType(Element.ID_WS));
@@ -138,18 +137,19 @@ var timerHandler =
 			if (temp_ws_scaler <= 0)
 			  temp_ws_scaler = 1;
 		*/
-			temp_ws = getCurrentTempForType(Element.ID_WS) * temp_ws_scaler;
-			temp_pl = getCurrentTempForType(Element.ID_PL) * temp_pl_scaler;
-			graphHeater(temp_ws, temp_pl);
-		} else {
+// 			System.err.println("Time at first timer step: " + now());
+// 			temp_ws = getCurrentTempForType(Element.ID_WS) * temp_ws_scaler;
+//			temp_pl = getCurrentTempForType(Element.ID_PL) * temp_pl_scaler;
+// 		}			
+// 		} else {
 			// calculate the exponential moving average
 			temp_ws = a*(getCurrentTempForType(Element.ID_WS)*temp_ws_scaler)+(1-a)*temp_ws;
 			temp_pl = a*(getCurrentTempForType(Element.ID_PL)*temp_pl_scaler)+(1-a)*temp_pl;
 			graphValues(temp_ws, temp_pl);
-		}
+// 		}
 		
 		// graph.repaint()
-		timeCounter += counterIncrement;
+		
 		if (timeCounter > stopTime) {
 			end_run();
 			timer.stop();
