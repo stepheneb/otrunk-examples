@@ -515,9 +515,7 @@ function setupMultimeter()
 				
 				
 				//Analyze circuit
-				circuitAnalyzer.analyzeCircuit();
 				analyzeCircuitSetting(type, extra);
-				circuitAnalyzer.simplifyCircuit();
 				analyzeMultimeterLeads(extra);
 				
 				System.out.println(extra.toSource());
@@ -542,14 +540,22 @@ function setupMultimeter()
 }// end of setupMultimeter()
 
 function analyzeMultimeterLeads(extra)
-{	
-	//Check where the leads are connected to
+{					
 	//Get multimeter connections
 	var redConn = cckMultimeter.getRedLeadModel().getConnection();
 	var blackConn = cckMultimeter.getBlackLeadModel().getConnection();
-	var redLead = 0;
-	var blackLead = 0;
+
+	//Check if the leads are in between two wires or not
+	//NOTE: This HAS to be called before simplfying the circuit
+	extra.redLeadBetweenWires = circuitAnalyzer.isBetweenWires(redConn.getJunction());
+	extra.blackLeadBetweenWires = circuitAnalyzer.isBetweenWires(blackConn.getJunction());
 	
+	//Simplify te circuit
+	circuitAnalyzer.simplifyCircuit();
+
+	//Check where the leads are connected to
+	var redLead = 0;
+	var blackLead = 0;	
 	if (redConn != null){
 		if (circuitAnalyzer.isBetween(redConn.getJunction(), targetResistor, circuitBattery)){
 			redLead = 1;
@@ -574,7 +580,7 @@ function analyzeMultimeterLeads(extra)
 	}
 		
 	extra.redLead = redLead;
-	extra.blackLead = blackLead;
+	extra.blackLead = blackLead;	
 }
 
 /**
@@ -584,6 +590,8 @@ function analyzeMultimeterLeads(extra)
  */
 function analyzeCircuitSetting(type, extra)
 {
+	circuitAnalyzer.analyzeCircuit();
+				
 	var redConn = cckMultimeter.getRedLeadModel().getConnection();
 	var blackConn = cckMultimeter.getBlackLeadModel().getConnection();
 	
@@ -750,14 +758,6 @@ function setupCircuitListener()
 				menuItems[0].setEnabled(false);		//"Change voltage" option
 				menuItems[1].setEnabled(false);		//"Change internal resistance" option
 				menuItems[3].setEnabled(false);		//"Show vale" option
-			}
-			if(typeName.equals("Resistor"))
-			{
-//				var menuComponent = circuitNode.getBranchNode(branch).getMenu();
-//				var menuItems = menuComponent.getSubElements();
-				
-//				menuItems[0].setEnabled(false);
-//				menuItems[1].setEnabled(false);
 			}
 		}
 		
@@ -1117,45 +1117,67 @@ function logAnswerAssessment(answer, correctAnswer, answerValueType, answerUnitT
 		}		
 		
 		//Correct lead placement?
+		//Give values of 0 (really bad), 1 (bad), 2 (not bad), 3 (good)
+		//And take points off if any of the DMM leads are connected to 2 wires instead of
+		//directly connected to the component -> 4 (good, but no ideal)
+		var valLeadPlacement = -1;
 		if (getCurrentAnswerType().equalsIgnoreCase("voltage")){
 			//To measure voltage correctly, the leads have to placed in zone 1 and 2
-			//Give values of 0 (really bad), 1 (bad), 2 (not bad), 3 (good)
 			if (	 (measurement.extra.redLead == 1 && measurement.extra.blackLead == 2) ||
 					 (measurement.extra.redLead == 2 && measurement.extra.blackLead == 1)){
-				answerAssessIndicators.put("leadPlacement", new java.lang.Integer(3));
+				//Check if any lead is between wires
+				if (measurement.extra.redLeadBetweenWires || measurement.extra.blackLeadBetweenWires){
+					valLeadPlacement = 4;
+				}
+				else{
+					valLeadPlacement = 3;
+				}
 			}
 			else if ((measurement.extra.redLead == 1 && measurement.extra.blackLead == 3) ||
 					 (measurement.extra.redLead == 3 && measurement.extra.blackLead == 1)){
-				answerAssessIndicators.put("leadPlacement", new java.lang.Integer(2));
+				valLeadPlacement = 2;
 			}
 			else if ((measurement.extra.redLead == 2 && measurement.extra.blackLead == 3) ||
 					 (measurement.extra.redLead == 3 && measurement.extra.blackLead == 2)){
-				answerAssessIndicators.put("leadPlacement", new java.lang.Integer(1));
+				valLeadPlacement = 1;
 			}
 			else if ((measurement.extra.redLead == measurement.extra.blackLead)){
-				answerAssessIndicators.put("leadPlacement", new java.lang.Integer(0));
+				valLeadPlacement = 0;
 			}
 		}
 		else if (getCurrentAnswerType().equalsIgnoreCase("current")){
 			//To measure voltage correctly, the leads have to placed in zone 2 and 3
-			if ((measurement.extra.redLead == 2 && measurement.extra.blackLead == 3) ||
+			if (	 (measurement.extra.redLead == 2 && measurement.extra.blackLead == 3) ||
 					 (measurement.extra.redLead == 3 && measurement.extra.blackLead == 2)){
-				answerAssessIndicators.put("leadPlacement", new java.lang.Integer(3));
+				//Check if any lead is between wires
+				if (measurement.extra.redLeadBetweenWires || measurement.extra.blackLeadBetweenWires){
+					valLeadPlacement = 4;
+				}
+				else{
+					valLeadPlacement = 3;
+				}
 			}
 			else{
-				answerAssessIndicators.put("leadPlacement", new java.lang.Integer(0));
+				valLeadPlacement = 0;
 			}
 		}
 		else if (getCurrentAnswerType().equalsIgnoreCase("resistance")){
 			//To measure voltage correctly, the leads have to placed in zone 1 and 2
 			if (	 (measurement.extra.redLead == 1 && measurement.extra.blackLead == 2) ||
 					 (measurement.extra.redLead == 2 && measurement.extra.blackLead == 1)){
-				answerAssessIndicators.put("leadPlacement", new java.lang.Integer(3));
+				//Check if any lead is between wires
+				if (measurement.extra.redLeadBetweenWires || measurement.extra.blackLeadBetweenWires){
+					valLeadPlacement = 4;
+				}
+				else{
+					valLeadPlacement = 3;
+				}
 			}
 			else{
-				answerAssessIndicators.put("leadPlacement", new java.lang.Integer(0));
+				valLeadPlacement = 0;
 			}
 		}
+		answerAssessIndicators.put("leadPlacement", new java.lang.Integer(valLeadPlacement));
 		//	
 		
 		//Circuit setting
