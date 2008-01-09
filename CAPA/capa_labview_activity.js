@@ -34,8 +34,9 @@ importClass(Packages.java.math.RoundingMode)
 
 importClass(Packages.org.concord.otrunk.ui.OTText)
 importClass(Packages.org.concord.otrunk.ui.swing.OTCardContainerView)
-importClass(Packages.org.concord.otrunk.labview.LabviewReportConverter)
 importClass(Packages.org.concord.otrunkcapa.rubric.OTAssessment)
+importClass(Packages.org.concord.otrunk.labview.LabviewMonitor)
+importClass(Packages.org.concord.otrunk.labview.LabviewReportConverter)
 
 
 /*
@@ -59,38 +60,47 @@ importClass(Packages.org.concord.otrunkcapa.rubric.OTAssessment)
  * unitLabel
  * launchButton 
  */
+
+var _monitor = null
  
-var otAssessment
-var info // text to be added to the report
-var timeStepStarted = 0
+var _otAssessment = null
+var _info // text to be added to the report
 
-var unitIndicator = 0 // 0: wrong answer, 1: correct answer but suboptimal unit, 2: correct unit
+var _numFormat = DecimalFormat.getInstance()
+var	_dateFormat = SimpleDateFormat.getInstance()
 
-var numFormat = DecimalFormat.getInstance()
-var	dateFormat = SimpleDateFormat.getInstance()
+var _currentStep = 1
+var _lastStep = 1
 
-var currentStep = 1
-var lastStep = 1
-	
+var _correctAmp = 0.0
+var _submittedAmp = 0.0
+var _submittedAmpUnit = ""
+
+var _correctFrq = 0.0
+var _submittedFrq = 0.0
+var _submittedFrqUnit = "" 
 
 /**
  * This function is called when the script starts up
  * It returns a boolean indicating whether the initialization 
  * was successful or not.
  */
+
 function init() {
 	System.out.println("-------------------------- init --------------------------------")
 	
-	numFormat.applyPattern("####.##")
-	dateFormat.applyPattern("MM/dd/yyyy HH:mm:ss zzz")
+	_numFormat.applyPattern("####.##")
+	_dateFormat.applyPattern("MM/dd/yyyy HH:mm:ss zzz")
+	
+    _monitor = controllerService.getRealObject(otMonitor)	
 	
 	initLogging()
 	
 	setupGUI()
-	setupAsessmentLogging()
+	setupAssessmentLogging()
 	submitAnswerButton.addActionListener(submitAnswerButtonListener)
 	
-	startStep(currentStep)
+	startStep(_currentStep)
 	return true
 }
 
@@ -101,13 +111,13 @@ function save() {
 }
 
 function initLogging() {
-	info = otObjectService.createObject(OTText)
-	info.setText("CAPA - LabVIEW Oscilloscope\n")
-	otContents.add(info)
+	_info = otObjectService.createObject(OTText)
+	_info.setText("CAPA - LabVIEW Oscilloscope\n")
+	otContents.add(_info)
 }
 
 function log(msg) {
-	info.setText(info.getText() + msg + "\n")
+	_info.setText(_info.getText() + msg + "\n")
 }
 
 function setupGUI() {
@@ -119,10 +129,10 @@ function setupGUI() {
 	reportButton.setVisible(false)
 }
 
-function setupAsessmentLogging() {
+function setupAssessmentLogging() {
 	// Create assessment object
-	otAssessment = otObjectService.createObject(OTAssessment)
-	otContents.add(otAssessment)
+	_otAssessment = otObjectService.createObject(OTAssessment)
+	otContents.add(_otAssessment)
 }
 
 function startStep(step) {
@@ -136,60 +146,91 @@ function startStep(step) {
 	otUnitChoiceFrq.setCurrentChoice(otEmptyUnitChoice)	
 }
 
-// Create rubric from the OTModelActivityData object by populating the OTAssessment object
+
+/**
+ * Check if the submitted answers are valid values for assessment
+ */
+function validateAnswers() {
+	var ampText = answerBoxAmp.getText()
+	var frqText= answerBoxFrq.getText()
+	
+	_submittedAmpUnit = otUnitChoiceAmp.getCurrentChoice() 
+    _submittedFrqUnit = otUnitChoiceFrq.getCurrentChoice()
+    
+	System.out.println("_submittedAmp = [" + _submittedAmp + "]")
+
+	if (_submittedAmpUnit == null || _submittedAmpUnit.getAbbreviation() == "") {
+		JOptionPane.showMessageDialog(null, "Set the unit for amplitude and try again.")
+		return false
+	}
+	if (_submittedFrqUnit == null || _submittedFrqUnit.getAbbreviation() == "") {
+		JOptionPane.showMessageDialog(null, "Set the unit for frequency and try again.")
+		return false
+	}
+	try {
+		_submittedAmp = Double.parseDouble(ampText)
+	}
+	catch (e) {
+		JOptionPane.showMessageDialog(null, "Invalid amplitude value [" + ampText + "].\n" + "Please try again.")
+		return false
+	}
+	try {
+		_submittedFrq = Double.parseDouble(frqText)
+	}
+	catch (e) {
+		JOptionPane.showMessageDialog(null, "Invalid frequency value [" + frqText + "].\n" + "Please try again.")
+		return false
+	}
+	return true	
+}
+
+/**
+ * Create rubric from the OTModelActivityData object by populating the OTAssessment object
+ * This must happen AFTER the LabVIEW has exited, and AFTER validateAnswers().
+ */
 function assess() {
-	var converter = new LabviewReportConverter(otMonitor)
+	var converter = new LabviewReportConverter(_monitor)
 	converter.markEndTime()
 	var madwrapper = converter.getMADWrapper()
-	
-	System.out.println("fm: " + dateFormat.getNumberFormat().toPattern())
-	
-	var stime = dateFormat.format(new Date(madwrapper.getStartTime())) 
+	System.out.println("madwrapper=" + madwrapper)
+	var stime = _dateFormat.format(new Date(madwrapper.getStartTime())) 
 	log(stime + " - Activity started")
-	var etime = dateFormat.format(new Date())
+	var etime = _dateFormat.format(new Date())
 
-	var amplitude = Double.parseDouble(madwrapper.getInitialCIValue("amplitude"))
-	var frequency = Double.parseDouble(madwrapper.getInitialCIValue("frequency"))
-	log(stime + " - Solution is: amplitude=" + getAmpSolutionText(amplitude) + ", frequency = " + getFrqSolutionText(frequency))
+	_correctAmp = Double.parseDouble(madwrapper.getInitialCIValue("amplitude"))
+	_correctFrq = Double.parseDouble(madwrapper.getInitialCIValue("frequency"))
+	log(stime + " - Solution is: amplitude=" + getAmpSolutionText(_correctAmp) + ", frequency = " + getFrqSolutionText(_correctFrq))
 	
 	var numChanges = madwrapper.getNumChanges()
 	
-	var ampAnswer = answerBoxAmp.getText()
-	var frqAnswer = answerBoxFrq.getText()
-	
-	var ampUnitAnswer = otUnitChoiceAmp.getCurrentChoice() 
-    var frqUnitAnswer = otUnitChoiceFrq.getCurrentChoice()
-    
-    log(etime + " - Answer submitted: amplitude = " + ampAnswer + " " + ampUnitAnswer.getAbbreviation())
-  	log(etime + " - Answer submitted: frequency = " + frqAnswer + " " + frqUnitAnswer.getAbbreviation())
+    log(etime + " - Answer submitted: amplitude = " + _submittedAmp + " " + _submittedAmpUnit.getAbbreviation())
+  	log(etime + " - Answer submitted: frequency = " + _submittedFrq + " " + _submittedFrqUnit.getAbbreviation())
     
     var ampIndicator = 0.0
     var frqIndicator = 0.0
     
-    try {
-		ampIndicator = checkAmplitude(amplitude, ampAnswer, ampUnitAnswer)
-		frqIndicator = checkFrequency(frequency, frqAnswer, frqUnitAnswer)
-    }
-    catch (e) {
-    	return
-    }
+	ampIndicator = checkAmplitude(_correctAmp, _submittedAmp, _submittedAmpUnit)
+	frqIndicator = checkFrequency(_correctFrq, _submittedFrq, _submittedFrqUnit)
+	
+	System.out.println("ampIndicator=" + ampIndicator)
+	System.out.println("frqIndicator=" + frqIndicator)	
 	
 	var timeTotal = madwrapper.getTimeTotal()
 	
-	otAssessment.setLabel("Oscilloscope")
-	otAssessment.getIndicatorValues().put("amplitudeCorrect", ampIndicator)
-	otAssessment.getIndicatorValues().put("frequencyCorrect", frqIndicator)
-	otAssessment.getIndicatorValues().put("numChanges", numChanges)
-	otAssessment.getIndicatorValues().put("timeTotal", timeTotal)
+	_otAssessment.setLabel("Oscilloscope")
+	_otAssessment.getIndicatorValues().put("amplitudeCorrect", ampIndicator)
+	_otAssessment.getIndicatorValues().put("frequencyCorrect", frqIndicator)
+	_otAssessment.getIndicatorValues().put("numChanges", numChanges)
+	_otAssessment.getIndicatorValues().put("timeTotal", timeTotal)
 	
 	System.out.println("numChanges=" + numChanges)
 	System.out.println("timeTotal=" + timeTotal)
 	
-	++currentStep
+	++_currentStep
 	
-	System.out.println("step=" + currentStep)
-	if (currentStep <= lastStep){
-		startStep(currentStep)
+	System.out.println("step=" + _currentStep)
+	if (_currentStep <= _lastStep){
+		startStep(_currentStep)
 	}
 	else {
 		endActivity()
@@ -198,25 +239,25 @@ function assess() {
 
 function getAmpSolutionText(amplitude) {
 	if (amplitude >= 1000.0) {
-		return numFormat.format(amplitude / 1000.0) + " kV"
+		return _numFormat.format(amplitude / 1000.0) + " kV"
 	}
 	else if (amplitude < 0.0) {
-		return numFormat.format(amplitude * 1000.0) + " mV"
+		return _numFormat.format(amplitude * 1000.0) + " mV"
 	}
 	else {
-		return numFormat.format(amplitude) + " V"
+		return _numFormat.format(amplitude) + " V"
 	}
 }
 
 function getFrqSolutionText(frequency) {
 	if (frequency >= 1.0e6) {
-		return numFormat.format(frequency / 1.0e6) + " MHz"
+		return _numFormat.format(frequency / 1.0e6) + " MHz"
 	}
 	else if (frequency >= 1000.0) {
-		return numFormat.format(frequency / 1000.0) + " kHz"
+		return _numFormat.format(frequency / 1000.0) + " kHz"
 	}
 	else {
-		return numFormat.format(frequency) + " Hz"
+		return _numFormat.format(frequency) + " Hz"
 	}
 }
 
@@ -225,37 +266,13 @@ function checkAmplitude(correctValue, answer, unitAnswer) {
 	var answerValue = 0.0
 	
 	System.out.println("answer text = [" + answer + "]")
+	
+	unit = unitAnswer.getAbbreviation()
 
-	System.out.println(unitAnswer.getAbbreviation())
-	if (unitAnswer == null) {
-		JOptionPane.showMessageDialog(null, "Set the unit for amplitude and try again.")
-		throw new RuntimeException()
-	}
-	else {
-		unit = unitAnswer.getAbbreviation()
-	}
 	System.out.println("unit=" + unit)
 	
-	try {
-		answerValue = Double.parseDouble(answer)
-	}
-	catch (e) {
-		JOptionPane.showMessageDialog(null, "Invalid amplitude value [" + answer + "].\n" + "Please try again.")
-		throw e
-	}
-	if (answer == null) {
-		System.out.println("amp=null")
-		return 1.0 // totally wrong
-	}
-	else {
-		try {
-		    answerValue = Double.parseDouble(answer)
-		}
-		catch (e) {
-			System.out.println("ans exc")
-		}
-	}
-	
+	answerValue = Double.parseDouble(answer)
+
 	if (unit == "mV") {
 		answerValue *= 0.001		
 		
@@ -271,7 +288,7 @@ function checkAmplitude(correctValue, answer, unitAnswer) {
 	
 	var diff =  Math.abs(answerValue - correctValue) / correctValue
 	
-	System.out.println("diff=" + diff)
+	System.out.println("amp diff=" + diff)
 	return diff	
 }
 
@@ -279,22 +296,10 @@ function checkFrequency(correctValue, answer, unitAnswer) {
 	var unit = ""
 	var answerValue = 0.0
 
-	if (unitAnswer == null) {
-		JOptionPane.showMessageDialog(null, "Set the unit for frequency and try again.")
-		throw new RuntimeException()
-	}
-	else {
-		unit = unitAnswer.getAbbreviation()
-	}
+	unit = unitAnswer.getAbbreviation()
 	System.out.println("unit=" + unit)
 
-	try {	
-		answerValue = Double.parseDouble(answer) 
-	}
-	catch (e) {
-		JOptionPane.showMessageDialog(null, "Invalid frequency value [" + answer + "].\n" + "Please try again.")
-		throw e
-	}
+	answerValue = Double.parseDouble(answer) 
 	
 	if (unit == "kHz") {
 		answerValue *= 1000		
@@ -311,7 +316,7 @@ function checkFrequency(correctValue, answer, unitAnswer) {
 	
 	var diff =  Math.abs(answerValue - correctValue) / correctValue
 	
-	System.out.println("diff=" + diff)
+	System.out.println("frq diff=" + diff)
 	return diff	
 }
 
@@ -328,23 +333,43 @@ function endActivity()
 	unitLabel.setVisible(false)
 	launchButton.setVisible(false)
 	OTCardContainerView.setCurrentCard(otInfoAreaCards, "end_text")
+	OTCardContainerView.setCurrentCard(otInstAreaCards, "solution_text")
 	
 	reportButton.setVisible(true)
 }
 
 var submitAnswerButtonHandler = {
 	actionPerformed: function(evt) {
-		var monitor = controllerService.getRealObject(otMonitor)
+		var state = _monitor.getState()
+		var msg = ""
+
+		System.out.println("Entered: submitAnswerButtonHandler")
 		
-		if (monitor.processIsRunning()) {
-			JOptionPane.showMessageDialog(null, "Please close the LabVIEW session first and try SUBMIT again.")
-			System.out.println("Process running. Try when finished")
+		if (state == LabviewMonitor.READY) {
+		    System.out.println("State: ready")
+			msg = "The activity hasn't started yet.\n You need to launch LabVIEW first"
+			JOptionPane.showMessageDialog(null, msg)
 			return
 		}
-		assess()
+		else if (state == LabviewMonitor.RUNNING) {
+		    System.out.println("State: running")
+		    if (validateAnswers() == false) {
+		    	return
+		    }
+			msg = "This will end your activity and close the LabVIEW window. Do you want to continue?"
+			var option = JOptionPane.showConfirmDialog(null, msg, "Submitting Answer", JOptionPane.OK_CANCEL_OPTION)
+			
+			if (option == JOptionPane.OK_OPTION) {
+		    	System.out.println("option == OK")
+		  		_monitor.close()
+		    	assess() // must close labVIEW before assess()
+			}
+		}
+		else {
+			System.out.println("submitButtonHandler: this place shouldn't be reached")
+			return
+		}
 	}
 }
 
 var submitAnswerButtonListener = new ActionListener(submitAnswerButtonHandler)
-
-
