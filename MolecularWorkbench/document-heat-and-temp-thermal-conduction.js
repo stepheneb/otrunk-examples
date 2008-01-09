@@ -19,6 +19,8 @@ var metalRadioBtn;
 var woodRadioBtn;
 var stopTime;
 
+var hotCounter = false;
+
 ////
 //
 // variables for graph
@@ -35,7 +37,7 @@ var temp_pl = 0;
 var temp_ws_scaler = 1;
 var temp_pl_scaler = 1;
 
-var a = 0.15; // what part of the current actual temperature to use in the smoothed temp
+var a = 0.10; // what part of the current actual temperature to use in the smoothed temp
 var f = 7/2.8; // K.E. scale factor
 var n = (1.6/1.38 * 10000.00); // ~ number of deg K in 1 eV
 var b = 0; // increment degC by this amount
@@ -48,7 +50,7 @@ var yMax = 50;
 var yMin = -2;
 var xMin = -2;
 
-var stepTime = 500;
+var stepTime = 200;  // how often to take a sample, in ms
 var counterIncrement = stepTime/1000;
 
 var page = modelComponent.getComponent(0);
@@ -97,7 +99,7 @@ var modelListener = new ModelListener() {
 				// System.err.println("Stop time is: " + stopTime);
 				if (timeCounter == 0) {
 						resetGraph();
-						System.err.println("Time at start: " + now());
+						// System.err.println("Time at start: " + now());
 						start_run();
 				}
 				
@@ -125,8 +127,8 @@ var timerHandler =
 			end_run();
 			timer.stop();
 		}
-		timeCounter += counterIncrement;
-//  		if (timeCounter == 0) {
+		
+ 		if (timeCounter == 0) {
 			// for some reason the temp recorded here is always substantially lower than the temp the sliders are set to
 			// so using our first recording, calculate a scaling factor
 			/* temp_ws_scaler = ((counterTempSlider.getValue()*10)/getCurrentTempForType(Element.ID_WS));
@@ -138,15 +140,43 @@ var timerHandler =
 			  temp_ws_scaler = 1;
 		*/
 // 			System.err.println("Time at first timer step: " + now());
-// 			temp_ws = getCurrentTempForType(Element.ID_WS) * temp_ws_scaler;
-//			temp_pl = getCurrentTempForType(Element.ID_PL) * temp_pl_scaler;
-// 		}			
-// 		} else {
+			try {
+ 				temp_ws = getCurrentTempForType(Element.ID_WS) * temp_ws_scaler;
+ 				temp_pl = getCurrentTempForType(Element.ID_PL) * temp_pl_scaler;
+			} catch (error) {
+				// bad to have an error this early in the run
+				// skip this tick
+				return;
+			}
+			hotCounter = false;
+			if (temp_ws > temp_pl) {
+				// counter temp is greater than the cup
+				hotCounter = true;
+			}
+			// System.err.println("Hotcounter = " + hotCounter);
+//  		}			
+		} else {
 			// calculate the exponential moving average
-			temp_ws = a*(getCurrentTempForType(Element.ID_WS)*temp_ws_scaler)+(1-a)*temp_ws;
-			temp_pl = a*(getCurrentTempForType(Element.ID_PL)*temp_pl_scaler)+(1-a)*temp_pl;
-			graphValues(temp_ws, temp_pl);
-// 		}
+			try {
+				temp_ws = a*(getCurrentTempForType(Element.ID_WS)*temp_ws_scaler)+(1-a)*temp_ws;
+			} catch (error) {
+				// skip this tick, use the previous value
+				System.err.println("Skipping tick (ws) " + timeCounter);
+			}
+			
+			try {
+				temp_pl = a*(getCurrentTempForType(Element.ID_PL)*temp_pl_scaler)+(1-a)*temp_pl;
+			} catch (error) {
+				// skip this tick, use the previous value
+				System.err.println("Skipping tick (pl) " + timeCounter);
+			}
+			// temp_ws = getCurrentTempForType(Element.ID_WS) * temp_ws_scaler;
+			// temp_pl = getCurrentTempForType(Element.ID_PL) * temp_pl_scaler;
+			
+ 		}
+ 		
+ 		graphValues(temp_ws, temp_pl);
+ 		timeCounter += counterIncrement;
 		
 		// graph.repaint()
 		
@@ -156,11 +186,19 @@ var timerHandler =
 			model.stop();
 		}
 		// if (timeCounter>30) {
+		if (hotCounter) {
+			if (Math.round(temp_pl) >= Math.round(temp_ws)) {
+					end_run();
+					model.stop();
+					timer.stop();
+			}
+		} else {
 			if (Math.round(temp_pl) <= Math.round(temp_ws)) {
 					end_run();
 					model.stop();
 					timer.stop();
 			}
+		}
 		// }
 	}
 }
@@ -255,9 +293,9 @@ function resetGraph() {
 	
 	graph.reset();
 	
-	temp_ws = getCurrentTempForType(Element.ID_WS);
-	temp_pl = getCurrentTempForType(Element.ID_PL);
-	graphHeater(temp_ws, temp_pl);
+	// temp_ws = getCurrentTempForType(Element.ID_WS);
+	// temp_pl = getCurrentTempForType(Element.ID_PL);
+	// graphHeater(temp_ws, temp_pl);
 	
 	timeCounter = 0;
 	yMax = 100;
