@@ -206,22 +206,23 @@ function assess() {
     log(etime + " - Answer submitted: amplitude = " + _submittedAmp + " " + _submittedAmpUnit.getAbbreviation())
   	log(etime + " - Answer submitted: frequency = " + _submittedFrq + " " + _submittedFrqUnit.getAbbreviation())
     
-    var ampIndicator = 0.0
-    var frqIndicator = 0.0
-    
-	ampIndicator = checkAmplitude(_correctAmp, _submittedAmp, _submittedAmpUnit)
-	frqIndicator = checkFrequency(_correctFrq, _submittedFrq, _submittedFrqUnit)
+	var ampIndicator = checkAmplitude(_correctAmp, _submittedAmp, _submittedAmpUnit)
+	var frqIndicator = checkFrequency(_correctFrq, _submittedFrq, _submittedFrqUnit)
 	
 	System.out.println("ampIndicator=" + ampIndicator)
 	System.out.println("frqIndicator=" + frqIndicator)	
 	
 	var timeTotal = madwrapper.getTimeTotal()
 	
+	var tpdIndicator = checkTimePerDiv(madwrapper)
+	
 	_otAssessment.setLabel("Oscilloscope")
-	_otAssessment.getIndicatorValues().put("amplitudeCorrect", ampIndicator)
-	_otAssessment.getIndicatorValues().put("frequencyCorrect", frqIndicator)
-	_otAssessment.getIndicatorValues().put("numChanges", numChanges)
-	_otAssessment.getIndicatorValues().put("timeTotal", timeTotal)
+	var indicators = _otAssessment.getIndicatorValues()
+	indicators.put("amplitudeCorrect", ampIndicator)
+	indicators.put("frequencyCorrect", frqIndicator)
+	indicators.put("numChanges", numChanges)
+	indicators.put("timeTotal", timeTotal)
+	indicators.put("timePerDiv", tpdIndicator)
 	
 	System.out.println("numChanges=" + numChanges)
 	System.out.println("timeTotal=" + timeTotal)
@@ -318,6 +319,51 @@ function checkFrequency(correctValue, answer, unitAnswer) {
 	
 	System.out.println("frq diff=" + diff)
 	return diff	
+}
+
+// @return 0:excellent, 1: good, 2: ok, 3: bad 
+function checkTimePerDiv(madWrapper) {
+	var name = "TIME/DIV"
+	var civs = madWrapper.getSortedCIVs(name)
+	var n = civs.size()
+	var last = 0.0
+	
+	if (n == 0) {
+		last = Integer.parseInt(madWrapper.getInitialCIValue(name))
+	}
+	else {
+		last = Integer.parseInt(civs.get(n-1).getValue())
+	}
+	
+	// mapping from dial value to actual time in seconds
+	var map = [ 0.2,   0.1,   0.05,  0.02, 0.01, 
+		        0.005, 0.002, 0.001, 5e-4, 2e-4, 
+		        1e-4,  5e-5,  2e-5,  1e-5, 5e-6, 
+		        2e-6, 1e-6, 5e-7 ]
+		
+	var timePerDiv = map[last]
+	var halfWaveLength = 1.0 / _correctFrq / 2.0
+	var viewWidth = timePerDiv * 10
+	var diff = (viewWidth - halfWaveLength) / halfWaveLength
+	
+	System.out.println("viewWidth=" + viewWidth)
+	System.out.println("halfWaveLength=" + halfWaveLength)
+	
+	if (diff < 0.0) {
+		return 3 //bad
+	}
+	else if (diff < 1.0) {
+		return 0 //excellent
+	}
+	else if (diff < 2.0) {
+		return 1 //good
+	}
+	else if (diff < 3.0) {
+		return 2 //ok
+	}
+	else {
+		return 3 //bad
+	}
 }
 
 function endActivity()
