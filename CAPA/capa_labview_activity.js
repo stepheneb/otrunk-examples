@@ -100,6 +100,7 @@ function init() {
 	setupAssessmentLogging()
 	submitAnswerButton.addActionListener(submitAnswerButtonListener)
 	
+	OTCardContainerView.setCurrentCard(otInfoAreaCards, "intro_text")
 	startStep(_currentStep)
 	return true
 }
