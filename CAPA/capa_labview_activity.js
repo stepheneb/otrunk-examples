@@ -25,7 +25,6 @@
 importClass(Packages.java.lang.System)
 importClass(Packages.java.lang.Integer)
 importClass(Packages.java.lang.Double)
-importClass(Packages.java.text.DecimalFormat)
 importClass(Packages.java.text.SimpleDateFormat)
 importClass(Packages.java.awt.Color)
 importClass(Packages.java.awt.event.ActionListener)
@@ -37,6 +36,7 @@ importClass(Packages.org.concord.otrunk.ui.swing.OTCardContainerView)
 importClass(Packages.org.concord.otrunkcapa.rubric.OTAssessment)
 importClass(Packages.org.concord.otrunk.labview.LabviewMonitor)
 importClass(Packages.org.concord.otrunk.labview.LabviewReportConverter)
+importClass(Packages.org.concord.otrunk.labview.ScopeAssessmentUtil)
 
 
 /*
@@ -62,11 +62,11 @@ importClass(Packages.org.concord.otrunk.labview.LabviewReportConverter)
  */
 
 var _monitor = null
+var _assessUtil = null
  
 var _otAssessment = null
 var _info // text to be added to the report
 
-var _numFormat = DecimalFormat.getInstance()
 var	_dateFormat = SimpleDateFormat.getInstance()
 
 var _currentStep = 1
@@ -89,7 +89,6 @@ var _submittedFrqUnit = ""
 function init() {
 	System.out.println("-------------------------- init --------------------------------")
 	
-	_numFormat.applyPattern("####.##")
 	_dateFormat.applyPattern("MM/dd/yyyy HH:mm:ss zzz")
 	
     _monitor = controllerService.getRealObject(otMonitor)	
@@ -193,6 +192,8 @@ function assess() {
 	var converter = new LabviewReportConverter(_monitor)
 	converter.markEndTime()
 	var madwrapper = converter.getMADWrapper()
+	_assessUtil = new ScopeAssessmentUtil(madwrapper)
+	
 	System.out.println("madwrapper=" + madwrapper)
 	var stime = _dateFormat.format(new Date(madwrapper.getStartTime())) 
 	log(stime + " - Activity started")
@@ -200,7 +201,7 @@ function assess() {
 
 	_correctAmp = Double.parseDouble(madwrapper.getInitialCIValue("amplitude"))
 	_correctFrq = Double.parseDouble(madwrapper.getInitialCIValue("frequency"))
-	log(stime + " - Solution is: amplitude=" + getAmpSolutionText(_correctAmp) + ", frequency = " + getFrqSolutionText(_correctFrq))
+	log(stime + " - Solution is: amplitude=" + ScopeAssessmentUtil.getAmplitudeString(_correctAmp) + ", frequency = " + ScopeAssessmentUtil.getFrequencyString(_correctFrq))
 	
 	var numChanges = madwrapper.getNumChanges()
 	
@@ -236,30 +237,6 @@ function assess() {
 	}
 	else {
 		endActivity()
-	}
-}
-
-function getAmpSolutionText(amplitude) {
-	if (amplitude >= 1000.0) {
-		return _numFormat.format(amplitude / 1000.0) + " kV"
-	}
-	else if (amplitude < 0.0) {
-		return _numFormat.format(amplitude * 1000.0) + " mV"
-	}
-	else {
-		return _numFormat.format(amplitude) + " V"
-	}
-}
-
-function getFrqSolutionText(frequency) {
-	if (frequency >= 1.0e6) {
-		return _numFormat.format(frequency / 1.0e6) + " MHz"
-	}
-	else if (frequency >= 1000.0) {
-		return _numFormat.format(frequency / 1000.0) + " kHz"
-	}
-	else {
-		return _numFormat.format(frequency) + " Hz"
 	}
 }
 
@@ -324,25 +301,7 @@ function checkFrequency(correctValue, answer, unitAnswer) {
 
 // @return 0:excellent, 1: good, 2: ok, 3: bad 
 function checkTimePerDiv(madWrapper) {
-	var name = "TIME/DIV"
-	var civs = madWrapper.getSortedCIVs(name)
-	var n = civs.size()
-	var last = 0.0
-	
-	if (n == 0) {
-		last = Integer.parseInt(madWrapper.getInitialCIValue(name))
-	}
-	else {
-		last = Integer.parseInt(civs.get(n-1).getValue())
-	}
-	
-	// mapping from dial value to actual time in seconds
-	var map = [ 0.2,   0.1,   0.05,  0.02, 0.01, 
-		        0.005, 0.002, 0.001, 5e-4, 2e-4, 
-		        1e-4,  5e-5,  2e-5,  1e-5, 5e-6, 
-		        2e-6, 1e-6, 5e-7 ]
-		
-	var timePerDiv = map[last]
+	var timePerDiv = _assessUtil.getLastTimePerDiv()
 	var halfWaveLength = 1.0 / _correctFrq / 2.0
 	var viewWidth = timePerDiv * 10
 	var diff = (viewWidth - halfWaveLength) / halfWaveLength
@@ -389,16 +348,12 @@ var submitAnswerButtonHandler = {
 	actionPerformed: function(evt) {
 		var state = _monitor.getState()
 		var msg = ""
+		var prop = System.getProperty("otrunk.capa.labview.no_labview")
+		var noLabview = (prop == "true")
 
-		System.out.println("Entered: submitAnswerButtonHandler")
+		System.out.println("Entered: submitAnswerButtonHandler" + prop)
 		
-		if (state == LabviewMonitor.READY) {
-		    System.out.println("State: ready")
-			msg = "The activity hasn't started yet.\n You need to launch LabVIEW first"
-			JOptionPane.showMessageDialog(null, msg)
-			return
-		}
-		else if (state == LabviewMonitor.RUNNING) {
+		if (state == LabviewMonitor.RUNNING || noLabview) {
 		    System.out.println("State: running")
 		    if (validateAnswers() == false) {
 		    	return
@@ -411,6 +366,12 @@ var submitAnswerButtonHandler = {
 		  		_monitor.close()
 		    	assess() // must close labVIEW before assess()
 			}
+		}
+		else if (state == LabviewMonitor.READY) {
+		    System.out.println("State: ready")
+			msg = "The activity hasn't started yet.\n You need to launch LabVIEW first"
+			JOptionPane.showMessageDialog(null, msg)
+			return
 		}
 		else {
 			System.out.println("submitButtonHandler: this place shouldn't be reached")
