@@ -61,8 +61,8 @@ importClass(Packages.org.concord.otrunkcapa.OTMultimeterAssessment);
 importClass(Packages.org.concord.otrunkcck.CCKCircuitAnalyzer);
 importClass(Packages.org.concord.otrunkcapa.CAPAUnitUtil);
 
-var startHTML = "<html><blockquote><p><font size=\"4\" face=\"Verdana\">";
-var endHTML = "</font></p></blockquote></html>";
+//var startHTML = "<html><blockquote><p><font size=\"4\" face=\"Verdana\">";
+//var endHTML = "</font></p></blockquote></html>";
 
 //CCK handy objects 
 var cckModule = cckModelView.getModule();	// (CCKPiccoloModule)
@@ -501,8 +501,6 @@ function setupMultimeter()
 				var targetResistorVoltageString = rangeValue(targetResistorVoltage) + "V";
 				var targetResistorCurrentString = rangeValue(targetResistorCurrent) + "A";
 				//
-				
-				System.out.println("DMM resistance: "+cckMultimeter.getResistance());
 				
 				//System.out.println("Target resistor voltage drop: " + targetResistorVoltage + " -> " + targetResistorVoltageString);	
 				//System.out.println("Target resistor current: " + targetResistorCurrent + " -> " + targetResistorCurrentString);	
@@ -1415,11 +1413,11 @@ function getCurrentAnswerTypeLabel()
 
 function showSolutionMessage()
 {
-	//Solution message is not overriden by the report button
-	solutionMessage = "Click on the <b>Show Report</b> button to see a report of your work.";
-
-	var otxml = new OTXMLString(startHTML + solutionMessage + endHTML);
-	solutionText.setText(otxml);
+	//Solution message is now overriden by the report button
+	//var otxml = new OTXMLString(startHTML + solutionMessage + endHTML);
+	//solutionText.setText(otxml);
+	//
+	
 	OTCardContainerView.setCurrentCard(otInstAreaCards, "solutionText");
 }
 
