@@ -264,7 +264,7 @@ function setupActivityInitial()
 	unitChoice.setCurrentChoice(emptyUnitChoice);
 	
 	answerObj = null;
-//	reportButton.setVisible(false);
+	reportButton.setVisible(false);
 	
 	deleteNotebookData();
 
