@@ -502,6 +502,8 @@ function setupMultimeter()
 				var targetResistorCurrentString = rangeValue(targetResistorCurrent) + "A";
 				//
 				
+				System.out.println("DMM resistance: "+cckMultimeter.getResistance());
+				
 				//System.out.println("Target resistor voltage drop: " + targetResistorVoltage + " -> " + targetResistorVoltageString);	
 				//System.out.println("Target resistor current: " + targetResistorCurrent + " -> " + targetResistorCurrentString);	
 							
@@ -1413,6 +1415,9 @@ function getCurrentAnswerTypeLabel()
 
 function showSolutionMessage()
 {
+	//Solution message is not overriden by the report button
+	solutionMessage = "Click on the <b>Show Report</b> button to see a report of your work.";
+
 	var otxml = new OTXMLString(startHTML + solutionMessage + endHTML);
 	solutionText.setText(otxml);
 	OTCardContainerView.setCurrentCard(otInstAreaCards, "solutionText");
