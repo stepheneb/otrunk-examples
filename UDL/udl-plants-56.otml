@@ -77,7 +77,7 @@
   <objects>
     <OTSystem local_id="system">
       <includes>
-        <OTInclude href="http://continuum.concord.org/otrunk/examples/UDL/global-imports/predefined-sensor-graphs.otml" />
+        <OTInclude href="global-imports/predefined-sensor-graphs.otml" />
       </includes>
       <bundles>
         <OTViewBundle showLeftPanel="false" currentMode="student">
@@ -99,6 +99,9 @@
                 <entry key="${text-edit}">
                   <OTViewEntry objectClass="org.concord.otrunk.ui.OTText" viewClass="org.concord.otrunk.ui.swing.OTTextPrintView" />
                 </entry>
+                <entry key="${question-view}">
+                  <OTViewEntry objectClass="org.concord.otrunk.udl.question.OTQuestion" viewClass="org.concord.otrunk.udl.question.OTQuestionPrintView" />
+                </entry>
               </map>
             </OTViewMode>
             <OTViewMode name="reporting">
@@ -110,6 +113,9 @@
             </OTViewMode>
             <OTViewMode name="authoring">
               <map>
+                <entry key="${snapshot_button_view}">
+                  <OTViewEntry objectClass="org.concord.otrunk.ui.snapshot.OTSnapshotButton" viewClass="org.concord.otrunk.ui.snapshot.OTSnapshotButtonEditView" />
+                </entry>
                 <entry key="${container_view}">
                   <OTViewEntry objectClass="org.concord.otrunk.udl3.OTUDLContainer" viewClass="org.concord.otrunk.udl3.OTUDLContainerEditView" />
                 </entry>
@@ -120,6 +126,9 @@
                   <OTChoiceViewConfig objectClass="org.concord.otrunk.ui.OTChoiceMultiple" viewClass="org.concord.otrunk.ui.swing.OTChoiceComboBoxEditView" useViewsAsChoices="true" />
                 </entry>
                 <entry key="${menu-horizontal-circle}">
+                  <OTViewEntry objectClass="org.concord.otrunk.udl3.OTUDLMenu" viewClass="org.concord.otrunk.udl.ui.OTUDLMenuPageEditView" />
+                </entry>
+                <entry key="${menu-horizontal-book}">
                   <OTViewEntry objectClass="org.concord.otrunk.udl3.OTUDLMenu" viewClass="org.concord.otrunk.udl.ui.OTUDLMenuPageEditView" />
                 </entry>
                 <entry key="${question-view}">
@@ -176,6 +185,7 @@
                         </yDataAxis>
                       </OTDataCollector>
                       <OTNLogoModel name="NetLogo model" />
+                      <OTSnapshotButton name="Snapshot button" />
                     </objectsToInsert>
                   </OTObjectEditViewConfig>
                 </entry>
@@ -349,9 +359,9 @@
                 <object refid="${definition-manager}" />
               </definitionManager>
               <cssBlocks>
-                <OTCssText local_id="css-font" src="http://continuum.concord.org/otrunk/examples/UDL/css/otrunk-normal-font.css" />
-                <OTCssText local_id="css-color" src="http://continuum.concord.org/otrunk/examples/UDL/css/otrunk-56-color.css" />
-                <OTCssText local_id="css-layout" src="http://continuum.concord.org/otrunk/examples/UDL/css/otrunk-normal-layout.css" />
+                <OTCssText local_id="css-font" src="css/otrunk-normal-font.css" />
+                <OTCssText local_id="css-color" src="css/otrunk-56-color.css" />
+                <OTCssText local_id="css-layout" src="css/otrunk-normal-layout.css" />
               </cssBlocks>
             </OTUDLDocumentViewConfig>
             <OTPrototypeViewEntry local_id="textsize-choice-view" objectClass="org.concord.otrunk.OTSystem" viewClass="org.concord.otrunk.view.prototype.OTPrototypeView" copyPrototype="false">
@@ -364,7 +374,7 @@
                     <OTOverlay local_id="small-text-overlay" name="Small text">
                       <deltaObjectMap>
                         <entry key="${css-font}">
-                          <OTCssText src="http://continuum.concord.org/otrunk/examples/UDL/css/otrunk-small-font.css" />
+                          <OTCssText src="css/otrunk-small-font.css" />
                         </entry>
                       </deltaObjectMap>
                     </OTOverlay>
@@ -372,7 +382,7 @@
                     <OTOverlay local_id="large-text-overlay" name="Large text">
                       <deltaObjectMap>
                         <entry key="${css-font}">
-                          <OTCssText src="http://continuum.concord.org/otrunk/examples/UDL/css/otrunk-large-font.css" />
+                          <OTCssText src="css/otrunk-large-font.css" />
                         </entry>
                       </deltaObjectMap>
                     </OTOverlay>
@@ -549,7 +559,6 @@
                                   <object refid="3f2220d8-c92b-11dc-a2c1-27e3a7104fe1" />
                                   <p />
                                   <p />
-                                  <p />
                                   <table>
                                     <tr>
                                       <td>
@@ -645,10 +654,22 @@
                     <OTCompoundDoc id="2767fe20-6c7d-11dc-8314-0800200c9a66!/section_1/footer">
                       <bodyText>
                         <div align="center">
-                          <table>
+                          <table width="100%">
                             <tr>
-                              <td>
-                                <object refid="${section-1-menu}" viewid="${menu-horizontal-circle}" />
+                              <td width="10%" />
+                              <td width="80%">
+                                <div align="center">
+                                  <table>
+                                    <tr>
+                                      <td>
+                                        <object refid="${section-1-menu}" viewid="${menu-horizontal-circle}" />
+                                      </td>
+                                    </tr>
+                                  </table>
+                                </div>
+                              </td>
+                              <td width="10%">
+                                <object refid="${album}" />
                               </td>
                             </tr>
                           </table>
@@ -706,10 +727,22 @@
                     <OTUDLCompoundDoc id="fcb6477e-87ca-11dc-a57f-8bcc557bc796" name="%fcb6477e-87ca-11dc-a57f-8bcc557bc796">
                       <bodyText>
                         <div align="center">
-                          <table>
+                          <table width="100%">
                             <tr>
-                              <td>
-                                <object refid="fcb77fff-87ca-11dc-a57f-8bcc557bc796" viewid="${menu-horizontal-circle}" />
+                              <td width="10%" />
+                              <td width="80%">
+                                <div align="center">
+                                  <table>
+                                    <tr>
+                                      <td>
+                                        <object refid="fcb77fff-87ca-11dc-a57f-8bcc557bc796" viewid="${menu-horizontal-circle}" />
+                                      </td>
+                                    </tr>
+                                  </table>
+                                </div>
+                              </td>
+                              <td width="10%">
+                                <object refid="${album}" />
                               </td>
                             </tr>
                           </table>
@@ -1251,10 +1284,22 @@
                     <OTUDLCompoundDoc id="2767fe20-6c7d-11dc-8314-0800200c9a66!/section_3/footer" name="%02c0e904-87cb-11dc-a57f-8bcc557bc796">
                       <bodyText>
                         <div align="center">
-                          <table>
+                          <table width="100%">
                             <tr>
-                              <td>
-                                <object refid="02c11015-87cb-11dc-a57f-8bcc557bc796" viewid="${menu-horizontal-book}" />
+                              <td width="10%" />
+                              <td width="80%">
+                                <div align="center">
+                                  <table>
+                                    <tr>
+                                      <td>
+                                        <object refid="02c11015-87cb-11dc-a57f-8bcc557bc796" viewid="${menu-horizontal-book}" />
+                                      </td>
+                                    </tr>
+                                  </table>
+                                </div>
+                              </td>
+                              <td width="10%">
+                                <object refid="${album}" />
                               </td>
                             </tr>
                           </table>
@@ -2101,6 +2146,9 @@ You also need a teaspoon, a tablespoon, and a cup to measure water.
                       <currentCard>
                         <object refid="0848ed07-87cb-11dc-a57f-8bcc557bc796" />
                       </currentCard>
+                      <viewedCards>
+                        <object refid="0848ed07-87cb-11dc-a57f-8bcc557bc796" />
+                      </viewedCards>
                     </OTCardContainer>
                   </content>
                   <header>
@@ -2114,10 +2162,22 @@ You also need a teaspoon, a tablespoon, and a cup to measure water.
                     <OTUDLCompoundDoc id="2767fe20-6c7d-11dc-8314-0800200c9a66!/section_4/footer" name="%0848ed0a-87cb-11dc-a57f-8bcc557bc796">
                       <bodyText>
                         <div align="center">
-                          <table>
+                          <table width="100%">
                             <tr>
-                              <td>
-                                <object refid="08493b2b-87cb-11dc-a57f-8bcc557bc796" viewid="${menu-horizontal-circle}" />
+                              <td width="10%" />
+                              <td width="80%">
+                                <div align="center">
+                                  <table>
+                                    <tr>
+                                      <td>
+                                        <object refid="08493b2b-87cb-11dc-a57f-8bcc557bc796" viewid="${menu-horizontal-circle}" />
+                                      </td>
+                                    </tr>
+                                  </table>
+                                </div>
+                              </td>
+                              <td width="10%">
+                                <object refid="${album}" />
                               </td>
                             </tr>
                           </table>
@@ -2593,6 +2653,9 @@ Click on the
                       <currentCard>
                         <object refid="0d742b0d-87cb-11dc-a57f-8bcc557bc796" />
                       </currentCard>
+                      <viewedCards>
+                        <object refid="0d742b0d-87cb-11dc-a57f-8bcc557bc796" />
+                      </viewedCards>
                     </OTCardContainer>
                   </content>
                   <header>
@@ -2606,10 +2669,22 @@ Click on the
                     <OTUDLCompoundDoc id="2767fe20-6c7d-11dc-8314-0800200c9a66!/section_5/footer" name="%0d745220-87cb-11dc-a57f-8bcc557bc796">
                       <bodyText>
                         <div align="center">
-                          <table>
+                          <table width="100%">
                             <tr>
-                              <td>
-                                <object refid="0d747931-87cb-11dc-a57f-8bcc557bc796" viewid="${menu-horizontal-circle}" />
+                              <td width="10%" />
+                              <td width="80%">
+                                <div align="center">
+                                  <table>
+                                    <tr>
+                                      <td>
+                                        <object refid="0d747931-87cb-11dc-a57f-8bcc557bc796" viewid="${menu-horizontal-circle}" />
+                                      </td>
+                                    </tr>
+                                  </table>
+                                </div>
+                              </td>
+                              <td width="10%">
+                                <object refid="${album}" />
                               </td>
                             </tr>
                           </table>
@@ -3042,6 +3117,9 @@ Describe the evidence collected in your model for your answer.
                       <currentCard>
                         <object refid="15771a23-87cb-11dc-a57f-8bcc557bc796" />
                       </currentCard>
+                      <viewedCards>
+                        <object refid="15771a23-87cb-11dc-a57f-8bcc557bc796" />
+                      </viewedCards>
                     </OTCardContainer>
                   </content>
                   <header>
@@ -3055,10 +3133,22 @@ Describe the evidence collected in your model for your answer.
                     <OTUDLCompoundDoc id="2767fe20-6c7d-11dc-8314-0800200c9a66!/section_6/footer" name="%15771a26-87cb-11dc-a57f-8bcc557bc796">
                       <bodyText>
                         <div align="center">
-                          <table>
+                          <table width="100%">
                             <tr>
-                              <td>
-                                <object refid="15776847-87cb-11dc-a57f-8bcc557bc796" viewid="${menu-horizontal-circle}" />
+                              <td width="10%" />
+                              <td width="80%">
+                                <div align="center">
+                                  <table>
+                                    <tr>
+                                      <td>
+                                        <object refid="15776847-87cb-11dc-a57f-8bcc557bc796" viewid="${menu-horizontal-circle}" />
+                                      </td>
+                                    </tr>
+                                  </table>
+                                </div>
+                              </td>
+                              <td width="10%">
+                                <object refid="${album}" />
                               </td>
                             </tr>
                           </table>
@@ -3276,6 +3366,8 @@ Describe the evidence collected in your model for your answer.
                                         <object refid="b1bc58d0-af2a-11dc-97cc-b77bae971bcf" />
                                         <object refid="b1bc58d0-af2a-11dc-97cc-b77bae971bcf" />
                                         <object refid="b1bc58d0-af2a-11dc-97cc-b77bae971bcf" />
+                                        <object refid="b1bc58d0-af2a-11dc-97cc-b77bae971bcf" />
+                                        <object refid="b1bc58d0-af2a-11dc-97cc-b77bae971bcf" />
                                       </documentRefs>
                                     </OTUDLCompoundDoc>
                                   </scaffolding>
@@ -3379,6 +3471,8 @@ Describe the evidence collected in your model for your answer.
                                             </OTCompoundDoc>
                                           </choices>
                                         </OTChoice>
+                                        <object refid="c593c5ea-af2c-11dc-a155-55c23923efd3" />
+                                        <object refid="c593c5ea-af2c-11dc-a155-55c23923efd3" />
                                         <object refid="c593c5ea-af2c-11dc-a155-55c23923efd3" />
                                         <object refid="c593c5ea-af2c-11dc-a155-55c23923efd3" />
                                         <object refid="c593c5ea-af2c-11dc-a155-55c23923efd3" />
@@ -4296,6 +4390,9 @@ Describe the evidence collected in your model for your answer.
                       <currentCard>
                         <object refid="19a95229-87cb-11dc-a57f-8bcc557bc796" />
                       </currentCard>
+                      <viewedCards>
+                        <object refid="19a95229-87cb-11dc-a57f-8bcc557bc796" />
+                      </viewedCards>
                     </OTCardContainer>
                   </content>
                   <header>
@@ -4309,10 +4406,22 @@ Describe the evidence collected in your model for your answer.
                     <OTUDLCompoundDoc id="2767fe20-6c7d-11dc-8314-0800200c9a66!/section_7/footer" name="%19a9522c-87cb-11dc-a57f-8bcc557bc796">
                       <bodyText>
                         <div align="center">
-                          <table>
+                          <table width="100%">
                             <tr>
-                              <td>
-                                <object refid="19a9a04d-87cb-11dc-a57f-8bcc557bc796" viewid="${menu-horizontal-circle}" />
+                              <td width="10%" />
+                              <td width="80%">
+                                <div align="center">
+                                  <table>
+                                    <tr>
+                                      <td>
+                                        <object refid="19a9a04d-87cb-11dc-a57f-8bcc557bc796" viewid="${menu-horizontal-circle}" />
+                                      </td>
+                                    </tr>
+                                  </table>
+                                </div>
+                              </td>
+                              <td width="10%">
+                                <object refid="${album}" />
                               </td>
                             </tr>
                           </table>
@@ -4954,6 +5063,9 @@ Describe the evidence collected in your model for your answer.
                       <currentCard>
                         <object refid="b2c84193-7121-11dc-b75e-4b06cf421f29" />
                       </currentCard>
+                      <viewedCards>
+                        <object refid="b2c84193-7121-11dc-b75e-4b06cf421f29" />
+                      </viewedCards>
                     </OTCardContainer>
                   </content>
                   <header>
@@ -4978,10 +5090,22 @@ Describe the evidence collected in your model for your answer.
                       </documentRefs>
                       <bodyText>
                         <div align="center">
-                          <table>
+                          <table width="100%">
                             <tr>
-                              <td>
-                                <object refid="b2ca6478-7121-11dc-b75e-4b06cf421f29" viewid="${menu-horizontal-circle}" />
+                              <td width="10%" />
+                              <td width="80%">
+                                <div align="center">
+                                  <table>
+                                    <tr>
+                                      <td>
+                                        <object refid="b2ca6478-7121-11dc-b75e-4b06cf421f29" viewid="${menu-horizontal-circle}" />
+                                      </td>
+                                    </tr>
+                                  </table>
+                                </div>
+                              </td>
+                              <td width="10%">
+                                <object refid="${album}" />
                               </td>
                             </tr>
                           </table>
@@ -5090,10 +5214,22 @@ Describe the evidence collected in your model for your answer.
                     <OTUDLCompoundDoc id="2767fe20-6c7d-11dc-8314-0800200c9a66!/section_9/footer" name="%252d78c8-87cb-11dc-a57f-8bcc557bc796">
                       <bodyText>
                         <div align="center">
-                          <table>
+                          <table width="100%">
                             <tr>
-                              <td>
-                                <object refid="252d9fd9-87cb-11dc-a57f-8bcc557bc796" viewid="${menu-horizontal-circle}" />
+                              <td width="10%" />
+                              <td width="80%">
+                                <div align="center">
+                                  <table>
+                                    <tr>
+                                      <td>
+                                        <object refid="252d9fd9-87cb-11dc-a57f-8bcc557bc796" viewid="${menu-horizontal-circle}" />
+                                      </td>
+                                    </tr>
+                                  </table>
+                                </div>
+                              </td>
+                              <td width="10%">
+                                <object refid="${album}" />
                               </td>
                             </tr>
                           </table>
@@ -5188,6 +5324,9 @@ Describe the evidence collected in your model for your answer.
                       <currentCard>
                         <object refid="29d6194b-87cb-11dc-a57f-8bcc557bc796" />
                       </currentCard>
+                      <viewedCards>
+                        <object refid="29d6194b-87cb-11dc-a57f-8bcc557bc796" />
+                      </viewedCards>
                     </OTCardContainer>
                   </content>
                   <header>
@@ -5201,10 +5340,22 @@ Describe the evidence collected in your model for your answer.
                     <OTUDLCompoundDoc id="2767fe20-6c7d-11dc-8314-0800200c9a66!/section_10/footer" name="%29d6194e-87cb-11dc-a57f-8bcc557bc796">
                       <bodyText>
                         <div align="center">
-                          <table>
+                          <table width="100%">
                             <tr>
-                              <td>
-                                <object refid="29d6405f-87cb-11dc-a57f-8bcc557bc796" viewid="${menu-horizontal-circle}" />
+                              <td width="10%" />
+                              <td width="80%">
+                                <div align="center">
+                                  <table>
+                                    <tr>
+                                      <td>
+                                        <object refid="29d6405f-87cb-11dc-a57f-8bcc557bc796" viewid="${menu-horizontal-circle}" />
+                                      </td>
+                                    </tr>
+                                  </table>
+                                </div>
+                              </td>
+                              <td width="10%">
+                                <object refid="${album}" />
                               </td>
                             </tr>
                           </table>
@@ -5237,6 +5388,9 @@ Describe the evidence collected in your model for your answer.
               <currentCard>
                 <object refid="${section_1}" />
               </currentCard>
+              <viewedCards>
+                <object refid="${section_1}" />
+              </viewedCards>
             </OTCardContainer>
           </content>
           <script>
@@ -5299,8 +5453,8 @@ Describe the evidence collected in your model for your answer.
         <OTSnapshotAlbum local_id="album" />
         <OTDefinitionManager local_id="definition-manager">
           <definitions>
-            <OTDefinitionList src="http://continuum.concord.org/otrunk/examples/UDL/glossary/common-glossary.txt" />
-            <OTDefinitionList src="http://continuum.concord.org/otrunk/examples/UDL/glossary/plants-glossary.txt" />
+            <OTDefinitionList src="glossary/common-glossary.txt" />
+            <OTDefinitionList src="glossary/plants-glossary.txt" />
           </definitions>
           <frame>
             <OTFrame local_id="definition_frame" width="300" height="190" borderlessPopup="true" />
@@ -5333,11 +5487,10 @@ Describe the evidence collected in your model for your answer.
             </OTUDLMenuRule>
           </rules>
         </OTUDLMenuRule>
-        <OTJavascript local_id="change_page.js" src="http://continuum.concord.org/otrunk/examples/UDL/scripts/change_page.js" />
-        <OTJavascript local_id="show_message.js" src="http://continuum.concord.org/otrunk/examples/UDL/scripts/show_message.js" />
-        <OTJavascript local_id="authoring_script.js" src="http://continuum.concord.org/otrunk/examples/UDL/scripts/authoring_script.js" />
+        <OTJavascript local_id="change_page.js" src="scripts/change_page.js" />
+        <OTJavascript local_id="show_message.js" src="scripts/show_message.js" />
+        <OTJavascript local_id="authoring_script.js" src="scripts/authoring_script.js" />
       </library>
     </OTSystem>
   </objects>
 </otrunk>
-
