@@ -12,7 +12,8 @@
  * var cardContainer - The top-level section card container
  * var sampleMenu - used to create new menus
  * var menuPageRule - rule for new menus
- * varmenuHorizontalView - view for new menus
+ * var menuHorizontalView - view for new menus
+ * var album - snapshot album for attaching to button
  */
   
 importClass(Packages.org.concord.framework.otrunk.OTChangeEvent);
@@ -23,10 +24,13 @@ importClass(Packages.org.concord.otrunk.ui.OTCardContainer);
 importClass(Packages.org.concord.otrunk.udl3.OTUDLMenu);
 importPackage(Packages.org.concord.framework.otrunk);
 importClass(Packages.java.lang.System);
+importClass(Packages.javax.swing.JOptionPane);
 
+var objectAboveSnapshotButton;
 
 var pageHandler =
 {
+	
 	stateChanged: function(evt)
 	{
 		if (evt.getProperty().equalsIgnoreCase("coachStatements") && evt.getOperation().equalsIgnoreCase("add")){
@@ -40,7 +44,37 @@ var pageHandler =
 											"</div>"+
 										"</div>"+
 								"</div>");
+		} 
+		
+		else if (evt.getProperty().equalsIgnoreCase("documentRefs") && evt.getOperation().equalsIgnoreCase("add")){
+			var otUUID = evt.getValue();
+			var objService = evt.getSource().getOTObjectService();
+			System.out.println(otUUID);
+			try {
+				var referencedObject = objService.getOTObject(otUUID);
+				
+				if (referencedObject.toString().indexOf("OTSnapshotButton") > -1){
+					var snapshotButton = referencedObject;
+					if (objectAboveSnapshotButton != null){
+						snapshotButton.setTarget(objectAboveSnapshotButton);
+						snapshotButton.setSnapshotAlbum(album);
+					} else {
+						JOptionPane.showMessageDialog(null,
+						    "Snapshot buttons must be placed directly beneath another object.\nPlease remove the button.",
+						    "Warning",
+						    JOptionPane.ERROR_MESSAGE);
+						    
+					//	    var page = evt.getSource();
+					//	    page.getDocumentRefsAsObjectList().remove(snapshotButton);
+					}
+				} else {
+					objectAboveSnapshotButton = referencedObject;
+				}
+			} catch (e){
+				// could not get object from object service
+			}
 		}
+		
 	}
 }
 var pageListener = new OTChangeListener(pageHandler);
@@ -144,6 +178,8 @@ var pageContainerHandler =
 								"</div>");
 				pages.push(doc)	
 				pages[pages.length-1].addOTChangeListener(pageListener);
+			} else if (evt.getProperty().equalsIgnoreCase("currentCard")) {
+				objectAboveSnapshotButton = null;
 			}
 		}
 };
