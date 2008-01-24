@@ -27,6 +27,7 @@
 		<import class="org.concord.otrunk.ui.notebook.OTNotebookMeasurement" />
 		<import class="org.concord.otrunk.ui.notebook.OTNotebook" />
 		<import class="org.concord.otrunk.ui.OTCardContainer" />
+	    <import class="org.concord.otrunk.ui.OTChoice"/>
 
 		<import	class="org.concord.calculator.state.OTProgrammableCalculator" />
 		<import	class="org.concord.calculator.state.OTProgrammableCalculatorNotebook" />
@@ -48,6 +49,8 @@
 		<import class="org.concord.otrunk.script.OTScriptEngineBundle" />
 		<import class="org.concord.otrunk.script.OTScriptEngineEntry" />
 
+		<import class="org.concord.otrunkcapa.OTUnit" />
+		
 		<import class="org.concord.otrunkcapa.rubric.OTAssessmentViewConfig" />
 	</imports>
 	<objects>
@@ -186,6 +189,9 @@
 								<object refid="79ad9480-c9fd-11dc-95ff-0800200c9a66" />
 							</rubric>
 			            </OTAssessmentViewConfig>
+			            <OTViewEntry
+			              objectClass="org.concord.otrunk.ui.OTChoice" 
+			              viewClass="org.concord.otrunk.ui.swing.OTChoiceComboBoxView"/>
 					</viewEntries>
 					<frame>
 						<OTFrame width="940" height="680" />
@@ -213,11 +219,13 @@
 						<OTPlacement component="${submitAnswerButton}"
 							height="40" width="160" x="830" y="610" />
 						<OTPlacement component="${information_area}"
-							height="600" width="330" x="710" y="10" />
+							height="600" width="380" x="660" y="10" />
 						<OTPlacement component="${answerBox}"
-							height="35" width="100" x="730" y="610" />
+							height="28" width="60" x="670" y="610" />
+						<OTPlacement component="${unit_choice}"
+							height="28" width="100" x="730" y="610" />
 						<OTPlacement component="${cck_model}"
-							height="600" width="700" x="10" y="10" />
+							height="600" width="650" x="10" y="10" />
 						<OTPlacement component="${calculatorButton}"
 							height="40" width="150" x="150" y="610" />
 						<OTPlacement component="${reportButton}"
@@ -232,14 +240,24 @@
 						<object refid="${firstMeasurementText}"/>
 						<object refid="${firstJunctionText}"/>
 						<object refid="${solutionText}"/>
+						<object refid="${endText}"/>
 					</cards>
 				</OTCardContainer>
 				<OTText local_id="answerBox"/>
 				<OTButton local_id="calculatorButton" text="Show Notebook">
 					<action>
-						<object refid="${show_calculator_action}"/>
+						<object refid="${show_notebook_action}"/>
 					</action>
 				</OTButton>
+				<OTFrameDisplayAction local_id="show_notebook_action">
+					<frame>
+						<OTFrame local_id="notebook_popup"
+							width="600" height="400" title="Notebook"/>
+					</frame>
+					<objectToDisplay>
+						<object refid="${notebook}"/>
+					</objectToDisplay>
+				</OTFrameDisplayAction>
 				<OTFrameDisplayAction local_id="show_calculator_action">
 					<frame>
 						<OTFrame local_id="calculator_popup"
@@ -274,13 +292,32 @@
 				<OTFrameDisplayAction local_id="show_calculator_help">
 					<frame>
 						<OTFrame local_id="calculator_help_popup"
-							width="400" height="500" title="Notebook and Calculator Help"
+							width="400" height="250" title="Notebook and Calculator Help"
 							alwaysOnTop="true"/>
 					</frame>
 					<objectToDisplay>
 						<object refid="${calculatorHelpText}"/>
 					</objectToDisplay>
 				</OTFrameDisplayAction>
+				<OTUnit name="Units?" abbreviation="" local_id="empty_unit_choice"/>
+		        <OTChoice local_id="unit_choice">
+		        	<choices>
+		        		<OTUnit name="Meters" abbreviation="m"/>
+		        		<OTUnit name="Amps" abbreviation="A"/>
+		        		<OTUnit name="miliAmps" abbreviation="mA"/>
+		        		<OTUnit name="kiloAmps" abbreviation="kA"/>
+		        		<OTUnit name="Kilograms" abbreviation="kg"/>
+		        		<OTUnit name="Ohms" abbreviation="Ohms"/>
+		        		<OTUnit name="miliOhms" abbreviation="mOhms"/>
+		        		<OTUnit name="kiloOhms" abbreviation="kOhms"/>
+		        		<OTUnit name="Volts" abbreviation="V"/>
+		        		<OTUnit name="miliVolts" abbreviation="mV"/>
+		        		<OTUnit name="kiloVolts" abbreviation="kV"/>
+		        	</choices>
+		        	<currentChoice>
+		        		<object refid="${empty_unit_choice}"/>
+		        	</currentChoice>
+		        </OTChoice>
 				<OTButton local_id="submitAnswerButton"	text="Submit Answer" />
 				<OTScriptObject local_id="activity_script">
 					<variables>
@@ -291,6 +328,9 @@
 						<OTScriptVariableComponent name="submitAnswerButton" reference="${submitAnswerButton}" />
 						<OTScriptVariableComponent name="answerBox" reference="${answerBox}" />
 						<OTScriptVariable name="solutionText" reference="${solutionText}" />
+						<OTScriptVariableComponent name="reportButton" reference="${reportButton}" />
+						<OTScriptVariableComponent name="unitComboBox" reference="${unit_choice}"/>
+						<OTScriptVariable name="unitChoice" reference="${unit_choice}"/>
 						<OTScriptVariable name="otCalculatorObject" reference="${calc}"/>
 						<OTScriptVariable name="answerChooser" reference="${calc_answer_chooser}"/>
 						<OTScriptVariableComponent name="calculatorButton" reference="${calculatorButton}"/>
@@ -355,7 +395,7 @@
 										clicking on the button. 
 										When you think you
 										know the answer, select it and 
-										click on the "Submit Answer" button.
+										click on the <b>Submit Answer</b> button.
 									</font>
 								</p>
 							</blockquote>
@@ -389,6 +429,21 @@
 						</html>
 					</text>
 				</OTTextPane>
+				<OTTextPane local_id="endText" name="endText">
+					<text>
+						<html>
+							<blockquote>
+								<p>
+									<font size="4" face="Verdana">
+This assessment is over. <br/>
+You can close the window now. <br/><br/>
+Click on the <b>Show Report</b> button to see a report of your work.
+									</font>
+								</p>
+							</blockquote>
+						</html>
+					</text>
+				</OTTextPane>
 				<OTTextPane local_id="solutionText" name="solutionText">
 					<text>
 						Placeholder.
@@ -397,24 +452,10 @@
 				<OTCompoundDoc local_id="calculatorHelpText">
 					<bodyText>
 						<font size="4" face="Verdana">
-							<p align="center">This is your online Laboratory Notebook.</p>
+							<p align="center"><b>This is your online Laboratory Notebook.</b></p>
 							<p>
-							Every time you make a measurement it will be pasted into the top pane. <br/>
-							The notebook also comes with an online programmable calculator, 
-							which can compute answers for you if it knows what the formula is. <br/>
-							You can use the "Formulas" box to type a formula with a one variable 
-							on the left and some algebraic expression with measured variables 
-							on the right. The formula can also involve constants on the right, 
-							but it must have only one variable on the left. <br/>
-							When you do that all the measured variables will show up in the 
-							Variables box. You can then drag a measurement onto the appropriate 
-							variable and that will set the variable to be the measured value. <br/>
-							When all the measured variables are set in this way the calculator 
-							will calculate the result for you. 
-							It will not know the correct units for the answer, 
-							however -- you have to enter those yourself, using the popup menu. 
-							When you think you have the correct answer, drag it onto the 
-							"Submit Answer" box.
+							Every time you make a measurement it will be recorded here
+							and you can add comments to it. 
 							</p>
 						</font>
 					</bodyText>

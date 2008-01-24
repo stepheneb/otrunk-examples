@@ -19,6 +19,9 @@
  * submitAnswerButton	(JButton) 					// Actual swing button used to submit the answer
  * answerBox			(JTextArea)					// Swing text component where the user writes the answer
  * solutionText			(OTTextPane)				// OT Text Pane that holds the text with the solution
+ * reportButton			(JButton)					// Button used to show report
+ * unitComboBox			(JComboBox)					// Swing combo box with all units 
+ * unitChoice			(OTChoice)					// OT Choice object with all the units that can be selected
  * otCalculatorObject	(OTProgrammableCalculatorNotebook)			// OT Calculator-notebook object
  * answerChooser		(OTProgrammableCalculatorResultChooser)		//Allows the user to choose the answer 
  * calculatorButton		(JButton)					//Button that pops up the calculator
@@ -144,6 +147,7 @@ function init()
 
 function setupCalculatorListener()
 {
+	/*
 	var calculatorHandler =
 	{
 		variableChanged : function(evt)
@@ -205,6 +209,7 @@ function setupCalculatorListener()
 	}
 	var otListener = new OTChangeListener(otHandler);
 	answerChooser.addOTChangeListener(otListener);
+	*/
 	
 	var calculatorButtonHandler =
 	{
@@ -258,8 +263,9 @@ function saveStateVariable(name, value)
 /** Initial set up if the GUI. This stuff eventually could be moved to the otml file */
 function setupGUI()
 {
-	answerBox.setBackground(new Color(1,1,0.8));
-	answerBox.setEditable(false);
+	answerBox.setBackground(new Color(1,1,0.7));
+	unitComboBox.setBackground(new Color(1,1,0.7));
+//	answerBox.setEditable(false);
 }
 
 /** 
@@ -313,7 +319,8 @@ function setupActivityInitial()
 	
 	answerBox.setText("");
 	answerObj = null;
-	
+	reportButton.setVisible(false);
+
 	deleteCalculatorAndNotebookData();
 }
 
@@ -892,9 +899,36 @@ function findBranch(name)
 /** Checks the answer and creates messages according to the answer submitted */
 function checkAnswer()
 {
+	/////
+	//Get answer
 	//The answer is at: 
-	//answerObj (OTValueUnit) and answerBox(JTextField)
-	if (answerObj == null) return;
+	//answerBox(JTextField)
+	//unitChoice(OTChoice)
+	//if (answerObj == null) return;
+	var strAnswer = answerBox.getText();
+	//Get rid of return char
+	strAnswer = strAnswer.replaceAll("\n", "");
+	answerBox.setText(strAnswer);
+	
+	var val = 0;
+	var unit = "";
+	try{
+		val = Float.valueOf(strAnswer).floatValue();
+	}
+	catch(ex){
+		JOptionPane.showMessageDialog(null, "Value invalid: " + strAnswer + ".\n" + "Please try again.");
+		return;
+	}
+	
+	var otUnit = unitChoice.getCurrentChoice();
+	if (otUnit != null){
+		unit = otUnit.getAbbreviation();
+	}
+	
+	answerObj = otObjectService.createObject(OTUnitValue);
+	answerObj.setValue(val);
+	answerObj.setUnit(unit);
+	/////
 	
 	/////
 	//Correct answer is at
@@ -902,6 +936,8 @@ function checkAnswer()
 	/////
 
 	checkAnswerValue(solutionObj);
+	
+	endActivity();
 }
 	
 function checkAnswerValue(correctAnswer)
@@ -973,6 +1009,17 @@ function checkAnswerValue(correctAnswer)
 	showSolution(answerValueType, answerUnitType);
 
 	logAnswerAssessment(answerObj, correctAnswer, answerValueType, answerUnitType);
+}
+
+function endActivity()
+{
+	activityDone = true;
+	submitAnswerButton.setVisible(false);
+	answerBox.setVisible(false);
+	unitComboBox.setVisible(false);
+	OTCardContainerView.setCurrentCard(otInfoAreaCards, "endText");
+	
+	reportButton.setVisible(true);
 }
 
 function logAnswerAssessment(answer, correctAnswer, answerValueType, answerUnitType)
@@ -1078,12 +1125,14 @@ function showSolution(answerValueType, answerUnitType)
 	}
 
 	//Show solution	
-	var otxml = new OTXMLString(startHTML + solutionMsg + shortCircuitMsg + endHTML);
-	solutionText.setText(otxml);
-	OTCardContainerView.setCurrentCard(otInfoAreaCards, "solutionText");
+	//var otxml = new OTXMLString(startHTML + solutionMsg + shortCircuitMsg + endHTML);
+	//solutionText.setText(otxml);
+	//OTCardContainerView.setCurrentCard(otInfoAreaCards, "solutionText");
 	//
+	
+	OTCardContainerView.setCurrentCard(otInfoAreaCards, "endText");
 
-	var strMsg = "Answer Submitted: "+answerBox.getText();
+	var strMsg = "Answer Submitted: "+answerObj.getValue()+" "+answerObj.getUnit();
 	strMsg = strMsg + "  (Value:" + answerValueType + ", Unit:" + answerUnitType +"): "
 	strMsg = strMsg + solutionMsg
 	logInformation(strMsg);
