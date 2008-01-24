@@ -59,6 +59,9 @@ importClass(Packages.org.concord.calculator.state.OTProgrammableCalculatorEventH
 importClass(Packages.org.concord.calculator.state.OTProgrammableCalculatorEvent);
 importClass(Packages.org.concord.calculator.state.OTProgrammableCalculatorListener);
 
+importClass(Packages.org.concord.otrunkcapa.rubric.OTAssessment);
+importClass(Packages.org.concord.otrunkcapa.CAPAUnitUtil);
+
 var startHTML = "<html><blockquote>";
 var endHTML = "</blockquote></html>";
 
@@ -100,6 +103,12 @@ var measurements = [];			// Array of measurement objects
 var calculatorEventHandler;		// (OTProgrammableCalculatorEventHandler)
 var calculatorListener;
 var answerObj;
+var solutionObj;
+var otAssessment;
+
+var activityInitialized;
+var timeStepStarted = 0;
+var activityDone = false;
 
 /**
  * This function is called when the script starts up
@@ -126,6 +135,8 @@ function init()
 	
 	setupActivity();
     
+	setupAsessmentLogging();
+
 	initializationDone = true;
         
 	return initializationDone;
@@ -216,6 +227,8 @@ function save()
 	//Save state variables
 	saveStateVariable("initialSetupDone", new java.lang.Boolean(true));	//Marks that the initial setup is done
 	saveStateVariable("shortCircuitCounter", new java.lang.Integer(shortCircuitCounter));
+	saveStateVariable("activityDone", new java.lang.Boolean(activityDone));	//Marks if the activity was done
+	saveStateVariable("resistorResistance", new java.lang.Float(targetResistor.getResistance()));	//Saves the resistance
 	//
 	
 	//Log measurements
@@ -228,6 +241,13 @@ function save()
 function getStateVariable(name)
 {
 	return scriptState.get(name);
+}
+
+function getStateVariableBln(name)
+{
+	var bVar = getStateVariable(name);
+	if (bVar == null) return false;
+	else return bVar.booleanValue();
 }
 
 function saveStateVariable(name, value)
@@ -253,21 +273,27 @@ function setupActivity()
 	//
 	
 	//Find out if the activity has been run already
-	var bInitialSetupDone = getStateVariable("initialSetupDone");
-	if (bInitialSetupDone == null) bInitialSetupDone = false;
-	else bInitialSetupDone = true;
+	var bInitialSetupDone = getStateVariableBln("initialSetupDone");
+	
+	//Check whether the activity has been completed before or not
+	var bActivityDone = getStateVariableBln("activityDone");
 	
 	var bLoadedDone = false;
-	
-	if (bInitialSetupDone){
+	if (bInitialSetupDone && !bActivityDone){
 	
 		bLoadedDone = setupActivityLoaded();
 	}
 	
-	if (!bInitialSetupDone || !bLoadedDone){
+	if (!bInitialSetupDone || !bLoadedDone || bActivityDone){
 	
 		setupActivityInitial();
+		activityInitialized = true;
 	}
+	else{
+		activityInitialized = false;
+	}
+	
+	calculateSolution();
 }
 
 /** 
@@ -281,6 +307,9 @@ function setupActivityInitial()
 
 	//Show initial text
 	OTCardContainerView.setCurrentCard(otInfoAreaCards, "introText");
+	
+	//Record start time
+	timeStepStarted = System.currentTimeMillis();
 	
 	answerBox.setText("");
 	answerObj = null;
@@ -333,6 +362,31 @@ function initLogging()
 	otContents.add(xmlText);
 	
 	logInformation("Activity started");
+}
+
+function setupAsessmentLogging()
+{
+	if (activityInitialized) {
+		//Create assessment object
+		otAssessment = otObjectService.createObject(OTAssessment);
+		otAssessment.setLabel("resistance");
+		otContents.add(otAssessment);
+	}
+	else{
+		//If the activity was already run, take the last assessment object, copy it and continue it
+		var otLastAssessment = null;
+		for (var i = otContents.size() - 1; i >= 0; i--){
+			var obj = otContents.get(i);
+			if (obj instanceof OTMultimeterAssessment){
+				otLastAssessment = obj;
+				break;
+			}
+		}
+		if (otLastAssessment != null){
+			otAssessment = otObjectService.copyObject(otLastAssessment, -1);
+			otContents.add(otAssessment);
+		}
+	}
 }
 
 function logInformation(info)
@@ -708,6 +762,13 @@ function roundValue(value)
 	return Math.round(value*100)/100;
 }
 
+function roundValue2(value)
+{
+	//var rounder = new DecimalFormat("#.##");
+	//return rounder.format(value).toString();
+	return Math.round(value*10000)/10000;
+}
+
 /** Copy/pasted from the original CCK */
 function rangeValue(value) 
 {
@@ -835,20 +896,47 @@ function checkAnswer()
 	//answerObj (OTValueUnit) and answerBox(JTextField)
 	if (answerObj == null) return;
 	
+	/////
+	//Correct answer is at
+	//solutionObj
+	/////
+
+	checkAnswerValue(solutionObj);
+}
+	
+function checkAnswerValue(correctAnswer)
+{
+	if (answerObj == null || correctAnswer == null) return;
+	
+	System.out.println("Checking answer " + answerObj.getValue() + " " + answerObj.getUnit() +
+		"    Correct answer is " + correctAnswer.getValue() + " " + correctAnswer.getUnit());
+	
 	//Check value
 	var answerValueType = "";
 	var value = answerObj.getValue();
-	if (MathUtil.isApproxEqual(value, targetResistor.getResistance(), 0.1)){
-		answerValueType = "correct"
+	var correctValue = correctAnswer.getValue();
+	if (MathUtil.isApproxEqual(value, correctValue, 0.1)){
+		answerValueType = "correct";
+	}
+	else if (MathUtil.isApproxEqual(value, -correctValue, 0.1)){
+		answerValueType = "correct wrong sign";
+	}
+	else if (CAPAUnitUtil.compareValues(answerObj, correctAnswer)){
+		//Answer given in different units but still correct
+		answerValueType = "correct";
+	}
+	else if (CAPAUnitUtil.compareValues(answerObj, correctAnswer, true, false)){
+		//Answer given in different units but still correct but wrong sign
+		answerValueType = "correct wrong sign";
 	}
 	else{
-		if (MathUtil.isApproxEqual(value*1000, targetResistor.getResistance(), 0.1) ||
-				MathUtil.isApproxEqual(value/1000, targetResistor.getResistance(), 0.1)){
-			answerValueType = "correct in other unit"
+		if (correctValue != 0 && value != 0 && 
+				(MathUtil.isApproxEqual(value*1000, correctValue, 0.1) ||
+				MathUtil.isApproxEqual(value/1000, correctValue, 0.001))){
+			answerValueType = "correct in other unit";
 		}
 		else{
-			answerType = 2;
-			answerValueType = "incorrect"
+			answerValueType = "incorrect";
 		}
 	}
 	//
@@ -856,21 +944,88 @@ function checkAnswer()
 	var answerUnitType = "";
 	var unit = answerObj.getUnit();
 	if (unit == null || unit.equals("")){
-		answerUnitType = "no unit"
+		answerUnitType = "no unit";
 	}
-	else if (unit.equalsIgnoreCase("ohms")){
-		answerUnitType = "correct"
+	else if (unit.equalsIgnoreCase(correctAnswer.getUnit())){
+		answerUnitType = "correct";
+		//Fix case of unit
+		answerObj.setUnit(correctAnswer.getUnit());
 	}
-	else if (unit.equalsIgnoreCase("mohms") || unit.equalsIgnoreCase("miliohms") ||
-			unit.equalsIgnoreCase("kohms") || unit.equalsIgnoreCase("kiloohms")){
-		answerUnitType = "incorrect but other good unit"
+	else if (CAPAUnitUtil.isUnitCompatible(answerObj, correctAnswer)){
+		if (answerValueType == "correct" || answerValueType == "correct wrong sign"){
+			//If they specified units and the units are not the same as the answer units
+			//but the value was considered correct, is because the units had to be correct too
+			//For example, let's say the correct answer was 1.2 A. If the value answer was considered 
+			//correct but they did specify units (meaning the answer wasn't simply "1.2") AND their units
+			//were not "A", then it means that the whole value+unit answer had to be considered correct,
+			//so their answer was either 1200 mA or 0.0012 kA. In this case, the units are considered correct 
+			answerUnitType = "correct";
+		}
+		else{
+			answerUnitType = "incorrect but other good unit";
+		}
 	}
 	else {
-		answerUnitType = "incorrect"
+		answerUnitType = "incorrect";
 	}
 	//
 		
 	showSolution(answerValueType, answerUnitType);
+
+	logAnswerAssessment(answerObj, correctAnswer, answerValueType, answerUnitType);
+}
+
+function logAnswerAssessment(answer, correctAnswer, answerValueType, answerUnitType)
+{
+	var answerAssess = otAssessment;
+		
+	var answerAssessIndicators = answerAssess.getIndicatorValues();
+	
+	if (answerValueType.equals("correct")){
+		answerAssessIndicators.put("valueCorrect", new java.lang.Integer(1));
+	}
+	else if (answerValueType.equals("correct wrong sign")){
+		answerAssessIndicators.put("valueCorrect", new java.lang.Integer(2));
+	}
+	else if (answerValueType.equals("correct in other unit")){
+		answerAssessIndicators.put("valueCorrect", new java.lang.Integer(3));
+	}
+	else if (answerValueType.equals("incorrect")){
+		answerAssessIndicators.put("valueCorrect", new java.lang.Integer(0));
+	}
+	
+	if (answerUnitType.equals("no unit")){
+		answerAssessIndicators.put("unitCorrect", new java.lang.Integer(0));
+	}
+	else if (answerUnitType.equals("correct")){
+		answerAssessIndicators.put("unitCorrect", new java.lang.Integer(1));
+	}
+	else if (answerUnitType.equals("incorrect but other good unit")){
+		answerAssessIndicators.put("unitCorrect", new java.lang.Integer(2));
+	}
+	else if (answerUnitType.equals("incorrect")){
+		answerAssessIndicators.put("unitCorrect", new java.lang.Integer(3));
+	}
+	
+	//How long did the student take completing this step (in seconds, rounded so it shows 1 decimal)
+	var time = (System.currentTimeMillis() - timeStepStarted) / 1000;
+	answerAssessIndicators.put("time", Math.round(time * 10) / 10);
+	
+	//How many measurements did the student make in this step
+	answerAssessIndicators.put("numberMeasurements", new java.lang.Integer(measurements.length));
+	
+}
+
+function calculateSolution()
+{
+	//Resistance (we get it from the resistor)
+	solutionObj = otObjectService.createObject(OTUnitValue);
+	solutionObj.setValue(targetResistor.getResistance());
+	solutionObj.setUnit("Ohms");
+	//
+	
+	logInformation("Solution is:"+
+		"  resistance = " + roundValue2(solutionObj.getValue()) + " " + solutionObj.getUnit());
 }
 
 /** Shows a message as feedback after submitting an answer */
