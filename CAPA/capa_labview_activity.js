@@ -194,14 +194,16 @@ function assess() {
 	var madwrapper = converter.getMADWrapper()
 	_assessUtil = new ScopeAssessmentUtil(madwrapper)
 	
+	_info.setText(_info.getText() + _assessUtil.getChangeLog())
+	
 	System.out.println("madwrapper=" + madwrapper)
-	var stime = _dateFormat.format(new Date(madwrapper.getStartTime())) 
-	log(stime + " - Activity started")
-	var etime = _dateFormat.format(new Date())
 
-	_correctAmp = Double.parseDouble(madwrapper.getInitialCIValue("amplitude"))
-	_correctFrq = Double.parseDouble(madwrapper.getInitialCIValue("frequency"))
-	log(stime + " - Solution is: amplitude=" + ScopeAssessmentUtil.getAmplitudeString(_correctAmp) + ", frequency = " + ScopeAssessmentUtil.getFrequencyString(_correctFrq))
+	_correctAmp = Double.parseDouble(madwrapper.getLastCIValue("amplitude"))
+	_correctFrq = Double.parseDouble(madwrapper.getLastCIValue("frequency"))
+	
+	var etime = _dateFormat.format(new Date())
+	log("----------")
+	log(etime + " - Solution is: amplitude=" + ScopeAssessmentUtil.getAmplitudeString(_correctAmp) + ", frequency = " + ScopeAssessmentUtil.getFrequencyString(_correctFrq))
 	
 	var numChanges = madwrapper.getNumChanges()
 	
@@ -224,7 +226,7 @@ function assess() {
 	indicators.put("frequencyCorrect", frqIndicator)
 	indicators.put("numChanges", numChanges)
 	indicators.put("timeTotal", timeTotal)
-	indicators.put("timePerDiv", tpdIndicator)
+	indicators.put("controlSetting", tpdIndicator)
 	
 	System.out.println("numChanges=" + numChanges)
 	System.out.println("timeTotal=" + timeTotal)
@@ -301,29 +303,67 @@ function checkFrequency(correctValue, answer, unitAnswer) {
 
 // @return 0:excellent, 1: good, 2: ok, 3: bad 
 function checkTimePerDiv(madWrapper) {
+	var ind = 0.0
 	var timePerDiv = _assessUtil.getLastTimePerDiv()
 	var halfWaveLength = 1.0 / _correctFrq / 2.0
 	var viewWidth = timePerDiv * 10
-	var diff = (viewWidth - halfWaveLength) / halfWaveLength
+	var timeDiff = (viewWidth - halfWaveLength) / halfWaveLength
 	
 	System.out.println("viewWidth=" + viewWidth)
 	System.out.println("halfWaveLength=" + halfWaveLength)
 	
-	if (diff < 0.0) {
-		return 3 //bad
+	var voltsPerDiv = _assessUtil.getLastVoltsPerDiv()
+	var halfViewHeight = voltsPerDiv * 4
+	var voltDiff = (halfViewHeight - _correctAmp) / _correctAmp	
+	
+	System.out.println("halfViewHeight=" + halfViewHeight)
+	System.out.println("_correctAmp=" + _correctAmp)
+	
+	var channel = Integer.parseInt(madWrapper.getLastCIValue("SelectChannel"));
+	System.out.println("channel=" + channel);
+	if (channel == 2) {
+		return 3 // bad: channel A has no signal 
 	}
-	else if (diff < 1.0) {
-		return 0 //excellent
+	
+	if (timeDiff < -0.1) {
+		ind += 3 //bad				
 	}
-	else if (diff < 2.0) {
-		return 1 //good
+	else if (timeDiff < 0.0) {
+		ind += 2 //ok
 	}
-	else if (diff < 3.0) {
-		return 2 //ok
+	else if (timeDiff < 1.0) {
+		ind += 0 //excellent
+	}
+	else if (timeDiff < 2.0) {
+		ind += 1 //good
+	}
+	else if (timeDiff < 3.0) {
+		ind += 2 //ok
 	}
 	else {
-		return 3 //bad
+		ind += 3 //bad
 	}
+	
+	if (voltDiff < -0.1) {
+		ind += 3 //bad				
+	}
+	else if (voltDiff < 0.0) {
+		ind += 2 //ok
+	}
+	else if (voltDiff < 1.0) {
+		ind += 0 //excellent
+	}
+	else if (voltDiff < 2.0) {
+		ind += 1 //good
+	}
+	else if (voltDiff < 3.0) {
+		ind += 2 //ok
+	}
+	else {
+		ind += 3 //bad
+	}
+	
+	return new Integer(ind / 2.0)
 }
 
 function endActivity()
