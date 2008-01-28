@@ -79,7 +79,7 @@
   <objects>
     <OTSystem local_id="system">
       <includes>
-        <OTInclude href="http://continuum.concord.org/otrunk/examples/UDL/global-imports/predefined-sensor-graphs.otml" />
+        <OTInclude href="global-imports/predefined-sensor-graphs.otml" />
       </includes>
       <bundles>
         <OTViewBundle showLeftPanel="false" currentMode="student">
@@ -183,7 +183,7 @@
                           <OTDataAxis max="60.0" units="s" min="0.0" label="Time" />
                         </xDataAxis>
                         <yDataAxis>
-                          <OTDataAxis max="40.0" units="" min="0.0" label="" />
+                          <OTDataAxis max="40.0" units="" min="-0.0" label="" />
                         </yDataAxis>
                       </OTDataCollector>
                       <OTNLogoModel name="NetLogo model" />
@@ -203,6 +203,61 @@
                     <predefinedGraphs>
                       <object refid="088786c2-8719-11dc-8314-0800200c9a66" />
                     </predefinedGraphs>
+                    <sharedGraphs>
+                      <OTDataCollector id="29c12135-cdcb-11dc-8ae1-ef1e138f3b5b" name="volts-1" title="Voltage Graph" multipleGraphableEnabled="true" autoScaleEnabled="true">
+                        <source>
+                          <OTDataGraphable name="one" connectPoints="true" yColumn="1" drawMarks="false" color="255" xColumn="0" lineWidth="2.0">
+                            <dataProducer>
+                              <OTSensorDataProxy id="3769d4c6-cdcb-11dc-8ae1-ef1e138f3b5b" name="dataproducer">
+                                <request>
+                                  <OTExperimentRequest period="0.1">
+                                    <sensorRequests>
+                                      <OTSensorRequest stepSize="0.1" type="4" unit="V" port="0" requiredMax="10.0" displayPrecision="-2" requiredMin="-10.0" />
+                                    </sensorRequests>
+                                  </OTExperimentRequest>
+                                </request>
+                              </OTSensorDataProxy>
+                            </dataProducer>
+                            <dataStore>
+                              <OTDataStore id="3769d4c7-cdcb-11dc-8ae1-ef1e138f3b5b" dt="0.1" numberChannels="1">
+                                <channelDescriptions>
+                                  <OTDataChannelDescription name="dt" precision="2" numericData="true" />
+                                  <OTDataChannelDescription name="" unit="V" precision="-2" numericData="true" />
+                                </channelDescriptions>
+                              </OTDataStore>
+                            </dataStore>
+                          </OTDataGraphable>
+                        </source>
+                        <xDataAxis>
+                          <OTDataAxis max="60.0" units="s" min="0.0" label="Time" />
+                        </xDataAxis>
+                        <yDataAxis>
+                          <OTDataAxis max="10.0" units="V" min="-10.0" label="Voltage" />
+                        </yDataAxis>
+                        <graphables>
+                          <OTDataGraphable name="Prediction" connectPoints="true" controllable="true" yColumn="1" drawMarks="false" color="16711680" xColumn="0" lineWidth="2.0" locked="true">
+                            <dataStore>
+                              <OTDataStore id="99b1b3a4-cdca-11dc-8ae1-ef1e138f3b5b" numberChannels="2" />
+                            </dataStore>
+                          </OTDataGraphable>
+                        </graphables>
+                      </OTDataCollector>
+                      <OTDataCollector id="99b1b3a0-cdca-11dc-8ae1-ef1e138f3b5b" name="predict-voltage" title="Voltage Prediction" multipleGraphableEnabled="true">
+                        <source>
+                          <OTDataGraphable name="Data Graph" connectPoints="true" controllable="true" yColumn="1" drawMarks="false" color="16711680" xColumn="0" lineWidth="2.0">
+                            <dataStore>
+                              <object refid="99b1b3a4-cdca-11dc-8ae1-ef1e138f3b5b" />
+                            </dataStore>
+                          </OTDataGraphable>
+                        </source>
+                        <xDataAxis>
+                          <OTDataAxis max="60.0" units="s" min="0.0" label="Time" />
+                        </xDataAxis>
+                        <yDataAxis>
+                          <OTDataAxis max="10.0" units="V" min="-10.0" label="" />
+                        </yDataAxis>
+                      </OTDataCollector>
+                    </sharedGraphs>
                   </OTDataCollectorViewConfig>
                 </entry>
                 <entry key="${drawing-view}">
@@ -258,9 +313,9 @@
                 <object refid="${definition-manager}" />
               </definitionManager>
               <cssBlocks>
-                <OTCssText local_id="css-font" src="http://continuum.concord.org/otrunk/examples/UDL/css/otrunk-normal-font.css" />
-                <OTCssText local_id="css-color" src="http://continuum.concord.org/otrunk/examples/UDL/css/otrunk-34-color.css" />
-                <OTCssText local_id="css-layout" src="http://continuum.concord.org/otrunk/examples/UDL/css/otrunk-normal-layout.css" />
+                <OTCssText local_id="css-font" src="css/otrunk-normal-font.css" />
+                <OTCssText local_id="css-color" src="css/otrunk-34-color.css" />
+                <OTCssText local_id="css-layout" src="css/otrunk-normal-layout.css" />
               </cssBlocks>
             </OTUDLDocumentViewConfig>
             <OTPrototypeViewEntry local_id="textsize-choice-view" objectClass="org.concord.otrunk.OTSystem" viewClass="org.concord.otrunk.view.prototype.OTPrototypeView" copyPrototype="false">
@@ -273,7 +328,7 @@
                     <OTOverlay local_id="small-text-overlay" name="Small text">
                       <deltaObjectMap>
                         <entry key="${css-font}">
-                          <OTCssText src="http://continuum.concord.org/otrunk/examples/UDL/css/otrunk-small-font.css" />
+                          <OTCssText src="css/otrunk-small-font.css" />
                         </entry>
                       </deltaObjectMap>
                     </OTOverlay>
@@ -281,7 +336,7 @@
                     <OTOverlay local_id="large-text-overlay" name="Large text">
                       <deltaObjectMap>
                         <entry key="${css-font}">
-                          <OTCssText src="http://continuum.concord.org/otrunk/examples/UDL/css/otrunk-large-font.css" />
+                          <OTCssText src="css/otrunk-large-font.css" />
                         </entry>
                       </deltaObjectMap>
                     </OTOverlay>
@@ -577,9 +632,6 @@
                       <currentCard>
                         <object refid="${page-1}" />
                       </currentCard>
-                      <viewedCards>
-                        <object refid="${page-1}" />
-                      </viewedCards>
                     </OTCardContainer>
                   </content>
                   <footer>
@@ -1849,7 +1901,7 @@
                             </OTQuestion>
                           </documentRefs>
                         </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc id="1b062cc5-775f-11dc-88e0-f91e4efaa30a/cards[5]" name="%e764bdfd-ccdd-11dc-b389-a1ad3851fa89">
+                        <OTUDLCompoundDoc name="%e764bdfd-ccdd-11dc-b389-a1ad3851fa89">
                           <documentRefs>
                             <OTChoice id="ff281dfb-ccdd-11dc-b389-a1ad3851fa89" name="Multiple-choice (single answer)" alignContent="0">
                               <choices>
@@ -1890,7 +1942,7 @@
                             </div>
                           </bodyText>
                         </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc id="1b062cc5-775f-11dc-88e0-f91e4efaa30a/cards[6]" name="%93e3c518-781b-11dc-a365-9554a3cf1337">
+                        <OTUDLCompoundDoc name="%93e3c518-781b-11dc-a365-9554a3cf1337">
                           <bodyText>
                             <div class="buffer">
                               <div class="border">
@@ -2070,16 +2122,26 @@
                               <input>
                                 <OTText />
                               </input>
+                              <correctAnswer>
+                                <OTUDLCompoundDoc>
+                                  <bodyText>Negative charges move from the sweater to the balloon.</bodyText>
+                                </OTUDLCompoundDoc>
+                              </correctAnswer>
                             </OTQuestion>
                             <OTQuestion id="bde7a371-ccdf-11dc-b389-a1ad3851fa89" name="Question" showConvertButton="true">
                               <prompt>
                                 <OTUDLCompoundDoc>
-                                  <bodyText>What does the balloon do when you let it go?</bodyText>
+                                  <bodyText>It is attracted to the sweater.</bodyText>
                                 </OTUDLCompoundDoc>
                               </prompt>
                               <input>
                                 <OTText />
                               </input>
+                              <correctAnswer>
+                                <OTUDLCompoundDoc>
+                                  <bodyText>Insert answer here</bodyText>
+                                </OTUDLCompoundDoc>
+                              </correctAnswer>
                             </OTQuestion>
                           </documentRefs>
                           <coachStatements>
@@ -2136,8 +2198,37 @@
                         <OTUDLCompoundDoc name="%ec8aaf59-ccde-11dc-b389-a1ad3851fa89">
                           <documentRefs>
                             <object refid="${balloons_model2}" />
-                            <object refid="0516ba23-a293-11dc-b231-c3f63af180f5" />
-                            <object refid="84f14a16-a293-11dc-bf0c-65bc2764d855" />
+                            <OTQuestion id="f8ea7c22-cdba-11dc-b98b-9353270f32e0" name="Question" showConvertButton="true">
+                              <prompt>
+                                <OTUDLCompoundDoc>
+                                  <bodyText>What does the model show now?</bodyText>
+                                </OTUDLCompoundDoc>
+                              </prompt>
+                              <input>
+                                <OTText />
+                              </input>
+                              <correctAnswer>
+                                <OTUDLCompoundDoc>
+                                  <bodyText>There are more negative charges on the balloon and more positive charges on the sweater.</bodyText>
+                                </OTUDLCompoundDoc>
+                              </correctAnswer>
+                            </OTQuestion>
+                            <OTChoiceMultiple id="3b0d3862-cdbc-11dc-b98b-9353270f32e0" name="Multiple-choice (check boxes)" alignContent="0">
+                              <choices>
+                                <OTCompoundDoc name="The balloon ends up with more positive than negative charges.">
+                                  <bodyText>The balloon ends up with more positive than negative charges.</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="The sweater ends up with more positive than negative charges.">
+                                  <bodyText>The sweater ends up with more positive than negative charges.</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="The balloon ends up with more negative than positive charges.">
+                                  <bodyText>The balloon ends up with more negative than positive charges.</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="The sweater ends up with more negative than positive charges.">
+                                  <bodyText>The sweater ends up with more negative than positive charges.</bodyText>
+                                </OTCompoundDoc>
+                              </choices>
+                            </OTChoiceMultiple>
                           </documentRefs>
                           <bodyText>
                             <div class="buffer">
@@ -2150,12 +2241,13 @@
                                   <b>Reset all</b>
                                   and
                                   <b>Show charge differences.</b>
-                                  Rub the balloon on the sweater. What does the model show now?
+                                  Rub the balloon on the sweater.
                                   <br />
-                                  <object refid="0516ba23-a293-11dc-b231-c3f63af180f5" />
+                                  <object refid="f8ea7c22-cdba-11dc-b98b-9353270f32e0" />
                                   <p />
-                                  How does this explain what the balloon does?
-                                  <object refid="84f14a16-a293-11dc-bf0c-65bc2764d855" />
+                                  Choose the true statements.
+                                  <br />
+                                  <object refid="3b0d3862-cdbc-11dc-b98b-9353270f32e0" />
                                   <p />
                                 </div>
                               </div>
@@ -2165,7 +2257,36 @@
                         <OTUDLCompoundDoc name="%38a80490-cce3-11dc-891d-4d13329d6daa">
                           <documentRefs>
                             <object refid="${balloons_model3}" />
-                            <object refid="54a321cf-7831-11dc-ab7e-6d2f34ff62a8" />
+                            <OTQuestion id="122e959c-cdc0-11dc-b921-a1f0b38e3825" name="Question" showConvertButton="true">
+                              <prompt>
+                                <OTUDLCompoundDoc>
+                                  <bodyText>What happens?</bodyText>
+                                </OTUDLCompoundDoc>
+                              </prompt>
+                              <input>
+                                <OTText />
+                              </input>
+                              <correctAnswer>
+                                <OTUDLCompoundDoc>
+                                  <bodyText>Both balloons collect negative charges from the sweater.</bodyText>
+                                </OTUDLCompoundDoc>
+                              </correctAnswer>
+                            </OTQuestion>
+                            <OTQuestion id="3626f5af-cdc0-11dc-b921-a1f0b38e3825" name="Question" showConvertButton="true">
+                              <prompt>
+                                <OTUDLCompoundDoc>
+                                  <bodyText>Let the balloons go. How do they move?</bodyText>
+                                </OTUDLCompoundDoc>
+                              </prompt>
+                              <input>
+                                <OTText />
+                              </input>
+                              <correctAnswer>
+                                <OTUDLCompoundDoc>
+                                  <bodyText>They are both attracted to the sweater.</bodyText>
+                                </OTUDLCompoundDoc>
+                              </correctAnswer>
+                            </OTQuestion>
                             <object refid="5a8bbc60-7831-11dc-ab7e-6d2f34ff62a8" />
                           </documentRefs>
                           <bodyText>
@@ -2174,14 +2295,15 @@
                                 <div class="body">
                                   <div class="subtitle-continued">Elaborate 3</div>
                                   <object refid="${balloons_model3}" />
+                                  <br />
                                   Now add another balloon by checking the
                                   <b>Two Balloons</b>
-                                  box. Drag both balloons up and down over the wool sweater. What happens?
+                                  box. Drag both balloons up and down over the wool sweater.
                                   <br />
-                                  <object refid="54a321cf-7831-11dc-ab7e-6d2f34ff62a8" />
+                                  <object refid="122e959c-cdc0-11dc-b921-a1f0b38e3825" />
                                   <p />
-                                  Let the balloons go. How do they move?
-                                  <br />
+                                  <object refid="3626f5af-cdc0-11dc-b921-a1f0b38e3825" />
+                                  <p />
                                   <object refid="5a8bbc60-7831-11dc-ab7e-6d2f34ff62a8" />
                                   <p />
                                 </div>
@@ -2192,7 +2314,21 @@
                         <OTUDLCompoundDoc name="%ed2faffa-cce3-11dc-891d-4d13329d6daa">
                           <documentRefs>
                             <object refid="${balloons_model4}" />
-                            <object refid="71a2af81-7831-11dc-ab7e-6d2f34ff62a8" />
+                            <OTQuestion id="718579e1-cdc0-11dc-b921-a1f0b38e3825" name="Question" showConvertButton="true">
+                              <prompt>
+                                <OTUDLCompoundDoc>
+                                  <bodyText>They move away from each other.</bodyText>
+                                </OTUDLCompoundDoc>
+                              </prompt>
+                              <input>
+                                <OTText />
+                              </input>
+                              <correctAnswer>
+                                <OTUDLCompoundDoc>
+                                  <bodyText>Insert answer here</bodyText>
+                                </OTUDLCompoundDoc>
+                              </correctAnswer>
+                            </OTQuestion>
                           </documentRefs>
                           <bodyText>
                             <div class="buffer">
@@ -2205,9 +2341,10 @@
                                   <b>Two Balloons</b>
                                   and rub each one on the sweater. Then hide the wool sweater by unchecking the
                                   <b>Show sweater</b>
-                                  box. How do the balloons move now?
+                                  box.
                                   <br />
-                                  <object refid="71a2af81-7831-11dc-ab7e-6d2f34ff62a8" />
+                                  <object refid="718579e1-cdc0-11dc-b921-a1f0b38e3825" />
+                                  <p />
                                 </div>
                               </div>
                             </div>
@@ -2291,13 +2428,8 @@
                         </OTUDLCompoundDoc>
                       </cards>
                       <currentCard>
-                        <object refid="1b062cc5-775f-11dc-88e0-f91e4efaa30a/cards[6]" />
-                      </currentCard>
-                      <viewedCards>
                         <object refid="1b062cc4-775f-11dc-88e0-f91e4efaa30a" />
-                        <object refid="1b062cc5-775f-11dc-88e0-f91e4efaa30a/cards[5]" />
-                        <object refid="1b062cc5-775f-11dc-88e0-f91e4efaa30a/cards[6]" />
-                      </viewedCards>
+                      </currentCard>
                     </OTCardContainer>
                   </content>
                   <header>
@@ -2665,7 +2797,7 @@
                             </div>
                           </bodyText>
                           <documentRefs>
-                            <OTChoice id="ba9d3de7-7831-11dc-ab7e-6d2f34ff62a8" name="Choices">
+                            <OTChoice id="ba9d3de7-7831-11dc-ab7e-6d2f34ff62a8" name="Choices" alignContent="0">
                               <choices>
                                 <OTCompoundDoc name="negatively">
                                   <bodyText>negatively</bodyText>
@@ -2675,7 +2807,7 @@
                                 </OTCompoundDoc>
                               </choices>
                             </OTChoice>
-                            <OTChoice id="c27a075b-7831-11dc-ab7e-6d2f34ff62a8" name="Choices">
+                            <OTChoice id="c27a075b-7831-11dc-ab7e-6d2f34ff62a8" name="Choices" alignContent="0">
                               <choices>
                                 <OTCompoundDoc name="negatively">
                                   <bodyText>negatively</bodyText>
@@ -2685,7 +2817,7 @@
                                 </OTCompoundDoc>
                               </choices>
                             </OTChoice>
-                            <OTChoice id="b25b7113-7831-11dc-ab7e-6d2f34ff62a8" name="Choices">
+                            <OTChoice id="b25b7113-7831-11dc-ab7e-6d2f34ff62a8" name="Choices" alignContent="0">
                               <choices>
                                 <OTCompoundDoc name="negatively">
                                   <bodyText>negatively</bodyText>
@@ -2728,7 +2860,7 @@
                             <OTPhetBalloonsModel local_id="balloons_model5" />
                             <OTText id="e3f24bf0-7831-11dc-ab7e-6d2f34ff62a8" name="Text field" />
                             <OTText id="eda44a91-7831-11dc-ab7e-6d2f34ff62a8" name="Text field" />
-                            <OTChoice id="fd777ff2-7831-11dc-ab7e-6d2f34ff62a8" name="Choices">
+                            <OTChoice id="fd777ff2-7831-11dc-ab7e-6d2f34ff62a8" name="Choices" alignContent="0">
                               <choices>
                                 <OTCompoundDoc name="One is positive and one is negative.">
                                   <bodyText>One is positive and one is negative.</bodyText>
@@ -2880,660 +3012,6 @@
                   </center>
                   <south>
                     <object refid="1f2503dd-775f-11dc-88e0-f91e4efaa30a" />
-                  </south>
-                </OTUDLSection>
-                <OTUDLSection local_id="section_6" name="Circuit model" isComputerBased="true" isIntroduction="false" isMath="false" isPosttest="false" isPretest="false" isReading="false" isWrapup="false">
-                  <content>
-                    <OTCardContainer id="236e6d61-775f-11dc-88e0-f91e4efaa30a" contentsMayScroll="true" loadViewOnlyOnDemand="true">
-                      <cards>
-                        <OTUDLCompoundDoc id="236e6d60-775f-11dc-88e0-f91e4efaa30a" name="%236e6d60-775f-11dc-88e0-f91e4efaa30a">
-                          <bodyText>
-                            <div class="buffer">
-                              <div class="border">
-                                <div class="body">
-                                  <div class="subtitle">Discovery question</div>
-                                  How does electricity move?
-                                  <p />
-                                  <img src="http://udl.concord.org/share/Electricity/electrons.gif" />
-                                  <p />
-                                  In this activity, you will build a model of how electrical charges travel in a circuit and move energy from one place to another.
-                                </div>
-                              </div>
-                            </div>
-                          </bodyText>
-                        </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc name="%81055e0c-7833-11dc-ab7e-6d2f34ff62a8">
-                          <bodyText>
-                            <div class="buffer">
-                              <div class="border">
-                                <div class="body">
-                                  <div class="subtitle">Engage</div>
-                                  In an electric circuit, such as a battery and a light bulb, the charges are free to move around the circuit. If they are pushed through the light bulb, it heats up and glows. The battery provides the "push."
-                                  <p />
-                                  You can model this process with a circle of students. Form a circle with everyone linking arms, including the teacher. Pretend that the teacher is the battery and a student across the circle is the light bulb.
-                                  <p />
-                                  Have the teacher give a little push. This is like what a battery does. Right away, every other person feels the push. The push goes right around the circle.
-                                  <p />
-                                  The person who is the light bulb should try not to move. He or she will feel pushed on one side and pulled on the other. The effort that the student must make to try not to move is like the energy the light gets from the battery that makes it heat up.
-                                  <p />
-                                  Now you will build a similar model of a circuit using string and straws.
-                                </div>
-                              </div>
-                            </div>
-                          </bodyText>
-                          <coachStatements>
-                            <OTUDLCoachStatement>
-                              <coach>
-                                <object refid="${character_affective}" />
-                              </coach>
-                              <statement>
-                                <OTUDLCompoundDoc>
-                                  <bodyText>
-                                    <div class="buffer">
-                                      <div class="border">
-                                        <div class="body">I love building models.  They help me to understand what's happening.</div>
-                                      </div>
-                                    </div>
-                                    <img src="http://udl.concord.org/share/shared-images/blah-anim.gif" height="150" width="200" />
-                                  </bodyText>
-                                </OTUDLCompoundDoc>
-                              </statement>
-                            </OTUDLCoachStatement>
-                            <OTUDLCoachStatement>
-                              <coach>
-                                <object refid="${character_strategic}" />
-                              </coach>
-                              <statement>
-                                <OTUDLCompoundDoc>
-                                  <bodyText>
-                                    <div class="buffer">
-                                      <div class="border">
-                                        <div class="body">In this experiment, you get to be part of an electric circuit.  Remember what you feel like as you get pushed or pulled.</div>
-                                      </div>
-                                    </div>
-                                    <img src="http://udl.concord.org/share/shared-images/clunk-anim.gif" height="150" width="200" />
-                                  </bodyText>
-                                </OTUDLCompoundDoc>
-                              </statement>
-                            </OTUDLCoachStatement>
-                            <OTUDLCoachStatement>
-                              <coach>
-                                <object refid="${character_recognition}" />
-                              </coach>
-                              <statement>
-                                <OTUDLCompoundDoc>
-                                  <bodyText>
-                                    <div class="buffer">
-                                      <div class="border">
-                                        <div class="body">The circle of students is a model of a circuit.  Keep this model in mind as you build another kind of circuit.</div>
-                                      </div>
-                                    </div>
-                                  </bodyText>
-                                </OTUDLCompoundDoc>
-                              </statement>
-                            </OTUDLCoachStatement>
-                          </coachStatements>
-                        </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc name="%a7a07c2d-7833-11dc-ab7e-6d2f34ff62a8">
-                          <bodyText>
-                            <div class="buffer">
-                              <div class="border">
-                                <div class="body">
-                                  <div class="subtitle">Materials</div>
-                                  <ul>
-                                    <li>piece of cardboard 25 x 50 cm (10 x 20 in)</li>
-                                    <li>bendable straws</li>
-                                    <li>string</li>
-                                    <li>tape</li>
-                                    <li>marker</li>
-                                  </ul>
-                                </div>
-                              </div>
-                            </div>
-                          </bodyText>
-                        </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc name="%cbff17ce-7833-11dc-ab7e-6d2f34ff62a8">
-                          <bodyText>
-                            <div class="buffer">
-                              <div class="border">
-                                <div class="body">
-                                  <div class="subtitle">Explore</div>
-                                  First, using your marker, put a dot on the string about every centimeter. These dots represent electric charges that can move inside the wire.
-                                  <p />
-                                  Make a "necklace" by putting  a piece of string through four bendable straws.
-                                  <p />
-                                  Tie the string into a loop, leaving about 20 cm of string that is not inside the straws.
-                                  <p />
-                                  Tape the necklace to a piece of cardboard in a rough rectangle. Leave the string a little loose. Leave two areas where the string is not inside the straws.
-                                  <p />
-                                  <img src="http://udl.concord.org/share/Electricity/circuit-model.JPG" />
-                                  <p />
-                                </div>
-                              </div>
-                            </div>
-                          </bodyText>
-                          <coachStatements>
-                            <OTUDLCoachStatement>
-                              <coach>
-                                <object refid="${character_recognition}" />
-                              </coach>
-                              <statement>
-                                <OTUDLCompoundDoc>
-                                  <bodyText>
-                                    <div class="buffer">
-                                      <div class="border">
-                                        <div class="body">I am learning that a circuit is like a circle.  An electric circuit means that charges are moving in a loop.</div>
-                                      </div>
-                                    </div>
-                                    <img src="http://udl.concord.org/share/shared-images/roxy-anim.gif" height="150" width="200" />
-                                  </bodyText>
-                                </OTUDLCompoundDoc>
-                              </statement>
-                            </OTUDLCoachStatement>
-                            <OTUDLCoachStatement>
-                              <coach>
-                                <object refid="${character_strategic}" />
-                              </coach>
-                              <statement>
-                                <OTUDLCompoundDoc>
-                                  <bodyText>
-                                    <div class="buffer">
-                                      <div class="border">
-                                        <div class="body">In this model I need to pay attention to the dots on the string.</div>
-                                      </div>
-                                    </div>
-                                    <img src="http://udl.concord.org/share/shared-images/clunk-anim.gif" height="150" width="200" />
-                                  </bodyText>
-                                </OTUDLCompoundDoc>
-                              </statement>
-                            </OTUDLCoachStatement>
-                            <OTUDLCoachStatement>
-                              <coach>
-                                <object refid="${character_affective}" />
-                              </coach>
-                              <statement>
-                                <OTUDLCompoundDoc>
-                                  <bodyText>
-                                    <div class="buffer">
-                                      <div class="border">
-                                        <div class="body">Models can be great fun.  Have you ever made a model?</div>
-                                      </div>
-                                    </div>
-                                    <img src="http://udl.concord.org/share/shared-images/blah-anim.gif" height="150" width="200" />
-                                  </bodyText>
-                                </OTUDLCompoundDoc>
-                              </statement>
-                            </OTUDLCoachStatement>
-                          </coachStatements>
-                        </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc name="%cbff17ce-7833-11dc-ab7e-6d2f34ff62a8">
-                          <bodyText>
-                            <div class="buffer">
-                              <div class="border">
-                                <div class="body">
-                                  <div class="subtitle-continued">Explore 2</div>
-                                  Draw a
-                                  <b>picture</b>
-                                  of a battery on a piece of paper and tape it to the cardboard.
-                                  <br />
-                                  Draw a
-                                  <b>picture</b>
-                                  of a light bulb and tape it to the cardboard.
-                                  <p />
-                                  <img src="http://udl.concord.org/share/Electricity/circuit-model-w-bulb-battery.jpg" />
-                                  <p />
-                                  Pull the string to make it go around the loop. This is what a battery does. It forces the electric charges along the wire.
-                                  <p />
-                                  <object refid="e726419b-bec9-11dc-8b42-09b93e98b973" />
-                                  <p />
-                                  Have one person press down gently on the string where the light bulb is. Have another person pull the string where the battery is to make it go around.
-                                  <BR />
-                                  <object refid="d2725918-becb-11dc-8b42-09b93e98b973" />
-                                  <br />
-                                  <br />
-                                </div>
-                              </div>
-                            </div>
-                          </bodyText>
-                          <documentRefs>
-                            <OTUDLQuestions id="e726419b-bec9-11dc-8b42-09b93e98b973" timesClicked="5" currentIndex="0">
-                              <questions>
-                                <OTQuestion name="L5" showConvertButton="false" showScaffolding="true">
-                                  <prompt>
-                                    <OTUDLCompoundDoc>
-                                      <bodyText>What do you notice about the movement of the dots on the string?</bodyText>
-                                    </OTUDLCompoundDoc>
-                                  </prompt>
-                                  <input>
-                                    <OTText />
-                                  </input>
-                                </OTQuestion>
-                                <OTQuestion name="L4" showConvertButton="false" showScaffolding="true">
-                                  <prompt>
-                                    <OTUDLCompoundDoc>
-                                      <bodyText>What do you notice about the movement of the dots on the string?</bodyText>
-                                    </OTUDLCompoundDoc>
-                                  </prompt>
-                                  <input>
-                                    <OTText />
-                                  </input>
-                                  <scaffolding>
-                                    <OTUDLCompoundDoc>
-                                      <bodyText>Think about whether all of the dots on the string are moving.</bodyText>
-                                    </OTUDLCompoundDoc>
-                                  </scaffolding>
-                                </OTQuestion>
-                                <OTQuestion name="L3" showConvertButton="false" showScaffolding="true">
-                                  <prompt>
-                                    <OTUDLCompoundDoc>
-                                      <bodyText>What do you notice about the movement of the dots on the string?</bodyText>
-                                    </OTUDLCompoundDoc>
-                                  </prompt>
-                                  <input>
-                                    <OTText />
-                                  </input>
-                                  <scaffolding>
-                                    <OTUDLCompoundDoc>
-                                      <bodyText>The dots on the string are all moving at the _________ time in the ________ direction.</bodyText>
-                                    </OTUDLCompoundDoc>
-                                  </scaffolding>
-                                </OTQuestion>
-                                <OTQuestion name="L2" showConvertButton="false" showScaffolding="true">
-                                  <prompt>
-                                    <OTUDLCompoundDoc>
-                                      <bodyText>What do you notice about the movement of the dots on the string?</bodyText>
-                                    </OTUDLCompoundDoc>
-                                  </prompt>
-                                  <input>
-                                    <OTText />
-                                  </input>
-                                  <scaffolding>
-                                    <OTUDLCompoundDoc>
-                                      <bodyText>
-                                        Which statement is true?
-                                        <object refid="b47a09b5-beca-11dc-8b42-09b93e98b973" />
-                                        <p />
-                                      </bodyText>
-                                      <documentRefs>
-                                        <OTChoiceMultiple id="b47a09b5-beca-11dc-8b42-09b93e98b973" name="Multiple-choice (check boxes)">
-                                          <choices>
-                                            <OTCompoundDoc name="All the dots on the string move at once.">
-                                              <bodyText>All the dots on the string move at once.</bodyText>
-                                            </OTCompoundDoc>
-                                            <OTCompoundDoc name="It takes a while for some of the dots on the string to start moving.">
-                                              <bodyText>It takes a while for some of the dots on the string to start moving.</bodyText>
-                                            </OTCompoundDoc>
-                                            <OTCompoundDoc name="The dots on the string further away from the battery begin moving later.">
-                                              <bodyText>The dots on the string further away from the battery begin moving later.</bodyText>
-                                            </OTCompoundDoc>
-                                          </choices>
-                                        </OTChoiceMultiple>
-                                      </documentRefs>
-                                    </OTUDLCompoundDoc>
-                                  </scaffolding>
-                                </OTQuestion>
-                                <OTQuestion name="L1" showConvertButton="false" showScaffolding="true">
-                                  <prompt>
-                                    <OTUDLCompoundDoc>
-                                      <bodyText>What do you notice about the movement of the dots on the string?</bodyText>
-                                    </OTUDLCompoundDoc>
-                                  </prompt>
-                                  <input>
-                                    <OTText />
-                                  </input>
-                                  <scaffolding>
-                                    <OTUDLCompoundDoc>
-                                      <bodyText>All the dots on the string move at once making a complete loop.</bodyText>
-                                    </OTUDLCompoundDoc>
-                                  </scaffolding>
-                                </OTQuestion>
-                              </questions>
-                            </OTUDLQuestions>
-                            <OTUDLQuestions id="d2725918-becb-11dc-8b42-09b93e98b973">
-                              <questions>
-                                <OTQuestion name="L5" showConvertButton="false" showScaffolding="true">
-                                  <prompt>
-                                    <OTUDLCompoundDoc>
-                                      <bodyText>What happens?</bodyText>
-                                    </OTUDLCompoundDoc>
-                                  </prompt>
-                                  <input>
-                                    <OTText />
-                                  </input>
-                                </OTQuestion>
-                                <OTQuestion name="L4" showConvertButton="false" showScaffolding="true">
-                                  <prompt>
-                                    <OTUDLCompoundDoc>
-                                      <bodyText>What happens?</bodyText>
-                                    </OTUDLCompoundDoc>
-                                  </prompt>
-                                  <input>
-                                    <OTText />
-                                  </input>
-                                  <scaffolding>
-                                    <OTUDLCompoundDoc>
-                                      <bodyText>Think about how the movement of the string is different than before.</bodyText>
-                                    </OTUDLCompoundDoc>
-                                  </scaffolding>
-                                </OTQuestion>
-                                <OTQuestion name="L3" showConvertButton="false" showScaffolding="true">
-                                  <prompt>
-                                    <OTUDLCompoundDoc>
-                                      <bodyText>What happens?</bodyText>
-                                    </OTUDLCompoundDoc>
-                                  </prompt>
-                                  <input>
-                                    <OTText />
-                                  </input>
-                                  <scaffolding>
-                                    <OTUDLCompoundDoc>
-                                      <bodyText>By pressing on the string, it makes it __________ to move.</bodyText>
-                                    </OTUDLCompoundDoc>
-                                  </scaffolding>
-                                </OTQuestion>
-                                <OTQuestion name="L2" showConvertButton="false" showScaffolding="true">
-                                  <prompt>
-                                    <OTUDLCompoundDoc>
-                                      <bodyText>What happens?</bodyText>
-                                    </OTUDLCompoundDoc>
-                                  </prompt>
-                                  <input>
-                                    <OTText />
-                                  </input>
-                                  <scaffolding>
-                                    <OTUDLCompoundDoc>
-                                      <bodyText>
-                                        Which statement is true?
-                                        <br />
-                                        <object refid="ad36394d-becc-11dc-8b42-09b93e98b973" />
-                                        <p />
-                                      </bodyText>
-                                      <documentRefs>
-                                        <OTChoiceMultiple id="ad36394d-becc-11dc-8b42-09b93e98b973" name="Multiple-choice (check boxes)">
-                                          <choices>
-                                            <OTCompoundDoc name="The dots on the string move exactly like they did before.">
-                                              <bodyText>The dots on the string move exactly like they did before.</bodyText>
-                                            </OTCompoundDoc>
-                                            <OTCompoundDoc name="The dots on the string do not move at all.">
-                                              <bodyText>The dots on the string do not move at all.</bodyText>
-                                            </OTCompoundDoc>
-                                            <OTCompoundDoc name="The dots on the string are harder to move than before.">
-                                              <bodyText>The dots on the string are harder to move than before.</bodyText>
-                                            </OTCompoundDoc>
-                                          </choices>
-                                        </OTChoiceMultiple>
-                                      </documentRefs>
-                                    </OTUDLCompoundDoc>
-                                  </scaffolding>
-                                </OTQuestion>
-                                <OTQuestion name="L1" showConvertButton="false" showScaffolding="true">
-                                  <prompt>
-                                    <OTUDLCompoundDoc>
-                                      <bodyText>What happens?</bodyText>
-                                    </OTUDLCompoundDoc>
-                                  </prompt>
-                                  <input>
-                                    <OTText />
-                                  </input>
-                                  <scaffolding>
-                                    <OTUDLCompoundDoc>
-                                      <bodyText>The dots on the string are harder to move than before.</bodyText>
-                                    </OTUDLCompoundDoc>
-                                  </scaffolding>
-                                </OTQuestion>
-                              </questions>
-                            </OTUDLQuestions>
-                          </documentRefs>
-                        </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc name="%0e1f3190-7834-11dc-ab7e-6d2f34ff62a8">
-                          <bodyText>
-                            <div class="buffer">
-                              <div class="border">
-                                <div class="body">
-                                  <div class="subtitle">Explain</div>
-                                  Here is a picture of an electric circuit showing electrons moving along the wires. Of course, real electrons are very, very, very small. We can't see them.
-                                  <p />
-                                  <img src="http://udl.concord.org/share/Electricity/electrons.gif" />
-                                  <p />
-                                  In your own words, explain what electrons do in a circuit.
-                                  <br />
-                                  <object refid="98444bb0-7c2c-11dc-a42b-09251e424683" />
-                                  <p />
-                                </div>
-                              </div>
-                            </div>
-                          </bodyText>
-                          <documentRefs>
-                            <OTText id="98444bb0-7c2c-11dc-a42b-09251e424683" name="Text field" />
-                          </documentRefs>
-                          <coachStatements>
-                            <OTUDLCoachStatement>
-                              <coach>
-                                <object refid="${character_strategic}" />
-                              </coach>
-                              <statement>
-                                <OTUDLCompoundDoc>
-                                  <bodyText>
-                                    <div class="buffer">
-                                      <div class="border">
-                                        <div class="body">You need to describe what you see in the model.</div>
-                                      </div>
-                                    </div>
-                                    <img src="http://udl.concord.org/share/shared-images/clunk-anim.gif" height="150" width="200" />
-                                  </bodyText>
-                                </OTUDLCompoundDoc>
-                              </statement>
-                            </OTUDLCoachStatement>
-                            <OTUDLCoachStatement>
-                              <coach>
-                                <object refid="${character_recognition}" />
-                              </coach>
-                              <statement>
-                                <OTUDLCompoundDoc>
-                                  <bodyText>
-                                    <div class="buffer">
-                                      <div class="border">
-                                        <div class="body">I see electrons moving through the wires of this model.  Think about what you already know about light bulbs and how they work that will help you to answer this question.</div>
-                                      </div>
-                                    </div>
-                                  </bodyText>
-                                </OTUDLCompoundDoc>
-                              </statement>
-                            </OTUDLCoachStatement>
-                            <OTUDLCoachStatement>
-                              <coach>
-                                <object refid="${character_affective}" />
-                              </coach>
-                              <statement>
-                                <OTUDLCompoundDoc>
-                                  <bodyText>
-                                    <div class="buffer">
-                                      <div class="border">
-                                        <div class="body">We have real light bulbs in school and at home. This is a model of what's happening.</div>
-                                      </div>
-                                    </div>
-                                  </bodyText>
-                                </OTUDLCompoundDoc>
-                              </statement>
-                            </OTUDLCoachStatement>
-                          </coachStatements>
-                        </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc name="%40ea94c1-7834-11dc-ab7e-6d2f34ff62a8">
-                          <bodyText>
-                            <div class="buffer">
-                              <div class="border">
-                                <div class="body">
-                                  <div class="subtitle">Elaborate</div>
-                                  What if you cut the string in the "string" model you made? Could you move charges around the loop?
-                                  <br />
-                                  <object refid="49b58ec2-7834-11dc-ab7e-6d2f34ff62a8" />
-                                  <p />
-                                  Cutting the string is like opening a switch. Draw a picture of a switch  on a piece of paper and tape it somewhere along the wire.
-                                </div>
-                              </div>
-                            </div>
-                          </bodyText>
-                          <documentRefs>
-                            <OTText id="49b58ec2-7834-11dc-ab7e-6d2f34ff62a8" name="Text field" />
-                          </documentRefs>
-                        </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc name="%70e599e3-7834-11dc-ab7e-6d2f34ff62a8">
-                          <bodyText>
-                            <div class="buffer">
-                              <div class="border">
-                                <div class="body">
-                                  <div class="subtitle">Evaluate</div>
-                                  Your model is like an electric circuit in some ways, but it is different in other ways. Here is a comparison between your string circuit and a real electric circuit.
-                                  <p />
-                                  <table border="1">
-                                    <tr>
-                                      <td>
-                                        <b>String circuit</b>
-                                      </td>
-                                      <td>
-                                        <b>Electric circuit</b>
-                                      </td>
-                                    </tr>
-                                    <tr>
-                                      <td>Straw</td>
-                                      <td>Wire</td>
-                                    </tr>
-                                    <tr>
-                                      <td>Dots on the string</td>
-                                      <td>Electric charges in the wire</td>
-                                    </tr>
-                                    <tr>
-                                      <td>Must make a loop for the string to move</td>
-                                      <td>Must make a complete circuit for the electricity to flow</td>
-                                    </tr>
-                                    <tr>
-                                      <td>Cut the string – no loop!</td>
-                                      <td>Open the switch – no circuit!</td>
-                                    </tr>
-                                    <tr>
-                                      <td>Pull the string to make dots move</td>
-                                      <td>Battery pushes and pulls charges</td>
-                                    </tr>
-                                    <tr>
-                                      <td>Pinch the string, making resistance</td>
-                                      <td>Resist the flow of electric charges (electrical resistance)</td>
-                                    </tr>
-                                    <tr>
-                                      <td>It takes energy to pull the string if it is pinched</td>
-                                      <td>It takes energy to make the electric charges flow when there's resistance, as in a light bulb or a motor</td>
-                                    </tr>
-                                    <tr>
-                                      <td>When you move the string in one place, all the dots move at once</td>
-                                      <td>When you hook up the circuit, the charges in the wire all move at once</td>
-                                    </tr>
-                                  </table>
-                                  <p />
-                                  Here are some ways the model is not correct!
-                                  <p />
-                                  <table border="1">
-                                    <tr>
-                                      <td>
-                                        <b>String circuit</b>
-                                      </td>
-                                      <td>
-                                        <b>Electric circuit</b>
-                                      </td>
-                                    </tr>
-                                    <tr>
-                                      <td>String moves through the straw</td>
-                                      <td>The wire does NOT move  – just the electric charges move</td>
-                                    </tr>
-                                    <tr>
-                                      <td>Dots move slowly</td>
-                                      <td>Charges move very fast</td>
-                                    </tr>
-                                    <tr>
-                                      <td>You can see the dots</td>
-                                      <td>Electric charges are too small to see</td>
-                                    </tr>
-                                  </table>
-                                  <p />
-                                  In your own words, write down two ways this model is like a real electrical circuit.
-                                  <br />
-                                  <object refid="90fe9cb1-7c2d-11dc-a42b-09251e424683" />
-                                  <p />
-                                  In your own words, write down one way this model is
-                                  <b>not</b>
-                                  like an electrical circuit.
-                                  <br />
-                                  <object refid="ad7b17b2-7c2d-11dc-a42b-09251e424683" />
-                                  <p />
-                                  You have now completed the
-                                  <b>Circuit model</b>
-                                  activity.
-                                </div>
-                              </div>
-                            </div>
-                          </bodyText>
-                          <documentRefs>
-                            <OTText id="90fe9cb1-7c2d-11dc-a42b-09251e424683" name="Text field" />
-                            <OTText id="ad7b17b2-7c2d-11dc-a42b-09251e424683" name="Text field" />
-                          </documentRefs>
-                        </OTUDLCompoundDoc>
-                      </cards>
-                      <currentCard>
-                        <object refid="236e6d60-775f-11dc-88e0-f91e4efaa30a" />
-                      </currentCard>
-                    </OTCardContainer>
-                  </content>
-                  <header>
-                    <OTUDLCompoundDoc id="236e6d62-775f-11dc-88e0-f91e4efaa30a" name="%236e6d62-775f-11dc-88e0-f91e4efaa30a">
-                      <bodyText>
-                        <div class="title">Circuit model</div>
-                      </bodyText>
-                    </OTUDLCompoundDoc>
-                  </header>
-                  <footer>
-                    <OTUDLCompoundDoc id="236e6d63-775f-11dc-88e0-f91e4efaa30a" name="%236e6d63-775f-11dc-88e0-f91e4efaa30a">
-                      <bodyText>
-                        <div align="center">
-                          <table width="100%">
-                            <tr>
-                              <td width="10%" />
-                              <td width="80%">
-                                <div align="center">
-                                  <table>
-                                    <tr>
-                                      <td>
-                                        <object refid="236e9474-775f-11dc-88e0-f91e4efaa30a" viewid="${menu-horizontal-circle}" />
-                                      </td>
-                                    </tr>
-                                  </table>
-                                </div>
-                              </td>
-                              <td width="10%">
-                                <object refid="${album}" />
-                              </td>
-                            </tr>
-                          </table>
-                        </div>
-                      </bodyText>
-                      <documentRefs>
-                        <OTUDLMenu id="236e9474-775f-11dc-88e0-f91e4efaa30a">
-                          <cardContainer>
-                            <object refid="236e6d61-775f-11dc-88e0-f91e4efaa30a" />
-                          </cardContainer>
-                          <menuRule>
-                            <object refid="${page-rule}" />
-                          </menuRule>
-                        </OTUDLMenu>
-                        <object refid="${menu-horizontal-circle}" />
-                      </documentRefs>
-                    </OTUDLCompoundDoc>
-                  </footer>
-                  <north>
-                    <object refid="236e6d62-775f-11dc-88e0-f91e4efaa30a" />
-                  </north>
-                  <center>
-                    <object refid="236e6d61-775f-11dc-88e0-f91e4efaa30a" />
-                  </center>
-                  <south>
-                    <object refid="236e6d63-775f-11dc-88e0-f91e4efaa30a" />
                   </south>
                 </OTUDLSection>
                 <OTUDLSection local_id="section_7" name="Light a bulb!" isComputerBased="true" isIntroduction="false" isMath="false" isPosttest="false" isPretest="false" isReading="false" isWrapup="false">
@@ -4034,6 +3512,518 @@ Mark whether they are a conductor or an insulator.
                   </center>
                   <south>
                     <object refid="27c8ede9-775f-11dc-88e0-f91e4efaa30a" />
+                  </south>
+                </OTUDLSection>
+                <OTUDLSection name="Volts and lights" isComputerBased="true" isIntroduction="false" isMath="false" isPosttest="false" isPretest="false" isReading="false" isWrapup="false">
+                  <content>
+                    <OTCardContainer id="4e5e0956-cdc1-11dc-bd2b-dd05e7961664" contentsMayScroll="true" loadViewOnlyOnDemand="true">
+                      <cards>
+                        <OTUDLCompoundDoc id="4e5e0955-cdc1-11dc-bd2b-dd05e7961664">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle">Discovery question</div>
+                                  How do light bulbs work?
+                                  <p />
+                                  IMAGE: reading an electric meter
+                                  <p />
+                                  In this activity you will examine a light bulb and make it glow using a hand generator.
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                        </OTUDLCompoundDoc>
+                        <OTUDLCompoundDoc name="%bbf06c4a-cdc1-11dc-bd2b-dd05e7961664">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle">Engage</div>
+                                  Here are two pictures of a light bulb. When electric charges are pushed through the bulb, a special wire called a filament heats up.  It gets so hot that it gives off light.
+                                  <p />
+                                  <object refid="da903bbb-cdc1-11dc-bd2b-dd05e7961664" />
+                                  <p />
+                                  NOT GLOWING,    GLOWING – background to drawing tool.
+                                  <p />
+                                  Draw a circle around the filament in each picture and label it "filament", using the drawing tool.
+                                  <br />
+                                  <object refid="6cc19e32-cdc2-11dc-bd2b-dd05e7961664" />
+                                  <p />
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                          <documentRefs>
+                            <OTDrawingTool2 id="da903bbb-cdc1-11dc-bd2b-dd05e7961664" name="Draw tool" />
+                            <OTQuestion id="6cc19e32-cdc2-11dc-bd2b-dd05e7961664" name="Question" showConvertButton="true">
+                              <prompt>
+                                <OTUDLCompoundDoc>
+                                  <bodyText>Why do you think the filament has a glass bulb around it?</bodyText>
+                                </OTUDLCompoundDoc>
+                              </prompt>
+                              <input>
+                                <OTText />
+                              </input>
+                              <correctAnswer>
+                                <OTUDLCompoundDoc>
+                                  <bodyText>It protects the filament. It keeps out the air, so the filament won't burn up.</bodyText>
+                                </OTUDLCompoundDoc>
+                              </correctAnswer>
+                            </OTQuestion>
+                          </documentRefs>
+                        </OTUDLCompoundDoc>
+                        <OTUDLCompoundDoc name="%fbc0f0bc-cdc1-11dc-bd2b-dd05e7961664">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle-continued">Engage 2</div>
+                                  Now connect a real holiday light to the genecon hand generator.
+                                  <br />
+                                  IMAGE
+                                  <br />
+                                  <ul>
+                                    <li>Crank the genecon, but not too hard – you may burn out the bulb!</li>
+                                    <li>See if you can recognize the filament.</li>
+                                    <li>Notice that the filament is connected to a tiny wire at each end. Each wire is connected to the bigger wire that you attached to the genecon. This is how the electricity gets to the filament from the genecon.</li>
+                                    <li>Draw a picture of the holiday light, showing the filament and the two wires that connect to the circuit.</li>
+                                  </ul>
+                                  DRAWING TOOL
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                        </OTUDLCompoundDoc>
+                        <OTUDLCompoundDoc name="%8d184670-cdc2-11dc-bd2b-dd05e7961664">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle">Materials</div>
+                                  <ul>
+                                    <li>Genecon hand generator</li>
+                                    <li>voltage sensor</li>
+                                    <li>two holiday lights</li>
+                                  </ul>
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                        </OTUDLCompoundDoc>
+                        <OTUDLCompoundDoc name="%d6ce5d21-cdc2-11dc-bd2b-dd05e7961664">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle">Explore</div>
+                                  Connect a holiday light to the genecon. This time, also connect the voltage sensor [tech hint]. The voltage is a measure of how hard the electric charges are being pushed through the circuit.
+                                  <br />
+                                  IMAGE
+                                  <br />
+                                  Start data collection. Crank the genecon and watch the graph.
+                                  <br />
+                                  <object refid="4f72223a-cdca-11dc-8ae1-ef1e138f3b5b" />
+                                  <p />
+                                  <object refid="554c68fc-cdc3-11dc-bd2b-dd05e7961664" />
+                                  <p />
+                                  <object refid="1d340f57-cdc3-11dc-bd2b-dd05e7961664" />
+                                  <p />
+                                  <object refid="258b1224-cdc3-11dc-bd2b-dd05e7961664" />
+                                  <p />
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                          <documentRefs>
+                            <OTDataCollector id="4f72223a-cdca-11dc-8ae1-ef1e138f3b5b" name="Voltage" title="Voltage Sensor Graph" autoScaleEnabled="true">
+                              <source>
+                                <OTDataGraphable name="Sensor" connectPoints="true" yColumn="1" drawMarks="false" color="255" xColumn="0" lineWidth="2.0">
+                                  <dataProducer>
+                                    <OTSensorDataProxy name="dataproducer">
+                                      <request>
+                                        <OTExperimentRequest period="0.1">
+                                          <sensorRequests>
+                                            <OTSensorRequest stepSize="0.1" type="4" unit="V" port="0" requiredMax="10.0" displayPrecision="-2" requiredMin="-10.0" />
+                                          </sensorRequests>
+                                        </OTExperimentRequest>
+                                      </request>
+                                    </OTSensorDataProxy>
+                                  </dataProducer>
+                                  <dataStore>
+                                    <OTDataStore dt="0.1" numberChannels="1">
+                                      <channelDescriptions>
+                                        <OTDataChannelDescription name="dt" precision="2" numericData="true" />
+                                        <OTDataChannelDescription name="" unit="V" precision="-2" numericData="true" />
+                                      </channelDescriptions>
+                                    </OTDataStore>
+                                  </dataStore>
+                                </OTDataGraphable>
+                              </source>
+                              <xDataAxis>
+                                <OTDataAxis max="30.0" units="s" min="0.0" label="Time" />
+                              </xDataAxis>
+                              <yDataAxis>
+                                <OTDataAxis max="10.0" units="V" min="-10.0" label="Voltage" />
+                              </yDataAxis>
+                            </OTDataCollector>
+                            <OTQuestion id="554c68fc-cdc3-11dc-bd2b-dd05e7961664" name="Question" showConvertButton="true">
+                              <prompt>
+                                <OTUDLCompoundDoc>
+                                  <bodyText>What is the voltage if you don't crank at all?</bodyText>
+                                </OTUDLCompoundDoc>
+                              </prompt>
+                              <input>
+                                <OTText />
+                              </input>
+                              <correctAnswer>
+                                <OTUDLCompoundDoc>
+                                  <bodyText>The voltage is zero.</bodyText>
+                                </OTUDLCompoundDoc>
+                              </correctAnswer>
+                            </OTQuestion>
+                            <OTQuestion id="1d340f57-cdc3-11dc-bd2b-dd05e7961664" name="Question" showConvertButton="true">
+                              <prompt>
+                                <OTUDLCompoundDoc>
+                                  <bodyText>What happens to the voltage if you crank slower or faster?</bodyText>
+                                </OTUDLCompoundDoc>
+                              </prompt>
+                              <input>
+                                <OTText />
+                              </input>
+                              <correctAnswer>
+                                <OTUDLCompoundDoc>
+                                  <bodyText>If you crank faster, the voltage increases. If you crank slower, the voltage decreases.</bodyText>
+                                </OTUDLCompoundDoc>
+                              </correctAnswer>
+                            </OTQuestion>
+                            <OTQuestion id="258b1224-cdc3-11dc-bd2b-dd05e7961664" name="Question" showConvertButton="true">
+                              <prompt>
+                                <OTUDLCompoundDoc>
+                                  <bodyText>What happens to the voltage if you crank in the other direction?</bodyText>
+                                </OTUDLCompoundDoc>
+                              </prompt>
+                              <input>
+                                <OTText />
+                              </input>
+                              <correctAnswer>
+                                <OTUDLCompoundDoc>
+                                  <bodyText>The voltage reverses sign, from positive to negative or from negative to positive.</bodyText>
+                                </OTUDLCompoundDoc>
+                              </correctAnswer>
+                            </OTQuestion>
+                          </documentRefs>
+                        </OTUDLCompoundDoc>
+                        <OTUDLCompoundDoc name="%8e47d05a-cdc3-11dc-bd2b-dd05e7961664">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle-continued">Explore 2</div>
+                                  Make a prediction of what the voltage graph will look like if you do the following:
+                                  <ol>
+                                    <li>Wait 5 seconds.</li>
+                                    <li>Crank the genecon gently for 5 seconds, so that the light glows just a little.</li>
+                                    <li>Wait 5 seconds.</li>
+                                    <li>Crank the genecon at a medium speed.</li>
+                                    <li>Wait 5 seconds.</li>
+                                    <li>Crank the genecon fast.</li>
+                                    <li>Wait 5 seconds.</li>
+                                    <li>Stop.</li>
+                                  </ol>
+                                  <object refid="99b1b3a0-cdca-11dc-8ae1-ef1e138f3b5b" />
+                                  <p />
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                          <documentRefs>
+                            <object refid="99b1b3a0-cdca-11dc-8ae1-ef1e138f3b5b" />
+                          </documentRefs>
+                        </OTUDLCompoundDoc>
+                        <OTUDLCompoundDoc name="%c2e5c90b-cdc6-11dc-bd2b-dd05e7961664">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle-continued">Explore 3</div>
+                                  Now test your prediction.
+                                  <ol>
+                                    <li>Start the data collector.</li>
+                                    <li>Wait 5 seconds.</li>
+                                    <li>Crank the genecon gently for 5 seconds, so that the light glows just a little.</li>
+                                    <li>Wait 5 seconds.</li>
+                                    <li>Crank the genecon at a medium speed.</li>
+                                    <li>Wait 5 seconds.</li>
+                                    <li>Crank the genecon fast.</li>
+                                    <li>Wait 5 seconds.</li>
+                                    <li>Stop.</li>
+                                    <li>If you wish, you can take a snapshot of your data, hit clear, and try again.</li>
+                                  </ol>
+                                  <object refid="29c12135-cdcb-11dc-8ae1-ef1e138f3b5b" />
+                                  <p />
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                          <documentRefs>
+                            <object refid="29c12135-cdcb-11dc-8ae1-ef1e138f3b5b" />
+                          </documentRefs>
+                        </OTUDLCompoundDoc>
+                        <OTUDLCompoundDoc name="%893a7d8c-cdc7-11dc-bd2b-dd05e7961664">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle">Explain</div>
+                                  Here are your data.
+                                  <br />
+                                  <object refid="29c12135-cdcb-11dc-8ae1-ef1e138f3b5b" />
+                                  <p />
+                                  Compare your measurement with your prediction.
+                                  <br />
+                                  <object refid="f4e1406c-cdcb-11dc-8ae1-ef1e138f3b5b" />
+                                  <p />
+                                  <object refid="fc2c9e9b-cdcb-11dc-8ae1-ef1e138f3b5b" />
+                                  <p />
+                                  <object refid="013539bf-cdcc-11dc-8ae1-ef1e138f3b5b" />
+                                  <p />
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                          <documentRefs>
+                            <object refid="29c12135-cdcb-11dc-8ae1-ef1e138f3b5b" />
+                            <OTQuestion id="f4e1406c-cdcb-11dc-8ae1-ef1e138f3b5b" name="Question" showConvertButton="true">
+                              <prompt>
+                                <OTUDLCompoundDoc>
+                                  <bodyText>How good was your prediction?</bodyText>
+                                </OTUDLCompoundDoc>
+                              </prompt>
+                              <input>
+                                <OTText />
+                              </input>
+                            </OTQuestion>
+                            <OTQuestion id="fc2c9e9b-cdcb-11dc-8ae1-ef1e138f3b5b" name="Question" showConvertButton="true">
+                              <prompt>
+                                <OTUDLCompoundDoc>
+                                  <bodyText>What is the relationship between the speed of cranking and the voltage?</bodyText>
+                                </OTUDLCompoundDoc>
+                              </prompt>
+                              <input>
+                                <OTText />
+                              </input>
+                            </OTQuestion>
+                            <OTQuestion id="013539bf-cdcc-11dc-8ae1-ef1e138f3b5b" name="Question" showConvertButton="true">
+                              <prompt>
+                                <OTUDLCompoundDoc>
+                                  <bodyText>What is the relationship between the voltage and the brightness of the light?</bodyText>
+                                </OTUDLCompoundDoc>
+                              </prompt>
+                              <input>
+                                <OTText />
+                              </input>
+                            </OTQuestion>
+                          </documentRefs>
+                        </OTUDLCompoundDoc>
+                        <OTUDLCompoundDoc name="%d61b6e5d-cdc7-11dc-bd2b-dd05e7961664">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle">Elaborate</div>
+                                  Now use
+                                  <b>two</b>
+                                  holiday lights. See if you can light them both at the same time, using the genecon.
+                                  <p />
+                                  When you can light up both lights, connect the voltage sensor across
+                                  <b>one</b>
+                                  of the holiday lights. Repeat your experiment.
+                                  <ol>
+                                    <li>Start the data collector.</li>
+                                    <li>Wait 5 seconds.</li>
+                                    <li>Crank the genecon gently for 5 seconds, so that the light glows just a little.</li>
+                                    <li>Wait 5 seconds.</li>
+                                    <li>Crank the genecon at a medium speed.</li>
+                                    <li>Wait 5 seconds.</li>
+                                    <li>Crank the genecon fast.</li>
+                                    <li>Wait 5 seconds.</li>
+                                    <li>Stop.</li>
+                                  </ol>
+                                  <object refid="4d015ea5-cdcc-11dc-8ae1-ef1e138f3b5b" />
+                                  <p />
+                                  <object refid="bec5a753-cdc8-11dc-bd2b-dd05e7961664" />
+                                  <p />
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                          <documentRefs>
+                            <OTDataCollector id="4d015ea5-cdcc-11dc-8ae1-ef1e138f3b5b" name="Voltage" title="Voltage Graph" multipleGraphableEnabled="true" autoScaleEnabled="true">
+                              <source>
+                                <OTDataGraphable name="two" connectPoints="true" yColumn="1" drawMarks="false" color="65280" xColumn="0" lineWidth="2.0">
+                                  <dataProducer>
+                                    <OTSensorDataProxy name="dataproducer">
+                                      <request>
+                                        <OTExperimentRequest period="0.1">
+                                          <sensorRequests>
+                                            <OTSensorRequest stepSize="0.1" type="4" unit="V" port="0" requiredMax="10.0" displayPrecision="-2" requiredMin="-10.0" />
+                                          </sensorRequests>
+                                        </OTExperimentRequest>
+                                      </request>
+                                    </OTSensorDataProxy>
+                                  </dataProducer>
+                                  <dataStore>
+                                    <OTDataStore dt="0.1" numberChannels="1">
+                                      <channelDescriptions>
+                                        <OTDataChannelDescription name="dt" precision="2" numericData="true" />
+                                        <OTDataChannelDescription name="" unit="V" precision="-2" numericData="true" />
+                                      </channelDescriptions>
+                                    </OTDataStore>
+                                  </dataStore>
+                                </OTDataGraphable>
+                              </source>
+                              <xDataAxis>
+                                <OTDataAxis max="60.0" units="s" min="0.0" label="Time" />
+                              </xDataAxis>
+                              <yDataAxis>
+                                <OTDataAxis max="10.0" units="V" min="-10.0" label="Voltage" />
+                              </yDataAxis>
+                              <graphables>
+                                <OTDataGraphable name="Sensor" connectPoints="true" yColumn="1" drawMarks="false" color="255" xColumn="0" lineWidth="2.0" locked="true">
+                                  <dataProducer>
+                                    <object refid="3769d4c6-cdcb-11dc-8ae1-ef1e138f3b5b" />
+                                  </dataProducer>
+                                  <dataStore>
+                                    <object refid="3769d4c7-cdcb-11dc-8ae1-ef1e138f3b5b" />
+                                  </dataStore>
+                                </OTDataGraphable>
+                                <OTDataGraphable name="Data Graph" connectPoints="true" controllable="true" yColumn="1" drawMarks="false" color="16711680" xColumn="0" lineWidth="2.0" locked="true">
+                                  <dataStore>
+                                    <object refid="99b1b3a4-cdca-11dc-8ae1-ef1e138f3b5b" />
+                                  </dataStore>
+                                </OTDataGraphable>
+                              </graphables>
+                            </OTDataCollector>
+                            <OTQuestion id="bec5a753-cdc8-11dc-bd2b-dd05e7961664" name="Question" showConvertButton="true">
+                              <prompt>
+                                <OTUDLCompoundDoc>
+                                  <bodyText>How did the voltage change when you had two holiday lights?</bodyText>
+                                </OTUDLCompoundDoc>
+                              </prompt>
+                              <input>
+                                <OTText />
+                              </input>
+                            </OTQuestion>
+                          </documentRefs>
+                        </OTUDLCompoundDoc>
+                        <OTUDLCompoundDoc name="%e8a2d1a0-cdc8-11dc-bd2b-dd05e7961664">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle">Evaluate</div>
+                                  Draw a picture of the circuit that you made with the genecon, the two holiday lights and the voltage sensor. You can use the stamp tools on the right.
+                                  <br />
+                                  <object refid="ae7a10f7-cdcc-11dc-8ae1-ef1e138f3b5b" />
+                                  <p />
+                                  NEED TO MAKE VOLTAGE SENSOR AND GENECON STAMP TOOL
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                          <documentRefs>
+                            <OTDrawingTool2 id="ae7a10f7-cdcc-11dc-8ae1-ef1e138f3b5b" name="Draw tool" />
+                          </documentRefs>
+                        </OTUDLCompoundDoc>
+                        <OTUDLCompoundDoc name="%2292aa82-cdc9-11dc-bd2b-dd05e7961664">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle-continued">Evaluate 2</div>
+                                  Greater voltage makes the bulb
+                                  <br />
+                                  <object refid="c49c729f-cdc9-11dc-8ae1-ef1e138f3b5b" />
+                                  <p />
+                                  To produce greater voltage, it takes
+                                  <br />
+                                  <object refid="ca92f020-cdc9-11dc-8ae1-ef1e138f3b5b" />
+                                  <p />
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                          <documentRefs>
+                            <OTChoice id="c49c729f-cdc9-11dc-8ae1-ef1e138f3b5b" name="Multiple-choice (single answer)" alignContent="0">
+                              <choices>
+                                <OTCompoundDoc name="brighter.">
+                                  <bodyText>brighter.</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="dimmer.">
+                                  <bodyText>dimmer.</bodyText>
+                                </OTCompoundDoc>
+                              </choices>
+                            </OTChoice>
+                            <OTChoice id="ca92f020-cdc9-11dc-8ae1-ef1e138f3b5b" name="Multiple-choice (single answer)" alignContent="0">
+                              <choices>
+                                <OTCompoundDoc name="more energy.">
+                                  <bodyText>more energy.</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="less energy.">
+                                  <bodyText>less energy.</bodyText>
+                                </OTCompoundDoc>
+                              </choices>
+                            </OTChoice>
+                          </documentRefs>
+                        </OTUDLCompoundDoc>
+                      </cards>
+                      <currentCard>
+                        <object refid="4e5e0955-cdc1-11dc-bd2b-dd05e7961664" />
+                      </currentCard>
+                    </OTCardContainer>
+                  </content>
+                  <header>
+                    <OTUDLCompoundDoc id="4e5e3067-cdc1-11dc-bd2b-dd05e7961664" name="%4e5e3067-cdc1-11dc-bd2b-dd05e7961664">
+                      <bodyText>
+                        <div class="title">Volts and lights</div>
+                      </bodyText>
+                    </OTUDLCompoundDoc>
+                  </header>
+                  <footer>
+                    <OTUDLCompoundDoc id="4e5e5778-cdc1-11dc-bd2b-dd05e7961664" name="%4e5e5778-cdc1-11dc-bd2b-dd05e7961664">
+                      <bodyText>
+                        <div align="center">
+                          <table>
+                            <tr>
+                              <td>
+                                <object refid="4e613da9-cdc1-11dc-bd2b-dd05e7961664" viewid="${menu-horizontal-circle}" />
+                              </td>
+                            </tr>
+                          </table>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                        <OTUDLMenu id="4e613da9-cdc1-11dc-bd2b-dd05e7961664">
+                          <cardContainer>
+                            <object refid="4e5e0956-cdc1-11dc-bd2b-dd05e7961664" />
+                          </cardContainer>
+                          <menuRule>
+                            <object refid="${page-rule}" />
+                          </menuRule>
+                        </OTUDLMenu>
+                        <object refid="${menu-horizontal-circle}" />
+                      </documentRefs>
+                    </OTUDLCompoundDoc>
+                  </footer>
+                  <north>
+                    <object refid="4e5e3067-cdc1-11dc-bd2b-dd05e7961664" />
+                  </north>
+                  <center>
+                    <object refid="4e5e0956-cdc1-11dc-bd2b-dd05e7961664" />
+                  </center>
+                  <south>
+                    <object refid="4e5e5778-cdc1-11dc-bd2b-dd05e7961664" />
                   </south>
                 </OTUDLSection>
                 <OTUDLSection local_id="section_8" name="Plus and minus" isComputerBased="false" isIntroduction="false" isMath="true" isPosttest="false" isPretest="false" isReading="false" isWrapup="false">
@@ -4880,12 +4870,8 @@ Try another problem.
                 </OTUDLSection>
               </cards>
               <currentCard>
-                <object refid="${section_4}" />
-              </currentCard>
-              <viewedCards>
                 <object refid="${section_1}" />
-                <object refid="${section_4}" />
-              </viewedCards>
+              </currentCard>
             </OTCardContainer>
           </content>
           <script>
@@ -4933,8 +4919,8 @@ Try another problem.
       <library>
         <OTDefinitionManager local_id="definition-manager">
           <definitions>
-            <OTDefinitionList src="http://continuum.concord.org/otrunk/examples/UDL/glossary/common-glossary.txt" />
-            <OTDefinitionList src="http://continuum.concord.org/otrunk/examples/UDL/glossary/electricity-glossary.txt" />
+            <OTDefinitionList src="glossary/common-glossary.txt" />
+            <OTDefinitionList src="glossary/electricity-glossary.txt" />
           </definitions>
           <frame>
             <OTFrame local_id="definition_frame" width="300" height="190" borderlessPopup="true" />
@@ -4974,7 +4960,7 @@ Try another problem.
                 <object refid="${section_3}" />
                 <object refid="${section_4}" />
                 <object refid="${section_5}" />
-                <object refid="${section_6}" />
+                <null />
                 <object refid="${section_7}" />
                 <object refid="${section_8}" />
                 <object refid="${section_9}" />
@@ -4987,9 +4973,9 @@ Try another problem.
             </OTUDLMenuRule>
           </rules>
         </OTUDLMenuRule>
-        <OTJavascript local_id="change_page.js" src="http://continuum.concord.org/otrunk/examples/UDL/scripts/change_page.js" />
-        <OTJavascript local_id="show_message.js" src="http://continuum.concord.org/otrunk/examples/UDL/scripts/show_message.js" />
-        <OTJavascript local_id="authoring_script.js" src="http://continuum.concord.org/otrunk/examples/UDL/scripts/authoring_script.js" />
+        <OTJavascript local_id="change_page.js" src="scripts/change_page.js" />
+        <OTJavascript local_id="show_message.js" src="scripts/show_message.js" />
+        <OTJavascript local_id="authoring_script.js" src="scripts/authoring_script.js" />
       </library>
     </OTSystem>
   </objects>
