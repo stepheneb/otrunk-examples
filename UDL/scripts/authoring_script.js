@@ -63,10 +63,10 @@ var pageHandler =
 						    "Snapshot buttons must be placed directly beneath another object.\nPlease remove the button.",
 						    "Warning",
 						    JOptionPane.ERROR_MESSAGE);
-						    
-					//	    var page = evt.getSource();
-					//	    page.getDocumentRefsAsObjectList().remove(snapshotButton);
 					}
+				} else if (referencedObject.toString().indexOf("OTSnapshotChooser") > -1){
+					var snapshotChooser = referencedObject;
+					snapshotChooser.setAlbum(album);
 				} else {
 					objectAboveSnapshotButton = referencedObject;
 				}
