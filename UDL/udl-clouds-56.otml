@@ -21,6 +21,7 @@
     <import class="org.concord.graph.util.state.OTPointTextLabel" />
     <import class="org.concord.otrunk.OTInclude" />
     <import class="org.concord.otrunk.OTSystem" />
+    <import class="org.concord.otrunk.browser.mozswing.OTMozSwing" />
     <import class="org.concord.otrunk.overlay.OTOverlay" />
     <import class="org.concord.otrunk.script.ui.OTScriptObject" />
     <import class="org.concord.otrunk.script.ui.OTScriptVariable" />
@@ -29,6 +30,7 @@
     <import class="org.concord.otrunk.script.js.OTJavascript" />
     <import class="org.concord.otrunk.script.OTScriptEngineBundle" />
     <import class="org.concord.otrunk.script.OTScriptEngineEntry" />
+    <import class="org.concord.otrunk.udl.OTAuthorNote" />
     <import class="org.concord.otrunk.udl.coach.OTUDLCoach" />
     <import class="org.concord.otrunk.udl.coach.OTUDLCoachGroup" />
     <import class="org.concord.otrunk.udl.coach.OTUDLCoachStatement" />
@@ -48,12 +50,14 @@
     <import class="org.concord.otrunk.ui.OTButton" />
     <import class="org.concord.otrunk.ui.OTCardContainer" />
     <import class="org.concord.otrunk.ui.OTChoice" />
+    <import class="org.concord.otrunk.ui.OTChoiceMultiple" />
     <import class="org.concord.otrunk.ui.OTImage" />
     <import class="org.concord.otrunk.ui.OTModeSwitcher" />
     <import class="org.concord.otrunk.ui.OTText" />
     <import class="org.concord.otrunk.ui.snapshot.OTSnapshot" />
     <import class="org.concord.otrunk.ui.snapshot.OTSnapshotButton" />
     <import class="org.concord.otrunk.ui.snapshot.OTSnapshotAlbum" />
+    <import class="org.concord.otrunk.ui.snapshot.OTSnapshotChooser" />
     <import class="org.concord.otrunk.ui.swing.OTChoiceViewConfig" />
     <import class="org.concord.otrunk.view.OTObjectEditViewConfig" />
     <import class="org.concord.otrunk.view.OTViewChild" />
@@ -75,14 +79,12 @@
   <objects>
     <OTSystem local_id="system">
       <includes>
-        <OTInclude href="http://continuum.concord.org/otrunk/examples/UDL/global-imports/predefined-sensor-graphs.otml" />
+        <OTInclude href="global-imports/predefined-sensor-graphs.otml" />
       </includes>
       <bundles>
         <OTViewBundle showLeftPanel="false" currentMode="student">
           <modes>
-            <OTViewMode name="student">
-              <map />
-            </OTViewMode>
+            <OTViewMode name="student" />
             <OTViewMode name="printing">
               <map>
                 <entry key="${questions-card-view}">
@@ -91,8 +93,14 @@
                 <entry key="${choice-radio-view}">
                   <OTChoiceViewConfig objectClass="org.concord.otrunk.ui.OTChoice" viewClass="org.concord.otrunk.ui.swing.OTChoiceRadioButtonPrintView" useViewsAsChoices="true" />
                 </entry>
+                <entry key="${choice-checkbox-view}">
+                  <OTChoiceViewConfig objectClass="org.concord.otrunk.ui.OTChoiceMultiple" viewClass="org.concord.otrunk.ui.swing.OTChoiceRadioButtonPrintView" useViewsAsChoices="true" />
+                </entry>
                 <entry key="${text-edit}">
                   <OTViewEntry objectClass="org.concord.otrunk.ui.OTText" viewClass="org.concord.otrunk.ui.swing.OTTextPrintView" />
+                </entry>
+                <entry key="${question-view}">
+                  <OTViewEntry objectClass="org.concord.otrunk.udl.question.OTQuestion" viewClass="org.concord.otrunk.udl.question.OTQuestionPrintView" />
                 </entry>
               </map>
             </OTViewMode>
@@ -105,13 +113,25 @@
             </OTViewMode>
             <OTViewMode name="authoring">
               <map>
+                <entry key="${moz-swing-view}">
+                  <OTViewEntry objectClass="org.concord.otrunk.browser.mozswing.OTMozSwing" viewClass="org.concord.otrunk.browser.mozswing.OTMozSwingEditView" />
+                </entry>
+                <entry key="${snapshot_button_view}">
+                  <OTViewEntry objectClass="org.concord.otrunk.ui.snapshot.OTSnapshotButton" viewClass="org.concord.otrunk.ui.snapshot.OTSnapshotButtonEditView" />
+                </entry>
                 <entry key="${container_view}">
                   <OTViewEntry objectClass="org.concord.otrunk.udl3.OTUDLContainer" viewClass="org.concord.otrunk.udl3.OTUDLContainerEditView" />
                 </entry>
                 <entry key="${choice-radio-view}">
                   <OTChoiceViewConfig objectClass="org.concord.otrunk.ui.OTChoice" viewClass="org.concord.otrunk.ui.swing.OTChoiceComboBoxEditView" useViewsAsChoices="true" />
                 </entry>
+                <entry key="${choice-checkbox-view}">
+                  <OTChoiceViewConfig objectClass="org.concord.otrunk.ui.OTChoiceMultiple" viewClass="org.concord.otrunk.ui.swing.OTChoiceComboBoxEditView" useViewsAsChoices="true" />
+                </entry>
                 <entry key="${menu-horizontal-circle}">
+                  <OTViewEntry objectClass="org.concord.otrunk.udl3.OTUDLMenu" viewClass="org.concord.otrunk.udl.ui.OTUDLMenuPageEditView" />
+                </entry>
+                <entry key="${menu-horizontal-book}">
                   <OTViewEntry objectClass="org.concord.otrunk.udl3.OTUDLMenu" viewClass="org.concord.otrunk.udl.ui.OTUDLMenuPageEditView" />
                 </entry>
                 <entry key="${question-view}">
@@ -131,7 +151,8 @@
                     <objectsToInsert>
                       <OTText name="Text field" />
                       <OTDrawingTool2 name="Draw tool" />
-                      <OTChoice name="Choices" />
+                      <OTChoice name="Multiple-choice (single answer)" />
+                      <OTChoiceMultiple name="Multiple-choice (check boxes)" />
                       <OTQuestion name="Question" showConvertButton="true">
                         <prompt>
                           <OTUDLCompoundDoc>
@@ -142,60 +163,7 @@
                           <OTText />
                         </input>
                       </OTQuestion>
-                      <OTUDLQuestions name="Leveled questions">
-                        <questions>
-                          <OTQuestion name="L5">
-                            <prompt>
-                              <OTUDLCompoundDoc>
-                                <bodyText>Insert question here</bodyText>
-                              </OTUDLCompoundDoc>
-                            </prompt>
-                            <input>
-                              <OTText />
-                            </input>
-                          </OTQuestion>
-                          <OTQuestion name="L4">
-                            <prompt>
-                              <OTUDLCompoundDoc>
-                                <bodyText>Insert question here</bodyText>
-                              </OTUDLCompoundDoc>
-                            </prompt>
-                            <input>
-                              <OTText />
-                            </input>
-                          </OTQuestion>
-                          <OTQuestion name="L3">
-                            <prompt>
-                              <OTUDLCompoundDoc>
-                                <bodyText>Insert question here</bodyText>
-                              </OTUDLCompoundDoc>
-                            </prompt>
-                            <input>
-                              <OTText />
-                            </input>
-                          </OTQuestion>
-                          <OTQuestion name="L2">
-                            <prompt>
-                              <OTUDLCompoundDoc>
-                                <bodyText>Insert question here</bodyText>
-                              </OTUDLCompoundDoc>
-                            </prompt>
-                            <input>
-                              <OTText />
-                            </input>
-                          </OTQuestion>
-                          <OTQuestion name="L1">
-                            <prompt>
-                              <OTUDLCompoundDoc>
-                                <bodyText>Insert question here</bodyText>
-                              </OTUDLCompoundDoc>
-                            </prompt>
-                            <input>
-                              <OTText />
-                            </input>
-                          </OTQuestion>
-                        </questions>
-                      </OTUDLQuestions>
+                      <OTUDLQuestions name="Leveled questions" />
                       <OTDataTable name="Data table" showLastRowForAddingNew="true">
                         <dataStore>
                           <OTDataStore numberChannels="2" />
@@ -203,7 +171,7 @@
                       </OTDataTable>
                       <OTDataCollector name="Data graph" title="Data graph">
                         <source>
-                          <OTDataGraphable name="Data Graph" connectPoints="true" controllable="true" yColumn="1" drawMarks="false" color="16711680" xColumn="0">
+                          <OTDataGraphable name="Data Graph" connectPoints="true" controllable="true" yColumn="1" drawMarks="false" color="16711680" xColumn="0" lineWidth="2.0">
                             <dataStore>
                               <OTDataStore />
                             </dataStore>
@@ -213,9 +181,13 @@
                           <OTDataAxis max="60.0" units="s" min="0.0" label="Time" />
                         </xDataAxis>
                         <yDataAxis>
-                          <OTDataAxis max="40.0" units="" min="0.0" label="" />
+                          <OTDataAxis max="40.0" units="" min="-0.0" label="" />
                         </yDataAxis>
                       </OTDataCollector>
+                      <OTSnapshotButton name="Snapshot button" />
+                      <OTSnapshotChooser name="Snapshot chooser" />
+                      <OTMozSwing name="Web browser" />
+                      <OTAuthorNote name="Author's note" />
                     </objectsToInsert>
                   </OTObjectEditViewConfig>
                 </entry>
@@ -235,6 +207,9 @@
                 <entry key="${drawing-view}">
                   <OTViewEntry viewClass="org.concord.datagraph.state.OTDataDrawingToolEditView" objectClass="org.concord.graph.util.state.OTDrawingTool" />
                 </entry>
+                <entry key="${author-note-view}">
+                  <OTViewEntry objectClass="org.concord.otrunk.udl.OTAuthorNote" viewClass="org.concord.otrunk.udl.OTAuthorNoteEditView" />
+                </entry>
               </map>
             </OTViewMode>
           </modes>
@@ -246,10 +221,14 @@
 						  The default scaffolding level just uses the order of the items inside OTUDLQuestions/questions. It is not aware of the names
 						  such as "L1", "L2", etc. -->
             <OTUDLQuestionViewConfig local_id="questions-card-view" isLevelFrozen="false" defaultScaffoldLevel="0" objectClass="org.concord.otrunk.udl.question.OTUDLQuestions" viewClass="org.concord.otrunk.udl.question.OTUDLQuestionsCardView" />
+            <OTViewEntry local_id="author-note-view" objectClass="org.concord.otrunk.udl.OTAuthorNote" viewClass="org.concord.otrunk.udl.OTAuthorNoteView" />
+            <OTViewEntry local_id="moz-swing-view" objectClass="org.concord.otrunk.browser.mozswing.OTMozSwing" viewClass="org.concord.otrunk.browser.mozswing.OTMozSwingView" />
             <OTViewEntry objectClass="org.concord.otrunk.ui.OTModeSwitcher" viewClass="org.concord.otrunk.ui.swing.OTModeSwitcherView" />
+            <OTUDLQuestionViewConfig local_id="questions-on-off-view" isLevelFrozen="false" defaultScaffoldLevel="0" objectClass="org.concord.otrunk.udl.question.OTUDLQuestions" viewClass="org.concord.otrunk.udl.question.OTUDLQuestionsOnOffView" />
+            <OTUDLQuestionViewConfig local_id="questions-tab-view" isLevelFrozen="false" defaultScaffoldLevel="0" objectClass="org.concord.otrunk.udl.question.OTUDLQuestions" viewClass="org.concord.otrunk.udl.question.OTUDLQuestionsTabView" />
             <OTViewEntry objectClass="org.concord.otrunk.ui.OTImage" viewClass="org.concord.otrunk.ui.swing.OTImageView" />
-            <OTUDLQuestionViewConfig local_id="questions-on-off-view" isLevelFrozen="false" defaultScaffoldLevel="1" objectClass="org.concord.otrunk.udl.question.OTUDLQuestions" viewClass="org.concord.otrunk.udl.question.OTUDLQuestionsOnOffView" />
             <OTViewEntry local_id="snapshot_button_view" objectClass="org.concord.otrunk.ui.snapshot.OTSnapshotButton" viewClass="org.concord.otrunk.ui.snapshot.OTSnapshotButtonView" />
+            <OTViewEntry local_id="snapshot-chooser-view" objectClass="org.concord.otrunk.ui.snapshot.OTSnapshotChooser" viewClass="org.concord.otrunk.ui.snapshot.OTSnapshotChooserView" />
             <OTViewEntry objectClass="org.concord.otrunk.ui.snapshot.OTSnapshotAlbum" viewClass="org.concord.otrunk.ui.snapshot.OTSnapshotAlbumView" />
             <OTViewEntry objectClass="org.concord.otrunk.udl.friction.OTFrictionModel" viewClass="org.concord.otrunk.udl.friction.OTFrictionModelView" />
             <OTViewEntry objectClass="org.concord.otrunk.ui.OTButton" viewClass="org.concord.otrunk.ui.swing.OTButtonView" />
@@ -262,6 +241,7 @@
             <OTViewEntry local_id="menu-vertical" objectClass="org.concord.otrunk.udl3.OTUDLMenu" viewClass="org.concord.otrunk.udl.ui.OTUDLMenuSectionView" />
             <OTViewEntry local_id="menu-horizontal-circle" objectClass="org.concord.otrunk.udl3.OTUDLMenu" viewClass="org.concord.otrunk.udl.ui.OTUDLMenuPageView" />
             <OTViewEntry local_id="menu-horizontal-book" objectClass="org.concord.otrunk.udl3.OTUDLMenu" viewClass="org.concord.otrunk.udl.ui.OTUDLMenuPageBookView" />
+            <OTChoiceViewConfig local_id="choice-checkbox-view" objectClass="org.concord.otrunk.ui.OTChoiceMultiple" viewClass="org.concord.otrunk.ui.swing.OTChoiceCheckBoxView" useViewsAsChoices="true" />
             <OTChoiceViewConfig local_id="choice-radio-view" objectClass="org.concord.otrunk.ui.OTChoice" viewClass="org.concord.otrunk.ui.swing.OTChoiceRadioButtonView" useViewsAsChoices="true" />
             <OTViewEntry local_id="choice-combo-view" objectClass="org.concord.otrunk.ui.OTChoice" viewClass="org.concord.otrunk.ui.swing.OTChoiceComboBoxView" />
             <OTViewEntry objectClass="org.concord.otrunk.script.ui.OTScriptObject" viewClass="org.concord.otrunk.script.ui.OTScriptObjectView" />
@@ -282,9 +262,9 @@
                 <object refid="${definition-manager}" />
               </definitionManager>
               <cssBlocks>
-                <OTCssText local_id="css-font" src="http://continuum.concord.org/otrunk/examples/UDL/css/otrunk-normal-font.css" />
-                <OTCssText local_id="css-color" src="http://continuum.concord.org/otrunk/examples/UDL/css/otrunk-56-color.css" />
-                <OTCssText local_id="css-layout" src="http://continuum.concord.org/otrunk/examples/UDL/css/otrunk-normal-layout.css" />
+                <OTCssText local_id="css-font" src="css/otrunk-normal-font.css" />
+                <OTCssText local_id="css-color" src="css/otrunk-56-color.css" />
+                <OTCssText local_id="css-layout" src="css/otrunk-normal-layout.css" />
               </cssBlocks>
             </OTUDLDocumentViewConfig>
             <OTPrototypeViewEntry local_id="textsize-choice-view" objectClass="org.concord.otrunk.OTSystem" viewClass="org.concord.otrunk.view.prototype.OTPrototypeView" copyPrototype="false">
@@ -297,7 +277,7 @@
                     <OTOverlay local_id="small-text-overlay" name="Small text">
                       <deltaObjectMap>
                         <entry key="${css-font}">
-                          <OTCssText src="http://continuum.concord.org/otrunk/examples/UDL/css/otrunk-small-font.css" />
+                          <OTCssText src="css/otrunk-small-font.css" />
                         </entry>
                       </deltaObjectMap>
                     </OTOverlay>
@@ -305,7 +285,7 @@
                     <OTOverlay local_id="large-text-overlay" name="Large text">
                       <deltaObjectMap>
                         <entry key="${css-font}">
-                          <OTCssText src="http://continuum.concord.org/otrunk/examples/UDL/css/otrunk-large-font.css" />
+                          <OTCssText src="css/otrunk-large-font.css" />
                         </entry>
                       </deltaObjectMap>
                     </OTOverlay>
@@ -465,7 +445,7 @@
                             </div>
                           </bodyText>
                           <documentRefs>
-                            <OTChoice id="ad4a94d9-7db9-11dc-934e-a5f46f21c469" name="Choices">
+                            <OTChoice id="ad4a94d9-7db9-11dc-934e-a5f46f21c469" name="Choices" alignContent="0">
                               <choices>
                                 <OTCompoundDoc name="A puddle disappearing on a hot summer afternoon.">
                                   <bodyText>A puddle disappearing on a hot summer afternoon.</bodyText>
@@ -482,7 +462,7 @@
                               </choices>
                             </OTChoice>
                             <OTText id="9f6bb568-7db9-11dc-934e-a5f46f21c469" name="Text field" />
-                            <OTChoice id="b4386a6a-7db9-11dc-934e-a5f46f21c469" name="Choices">
+                            <OTChoice id="b4386a6a-7db9-11dc-934e-a5f46f21c469" name="Choices" alignContent="0">
                               <choices>
                                 <OTCompoundDoc name="The water in the glass seeped through the glass.">
                                   <bodyText>The water in the glass seeped through the glass.</bodyText>
@@ -670,9 +650,6 @@
                       <currentCard>
                         <object refid="4b142e3a-767f-11dc-a568-7984efa6d7c4" />
                       </currentCard>
-                      <viewedCards>
-                        <object refid="4b142e3a-767f-11dc-a568-7984efa6d7c4" />
-                      </viewedCards>
                     </OTCardContainer>
                   </content>
                   <header>
@@ -738,9 +715,6 @@
                       <currentCard>
                         <object refid="633bfee6-768b-11dc-a568-7984efa6d7c4" />
                       </currentCard>
-                      <viewedCards>
-                        <object refid="633bfee6-768b-11dc-a568-7984efa6d7c4" />
-                      </viewedCards>
                     </OTCardContainer>
                   </content>
                   <header>
@@ -804,7 +778,7 @@
                             </div>
                           </bodyText>
                         </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc id="2fc09760-7689-11dc-a568-7984efa6d7c4" name="%2fc09760-7689-11dc-a568-7984efa6d7c4">
+                        <OTUDLCompoundDoc name="%2fc09760-7689-11dc-a568-7984efa6d7c4">
                           <bodyText>
                             <div class="buffer">
                               <div class="border">
@@ -822,7 +796,7 @@
                             </div>
                           </bodyText>
                         </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc id="2fc09761-7689-11dc-a568-7984efa6d7c4/cards[1]" name="%743b9116-7689-11dc-a568-7984efa6d7c4">
+                        <OTUDLCompoundDoc name="%743b9116-7689-11dc-a568-7984efa6d7c4">
                           <bodyText>
                             <div class="buffer">
                               <div class="border">
@@ -849,7 +823,7 @@
                             </OTDrawingTool2>
                           </documentRefs>
                         </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc id="2fc09761-7689-11dc-a568-7984efa6d7c4/cards[2]" name="%af556b48-7689-11dc-a568-7984efa6d7c4">
+                        <OTUDLCompoundDoc name="%af556b48-7689-11dc-a568-7984efa6d7c4">
                           <bodyText>
                             <div class="buffer">
                               <div class="border">
@@ -877,7 +851,7 @@
                             <OTText id="e3bbb9cc-7689-11dc-a568-7984efa6d7c4" name="Text field" />
                           </documentRefs>
                         </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc id="2fc09761-7689-11dc-a568-7984efa6d7c4/cards[3]" name="%ee43a60d-7689-11dc-a568-7984efa6d7c4">
+                        <OTUDLCompoundDoc name="%ee43a60d-7689-11dc-a568-7984efa6d7c4">
                           <bodyText>
                             <div class="buffer">
                               <div class="border">
@@ -904,7 +878,7 @@
                             </div>
                           </bodyText>
                         </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc id="2fc09761-7689-11dc-a568-7984efa6d7c4/cards[4]" name="%7e265d8f-768a-11dc-a568-7984efa6d7c4">
+                        <OTUDLCompoundDoc name="%7e265d8f-768a-11dc-a568-7984efa6d7c4">
                           <bodyText>
                             <div class="buffer">
                               <div class="border">
@@ -1074,14 +1048,6 @@
                       <currentCard>
                         <object refid="991e1b48-bed9-11dc-8394-53bb1076bc90" />
                       </currentCard>
-                      <viewedCards>
-                        <object refid="2fc09760-7689-11dc-a568-7984efa6d7c4" />
-                        <object refid="2fc09761-7689-11dc-a568-7984efa6d7c4/cards[1]" />
-                        <object refid="2fc09761-7689-11dc-a568-7984efa6d7c4/cards[2]" />
-                        <object refid="2fc09761-7689-11dc-a568-7984efa6d7c4/cards[3]" />
-                        <object refid="2fc09761-7689-11dc-a568-7984efa6d7c4/cards[4]" />
-                        <object refid="991e1b48-bed9-11dc-8394-53bb1076bc90" />
-                      </viewedCards>
                     </OTCardContainer>
                   </content>
                   <header>
@@ -1145,7 +1111,7 @@
                             </div>
                           </bodyText>
                         </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc id="d9b58f35-bed8-11dc-8394-53bb1076bc90" name="%d9b58f35-bed8-11dc-8394-53bb1076bc90">
+                        <OTUDLCompoundDoc name="%d9b58f35-bed8-11dc-8394-53bb1076bc90">
                           <bodyText>
                             <div class="buffer">
                               <div class="border">
@@ -1166,7 +1132,7 @@
                             <OTText id="ebc0b2a2-bed8-11dc-8394-53bb1076bc90" name="Text field" />
                           </documentRefs>
                         </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc id="f185e71f-bed8-11dc-8394-53bb1076bc90" name="%f185e71f-bed8-11dc-8394-53bb1076bc90">
+                        <OTUDLCompoundDoc name="%f185e71f-bed8-11dc-8394-53bb1076bc90">
                           <bodyText>
                             <div class="buffer">
                               <div class="border">
@@ -1205,7 +1171,7 @@
                             <object refid="fddfd476-bed8-11dc-8394-53bb1076bc90" />
                           </documentRefs>
                         </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc id="15bb016c-bed9-11dc-8394-53bb1076bc90" name="%15bb016c-bed9-11dc-8394-53bb1076bc90">
+                        <OTUDLCompoundDoc name="%15bb016c-bed9-11dc-8394-53bb1076bc90">
                           <bodyText>
                             <div class="buffer">
                               <div class="border">
@@ -1229,12 +1195,6 @@
                       <currentCard>
                         <object refid="56250341-768b-11dc-a568-7984efa6d7c4" />
                       </currentCard>
-                      <viewedCards>
-                        <object refid="56250341-768b-11dc-a568-7984efa6d7c4" />
-                        <object refid="d9b58f35-bed8-11dc-8394-53bb1076bc90" />
-                        <object refid="f185e71f-bed8-11dc-8394-53bb1076bc90" />
-                        <object refid="15bb016c-bed9-11dc-8394-53bb1076bc90" />
-                      </viewedCards>
                     </OTCardContainer>
                   </content>
                   <header>
@@ -1298,7 +1258,7 @@
                             </div>
                           </bodyText>
                         </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc id="58e4cd93-beda-11dc-8394-53bb1076bc90" name="%58e4cd93-beda-11dc-8394-53bb1076bc90">
+                        <OTUDLCompoundDoc name="%58e4cd93-beda-11dc-8394-53bb1076bc90">
                           <bodyText>
                             <div class="buffer">
                               <div class="border">
@@ -1386,7 +1346,7 @@
                             </OTUDLQuestions>
                           </documentRefs>
                         </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc id="afa19622-bedb-11dc-8394-53bb1076bc90" name="%afa19622-bedb-11dc-8394-53bb1076bc90">
+                        <OTUDLCompoundDoc name="%afa19622-bedb-11dc-8394-53bb1076bc90">
                           <bodyText>
                             <div class="buffer">
                               <div class="border">
@@ -1400,7 +1360,7 @@
                             </div>
                           </bodyText>
                         </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc id="eca650cf-bedb-11dc-8394-53bb1076bc90" name="%eca650cf-bedb-11dc-8394-53bb1076bc90">
+                        <OTUDLCompoundDoc name="%eca650cf-bedb-11dc-8394-53bb1076bc90">
                           <bodyText>
                             <div class="buffer">
                               <div class="border">
@@ -1432,7 +1392,7 @@
                             </div>
                           </bodyText>
                         </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc id="31ac7322-bedc-11dc-8394-53bb1076bc90" name="%31ac7322-bedc-11dc-8394-53bb1076bc90">
+                        <OTUDLCompoundDoc name="%31ac7322-bedc-11dc-8394-53bb1076bc90">
                           <bodyText>
                             <div class="buffer">
                               <div class="border">
@@ -1469,7 +1429,7 @@
                             </OTQuestion>
                           </documentRefs>
                         </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc id="b8acffb1-bedc-11dc-8394-53bb1076bc90" name="%b8acffb1-bedc-11dc-8394-53bb1076bc90">
+                        <OTUDLCompoundDoc name="%b8acffb1-bedc-11dc-8394-53bb1076bc90">
                           <bodyText>
                             <div class="buffer">
                               <div class="border">
@@ -1485,7 +1445,7 @@
                             </div>
                           </bodyText>
                         </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc id="e645aa74-bedc-11dc-8394-53bb1076bc90" name="%e645aa74-bedc-11dc-8394-53bb1076bc90">
+                        <OTUDLCompoundDoc name="%e645aa74-bedc-11dc-8394-53bb1076bc90">
                           <bodyText>
                             <div class="buffer">
                               <div class="border">
@@ -1499,7 +1459,7 @@
                             </div>
                           </bodyText>
                         </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc id="0534abb7-bedd-11dc-8394-53bb1076bc90" name="%0534abb7-bedd-11dc-8394-53bb1076bc90">
+                        <OTUDLCompoundDoc name="%0534abb7-bedd-11dc-8394-53bb1076bc90">
                           <bodyText>
                             <div class="buffer">
                               <div class="border">
@@ -1513,7 +1473,7 @@
                             </div>
                           </bodyText>
                         </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc id="303a28e6-bedd-11dc-8394-53bb1076bc90" name="%303a28e6-bedd-11dc-8394-53bb1076bc90">
+                        <OTUDLCompoundDoc name="%303a28e6-bedd-11dc-8394-53bb1076bc90">
                           <bodyText>
                             <div class="buffer">
                               <div class="border">
@@ -1527,7 +1487,7 @@
                             </div>
                           </bodyText>
                         </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc id="563cb15f-bedd-11dc-8394-53bb1076bc90" name="%563cb15f-bedd-11dc-8394-53bb1076bc90">
+                        <OTUDLCompoundDoc name="%563cb15f-bedd-11dc-8394-53bb1076bc90">
                           <bodyText>
                             <div class="buffer">
                               <div class="border">
@@ -1547,32 +1507,8 @@
                         </OTUDLCompoundDoc>
                       </cards>
                       <currentCard>
-                        <object refid="563cb15f-bedd-11dc-8394-53bb1076bc90" />
-                      </currentCard>
-                      <viewedCards>
                         <object refid="5ae8a5d8-768b-11dc-a568-7984efa6d7c4" />
-                        <object refid="58e4cd93-beda-11dc-8394-53bb1076bc90" />
-                        <object refid="afa19622-bedb-11dc-8394-53bb1076bc90" />
-                        <object refid="eca650cf-bedb-11dc-8394-53bb1076bc90" />
-                        <object refid="31ac7322-bedc-11dc-8394-53bb1076bc90" />
-                        <object refid="b8acffb1-bedc-11dc-8394-53bb1076bc90" />
-                        <object refid="e645aa74-bedc-11dc-8394-53bb1076bc90" />
-                        <object refid="0534abb7-bedd-11dc-8394-53bb1076bc90" />
-                        <object refid="303a28e6-bedd-11dc-8394-53bb1076bc90" />
-                        <object refid="563cb15f-bedd-11dc-8394-53bb1076bc90" />
-                        <OTUDLCompoundDoc name="%5746cd96-bedd-11dc-8394-53bb1076bc90">
-                          <bodyText>
-                            <div class="buffer">
-                              <div class="border">
-                                <div class="body">
-                                  <div class="subtitle">New page</div>
-                                  New page content
-                                </div>
-                              </div>
-                            </div>
-                          </bodyText>
-                        </OTUDLCompoundDoc>
-                      </viewedCards>
+                      </currentCard>
                     </OTCardContainer>
                   </content>
                   <header>
@@ -1636,7 +1572,7 @@
                             </div>
                           </bodyText>
                         </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc id="5f56ae5f-768b-11dc-a568-7984efa6d7c4" name="%5f56ae5f-768b-11dc-a568-7984efa6d7c4">
+                        <OTUDLCompoundDoc name="%5f56ae5f-768b-11dc-a568-7984efa6d7c4">
                           <bodyText>
                             <div class="buffer">
                               <div class="border">
@@ -1654,7 +1590,7 @@
                             </div>
                           </bodyText>
                         </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc id="5f56ae60-768b-11dc-a568-7984efa6d7c4/cards[1]" name="%497bdc85-768e-11dc-a568-7984efa6d7c4">
+                        <OTUDLCompoundDoc name="%497bdc85-768e-11dc-a568-7984efa6d7c4">
                           <bodyText>
                             <div class="buffer">
                               <div class="border">
@@ -1673,7 +1609,7 @@
                             </div>
                           </bodyText>
                         </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc id="5f56ae60-768b-11dc-a568-7984efa6d7c4/cards[2]" name="%8100f736-768e-11dc-a568-7984efa6d7c4">
+                        <OTUDLCompoundDoc name="%8100f736-768e-11dc-a568-7984efa6d7c4">
                           <bodyText>
                             <div class="buffer">
                               <div class="border">
@@ -1841,7 +1777,7 @@
                             </OTUDLQuestions>
                           </documentRefs>
                         </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc id="5f56ae60-768b-11dc-a568-7984efa6d7c4/cards[3]" name="%e5655848-768e-11dc-a568-7984efa6d7c4">
+                        <OTUDLCompoundDoc name="%e5655848-768e-11dc-a568-7984efa6d7c4">
                           <bodyText>
                             <div class="buffer">
                               <div class="border">
@@ -2009,7 +1945,7 @@
                             <OTText id="241f3c9a-768f-11dc-a568-7984efa6d7c4" name="Text field" />
                           </documentRefs>
                         </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc id="5f56ae60-768b-11dc-a568-7984efa6d7c4/cards[4]" name="%3629010b-768f-11dc-a568-7984efa6d7c4">
+                        <OTUDLCompoundDoc name="%3629010b-768f-11dc-a568-7984efa6d7c4">
                           <bodyText>
                             <div class="buffer">
                               <div class="border">
@@ -2029,16 +1965,8 @@
                         </OTUDLCompoundDoc>
                       </cards>
                       <currentCard>
-                        <object refid="5f56ae60-768b-11dc-a568-7984efa6d7c4/cards[4]" />
-                      </currentCard>
-                      <viewedCards>
-                        <object refid="5f56ae5f-768b-11dc-a568-7984efa6d7c4" />
-                        <object refid="5f56ae60-768b-11dc-a568-7984efa6d7c4/cards[1]" />
-                        <object refid="5f56ae60-768b-11dc-a568-7984efa6d7c4/cards[2]" />
-                        <object refid="5f56ae60-768b-11dc-a568-7984efa6d7c4/cards[3]" />
-                        <object refid="5f56ae60-768b-11dc-a568-7984efa6d7c4/cards[4]" />
                         <object refid="cb42ac22-bee3-11dc-8394-53bb1076bc90" />
-                      </viewedCards>
+                      </currentCard>
                     </OTCardContainer>
                   </content>
                   <header>
@@ -2104,7 +2032,7 @@
                             </div>
                           </bodyText>
                         </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc id="67c9eb7e-768b-11dc-a568-7984efa6d7c4/cards[1]" name="%b21d7941-768b-11dc-a568-7984efa6d7c4">
+                        <OTUDLCompoundDoc name="%b21d7941-768b-11dc-a568-7984efa6d7c4">
                           <bodyText>
                             <div class="buffer">
                               <div class="border">
@@ -2152,11 +2080,10 @@
                         </OTUDLCompoundDoc>
                       </cards>
                       <currentCard>
-                        <object refid="67c9eb7e-768b-11dc-a568-7984efa6d7c4/cards[1]" />
+                        <object refid="67c9eb7d-768b-11dc-a568-7984efa6d7c4" />
                       </currentCard>
                       <viewedCards>
                         <object refid="67c9eb7d-768b-11dc-a568-7984efa6d7c4" />
-                        <object refid="67c9eb7e-768b-11dc-a568-7984efa6d7c4/cards[1]" />
                       </viewedCards>
                     </OTCardContainer>
                   </content>
@@ -2453,17 +2380,10 @@
                 </OTUDLSection>
               </cards>
               <currentCard>
-                <object refid="${section_8}" />
+                <object refid="${section_1}" />
               </currentCard>
               <viewedCards>
                 <object refid="${section_1}" />
-                <object refid="${section_3}" />
-                <object refid="${section_2}" />
-                <object refid="${section_4}" />
-                <object refid="${section_5}" />
-                <object refid="${section_7}" />
-                <object refid="${section_8}" />
-                <object refid="${section_6}" />
               </viewedCards>
             </OTCardContainer>
           </content>
@@ -2495,6 +2415,11 @@
                     <object refid="${menu-horizontal-circle}" />
                   </reference>
                 </OTScriptVariable>
+                <OTScriptVariable name="album">
+                  <reference>
+                    <object refid="${album}" />
+                  </reference>
+                </OTScriptVariable>
               </variables>
               <script>
                 <object refid="${authoring_script.js}" />
@@ -2507,8 +2432,7 @@
       <library>
         <OTDefinitionManager local_id="definition-manager">
           <definitions>
-            <OTDefinitionList src="http://continuum.concord.org/otrunk/examples/UDL/glossary/common-glossary.txt" />
-            <OTDefinitionList src="http://continuum.concord.org/otrunk/examples/UDL/glossary/electricity-glossary.txt" />
+            <OTDefinitionList src="glossary/common-glossary.txt" />
           </definitions>
           <frame>
             <OTFrame local_id="definition_frame" width="300" height="190" borderlessPopup="true" />
@@ -2561,9 +2485,9 @@
             </OTUDLMenuRule>
           </rules>
         </OTUDLMenuRule>
-        <OTJavascript local_id="change_page.js" src="http://continuum.concord.org/otrunk/examples/UDL/scripts/change_page.js" />
-        <OTJavascript local_id="show_message.js" src="http://continuum.concord.org/otrunk/examples/UDL/scripts/show_message.js" />
-        <OTJavascript local_id="authoring_script.js" src="http://continuum.concord.org/otrunk/examples/UDL/scripts/authoring_script.js" />
+        <OTJavascript local_id="change_page.js" src="scripts/change_page.js" />
+        <OTJavascript local_id="show_message.js" src="scripts/show_message.js" />
+        <OTJavascript local_id="authoring_script.js" src="scripts/authoring_script.js" />
       </library>
     </OTSystem>
   </objects>
