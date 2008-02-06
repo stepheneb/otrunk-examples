@@ -7,6 +7,7 @@
 		<import class="org.concord.otrunk.view.document.OTCompoundDoc" />
 		<import class="org.concord.otrunk.view.document.OTTextObject" />
 		<import class="org.concord.otrunkmw.OTModelerPage" />
+		<import class="org.concord.otrunkmw.OTMwDataProducer" />
 		<import class="org.concord.otrunk.ui.OTText" />
 		<import
 			class="org.concord.otrunk.view.document.OTDocumentViewConfig" />
@@ -78,8 +79,8 @@
 						</p>
 						<p>
 							<font size='4'>
-								This page sets up an MW simulation with a
-								CC graph.
+								This page sets up an MW simulation with
+								a CC graph.
 								<br></br>
 								<br></br>
 								<hr></hr>
@@ -98,38 +99,29 @@
 						<OTDataCollector name="Model Data"
 							local_id="graph" multipleGraphableEnabled="false"
 							autoScaleEnabled="false">
-							<graphables>
-								<OTDataGraphable local_id="atom_nt"
-									connectPoints="true" color="0xa9a9a9" drawMarks="false"
-									name="Nt Temp" xColumn="0" yColumn="1">
-									<dataStore>
-										<OTDataStore
-											local_id="atom_nt_datastore" numberChannels="2">
-											<channelDescriptions>
-												<OTDataChannelDescription
-													precision="0" unit="s" />
-												<OTDataChannelDescription
-													precision="-2" unit="degC" />
-											</channelDescriptions>
-											<valuesString></valuesString>
-										</OTDataStore>
-									</dataStore>
+							<source>
+								<OTDataGraphable connectPoints="true"
+									color="0x0000ff" drawMarks="false" name="Displacement"
+									xColumn="0" yColumn="1">
+									<dataProducer>
+										<OTMwDataProducer timeScale="1"
+											property="ry">
+											<model>
+												<object
+													refid="${model}" />
+											</model>
+										</OTMwDataProducer>
+									</dataProducer>
 								</OTDataGraphable>
-							</graphables>
+							</source>
 							<xDataAxis>
-								<OTDataAxis min="-1" max="56"
+								<OTDataAxis min="0" max="60"
 									label="Time" units="s" local_id="xAxis">
-									<graphables>
-										<object refid="${atom_nt}" />
-									</graphables>
 								</OTDataAxis>
 							</xDataAxis>
 							<yDataAxis>
-								<OTDataAxis min="-10" max="100"
-									label="Temperature" units="degC" local_id="yAxis">
-									<graphables>
-										<object refid="${atom_nt}" />
-									</graphables>
+								<OTDataAxis min="-0.5" max="0.5"
+									label="Displacement" units="m" local_id="yAxis">
 								</OTDataAxis>
 							</yDataAxis>
 						</OTDataCollector>
