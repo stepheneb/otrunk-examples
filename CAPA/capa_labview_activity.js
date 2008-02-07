@@ -198,7 +198,7 @@ function assess() {
 	
 	System.out.println("madwrapper=" + madwrapper)
 
-	_correctAmp = Double.parseDouble(madwrapper.getLastCIValue("amplitude"))
+	_correctAmp = 2 * Double.parseDouble(madwrapper.getLastCIValue("amplitude")) //peak-to-peak amplitude
 	_correctFrq = Double.parseDouble(madwrapper.getLastCIValue("frequency"))
 	
 	var etime = _dateFormat.format(new Date())
