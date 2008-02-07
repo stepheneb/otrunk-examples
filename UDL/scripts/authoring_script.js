@@ -37,13 +37,15 @@ var pageHandler =
 			var statement = evt.getValue();
 			var statementDoc = statement.getStatement();
 			var statementText = statementDoc.getBodyText();
-			statementDoc.setBodyText("<div class=\"buffer\">"+
+			if (statementText.indexOf("<div class=\"buffer\">") < 0) {
+				statementDoc.setBodyText("<div class=\"buffer\">"+
 										"<div class=\"border\">"+
 											"<div class=\"body\">"+
 												statementText +
 											"</div>"+
 										"</div>"+
 								"</div>");
+			}
 		} 
 		
 		else if (evt.getProperty().equalsIgnoreCase("documentRefs") && evt.getOperation().equalsIgnoreCase("add")){
