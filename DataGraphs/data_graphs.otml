@@ -10,6 +10,8 @@
     <import class="org.concord.data.state.OTDataChannelDescription"/>
     <import class="org.concord.data.state.OTDataField"/>
     <import class="org.concord.data.state.OTWaveGenerator"/>
+    <import class="org.concord.data.state.OTMultiWaveGenerator"/>
+    <import class="org.concord.data.state.OTWave"/>
     <import class="org.concord.datagraph.state.OTDataGraph"/>
     <import class="org.concord.datagraph.state.OTDataAxis"/>
     <import class="org.concord.datagraph.state.OTDataGraphable"/>
@@ -369,6 +371,32 @@
               </source>
               <xDataAxis>
                 <OTDataAxis min="0" max="100" label="Time" units="min"/>
+              </xDataAxis>
+              <yDataAxis>
+                <OTDataAxis min="-2" max="2" label="sin(x)"/>
+              </yDataAxis>
+            </OTDataCollector>
+            <OTDataCollector name="Multi Wave Graph">
+              <source>
+                <OTDataGraphable connectPoints="true" color="0x0000ff"
+                  drawMarks="false" name="Pressure1" xColumn="0" yColumn="1">
+                  <dataProducer>
+                    <OTMultiWaveGenerator local_id="multi_wave_generator">
+                      <waves>
+                        <OTWave amplitude="1" wavelength="10"/>
+                        <OTWave amplitude="1.5" wavelength="7"/>
+                      </waves>
+                    </OTMultiWaveGenerator>
+                  </dataProducer>
+                </OTDataGraphable>
+              </source>
+              <graphables>
+				<OTDataGraphable connectPoints="true" color="0xff0000"
+                  drawMarks="false" name="Pressure2" xColumn="0" yColumn="2"
+                  dataProducer="${multi_wave_generator}"/>
+              </graphables>
+              <xDataAxis>
+                <OTDataAxis min="0" max="60" label="Time" units="s"/>
               </xDataAxis>
               <yDataAxis>
                 <OTDataAxis min="-2" max="2" label="sin(x)"/>
