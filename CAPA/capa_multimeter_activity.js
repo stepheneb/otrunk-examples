@@ -73,11 +73,12 @@ var cckMultimeter = cckModule.getMultimeterModel();		// (MultimeterModel)
 //
 
 // Variables that should be saved (as part of the script state)
-var shortCircuitCounter = 0;	// How many times has the user caused a short circuit
+var multimeterBrokenStepCount = 0;	// How many times has the DMM been blown up in this step
 //
 
+var maxDMMSafeCurrent;				// Maximum current that is safe without blowing up the multimeter
+
 var initializationDone = true;	// Whether the init() function is done or not
-var shortCircuit = false;		// Flag used to determine if the user has caused a short circuit in THIS current change  
 var solverFinishedOnce = false;	// ?
 var lastMMStateViable = false;	// ?
 var logFile;					// Used for logging information
@@ -230,6 +231,12 @@ function setupActivity()
 	}
 	//	
 	
+	//Find the maximum current to be safe before blowing up the multimeter (in amps)
+	//current = voltage / resistance
+	maxDMMSafeCurrent = circuitBattery.getVoltageDrop() / circuitBattery.getResistance();
+	System.out.println("maxDMMSafeCurrent: "+maxDMMSafeCurrent)
+	//
+	
 	var bLoadedDone = false;	
 	if (bInitialSetupDone && !bActivityDone){
 	
@@ -361,6 +368,7 @@ function initStep()
 {
 	timeStepStarted = System.currentTimeMillis();
 	measurementIndexStepStarted = measurements.length;
+	multimeterBrokenStepCount = 0;
 }
 
 function startStep(step)
@@ -520,11 +528,22 @@ function setupMultimeter()
 				
 				System.out.println(extra.toSource());
 				
+				//See if the DMM was blown up
+				//System.out.println("battery current: " + circuitBattery.getCurrent());
+				extra.brokenDMM = false;
+				var currentToCheck = circuitBattery.getCurrent();
+				if (currentToCheck >= (maxDMMSafeCurrent * 0.99)){
+					logInformation("DMM blown up, battery current: " + currentToCheck);
+					multimeterBrokenStepCount++;
+					extra.brokenDMM = true;
+				}
+				//
+				
 				//Record the measurement, including the voltage and current of the target resistor
 				extra.resistorVoltage = targetResistorVoltageString;
 				extra.resistorCurrent = targetResistorCurrentString;
 				var m = addMeasurement(type, roundedValue, units, extra);
-				//
+				//				
 				
 				//more debug info
 				//System.out.println(m.toSource());
@@ -664,43 +683,6 @@ function showFirstJunctionMessage()
  */
 function setupCircuitListener()
 {
-	//the current and voltage listener is added to the resistor or to the multimeter
-	var currentVoltListener = new CurrentVoltListener() 
-	{
-		/**
-		* This function is called every time the current or voltage changes. 
-		* Within the function, there are statements which filter out 
-		* insignificant changes (on the order of variables vTolerance and aTolerance) 
-		* to the current or voltage, as the values change slightly when a branch is moved. 
-		* If the changes are signficant, they are printed.
-		*/	
-		currentOrVoltageChanged: function(branch)
-		{
-			var branchVoltage = branch.getVoltageDrop();
-			var branchCurrent = branch.getCurrent();
-			
-			logInformation("A voltage of " + branchVoltage + " with a current of " + branchCurrent + " is flowing through " + branch.getName());
-
-			solverFinishedOnce = false;
-
-			//Detect shortcircuit
-			if(Math.abs(branchCurrent) > 10 && shortCircuit == false)
-			{
-				var warningDialog = new JOptionPane();
-				var shortCircuitStr = "shortCircuitStr";
-				warningDialog.showMessageDialog(frame, shortCircuitStr, "", JOptionPane.WARNING_MESSAGE);
-				shortCircuit = true;
-				shortCircuitCounter++;
-				System.out.println("++++ SHORT CIRCUIT ++++");
-			}
-			else if(!(Math.abs(branchCurrent) > Math.abs(branchVoltage) + 1))
-			{
-				shortCircuit = false;			
-			}
-			//
-		}
-	}
-
 	//circuitHandler handles all changes in the circuit
 	var circuitHandler = new CircuitListener() 
 	{
@@ -1233,6 +1215,13 @@ function logAnswerAssessment(answer, correctAnswer, answerValueType, answerUnitT
 		answerAssessIndicators.put("leadPlacement", new java.lang.Integer(-2));
 		answerAssessIndicators.put("circuitSetting", new java.lang.Integer(-2));
 	}
+	
+	if (multimeterBrokenStepCount > 0){
+		answerAssessIndicators.put("brokenDMM", new java.lang.Integer(1));
+	}
+	else{
+		answerAssessIndicators.put("brokenDMM", new java.lang.Integer(0));
+	}
 		
 	otAssessment.getAnswers().add(answerAssess);
 }
@@ -1313,7 +1302,6 @@ function calculateSolution()
 function showSolution(answerValueType, answerUnitType, bShowNow)
 {
 	var solutionMsg = "";
-	var shortCircuitMsg = "";
 	
 	if (answerValueType.equals("correct")){
 		if (answerUnitType.equals("no unit")){
@@ -1375,7 +1363,7 @@ function showSolution(answerValueType, answerUnitType, bShowNow)
 	//Show solution	
 	var strPrefix = getCurrentAnswerType() + " answer: ";
 	
-	solutionMessage = solutionMessage + "<br/>" + strPrefix + solutionMsg + shortCircuitMsg;
+	solutionMessage = solutionMessage + "<br/>" + strPrefix + solutionMsg;
 	if (bShowNow){
 		showSolutionMessage();
 	}
