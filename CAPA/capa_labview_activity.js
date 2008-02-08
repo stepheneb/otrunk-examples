@@ -201,18 +201,24 @@ function assess() {
 	_correctAmp = 2 * Double.parseDouble(madwrapper.getLastCIValue("amplitude")) //peak-to-peak amplitude
 	_correctFrq = Double.parseDouble(madwrapper.getLastCIValue("frequency"))
 	
+	var ampUnit = _submittedAmpUnit.getAbbreviation()
+	var frqUnit = _submittedFrqUnit.getAbbreviation()
+	
 	var etime = _dateFormat.format(new Date())
 	log("----------")
 	log(etime + " - Solution is: amplitude=" + ScopeAssessmentUtil.getAmplitudeString(_correctAmp) + ", frequency = " + ScopeAssessmentUtil.getFrequencyString(_correctFrq))
 	
 	var numChanges = madwrapper.getNumChanges()
 	
-    log(etime + " - Answer submitted: amplitude = " + _submittedAmp + " " + _submittedAmpUnit.getAbbreviation())
-  	log(etime + " - Answer submitted: frequency = " + _submittedFrq + " " + _submittedFrqUnit.getAbbreviation())
+    log(etime + " - Answer submitted: amplitude = " + _submittedAmp + " " + ampUnit)
+  	log(etime + " - Answer submitted: frequency = " + _submittedFrq + " " + frqUnit)
     
-	var ampIndicator = checkAmplitude(_correctAmp, _submittedAmp, _submittedAmpUnit)
-	var frqIndicator = checkFrequency(_correctFrq, _submittedFrq, _submittedFrqUnit)
+	var ampIndicator = checkAmplitude(_correctAmp, _submittedAmp, ampUnit)
+	var frqIndicator = checkFrequency(_correctFrq, _submittedFrq, frqUnit)
+	var ampUnitIndicator = checkAmpUnit(ampUnit)
+	var frqUnitIndicator = checkFrqUnit(frqUnit)
 	
+	System.out.println("ampUnit=" + ampUnit + " ind=" + ampIndicator)
 	System.out.println("ampIndicator=" + ampIndicator)
 	System.out.println("frqIndicator=" + frqIndicator)	
 	
@@ -222,8 +228,10 @@ function assess() {
 	
 	_otAssessment.setLabel("Oscilloscope")
 	var indicators = _otAssessment.getIndicatorValues()
-	indicators.put("amplitudeCorrect", ampIndicator)
-	indicators.put("frequencyCorrect", frqIndicator)
+	indicators.put("amplitudeValue", ampIndicator)
+	indicators.put("frequencyValue", frqIndicator)
+	indicators.put("amplitudeUnit", ampUnitIndicator)
+	indicators.put("frequencyUnit", frqUnitIndicator)
 	indicators.put("numChanges", numChanges)
 	indicators.put("timeTotal", timeTotal)
 	indicators.put("controlSetting", tpdIndicator)
@@ -242,16 +250,13 @@ function assess() {
 	}
 }
 
-function checkAmplitude(correctValue, answer, unitAnswer) {
-	var unit = ""
-	var answerValue = 0.0
-	
-	System.out.println("answer text = [" + answer + "]")
-	
-	unit = unitAnswer.getAbbreviation()
+function getDiff(a, b) {
+	return Math.abs(a - b) / b	
+}
 
-	System.out.println("unit=" + unit)
-	
+function checkAmplitude(correctValue, answer, unit) {
+	var answerValue = 0.0
+
 	answerValue = Double.parseDouble(answer)
 
 	if (unit == "mV") {
@@ -262,23 +267,40 @@ function checkAmplitude(correctValue, answer, unitAnswer) {
 		answerValue *= 1000
 	}
 	else if (unit != "V") {
-		return 1.0 // totally wrong
+		return 0 // totally wrong
 	}
 	
-	System.out.println("amp answer=" + answerValue)
+	var diff = getDiff(answerValue, correctValue)
 	
-	var diff =  Math.abs(answerValue - correctValue) / correctValue
-	
-	System.out.println("amp diff=" + diff)
-	return diff	
+	if (diff < 0.05) {
+		return 4  //perfect
+	}
+	else if (diff < 0.1 ) {
+		return 3  //close
+	}
+
+	// NOw check for possiblities of mistaken units
+	diff = getDiff(answerValue, correctValue * 1000)
+	if (diff < 0.05) {
+		return 2
+	} 
+	else if (diff < 0.1) {
+		return 1
+	}
+	diff = getDiff(answerValue, correctValue * 0.001)
+	if (diff < 0.05) {
+		return 2
+	} 	
+	else if (diff < 0.1) {
+		return 1
+	}
+	return 0
 }
 
-function checkFrequency(correctValue, answer, unitAnswer) {
-	var unit = ""
+function checkFrequency(correctValue, answer, unit) {
 	var answerValue = 0.0
 
-	unit = unitAnswer.getAbbreviation()
-	System.out.println("unit=" + unit)
+	System.out.println("checkFrequency: unit = [" + unit + "]")
 
 	answerValue = Double.parseDouble(answer) 
 	
@@ -290,15 +312,54 @@ function checkFrequency(correctValue, answer, unitAnswer) {
 		answerValue *= 1.0e6
 	}
 	else if (unit != "Hz") {
-		return 1.0 // totally wrong
+		return 0 // totally wrong
 	}
 	
-	System.out.println("frq answer=" + answerValue)
+	var diff =  getDiff(answerValue, correctValue)
 	
-	var diff =  Math.abs(answerValue - correctValue) / correctValue
-	
-	System.out.println("frq diff=" + diff)
-	return diff	
+	if (diff < 0.05) {
+		return 4  //perfect
+	}
+	else if (diff < 0.1 ) {
+		return 3  //close
+	}
+
+	// NOw check for possiblities of mistaken units
+	diff = getDiff(answerValue, correctValue * 1000)
+	if (diff < 0.05) {
+		return 2
+	} 
+	else if (diff < 0.1) {
+		return 1
+	}
+	diff = getDiff(answerValue, correctValue * 1.0e6)
+	if (diff < 0.05) {
+		return 2
+	} 	
+	else if (diff < 0.1) {
+		return 1
+	}
+	return 0
+}
+
+function checkAmpUnit(unit) {
+	a = ["mV", "V", "kV"] 
+	for (i in a) {
+		if (a[i] == unit) {
+			return 1
+		} 
+	}
+	return 0
+}
+
+function checkFrqUnit(unit) {
+	a = ["Hz", "kHz", "MHz"] 
+	for (i in a) {
+		if (a[i] == unit) {
+			return 1
+		} 
+	}
+	return 0
 }
 
 // @return 0:excellent, 1: good, 2: ok, 3: bad 
