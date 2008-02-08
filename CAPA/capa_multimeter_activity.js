@@ -983,10 +983,12 @@ function checkAnswerValue(correctAnswer)
 	var answerValueType = "";
 	var value = answerObj.getValue();
 	var correctValue = correctAnswer.getValue();
-	if (MathUtil.isApproxEqual(value, correctValue, 0.1)){
+	var tolerance = CAPAUnitUtil.getAppropriateTolerance(value, correctValue);
+	
+	if (CAPAUnitUtil.isApproxEqual(value, correctValue, tolerance)){
 		answerValueType = "correct";
 	}
-	else if (MathUtil.isApproxEqual(value, -correctValue, 0.1)){
+	else if (CAPAUnitUtil.isApproxEqual(value, -correctValue, tolerance)){
 		answerValueType = "correct wrong sign";
 	}
 	else if (CAPAUnitUtil.compareValues(answerObj, correctAnswer)){
