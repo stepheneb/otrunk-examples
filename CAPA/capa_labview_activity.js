@@ -224,7 +224,7 @@ function assess() {
 	
 	var timeTotal = madwrapper.getTimeTotal()
 	
-	var tpdIndicator = checkTimePerDiv(madwrapper)
+	var settingsIndicator = checkSettings(madwrapper)
 	
 	_otAssessment.setLabel("Oscilloscope")
 	var indicators = _otAssessment.getIndicatorValues()
@@ -234,7 +234,7 @@ function assess() {
 	indicators.put("frequencyUnit", frqUnitIndicator)
 	indicators.put("numChanges", numChanges)
 	indicators.put("timeTotal", timeTotal)
-	indicators.put("controlSetting", tpdIndicator)
+	indicators.put("controlSetting", settingsIndicator)
 	
 	System.out.println("numChanges=" + numChanges)
 	System.out.println("timeTotal=" + timeTotal)
@@ -363,68 +363,63 @@ function checkFrqUnit(unit) {
 }
 
 // @return 0:excellent, 1: good, 2: ok, 3: bad 
-function checkTimePerDiv(madWrapper) {
-	var ind = 0.0
-	var timePerDiv = _assessUtil.getLastTimePerDiv()
-	var halfWaveLength = 1.0 / _correctFrq / 2.0
-	var viewWidth = timePerDiv * 10
-	var timeDiff = (viewWidth - halfWaveLength) / halfWaveLength
+function checkSettings(madWrapper) {
+	var viewWidth = _assessUtil.getLastTimePerDiv() * 10
+	var waveLength = 1.0 / _correctFrq
+	var timePerDivPoints = 0
+	var voltsPerDivPoints = 0
+
+	if (ScopeAssessmentUtil.optimalTimePerDivPossible(waveLength)) {
+		if (viewWidth < 0.5 * waveLength) {
+			timePerDivPoints = 0
+		}
+		else if (viewWidth < waveLength) {
+			timePerDivPoints = 1 	
+		}
+		else if (viewWidth < 2 * waveLength) {
+			timePerDivPoints = 2
+		}
+		else if (viewWidth < 3 * waveLength) {
+			timePerDivPoints = 1
+		}
+		else {
+			timePerDivPoints = 0
+		}
+	}
+	else {
+		if (viewWidth < 0.5 * waveLength) {
+			timePerDivPoints = 0
+		}
+		else if (viewWidth < 3 * waveLength) {
+			timePerDivPoints = 2
+		}
+		else {
+			timePerDivPoints = 0
+		}
+	}
 	
-	System.out.println("viewWidth=" + viewWidth)
-	System.out.println("halfWaveLength=" + halfWaveLength)
-	
-	var voltsPerDiv = _assessUtil.getLastVoltsPerDiv()
-	var halfViewHeight = voltsPerDiv * 4
-	var voltDiff = (halfViewHeight - _correctAmp) / _correctAmp	
-	
-	System.out.println("halfViewHeight=" + halfViewHeight)
-	System.out.println("_correctAmp=" + _correctAmp)
-	
+	var viewHeight = _assessUtil.getLastVoltsPerDiv() * 8
+	var voltsPerDivPoints = _assessUtil.getVoltsPerDivPoints(_correctAmp)
+
+	// Check for channel selection
 	var channel = Integer.parseInt(madWrapper.getLastCIValue("SelectChannel"));
 	System.out.println("channel=" + channel);
 	if (channel == 2) {
-		return 3 // bad: channel A has no signal 
+		return 0 // bad: channel A has no signal 
 	}
 	
-	if (timeDiff < -0.1) {
-		ind += 3 //bad				
+	if (timePerDivPoints == 2 && voltsPerDivPoints == 2) {
+		return 3
 	}
-	else if (timeDiff < 0.0) {
-		ind += 2 //ok
+	else if ((timePerDivPoints == 2 && voltsPerDivPoints == 1) || (timePerDivPoints == 1 && voltsPerDivPoints == 2)) {
+		return 2
 	}
-	else if (timeDiff < 1.0) {
-		ind += 0 //excellent
-	}
-	else if (timeDiff < 2.0) {
-		ind += 1 //good
-	}
-	else if (timeDiff < 3.0) {
-		ind += 2 //ok
+	else if (timePerDivPoints == 1 && voltsPerDivPoints == 1) {
+		return 1
 	}
 	else {
-		ind += 3 //bad
+		return 0
 	}
-	
-	if (voltDiff < -0.1) {
-		ind += 3 //bad				
-	}
-	else if (voltDiff < 0.0) {
-		ind += 2 //ok
-	}
-	else if (voltDiff < 1.0) {
-		ind += 0 //excellent
-	}
-	else if (voltDiff < 2.0) {
-		ind += 1 //good
-	}
-	else if (voltDiff < 3.0) {
-		ind += 2 //ok
-	}
-	else {
-		ind += 3 //bad
-	}
-	
-	return new Integer(ind / 2.0)
 }
 
 function endActivity()
