@@ -387,7 +387,7 @@ function initLogging()
 	
 	//Create an OTText
 	xmlText = otObjectService.createObject(OTText);
-	xmlText.setText("CAPA - Measuring Resistance 2.0\n");
+	xmlText.setText("CAPA - Measuring Resistance 3.0\n");
 	//Put logging information into the otContents of the script object
 	otContents.add(xmlText);
 	
