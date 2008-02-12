@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<otrunk id="33754150-b594-11d9-9669-0800200c9a66" >
+  <imports>
+    <import class="org.concord.otrunk.OTSystem"/>
+    <import class="org.concord.otrunk.view.OTViewBundle"/>
+    <import class="org.concord.otrunk.view.OTViewEntry"/>
+
+	<import class="org.concord.otrunk.script.OTScript" />
+    <import class="org.concord.otrunk.script.js.OTJavascript"/>
+    <import class="org.concord.otrunk.script.OTScriptEngineBundle"/>
+    <import class="org.concord.otrunk.script.OTScriptEngineEntry"/>
+    <import class="org.concord.otrunk.script.ui.OTScriptButton"/>
+	<import class="org.concord.otrunk.script.ui.OTScriptObject" />
+	<import class="org.concord.otrunk.script.ui.OTScriptVariable" />
+	<import class="org.concord.otrunk.script.ui.OTScriptVariableRealObject" />
+    
+    <import class="org.concord.otrunk.view.OTFolderObject"/>
+    <import class="org.concord.otrunk.view.OTViewEntry"/>
+    <import class="org.concord.otrunk.view.OTViewService"/>
+    
+    <import class="org.concord.framework.otrunk.view.OTFrame"/>
+    <import class="org.concord.data.state.OTDataStore"/>
+    <import class="org.concord.data.state.OTDataChannelDescription"/>
+    <import class="org.concord.data.state.OTDataField"/>
+    <import class="org.concord.data.state.OTWaveGenerator"/>
+    <import class="org.concord.datagraph.state.OTDataGraph"/>
+    <import class="org.concord.datagraph.state.OTDataAxis"/>
+    <import class="org.concord.datagraph.state.OTDataGraphable"/>
+    <import class="org.concord.datagraph.state.OTDataCollector"/>
+    <import class="org.concord.datagraph.state.OTMultiDataGraph"/>
+    <import class="org.concord.datagraph.state.OTDataPointLabel"/>
+    <import class="org.concord.datagraph.state.OTDataPointRuler"/>
+    <import class="org.concord.graph.util.state.OTDrawingTool"/>
+    <import class="org.concord.graph.util.state.OTDrawingStamp"/>
+    <import class="org.concord.graph.util.state.OTDrawingImageIcon"/>
+    <import class="org.concord.graph.util.state.OTDrawingShape"/>
+    <import class="org.concord.graph.util.state.OTPointTextLabel"/>
+    <import class="org.concord.otrunk.view.document.OTCompoundDoc"/>
+    <import class="org.concord.smartgraph.OTDataFilter"/>
+    <import class="org.concord.smartgraph.OTDataFilterDescription"/>
+    <import class="org.concord.data.state.OTDataTable"/>
+    <import class="org.concord.data.state.OTDataColumnDescription"/>
+    <import class="org.concord.otrunk.OTProperty"/>
+    <import class="org.concord.otrunk.view.OTViewChild"/>
+    <import class="org.concord.examples.smartgraph.OTDataFilterScript"/>
+  </imports>
+  <objects>
+    <OTSystem>
+      <bundles>
+        <OTViewBundle>
+          <views>
+			<OTViewEntry
+			  objectClass="org.concord.otrunk.script.ui.OTScriptObject"
+			  viewClass="org.concord.otrunk.script.ui.OTScriptObjectView"/>
+			<OTViewEntry
+			  objectClass="org.concord.otrunk.script.ui.OTScriptButton"
+			  viewClass="org.concord.otrunk.script.ui.OTScriptButtonView"/>
+            <OTViewEntry
+              objectClass="org.concord.otrunk.view.document.OTCompoundDoc" 
+              viewClass="org.concord.otrunk.view.document.OTDocumentView"/>
+            <OTViewEntry 
+              objectClass="org.concord.datagraph.state.OTDataGraph" 
+              viewClass="org.concord.datagraph.state.OTDataGraphView"/>
+            <OTViewEntry
+              objectClass="org.concord.otrunk.view.OTFolderObject"
+              viewClass="org.concord.otrunk.view.OTFolderObjectView"/>
+            <OTViewEntry
+              objectClass="org.concord.data.state.OTDataTable"
+              viewClass="org.concord.data.state.OTDataTableView"/>
+          </views>
+        </OTViewBundle>
+        <OTScriptEngineBundle>
+          <engines>
+             <OTScriptEngineEntry 
+             	objectClass="org.concord.otrunk.script.js.OTJavascript"
+             	engineClass="org.concord.otrunk.script.js.OTJavascriptEngine"/>
+          </engines>
+        </OTScriptEngineBundle>
+      </bundles>
+      <root>
+        <OTFolderObject name="Graphs">
+          <children>
+ 	        <OTCompoundDoc name="Graph with Filter">
+	          <bodyText>
+	            <p>Graph with Filter:</p>
+                <object refid="${data_graph1}"/><br/>
+                <object refid="${data_table1}"/><br/>
+                <object refid="${script_button}"/><br/>
+				<object refid="${script_object}"/>				
+              </bodyText>
+            </OTCompoundDoc>
+            <OTViewChild name="Edit general script" object="${script_01}" viewid="${script_edit_view}"/>
+            <OTViewChild name="Edit filter script" object="${script_02}" viewid="${script_edit_view}"/>
+            <OTViewChild name="Edit button script" object="${script_button_script}" viewid="${script_edit_view}"/>
+          </children>
+        </OTFolderObject>
+      </root>
+      <library>
+	      <OTDataGraph name="Predefined Data Graph 1" local_id="data_graph1" showGraphableList="false">
+	        <graphables>
+                <object refid="${graphable01}"/>
+                <object refid="${graphable02}"/>
+	        </graphables>
+	        <xDataAxis>
+	          <OTDataAxis min="0" max="5" label="x"/>
+	        </xDataAxis>
+	        <yDataAxis>
+	          <OTDataAxis min="0" max="100" label="y"/>
+	        </yDataAxis>
+	      </OTDataGraph>
+	      <OTDataTable local_id="data_table1">
+	      	<dataStore>
+	      		<object refid="${datastore01}"/>
+	      	</dataStore>
+	      	<columns>
+	      		<OTDataColumnDescription label="x"/>
+	      		<OTDataColumnDescription label="y" color="0xFF0000"/>
+	      	</columns>
+	      </OTDataTable>
+          <OTDataGraphable name="Predefined data graphable 1" local_id="graphable01"
+            connectPoints="true" color="0xff0000" drawMarks="false"
+            xColumn="0" yColumn="1">
+            <dataStore>
+                <object refid="${datastore01}"/>
+            </dataStore>
+          </OTDataGraphable>
+          <OTDataGraphable name="filter 2" local_id="graphable02"
+            connectPoints="true" color="0xaa00ff" drawMarks="false"
+            xColumn="0" yColumn="1">
+            <dataStore>
+                <object refid="${datafilter02}"/>
+            </dataStore>
+          </OTDataGraphable>
+          <OTDataStore name="Predefined data 1" local_id="datastore01" numberChannels="2">
+            <channelDescriptions>
+              <OTDataChannelDescription unit="s"/>
+              <OTDataChannelDescription unit="m"/>
+            </channelDescriptions>
+            <valuesString> 0 10 0.5 50 1 75 1.5 45 2 50 2.5 65 3 40 3.5 35 4 20</valuesString>
+          </OTDataStore>
+          <OTDataFilter name="maximum filter obj" local_id="maximum_datafilter">
+          	<description>
+	          	<OTDataFilterDescription operation="maximum" filterClass="org.concord.smartgraph.DataMaximumFilter"/>
+	        </description>
+          	<inputDataStore>
+                <object refid="${datastore01}"/>
+          	</inputDataStore>
+          </OTDataFilter>
+          <OTDataFilterScript name="script filter obj" local_id="datafilter02">
+          	<description>
+	          	<OTDataFilterDescription operation="custom script"/>
+	        </description>
+	        <filterScript>
+	        	<object refid="${script_02}"/>
+	        </filterScript>
+          	<inputDataStore>
+                <object refid="${datastore01}"/>
+          	</inputDataStore>
+          </OTDataFilterScript>
+          <OTScriptButton name="Script Button" text="Click Me" local_id="script_button">
+          	<scriptVariables>
+            	<OTScriptVariable name="dataGraph" reference="${data_graph1}"/>
+            	<OTScriptVariableRealObject name="filter" reference="${datafilter02}"/>
+          	</scriptVariables>
+            <script>
+            	<object refid="${script_button_script}"/>
+           	</script>	
+          </OTScriptButton>
+          <OTJavascript local_id="script_button_script">
+				<script>
+importClass(Packages.javax.swing.JOptionPane);
+            
+function clicked()
+{
+	JOptionPane.showMessageDialog(null, "Hello", "Hello", JOptionPane.PLAIN_MESSAGE);
+}
+				</script> 
+          </OTJavascript>
+          <OTScriptObject name="Script external" local_id="script_object_no">
+          	<variables>
+          		<OTScriptVariable name="graphable" reference="${graphable01}"/>
+          	</variables>
+			<script>
+				<OTJavascript src="data_filters_script.js"/>
+			</script>
+          </OTScriptObject>
+          <OTScriptObject name="Script embedded" local_id="script_object">
+          	<variables>
+          		<OTScriptVariable name="graphable" reference="${graphable01}"/>
+          	</variables>
+			<script>
+          		<object refid="${script_01}"/>
+		  	</script>
+	  	  </OTScriptObject>
+		  <OTViewEntry
+			  objectClass="org.concord.otrunk.script.OTScript"
+			  viewClass="org.concord.otrunk.script.ui.OTScriptEditView"
+			  local_id="script_edit_view"/>
+	      <OTJavascript local_id="script_01" name="General Script">
+	          <script>
+//This is an example embedded script
+importClass(Packages.java.lang.System);
+
+/**
+ * This example changes the properties of the main graphable
+ * in this case is originally red.
+ */
+function init()
+{
+	System.out.println("changing graphable properties in the script --- ");
+	//graphable.setColor(0xFFFF00);			//color to yellow
+	//graphable.setLineWidth(5);			//wide lines
+	//graphable.setDrawMarks(true);			//draw crosses on points
+	//graphable.setConnectPoints(false);	//don't connect points
+
+	return true;
+}
+
+function save()
+{
+	return null;
+}
+			  </script>
+		  </OTJavascript>
+	      <OTJavascript local_id="script_02" name="Filter Script">
+	          <script>
+importClass(Packages.java.lang.System);
+importClass(Packages.java.lang.Float);
+
+/**
+ * This function returns the y value of the filter 
+ * (in this example the filter is graphed in purple)
+ */
+function filterYValue(x, y)
+{
+	return y + 10;		// original y value + 10
+	//return y - y/2;	
+}
+			  </script>
+		  </OTJavascript>
+      </library>
+    </OTSystem>
+  </objects>
+</otrunk>
