@@ -114,6 +114,8 @@ var sectionContainerHandler =
 				
 				var header = section.getHeader();
 				
+				header.setShowEditBar(false);
+				
 				header.setBodyText("<div class=\"title\">"+
 									"Section " + numCards +
 								"</div>");
@@ -139,6 +141,8 @@ var sectionContainerHandler =
 				menu.setMenuRule(menuPageRule);
 				
 				var footer = section.getFooter();
+				
+				footer.setShowEditBar(false);
 				
 				var otid = menu.getOTObjectService().getExternalID(menu);
 				var viewid = menu.getOTObjectService().getExternalID(menuHorizontalView);
