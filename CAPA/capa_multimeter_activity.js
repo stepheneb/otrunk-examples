@@ -1216,6 +1216,7 @@ function logAnswerAssessment(answer, correctAnswer, answerValueType, answerUnitT
 		answerAssessIndicators.put("circuitSetting", new java.lang.Integer(-2));
 	}
 	
+	//Whether the student blew up the DMM or not
 	if (multimeterBrokenStepCount > 0){
 		answerAssessIndicators.put("brokenDMM", new java.lang.Integer(1));
 	}

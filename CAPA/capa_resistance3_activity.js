@@ -571,6 +571,9 @@ function setupMultimeter()
 				
 				var extra = new Object();
 				
+				//Analyze if measurement is useful
+				analyzeMeasurement(type, roundedValue, units, extra);
+				
 				//See if the DMM was blown up
 				//System.out.println("battery current: " + circuitBattery.getCurrent());
 				extra.brokenDMM = false;
@@ -603,6 +606,29 @@ function setupMultimeter()
 	cckMultimeter.addListener(multimeterListener);
 
 }// end of setupMultimeter()
+
+function analyzeMeasurement(type, roundedValue, unit, extra)
+{
+	//Check if the measurement is useful for what we need
+	var valueObj = otObjectService.createObject(OTUnitValue);
+	valueObj.setValue(roundedValue);
+	valueObj.setUnit(unit);
+	
+	//Check if it matches the voltage
+	if (CAPAUnitUtil.compareValues(solutionObj.voltage, valueObj, true, false)){
+		extra.correctVoltageMeasurement = true;
+	}
+	else{
+		extra.correctVoltageMeasurement = false;
+	}
+	//Check if it matches the current
+	if (CAPAUnitUtil.compareValues(solutionObj.current, valueObj, true, false)){
+		extra.correctCurrentMeasurement = true;
+	}
+	else{
+		extra.correctCurrentMeasurement = false;
+	}
+}
 
 function showFirstMeasurementMessage()
 {
@@ -936,10 +962,10 @@ function checkAnswer()
 	
 	/////
 	//Correct answer is at
-	//solutionObj
+	//solutionObj.resistance
 	/////
 
-	checkAnswerValue(solutionObj);
+	checkAnswerValue(solutionObj.resistance);
 	
 	endActivity();
 }
@@ -1066,18 +1092,95 @@ function logAnswerAssessment(answer, correctAnswer, answerValueType, answerUnitT
 	//How many measurements did the student make in this step
 	answerAssessIndicators.put("numberMeasurements", new java.lang.Integer(measurements.length));
 	
+	//Check whether the student ever measured the voltage or the current correctly
+	//I calculate the number of all voltage and current measurements even though it's not necessary (just in case)
+	var numberVoltageMeasurements = 0;
+	var numberGoodVoltageMeasurements = 0;
+	var numberCurrentMeasurements = 0;
+	var numberGoodCurrentMeasurements = 0;
+	for (var i=0; i<measurements.length; i++){
+		var m = measurements[i];
+		
+		if (m.type.equals("voltage")){
+			//The student measured voltage
+			numberVoltageMeasurements++;
+		}
+		if (m.extra.correctVoltageMeasurement){
+			//The student measured voltage CORRECTLY at least once
+			numberGoodVoltageMeasurements++;
+		}
+
+		if (m.type.equals("current")){
+			//The student measured current
+			numberVoltageMeasurements++;
+		}
+		if (m.extra.correctCurrentMeasurement){
+			//The student measured current CORRECTLY at least once
+			numberGoodCurrentMeasurements++;
+		}
+	}
+	if (numberGoodVoltageMeasurements > 0){
+		answerAssessIndicators.put("voltageMeasurement", new java.lang.Integer(1));	//Voltage was measured correctly at least once
+	}
+	else if (numberVoltageMeasurements > 0){
+		answerAssessIndicators.put("voltageMeasurement", new java.lang.Integer(2));	//Voltage was measured but incorrectly
+	}
+	else{
+		answerAssessIndicators.put("voltageMeasurement", new java.lang.Integer(0));	//Voltage was never measured
+	}
+	if (numberGoodCurrentMeasurements > 0){
+		answerAssessIndicators.put("currentMeasurement", new java.lang.Integer(1));	//Current was measured correctly at least once
+	}
+	else if (numberCurrentMeasurements > 0){
+		answerAssessIndicators.put("currentMeasurement", new java.lang.Integer(2));	//Current was measured but incorrectly
+	}
+	else{
+		answerAssessIndicators.put("currentMeasurement", new java.lang.Integer(0));	//Current was never measured
+	}
+	//
+	
+	//Whether the student blew up the DMM or not
+	if (multimeterBrokenStepCount > 0){
+		answerAssessIndicators.put("brokenDMM", new java.lang.Integer(1));
+	}
+	else{
+		answerAssessIndicators.put("brokenDMM", new java.lang.Integer(0));
+	}
 }
 
 function calculateSolution()
 {
-	//Resistance (we get it from the resistor)
-	solutionObj = otObjectService.createObject(OTUnitValue);
-	solutionObj.setValue(targetResistor.getResistance());
-	solutionObj.setUnit("Ohms");
+	var valueObj;
+	
+	solutionObj = new Object();
+	
+	//Calculate current using battery voltage and total resistance
+	valueObj = otObjectService.createObject(OTUnitValue);
+	var current = circuitBattery.getVoltageDrop() / (targetResistor.getResistance() + circuitBattery.getResistance());
+	valueObj.setValue(current);
+	valueObj.setUnit("A");
+	solutionObj.current = valueObj;
+	//
+	
+	//Calculate voltage drop in the resistor using current and resistor's resistance
+	valueObj = otObjectService.createObject(OTUnitValue);
+	var voltage = current * targetResistor.getResistance();
+	valueObj.setValue(voltage);
+	valueObj.setUnit("V");
+	solutionObj.voltage = valueObj;
+	//
+	
+	//Resistance (we got it from the resistor)
+	valueObj = otObjectService.createObject(OTUnitValue);
+	valueObj.setValue(targetResistor.getResistance());
+	valueObj.setUnit("Ohms");
+	solutionObj.resistance = valueObj;
 	//
 	
 	logInformation("Solution is:"+
-		"  resistance = " + roundValue2(solutionObj.getValue()) + " " + solutionObj.getUnit());
+		"  voltage = " + roundValue2(solutionObj.voltage.getValue()) + " " + solutionObj.voltage.getUnit() +
+		"  current = " + roundValue2(solutionObj.current.getValue()) + " " + solutionObj.current.getUnit() +
+		"  resistance = " + roundValue2(solutionObj.resistance.getValue()) + " " + solutionObj.resistance.getUnit());
 }
 
 /** Shows a message as feedback after submitting an answer */
