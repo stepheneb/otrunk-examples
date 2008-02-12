@@ -521,12 +521,9 @@ function setupMultimeter()
 				
 				var extra = new Object();
 				
-				
 				//Analyze circuit
 				analyzeCircuitSetting(type, extra);
 				analyzeMultimeterLeads(extra);
-				
-				System.out.println(extra.toSource());
 				
 				//See if the DMM was blown up
 				//System.out.println("battery current: " + circuitBattery.getCurrent());
@@ -539,9 +536,12 @@ function setupMultimeter()
 				}
 				//
 				
-				//Record the measurement, including the voltage and current of the target resistor
 				extra.resistorVoltage = targetResistorVoltageString;
 				extra.resistorCurrent = targetResistorCurrentString;
+				
+				System.out.println(extra.toSource());
+				
+				//Record the measurement, including the voltage and current of the target resistor
 				var m = addMeasurement(type, roundedValue, units, extra);
 				//				
 				
