@@ -6,6 +6,7 @@
 		<import class="org.concord.otrunk.OTInclude" />
 		<import class="org.concord.otrunk.view.OTViewEntry" />
 		<import class="org.concord.otrunk.view.OTViewBundle" />
+		<import class="org.concord.otrunk.view.OTViewMode"/>
 		<import class="org.concord.otrunk.view.document.OTCompoundDoc" />
 		<import class="org.concord.otrunk.view.document.OTTextObject" />
 		<import class="org.concord.otrunk.view.OTFrameDisplayAction"/>
@@ -167,7 +168,7 @@
 						<OTViewEntry
 							objectClass="org.concord.otrunk.view.document.OTDocument"
 							viewClass="org.concord.otrunk.view.document.OTDocumentView" />
-						<OTViewEntry
+						<OTViewEntry local_id="ot_text_view"
 							objectClass="org.concord.otrunk.ui.OTText"
 							viewClass="org.concord.otrunk.ui.swing.OTTextEditView" />
 						<OTViewEntry
@@ -205,6 +206,17 @@
 							objectClass="org.concord.otrunkcapa.rubric.OTRubricIndicatorRange"
 							viewClass="org.concord.otrunkcapa.rubric.view.OTRubricIndicatorRangeView" />
 					</viewEntries>
+					<modes>
+						<OTViewMode name="report_mode">
+							<map>
+						  		<entry key="${ot_text_view}">
+						  			<OTViewEntry
+						  				objectClass="org.concord.otrunk.ui.OTText"
+						  				viewClass="org.concord.otrunk.ui.xhtml.OTTextXHTMLView" />
+						  		</entry>
+							</map>
+						</OTViewMode>  
+					</modes>
 					<frame>
 						<OTFrame width="940" height="680" />
 					</frame>
@@ -285,7 +297,7 @@
 						<object refid="${show_report_action}"/>
 					</action>
 				</OTButton>
-				<OTFrameDisplayAction local_id="show_report_action">
+				<OTFrameDisplayAction local_id="show_report_action" viewMode="report_mode">
 					<frame>
 						<OTFrame local_id="report_popup"
 							width="600" height="600" title="Activity Report"/>
