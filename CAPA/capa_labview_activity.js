@@ -92,11 +92,13 @@ function init() {
 	_dateFormat.applyPattern("MM/dd/yyyy HH:mm:ss zzz")
 	
     _monitor = controllerService.getRealObject(otMonitor)	
+
+	setupGUI()
 	
+	reportHeader()	
+	setupAssessmentLogging()
 	initLogging()
 	
-	setupGUI()
-	setupAssessmentLogging()
 	submitAnswerButton.addActionListener(submitAnswerButtonListener)
 	
 	OTCardContainerView.setCurrentCard(otInfoAreaCards, "intro_text")
@@ -110,9 +112,16 @@ function save() {
 	return true
 }
 
+function reportHeader() {
+	var header = otObjectService.createObject(OTText)
+	var now = _dateFormat.format(new Date())
+	header.setText("CAPA - LabVIEW Oscilloscope (" + now + ")")
+	otContents.add(header)
+}
+
 function initLogging() {
 	_info = otObjectService.createObject(OTText)
-	_info.setText("CAPA - LabVIEW Oscilloscope\n")
+	_info.setText("")
 	otContents.add(_info)
 }
 
@@ -194,8 +203,6 @@ function assess() {
 	var madwrapper = converter.getMADWrapper()
 	_assessUtil = new ScopeAssessmentUtil(madwrapper)
 	
-	_info.setText(_info.getText() + _assessUtil.getChangeLog())
-	
 	System.out.println("madwrapper=" + madwrapper)
 
 	_correctAmp = 2 * Double.parseDouble(madwrapper.getLastCIValue("amplitude")) //peak-to-peak amplitude
@@ -205,7 +212,6 @@ function assess() {
 	var frqUnit = _submittedFrqUnit.getAbbreviation()
 	
 	var etime = _dateFormat.format(new Date())
-	log("----------")
 	log(etime + " - Solution is: amplitude=" + ScopeAssessmentUtil.getAmplitudeString(_correctAmp) + ", frequency = " + ScopeAssessmentUtil.getFrequencyString(_correctFrq))
 	
 	var numChanges = madwrapper.getNumChanges()
@@ -248,6 +254,9 @@ function assess() {
 	else {
 		endActivity()
 	}
+
+	log("----------")
+	_info.setText(_info.getText() + _assessUtil.getChangeLog())
 }
 
 function getDiff(a, b) {
