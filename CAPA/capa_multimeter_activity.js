@@ -330,7 +330,7 @@ function setupAsessmentLogging()
 	if (activityInitialized) {
 		//Create assessment object
 		otAssessment = otObjectService.createObject(OTMultimeterAssessment);
-		otContents.add(otAssessment);
+		otContents.add(otContents.size() - 1, otAssessment);
 	}
 	else{
 		//If the activity was already run, take the last assessment object, copy it and continue it
@@ -344,7 +344,7 @@ function setupAsessmentLogging()
 		}
 		if (otLastAssessment != null){
 			otAssessment = otObjectService.copyObject(otLastAssessment, -1);
-			otContents.add(otAssessment);
+			otContents.add(otContents.size() - 1, otAssessment);
 		}
 	}
 }
