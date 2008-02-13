@@ -65,6 +65,8 @@ importClass(Packages.org.concord.calculator.state.OTProgrammableCalculatorListen
 importClass(Packages.org.concord.otrunkcapa.rubric.OTAssessment);
 importClass(Packages.org.concord.otrunkcapa.CAPAUnitUtil);
 
+var activityName = "Measuring Resistance 3.0";
+
 var startHTML = "<html><blockquote>";
 var endHTML = "</blockquote></html>";
 
@@ -86,6 +88,7 @@ var initializationDone = true;	// Whether the init() function is done or not
 var solverFinishedOnce = false;	// ?
 var lastMMStateViable = false;	// ?
 var logFile;					// Used for logging information
+var bLogTextFile = false;		// Whether we log in a test file or not
 var xmlText;					// OTXMLText object used for logging information
 var firstJunctionsConnected = true;	//Used to put up text the first time a junction is connected.
 var firstMeasurement = true; 		//Used to put up text the first time a measurement is made.
@@ -373,21 +376,23 @@ function setupActivityLoaded()
 
 function getLogFilename()
 {
-	return "capa_resistance_activity_log";
+	return "capa_resistance3_activity_log";
 }
 
-/** Creates a text file in the Desktop with logging information. File is called studentName.txt */
+/** Initializes logging in the otContents section */
 function initLogging()
 {
-	var studentName = getLogFilename();
-	var desktop = new File(System.getProperty("user.home") + "/Desktop");
-	var outputFile = new File(desktop, studentName + ".txt");
-	logFile = new PrintWriter(new FileOutputStream(outputFile));
-	// logFile.println(studentName + "\'s log");
-	
+	if (bLogTextFile){
+		var studentName = getLogFilename();
+		var desktop = new File(System.getProperty("user.home") + "/Desktop");
+		var outputFile = new File(desktop, studentName + ".txt");
+		logFile = new PrintWriter(new FileOutputStream(outputFile));
+		// logFile.println(studentName + "\'s log");
+	}	
+
 	//Create an OTText
 	xmlText = otObjectService.createObject(OTText);
-	xmlText.setText("CAPA - Measuring Resistance 3.0\n");
+	xmlText.setText("CAPA - " + activityName + " - Logging information\n");
 	//Put logging information into the otContents of the script object
 	otContents.add(xmlText);
 	
@@ -399,6 +404,7 @@ function setupAsessmentLogging()
 	if (activityInitialized) {
 		//Create assessment object
 		otAssessment = otObjectService.createObject(OTAssessment);
+		otAssessment.setTitle(activityName + " - Student Report");
 		otAssessment.setLabel("resistance");
 		otContents.add(otContents.size() - 1, otAssessment);
 	}
@@ -423,15 +429,18 @@ function logInformation(info)
 {
 	info = (new java.util.Date()).toString() + " - " + info;
 	System.out.println("LOG --- " + info);
-	logFile.println(info);
+	if (bLogTextFile){
+		logFile.println(info);
+	}
 	xmlText.setText(xmlText.getText() + info + "\n");
 }
 
 function finalizeLogging()
 {
 	logInformation("Activity finished");
-	
-	logFile.close();	
+	if (bLogTextFile){
+		logFile.close();
+	}
 }
 
 function setupApparatusPanel()

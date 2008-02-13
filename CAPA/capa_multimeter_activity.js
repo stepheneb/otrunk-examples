@@ -61,6 +61,8 @@ importClass(Packages.org.concord.otrunkcapa.OTMultimeterAssessment);
 importClass(Packages.org.concord.otrunkcck.CCKCircuitAnalyzer);
 importClass(Packages.org.concord.otrunkcapa.CAPAUnitUtil);
 
+var activityName = "Using the digital multimeter";
+
 //var startHTML = "<html><blockquote><p><font size=\"4\" face=\"Verdana\">";
 //var endHTML = "</font></p></blockquote></html>";
 
@@ -82,6 +84,7 @@ var initializationDone = true;	// Whether the init() function is done or not
 var solverFinishedOnce = false;	// ?
 var lastMMStateViable = false;	// ?
 var logFile;					// Used for logging information
+var bLogTextFile = false;		// Whether we log in a test file or not
 var xmlText;					// OTXMLText object used for logging information
 var firstJunctionsConnected = true;	//Used to put up text the first time a junction is connected.
 var firstMeasurement = true; 		//Used to put up text the first time a measurement is made.
@@ -310,15 +313,17 @@ function getLogFilename()
 /** Creates a text file in the Desktop with logging information. */
 function initLogging()
 {
-	var studentName = getLogFilename();
-	var desktop = new File(System.getProperty("user.home") + "/Desktop");
-	var outputFile = new File(desktop, studentName + ".txt");
-	logFile = new PrintWriter(new FileOutputStream(outputFile));
-	// logFile.println(studentName + "\'s log");
-	
+	if (bLogTextFile){
+		var studentName = getLogFilename();
+		var desktop = new File(System.getProperty("user.home") + "/Desktop");
+		var outputFile = new File(desktop, studentName + ".txt");
+		logFile = new PrintWriter(new FileOutputStream(outputFile));
+		// logFile.println(studentName + "\'s log");
+	}
+		
 	//Create an OTText
 	xmlText = otObjectService.createObject(OTText);
-	xmlText.setText("CAPA - Using the digital multimeter\n");
+	xmlText.setText("CAPA - " + activityName + " - Logging information\n");
 	//Put logging information into the otContents of the script object
 	otContents.add(xmlText);
 		
@@ -330,6 +335,7 @@ function setupAsessmentLogging()
 	if (activityInitialized) {
 		//Create assessment object
 		otAssessment = otObjectService.createObject(OTMultimeterAssessment);
+		otAssessment.setTitle(activityName + " - Student Report");
 		otContents.add(otContents.size() - 1, otAssessment);
 	}
 	else{
@@ -353,15 +359,18 @@ function logInformation(info)
 {
 	info = (new java.util.Date()).toString() + " - " + info;
 	System.out.println("LOG --- " + info);
-	logFile.println(info);
+	if (bLogTextFile){
+		logFile.println(info);
+	}
 	xmlText.setText(xmlText.getText() + info + "\n");
 }
 
 function finalizeLogging()
 {
 	logInformation("Activity finished");
-	
-	logFile.close();	
+	if (bLogTextFile){
+		logFile.close();
+	}	
 }
 
 function initStep()
