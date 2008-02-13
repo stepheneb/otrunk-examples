@@ -47,18 +47,20 @@ importClass(Packages.org.concord.otrunk.labview.ScopeAssessmentUtil)
  * otInstAreaCards
  * submitAnswerButton
  * reportButton
- * answerBoxAmp
- * answerBoxFrq
+ * answerBoxCarrierAmp
+ * answerBoxCarrierFrq
  * answerBoxModFrq
- * otUnitChoiceAmp
- * otUnitChoiceFrq
+ * otUnitChoiceCarrierAmp
+ * otUnitChoiceCarrierFrq
  * otUnitChoiceModFrq
- * unitComboBoxAmp
- * unitComboBoxFrq 
- * unitComboBoxMod
+ * unitComboBoxCarrierAmp
+ * unitComboBoxCarrierFrq 
+ * unitComboBoxModFrq
  * otEmptyUnitChoice
- * ampLabel
- * frqLabel
+ * carrierAmpLabel
+ * carrierFrqLabel
+ * modAmpLabel
+ * modFrqLabel
  * valueLabel
  * unitLabel
  * launchButton 
@@ -75,15 +77,15 @@ var	_dateFormat = SimpleDateFormat.getInstance()
 var _currentStep = 1
 var _lastStep = 1
 
-var _correctAmp = 0.0
-var _submittedAmp = 0.0
-var _submittedAmpUnit = ""
+var _correctCarrierAmp = 0.0
+var _submittedCarrierAmp = 0.0
+var _submittedCarrierAmpUnit = ""
 
-var _correctFrq = 0.0
+var _correctCarrierFrq = 0.0
 var _correctModFrq = 0.0
-var _submittedFrq = 0.0
+var _submittedCarrierFrq = 0.0
 var _submittedModFrq = 0.0
-var _submittedFrqUnit = "" 
+var _submittedCarrierFrqUnit = "" 
 var _submittedModFrqUnit = "" 
 
 /**
@@ -101,7 +103,7 @@ function init() {
 	
 	setupGUI()
 	
-	reportHeader()
+	//reportHeader()
 	setupAssessmentLogging()
 	initLogging()
 	
@@ -136,11 +138,13 @@ function log(msg) {
 }
 
 function setupGUI() {
-	answerBoxAmp.setBackground(new Color(1,1,0.7))
-	answerBoxFrq.setBackground(new Color(1,1,0.7))	
+	answerBoxCarrierAmp.setBackground(new Color(1,1,0.7))
+	answerBoxCarrierFrq.setBackground(new Color(1,1,0.7))	
+	answerBoxModAmp.setBackground(new Color(1,1,0.7))			
 	answerBoxModFrq.setBackground(new Color(1,1,0.7))		
-	unitComboBoxAmp.setBackground(new Color(1,1,0.7))
-	unitComboBoxFrq.setBackground(new Color(1,1,0.7))
+	unitComboBoxCarrierAmp.setBackground(new Color(1,1,0.7))
+	unitComboBoxCarrierFrq.setBackground(new Color(1,1,0.7))
+	unitComboBoxModAmp.setBackground(new Color(1,1,0.7))		
 	unitComboBoxModFrq.setBackground(new Color(1,1,0.7))	
 	
 	reportButton.setVisible(false)
@@ -157,10 +161,10 @@ function startStep(step) {
 	var strCardID = "step" + step + "_text"
 	OTCardContainerView.setCurrentCard(otInstAreaCards, strCardID)
 	
-	answerBoxAmp.setText("")
-	answerBoxFrq.setText("")	
-	otUnitChoiceAmp.setCurrentChoice(otEmptyUnitChoice)
-	otUnitChoiceFrq.setCurrentChoice(otEmptyUnitChoice)	
+	answerBoxCarrierAmp.setText("")
+	answerBoxCarrierFrq.setText("")	
+	otUnitChoiceCarrierAmp.setCurrentChoice(otEmptyUnitChoice)
+	otUnitChoiceCarrierFrq.setCurrentChoice(otEmptyUnitChoice)	
 }
 
 
@@ -168,22 +172,28 @@ function startStep(step) {
  * Check if the submitted answers are valid values for assessment
  */
 function validateAnswers() {
-	var ampText = answerBoxAmp.getText()
-	var frqText= answerBoxFrq.getText()
+	var carrierAmpText = answerBoxCarrierAmp.getText()
+	var carrierFrqText= answerBoxCarrierFrq.getText()
+	var modAmpText = answerBoxModAmp.getText()
 	var modFrqText= answerBoxModFrq.getText()	
 	
-	_submittedAmpUnit = otUnitChoiceAmp.getCurrentChoice() 
-    _submittedFrqUnit = otUnitChoiceFrq.getCurrentChoice()
+	_submittedCarrierAmpUnit = otUnitChoiceCarrierAmp.getCurrentChoice() 
+    _submittedCarrierFrqUnit = otUnitChoiceCarrierFrq.getCurrentChoice()
+	_submittedModAmpUnit = otUnitChoiceModAmp.getCurrentChoice()     
     _submittedModFrqUnit = otUnitChoiceModFrq.getCurrentChoice()    
     
-	System.out.println("_submittedAmp = [" + _submittedAmp + "]")
+	System.out.println("_submittedCarrierAmp = [" + _submittedCarrierAmp + "]")
 
-	if (_submittedAmpUnit == null || _submittedAmpUnit.getAbbreviation() == "") {
+	if (_submittedCarrierAmpUnit == null || _submittedCarrierAmpUnit.getAbbreviation() == "") {
 		JOptionPane.showMessageDialog(null, "Set the unit for carrier amplitude and try again.")
 		return false
 	}
-	if (_submittedFrqUnit == null || _submittedFrqUnit.getAbbreviation() == "") {
+	if (_submittedCarrierFrqUnit == null || _submittedCarrierFrqUnit.getAbbreviation() == "") {
 		JOptionPane.showMessageDialog(null, "Set the unit for carrier <quency and try again.")
+		return false
+	}
+	if (_submittedModAmpUnit == null || _submittedModAmpUnit.getAbbreviation() == "") {
+		JOptionPane.showMessageDialog(null, "Set the unit for modulator amplitude and try again.")
 		return false
 	}
 	if (_submittedModFrqUnit == null || _submittedModFrqUnit.getAbbreviation() == "") {
@@ -191,17 +201,24 @@ function validateAnswers() {
 		return false
 	}
 	try {
-		_submittedAmp = Double.parseDouble(ampText)
+		_submittedCarrierAmp = Double.parseDouble(carrierAmpText)
 	}
 	catch (e) {
 		JOptionPane.showMessageDialog(null, "Invalid carrier amplitude value [" + ampText + "].\n" + "Please try again.")
 		return false
 	}
 	try {
-		_submittedFrq = Double.parseDouble(frqText)
+		_submittedCarrierFrq = Double.parseDouble(carrierFrqText)
 	}
 	catch (e) {
 		JOptionPane.showMessageDialog(null, "Invalid carrier frequency value [" + frqText + "].\n" + "Please try again.")
+		return false
+	}
+	try {
+		_submittedModAmp = Double.parseDouble(modAmpText)
+	}
+	catch (e) {
+		JOptionPane.showMessageDialog(null, "Invalid modulator amplitude value [" + ampText + "].\n" + "Please try again.")
 		return false
 	}
 	try {
@@ -226,24 +243,26 @@ function assess() {
 	
 	System.out.println("madwrapper=" + madwrapper)
 
-	_correctAmp = 2.0 * Double.parseDouble(madwrapper.getLastCIValue("amplitude")) //peak-to-peak amplitude
-	_correctFrq = Double.parseDouble(madwrapper.getLastCIValue("frequency"))
-	_correctModFrq = Double.parseDouble(madwrapper.getLastCIValue("frequency2"))
+	_correctCarrierAmp = 2.0 * Double.parseDouble(madwrapper.getLastCIValue("amplitude2")) //peak-to-peak amplitude
+	_correctCarrierFrq = Double.parseDouble(madwrapper.getLastCIValue("frequency2"))
+	_correctModAmp = 2.0 * Double.parseDouble(madwrapper.getLastCIValue("amplitude")) //peak-to-peak amplitude	
+	_correctModFrq = Double.parseDouble(madwrapper.getLastCIValue("frequency"))
 	
 	var etime = _dateFormat.format(new Date())
 	log("----------")
-	log(etime + " - Correct carrier amplitude = " + ScopeAssessmentUtil.getAmplitudeString(_correctAmp))
-	log(etime + " - Correct carrier frequency = " + ScopeAssessmentUtil.getFrequencyString(_correctFrq))
+	log(etime + " - Correct carrier amplitude = " + ScopeAssessmentUtil.getAmplitudeString(_correctCarrierAmp))
+	log(etime + " - Correct carrier frequency = " + ScopeAssessmentUtil.getFrequencyString(_correctCarrierFrq))
 	log(etime + " - Correct modulator frequency = " + ScopeAssessmentUtil.getFrequencyString(_correctModFrq))
 
 	var numChanges = madwrapper.getNumChanges()
 
-    log(etime + " - Answer submitted: carrier amplitude = " + _submittedAmp + " " + _submittedAmpUnit.getAbbreviation())
-  	log(etime + " - Answer submitted: carrier frequency = " + _submittedFrq + " " + _submittedFrqUnit.getAbbreviation())
+    log(etime + " - Answer submitted: carrier amplitude = " + _submittedCarrierAmp + " " + _submittedCarrierAmpUnit.getAbbreviation())
+  	log(etime + " - Answer submitted: carrier frequency = " + _submittedCarrierFrq + " " + _submittedCarrierFrqUnit.getAbbreviation())
   	log(etime + " - Answer submitted: modulator frequency = " + _submittedModFrq + " " + _submittedModFrqUnit.getAbbreviation())  	
     
-	var ampIndicator = checkAmplitude(_correctAmp, _submittedAmp, _submittedAmpUnit)
-	var frqIndicator = checkFrequency(_correctFrq, _submittedFrq, _submittedFrqUnit)
+	var ampIndicator = checkAmplitude(_correctCarrierAmp, _submittedCarrierAmp, _submittedCarrierAmpUnit)
+	var frqIndicator = checkFrequency(_correctCarrierFrq, _submittedCarrierFrq, _submittedCarrierFrqUnit)
+	var modAmpIndicator = checkAmplitude(_correctModAmp, _submittedModAmp, _submittedModAmpUnit)	
 	var modFrqIndicator = checkFrequency(_correctModFrq, _submittedModFrq, _submittedModFrqUnit)
 	
 	System.out.println("ampIndicator=" + ampIndicator)
@@ -257,6 +276,7 @@ function assess() {
 	var indicators = _otAssessment.getIndicatorValues()
 	indicators.put("carrierAmpCorrect", ampIndicator)
 	indicators.put("carrierFrqCorrect", frqIndicator)
+	indicators.put("modAmpCorrect", modAmpIndicator)	
 	indicators.put("modFrqCorrect", modFrqIndicator)
 	indicators.put("numChanges", numChanges)
 	indicators.put("timeTotal", timeTotal)
@@ -342,7 +362,7 @@ function checkFrequency(correctValue, answer, unitAnswer) {
 function checkTimePerDiv(madWrapper) {
 	var ind = 0.0
 	var timePerDiv = _assessUtil.getLastTimePerDiv()
-	var halfWaveLength = 1.0 / _correctFrq / 2.0
+	var halfWaveLength = 1.0 / _correctCarrierFrq / 2.0
 	var viewWidth = timePerDiv * 10
 	var timeDiff = (viewWidth - halfWaveLength) / halfWaveLength
 	
@@ -351,10 +371,10 @@ function checkTimePerDiv(madWrapper) {
 	
 	var voltsPerDiv = _assessUtil.getLastVoltsPerDiv()
 	var halfViewHeight = voltsPerDiv * 4
-	var voltDiff = (halfViewHeight - _correctAmp) / _correctAmp	
+	var voltDiff = (halfViewHeight - _correctCarrierAmp) / _correctCarrierAmp	
 	
 	System.out.println("halfViewHeight=" + halfViewHeight)
-	System.out.println("_correctAmp=" + _correctAmp)
+	System.out.println("_correctCarrierAmp=" + _correctCarrierAmp)
 	
 	var channel = Integer.parseInt(madWrapper.getLastCIValue("SelectChannel"));
 	System.out.println("channel=" + channel);
@@ -406,14 +426,17 @@ function checkTimePerDiv(madWrapper) {
 function endActivity()
 {
 	submitAnswerButton.setVisible(false)
-	answerBoxAmp.setVisible(false)
-	answerBoxFrq.setVisible(false)
+	answerBoxCarrierAmp.setVisible(false)
+	answerBoxCarrierFrq.setVisible(false)
+	answerBoxModAmp.setVisible(false)		
 	answerBoxModFrq.setVisible(false)	
-	unitComboBoxAmp.setVisible(false)
-	unitComboBoxFrq.setVisible(false)
+	unitComboBoxCarrierAmp.setVisible(false)
+	unitComboBoxCarrierFrq.setVisible(false)
+	unitComboBoxModAmp.setVisible(false)	
 	unitComboBoxModFrq.setVisible(false)
-	ampLabel.setVisible(false)
-	frqLabel.setVisible(false)
+	carrierAmpLabel.setVisible(false)
+	carrierFrqLabel.setVisible(false)
+	modAmpLabel.setVisible(false)	
 	modFrqLabel.setVisible(false)
 	valueLabel.setVisible(false)
 	unitLabel.setVisible(false)
