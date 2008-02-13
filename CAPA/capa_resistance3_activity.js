@@ -1112,7 +1112,7 @@ function logAnswerAssessment(answer, correctAnswer, answerValueType, answerUnitT
 
 		if (m.type.equals("current")){
 			//The student measured current
-			numberVoltageMeasurements++;
+			numberCurrentMeasurements++;
 		}
 		if (m.extra.correctCurrentMeasurement){
 			//The student measured current CORRECTLY at least once
