@@ -183,8 +183,6 @@ function validateAnswers() {
 	_submittedModAmpUnit = otUnitChoiceModAmp.getCurrentChoice()     
     _submittedModFrqUnit = otUnitChoiceModFrq.getCurrentChoice()    
     
-	System.out.println("_submittedCarrierAmp = [" + _submittedCarrierAmp + "]")
-
 	if (_submittedCarrierAmpUnit == null || _submittedCarrierAmpUnit.getAbbreviation() == "") {
 		JOptionPane.showMessageDialog(null, "Set the unit for carrier amplitude and try again.")
 		return false
@@ -242,8 +240,6 @@ function assess() {
 	var madwrapper = converter.getMADWrapper()
 	_assessUtil = new ScopeAssessmentUtil(madwrapper)
 	
-	System.out.println("madwrapper=" + madwrapper)
-
 	_correctCarrierAmp = 2.0 * Double.parseDouble(madwrapper.getLastCIValue("amplitude2")) //peak-to-peak amplitude
 	_correctCarrierFrq = Double.parseDouble(madwrapper.getLastCIValue("frequency2"))
 	_correctModAmp = 2.0 * Double.parseDouble(madwrapper.getLastCIValue("amplitude")) //peak-to-peak amplitude	
@@ -279,7 +275,7 @@ function assess() {
 	var modFrqUnitIndicator = checkFrqUnit(carrierFrqUnit)
 
 	var timeTotal = madwrapper.getTimeTotal()
-	var tpdIndicator = checkTimePerDiv(madwrapper)
+	var tpdIndicator = checkSettings(madwrapper)
 	
 	_otAssessment.setLabel("Oscilloscope")
 	var indicators = _otAssessment.getIndicatorValues()
@@ -295,12 +291,8 @@ function assess() {
 	indicators.put("timeTotal", timeTotal)
 	indicators.put("controlSetting", tpdIndicator)
 	
-	System.out.println("numChanges=" + numChanges)
-	System.out.println("timeTotal=" + timeTotal)
-	
 	++_currentStep
 	
-	System.out.println("step=" + _currentStep)
 	if (_currentStep <= _lastStep){
 		startStep(_currentStep)
 	}
@@ -312,12 +304,13 @@ function assess() {
 	_info.setText(_info.getText() + _assessUtil.getChangeLog())
 }
 
+function getDiff(a, b) {
+	return Math.abs(a - b) / b	
+}
+
 function checkAmplitude(correctValue, answer, unit) {
 	var answerValue = 0.0
-	
-	System.out.println("answer text = [" + answer + "]")
-	System.out.println("unit=" + unit)
-	
+
 	answerValue = Double.parseDouble(answer)
 
 	if (unit == "mV") {
@@ -328,21 +321,38 @@ function checkAmplitude(correctValue, answer, unit) {
 		answerValue *= 1000
 	}
 	else if (unit != "V") {
-		return 1.0 // totally wrong
+		return 0 // totally wrong
 	}
 	
-	System.out.println("amp answer=" + answerValue)
+	var diff = getDiff(answerValue, correctValue)
 	
-	var diff =  Math.abs(answerValue - correctValue) / correctValue
-	
-	System.out.println("amp diff=" + diff)
-	return diff	
+	if (diff < 0.05) {
+		return 4  //perfect
+	}
+	else if (diff < 0.1 ) {
+		return 3  //close
+	}
+
+	// NOw check for possiblities of mistaken units
+	diff = getDiff(answerValue, correctValue * 1000)
+	if (diff < 0.05) {
+		return 2
+	} 
+	else if (diff < 0.1) {
+		return 1
+	}
+	diff = getDiff(answerValue, correctValue * 0.001)
+	if (diff < 0.05) {
+		return 2
+	} 	
+	else if (diff < 0.1) {
+		return 1
+	}
+	return 0
 }
 
 function checkFrequency(correctValue, answer, unit) {
 	var answerValue = 0.0
-
-	System.out.println("unit=" + unit)
 
 	answerValue = Double.parseDouble(answer) 
 	
@@ -354,15 +364,34 @@ function checkFrequency(correctValue, answer, unit) {
 		answerValue *= 1.0e6
 	}
 	else if (unit != "Hz") {
-		return 1.0 // totally wrong
+		return 0 // totally wrong
 	}
 	
-	System.out.println("frq answer=" + answerValue)
+	var diff =  getDiff(answerValue, correctValue)
 	
-	var diff =  Math.abs(answerValue - correctValue) / correctValue
-	
-	System.out.println("frq diff=" + diff)
-	return diff	
+	if (diff < 0.05) {
+		return 4  //perfect
+	}
+	else if (diff < 0.1 ) {
+		return 3  //close
+	}
+
+	// NOw check for possiblities of mistaken units
+	diff = getDiff(answerValue, correctValue * 1000)
+	if (diff < 0.05) {
+		return 2
+	} 
+	else if (diff < 0.1) {
+		return 1
+	}
+	diff = getDiff(answerValue, correctValue * 1.0e6)
+	if (diff < 0.05) {
+		return 2
+	} 	
+	else if (diff < 0.1) {
+		return 1
+	}
+	return 0
 }
 
 function checkAmpUnit(unit) {
@@ -385,69 +414,92 @@ function checkFrqUnit(unit) {
 	return 0
 }
 
-// @return 0:excellent, 1: good, 2: ok, 3: bad 
-function checkTimePerDiv(madWrapper) {
-	var ind = 0.0
-	var timePerDiv = _assessUtil.getLastTimePerDiv()
-	var halfWaveLength = 1.0 / _correctCarrierFrq / 2.0
-	var viewWidth = timePerDiv * 10
-	var timeDiff = (viewWidth - halfWaveLength) / halfWaveLength
+function checkSettings(madWrapper) {
+	var timePerDivPoints = 0
+	var voltsPerDivPoints = 0
 	
-	System.out.println("viewWidth=" + viewWidth)
-	System.out.println("halfWaveLength=" + halfWaveLength)
+	var timePerDivs = _assessUtil.getTimePerDivs()
+	var voltsPerDivs = _assessUtil.getVoltsPerDivs()
 	
-	var voltsPerDiv = _assessUtil.getLastVoltsPerDiv()
-	var halfViewHeight = voltsPerDiv * 4
-	var voltDiff = (halfViewHeight - _correctCarrierAmp) / _correctCarrierAmp	
+	for (var i = 0; i < timePerDivs.size(); ++i) {
+		System.out.println(timePerDivs.get(i))
+		var pts = checkTimePerDiv(timePerDivs.get(i), _correctCarrierFrq)
+		if (pts > timePerDivPoints) {
+			timePerDivPoints = pts
+			System.out.println("tpd pts=" + pts)
+		}		
+		pts = checkTimePerDiv(timePerDivs.get(i), _correctModFrq)
+		if (pts > timePerDivPoints) {
+			timePerDivPoints = pts
+			System.out.println("tpd pts=" + pts)			
+		}		
+	}
+	for (var i = 0; i < voltsPerDivs.size(); ++i) {
+		System.out.println(voltsPerDivs.get(i))
+		var pts = _assessUtil.getVoltsPerDivPoints(_correctCarrierAmp)
+		if (pts > voltsPerDivPoints) {
+			voltsPerDivPoints = pts
+		}
+		pts = _assessUtil.getVoltsPerDivPoints(_correctModAmp)		 
+		if (pts > voltsPerDivPoints) {
+			voltsPerDivPoints = pts
+			System.out.println("vpd pts=" + pts)			
+		}
+	}
 	
-	System.out.println("halfViewHeight=" + halfViewHeight)
-	System.out.println("_correctCarrierAmp=" + _correctCarrierAmp)
-	
+	// Check for channel selection
 	var channel = Integer.parseInt(madWrapper.getLastCIValue("SelectChannel"));
-	System.out.println("channel=" + channel);
+	
 	if (channel == 2) {
-		return 3 // bad: channel A has no signal 
+		return 0 // bad: channel A has no signal 
 	}
 	
-	if (timeDiff < -0.1) {
-		ind += 3 //bad				
+	if (timePerDivPoints == 2 && voltsPerDivPoints == 2) {
+		return 3
 	}
-	else if (timeDiff < 0.0) {
-		ind += 2 //ok
+	else if ((timePerDivPoints == 2 && voltsPerDivPoints == 1) || (timePerDivPoints == 1 && voltsPerDivPoints == 2)) {
+		return 2
 	}
-	else if (timeDiff < 1.0) {
-		ind += 0 //excellent
-	}
-	else if (timeDiff < 2.0) {
-		ind += 1 //good
-	}
-	else if (timeDiff < 3.0) {
-		ind += 2 //ok
+	else if (timePerDivPoints == 1 && voltsPerDivPoints == 1) {
+		return 1
 	}
 	else {
-		ind += 3 //bad
+		return 0
 	}
+}
+
+function checkTimePerDiv(tpd, correctFrq) {
+	var viewWidth = tpd * 10
+	var waveLength = 1.0 / correctFrq
 	
-	if (voltDiff < -0.1) {
-		ind += 3 //bad				
-	}
-	else if (voltDiff < 0.0) {
-		ind += 2 //ok
-	}
-	else if (voltDiff < 1.0) {
-		ind += 0 //excellent
-	}
-	else if (voltDiff < 2.0) {
-		ind += 1 //good
-	}
-	else if (voltDiff < 3.0) {
-		ind += 2 //ok
+	if (ScopeAssessmentUtil.optimalTimePerDivPossible(waveLength)) {
+		if (viewWidth < 0.5 * waveLength) {
+			return 0
+		}
+		else if (viewWidth < waveLength) {
+			return 1 	
+		}
+		else if (viewWidth < 2 * waveLength) {
+			return 2
+		}
+		else if (viewWidth < 3 * waveLength) {
+			return 1
+		}
+		else {
+			return 0
+		}
 	}
 	else {
-		ind += 3 //bad
+		if (viewWidth < 0.5 * waveLength) {
+			return 0
+		}
+		else if (viewWidth < 3 * waveLength) {
+			return 2
+		}
+		else {
+			return 0
+		}
 	}
-	
-	return new Integer(ind / 2.0)
 }
 
 function endActivity()
@@ -481,8 +533,6 @@ var submitAnswerButtonHandler = {
 		var prop = System.getProperty("otrunk.capa.labview.no_labview")
 		var noLabview = (prop == "true")
 
-		System.out.println("Entered: submitAnswerButtonHandler" + prop)
-		
 		if (state == LabviewMonitor.RUNNING || noLabview) {
 		    System.out.println("State: running")
 		    if (validateAnswers() == false) {
@@ -492,7 +542,6 @@ var submitAnswerButtonHandler = {
 			var option = JOptionPane.showConfirmDialog(null, msg, "Submitting Answer", JOptionPane.OK_CANCEL_OPTION)
 			
 			if (option == JOptionPane.OK_OPTION) {
-		    	System.out.println("option == OK")
 		  		_monitor.close()
 		    	assess() // must close labVIEW before assess()
 			}
