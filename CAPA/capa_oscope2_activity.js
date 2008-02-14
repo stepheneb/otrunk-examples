@@ -205,21 +205,21 @@ function validateAnswers() {
 		_submittedCarrierAmp = Double.parseDouble(carrierAmpText)
 	}
 	catch (e) {
-		JOptionPane.showMessageDialog(null, "Invalid carrier amplitude value [" + ampText + "].\n" + "Please try again.")
+		JOptionPane.showMessageDialog(null, "Invalid carrier amplitude value [" + carrierAmpText + "].\n" + "Please try again.")
 		return false
 	}
 	try {
 		_submittedCarrierFrq = Double.parseDouble(carrierFrqText)
 	}
 	catch (e) {
-		JOptionPane.showMessageDialog(null, "Invalid carrier frequency value [" + frqText + "].\n" + "Please try again.")
+		JOptionPane.showMessageDialog(null, "Invalid carrier frequency value [" + carrierFrqText + "].\n" + "Please try again.")
 		return false
 	}
 	try {
 		_submittedModAmp = Double.parseDouble(modAmpText)
 	}
 	catch (e) {
-		JOptionPane.showMessageDialog(null, "Invalid modulator amplitude value [" + ampText + "].\n" + "Please try again.")
+		JOptionPane.showMessageDialog(null, "Invalid modulator amplitude value [" + modAmpText + "].\n" + "Please try again.")
 		return false
 	}
 	try {
@@ -249,36 +249,48 @@ function assess() {
 	_correctModAmp = 2.0 * Double.parseDouble(madwrapper.getLastCIValue("amplitude")) //peak-to-peak amplitude	
 	_correctModFrq = Double.parseDouble(madwrapper.getLastCIValue("frequency"))
 	
+	var carrierAmpUnit = _submittedCarrierAmpUnit.getAbbreviation()
+	var carrierFrqUnit = _submittedCarrierFrqUnit.getAbbreviation()
+	var modAmpUnit = _submittedModAmpUnit.getAbbreviation()
+	var modFrqUnit = _submittedModFrqUnit.getAbbreviation()	
+	
 	var etime = _dateFormat.format(new Date())
 	log("----------")
 	log(etime + " - Correct carrier amplitude = " + ScopeAssessmentUtil.getAmplitudeString(_correctCarrierAmp))
 	log(etime + " - Correct carrier frequency = " + ScopeAssessmentUtil.getFrequencyString(_correctCarrierFrq))
+	log(etime + " - Correct modulator amplitude = " + ScopeAssessmentUtil.getAmplitudeString(_correctModAmp))	
 	log(etime + " - Correct modulator frequency = " + ScopeAssessmentUtil.getFrequencyString(_correctModFrq))
 
 	var numChanges = madwrapper.getNumChanges()
 
-    log(etime + " - Answer submitted: carrier amplitude = " + _submittedCarrierAmp + " " + _submittedCarrierAmpUnit.getAbbreviation())
-  	log(etime + " - Answer submitted: carrier frequency = " + _submittedCarrierFrq + " " + _submittedCarrierFrqUnit.getAbbreviation())
-  	log(etime + " - Answer submitted: modulator frequency = " + _submittedModFrq + " " + _submittedModFrqUnit.getAbbreviation())  	
+    log(etime + " - Answer submitted: carrier amplitude = " + _submittedCarrierAmp + " " + carrierAmpUnit)
+  	log(etime + " - Answer submitted: carrier frequency = " + _submittedCarrierFrq + " " + carrierFrqUnit)
+  	log(etime + " - Answer submitted: modulator amplitude = " + _submittedModAmp + " " + modAmpUnit)
+  	log(etime + " - Answer submitted: modulator frequency = " + _submittedModFrq + " " + modFrqUnit)
     
-	var ampIndicator = checkAmplitude(_correctCarrierAmp, _submittedCarrierAmp, _submittedCarrierAmpUnit)
-	var frqIndicator = checkFrequency(_correctCarrierFrq, _submittedCarrierFrq, _submittedCarrierFrqUnit)
-	var modAmpIndicator = checkAmplitude(_correctModAmp, _submittedModAmp, _submittedModAmpUnit)	
-	var modFrqIndicator = checkFrequency(_correctModFrq, _submittedModFrq, _submittedModFrqUnit)
+	var carrierAmpIndicator = checkAmplitude(_correctCarrierAmp, _submittedCarrierAmp, carrierAmpUnit)
+	var carrierFrqIndicator = checkFrequency(_correctCarrierFrq, _submittedCarrierFrq, carrierFrqUnit)
+	var modAmpIndicator = checkAmplitude(_correctModAmp, _submittedModAmp, modAmpUnit)	
+	var modFrqIndicator = checkFrequency(_correctModFrq, _submittedModFrq, modFrqUnit)
 	
-	System.out.println("ampIndicator=" + ampIndicator)
-	System.out.println("frqIndicator=" + frqIndicator)	
-	
+	var carrierAmpUnitIndicator = checkAmpUnit(carrierAmpUnit)
+	var carrierFrqUnitIndicator = checkFrqUnit(carrierFrqUnit)
+	var modAmpUnitIndicator = checkAmpUnit(carrierAmpUnit)
+	var modFrqUnitIndicator = checkFrqUnit(carrierFrqUnit)
+
 	var timeTotal = madwrapper.getTimeTotal()
-	
 	var tpdIndicator = checkTimePerDiv(madwrapper)
 	
 	_otAssessment.setLabel("Oscilloscope")
 	var indicators = _otAssessment.getIndicatorValues()
-	indicators.put("carrierAmpCorrect", ampIndicator)
-	indicators.put("carrierFrqCorrect", frqIndicator)
-	indicators.put("modAmpCorrect", modAmpIndicator)	
-	indicators.put("modFrqCorrect", modFrqIndicator)
+	indicators.put("carrierAmplitudeValue", carrierAmpIndicator)
+	indicators.put("carrierAmplitudeUnit", carrierAmpUnitIndicator)
+	indicators.put("carrierFrequencyValue", carrierFrqIndicator)
+	indicators.put("carrierFrequencyUnit", carrierFrqUnitIndicator)	
+	indicators.put("modAmplitudeValue", modAmpIndicator)	
+	indicators.put("modAmplitudeUnit", modAmpUnitIndicator)		
+	indicators.put("modFrequencyValue", modFrqIndicator)
+	indicators.put("modFrequencyUnit", modFrqUnitIndicator)			
 	indicators.put("numChanges", numChanges)
 	indicators.put("timeTotal", timeTotal)
 	indicators.put("controlSetting", tpdIndicator)
@@ -300,14 +312,10 @@ function assess() {
 	_info.setText(_info.getText() + _assessUtil.getChangeLog())
 }
 
-function checkAmplitude(correctValue, answer, unitAnswer) {
-	var unit = ""
+function checkAmplitude(correctValue, answer, unit) {
 	var answerValue = 0.0
 	
 	System.out.println("answer text = [" + answer + "]")
-	
-	unit = unitAnswer.getAbbreviation()
-
 	System.out.println("unit=" + unit)
 	
 	answerValue = Double.parseDouble(answer)
@@ -331,11 +339,9 @@ function checkAmplitude(correctValue, answer, unitAnswer) {
 	return diff	
 }
 
-function checkFrequency(correctValue, answer, unitAnswer) {
-	var unit = ""
+function checkFrequency(correctValue, answer, unit) {
 	var answerValue = 0.0
 
-	unit = unitAnswer.getAbbreviation()
 	System.out.println("unit=" + unit)
 
 	answerValue = Double.parseDouble(answer) 
@@ -357,6 +363,26 @@ function checkFrequency(correctValue, answer, unitAnswer) {
 	
 	System.out.println("frq diff=" + diff)
 	return diff	
+}
+
+function checkAmpUnit(unit) {
+	a = ["mV", "V", "kV"] 
+	for (i in a) {
+		if (a[i] == unit) {
+			return 1
+		} 
+	}
+	return 0
+}
+
+function checkFrqUnit(unit) {
+	a = ["Hz", "kHz", "MHz"] 
+	for (i in a) {
+		if (a[i] == unit) {
+			return 1
+		} 
+	}
+	return 0
 }
 
 // @return 0:excellent, 1: good, 2: ok, 3: bad 
