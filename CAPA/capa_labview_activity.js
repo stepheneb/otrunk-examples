@@ -167,8 +167,6 @@ function validateAnswers() {
 	_submittedAmpUnit = otUnitChoiceAmp.getCurrentChoice() 
     _submittedFrqUnit = otUnitChoiceFrq.getCurrentChoice()
     
-	System.out.println("_submittedAmp = [" + _submittedAmp + "]")
-
 	if (_submittedAmpUnit == null || _submittedAmpUnit.getAbbreviation() == "") {
 		JOptionPane.showMessageDialog(null, "Set the unit for amplitude and try again.")
 		return false
@@ -204,8 +202,6 @@ function assess() {
 	var madwrapper = converter.getMADWrapper()
 	_assessUtil = new ScopeAssessmentUtil(madwrapper)
 	
-	System.out.println("madwrapper=" + madwrapper)
-
 	_correctAmp = 2 * Double.parseDouble(madwrapper.getLastCIValue("amplitude")) //peak-to-peak amplitude
 	_correctFrq = Double.parseDouble(madwrapper.getLastCIValue("frequency"))
 	
@@ -224,13 +220,7 @@ function assess() {
 	var frqIndicator = checkFrequency(_correctFrq, _submittedFrq, frqUnit)
 	var ampUnitIndicator = checkAmpUnit(ampUnit)
 	var frqUnitIndicator = checkFrqUnit(frqUnit)
-	
-	System.out.println("ampUnit=" + ampUnit + " ind=" + ampIndicator)
-	System.out.println("ampIndicator=" + ampIndicator)
-	System.out.println("frqIndicator=" + frqIndicator)	
-	
 	var timeTotal = madwrapper.getTimeTotal()
-	
 	var settingsIndicator = checkSettings(madwrapper)
 	
 	_otAssessment.setLabel("Oscilloscope")
@@ -243,12 +233,8 @@ function assess() {
 	indicators.put("timeTotal", timeTotal)
 	indicators.put("controlSetting", settingsIndicator)
 	
-	System.out.println("numChanges=" + numChanges)
-	System.out.println("timeTotal=" + timeTotal)
-	
 	++_currentStep
 	
-	System.out.println("step=" + _currentStep)
 	if (_currentStep <= _lastStep){
 		startStep(_currentStep)
 	}
@@ -310,8 +296,6 @@ function checkAmplitude(correctValue, answer, unit) {
 function checkFrequency(correctValue, answer, unit) {
 	var answerValue = 0.0
 
-	System.out.println("checkFrequency: unit = [" + unit + "]")
-
 	answerValue = Double.parseDouble(answer) 
 	
 	if (unit == "kHz") {
@@ -372,7 +356,6 @@ function checkFrqUnit(unit) {
 	return 0
 }
 
-// @return 0:excellent, 1: good, 2: ok, 3: bad 
 function checkSettings(madWrapper) {
 	var viewWidth = _assessUtil.getLastTimePerDiv() * 10
 	var waveLength = 1.0 / _correctFrq
@@ -413,7 +396,6 @@ function checkSettings(madWrapper) {
 
 	// Check for channel selection
 	var channel = Integer.parseInt(madWrapper.getLastCIValue("SelectChannel"));
-	System.out.println("channel=" + channel);
 	if (channel == 2) {
 		return 0 // bad: channel A has no signal 
 	}
@@ -457,8 +439,6 @@ var submitAnswerButtonHandler = {
 		var prop = System.getProperty("otrunk.capa.labview.no_labview")
 		var noLabview = (prop == "true")
 
-		System.out.println("Entered: submitAnswerButtonHandler" + prop)
-		
 		if (state == LabviewMonitor.RUNNING || noLabview) {
 		    System.out.println("State: running")
 		    if (validateAnswers() == false) {
@@ -468,7 +448,6 @@ var submitAnswerButtonHandler = {
 			var option = JOptionPane.showConfirmDialog(null, msg, "Submitting Answer", JOptionPane.OK_CANCEL_OPTION)
 			
 			if (option == JOptionPane.OK_OPTION) {
-		    	System.out.println("option == OK")
 		  		_monitor.close()
 		    	assess() // must close labVIEW before assess()
 			}
