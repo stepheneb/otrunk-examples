@@ -153,6 +153,7 @@ function setupGUI() {
 function setupAssessmentLogging() {
 	// Create assessment object
 	_otAssessment = otObjectService.createObject(OTAssessment)
+	_otAssessment.setTitle("Amplitude Modulation - Student Report")
 	otContents.add(_otAssessment)
 }
 

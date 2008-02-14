@@ -95,7 +95,7 @@ function init() {
 
 	setupGUI()
 	
-	reportHeader()	
+	//reportHeader()	
 	setupAssessmentLogging()
 	initLogging()
 	
@@ -141,6 +141,7 @@ function setupGUI() {
 function setupAssessmentLogging() {
 	// Create assessment object
 	_otAssessment = otObjectService.createObject(OTAssessment)
+	_otAssessment.setTitle("Using an Oscilloscope - Student Report")
 	otContents.add(_otAssessment)
 }
 
