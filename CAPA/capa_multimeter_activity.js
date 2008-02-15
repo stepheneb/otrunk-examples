@@ -967,70 +967,140 @@ function checkAnswerValue(correctAnswer)
 {
 	if (answerObj == null || correctAnswer == null) return;
 	
-	System.out.println("Checking answer " + answerObj.getValue() + " " + answerObj.getUnit() +
-		"    Correct answer is " + correctAnswer.getValue() + " " + correctAnswer.getUnit());
+	//System.out.println("Checking answer " + answerObj.getValue() + " " + answerObj.getUnit() +
+	//	"    Correct answer is " + correctAnswer.getValue() + " " + correctAnswer.getUnit());
 	
-	//Check value
+	//Check value and unit
 	var answerValueType = "";
 	var value = answerObj.getValue();
+	var answerUnitType = "";
+	var unit = answerObj.getUnit();	
 	var correctValue = correctAnswer.getValue();
+	var correctUnit = correctAnswer.getUnit();
 	var tolerance = CAPAUnitUtil.getAppropriateTolerance(value, correctValue);
 	
-	if (CAPAUnitUtil.isApproxEqual(value, correctValue, tolerance)){
+	if (CAPAUnitUtil.compareValues(answerObj, correctAnswer)){
+		//Answer might be given in different units but still correct
 		answerValueType = "correct";
-	}
-	else if (CAPAUnitUtil.isApproxEqual(value, -correctValue, tolerance)){
-		answerValueType = "correct wrong sign";
-	}
-	else if (CAPAUnitUtil.compareValues(answerObj, correctAnswer)){
-		//Answer given in different units but still correct
-		answerValueType = "correct";
+		answerUnitType = "correct";
 	}
 	else if (CAPAUnitUtil.compareValues(answerObj, correctAnswer, true, false)){
-		//Answer given in different units but still correct but wrong sign
+		//Answer considered correct but wrong sign
+		//Answer might be given in different units but still correct 
 		answerValueType = "correct wrong sign";
+		answerUnitType = "correct";
 	}
-	else{
-		if (correctValue != 0 && value != 0 && 
-				(MathUtil.isApproxEqual(value*1000, correctValue, 0.1) ||
-				MathUtil.isApproxEqual(value/1000, correctValue, 0.001))){
-			answerValueType = "correct in other unit";
+	else if (CAPAUnitUtil.compareValues(answerObj, correctAnswer, false, true)){
+		//Answer might not have any units but the value is correct
+		answerValueType = "correct";
+		if (unit == null || unit.equals("")){
+			answerUnitType = "no unit";
 		}
 		else{
-			answerValueType = "incorrect";
-		}
-	}
-	//
-	//Check unit
-	var answerUnitType = "";
-	var unit = answerObj.getUnit();
-	if (unit == null || unit.equals("")){
-		answerUnitType = "no unit";
-	}
-	else if (unit.equalsIgnoreCase(correctAnswer.getUnit())){
-		answerUnitType = "correct";
-		//Fix case of unit
-		answerObj.setUnit(correctAnswer.getUnit());
-	}
-	else if (CAPAUnitUtil.isUnitCompatible(answerObj, correctAnswer)){
-		if (answerValueType == "correct" || answerValueType == "correct wrong sign"){
-			//If they specified units and the units are not the same as the answer units
-			//but the value was considered correct, is because the units had to be correct too
-			//For example, let's say the correct answer was 1.2 A. If the value answer was considered 
-			//correct but they did specify units (meaning the answer wasn't simply "1.2") AND their units
-			//were not "A", then it means that the whole value+unit answer had to be considered correct,
-			//so their answer was either 1200 mA or 0.0012 kA. In this case, the units are considered correct 
+			//This shouldn't happen
 			answerUnitType = "correct";
 		}
+	}
+	else if (CAPAUnitUtil.compareValues(answerObj, correctAnswer, true, true)){
+		//Answer might not have any units but the value is correct (wrong sign)
+		answerValueType = "correct wrong sign";
+		if (unit == null || unit.equals("")){
+			answerUnitType = "no unit";
+		}
 		else{
-			answerUnitType = "incorrect but other good unit";
+			//This shouldn't happen
+			answerUnitType = "correct";
 		}
 	}
-	else {
-		answerUnitType = "incorrect";
+	else{
+		//Combination value/type is not correct
+		
+		if (unit == null || unit.equals("")){
+			answerUnitType = "no unit";
+			
+			if (CAPAUnitUtil.isApproxEqual(value, correctValue, tolerance)){
+				answerValueType = "correct";
+			}
+			else if (CAPAUnitUtil.isApproxEqual(value, -correctValue, tolerance)){
+				answerValueType = "correct wrong sign";
+			}
+			else if (correctValue != 0 && value != 0 && 
+					(MathUtil.isApproxEqual(value*1000, correctValue, 0.1) ||
+					MathUtil.isApproxEqual(value/1000, correctValue, 0.001))){
+				answerValueType = "correct in other unit";
+			}			
+			else if (correctValue != 0 && value != 0 && 
+					(MathUtil.isApproxEqual(value*1000, -correctValue, 0.1) ||
+					MathUtil.isApproxEqual(value/1000, -correctValue, 0.001))){
+				answerValueType = "correct in other unit wrong sign";
+			}
+			else{
+				answerValueType = "incorrect";
+			}
+		}
+		else if (unit.equalsIgnoreCase(correctAnswer.getUnit())){
+
+			if (correctValue != 0 && value != 0 && 
+					(MathUtil.isApproxEqual(value*1000, correctValue, 0.1) ||
+					MathUtil.isApproxEqual(value/1000, correctValue, 0.001))){
+				answerValueType = "correct in other unit";			
+				answerUnitType = "incorrect but compatible";
+			}
+			else if (correctValue != 0 && value != 0 && 
+					(MathUtil.isApproxEqual(value*1000, -correctValue, 0.1) ||
+					MathUtil.isApproxEqual(value/1000, -correctValue, 0.001))){
+				answerValueType = "correct in other unit wrong sign";			
+				answerUnitType = "incorrect but compatible";
+			}
+			else{
+				answerValueType = "incorrect";
+				answerUnitType = "correct";
+			}
+		}
+		else if (CAPAUnitUtil.isUnitCompatible(answerObj, correctAnswer)){
+			answerUnitType = "incorrect but compatible";
+
+			if (correctValue != 0 && value != 0 && 
+					(CAPAUnitUtil.isApproxEqual(value, correctValue, tolerance) ||
+					MathUtil.isApproxEqual(value*1000, correctValue, 0.1) ||
+					MathUtil.isApproxEqual(value/1000, correctValue, 0.001))){
+				answerValueType = "correct in other unit";			
+			}
+			else if (correctValue != 0 && value != 0 && 
+					(CAPAUnitUtil.isApproxEqual(value, -correctValue, tolerance) ||
+					MathUtil.isApproxEqual(value*1000, -correctValue, 0.1) ||
+					MathUtil.isApproxEqual(value/1000, -correctValue, 0.001))){
+				answerValueType = "correct in other unit wrong sign";			
+			}
+			else{
+				answerValueType = "incorrect";
+			}
+		}			
+		else{
+			answerUnitType = "incorrect";
+
+			if (correctValue != 0 && value != 0 && 
+					(CAPAUnitUtil.isApproxEqual(value, correctValue, tolerance) ||
+					MathUtil.isApproxEqual(value*1000, correctValue, 0.1) ||
+					MathUtil.isApproxEqual(value/1000, correctValue, 0.001))){
+				answerValueType = "correct in other unit";			
+			}
+			else if (correctValue != 0 && value != 0 && 
+					(CAPAUnitUtil.isApproxEqual(value, -correctValue, tolerance) ||
+					MathUtil.isApproxEqual(value*1000, -correctValue, 0.1) ||
+					MathUtil.isApproxEqual(value/1000, -correctValue, 0.001))){
+				answerValueType = "correct in other unit wrong sign";			
+			}
+			else{
+				answerValueType = "incorrect";
+			}
+		}
+		
 	}
 	//
-		
+	
+	//System.out.println("checkAnswerValue, answerValueType: " + answerValueType + " answerUnitType: "+ answerUnitType);
+	
 	showSolution(answerValueType, answerUnitType, false);
 	
 	logAnswerAssessment(answerObj, correctAnswer, answerValueType, answerUnitType);
@@ -1068,6 +1138,9 @@ function logAnswerAssessment(answer, correctAnswer, answerValueType, answerUnitT
 	else if (answerValueType.equals("correct in other unit")){
 		answerAssessIndicators.put("valueCorrect", new java.lang.Integer(3));
 	}
+	else if (answerValueType.equals("correct in other unit wrong sign")){
+		answerAssessIndicators.put("valueCorrect", new java.lang.Integer(4));
+	}
 	else if (answerValueType.equals("incorrect")){
 		answerAssessIndicators.put("valueCorrect", new java.lang.Integer(0));
 	}
@@ -1078,7 +1151,7 @@ function logAnswerAssessment(answer, correctAnswer, answerValueType, answerUnitT
 	else if (answerUnitType.equals("correct")){
 		answerAssessIndicators.put("unitCorrect", new java.lang.Integer(1));
 	}
-	else if (answerUnitType.equals("incorrect but other good unit")){
+	else if (answerUnitType.equals("incorrect but compatible")){
 		answerAssessIndicators.put("unitCorrect", new java.lang.Integer(2));
 	}
 	else if (answerUnitType.equals("incorrect")){
@@ -1246,23 +1319,32 @@ function findMeasurement(valueObj)
 	var measurement = null;
 	//Look in the last measurements first
 	if (measurement == null){
-		measurement = findMeasurementInRange(valueObj, measurementIndexStepStarted, measurements.length);
+		measurement = findMeasurementInRange(valueObj, measurementIndexStepStarted, measurements.length, true);
 	}
 	//Then look in the previous measurements
 	if (measurement == null){
-		measurement = findMeasurementInRange(valueObj, 0, measurementIndexStepStarted);
+		measurement = findMeasurementInRange(valueObj, 0, measurementIndexStepStarted, true);
 	}
+	//Now compare just the value without paying attention to the units
+	if (measurement == null){
+		measurement = findMeasurementInRange(valueObj, 0, measurements.length, false);
+	}
+	
 	return measurement;
 }
 
-function findMeasurementInRange(valueObj, startIndex, endIndex)
+function findMeasurementInRange(valueObj, startIndex, endIndex, bIncludeUnits)
 {
 	var measurementValueObj = otObjectService.createObject(OTUnitValue);
 	
-	for (var i = 0; i < endIndex; i++){
+	//for (var i = startIndex; i < endIndex; i++){
+	//Start at the end of the list (the last measurement is the one more likely to be the one)
+	for (var i = endIndex - 1; i >= startIndex; i--){
 		var measurement = measurements[i];
 		measurementValueObj.setValue(measurement.value);
-		measurementValueObj.setUnit(measurement.unit);
+		if (bIncludeUnits){
+			measurementValueObj.setUnit(measurement.unit);
+		}
 		
 		if (CAPAUnitUtil.compareValues(measurementValueObj, valueObj, true, true)){
 			logInformation("Answer matches measurement "+i);
@@ -1320,7 +1402,7 @@ function showSolution(answerValueType, answerUnitType, bShowNow)
 		else if (answerUnitType.equals("correct")){
 			solutionMsg = "Correct!";
 		}
-		else if (answerUnitType.equals("incorrect but other good unit")){
+		else if (answerUnitType.equals("incorrect but compatible")){
 			solutionMsg = "Correct numerically but unit supplied is incorrect.";
 		}
 		else if (answerUnitType.equals("incorrect")){
@@ -1334,7 +1416,7 @@ function showSolution(answerValueType, answerUnitType, bShowNow)
 		else if (answerUnitType.equals("correct")){
 			solutionMsg = "Correct but wrong sign";
 		}
-		else if (answerUnitType.equals("incorrect but other good unit")){
+		else if (answerUnitType.equals("incorrect but compatible")){
 			solutionMsg = "Correct numerically but wrong sign and unit supplied is incorrect.";
 		}
 		else if (answerUnitType.equals("incorrect")){
@@ -1343,16 +1425,30 @@ function showSolution(answerValueType, answerUnitType, bShowNow)
 	}
 	else if (answerValueType.equals("correct in other unit")){
 		if (answerUnitType.equals("no unit")){
-			solutionMsg = "Value is correct but no units supplied.";
+			solutionMsg = "Value is correct in other unit but no units supplied.";
 		}
 		else if (answerUnitType.equals("correct")){
 			solutionMsg = "Value correct but not in conjunction with the unit supplied.";
 		}
-		else if (answerUnitType.equals("incorrect but other good unit")){
+		else if (answerUnitType.equals("incorrect but compatible")){
 			solutionMsg = "Value correct but not in conjunction with the unit supplied.";
 		}
 		else if (answerUnitType.equals("incorrect")){
 			solutionMsg = "Value correct but unit supplied is inappropriate (incompatible).";
+		}
+	}
+	else if (answerValueType.equals("correct in other unit wrong sign")){
+		if (answerUnitType.equals("no unit")){
+			solutionMsg = "Value is correct in other unit wrong sign but no units supplied.";
+		}
+		else if (answerUnitType.equals("correct")){
+			solutionMsg = "Value correct in other unit wrong sign but not in conjunction with the unit supplied.";
+		}
+		else if (answerUnitType.equals("incorrect but compatible")){
+			solutionMsg = "Value correct in other unit wrong sign but not in conjunction with the unit supplied.";
+		}
+		else if (answerUnitType.equals("incorrect")){
+			solutionMsg = "Value correct in other unit wrong sign but unit supplied is inappropriate (incompatible).";
 		}
 	}
 	else if (answerValueType.equals("incorrect")){
@@ -1362,7 +1458,7 @@ function showSolution(answerValueType, answerUnitType, bShowNow)
 		else if (answerUnitType.equals("correct")){
 			solutionMsg = "Incorrect value.";
 		}
-		else if (answerUnitType.equals("incorrect but other good unit")){
+		else if (answerUnitType.equals("incorrect but compatible")){
 			solutionMsg = "Incorrect value.";
 		}
 		else if (answerUnitType.equals("incorrect")){
