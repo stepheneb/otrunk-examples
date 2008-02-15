@@ -15,6 +15,7 @@
  * cckModelView			(OTCCKCAPAModelView)		// CCK model view object
  * apparatusPanel		(JPanel)					// Swing panel that contains the CCKPanel (useful to take the screenshot)
  * otNotebookObject		(OTNotebook) 				// OT Notebook object to use to keep track of measurements
+ * otInstAreaCards		(OTCardContainer)			// OT card container for the instructons area of the activity. Used to switch between messages by switching to a different card.
  * otInfoAreaCards		(OTCardContainer)			// OT card container for the information area of the activity. Used to switch between messages by switching to a different card.
  * submitAnswerButton	(JButton) 					// Actual swing button used to submit the answer
  * answerBox			(JTextArea)					// Swing text component where the user writes the answer
@@ -644,7 +645,7 @@ function showFirstMeasurementMessage()
 	if (firstMeasurement)
 	{
 		firstMeasurement = false;
-		OTCardContainerView.setCurrentCard(otInfoAreaCards, "firstMeasurementText");
+		OTCardContainerView.setCurrentCard(otInstAreaCards, "firstMeasurementText");
 	}
 }
 
@@ -653,7 +654,7 @@ function showFirstJunctionMessage()
 	if(firstJunctionsConnected)
 	{
 		firstJunctionsConnected = false;
-		OTCardContainerView.setCurrentCard(otInfoAreaCards, "firstJunctionText");
+//		OTCardContainerView.setCurrentCard(otInstAreaCards, "firstJunctionText");
 	}
 }
 

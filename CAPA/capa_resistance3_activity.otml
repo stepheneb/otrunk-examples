@@ -226,11 +226,19 @@
 				<OTInclude href="capa_resistance3_rubric.otml"/> 
 			</includes>
 			<root>
-				<OTCompoundDoc name="Resistor Activity">
-					<bodyText><object refid="${cck_model_placement_view}"/></bodyText>
-				</OTCompoundDoc>
+				<object refid="${start_page}"/>
 			</root>
 			<library>
+				<OTCompoundDoc local_id="main_activity_doc" name="Measuring Resistance">
+					<bodyText>
+						<object refid="${cck_model_placement_view}"/>
+					</bodyText>
+				</OTCompoundDoc>
+				<OTCompoundDoc local_id="instructions_area">
+					<bodyText>
+						<object refid="${instructionsCards}"/>
+					</bodyText>
+				</OTCompoundDoc>
 				<OTCompoundDoc local_id="information_area">
 					<bodyText>
 						<p align="center"><img src="http://capa.concord.org/capa.gif"/></p>
@@ -244,7 +252,9 @@
 						<OTPlacement component="${submitAnswerButton}"
 							height="40" width="160" x="830" y="610" />
 						<OTPlacement component="${information_area}"
-							height="600" width="380" x="660" y="10" />
+							height="300" width="380" x="660" y="10" />
+						<OTPlacement component="${instructions_area}"
+							height="300" width="380" x="660" y="310" />
 						<OTPlacement component="${answerBox}"
 							height="28" width="60" x="670" y="610" />
 						<OTPlacement component="${unit_choice}"
@@ -259,12 +269,16 @@
 							height="0" width="0" x="0" y="0" />
 					</placements>
 				</OTPlacementContainer>
+				<OTCardContainer local_id="instructionsCards">
+					<cards>
+						<object refid="${instructionsText}"/>
+						<object refid="${firstMeasurementText}"/>
+						<object refid="${solutionText}"/>
+					</cards>
+				</OTCardContainer>
 				<OTCardContainer local_id="infoCards">
 					<cards>
 						<object refid="${introText}"/>
-						<object refid="${firstMeasurementText}"/>
-						<object refid="${firstJunctionText}"/>
-						<object refid="${solutionText}"/>
 						<object refid="${endText}"/>
 					</cards>
 				</OTCardContainer>
@@ -349,6 +363,7 @@
 						<OTScriptVariableView name="cckModelView" reference="${cck_model}" />
 						<OTScriptVariableComponent name="apparatusPanel" reference="${cck_model}" />
 						<OTScriptVariable name="otNotebookObject" reference="${notebook}" />
+						<OTScriptVariable name="otInstAreaCards" reference="${instructionsCards}" />
 						<OTScriptVariable name="otInfoAreaCards" reference="${infoCards}" />
 						<OTScriptVariableComponent name="submitAnswerButton" reference="${submitAnswerButton}" />
 						<OTScriptVariableComponent name="answerBox" reference="${answerBox}" />
@@ -398,27 +413,31 @@
 							<blockquote>
 								<p>
 									<font size="4" face="Verdana">
-The resistor on the screen has
-had its color bands rubbed off.
-Your job is to calculate its
-resistance. You can use the
-digital multimeter (DMM) to make
-measurements (if you right-click
-it you can change its size).
-Turn the dial to turn on the DMM
-and make it function as a
-voltmeter or an ammeter (the
-ohmmeter function is broken).
-Try not to make too many measurements
-and to get the answer as quickly as you can. 
-Each time you make a measurement 
-it will be saved in a lab notebook. 
-You can look at the notebook to see 
-all your measurements so far by 
-clicking on the button. 
-When you think you
-know the answer, type it and 
-click on the <b>Submit Answer</b> button.
+The resistor in this cicuit has had its color bands rubbed off. 
+Your job is to calculate its <b><font color="FF0000">resistance</font></b>. 
+Unfortunately, the ohmmeter function on your digital multimeter (DMM) is broken. 
+Work as efficiently as possible and do not damage your DMM.
+									</font>
+								</p>
+							</blockquote>
+						</html>
+					</text>
+				</OTTextPane>
+				<OTTextPane local_id="instructionsText" name="instructionsText">
+					<text>
+						<html>
+							<blockquote>
+								<p>
+									<font size="4" face="Verdana">
+Use the digital multimeter (DMM) to make measurements. 
+Turn the dial to turn on the DMM and make it function as a voltmeter or an ammeter. 
+Right-click the DMM to make it larger. 
+Each time you make a measurement it will be saved in a lab notebook. 
+You can look at the notebook to see all your measurements so far by clicking on the button.
+<br/>
+When you think you know the answer, type it in the field below and click on the 
+<b>Submit Answer</b> button. 
+
 									</font>
 								</p>
 							</blockquote>
@@ -431,21 +450,12 @@ click on the <b>Submit Answer</b> button.
 							<blockquote>
 								<p>
 									<font size="4" face="Verdana">
-You've connected the digital multimeter to the circuit. Remember, you can make it a voltmeter or an ammeter by turning the dial. If you're having trouble seeing it, you can make it bigger by right-clicking on it.
-									</font>
-								</p>
-							</blockquote>
-						</html>
-					</text>
-				</OTTextPane>
-				<OTTextPane local_id="firstJunctionText" name="firstJunctionText">
-					<text>
-						<html>
-							<blockquote>
-								<p>
-									<font size="4" face="Verdana">
-You've just connected two components. If you want to break the connection at any time, 
-right-click on the junction and select "Split Junction". 
+You've connected the digital multimeter to the circuit. 
+Remember, you can make it a voltmeter or an ammeter by turning the dial. 
+If you're having trouble seeing it, you can make it bigger by right-clicking on it.
+<br/>
+This measurement will be saved in the lab notebook. Click on the <b>Show Notebook</b>
+to view all your measurements so far.
 									</font>
 								</p>
 							</blockquote>
@@ -480,6 +490,50 @@ Every time you make a measurement it will be recorded here
 and you can add comments to it. 
 							</p>
 						</font>
+					</bodyText>
+				</OTCompoundDoc>
+				<OTTextPane local_id="startText" name="startText">
+					<text>
+						<html>
+			        		<div style="padding-top: 15mm; padding-bottom: 15mm; padding-left: 30mm; padding-right: 30mm;">
+				            	<p/>
+<h3><font face="Verdana">Measuring Resistance</font></h3>
+<p><font size="4" face="Verdana">
+On this test you will use a digital multimeter to determine 
+the resistance of an unknown resistor. 
+The catch is that the ohmmeter function of the multimeter is broken.
+</font></p>
+<p><font size="4" face="Verdana">
+On the next screen, you will see a simulated multimeter and a circuit 
+consisting of a resistor in series with a battery and a switch. 
+</font></p>
+<p><font size="4" face="Verdana">
+Make whatever measurements and calculations you need to determine 
+the resistance of the resistor. Do this as quickly and efficiently 
+as you can without being sloppy. Each time you make a measurement 
+it will automatically be stored in a <i>lab notebook</i> that you can
+view whenever you want. 
+You can also use paper and pencil and a calculator, if you have one.
+</font></p>
+<p><font size="4" face="Verdana">
+When you finish the test, click the report button to see your score.
+</font></p>
+<p><font size="4" face="Verdana">
+Good luck, and thank you for helping us with our research!
+</font></p>
+							</div>
+						</html>
+					</text>
+				</OTTextPane>
+	 			<OTCompoundDoc local_id="start_page" name="Using a Multimeter">
+					<bodyText>
+		            	<p align="center">
+		              		<img src="http://capa.concord.org/capa.gif"/>
+		            	</p>
+						<object refid="${startText}"/>
+						<p align="center"><font size="4" face="Verdana">
+							<a href="${main_activity_doc}">Continue</a>
+						</font></p>
 					</bodyText>
 				</OTCompoundDoc>
 			</library>
