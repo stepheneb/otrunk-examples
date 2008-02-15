@@ -3,6 +3,7 @@
   <imports>
     <import class="org.concord.otrunk.OTSystem"/>
     <import class="org.concord.otrunk.OTInclude" />
+    <import class="org.concord.otrunk.udl.ui.OTDataCollectorViewConfig" />
     <import class="org.concord.otrunk.util.OTSharingBundle"/>
     <import class="org.concord.otrunk.view.OTFolderObject"/>
     <import class="org.concord.otrunk.view.OTViewEntry"/>
@@ -43,19 +44,18 @@
             <OTViewEntry 
               objectClass="org.concord.data.state.OTDataField" 
               viewClass="org.concord.data.state.OTDataFieldView"/>
-            <OTViewEntry
-              objectClass="org.concord.datagraph.state.OTDataCollector" 
-              viewClass="org.concord.otrunk.udl.ui.OTDataCollectorEditView"/>
-            <OTViewEntry
-              objectClass="org.concord.graph.util.state.OTDrawingTool" 
-              viewClass="org.concord.datagraph.state.OTDataDrawingToolView"/>
+            <OTDataCollectorViewConfig viewClass="org.concord.otrunk.udl.ui.OTDataCollectorEditView" 
+            	objectClass="org.concord.datagraph.state.OTDataCollector">
+                    <predefinedGraphs>
+                      <object refid="088786c2-8719-11dc-8314-0800200c9a66" />
+                    </predefinedGraphs>
+            </OTDataCollectorViewConfig>
             <OTViewEntry
               objectClass="org.concord.datagraph.state.OTMultiDataGraph" 
               viewClass="org.concord.datagraph.state.OTMultiDataGraphView"/>
-            <OTViewEntry
-              objectClass="org.concord.otrunk.view.OTFolderObject"
-              viewClass="org.concord.otrunk.view.OTFolderObjectView"/>
-            <OTDocumentViewConfig objectClass="org.concord.otrunk.view.document.OTCompoundDoc" viewClass="org.concord.otrunk.view.document.OTDocumentView" />
+            <OTDocumentViewConfig 
+            	objectClass="org.concord.otrunk.view.document.OTCompoundDoc" 
+            	viewClass="org.concord.otrunk.view.document.OTDocumentView" />
           </viewEntries>
         </OTViewBundle>
         <OTSharingBundle />
@@ -69,8 +69,36 @@
         		<object refid="${graph-2}"/>
         	</bodyText>
         	<documentRefs>
-        		<OTDataCollector local_id="graph-1"/>
-        		<OTDataCollector local_id="graph-2"/>
+        		<OTDataCollector name="Data graph" title="Data graph" local_id="graph-1">
+                        <source>
+                          <OTDataGraphable name="Data Graph" connectPoints="true" controllable="true" yColumn="1" drawMarks="false" color="16711680" xColumn="0" lineWidth="2.0">
+                            <dataStore>
+                              <OTDataStore />
+                            </dataStore>
+                          </OTDataGraphable>
+                        </source>
+                        <xDataAxis>
+                          <OTDataAxis max="60.0" units="s" min="0.0" label="Time" />
+                        </xDataAxis>
+                        <yDataAxis>
+                          <OTDataAxis max="40.0" units="" min="0.0" label="" />
+                        </yDataAxis>
+                      </OTDataCollector>
+        		<OTDataCollector name="Data graph" title="Data graph" local_id="graph-2">
+                        <source>
+                          <OTDataGraphable name="Data Graph" connectPoints="true" controllable="true" yColumn="1" drawMarks="false" color="16711680" xColumn="0" lineWidth="2.0">
+                            <dataStore>
+                              <OTDataStore />
+                            </dataStore>
+                          </OTDataGraphable>
+                        </source>
+                        <xDataAxis>
+                          <OTDataAxis max="60.0" units="s" min="0.0" label="Time" />
+                        </xDataAxis>
+                        <yDataAxis>
+                          <OTDataAxis max="40.0" units="" min="0.0" label="" />
+                        </yDataAxis>
+                      </OTDataCollector>
         	</documentRefs>
         </OTCompoundDoc>
       </root>
