@@ -8,6 +8,7 @@
     <import class="org.concord.otrunk.view.OTFolderObject"/>
     <import class="org.concord.otrunk.view.OTViewEntry"/>
     <import class="org.concord.otrunk.view.OTViewBundle" />
+    <import class="org.concord.otrunk.view.OTViewMode" />
     <import class="org.concord.otrunk.view.document.OTCompoundDoc" />
     <import class="org.concord.otrunk.view.document.OTDocumentViewConfig" />
     <import class="org.concord.framework.otrunk.view.OTFrame"/>
@@ -36,20 +37,32 @@
         <OTInclude href="../UDL/global-imports/predefined-sensor-graphs.otml" />
       </includes>
       <bundles>
-      	<OTViewBundle showLeftPanel="false">
+      	<OTViewBundle showLeftPanel="false" currentMode="authoring">
+      		<modes>
+      			<OTViewMode name="authoring">
+      				<map>
+      					<entry key="${graph-view}">
+      						<OTDataCollectorViewConfig viewClass="org.concord.otrunk.udl.ui.OTDataCollectorEditView" 
+				            	objectClass="org.concord.datagraph.state.OTDataCollector">
+				                    <predefinedGraphs>
+				                      <object refid="088786c2-8719-11dc-8314-0800200c9a66" />
+				                    </predefinedGraphs>
+				            </OTDataCollectorViewConfig>
+      					</entry>
+      				</map>
+      			</OTViewMode>
+      			<OTViewMode name="student">
+      				<map/>
+      			</OTViewMode>
+      		</modes>
           <viewEntries>
-            <OTViewEntry 
-              objectClass="org.concord.datagraph.state.OTDataGraph" 
-              viewClass="org.concord.datagraph.state.OTDataGraphView"/>
             <OTViewEntry 
               objectClass="org.concord.data.state.OTDataField" 
               viewClass="org.concord.data.state.OTDataFieldView"/>
-            <OTDataCollectorViewConfig viewClass="org.concord.otrunk.udl.ui.OTDataCollectorEditView" 
-            	objectClass="org.concord.datagraph.state.OTDataCollector">
-                    <predefinedGraphs>
-                      <object refid="088786c2-8719-11dc-8314-0800200c9a66" />
-                    </predefinedGraphs>
-            </OTDataCollectorViewConfig>
+            <OTViewEntry 
+            	local_id="graph-view" 
+            	viewClass="org.concord.datagraph.state.OTDataCollectorView" 
+            	objectClass="org.concord.datagraph.state.OTDataCollector" />
             <OTViewEntry
               objectClass="org.concord.datagraph.state.OTMultiDataGraph" 
               viewClass="org.concord.datagraph.state.OTMultiDataGraphView"/>
