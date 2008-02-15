@@ -253,10 +253,10 @@ function assess() {
 	var etime = _dateFormat.format(new Date())
 	log("----------")
 	log(etime + " - Correct carrier amplitude = " + ScopeAssessmentUtil.getAmplitudeString(_correctCarrierAmp))
-	log(etime + " - Correct carrier frequency = " + ScopeAssessmentUtil.getFrequencyString(_correctCarrierFrq))
+	log(etime + " - Correct carrier frequency = " + ScopeAssessmentUtil.getFrequencyString(_correctCarrierFrq) + " (T = " + ScopeAssessmentUtil.getPeriodString(1/_correctCarrierFrq) + ")")
 	log(etime + " - Correct modulator amplitude = " + ScopeAssessmentUtil.getAmplitudeString(_correctModAmp))	
-	log(etime + " - Correct modulator frequency = " + ScopeAssessmentUtil.getFrequencyString(_correctModFrq))
-
+	log(etime + " - Correct modulator frequency = " + ScopeAssessmentUtil.getFrequencyString(_correctModFrq) + " (T = " + ScopeAssessmentUtil.getPeriodString(1/_correctModFrq) + ")")
+	
 	var numChanges = madwrapper.getNumChanges()
 
     log(etime + " - Answer submitted: carrier amplitude = " + _submittedCarrierAmp + " " + carrierAmpUnit)

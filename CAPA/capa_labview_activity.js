@@ -209,7 +209,8 @@ function assess() {
 	var frqUnit = _submittedFrqUnit.getAbbreviation()
 	
 	var etime = _dateFormat.format(new Date())
-	log(etime + " - Solution is: amplitude=" + ScopeAssessmentUtil.getAmplitudeString(_correctAmp) + ", frequency = " + ScopeAssessmentUtil.getFrequencyString(_correctFrq))
+	log(etime + " - Correct amplitude = " + ScopeAssessmentUtil.getAmplitudeString(_correctAmp))
+	log(etime + " - Correct frequency = " + ScopeAssessmentUtil.getFrequencyString(_correctFrq) + " (T = " + ScopeAssessmentUtil.getPeriodString(1/_correctFrq) + ")")
 	
 	var numChanges = madwrapper.getNumChanges()
 	
