@@ -264,9 +264,9 @@ function assess() {
   	log(etime + " - Answer submitted: modulator amplitude = " + _submittedModAmp + " " + modAmpUnit)
   	log(etime + " - Answer submitted: modulator frequency = " + _submittedModFrq + " " + modFrqUnit)
     
-	var carrierAmpIndicator = checkAmplitude(_correctCarrierAmp, _submittedCarrierAmp, carrierAmpUnit)
+	var carrierAmpIndicator = checkAmplitude(_correctCarrierAmp, _submittedCarrierAmp, carrierAmpUnit, 0.15, 0.3)
 	var carrierFrqIndicator = checkFrequency(_correctCarrierFrq, _submittedCarrierFrq, carrierFrqUnit)
-	var modAmpIndicator = checkAmplitude(_correctModAmp, _submittedModAmp, modAmpUnit)	
+	var modAmpIndicator = checkAmplitude(_correctModAmp, _submittedModAmp, modAmpUnit, 0.5, 1)	
 	var modFrqIndicator = checkFrequency(_correctModFrq, _submittedModFrq, modFrqUnit)
 	
 	var carrierAmpUnitIndicator = checkAmpUnit(carrierAmpUnit)
@@ -308,7 +308,7 @@ function getDiff(a, b) {
 	return Math.abs(a - b) / b	
 }
 
-function checkAmplitude(correctValue, answer, unit) {
+function checkAmplitude(correctValue, answer, unit, tolerance1, tolerance2) {
 	var answerValue = 0.0
 
 	answerValue = Double.parseDouble(answer)
@@ -335,10 +335,10 @@ function checkAmplitude(correctValue, answer, unit) {
 
 	// NOw check for possiblities of mistaken units
 	diff = getDiff(answerValue, correctValue * 1000)
-	if (diff < 0.05) {
+	if (diff < tolerance1) {
 		return 2
 	} 
-	else if (diff < 0.1) {
+	else if (diff < tolerance2) {
 		return 1
 	}
 	diff = getDiff(answerValue, correctValue * 0.001)
@@ -422,7 +422,6 @@ function checkSettings(madWrapper) {
 	var voltsPerDivs = _assessUtil.getVoltsPerDivs()
 	
 	for (var i = 0; i < timePerDivs.size(); ++i) {
-		System.out.println(timePerDivs.get(i))
 		var pts = checkTimePerDiv(timePerDivs.get(i), _correctCarrierFrq)
 		if (pts > timePerDivPoints) {
 			timePerDivPoints = pts
@@ -435,7 +434,6 @@ function checkSettings(madWrapper) {
 		}		
 	}
 	for (var i = 0; i < voltsPerDivs.size(); ++i) {
-		System.out.println(voltsPerDivs.get(i))
 		var pts = _assessUtil.getVoltsPerDivPoints(_correctCarrierAmp)
 		if (pts > voltsPerDivPoints) {
 			voltsPerDivPoints = pts
@@ -443,7 +441,6 @@ function checkSettings(madWrapper) {
 		pts = _assessUtil.getVoltsPerDivPoints(_correctModAmp)		 
 		if (pts > voltsPerDivPoints) {
 			voltsPerDivPoints = pts
-			System.out.println("vpd pts=" + pts)			
 		}
 	}
 	
