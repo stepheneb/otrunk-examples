@@ -367,6 +367,9 @@ function setupActivityInitial()
  */
 function setupActivityLoaded()
 {
+	timeStepStarted = System.currentTimeMillis();
+	multimeterBrokenStepCount = 0;
+	
 	//Load state variables
 	var resVal = getStateVariable("resistorResistance").doubleValue();
 	targetResistor.setResistance(resVal);
@@ -1000,7 +1003,7 @@ function checkAnswerValue(correctAnswer)
 	if (tolerance == 0){
 		tolerance = CAPAUnitUtil.getAppropriateTolerance(value, correctValue);
 	}
-	//System.out.println("tolerance: "+tolerance);
+	System.out.println("tolerance: "+tolerance);
 	
 /*	if (unit.equalsIgnoreCase(correctAnswer.getUnit())){
 		if (CAPAUnitUtil.equalWithTolerance(answerObj.getValue(), 
