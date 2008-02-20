@@ -27,6 +27,7 @@
  * otCalculatorObject	(OTProgrammableCalculatorNotebook)			// OT Calculator-notebook object
  * calculatorButton		(JButton)					//Button that pops up the calculator
  * calculatorHelpAction (OTAction)					//Action to show the calculator help 
+ * answerLabel			(JComponent)				//Text pane (inside of a scroll pane) with label
  */
 
 importPackage(Packages.java.lang);
@@ -414,7 +415,7 @@ function setupAsessmentLogging()
 		var otLastAssessment = null;
 		for (var i = otContents.size() - 1; i >= 0; i--){
 			var obj = otContents.get(i);
-			if (obj instanceof OTMultimeterAssessment){
+			if (obj instanceof OTAssessment){
 				otLastAssessment = obj;
 				break;
 			}
@@ -451,12 +452,12 @@ function setupApparatusPanel()
 	{
 		componentResized: function(event)
 		{
-			System.out.println(apparatusPanel.getSize() + " is the size of the apparatus panel after change");
+			//System.out.println(apparatusPanel.getSize() + " is the size of the apparatus panel after change");
 		}
 	};
 	var panelListener = new ComponentListener(panelHandler);
 	apparatusPanel.addComponentListener(panelListener);
-	System.out.println(apparatusPanel.getSize() + " is the size of the apparatus panel at initialization");
+	//System.out.println(apparatusPanel.getSize() + " is the size of the apparatus panel at initialization");
 	//
 }
 
@@ -994,20 +995,35 @@ function checkAnswerValue(correctAnswer)
 	var unit = answerObj.getUnit();	
 	var correctValue = correctAnswer.getValue();
 	var correctUnit = correctAnswer.getUnit();
-	var tolerance = CAPAUnitUtil.getAppropriateTolerance(value, correctValue);
 	
-	if (CAPAUnitUtil.compareValues(answerObj, correctAnswer)){
+	var tolerance = solutionObj.tolerance * 2;
+	if (tolerance == 0){
+		tolerance = CAPAUnitUtil.getAppropriateTolerance(value, correctValue);
+	}
+	//System.out.println("tolerance: "+tolerance);
+	
+/*	if (unit.equalsIgnoreCase(correctAnswer.getUnit())){
+		if (CAPAUnitUtil.equalWithTolerance(answerObj.getValue(), 
+				correctAnswer.getValue(), tolerance)){
+			//Answer in the same units as correct answer
+			answerValueType = "correct";
+			answerUnitType = "correct";
+		}
+	}
+*/
+	
+	if (CAPAUnitUtil.compareValues(answerObj, correctAnswer, false, false, tolerance)){
 		//Answer might be given in different units but still correct
 		answerValueType = "correct";
 		answerUnitType = "correct";
 	}
-	else if (CAPAUnitUtil.compareValues(answerObj, correctAnswer, true, false)){
+	else if (CAPAUnitUtil.compareValues(answerObj, correctAnswer, true, false, tolerance)){
 		//Answer considered correct but wrong sign
 		//Answer might be given in different units but still correct 
 		answerValueType = "correct wrong sign";
 		answerUnitType = "correct";
 	}
-	else if (CAPAUnitUtil.compareValues(answerObj, correctAnswer, false, true)){
+	else if (CAPAUnitUtil.compareValues(answerObj, correctAnswer, false, true, tolerance)){
 		//Answer might not have any units but the value is correct
 		answerValueType = "correct";
 		if (unit == null || unit.equals("")){
@@ -1018,7 +1034,7 @@ function checkAnswerValue(correctAnswer)
 			answerUnitType = "correct";
 		}
 	}
-	else if (CAPAUnitUtil.compareValues(answerObj, correctAnswer, true, true)){
+	else if (CAPAUnitUtil.compareValues(answerObj, correctAnswer, true, true, tolerance)){
 		//Answer might not have any units but the value is correct (wrong sign)
 		answerValueType = "correct wrong sign";
 		if (unit == null || unit.equals("")){
@@ -1129,6 +1145,7 @@ function endActivity()
 	submitAnswerButton.setVisible(false);
 	answerBox.setVisible(false);
 	unitComboBox.setVisible(false);
+	answerLabel.setVisible(false);
 	OTCardContainerView.setCurrentCard(otInfoAreaCards, "endText");
 	showSolutionMessage();
 	
@@ -1264,6 +1281,22 @@ function calculateSolution()
 	valueObj.setValue(targetResistor.getResistance());
 	valueObj.setUnit("Ohms");
 	solutionObj.resistance = valueObj;
+	//
+	
+	//Calculate the resistance from the voltage and current rounded (like the multimeter does)
+	solutionObj.tolerance = 0;
+	var v = solutionObj.voltage.getValue();
+	if (Math.abs(v) > 1){
+		var c = solutionObj.current.getValue();
+		if (Math.abs(c) < 1){
+			c = c * 1000;
+			var r = roundValue(v) / roundValue(c);
+			r = r * 1000;
+			//System.out.println("v: "+v+" c: "+c+" r: "+r);
+			solutionObj.tolerance = Math.abs(solutionObj.resistance.getValue() - r);
+			//System.out.println("solutionObj.tolerance: "+solutionObj.tolerance);
+		}
+	}
 	//
 	
 	logInformation("Solution is:"+
