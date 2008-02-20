@@ -218,11 +218,13 @@ function init() {
 
 function addPageNumber(page, number) {
 	var text = page.getBodyText();
+	if (text.indexOf("no-page-number") > -1){
+		System.out.println("no page num");
+		return;
+	}
 	if (text.indexOf("<div class=\"page-number\">") > -1){
-		System.out.println("yes");
 		text = text.replaceAll("<div class=\"page-number\">.*</div>","<div class=\"page-number\">"+number+"</div>");
 	} else {
-		System.out.println("no");
 		var startBody = "<div class=\"body\">";
 		var number = "<div class=\"page-number\">"+number+"</div>";
 		var table = "<table width=\"100%\"><tr>\n<td> <!-- title --> </td>\n<td align=\"right\">"+number+"</td>\n</tr></table>";
