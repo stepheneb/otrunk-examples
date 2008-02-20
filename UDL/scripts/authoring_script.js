@@ -219,7 +219,6 @@ function init() {
 function addPageNumber(page, number) {
 	var text = page.getBodyText();
 	if (text.indexOf("no-page-number") > -1){
-		System.out.println("no page num");
 		return;
 	}
 	if (text.indexOf("<div class=\"page-number\">") > -1){
