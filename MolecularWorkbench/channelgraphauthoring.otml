@@ -6,6 +6,7 @@
 		<import class="org.concord.otrunk.view.OTViewBundle" />
 		<import class="org.concord.otrunk.view.document.OTCompoundDoc" />
 		<import class="org.concord.otrunk.view.document.OTTextObject" />
+		<import class="org.concord.otrunk.udl.ui.OTDataCollectorViewConfig" />
 		<import class="org.concord.otrunkmw.OTModelerPage" />
 		<import class="org.concord.otrunkmw.OTMwDataProducer" />
 		<import class="org.concord.otrunkmw.OTMwChannelData" />
@@ -30,7 +31,7 @@
 					<views>
 						<OTViewEntry
 							objectClass="org.concord.otrunkmw.OTModelerPage"
-							viewClass="org.concord.otrunkmw.OTModelerPageView" />
+							viewClass="org.concord.otrunkmw.OTModelerPageEditView" />
 						<OTViewEntry
 							objectClass="org.concord.otrunk.ui.OTTextPane"
 							viewClass="org.concord.otrunk.ui.swing.OTTextPaneView" />
@@ -56,12 +57,14 @@
 						<OTViewEntry
 							objectClass="org.concord.otrunk.ui.snapshot.OTSnapshotAlbum"
 							viewClass="org.concord.otrunk.ui.snapshot.OTSnapshotAlbumView" />
+						<OTDataCollectorViewConfig 
+							objectClass="org.concord.datagraph.state.OTDataCollector"
+							viewClass="org.concord.otrunkmw.MwDataProducerEditView" >
+							<sharedGraphs />
+						</OTDataCollectorViewConfig>
 						<OTViewEntry
 							objectClass="org.concord.datagraph.state.OTDataGraph"
 							viewClass="org.concord.datagraph.state.OTDataGraphView" />
-						<OTViewEntry
-							objectClass="org.concord.datagraph.state.OTDataCollector"
-							viewClass="org.concord.datagraph.state.OTDataCollectorView" />
 					</views>
 					<frame>
 						<OTFrame width="800" height="600" />
@@ -73,40 +76,21 @@
 					<bodyText>
 						<p>
 							<center>
-								<font size='6'>
-									<b>
-										Graphing time-varying properties
-										stored in the channels of a
-										model
-									</b>
+								<font size="6">
+									<b>Model-graph author view</b>
 								</font>
 							</center>
 						</p>
 						<p>
-							<font size='4'>
-								This page demonstrates outputting
-								time-varying properties via data streams
-								stored in the computational channels
-								models to a CC graph. MW scripts should
-								be used to compute the properties.
-								Putting the scripts into a custom task
-								will generate data streams, which can be
-								stored in the model's channels.
-								<br></br>
-								<br></br>
-								<hr></hr>
-								<br></br>
-								<br></br>
-							</font>
+							<center>
+								<object refid="${model}" />
+								<object refid="${graph}" />
+							</center>
 						</p>
-						<center>
-							<object refid="${model}" />
-							<object refid="${graph}" />
-						</center>
 					</bodyText>
 					<documentRefs>
 						<OTModelerPage local_id="model"
-							authoredDataURL="resources/heatflow.cml" />
+							authoredDataURL="resources/hypocycloid.cml" />
 						<OTDataCollector name="Model Data"
 							local_id="graph" multipleGraphableEnabled="false"
 							autoScaleEnabled="false">
