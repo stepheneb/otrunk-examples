@@ -51,7 +51,6 @@ var pageHandler =
 		else if (evt.getProperty().equalsIgnoreCase("documentRefs") && evt.getOperation().equalsIgnoreCase("add")){
 			var otUUID = evt.getValue();
 			var objService = evt.getSource().getOTObjectService();
-			System.out.println(otUUID);
 			try {
 				var referencedObject = objService.getOTObject(otUUID);
 				
@@ -209,11 +208,27 @@ function init() {
 		for (var j = 0; j < sectionCardContainers[i].getCards().size(); j++){
 			pages[pageIndex] = sectionCardContainers[i].getCards().get(j);
 			pages[pageIndex].addOTChangeListener(pageListener);
+			addPageNumber(pages[pageIndex], j+1);
 			pageIndex++;
 		}
 	}
 	
 	return true;
+}
+
+function addPageNumber(page, number) {
+	var text = page.getBodyText();
+	if (text.indexOf("<div class=\"page-number\">") > -1){
+		System.out.println("yes");
+		text = text.replaceAll("<div class=\"page-number\">.*</div>","<div class=\"page-number\">"+number+"</div>");
+	} else {
+		System.out.println("no");
+		var startBody = "<div class=\"body\">";
+		var number = "<div class=\"page-number\">"+number+"</div>";
+		var table = "<table width=\"100%\"><tr>\n<td> <!-- title --> </td>\n<td align=\"right\">"+number+"</td>\n</tr></table>";
+		text = text.replaceAll(startBody, startBody+"\n"+table);
+	}
+	page.setBodyText(text);
 }
 
 function save() {
