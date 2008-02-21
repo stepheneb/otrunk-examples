@@ -3,10 +3,12 @@
 	<imports>
 		<import class="org.concord.otrunk.OTSystem" />
 		<import class="org.concord.otrunk.view.OTViewEntry" />
+		<import class="org.concord.otrunk.view.OTViewMode" />
 		<import class="org.concord.otrunk.view.OTViewBundle" />
 		<import class="org.concord.otrunk.view.document.OTCompoundDoc" />
 		<import class="org.concord.otrunk.view.document.OTTextObject" />
-		<import class="org.concord.otrunk.udl.ui.OTDataCollectorViewConfig" />
+		<import
+			class="org.concord.otrunk.udl.ui.OTDataCollectorViewConfig" />
 		<import class="org.concord.otrunkmw.OTModelerPage" />
 		<import class="org.concord.otrunkmw.OTMwDataProducer" />
 		<import class="org.concord.otrunkmw.OTMwChannelData" />
@@ -15,6 +17,7 @@
 			class="org.concord.otrunk.view.document.OTDocumentViewConfig" />
 		<import class="org.concord.datagraph.state.OTDataGraph" />
 		<import class="org.concord.datagraph.state.OTDataCollector" />
+		<import class="org.concord.datagraph.state.OTDataCollectorView" />
 		<import class="org.concord.datagraph.state.OTDataAxis" />
 		<import class="org.concord.datagraph.state.OTDataGraphable" />
 		<import class="org.concord.data.state.OTDataStore" />
@@ -27,11 +30,41 @@
 	<objects>
 		<OTSystem>
 			<bundles>
-				<OTViewBundle showLeftPanel="false">
+				<OTViewBundle showLeftPanel="false"
+					currentMode="authoring">
+					<modes>
+						<OTViewMode name="authoring">
+							<map>
+								<entry key="${mw-view}">
+									<OTDataCollectorViewConfig
+										viewClass="org.concord.otrunkmw.OTModelerPageEditView"
+										objectClass="org.concord.otrunkmw.OTModelerPage">
+										<predefinedGraphs>
+											<object
+												refid="874b8410-3938-012a-b543-0017f2cc694e" />
+										</predefinedGraphs>
+									</OTDataCollectorViewConfig>
+								</entry>
+								<entry key="${graph-view}">
+									<OTDataCollectorViewConfig
+										viewClass="org.concord.otrunkmw.MwDataProducerEditView"
+										objectClass="org.concord.datagraph.state.OTDataCollector">
+										<predefinedGraphs>
+											<object
+												refid="874b8410-3938-012a-b543-0017f2cc694e" />
+										</predefinedGraphs>
+									</OTDataCollectorViewConfig>
+								</entry>
+							</map>
+						</OTViewMode>
+						<OTViewMode name="student">
+							<map />
+						</OTViewMode>
+					</modes>
 					<views>
-						<OTViewEntry
+						<OTViewEntry local_id="mw-view"
 							objectClass="org.concord.otrunkmw.OTModelerPage"
-							viewClass="org.concord.otrunkmw.OTModelerPageEditView" />
+							viewClass="org.concord.otrunkmw.OTModelerPageView" />
 						<OTViewEntry
 							objectClass="org.concord.otrunk.ui.OTTextPane"
 							viewClass="org.concord.otrunk.ui.swing.OTTextPaneView" />
@@ -57,11 +90,9 @@
 						<OTViewEntry
 							objectClass="org.concord.otrunk.ui.snapshot.OTSnapshotAlbum"
 							viewClass="org.concord.otrunk.ui.snapshot.OTSnapshotAlbumView" />
-						<OTDataCollectorViewConfig 
+						<OTViewEntry local_id="graph-view"
 							objectClass="org.concord.datagraph.state.OTDataCollector"
-							viewClass="org.concord.otrunkmw.MwDataProducerEditView" >
-							<sharedGraphs />
-						</OTDataCollectorViewConfig>
+							viewClass="org.concord.datagraph.state.OTDataCollectorView" />
 						<OTViewEntry
 							objectClass="org.concord.datagraph.state.OTDataGraph"
 							viewClass="org.concord.datagraph.state.OTDataGraphView" />
