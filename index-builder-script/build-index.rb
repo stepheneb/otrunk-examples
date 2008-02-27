@@ -81,6 +81,15 @@ dir.each do |path|
 
       subdir = Dir.new(path)
       otml_launchers = "<h4>Run Examples</h4> <table>"
+      java_web_starty_warning = <<HERE
+<hr/>                                                                                                                                         
+<h4>MacOS X Java Web Start Problem</h4>                                                                                                       
+<p>If you are using Java 1.5 on MacOS 10.4 or 10.5 you will almost certainly need to run some version                                         
+our <a href="http://confluence.concord.org/display/CCTR/WebStart+OSX+Java+1.5+Fix">Fix Java Web Start Scripts</a>,                            
+once on each computer you run the Concord SAIL-OTrunk activities on. If you update Java on your Macintosh you will                            
+need to run this program again. This program fixes a problem on Macintosh computers where starting a Java Web Start                           
+program the second time freezes without completion.</p>                                                                                      
+HERE
       all_files = "<h4>All Files</h4><table>"
 
       subdir.each do |subpath|
@@ -105,7 +114,7 @@ dir.each do |path|
 
       index_page_body = "<a href=""../example-index.html"">Examples Index</a><br/>\n"  +  
         "<a href=""http://confluence.concord.org/display/CSP/#{path}"">Confluence Notes</a><br/>\n" +
-        otml_launchers + all_files
+        otml_launchers + java_web_start_warning + all_files
 
       index_page_body += "<hr/>The jnlp urls were constructed using the following template:<br/>\n"
       index_page_body += jnlp_url_tmpl + "<br/>\n"
