@@ -7,12 +7,15 @@ puts "Content-type: text/plain\n\n"
 # print error messages on stdout so we can see them in the browser
 STDERR.reopen(STDOUT)
 
-puts "hello I am"
-
+puts "Hello I am running as "
 system("whoami")
+puts ""
+
+Dir.chdir("../otrunk/examples")
+puts "In directory "
 puts Dir.pwd
-puts Dir.chdir("../otrunk/examples")
-puts Dir.pwd
+
+puts ""
 system("svn up")
 
 def writeHtmlPage(title, body, filename)
@@ -81,7 +84,7 @@ dir.each do |path|
 
       subdir = Dir.new(path)
       otml_launchers = "<h4>Run Examples</h4> <table>"
-      java_web_starty_warning = <<HERE
+      java_web_start_warning = <<HERE
 <hr/>
 <h4>MacOS X Java Web Start Problem</h4>
 <p>If you are using Java 1.5 on MacOS 10.4 or 10.5 you will almost certainly need to run some version
