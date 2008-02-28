@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<otrunk id="78a74dbd-e565-11dc-93d4-fd07c3ecd46a">
+  <imports>
+    <import class="org.concord.otrunk.OTSystem" />
+    <import class="org.concord.otrunk.OTInclude" />
+    <import class="org.concord.otrunk.view.OTViewBundle" />
+    <import class="org.concord.otrunk.view.OTViewEntry" />
+    <import class="org.concord.otrunk.view.OTMultiUserRoot" />
+    <import class="org.concord.otrunk.view.OTUserList" />    
+    <import class="org.concord.otrunk.view.OTUserDatabaseRef" />
+    <import class="org.concord.otrunkcapa.OTCAPAReportTemplate" />
+    <import class="org.concord.otrunkcapa.rubric.OTMultimeterAssessment" />
+    <import class="org.concord.otrunkcapa.rubric.OTAssessmentViewConfig" />
+  </imports>
+  <idMap>
+  	<idMapping local_id="script_object" id="33754150-b594-11d9-9669-0800200c9a66!/activity_script"/>
+  	<idMapping local_id="rubric" id="502664d6-9401-11dc-8314-0800200c9a66"/>
+  	<idMapping local_id="user_list" id="f757d5fc-3ea6-40ef-b876-a01419b5128f!/user_list"/>
+  </idMap>
+  <objects>
+    <OTSystem local_id="system">
+      <bundles>
+        <OTViewBundle showLeftPanel="false">
+          <views>
+            <OTViewEntry objectClass="org.concord.otrunk.view.OTMultiUserRoot" viewClass="org.concord.otrunk.view.OTMultiUserRootView" />
+            <OTViewEntry objectClass="org.concord.otrunkcapa.OTCAPAReportTemplate" viewClass="org.concord.otrunkcapa.OTCAPAReportTemplateView" />
+			<OTAssessmentViewConfig showQualitative="false"
+			    objectClass="org.concord.otrunkcapa.OTMultimeterAssessment"
+			    viewClass="org.concord.otrunkcapa.OTMultimeterAssessmentView">
+			  <rubric>
+				<object refid="${rubric}"/>
+			  </rubric>
+			</OTAssessmentViewConfig>
+          </views>
+        </OTViewBundle>
+      </bundles>
+      <includes>
+        <OTInclude href="capa_multimeter_activity.otml" />
+        <OTInclude href="capa_multimeter_userlist_tcc.otml"/>
+      </includes>
+      <root>
+        <OTMultiUserRoot local_id="multi_user_root" userList="${user_list}">
+          <reportTemplate>
+            <OTCAPAReportTemplate>
+              <script>
+                <object refid="${script_object}" />
+              </script>
+              <rubric>
+                <object refid="${rubric}" />
+              </rubric>
+            </OTCAPAReportTemplate>
+          </reportTemplate>
+        </OTMultiUserRoot>
+      </root>
+    </OTSystem>
+  </objects>
+</otrunk>
+
