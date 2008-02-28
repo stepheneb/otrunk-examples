@@ -95,6 +95,7 @@ var xmlText;					// OTXMLText object used for logging information
 var firstJunctionsConnected = true;	//Used to put up text the first time a junction is connected.
 var firstMeasurement = true; 		//Used to put up text the first time a measurement is made.
 var bCalculatorShow = false;	//Indicates whether the calculator has been showed or not
+var bLogNotebook = false;		//Indicated whether the notebook entries will be logged after closing the activity
 
 var previousMultimeterValue = Double.NaN;	// Value that stores the last multimeter measurement, to avoid repeated measurements
 var previousMultimeterState = -1;			// Value
@@ -235,6 +236,12 @@ function setupCalculatorListener()
  */
 function save()
 {
+	//Delete the notebook data because it's too big
+	if (!bLogNotebook){
+		deleteCalculatorAndNotebookData();
+	}
+	//
+
 	System.out.println("-------------------------- save--------------------------------");
 	
 	//Save state variables
