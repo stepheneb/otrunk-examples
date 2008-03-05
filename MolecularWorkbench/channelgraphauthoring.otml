@@ -25,11 +25,13 @@
 		<import class="org.concord.otrunk.ui.OTTextPane" />
 		<import class="org.concord.otrunk.ui.OTPlacementContainer" />
 		<import class="org.concord.otrunk.ui.OTPlacement" />
+		<import class="org.concord.otrunk.util.OTSharingBundle" />
 		<import class="org.concord.framework.otrunk.view.OTFrame" />
 	</imports>
 	<objects>
 		<OTSystem>
 			<bundles>
+				<OTSharingBundle />
 				<OTViewBundle showLeftPanel="false"
 					currentMode="authoring">
 					<modes>
@@ -42,7 +44,7 @@
 								</entry>
 								<entry key="${graph-view}">
 									<OTDataCollectorViewConfig
-										viewClass="org.concord.otrunkmw.MwDataProducerEditView"
+										viewClass="org.concord.otrunk.udl.ui.OTDataCollectorEditView"
 										objectClass="org.concord.datagraph.state.OTDataCollector" />
 								</entry>
 							</map>
@@ -55,6 +57,9 @@
 						<OTViewEntry local_id="mw-view"
 							objectClass="org.concord.otrunkmw.OTModelerPage"
 							viewClass="org.concord.otrunkmw.OTModelerPageView" />
+						<OTViewEntry local_id="data producer-view"
+							objectClass="org.concord.otrunkmw.OTMwDataProducer"
+							viewClass="org.concord.otrunkmw.OTMwDataProducerEditView" />
 						<OTViewEntry
 							objectClass="org.concord.otrunk.ui.OTTextPane"
 							viewClass="org.concord.otrunk.ui.swing.OTTextPaneView" />
@@ -93,12 +98,15 @@
 				</OTViewBundle>
 			</bundles>
 			<root>
-				<OTCompoundDoc>
+				<OTCompoundDoc name="document">
 					<bodyText>
 						<p>
 							<center>
 								<font size="6">
-									<b>Model-graph author view</b>
+									<b>
+										The preview and author view of a
+										simulation-graph setup
+									</b>
 								</font>
 							</center>
 						</p>
@@ -109,20 +117,21 @@
 							</center>
 						</p>
 					</bodyText>
+					<!-- <children><object refid="${dp}"></object></children> -->
 					<documentRefs>
 						<OTModelerPage local_id="model"
 							authoredDataURL="resources/hypocycloid.cml" width="380"
 							height="325" />
-						<OTDataCollector name="Model Data"
-							local_id="graph" multipleGraphableEnabled="false"
+						<OTDataCollector local_id="graph"
+							name="Model Data" multipleGraphableEnabled="false"
 							autoScaleEnabled="false">
 							<source>
 								<OTDataGraphable connectPoints="true"
-									color="0xff0000" drawMarks="false" name="Coordinate"
-									xColumn="0" yColumn="1">
+									color="16711680" drawMarks="false" name="Coordinate"
+									xColumn="0" yColumn="1" lineWidth="2.0">
 									<dataProducer>
-										<OTMwDataProducer
-											local_id="dp">
+										<OTMwDataProducer local_id="dp"
+											name="data producer">
 											<model>
 												<object
 													refid="${model}" />
@@ -135,26 +144,50 @@
 											</data>
 										</OTMwDataProducer>
 									</dataProducer>
+									<dataStore>
+										<OTDataStore dt="1.0"
+											numberChannels="2">
+											<channelDescriptions>
+												<OTDataChannelDescription
+													name="dt" precision="2" numericData="true" />
+												<OTDataChannelDescription
+													name="a" numericData="true" />
+												<OTDataChannelDescription
+													name="a" numericData="true" />
+											</channelDescriptions>
+										</OTDataStore>
+									</dataStore>
 								</OTDataGraphable>
 							</source>
 							<graphables>
 								<OTDataGraphable connectPoints="true"
-									color="0x0000ff" drawMarks="false" name="Temperature"
-									xColumn="0" yColumn="2">
+									color="255" drawMarks="false" name="Coordinate" xColumn="0"
+									yColumn="2" lineWidth="2.0">
 									<dataProducer>
 										<object refid="${dp}" />
 									</dataProducer>
+									<dataStore>
+										<OTDataStore dt="1.0"
+											numberChannels="2">
+											<channelDescriptions>
+												<OTDataChannelDescription
+													name="dt" precision="2" numericData="true" />
+												<OTDataChannelDescription
+													name="a" numericData="true" />
+												<OTDataChannelDescription
+													name="a" numericData="true" />
+											</channelDescriptions>
+										</OTDataStore>
+									</dataStore>
 								</OTDataGraphable>
 							</graphables>
 							<xDataAxis>
-								<OTDataAxis min="0" max="100"
-									label="Time" units="s" local_id="xAxis">
-								</OTDataAxis>
+								<OTDataAxis local_id="xAxis" min="0.0"
+									max="100.0" label="Time" units="s" />
 							</xDataAxis>
 							<yDataAxis>
-								<OTDataAxis min="0" max="50"
-									label="Coordinate" units="m" local_id="yAxis">
-								</OTDataAxis>
+								<OTDataAxis local_id="yAxis" min="-0.0"
+									max="50.0" label="Coordinate" units="m" />
 							</yDataAxis>
 						</OTDataCollector>
 					</documentRefs>
@@ -163,3 +196,4 @@
 		</OTSystem>
 	</objects>
 </otrunk>
+
