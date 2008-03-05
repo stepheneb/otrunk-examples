@@ -226,7 +226,7 @@ function addPageNumber(page, number) {
 	} else {
 		var startBody = "<div class=\"body\">";
 		var number = "<div class=\"page-number\">"+number+"</div>";
-		var table = "<table width=\"100%\"><tr>\n<td> <!-- title --> </td>\n<td align=\"right\">"+number+"</td>\n</tr></table>";
+		var table = "<table width=\"100%\"><tr>\n<td> </td>\n<td align=\"right\">"+number+"</td>\n</tr></table>";
 		text = text.replaceAll(startBody, startBody+"\n"+table);
 	}
 	page.setBodyText(text);
