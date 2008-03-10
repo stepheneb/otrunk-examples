@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<otrunk id="4f92d31e-ac58-40f7-a9f5-92ae5a2b8fa9">
+  <imports>
+    <import class="org.concord.otrunk.OTSystem"/>
+    <import class="org.concord.otrunk.view.OTViewBundle"/>
+    <import class="org.concord.otrunk.view.OTViewEntry"/>
+    <import class="org.concord.otrunk.view.document.OTCompoundDoc"/>
+    <import class="org.concord.otrunk.ui.OTText"/>
+   	<import class="org.concord.otrunk.ui.OTButton" />
+	<import class="org.concord.otrunk.script.OTScriptEngineBundle"/>
+	<import class="org.concord.otrunk.script.OTScriptEngineEntry"/>
+	<import class="org.concord.otrunk.script.ui.OTScriptObject"/>
+	<import class="org.concord.otrunk.script.ui.OTScriptVariable"/>
+   	<import class="org.concord.otrunk.script.ui.OTScriptVariableComponent" />
+	<import class="org.concord.otrunk.script.jython.OTJython" />
+  </imports>
+  <objects>
+    <OTSystem>
+      <bundles>
+        <OTViewBundle showLeftPanel="false">
+          <views>
+            <OTViewEntry
+                objectClass="org.concord.otrunk.ui.OTText" 
+                viewClass="org.concord.otrunk.ui.swing.OTTextView"/>
+   			<OTViewEntry 
+   			    objectClass="org.concord.otrunk.ui.OTButton" 
+   			    viewClass="org.concord.otrunk.ui.swing.OTButtonView" />
+			<OTViewEntry
+				objectClass="org.concord.otrunk.script.ui.OTScriptObject"
+				viewClass="org.concord.otrunk.script.ui.OTScriptObjectView"/>
+			<OTViewEntry
+				objectClass="org.concord.otrunk.view.document.OTDocument"
+				viewClass="org.concord.otrunk.view.document.OTDocumentView" />
+          </views>
+        </OTViewBundle>
+		<OTScriptEngineBundle>
+  		  <engines>
+     		<OTScriptEngineEntry 
+     			objectClass="org.concord.otrunk.script.jython.OTJython"
+     			engineClass="org.concord.otrunk.script.jython.OTJythonEngine"/>
+  		  </engines>
+		</OTScriptEngineBundle>
+      </bundles>
+      <root>
+        <OTCompoundDoc>
+          <bodyText>
+        	<p>
+        	  Click on the <b>Increment</b> button and the number in the text box will increase by 1.
+        	</p>
+        	<p>
+        	  After 9 a message will pop up and the number will be reset to 0.
+        	</p><p/>
+        	<table border="1">
+        	  <tr>
+        	    <td><object refid="${text_object}"/></td>
+        	    <td><object refid="${inc_button}"/></td>
+        	  </tr>
+        	</table>
+        	<object refid="${script_object}"/>
+          </bodyText>
+        </OTCompoundDoc>
+      </root>
+      <library>
+      	<OTText local_id="text_object"/>
+   		<OTButton local_id="inc_button" text="Increment" />
+      	<OTScriptObject local_id="script_object">
+          <variables>
+    	    <OTScriptVariable name="otText" reference="${text_object}"/>
+   			<OTScriptVariableComponent name="incButton">
+	          <reference>
+	            <object refid="${inc_button}"/>
+              </reference>
+            </OTScriptVariableComponent>
+          </variables>
+      	  <script>
+	      	<OTJython src="external-script.py"/>
+	      </script>
+      	</OTScriptObject>
+      </library>
+    </OTSystem>
+  </objects>
+</otrunk>
