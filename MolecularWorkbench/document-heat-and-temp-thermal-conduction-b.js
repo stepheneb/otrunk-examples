@@ -6,6 +6,7 @@ importPackage(Packages.javax.swing);
 importPackage(Packages.org.concord.mw2d.models);
 importPackage(Packages.org.concord.modeler);
 importPackage(Packages.org.concord.modeler.event);
+importPackage(Packages.org.concord.framework.otrunk);
 importPackage(Packages.org.concord.framework.data.stream);
 
 var runButton;
