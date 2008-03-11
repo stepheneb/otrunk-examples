@@ -60,22 +60,24 @@ var model;
 // Set up listeners on Sliders
 var cupSliderListener = new OTChangeListener() {
 	stateChanged: function(event) {
-		var val = event.getValue().getValue();
-		model.runScript("select element 1; set kelvin " + val + "*2; select element none;");
+		var val = event.getValue();
+		var script = "select element 1;\nset kelvin " + val + "*2;\nselect element none;"
+		model.runScript(script);
 	}
 }
 
 var counterSliderListener = new OTChangeListener() {
 	stateChanged: function(event) {
-		var val = event.getValue().getValue();
-		model.runScript("select element 2; set kelvin " + val + "*3; select element none;");
+		var val = event.getValue();
+		var script = "select element 2;\nset kelvin " + val + "*3;\nselect element none;"
+		model.runScript(script);
 	}
 }
 
-cupTempSlider.addChangeListener(cupSliderListener);
-counterTempSlider.addChangeListener(counterSliderListener);
+cupTempSlider.addOTChangeListener(cupSliderListener);
+counterTempSlider.addOTChangeListener(counterSliderListener);
 
-// TODO Set up listener on OTChoice (counter type choice)
+// Set up listener on OTChoice (counter type choice)
 var counterTypeListener = new OTChangeListener() {
 	stateChanged: function(event) {
 		var type = getCurrentlySelectedCounter();
@@ -89,7 +91,7 @@ var counterTypeListener = new OTChangeListener() {
 		model.runScript("define %epsi " + epsi + "; reset;");
 	}
 }
-counterType.addChangeListener(counterTypeListener);
+counterType.addOTChangeListener(counterTypeListener);
 
 var pageListener = new PageListener() {
 	pageUpdate: function(event) {
@@ -104,14 +106,19 @@ var resetButtonHandler =
 {
 	actionPerformed :function(evt)
 	{
-		// System.err.println("Reset action recieved");
 			if (timer.isRunning())
 			{
-				// System.err.println("Stopping timer");
 				end_run();
 				timer.stop();
 			}
 			resetGraph();
+			// change the values on the sliders to trigger updating the model to the correct temps
+			cupVal = cupTempSlider.getValue();
+			cupTempSlider.setValue(cupVal+1);
+			cupTempSlider.setValue(cupVal);
+			counterVal = counterTempSlider.getValue()
+			counterTempSlider.setValue(counterVal+1);
+			counterTempSlider.setValue(counterVal);
 	}
 }
 var resetButtonListener = new ActionListener(resetButtonHandler);
@@ -119,33 +126,25 @@ var resetButtonListener = new ActionListener(resetButtonHandler);
 var modelListener = new ModelListener() {
 	modelUpdate: function(event) {
 		if (event.getID() == ModelEvent.MODEL_RESET || event.getID() == ModelEvent.MODEL_INPUT) {
-			// System.err.println("Reset action recieved");
 			if (timer.isRunning())
 			{
-				// System.err.println("Stopping timer");
 				end_run();
 				timer.stop();
 			}
 			resetGraph();
 		} else if (event.getID() == ModelEvent.MODEL_RUN) {
-			// System.err.println("Start action recieved");
 			if (! timer.isRunning()) {
 				stopTime = timeSlider.getValue()*60;
-				// System.err.println("Stop time is: " + stopTime);
 				if (timeCounter == 0) {
 						resetGraph();
-						// System.err.println("Time at start: " + now());
 						start_run();
 				}
 				
-				// System.err.println("Starting timer");
 				timer.start();
 			}
 		} else if (event.getID() == ModelEvent.MODEL_STOP) {
-			// System.err.println("Stop action recieved");
 			if (timer.isRunning())
 			{
-				// System.err.println("Stopping timer");
 				end_run();
 				timer.stop();
 			}
@@ -157,7 +156,6 @@ var timerHandler =
 { 
 	actionPerformed:function(evt)
 	{
-		// System.err.println("timer run: " + timeCounter);
 		if (! model.isRunning()) {
 			end_run();
 			timer.stop();
@@ -166,15 +164,7 @@ var timerHandler =
  		if (timeCounter == 0) {
 			// for some reason the temp recorded here is always substantially lower than the temp the sliders are set to
 			// so using our first recording, calculate a scaling factor
-			/* temp_ws_scaler = ((counterTempSlider.getValue()*10)/getCurrentTempForType(Element.ID_WS));
-			temp_pl_scaler = ((cupTempSlider.getValue()*10)/getCurrentTempForType(Element.ID_PL));
 			
-			if (temp_pl_scaler <= 0)
-			  temp_pl_scaler = 1;
-			if (temp_ws_scaler <= 0)
-			  temp_ws_scaler = 1;
-		*/
-// 			System.err.println("Time at first timer step: " + now());
 			try {
  				temp_ws = getCurrentTempForType(Element.ID_WS) * temp_ws_scaler;
  				temp_pl = getCurrentTempForType(Element.ID_PL) * temp_pl_scaler;
@@ -188,8 +178,7 @@ var timerHandler =
 				// counter temp is greater than the cup
 				hotCounter = true;
 			}
-			// System.err.println("Hotcounter = " + hotCounter);
-//  		}			
+		
 		} else {
 			// calculate the exponential moving average
 			try {
@@ -259,39 +248,6 @@ function postMWInit() {
 	}
 	resetButton.addActionListener(resetButtonListener);
 	
-	/* var sliderComps = page.getEmbeddedComponent(Class.forName("org.concord.modeler.PageSlider")).values().toArray();
-	if (sliderComps != null) {
-		for (var i = 0; i < sliderComps.length; i++) {
-			var obj = sliderComps[i];
-			// System.err.println(obj.getTitle());
-			if (obj.getTitle().equals("Observation Time (Minute)")) {
-				timeSlider = obj;
-			}
-			else if (obj.getTitle().equals("Cup Temperature (degree C)")) {
-				cupTempSlider = obj;
-			}
-			else if (obj.getTitle().equals("Counter Temperature (degree C)")) {
-				counterTempSlider = obj;
-			}
-		}
-	} */
-	
-	/* var radioButtons = page.getEmbeddedComponent(Class.forName("org.concord.modeler.PageRadioButton")).values().toArray();
-	if (radioButtons != null) {
-		for (var i = 0; i < radioButtons.length; i++) {
-			var radio = radioButtons[i];
-			if (radio.getText().equals("Metal Counter")) {
-				metalRadioBtn = radio;
-			}
-			else if (radio.getText().equals("Glass Counter")) {
-				glassRadioBtn = radio;
-			}
-			else if (radio.getText().equals("Wood Counter")) {
-				woodRadioBtn = radio;
-			}
-		}
-	} */
-	
 	var models = page.getEmbeddedComponent(Class.forName("org.concord.modeler.ModelCanvas")).values().toArray();
 	if (models != null) {
 		for (var i = 0; i < models.length; i++) {
@@ -310,7 +266,6 @@ function save() {
 }
 
 function getCurrentTempForType(type) {
-	// System.err.println(System.currentTimeMillis() + "," + type + "," + ((1*m2)*(n*f*model.getKinForType(type)-constant)+b*1));
 	return ((1*m2)*(n*f*model.getKinForType(type)-constant)+b*1);
 }
 
@@ -340,8 +295,6 @@ function resetGraph() {
 
 function graphValues(t_ws, t_pl)
 {
-	// System.err.println(timeCounter + " -- ck: " + t_ck + ", ws: " + t_ws + ", pl: " + t_pl + ", nt: " + t_nt);
-
 	if (t_ws != b) {
 		ws_values.add(new Float(timeCounter));
 		ws_values.add(new Float(t_ws));
@@ -358,22 +311,12 @@ function graphValues(t_ws, t_pl)
 
 function resizeGraph(t1, t2) {
 	var max = maximum(t1, t2);
-	// System.err.println("==================================");
-	// System.err.println("v1: " + t1 + ", v2: " + t2 + ", max: " + max);
-	// System.err.print("pmax: " + max);
-	// max = maximum(max, t3);
-	// System.err.println(", v2: " + t3 + ", max: " + max);
-	// System.err.print("omax: " + max);
-	// max = maximum(max, t4);
-	// System.err.println(", v2: " + t4 + ", max: " + max);
 	
 	if (max > (yMax-5)) {
-		// System.err.println("resizing y axis: " + (t2+5));
 		yMax = (max+5);
 	}
 	
 	if (timeCounter > (xMax - 5)) {
-		// System.err.println("resizing x axis: " + (timeCounter+5));
 		xMax = (timeCounter + 5);
 	}
 	graph.setLimitsAxisWorld(xMin,xMax,yMin,yMax);
@@ -440,16 +383,7 @@ function start_run() {
 }
 
 function getCurrentlySelectedCounter() {
-	return counterType.getValue().getText();
-	/* if (glassRadioBtn.isSelected()) {
-		return "Glass";
-	} else if (metalRadioBtn.isSelected()) {
-		return "Metal";
-	} else if (woodRadioBtn.isSelected()) {
-		return "Wood";
-	} else {
-		return "unknown";
-	} */
+	return counterType.getCurrentChoice().getText();
 }
 
 function end_run() {
