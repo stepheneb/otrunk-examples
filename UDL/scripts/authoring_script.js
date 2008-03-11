@@ -219,6 +219,11 @@ function init() {
 
 function addPageNumber(page, number) {
 	var text = page.getBodyText();
+	if (text.indexOf("<!-- title -->") > -1){
+		System.out.println(" ...replacing")
+		text = text.replaceAll("<!-- title -->","<div class=\"subtitle\"> </div>");
+	}
+	page.setBodyText(text);
 	if (text.indexOf("no-page-number") > -1){
 		return;
 	}
@@ -227,13 +232,8 @@ function addPageNumber(page, number) {
 	} else {
 		var startBody = "<div class=\"body\">";
 		var number = "<div class=\"page-number\">"+number+"</div>";
-		var table = "<table width=\"100%\"><tr>\n<td> </td>\n<td align=\"right\">"+number+"</td>\n</tr></table>";
+		var table = "<table width=\"100%\"><tr>\n<td><div class=\"subtitle\"> </div></td>\n<td align=\"right\">"+number+"</td>\n</tr></table>";
 		text = text.replaceAll(startBody, startBody+"\n"+table);
-	}
-	System.out.println("checking titles")
-	if (text.indexOf("<!-- title -->") > -1){
-		System.out.println(" ...replacing")
-		text = text.replaceAll("<!-- title -->","<div class=\"subtitle\"> </div>");
 	}
 	page.setBodyText(text);
 }
