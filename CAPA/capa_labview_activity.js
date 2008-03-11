@@ -126,7 +126,7 @@ function initLogging() {
 }
 
 function log(msg) {
-	_info.setText(_info.getText() + msg + "\n")
+	_info.setText(_info.getText() + msg)
 }
 
 function setupGUI() {
@@ -192,174 +192,6 @@ function validateAnswers() {
 	return true	
 }
 
-function getDiff(a, b) {
-	return Math.abs(a - b) / b	
-}
-
-function checkAmplitude(correctValue, answer, unit) {
-	var answerValue = 0.0
-
-	answerValue = Double.parseDouble(answer)
-
-	if (unit == "mV") {
-		answerValue *= 0.001		
-		
-	}
-	else if (unit == "kV") {
-		answerValue *= 1000
-	}
-	else if (unit != "V") {
-		return 0 // totally wrong
-	}
-	
-	var diff = getDiff(answerValue, correctValue)
-	
-	if (diff < 0.05) {
-		return 4  //perfect
-	}
-	else if (diff < 0.1 ) {
-		return 3  //close
-	}
-
-	// NOw check for possiblities of mistaken units
-	diff = getDiff(answerValue, correctValue * 1000)
-	if (diff < 0.05) {
-		return 2
-	} 
-	else if (diff < 0.1) {
-		return 1
-	}
-	diff = getDiff(answerValue, correctValue * 0.001)
-	if (diff < 0.05) {
-		return 2
-	} 	
-	else if (diff < 0.1) {
-		return 1
-	}
-	return 0
-}
-
-function checkFrequency(correctValue, answer, unit) {
-	var answerValue = 0.0
-
-	answerValue = Double.parseDouble(answer) 
-	
-	if (unit == "kHz") {
-		answerValue *= 1000		
-		
-	}
-	else if (unit == "MHz") {
-		answerValue *= 1.0e6
-	}
-	else if (unit != "Hz") {
-		return 0 // totally wrong
-	}
-	
-	var diff =  getDiff(answerValue, correctValue)
-	
-	if (diff < 0.05) {
-		return 4  //perfect
-	}
-	else if (diff < 0.1 ) {
-		return 3  //close
-	}
-
-	// NOw check for possiblities of mistaken units
-	diff = getDiff(answerValue, correctValue * 1000)
-	if (diff < 0.05) {
-		return 2
-	} 
-	else if (diff < 0.1) {
-		return 1
-	}
-	diff = getDiff(answerValue, correctValue * 1.0e6)
-	if (diff < 0.05) {
-		return 2
-	} 	
-	else if (diff < 0.1) {
-		return 1
-	}
-	return 0
-}
-
-function checkAmpUnit(unit) {
-	a = ["mV", "V", "kV"] 
-	for (i in a) {
-		if (a[i] == unit) {
-			return 1
-		} 
-	}
-	return 0
-}
-
-function checkFrqUnit(unit) {
-	a = ["Hz", "kHz", "MHz"] 
-	for (i in a) {
-		if (a[i] == unit) {
-			return 1
-		} 
-	}
-	return 0
-}
-
-function checkSettings(madWrapper) {
-	var viewWidth = _assessUtil.getLastTimePerDiv() * 10
-	var waveLength = 1.0 / _correctFrq
-	var timePerDivPoints = 0
-	var voltsPerDivPoints = 0
-
-	if (ScopeAssessmentUtil.optimalTimePerDivPossible(waveLength)) {
-		if (viewWidth < 0.5 * waveLength) {
-			timePerDivPoints = 0
-		}
-		else if (viewWidth < waveLength) {
-			timePerDivPoints = 1 	
-		}
-		else if (viewWidth < 2 * waveLength) {
-			timePerDivPoints = 2
-		}
-		else if (viewWidth < 3 * waveLength) {
-			timePerDivPoints = 1
-		}
-		else {
-			timePerDivPoints = 0
-		}
-	}
-	else {
-		if (viewWidth < 0.5 * waveLength) {
-			timePerDivPoints = 0
-		}
-		else if (viewWidth < 3 * waveLength) {
-			timePerDivPoints = 2
-		}
-		else {
-			timePerDivPoints = 0
-		}
-	}
-	
-	var viewHeight = _assessUtil.getLastVoltsPerDiv() * 8
-	var voltsPerDivPoints = _assessUtil.getVoltsPerDivPoints(_correctAmp)
-
-	// Check for channel selection
-	var channel = Integer.parseInt(madWrapper.getLastCIValue("SelectChannel"));
-	if (channel == 2) {
-		return 0 // bad: channel A has no signal 
-	}
-	
-	if (timePerDivPoints == 2 && voltsPerDivPoints == 2) {
-		return 3
-	}
-	else if ((timePerDivPoints == 2 && voltsPerDivPoints == 1) || (timePerDivPoints == 1 && voltsPerDivPoints == 2)) {
-		return 2
-	}
-	else if (timePerDivPoints == 1 && voltsPerDivPoints == 1) {
-		return 1
-	}
-	else {
-		return 0
-	}
-}
-
 function endActivity()
 {
 	submitAnswerButton.setVisible(false)
@@ -376,6 +208,16 @@ function endActivity()
 	OTCardContainerView.setCurrentCard(otInstAreaCards, "solution_text")
 	
 	reportButton.setVisible(true)
+}
+
+function wrap_assess() {
+	var converter = new LabviewReportConverter(_monitor)
+	converter.markEndTime()
+	var madwrapper = converter.getMADWrapper()
+	_assessUtil = new ScopeAssessmentUtil(madwrapper)
+	_otAssessment.setLabel("Oscilloscope")
+	_otAssessment.setActivityData(converter.getOTModelActivityData())
+	assess(_otAssessment, _assessUtil, madwrapper)
 }
 
 var submitAnswerButtonHandler = {
@@ -395,7 +237,15 @@ var submitAnswerButtonHandler = {
 			
 			if (option == JOptionPane.OK_OPTION) {
 		  		_monitor.close()
-		    	assess() // must close labVIEW before assess()
+		    	wrap_assess() // must close labVIEW before assess()
+		    	
+				++_currentStep
+				if (_currentStep <= _lastStep) {
+					startStep(_currentStep)
+				}
+				else {
+					endActivity()
+				}
 			}
 		}
 		else if (state == LabviewMonitor.READY) {
