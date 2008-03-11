@@ -220,7 +220,6 @@ function init() {
 function addPageNumber(page, number) {
 	var text = page.getBodyText();
 	if (text.indexOf("<!-- title -->") > -1){
-		System.out.println(" ...replacing")
 		text = text.replaceAll("<!-- title -->","<div class=\"subtitle\"> </div>");
 	}
 	page.setBodyText(text);
