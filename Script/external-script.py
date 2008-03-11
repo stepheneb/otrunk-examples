@@ -2,10 +2,6 @@ from java.lang import System
 from java.awt.event import ActionListener
 from javax.swing import JOptionPane
 
-from java.io import File
-f = File(".")
-print f.getCanonicalPath()
-
 # Variables from Java:
 #   otText
 #   incButton
