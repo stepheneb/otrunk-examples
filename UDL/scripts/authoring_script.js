@@ -195,6 +195,7 @@ var sectionCardContainers = [];
 var pages = [];
 
 function init() {
+	System.out.println("authoring script")
 	cardContainer.addOTChangeListener(sectionContainerListener);
 	
 	var pageIndex = 0;
@@ -228,6 +229,9 @@ function addPageNumber(page, number) {
 		var number = "<div class=\"page-number\">"+number+"</div>";
 		var table = "<table width=\"100%\"><tr>\n<td> </td>\n<td align=\"right\">"+number+"</td>\n</tr></table>";
 		text = text.replaceAll(startBody, startBody+"\n"+table);
+	}
+	if (text.indexOf("<!-- title -->") > -1){
+		text = text.replaceAll("<!-- title -->","<div class=\"subtitle\"> </div>");
 	}
 	page.setBodyText(text);
 }
