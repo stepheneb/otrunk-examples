@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<otrunk id="874b8410-3938-012a-b543-0017f2cc694e">
+    <imports>
+        <import class="org.concord.otrunk.OTSystem" />
+        <import class="org.concord.otrunk.view.OTViewEntry" />
+        <import class="org.concord.otrunk.view.OTViewBundle" />
+        <import class="org.concord.otrunk.script.OTScriptEngineBundle" />
+        <import class="org.concord.otrunk.script.OTScriptEngineEntry" />
+        <import class="org.concord.otrunk.view.document.OTCompoundDoc" />
+        <import class="org.concord.otrunk.view.document.OTTextObject" />
+        <import class="org.concord.otrunkmw.OTModelerPage" />
+        <import class="org.concord.otrunk.ui.OTText" />
+        <import class="org.concord.otrunk.ui.snapshot.OTSnapshot" />
+        <import class="org.concord.otrunk.ui.snapshot.OTSnapshotButton" />
+        <import class="org.concord.otrunk.ui.snapshot.OTSnapshotAlbum" />
+        <import class="org.concord.otrunk.view.document.OTDocumentViewConfig" />
+        <import class="org.concord.otrunk.script.ui.OTScriptObject" />
+        <import class="org.concord.otrunk.script.ui.OTScriptVariable" />
+        <import class="org.concord.otrunk.script.ui.OTScriptVariableComponent" />
+        <import class="org.concord.otrunk.script.js.OTJavascript" />
+        <import class="org.concord.datagraph.state.OTDataGraph" />
+        <import class="org.concord.datagraph.state.OTDataCollector" />
+        <import class="org.concord.datagraph.state.OTDataAxis" />
+        <import class="org.concord.datagraph.state.OTDataGraphable" />
+        <import class="org.concord.data.state.OTDataStore" />
+        <import class="org.concord.data.state.OTDataChannelDescription" />
+        <import class="org.concord.otrunk.ui.OTTextPane" />
+        <import class="org.concord.otrunk.ui.OTPlacementContainer" />
+        <import class="org.concord.otrunk.ui.OTPlacement" />
+        <import class="org.concord.otrunk.ui.OTSlider" />
+        <import class="org.concord.otrunk.ui.OTSliderLabel" />
+        <import class="org.concord.otrunk.ui.OTChoice" />
+        <import class="org.concord.framework.otrunk.view.OTFrame" />
+    </imports>
+    <objects>
+        <OTSystem>
+            <bundles>
+                <OTViewBundle showLeftPanel="false">
+                    <views>
+                        <OTViewEntry objectClass="org.concord.otrunkmw.OTModelerPage"
+                            viewClass="org.concord.otrunkmw.OTModelerPageView" />
+                        <OTViewEntry objectClass="org.concord.otrunk.ui.OTTextPane"
+                            viewClass="org.concord.otrunk.ui.swing.OTTextPaneView" />
+                        <OTViewEntry objectClass="org.concord.otrunk.ui.OTSlider"
+                            viewClass="org.concord.otrunk.ui.swing.OTSliderView" />
+                        <OTViewEntry objectClass="org.concord.otrunk.ui.OTText"
+                            viewClass="org.concord.otrunk.ui.swing.OTTextView" />
+                        <OTViewEntry objectClass="org.concord.otrunk.ui.OTPlacementContainer"
+                            viewClass="org.concord.otrunk.ui.swing.OTPlacementContainerView" />
+                        <OTViewEntry objectClass="org.concord.otrunk.script.ui.OTScriptObject"
+                            viewClass="org.concord.otrunk.script.ui.OTScriptObjectView" />
+                        <OTViewEntry objectClass="org.concord.otrunk.ui.OTChoice"
+                            viewClass="org.concord.otrunk.ui.swing.OTChoiceRadioButtonView" />
+                        <OTDocumentViewConfig objectClass="org.concord.otrunk.view.document.OTDocument"
+                            viewClass="org.concord.otrunk.view.document.OTDocumentView">
+                            <css>
+                                body { font-size: medium; font-family: verdana; background-color: white; } .sub {
+                                font-size: x-small; } .header { font-size: large; font-weight: bold; }
+                            </css>
+                        </OTDocumentViewConfig>
+                        <OTViewEntry objectClass="org.concord.otrunk.ui.snapshot.OTSnapshotButton"
+                            viewClass="org.concord.otrunk.ui.snapshot.OTSnapshotButtonView" />
+                        <OTViewEntry objectClass="org.concord.otrunk.ui.snapshot.OTSnapshotAlbum"
+                            viewClass="org.concord.otrunk.ui.snapshot.OTSnapshotAlbumView" />
+                        <OTViewEntry objectClass="org.concord.datagraph.state.OTDataGraph"
+                            viewClass="org.concord.datagraph.state.OTDataGraphView" />
+                        <OTViewEntry objectClass="org.concord.datagraph.state.OTDataCollector"
+                            viewClass="org.concord.datagraph.state.OTDataCollectorNonEditableView" />
+                    </views>
+                    <frame>
+                        <OTFrame width="850" height="640" />
+                    </frame>
+                </OTViewBundle>
+                <OTScriptEngineBundle>
+                    <engines>
+                        <OTScriptEngineEntry objectClass="org.concord.otrunk.script.js.OTJavascript"
+                            engineClass="org.concord.otrunk.script.js.OTJavascriptEngine" />
+                    </engines>
+                </OTScriptEngineBundle>
+            </bundles>
+            <root>
+                <OTCompoundDoc>
+                    <bodyText>
+                        <object refid="${placementcontainer}" />
+                    </bodyText>
+                    <documentRefs>
+                        <OTPlacementContainer width="800" height="800" local_id="placementcontainer">
+                            <placements>
+                                <OTPlacement component="${header}"
+                                    height="200" width="800" x="0" y="0" layer="0" />
+                                <OTPlacement component="${model}"
+                                    height="630" width="800" x="0" y="170" layer="1" />
+                                <OTPlacement component="${model_key}"
+                                    height="590" width="130" x="285" y="210" layer="1" />
+                                <OTPlacement component="${graph}"
+                                    height="400" width="400" x="400" y="330" layer="2" />
+                                <OTPlacement component="${counter_type_choice}"
+                                    height="30" width="500" x="430" y="170" layer="3" />
+                                <OTPlacement component="${controls}"
+                                    height="300" width="400" x="430" y="190" layer="3" />
+                                <OTPlacement component="${script}"
+                                    height="0" width="0" x="0" y="0" />
+                            </placements>
+                        </OTPlacementContainer>
+                        <OTPlacementContainer width="300" height="150" local_id="controls">
+                            <placements>
+                                <OTPlacement component="${cup_temp_slider}"
+                                    height="50" width="175" x="0" y="30" layer="0" />
+                                <OTPlacement component="${counter_temp_slider}"
+                                    height="50" width="175" x="185" y="30" layer="0" />
+                                <OTPlacement component="${time_slider}"
+                                    height="50" width="175" x="93" y="100" layer="0" />
+                                <OTPlacement component="${cup_temp_label}"
+                                    height="50" width="175" x="10" y="0" layer="1" />
+                                <OTPlacement component="${counter_temp_label}"
+                                    height="50" width="200" x="185" y="0" layer="1" />
+                                <OTPlacement component="${time_label}"
+                                    height="50" width="175" x="100" y="70" layer="1" />
+                            </placements>
+                        </OTPlacementContainer>
+                        <OTSlider local_id="cup_temp_slider" minimum="0" maximum="10" value="0" vertical="false"
+                            snapToMarks="true">
+                            <labels>
+                                <OTSliderLabel value="0" label="Low" />
+                                <OTSliderLabel value="5" label="Medium" />
+                                <OTSliderLabel value="10" label="High" />
+                            </labels>
+                        </OTSlider>
+                        <OTSlider local_id="counter_temp_slider" minimum="0" maximum="10" value="0" vertical="false"
+                            snapToMarks="true">
+                            <labels>
+                                <OTSliderLabel value="0" label="Low" />
+                                <OTSliderLabel value="5" label="Medium" />
+                                <OTSliderLabel value="10" label="High" />
+                            </labels>
+                        </OTSlider>
+                        <OTSlider local_id="time_slider" minimum="1" maximum="15" value="15" vertical="false"
+                            snapToMarks="true">
+                            <labels>
+                                <OTSliderLabel value="1" label="1" />
+                                <OTSliderLabel value="5" label="5" />
+                                <OTSliderLabel value="10" label="10" />
+                                <OTSliderLabel value="15" label="15" />
+                            </labels>
+                        </OTSlider>
+                        <OTChoice local_id="counter_type_choice" horizontal="true">
+                            <choices>
+                                <OTText name="Metal Counter" text="metal" local_id="metal_counter" />
+                                <OTText name="Glass Counter" text="glass" local_id="glass_counter" />
+                                <OTText name="Wood Counter" text="wood" local_id="wood_counter" />
+                            </choices>
+                            <currentChoice>
+                                <object refid="${glass_counter}" />
+                            </currentChoice>
+                        </OTChoice>
+                        <OTText local_id="cup_temp_label" text="Cup Temperature (deg C)" />
+                        <OTText local_id="counter_temp_label" text="Counter Temperature (deg C)" />
+                        <OTText local_id="time_label" text="Observation Time (Minute)" />
+                        <OTTextPane local_id="header">
+                            <text>
+                                <p>
+                                    <center>
+                                        <font size='6'>
+                                            <b>Cup and Counter: Molecular Model and Temperature Graph</b>
+                                        </font>
+                                    </center>
+                                </p>
+                                <font size='4'>
+                                    <p>
+                                        The model represents molecules from the cup and counter at the instant they
+                                        touch when we consider heart transferring only between the cup and the counter.
+                                    </p>
+                                    <p>
+                                        You can change the following to set up your experiment: (1) a metal, glass or
+                                        wood counter; (2) the cup temperature; (3) the counter temperature; (4) the
+                                        observation time.
+                                    </p>
+                                </font>
+                            </text>
+                        </OTTextPane>
+                        <OTTextPane local_id="model_key">
+                            <text>
+                                This<br/>
+                                Is<br/>
+                                Where<br/>
+                                The picture of a cup and counter with arrows pointing to the graph will go.
+                            </text>
+                        </OTTextPane>
+                        <OTModelerPage local_id="model"
+                            authoredDataURL="http://svn.concord.org/svn/projects/trunk/common/java/otrunk/otrunk-examples/MolecularWorkbench/thermal-conduction-models/thermo_main-01b.cml" />
+                        <OTDataCollector name="Model Data" local_id="graph" multipleGraphableEnabled="false"
+                            autoScaleEnabled="false">
+                            <graphables>
+                                <OTDataGraphable local_id="atom_ck" connectPoints="true" color="0x6f9400"
+                                    drawMarks="false" name="Ck Temp" xColumn="0" yColumn="1">
+                                    <dataStore>
+                                        <OTDataStore local_id="atom_ck_datastore" numberChannels="2">
+                                            <channelDescriptions>
+                                                <OTDataChannelDescription precision="0" unit="s" />
+                                                <OTDataChannelDescription precision="-2" unit="degC" />
+                                            </channelDescriptions>
+                                            <valuesString></valuesString>
+                                        </OTDataStore>
+                                    </dataStore>
+                                </OTDataGraphable>
+                                <OTDataGraphable local_id="atom_ws" connectPoints="true" color="0xc900c9"
+                                    drawMarks="false" name="Ws Temp" xColumn="0" yColumn="1">
+                                    <dataStore>
+                                        <OTDataStore local_id="atom_ws_datastore" numberChannels="2">
+                                            <channelDescriptions>
+                                                <OTDataChannelDescription precision="0" unit="s" />
+                                                <OTDataChannelDescription precision="-2" unit="degC" />
+                                            </channelDescriptions>
+                                            <valuesString></valuesString>
+                                        </OTDataStore>
+                                    </dataStore>
+                                </OTDataGraphable>
+                                <OTDataGraphable local_id="atom_pl" connectPoints="true" color="0x6f9400"
+                                    drawMarks="false" name="Pl Temp" xColumn="0" yColumn="1">
+                                    <dataStore>
+                                        <OTDataStore local_id="atom_pl_datastore" numberChannels="2">
+                                            <channelDescriptions>
+                                                <OTDataChannelDescription precision="0" unit="s" />
+                                                <OTDataChannelDescription precision="-2" unit="degC" />
+                                            </channelDescriptions>
+                                            <valuesString></valuesString>
+                                        </OTDataStore>
+                                    </dataStore>
+                                </OTDataGraphable>
+                                <OTDataGraphable local_id="atom_nt" connectPoints="true" color="0xa9a9a9"
+                                    drawMarks="false" name="Nt Temp" xColumn="0" yColumn="1">
+                                    <dataStore>
+                                        <OTDataStore local_id="atom_nt_datastore" numberChannels="2">
+                                            <channelDescriptions>
+                                                <OTDataChannelDescription precision="0" unit="s" />
+                                                <OTDataChannelDescription precision="-2" unit="degC" />
+                                            </channelDescriptions>
+                                            <valuesString></valuesString>
+                                        </OTDataStore>
+                                    </dataStore>
+                                </OTDataGraphable>
+                            </graphables>
+                            <xDataAxis>
+                                <OTDataAxis min="-1" max="56" label="Time" units="s" local_id="xAxis">
+                                    <graphables>
+                                        <object refid="${atom_ck}" />
+                                        <object refid="${atom_ws}" />
+                                        <object refid="${atom_pl}" />
+                                        <object refid="${atom_nt}" />
+                                    </graphables>
+                                </OTDataAxis>
+                            </xDataAxis>
+                            <yDataAxis>
+                                <OTDataAxis min="-10" max="100" label="Temperature" units="degC" local_id="yAxis">
+                                    <graphables>
+                                        <object refid="${atom_ck}" />
+                                        <object refid="${atom_ws}" />
+                                        <object refid="${atom_pl}" />
+                                        <object refid="${atom_nt}" />
+                                    </graphables>
+                                </OTDataAxis>
+                            </yDataAxis>
+                        </OTDataCollector>
+                        <OTScriptObject local_id="script">
+                            <variables>
+                                <OTScriptVariable name="datastore_ck" reference="${atom_ck_datastore}" />
+                                <OTScriptVariable name="datastore_ws" reference="${atom_ws_datastore}" />
+                                <OTScriptVariable name="datastore_pl" reference="${atom_pl_datastore}" />
+                                <OTScriptVariable name="datastore_nt" reference="${atom_nt_datastore}" />
+                                
+                                <OTScriptVariable name="timeSlider" reference="${time_slider}" />
+                                <OTScriptVariable name="cupTempSlider" reference="${cup_temp_slider}" />
+                                <OTScriptVariable name="counterTempSlider" reference="${counter_temp_slider}" />
+                                <OTScriptVariable name="counterType" reference="${counter_type_choice}" />
+                                
+                                <OTScriptVariableComponent name="modelComponent" reference="${model}" />
+                                <OTScriptVariableComponent name="graph" reference="${graph}" />
+                            </variables>
+                            <script>
+                                <OTJavascript
+                                    src="http://svn.concord.org/svn/projects/trunk/common/java/otrunk/otrunk-examples/MolecularWorkbench/document-heat-and-temp-thermal-conduction.js" />
+                            </script>
+                        </OTScriptObject>
+                    </documentRefs>
+                </OTCompoundDoc>
+            </root>
+        </OTSystem>
+    </objects>
+</otrunk>
