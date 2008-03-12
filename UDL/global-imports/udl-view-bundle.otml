@@ -19,6 +19,8 @@
     <import class="org.concord.graph.util.state.OTDrawingShape" />
     <import class="org.concord.graph.util.state.OTDrawingTool2" />
     <import class="org.concord.graph.util.state.OTPointTextLabel" />
+    <import class="org.concord.multimedia.state.OTSoundDataCollector" />
+    <import class="org.concord.multimedia.state.OTSoundDataProducer" />
     <import class="org.concord.otrunk.OTInclude" />
     <import class="org.concord.otrunk.OTSystem" />
     <import class="org.concord.otrunk.browser.mozswing.OTMozSwing" />
@@ -57,7 +59,6 @@
     <import class="org.concord.otrunk.ui.OTChoiceMultiple" />
     <import class="org.concord.otrunk.ui.OTImage" />
     <import class="org.concord.otrunk.ui.OTModeSwitcher" />
-    <import class="org.concord.otrunk.ui.OTSoundGrapher" />
     <import class="org.concord.otrunk.ui.OTSoundPlayer" />
     <import class="org.concord.otrunk.ui.OTText" />
     <import class="org.concord.otrunk.ui.snapshot.OTSnapshot" />
@@ -153,6 +154,9 @@
             </OTViewMode>
             <OTViewMode name="authoring">
               <map>
+                <entry key="${sound-grapher-view}">
+                	<OTViewEntry viewClass="org.concord.multimedia.state.ui.OTSoundDataCollectorView" objectClass="org.concord.multimedia.state.OTSoundDataCollector" />
+                </entry>
                 <entry key="${moz-swing-view}">
                   <OTViewEntry objectClass="org.concord.otrunk.browser.mozswing.OTMozSwing" viewClass="org.concord.otrunk.browser.mozswing.OTMozSwingEditView" />
                 </entry>
@@ -231,6 +235,24 @@
                         </note>
                       </OTAuthorNote>
                       <OTSoundPlayer name="Sound player"/>
+                      <OTSoundDataCollector name="Sound grapher" title="Data graph">
+                        <source>
+                          <OTDataGraphable drawMarks="false" color="255" connectPoints="true" xColumn="0" yColumn="1" name="vf" lineWidth="2.0">
+		                      <dataProducer>
+		                      	<OTSoundDataProducer/>
+		                      </dataProducer>
+		                      <dataStore>
+		                        <OTDataStore />
+		                      </dataStore>
+		                    </OTDataGraphable>
+                        </source>
+                        <xDataAxis>
+                          <OTDataAxis max="0.042661875" units="ms" min="0.0" label="Time" />
+                        </xDataAxis>
+                        <yDataAxis>
+                          <OTDataAxis max="4461.944" units="" min="-3913.9438" label="" />
+                        </yDataAxis>
+                      </OTSoundDataCollector>
                       <OTModelerPage name="Molecular workbench" authoredDataURL="http://mw2.concord.org/public/student/classic/motion/undershotwaterwheel.cml"/>
                     </objectsToInsert>
                   </OTDocumentEditViewConfig>
@@ -277,6 +299,7 @@
 						  The default scaffolding level just uses the order of the items inside OTUDLQuestions/questions. It is not aware of the names
 						  such as "L1", "L2", etc. -->
             <OTUDLQuestionViewConfig id="c0e33320-e611-11dc-95ff-0800200c9a66" isLevelFrozen="false" defaultScaffoldLevel="0" objectClass="org.concord.otrunk.udl.question.OTUDLQuestions" viewClass="org.concord.otrunk.udl.question.OTUDLQuestionsCardView" />
+            <OTViewEntry local_id="sound-grapher-view" viewClass="org.concord.multimedia.state.ui.OTSoundDataCollectorView" objectClass="org.concord.multimedia.state.OTSoundDataCollector" />
             <OTViewEntry local_id="mw-view" objectClass="org.concord.otrunkmw.OTModelerPage" viewClass="org.concord.otrunkmw.OTModelerPageView" />
             <OTViewEntry objectClass="org.concord.otrunk.OTIncludeRootObject" viewClass="org.concord.otrunk.OTIncludeRootObjectView" />
             <OTViewEntry objectClass="org.concord.otrunk.udl.OTZoom" viewClass="org.concord.otrunk.udl.OTZoomView" />
@@ -320,7 +343,6 @@
             <OTViewEntry local_id="netlogo-view" viewClass="org.concord.otrunknl4.OTNLogoModelView" objectClass="org.concord.otrunknl4.OTNLogoModel" />
             <OTViewEntry objectClass="org.concord.otrunkphet.balloons.OTPhetBalloonsModel" viewClass="org.concord.otrunkphet.balloons.OTPhetBalloonsModelView" />
             <OTViewEntry local_id="sound-player-view" objectClass="org.concord.otrunk.ui.OTSoundPlayer" viewClass="org.concord.otrunk.ui.swing.OTSoundPlayerView"/>
-             <OTViewEntry objectClass="org.concord.otrunk.ui.OTSoundGrapher" viewClass="org.concord.otrunk.ui.swing.OTSoundGrapherView"/>
             <OTUDLDocumentViewConfig id="0d03b9c0-e48a-11dc-95ff-0800200c9a66" objectClass="org.concord.otrunk.view.document.OTCompoundDoc" viewClass="org.concord.otrunk.udl.document.OTUDLDocumentView">
               <definitionManager>
                 <object refid="b6350a20-e3b4-11dc-95ff-0800200c9a66" />
