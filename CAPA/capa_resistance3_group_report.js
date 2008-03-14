@@ -37,8 +37,7 @@ function getTableView(users, contentsMap) {
 	var header = new XHTMLTable();
 
 	header.set("", 0, 0)
-	header.set("", 0, 1)
-	var col = 2
+	var col = 1
 	var indicators = otRubric.getIndicators()
 
 	for (var i = 0; i < indicators.size(); ++i) {
