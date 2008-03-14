@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <otrunk id="78a74dbd-e565-11dc-93d4-fd07c3ecd46a">
   <imports>
-    <import class="org.concord.otrunk.OTSystem" />
-    <import class="org.concord.otrunk.OTInclude" />
-    <import class="org.concord.otrunk.view.OTViewBundle" />
-    <import class="org.concord.otrunk.view.OTViewEntry" />
-    <import class="org.concord.otrunk.view.OTMultiUserRoot" />
-    <import class="org.concord.otrunk.view.OTUserList" />    
-    <import class="org.concord.otrunk.view.OTUserDatabaseRef" />
-    <import class="org.concord.otrunkcapa.OTCAPAReportTemplate" />
-    <import class="org.concord.otrunkcapa.rubric.OTMultimeterAssessment" />
-    <import class="org.concord.otrunkcapa.rubric.OTAssessmentViewConfig" />
+    <import class="org.concord.otrunk.OTSystem"/>
+    <import class="org.concord.otrunk.OTInclude"/>
+    <import class="org.concord.otrunk.view.OTViewBundle"/>
+    <import class="org.concord.otrunk.view.OTViewEntry"/>
+    <import class="org.concord.otrunk.view.OTMultiUserRoot"/>
+    <import class="org.concord.otrunk.script.OTScriptEngineBundle"/>    
+    <import class="org.concord.otrunk.script.OTScriptEngineEntry"/>    
+    <import class="org.concord.otrunk.script.ui.OTXHTMLScript"/>
+    <import class="org.concord.otrunk.script.ui.OTScriptVariable"/>    
+    <import class="org.concord.otrunk.script.js.OTJavascript"/>
+    <import class="org.concord.otrunkcapa.OTCAPAReportTemplate"/>
   </imports>
   <idMap>
   	<idMapping local_id="script_object" id="33754150-b594-11d9-9669-0800200c9a66!/activity_script"/>
@@ -22,37 +23,57 @@
       <bundles>
         <OTViewBundle showLeftPanel="false">
           <views>
-   			<OTViewEntry objectClass="org.concord.otrunk.ui.OTText" viewClass="org.concord.otrunk.ui.swing.OTTextEditView" />          
             <OTViewEntry objectClass="org.concord.otrunk.view.OTMultiUserRoot" viewClass="org.concord.otrunk.view.OTMultiUserRootView" />
+            <OTViewEntry objectClass="org.concord.otrunk.script.ui.OTXHTMLScript" viewClass="org.concord.otrunk.script.ui.OTXHTMLScriptView"/>            
             <OTViewEntry objectClass="org.concord.otrunkcapa.OTCAPAReportTemplate" viewClass="org.concord.otrunkcapa.OTCAPAReportTemplateView" />
-			<OTAssessmentViewConfig showQualitative="true"
-			    objectClass="org.concord.otrunkcapa.OTMultimeterAssessment"
-			    viewClass="org.concord.otrunkcapa.OTMultimeterAssessmentView">
-			  <rubric>
-				<object refid="${rubric}"/>
-			  </rubric>
-			</OTAssessmentViewConfig>
           </views>
         </OTViewBundle>
+        <OTScriptEngineBundle>
+	      <engines>
+			<OTScriptEngineEntry objectClass="org.concord.otrunk.script.js.OTJavascript" engineClass="org.concord.otrunk.script.js.OTJavascriptEngine"/>
+		  </engines>
+	    </OTScriptEngineBundle>        
       </bundles>
       <includes>
-        <OTInclude href="capa_multimeter_activity.otml" />
+        <OTInclude href="capa_multimeter_activity.otml"/>
         <OTInclude href="http://rails.dev.concord.org/diy/external_otrunk_activities/12/ot_learner_data.xml"/>
       </includes>
       <root>
         <OTMultiUserRoot local_id="multi_user_root" userList="${user_list}">
           <reportTemplate>
-            <OTCAPAReportTemplate>
-              <script>
-                <object refid="${script_object}" />
-              </script>
+            <OTCAPAReportTemplate local_id="report_source">
               <rubric>
-                <object refid="${rubric}" />
+                <object refid="${rubric}"/>
               </rubric>
+          	  <activityScript>
+            	<object refid="${script_object}"/>
+          	  </activityScript>
+			  <reportScript>
+			  	<object refid="${report_script}"/>
+			  </reportScript>
             </OTCAPAReportTemplate>
           </reportTemplate>
         </OTMultiUserRoot>
       </root>
+      <library>
+      	<OTXHTMLScript local_id="report_script">
+      		<script>
+      		  <OTJavascript name="script" local_id="script" src="capa_multimeter_group_report.js"/>
+      		</script>
+	        <variables>
+              <OTScriptVariable name="otRubric">
+	            <reference>
+                  <object refid="${rubric}"/>
+              	</reference>
+              </OTScriptVariable>
+              <OTScriptVariable name="otSource">
+	            <reference>
+                  <object refid="${report_source}"/>
+              	</reference>
+              </OTScriptVariable>
+            </variables>
+      	</OTXHTMLScript>
+      </library>
     </OTSystem>
   </objects>
 </otrunk>
