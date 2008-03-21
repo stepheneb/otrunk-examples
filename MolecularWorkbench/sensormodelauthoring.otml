@@ -11,8 +11,7 @@
 			class="org.concord.otrunk.graph.OTDataCollectorViewConfig" />
 		<import class="org.concord.otrunkmw.OTModelerPage" />
 		<import class="org.concord.otrunkmw.OTModelerPageViewConfig" />
-		<import class="org.concord.otrunkmw.OTMwDataProducer" />
-		<import class="org.concord.otrunkmw.OTMwChannelData" />
+		<import class="org.concord.otrunkmw.OTMwDataInputter" />
 		<import class="org.concord.otrunk.ui.OTText" />
 		<import
 			class="org.concord.otrunk.view.document.OTDocumentViewConfig" />
@@ -63,9 +62,6 @@
 						<OTViewEntry local_id="mw-view"
 							objectClass="org.concord.otrunkmw.OTModelerPage"
 							viewClass="org.concord.otrunkmw.OTModelerPageView" />
-						<OTViewEntry local_id="data producer-view"
-							objectClass="org.concord.otrunkmw.OTMwDataProducer"
-							viewClass="org.concord.otrunkmw.OTMwDataProducerEditView" />
 						<OTViewEntry
 							objectClass="org.concord.otrunk.ui.OTTextPane"
 							viewClass="org.concord.otrunk.ui.swing.OTTextPaneView" />
@@ -102,6 +98,12 @@
 						<OTFrame width="800" height="600" />
 					</frame>
 				</OTViewBundle>
+				<OTInterfaceManager>
+					<deviceConfigs>
+						<OTDeviceConfig configString="none"
+							deviceId="10" />
+					</deviceConfigs>
+				</OTInterfaceManager>
 			</bundles>
 			<root>
 				<OTCompoundDoc>
@@ -124,8 +126,6 @@
 						</p>
 					</bodyText>
 					<documentRefs>
-						<OTModelerPage local_id="model"
-							authoredDataURL="resources/gas.cml" width="380" height="325" />
 						<OTDataCollector name="Temperature"
 							local_id="sensor" multipleGraphableEnabled="false"
 							title="Temperature Sensor Graph" autoScaleEnabled="true">
@@ -134,7 +134,7 @@
 									connectPoints="true" yColumn="1" drawMarks="false"
 									color="0x0000ff" xColumn="0">
 									<dataProducer>
-										<OTSensorDataProxy
+										<OTSensorDataProxy local_id="sensorsource"
 											name="dataproducer">
 											<request>
 												<OTExperimentRequest
@@ -163,6 +163,17 @@
 									min="0.0" label="Temperature" />
 							</yDataAxis>
 						</OTDataCollector>
+						<OTModelerPage local_id="model"
+							authoredDataURL="resources/gas.cml" width="380" height="325">
+							<inputter>
+								<OTMwDataInputter>
+									<dataProducer>
+										<object
+											refid="${sensorsource}" />
+									</dataProducer>
+								</OTMwDataInputter>
+							</inputter>
+						</OTModelerPage>
 					</documentRefs>
 				</OTCompoundDoc>
 			</root>
