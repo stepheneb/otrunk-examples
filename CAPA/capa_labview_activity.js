@@ -223,41 +223,23 @@ function wrap_assess() {
 
 var submitAnswerButtonHandler = {
 	actionPerformed: function(evt) {
-		var state = _monitor.getState()
-		var msg = ""
-		var prop = System.getProperty("otrunk.capa.labview.no_labview")
-		var noLabview = (prop == "true")
-
-		if (state == LabviewMonitor.RUNNING || noLabview) {
-		    System.out.println("State: running")
-		    if (validateAnswers() == false) {
-		    	return
-		    }
-			msg = "This will end your activity and close the LabVIEW window. Do you want to continue?"
-			var option = JOptionPane.showConfirmDialog(null, msg, "Submitting Answer", JOptionPane.OK_CANCEL_OPTION)
-			
-			if (option == JOptionPane.OK_OPTION) {
-		  		_monitor.close()
-		    	wrap_assess() // must close labVIEW before assess()
-		    	
-				++_currentStep
-				if (_currentStep <= _lastStep) {
-					startStep(_currentStep)
-				}
-				else {
-					endActivity()
-				}
+	    if (validateAnswers() == false) {
+	    	return
+	    }
+		var msg = "This will end your activity and close the LabVIEW window. Do you want to continue?"
+		var option = JOptionPane.showConfirmDialog(null, msg, "Submitting Answer", JOptionPane.OK_CANCEL_OPTION)
+		
+		if (option == JOptionPane.OK_OPTION) {
+	  		_monitor.close()
+	    	wrap_assess() // must close labVIEW before assess()
+	    	
+			++_currentStep
+			if (_currentStep <= _lastStep) {
+				startStep(_currentStep)
 			}
-		}
-		else if (state == LabviewMonitor.READY) {
-		    System.out.println("State: ready")
-			msg = "The activity hasn't started yet.\n You need to launch LabVIEW first"
-			JOptionPane.showMessageDialog(null, msg)
-			return
-		}
-		else {
-			System.out.println("submitButtonHandler: this place shouldn't be reached")
-			return
+			else {
+				endActivity()
+			}
 		}
 	}
 }
