@@ -9,6 +9,7 @@
 		<import class="org.concord.otrunk.view.document.OTTextObject" />
 		<import
 			class="org.concord.otrunk.graph.OTDataCollectorViewConfig" />
+		<import class="org.concord.otrunkmw.OTMwAction" />
 		<import class="org.concord.otrunkmw.OTModelerPage" />
 		<import class="org.concord.otrunkmw.OTModelerPageViewConfig" />
 		<import class="org.concord.otrunkmw.OTMwDataInputter" />
@@ -21,6 +22,7 @@
 		<import class="org.concord.datagraph.state.OTDataGraphable" />
 		<import class="org.concord.data.state.OTDataStore" />
 		<import class="org.concord.data.state.OTDataChannelDescription" />
+		<import class="org.concord.otrunk.ui.OTButton" />
 		<import class="org.concord.otrunk.ui.OTTextPane" />
 		<import class="org.concord.otrunk.ui.OTPlacementContainer" />
 		<import class="org.concord.otrunk.ui.OTPlacement" />
@@ -93,6 +95,9 @@
 						<OTViewEntry
 							objectClass="org.concord.datagraph.state.OTDataGraph"
 							viewClass="org.concord.datagraph.state.OTDataGraphView" />
+						<OTViewEntry
+							objectClass="org.concord.otrunk.ui.OTButton"
+							viewClass="org.concord.otrunk.ui.swing.OTButtonView" />
 					</views>
 					<frame>
 						<OTFrame width="800" height="600" />
@@ -124,8 +129,64 @@
 								<object refid="${model}" />
 							</center>
 						</p>
+						<p>
+							<center>
+								<table>
+									<tr>
+										<td width="100">
+											<object
+												refid="${startButton}" />
+										</td>
+										<td width="100">
+											<object
+												refid="${stopButton}" />
+										</td>
+										<td width="100">
+											<object
+												refid="${resetButton}" />
+										</td>
+									</tr>
+								</table>
+							</center>
+						</p>
 					</bodyText>
 					<documentRefs>
+						<OTButton local_id="startButton" text="Start">
+							<action>
+								<object refid="${start_action}" />
+							</action>
+						</OTButton>
+						<OTButton local_id="stopButton" text="Stop">
+							<action>
+								<object refid="${stop_action}" />
+							</action>
+						</OTButton>
+						<OTButton local_id="resetButton" text="Reset">
+							<action>
+								<object refid="${reset_action}" />
+							</action>
+						</OTButton>
+						<OTMwAction local_id="start_action">
+							<name>Start</name>
+							<targets>
+								<object refid="${model}" />
+								<object refid="${sensorsource}" />
+							</targets>
+						</OTMwAction>
+						<OTMwAction local_id="stop_action">
+							<name>Stop</name>
+							<targets>
+								<object refid="${model}" />
+								<object refid="${sensorsource}" />
+							</targets>
+						</OTMwAction>
+						<OTMwAction local_id="reset_action">
+							<name>Reset</name>
+							<targets>
+								<object refid="${model}" />
+								<object refid="${sensorsource}" />
+							</targets>
+						</OTMwAction>
 						<OTDataCollector name="Temperature"
 							local_id="sensor" multipleGraphableEnabled="false"
 							title="Temperature Sensor Graph" autoScaleEnabled="true">
@@ -134,8 +195,9 @@
 									connectPoints="true" yColumn="1" drawMarks="false"
 									color="0x0000ff" xColumn="0">
 									<dataProducer>
-										<OTSensorDataProxy local_id="sensorsource"
-											name="dataproducer" sharable="true">
+										<OTSensorDataProxy
+											local_id="sensorsource" name="dataproducer"
+											sharable="true">
 											<request>
 												<OTExperimentRequest
 													period="0.1">
@@ -168,8 +230,7 @@
 							<inputter>
 								<OTMwDataInputter>
 									<dataProducer>
-										<object
-											refid="${sensorsource}" />
+										<object refid="${sensorsource}" />
 									</dataProducer>
 								</OTMwDataInputter>
 							</inputter>
