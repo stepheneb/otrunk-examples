@@ -2,7 +2,10 @@
 var answers =  { 
 	s_fault : 0, // submitted fault location
 	c_fault : 0, // correct fault location
-	numChanges : 0,
+	s_truthValues : "", // submitted answer to truth table question
+	c_truthValues : "10100100", // correct answer to truth table question
+	numChanges : 0, // number of changes (input switch flips + probes)
+	time : 0 // total time taken
 }
 
 // Maps used to interpret the data from the LabVIEW VI
@@ -24,6 +27,40 @@ var viMap = {
 		"U3A Output", "U3B Input 1", "U3B Input 2", "U3B Output", "U3 Ground",
 		"U3 VCC"
 	],
+}
+
+/**
+ * This function mut be called AFTER the LabVIEW has exited, and AFTER validateAnswers().
+ */
+function assess(assessment, madWrapper) {
+	p("ENTER: assess()")
+
+	processUserEvents(madWrapper)
+	answers.c_fault = getCorrectFaultyGate(madWrapper) // correct answer
+	answers.s_fault = getSubmittedFaultyGate(madWrapper) // submitted answer
+	answers.time = madWrapper.getTimeTotal()
+	
+	log("----------\n")
+	log("Correct truth table values: " + answers.c_truthValues + "\n")
+	log("Submitted truth table values: " + getSubmittedTruthValuesString(madWrapper) + "\n")
+	log("Correct fault location: " + viMap.gateToLabel[answers.c_fault] + "\n")
+  	log("Submitted fault location: " + viMap.gateToLabel[answers.s_fault] + "\n")
+  	log("Number of changes (probes + input switch): " + answers.numChanges + "\n")
+  	log("Time taken: " + getTimeStringFromSeconds(answers.time) + "\n")
+
+	var ttInd = parseInt(madWrapper.getLastCIValue("Truth Table Correct"))
+	var faultInd = answers.c_fault == answers.s_fault ? 1 : 0
+	var numProbesInd = getNumProbesIndicator(madWrapper, faultInd, answers.numChanges)
+	var timeInd = getTimeIndicator(answers.time, ttInd, faultInd)
+	
+	var indicators = assessment.getIndicatorValues()
+	indicators.put("truthTable", ttInd)
+	indicators.put("fault", faultInd)
+	indicators.put("numChanges", numProbesInd)
+	indicators.put("timeTotal", timeInd)
+	
+	log("----------\n")		
+	log(glob.activityLog)
 }
 
 function getCorrectFaultyGate(madWrapper) {
@@ -50,6 +87,46 @@ function processUserEvents(madWrapper) {
 	}
 }
 
+function getTimeIndicator(timeTotal, ttInd, faultInd) {
+	if (ttInd == 0 && faultInd == 0) {
+		return 0
+	}
+	if (timeTotal < 360) {
+		return 2
+	}
+	else if (timeTotal < 600) {
+		return 1
+	}
+	else {
+		return 0
+	}
+}
+
+function getNumProbesIndicator(madWrapper, faultInd, numChanges) {
+	if (faultInd == 0) {
+		return 0
+	}
+	if (numChanges < 20) {
+		return 2
+	}	
+	else if (numChanges < 30) {
+		return 1
+	}
+	else {
+		return 0
+	}
+}
+
+function getSubmittedTruthValuesString(madWrapper) {
+	var s = ""
+	
+	for (var i = 0; i < 8; ++i) {
+		var label = "TT" + i
+		s += madWrapper.getLastCIValue(label)
+	}	
+	return s
+}
+
 function getLogLine(civ) {
 	var name = civ.getName()
 	var value = civ.getValue()
@@ -63,28 +140,8 @@ function getLogLine(civ) {
 	}		
 }
 
-/**
- * This function mut be called AFTER the LabVIEW has exited, and AFTER validateAnswers().
- */
-function assess(assessment, madWrapper) {
-	p("ENTER: assess()")
-
-	processUserEvents(madWrapper)
-	answers.c_fault = getCorrectFaultyGate(madWrapper) // correct answer
-	answers.s_fault = getSubmittedFaultyGate(madWrapper) // submitted answer
-	
-	var etime = glob.dateFormat.format(new Date())
-	log("----------\n")
-	log(etime + " - Correct fault location = " + viMap.gateToLabel[answers.c_fault] + "\n")
-  	log(etime + " - Submitted fault location = " + viMap.gateToLabel[answers.s_fault] + "\n")
-
-	var timeTotal = madWrapper.getTimeTotal()
-	
-	var indicators = assessment.getIndicatorValues()
-	indicators.put("fault", answers.c_fault == answers.s_fault ? 1 : 0)
-	indicators.put("numChanges", answers.numChanges)
-	indicators.put("timeTotal", timeTotal)
-	
-	log("----------\n")		
-	log(glob.activityLog)
+function getTimeStringFromSeconds(s) {
+	var min = parseInt(s / 60)
+	var sec = s % 60
+	return "" + min + " minutes " + sec + " seconds"
 }
