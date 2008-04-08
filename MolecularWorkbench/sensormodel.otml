@@ -39,27 +39,7 @@
 		<OTSystem>
 			<bundles>
 				<OTSharingBundle />
-				<OTViewBundle showLeftPanel="false"
-					currentMode="authoring">
-					<modes>
-						<OTViewMode name="authoring">
-							<map>
-								<entry key="${mw-view}">
-									<OTModelerPageViewConfig
-										viewClass="org.concord.otrunkmw.OTModelerPageEditView"
-										objectClass="org.concord.otrunkmw.OTModelerPage" />
-								</entry>
-								<entry key="${graph-view}">
-									<OTDataCollectorViewConfig
-										viewClass="org.concord.otrunk.graph.OTDataCollectorEditView"
-										objectClass="org.concord.datagraph.state.OTDataCollector" />
-								</entry>
-							</map>
-						</OTViewMode>
-						<OTViewMode name="student">
-							<map />
-						</OTViewMode>
-					</modes>
+				<OTViewBundle showLeftPanel="false">
 					<views>
 						<OTViewEntry local_id="mw-view"
 							objectClass="org.concord.otrunkmw.OTModelerPage"
@@ -117,15 +97,14 @@
 							<center>
 								<font size="6">
 									<b>
-										The preview and author view of a
-										sensor-simulation setup
+										A sensor-simulation setup
+										without a graph
 									</b>
 								</font>
 							</center>
 						</p>
 						<p>
 							<center>
-								<object refid="${sensor}" />
 								<object refid="${model}" />
 							</center>
 						</p>
@@ -151,6 +130,29 @@
 						</p>
 					</bodyText>
 					<documentRefs>
+						<OTModelerPage local_id="model"
+							authoredDataURL="resources/gas.cml" width="380" height="325">
+							<inputter>
+								<OTMwDataInputter>
+									<dataProducer>
+										<OTSensorDataProxy
+											local_id="sensorsource" name="sensordata" sharable="true">
+											<request>
+												<OTExperimentRequest
+													period="0.1">
+													<sensorRequests>
+														<OTSensorRequest
+															stepSize="0.1" type="0" unit="degC" port="0"
+															requiredMax="40.0" displayPrecision="-1"
+															requiredMin="0.0" />
+													</sensorRequests>
+												</OTExperimentRequest>
+											</request>
+										</OTSensorDataProxy>
+									</dataProducer>
+								</OTMwDataInputter>
+							</inputter>
+						</OTModelerPage>
 						<OTButton local_id="startButton" text="Start">
 							<action>
 								<object refid="${start_action}" />
@@ -184,54 +186,6 @@
 								<object refid="${model}" />
 							</targets>
 						</OTMwAction>
-						<OTDataCollector name="Temperature"
-							local_id="sensor" multipleGraphableEnabled="false"
-							title="Temperature Sensor Graph" autoScaleEnabled="true">
-							<source>
-								<OTDataGraphable name="Sensor"
-									connectPoints="true" yColumn="1" drawMarks="false"
-									color="0x0000ff" xColumn="0">
-									<dataProducer>
-										<OTSensorDataProxy
-											local_id="sensorsource" name="dataproducer"
-											sharable="true">
-											<request>
-												<OTExperimentRequest
-													period="0.1">
-													<sensorRequests>
-														<OTSensorRequest
-															stepSize="0.1" type="0" unit="degC" port="0"
-															requiredMax="40.0" displayPrecision="-1"
-															requiredMin="0.0" />
-													</sensorRequests>
-												</OTExperimentRequest>
-											</request>
-										</OTSensorDataProxy>
-									</dataProducer>
-									<dataStore>
-										<OTDataStore />
-									</dataStore>
-								</OTDataGraphable>
-							</source>
-							<xDataAxis>
-								<OTDataAxis max="60" units="s" min="0"
-									label="Time" />
-							</xDataAxis>
-							<yDataAxis>
-								<OTDataAxis max="40.0" units="degC"
-									min="0.0" label="Temperature" />
-							</yDataAxis>
-						</OTDataCollector>
-						<OTModelerPage local_id="model"
-							authoredDataURL="resources/gas.cml" width="380" height="325">
-							<inputter>
-								<OTMwDataInputter>
-									<dataProducer>
-										<object refid="${sensorsource}" />
-									</dataProducer>
-								</OTMwDataInputter>
-							</inputter>
-						</OTModelerPage>
 					</documentRefs>
 				</OTCompoundDoc>
 			</root>
