@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<otrunk id="0910cfcd-77d1-4573-ad9e-a2132e2dc87c">
+  <imports>
+    <import class="org.concord.otrunk.OTSystem" />
+    <import class="org.concord.otrunk.OTInclude" />
+    <import class="org.concord.otrunk.view.OTViewBundle" />
+    <import class="org.concord.otrunk.view.OTViewEntry" />
+    <import class="org.concord.otrunk.view.OTMultiUserRoot" />
+    <import class="org.concord.otrunk.script.OTScriptEngineBundle"/>    
+    <import class="org.concord.otrunk.script.OTScriptEngineEntry"/>    
+    <import class="org.concord.otrunk.script.ui.OTXHTMLScript"/>
+    <import class="org.concord.otrunk.script.ui.OTScriptVariable"/>    
+    <import class="org.concord.otrunk.script.js.OTJavascript"/>
+    <import class="org.concord.otrunkcapa.OTCAPAReportTemplate"/>
+  </imports>
+  <idMap>
+  	<idMapping local_id="script_object" id="7dca7f8e-7296-4a85-a1bd-37997f03ab71!/activity_script"/>
+  	<idMapping local_id="rubric" id="02d179b3-db94-4014-ad2c-f689512ea3c5"/>
+  	<idMapping local_id="user_list" id="!/user_list"/>
+  </idMap>
+  <objects>
+    <OTSystem local_id="system">
+      <bundles>
+        <OTViewBundle showLeftPanel="false">
+          <views>
+            <OTViewEntry objectClass="org.concord.otrunk.view.OTMultiUserRoot" viewClass="org.concord.otrunk.view.OTMultiUserRootView" />
+            <OTViewEntry objectClass="org.concord.otrunk.script.ui.OTXHTMLScript" viewClass="org.concord.otrunk.script.ui.OTXHTMLScriptView"/>            
+            <OTViewEntry objectClass="org.concord.otrunkcapa.OTCAPAReportTemplate" viewClass="org.concord.otrunkcapa.OTCAPAReportTemplateView" />
+          </views>
+        </OTViewBundle>
+        <OTScriptEngineBundle>
+	      <engines>
+			<OTScriptEngineEntry objectClass="org.concord.otrunk.script.js.OTJavascript" engineClass="org.concord.otrunk.script.js.OTJavascriptEngine"/>
+		  </engines>
+	    </OTScriptEngineBundle>        
+      </bundles>
+      <includes>
+        <OTInclude href="capa_digital_fault_activity.otml" />
+        <OTInclude href="http://rails.dev.concord.org/diy/external_otrunk_activities/18/ot_learner_data.xml"/>
+      </includes>
+      <root>
+        <OTMultiUserRoot local_id="multi_user_root" userList="${user_list}">
+          <reportTemplate>
+            <OTCAPAReportTemplate local_id="report_source">
+              <rubric>
+                <object refid="${rubric}" />
+              </rubric>
+              <activityScript>
+                <object refid="${script_object}" />
+              </activityScript>
+              <reportScript>
+              	<object refid="${report_script}"/>
+              </reportScript>
+            </OTCAPAReportTemplate>
+          </reportTemplate>
+        </OTMultiUserRoot>
+      </root>
+      <library>
+      	<OTXHTMLScript local_id="report_script">
+      		<script>
+      		  <OTJavascript name="script" local_id="script" src="capa_faults_group_report.js"/>
+      		</script>
+	        <variables>
+              <OTScriptVariable name="otRubric">
+	            <reference>
+                  <object refid="${rubric}"/>
+              	</reference>
+              </OTScriptVariable>
+              <OTScriptVariable name="otSource">
+	            <reference>
+                  <object refid="${report_source}"/>
+              	</reference>
+              </OTScriptVariable>
+            </variables>
+      	</OTXHTMLScript>
+      </library>
+    </OTSystem>
+  </objects>
+</otrunk>
+
