@@ -22,6 +22,7 @@
 		<import class="org.concord.data.state.OTDataInput" />
 		<import class="org.concord.data.state.OTDataStore" />
 		<import class="org.concord.data.state.OTDataChannelDescription" />
+		<import class="org.concord.data.state.OTLinearProducerFilter" />
 		<import class="org.concord.otrunk.ui.OTButton" />
 		<import class="org.concord.otrunk.ui.OTTextPane" />
 		<import class="org.concord.otrunk.ui.OTPlacementContainer" />
@@ -133,22 +134,29 @@
 						<OTModelerPage local_id="model"
 							authoredDataURL="resources/gas.cml" width="380" height="325">
 							<dataInput>
-								<OTDataInput>
+								<OTDataInput
+									inputVariable="temperature">
 									<dataProducer>
-										<OTSensorDataProxy
-											local_id="sensorsource" name="sensordata" sharable="true">
-											<request>
-												<OTExperimentRequest
-													period="0.1">
-													<sensorRequests>
-														<OTSensorRequest
-															stepSize="0.1" type="0" unit="degC" port="0"
-															requiredMax="40.0" displayPrecision="-1"
-															requiredMin="0.0" />
-													</sensorRequests>
-												</OTExperimentRequest>
-											</request>
-										</OTSensorDataProxy>
+										<OTLinearProducerFilter
+											k0="-28000" k1="1000" sourceChannel="1">
+											<source>
+												<OTSensorDataProxy
+													local_id="sensorsource" name="sensordata"
+													sharable="true">
+													<request>
+														<OTExperimentRequest
+															period="0.1">
+															<sensorRequests>
+																<OTSensorRequest
+																	stepSize="0.1" type="0" unit="degC" port="0"
+																	requiredMax="40.0" displayPrecision="-1"
+																	requiredMin="0.0" />
+															</sensorRequests>
+														</OTExperimentRequest>
+													</request>
+												</OTSensorDataProxy>
+											</source>
+										</OTLinearProducerFilter>
 									</dataProducer>
 								</OTDataInput>
 							</dataInput>
