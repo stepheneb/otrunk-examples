@@ -96,7 +96,8 @@ function wrap_assess() {
 	var madWrapper = converter.getMADWrapper()
 	glob.otAssessment.setLabel("Fault")
 	var inventory = glob.otAssessment.getInventory()
-	inventory.put("modelActivityData", converter.getOTModelActivityData())
+	var madID = converter.getOTModelActivityData().getGlobalId()
+	inventory.put("modelActivityData", madID)
 	assess(glob.otAssessment, madWrapper)
 }
 
