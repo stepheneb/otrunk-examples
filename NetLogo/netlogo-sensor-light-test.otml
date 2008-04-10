@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<otrunk id="33754150-b594-11d9-9669-0800200c9a66" >
+  <imports>
+    <import class="org.concord.otrunk.OTSystem"/>
+    <import class="org.concord.otrunk.view.OTViewEntry"/>
+    <import class="org.concord.otrunk.view.OTViewService"/>
+    <import class="org.concord.otrunk.view.document.OTCompoundDoc"/>
+    <import class="org.concord.otrunk.view.document.OTTextObject"/>
+    <import class="org.concord.otrunknl4.OTNLogoModel"/>
+    
+    <import class="org.concord.data.state.OTDataInput"/>
+    
+    <import class="org.concord.datagraph.state.OTDataGraph" />
+	<import class="org.concord.datagraph.state.OTDataCollector" />
+	<import class="org.concord.datagraph.state.OTDataAxis" />
+	<import class="org.concord.datagraph.state.OTDataGraphable" />
+	<import class="org.concord.data.state.OTDataStore" />
+	<import class="org.concord.data.state.OTDataChannelDescription" />
+		
+    <import class="org.concord.sensor.state.OTDeviceConfig" />
+	<import class="org.concord.sensor.state.OTExperimentRequest" />
+	<import class="org.concord.sensor.state.OTInterfaceManager" />
+	<import class="org.concord.sensor.state.OTSensorDataProxy" />
+	<import class="org.concord.sensor.state.OTSensorRequest" />
+	<import class="org.concord.sensor.state.OTZeroSensor" />
+  </imports>
+  <objects>
+    <OTSystem>
+      <bundles>
+      <OTInterfaceManager>
+					<deviceConfigs>
+						<OTDeviceConfig configString="none"
+							deviceId="10" />
+					</deviceConfigs>
+				</OTInterfaceManager>
+        <OTViewService>
+          <viewEntries>
+            <OTViewEntry
+              objectClass="org.concord.otrunknl4.OTNLogoModel" 
+              viewClass="org.concord.otrunknl4.OTNLogoModelAppView"/>
+            <OTViewEntry
+              objectClass="org.concord.otrunk.view.document.OTDocument" 
+              viewClass="org.concord.otrunk.view.document.OTDocumentView"/>
+            <OTViewEntry local_id="graph-view"
+				objectClass="org.concord.datagraph.state.OTDataCollector"
+				viewClass="org.concord.datagraph.state.OTDataCollectorView" />
+			<OTViewEntry
+				objectClass="org.concord.datagraph.state.OTDataGraph"
+				viewClass="org.concord.datagraph.state.OTDataGraphView" />
+          </viewEntries>
+        </OTViewService>
+      </bundles>
+      <root>
+        <OTCompoundDoc>
+          <bodyText>
+            NetLogo test<br/>
+            <hr/>
+          <object refid="${nl_model}"/>
+            <hr/>
+            <object refid="${graph}"/>
+          </bodyText>
+          <documentRefs>
+          	<OTNLogoModel local_id="nl_model"
+          		authoredDataLocalURL="leaf-macro-d-v40.nlogo" >
+          		<input>
+          			<OTDataInput inputVariable="sun-brightness">
+          				<dataProducer>
+          					<OTSensorDataProxy local_id="sensorsource"
+								name="dataproducer" sharable="true">
+								<request>
+			                        <OTExperimentRequest period="0.1">
+			                          <sensorRequests>
+			                            <OTSensorRequest stepSize="0.1" type="2" unit="lux" port="0" requiredMax="4000.0" displayPrecision="0" requiredMin="0.0"/>
+			                          </sensorRequests>
+			                        </OTExperimentRequest>
+			                      </request>
+							</OTSensorDataProxy>
+          				</dataProducer>
+          			</OTDataInput>
+          		</input>
+          	</OTNLogoModel>
+          	<OTDataCollector name="Light" multipleGraphableEnabled="false" title="Light Sensor Graph"  autoScaleEnabled="true">
+	              <source>
+	                <OTDataGraphable name="Sensor" connectPoints="true" yColumn="1" drawMarks="false" color="0x0000ff" xColumn="0">
+	                  <dataProducer>
+							<object refid="${sensorsource}"/>
+						</dataProducer>
+	                  <dataStore>
+	                    <OTDataStore />
+	                  </dataStore>
+	                </OTDataGraphable>
+	              </source>
+	              <xDataAxis>
+	                <OTDataAxis max="60" units="s" min="0" label="Time"/>
+	              </xDataAxis>
+	              <yDataAxis>
+	                <OTDataAxis max="500.0" units="lux" min="0.0" label="Light"/>
+	              </yDataAxis>
+	            </OTDataCollector>
+          </documentRefs>
+        </OTCompoundDoc>      
+      </root>
+    </OTSystem>
+  </objects>
+</otrunk>
