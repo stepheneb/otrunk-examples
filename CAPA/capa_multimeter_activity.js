@@ -69,6 +69,7 @@ var activityName = "Using the digital multimeter";
 //CCK handy objects 
 var cckModule = cckModelView.getModule();	// (CCKPiccoloModule)
 var cckModel = cckModule.getCCKModel();		// (CCKModel)
+var cckSolver = cckModel.getCircuitSolver(); // (CircuitAnalysisCCKAdapter)
 var cckCircuitNode = cckModule.getCckSimulationPanel().getCircuitNode();	// (CircuitNode)
 var cckCircuit = cckModule.getCircuit();	// (Circuit)
 var cckMultimeter = cckModule.getMultimeterModel();		// (MultimeterModel)
@@ -448,11 +449,12 @@ function setupMultimeter()
 	// cckModule.setWiggleMeVisible(false);	//this method doesn't exist anymore in cck
 	cckModel.setInternalResistanceOn(true);
 
-	var multimeterListener = new MultimeterModel.Listener() 
+	var solverListener = new CircuitSolutionListener() 
 	{
 		//The way this works now is assuming that this function gets called when the multimeter gets a measurement
-		multimeterChanged: function()
-		{				
+		circuitSolverFinished: function()
+		{
+			//System.out.println("ENTER: JS setupMultimeter::solverListener.circuitSolverFinished()");				
 			var value = cckMultimeter.getCurrentValue();
 			var state = cckMultimeter.getState();
 			
@@ -563,7 +565,7 @@ function setupMultimeter()
 		
 	}; // end of var multimeterListener = new MultimeterModel.Listener() 
 
-	cckMultimeter.addListener(multimeterListener);
+	cckSolver.addSolutionListener(solverListener);
 
 }// end of setupMultimeter()
 
