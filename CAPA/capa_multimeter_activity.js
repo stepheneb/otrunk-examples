@@ -164,10 +164,6 @@ function save()
 	saveStateVariable("currentStep", new java.lang.Integer(currentStep));	//Saves the current step
 	//
 	
-	//Log measurements
-	logMeasurements();
-	//
-	
 	finalizeLogging();
 }
 
@@ -324,7 +320,7 @@ function initLogging()
 		
 	//Create an OTText
 	xmlText = otObjectService.createObject(OTText);
-	xmlText.setText("CAPA - " + activityName + " - Logging information\n");
+	xmlText.setText("<b>CAPA - " + activityName + " - Logging information</b>\n");
 	//Put logging information into the otContents of the script object
 	otContents.add(xmlText);
 		
@@ -360,6 +356,15 @@ function logInformation(info)
 {
 	info = (new java.util.Date()).toString() + " - " + info;
 	System.out.println("LOG --- " + info);
+	if (bLogTextFile){
+		logFile.println(info);
+	}
+	xmlText.setText(xmlText.getText() + info + "\n");
+}
+
+// Log without timestamp/prefix
+function logInfo(info) 
+{
 	if (bLogTextFile){
 		logFile.println(info);
 	}
@@ -433,15 +438,27 @@ function printMeasurements()
 function logMeasurements()
 {
 	var strLog;
-	logInformation("Measurements Summary - "+measurements.length+" measurements");
+	logInfo("\n<b>Measurements Summary - "+measurements.length+" measurements</b>");
 	for (var i=0; i<measurements.length; i++){
 		var m = measurements[i];
-		strLog = "type=" + m.type + " value=" + m.value + " unit=" + m.unit;
+		strLog = "" + i + ") type=" + m.type + " value=" + m.value + " unit=" + m.unit;
 		if (m.extra != null){
-			strLog = strLog + " " + m.extra.toSource();
+			strLog = strLog + " " + getExtraInfo(m.extra);
 		}
-		logInformation(strLog); 
+		logInfo(strLog); 
 	}
+}
+
+// Extract string to write to log
+function getExtraInfo(e) {
+	var s = "{";
+	s += "blackLead: " + e.blackLead + ", ";
+	s += "redLead: " + e.redLead + ", ";
+	s += "blackLeadBetweenWires: " + e.blackLeadBetweenWires + ", ";	
+	s += "redLeadBetweenWires: " + e.redLeadBetweenWires + ", ";
+	s += "switchClosed: " + e.switchClosed + ", ";		
+	s += "brokenDMM: " + e.brokenDMM + "}";
+	return s;			
 }
 
 function setupMultimeter()
@@ -1118,6 +1135,9 @@ function endActivity()
 	showSolutionMessage();
 	
 	reportButton.setVisible(true);
+	
+	//Log measurements
+	logMeasurements();
 }
 
 function logAnswerAssessment(answer, correctAnswer, answerValueType, answerUnitType)
