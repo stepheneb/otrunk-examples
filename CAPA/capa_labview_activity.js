@@ -33,12 +33,18 @@ importClass(Packages.java.math.RoundingMode)
 
 importClass(Packages.org.concord.otrunk.ui.OTText)
 importClass(Packages.org.concord.otrunk.ui.swing.OTCardContainerView)
+importClass(Packages.org.concord.framework.otrunk.view.OTUserListService)
 importClass(Packages.org.concord.otrunkcapa.rubric.OTAssessment)
 importClass(Packages.org.concord.otrunk.labview.LabviewMonitor)
 importClass(Packages.org.concord.otrunk.labview.LabviewReportConverter)
 importClass(Packages.org.concord.otrunk.labview.ScopeAssessmentUtil)
 
-
+/*
+ * Variables from OTScriptContextHelper
+ * ====================================
+ * viewContext
+ */
+ 
 /*
  * Variables from otml
  * ===================
@@ -141,7 +147,7 @@ function setupGUI() {
 function setupAssessmentLogging() {
 	// Create assessment object
 	_otAssessment = otObjectService.createObject(OTAssessment)
-	_otAssessment.setTitle("Using an Oscilloscope - Student Report")
+	_otAssessment.setTitle("Using an Oscilloscope - " + getUserName())
 	otContents.add(_otAssessment)
 }
 
@@ -219,6 +225,17 @@ function wrap_assess() {
 	var madID = converter.getOTModelActivityData().getGlobalId()
 	_otAssessment.getInventory().put("modelActivityData", madID) 
 	assess(_otAssessment, _assessUtil, madwrapper)
+}
+
+function getUserName() {
+	var userListService = viewContext.getViewService(OTUserListService)
+	var users = userListService.getUserList()
+	if (users.size() < 1) {
+		return "A student"
+	}
+	else {
+		return users.get(0).getName()
+	}
 }
 
 var submitAnswerButtonHandler = {
