@@ -1,7 +1,9 @@
 // Holder for answers
-var answers =  { 
-	s_fault : 0, // submitted fault location
-	c_fault : 0, // correct fault location
+var answers =  {
+	c_fault1 : 0, // correct location of fault #1
+	s_fault1 : 0, // submitted location of fault #1
+	c_fault2 : 0, // correct location of fault #2	
+	s_fault2 : 0, // submitted location of fault #2
 	s_truthValues : "", // submitted answer to truth table question
 	c_truthValues : "10100100", // correct answer to truth table question
 	numChanges : 0, // number of changes (input switch flips + probes)
@@ -18,7 +20,6 @@ var viMap = {
 		"No faults", "Inverter U1A", "Inverter U1B", "Inverter U1C", "AND gate U2A", "AND gate U2B", "AND gate U3B", 
 		"OR gate U3A", "OR gate U3B", "OR gate U3C"		
 	],
-	faultToGate : [ 0, 3, 6, 4, 5, 8],
 	probeMap : [ "No Connection", "U1A Input", "U1A Output", "U1B Input", "U1B Output",
 		"U1C Input", "U1C Output", "U1 Ground", "U1 VCC", "U2A Input1",
 		"U2A Input 2", "U2A Input 3", "U2A Output", "U2B Input 1", "U2B Input 2",
@@ -36,40 +37,37 @@ function assess(assessment, madWrapper) {
 	p("ENTER: assess()")
 
 	processUserEvents(madWrapper)
-	answers.c_fault = getCorrectFaultyGate(madWrapper) // correct answer
-	answers.s_fault = getSubmittedFaultyGate(madWrapper) // submitted answer
+	answers.c_fault1 = parseInt(madWrapper.getLastCIValue("faultLocation1")) 
+	answers.s_fault1 = parseInt(madWrapper.getLastCIValue("answer1")) 
+	answers.c_fault2 = parseInt(madWrapper.getLastCIValue("faultLocation2"))
+	answers.s_fault2 = parseInt(madWrapper.getLastCIValue("answer2")) 
 	answers.time = madWrapper.getTimeTotal()
 	
 	log("----------\n")
 	log("Correct truth table values: " + answers.c_truthValues + "\n")
 	log("Submitted truth table values: " + getSubmittedTruthValuesString(madWrapper) + "\n")
-	log("Correct fault location: " + viMap.gateToLabel[answers.c_fault] + "\n")
-  	log("Submitted fault location: " + viMap.gateToLabel[answers.s_fault] + "\n")
+	log("Correct fault #1 location: " + viMap.gateToLabel[answers.c_fault1] + "\n")
+  	log("Submitted fault #1 location: " + viMap.gateToLabel[answers.s_fault1] + "\n")
+	log("Correct fault #2 location: " + viMap.gateToLabel[answers.c_fault2] + "\n")
+  	log("Submitted fault #2 location: " + viMap.gateToLabel[answers.s_fault2] + "\n")
   	log("Number of changes (probes + input switch): " + answers.numChanges + "\n")
   	log("Time taken: " + getTimeStringFromSeconds(answers.time) + "\n")
 
-	var ttInd = parseInt(madWrapper.getLastCIValue("Truth Table Correct"))
-	var faultInd = answers.c_fault == answers.s_fault ? 1 : 0
-	var numProbesInd = getNumProbesIndicator(madWrapper, faultInd, answers.numChanges)
-	var timeInd = getTimeIndicator(answers.time, ttInd, faultInd)
+	var ttInd = parseInt(madWrapper.getLastCIValue("truthTableCorrect"))
+	var faultInd1 = answers.c_fault1 == answers.s_fault1 ? 1 : 0
+	var faultInd2 = answers.c_fault2 == answers.s_fault2 ? 1 : 0	
+	var numProbesInd = getNumProbesIndicator(madWrapper, faultInd1, faultInd2, answers.numChanges)
+	var timeInd = getTimeIndicator(answers.time, ttInd, faultInd1, faultInd2)
 	
 	var indicators = assessment.getIndicatorValues()
 	indicators.put("truthTable", ttInd)
-	indicators.put("fault", faultInd)
+	indicators.put("fault1", faultInd1)
+	indicators.put("fault2", faultInd2)	
 	indicators.put("numChanges", numProbesInd)
 	indicators.put("timeTotal", timeInd)
 	
 	log("----------\n")		
 	log(glob.activityLog)
-}
-
-function getCorrectFaultyGate(madWrapper) {
-	var faultID = parseInt(madWrapper.getLastCIValue("Fault"))
-	return viMap.faultToGate[faultID]
-}
-
-function getSubmittedFaultyGate(madWrapper) {
-	return parseInt(madWrapper.getLastCIValue("Fault List")) 
 }
 
 function processUserEvents(madWrapper) {
@@ -87,8 +85,8 @@ function processUserEvents(madWrapper) {
 	}
 }
 
-function getTimeIndicator(timeTotal, ttInd, faultInd) {
-	if (ttInd == 0 && faultInd == 0) {
+function getTimeIndicator(timeTotal, ttInd, faultInd1, faultInd2) {
+	if (ttInd == 0 && faultInd1 == 0 && faultInd2 == 0) {
 		return 0
 	}
 	if (timeTotal < 360) {
@@ -102,8 +100,8 @@ function getTimeIndicator(timeTotal, ttInd, faultInd) {
 	}
 }
 
-function getNumProbesIndicator(madWrapper, faultInd, numChanges) {
-	if (faultInd == 0) {
+function getNumProbesIndicator(madWrapper, faultInd1, faultInd2, numChanges) {
+	if (faultInd1 == 0 && faultInd2 == 0) {
 		return 0
 	}
 	if (numChanges < 20) {
