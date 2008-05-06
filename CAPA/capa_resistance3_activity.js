@@ -42,6 +42,7 @@ importPackage(Packages.java.awt.image);
 importPackage(Packages.javax.swing);
 importPackage(Packages.javax.imageio);
 importClass(Packages.java.text.DecimalFormat);
+importClass(Packages.java.text.SimpleDateFormat)
 
 importPackage(Packages.edu.colorado.phet.cck.model);
 importPackage(Packages.edu.colorado.phet.cck.model.components);
@@ -67,6 +68,16 @@ importClass(Packages.org.concord.calculator.state.OTProgrammableCalculatorListen
 importClass(Packages.org.concord.otrunkcapa.rubric.OTAssessment);
 importClass(Packages.org.concord.otrunkcapa.CAPAUnitUtil);
 
+importClass(Packages.org.concord.framework.otrunk.view.OTUserListService)
+
+/*
+ * Variables from OTScriptContextHelper
+ * ====================================
+ * otContents
+ * viewContext
+ */
+
+var	dateFormat = SimpleDateFormat.getInstance();
 var activityName = "Measuring Resistance 3.0";
 
 var startHTML = "<html><blockquote>";
@@ -273,6 +284,7 @@ function saveStateVariable(name, value)
 /** Initial set up if the GUI. This stuff eventually could be moved to the otml file */
 function setupGUI()
 {
+	dateFormat.applyPattern("MM/dd/yyyy HH:mm:ss zzz")	
 	answerBox.setBackground(new Color(1,1,0.7));
 	unitComboBox.setBackground(new Color(1,1,0.7));
 //	answerBox.setEditable(false);
@@ -410,9 +422,19 @@ function initLogging()
 function setupAsessmentLogging()
 {
 	if (activityInitialized) {
+		var userName = getUserName();
+		var now = new Date();
+		var ms = now.getTime();
+		var timeString = dateFormat.format(now);
+		
 		//Create assessment object
 		otAssessment = otObjectService.createObject(OTAssessment);
-		otAssessment.setTitle(activityName + " - Student Report");
+		otAssessment.setUserName(userName);
+		otAssessment.setTime(ms);	
+		otAssessment.setTitle(activityName + " - " + timeString + " - " + userName);
+		
+		//Create assessment object
+
 		otAssessment.setLabel("resistance");
 		otContents.add(otContents.size() - 1, otAssessment);
 	}
@@ -430,6 +452,17 @@ function setupAsessmentLogging()
 			otAssessment = otObjectService.copyObject(otLastAssessment, -1);
 			otContents.add(otContents.size() - 1, otAssessment);
 		}
+	}
+}
+
+function getUserName() {
+	var userListService = viewContext.getViewService(OTUserListService)
+	var users = userListService.getUserList()
+	if (users.size() < 1) {
+		return "A student"
+	}
+	else {
+		return users.get(0).getName()
 	}
 }
 

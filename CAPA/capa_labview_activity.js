@@ -100,8 +100,6 @@ function init() {
     _monitor = controllerService.getRealObject(otMonitor)	
 
 	setupGUI()
-	
-	//reportHeader()	
 	setupAssessmentLogging()
 	initLogging()
 	
@@ -116,13 +114,6 @@ function save() {
 	System.out.println("-------------------------- save --------------------------------")	
 	submitAnswerButton.removeActionListener(submitAnswerButtonListener)
 	return true
-}
-
-function reportHeader() {
-	var header = otObjectService.createObject(OTText)
-	var now = _dateFormat.format(new Date())
-	header.setText("CAPA - LabVIEW Oscilloscope (" + now + ")")
-	otContents.add(header)
 }
 
 function initLogging() {
@@ -145,9 +136,17 @@ function setupGUI() {
 }
 
 function setupAssessmentLogging() {
+	var userName = getUserName()
+	var now = new Date()
+	var ms = now.getTime()
+	var timeString = _dateFormat.format(now)
+	
 	// Create assessment object
 	_otAssessment = otObjectService.createObject(OTAssessment)
-	_otAssessment.setTitle("Using an Oscilloscope - " + getUserName())
+	_otAssessment.setUserName(userName)
+	_otAssessment.setTime(ms)	
+	_otAssessment.setTitle("Using an Oscilloscope - " + timeString + " - " + userName)
+
 	otContents.add(_otAssessment)
 }
 

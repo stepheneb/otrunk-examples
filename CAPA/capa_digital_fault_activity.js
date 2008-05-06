@@ -8,16 +8,19 @@ importClass(Packages.java.awt.event.ActionListener)
 importClass(Packages.javax.swing.JOptionPane)
 importClass(Packages.java.math.RoundingMode)
 
+importClass(Packages.org.concord.framework.otrunk.view.OTUserListService)
 importClass(Packages.org.concord.otrunk.ui.OTText)
 importClass(Packages.org.concord.otrunk.ui.swing.OTCardContainerView)
 importClass(Packages.org.concord.otrunkcapa.rubric.OTAssessment)
 importClass(Packages.org.concord.otrunk.labview.LabviewMonitor)
 importClass(Packages.org.concord.otrunk.labview.LabviewReportConverter)
 
+
 /*
- * Variables from OTScriptObject
- * 
+ * Variables from OTScriptContextHelper
+ * ====================================
  * otContents
+ * viewContext
  * controllerService
  */
  
@@ -64,10 +67,29 @@ function save() {
 }
 
 function setupAssessmentLogging() {
+	var userName = getUserName()
+	var now = new Date()
+	var ms = now.getTime()
+	var timeString = glob.dateFormat.format(now)
+	
 	// Create assessment object
-	glob.otAssessment = otObjectService.createObject(OTAssessment)
-	glob.otAssessment.setTitle("Faults - Student Report")
-	otContents.add(glob.otAssessment)
+	var assessment = otObjectService.createObject(OTAssessment)
+	assessment.setUserName(userName)
+	assessment.setTime(ms)	
+	assessment.setTitle("Digital Troubleshooting - " + timeString + " - " + userName)
+	otContents.add(assessment)
+	glob.otAssessment = assessment
+}
+
+function getUserName() {
+	var userListService = viewContext.getViewService(OTUserListService)
+	var users = userListService.getUserList()
+	if (users.size() < 1) {
+		return "A student"
+	}
+	else {
+		return users.get(0).getName()
+	}
 }
 
 function initLogging() {

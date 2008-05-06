@@ -37,6 +37,7 @@ importPackage(Packages.java.awt.image);
 
 importPackage(Packages.javax.swing);
 importPackage(Packages.javax.imageio);
+importClass(Packages.java.text.SimpleDateFormat)
 importClass(Packages.java.text.DecimalFormat);
 
 importPackage(Packages.edu.colorado.phet.cck.model);
@@ -53,6 +54,7 @@ importPackage(Packages.org.concord.otrunk.ui.notebook);
 importPackage(Packages.org.concord.data.state);
 importPackage(Packages.org.concord.framework.otrunk);
 
+importClass(Packages.org.concord.framework.otrunk.view.OTUserListService)
 importClass(Packages.org.concord.otrunk.ui.swing.OTCardContainerView);
 importClass(Packages.org.concord.otrunk.ui.OTText);
 importClass(Packages.org.concord.framework.otrunk.view.OTActionContext);
@@ -61,6 +63,15 @@ importClass(Packages.org.concord.otrunkcapa.OTMultimeterAssessment);
 importClass(Packages.org.concord.otrunkcck.CCKCircuitAnalyzer);
 importClass(Packages.org.concord.otrunkcapa.CAPAUnitUtil);
 
+
+/*
+ * Variables from OTScriptContextHelper
+ * ====================================
+ * otContents
+ * viewContext
+ */
+
+var	dateFormat = SimpleDateFormat.getInstance();
 var activityName = "Using the digital multimeter";
 
 //var startHTML = "<html><blockquote><p><font size=\"4\" face=\"Verdana\">";
@@ -187,6 +198,7 @@ function saveStateVariable(name, value)
 /** Initial set up if the GUI. This stuff eventually could be moved to the otml file */
 function setupGUI()
 {
+	dateFormat.applyPattern("MM/dd/yyyy HH:mm:ss zzz")	
 	answerBox.setBackground(new Color(1,1,0.7));
 	unitComboBox.setBackground(new Color(1,1,0.7));
 }
@@ -330,9 +342,16 @@ function initLogging()
 function setupAsessmentLogging()
 {
 	if (activityInitialized) {
+		var userName = getUserName();
+		var now = new Date();
+		var ms = now.getTime();
+		var timeString = dateFormat.format(now);
+		
 		//Create assessment object
 		otAssessment = otObjectService.createObject(OTMultimeterAssessment);
-		otAssessment.setTitle(activityName + " - Student Report");
+		otAssessment.setUserName(userName);
+		otAssessment.setTime(ms);	
+		otAssessment.setTitle(activityName + " - " + timeString + " - " + userName);
 		otContents.add(otContents.size() - 1, otAssessment);
 	}
 	else{
@@ -349,6 +368,17 @@ function setupAsessmentLogging()
 			otAssessment = otObjectService.copyObject(otLastAssessment, -1);
 			otContents.add(otContents.size() - 1, otAssessment);
 		}
+	}
+}
+
+function getUserName() {
+	var userListService = viewContext.getViewService(OTUserListService)
+	var users = userListService.getUserList()
+	if (users.size() < 1) {
+		return "A student"
+	}
+	else {
+		return users.get(0).getName()
 	}
 }
 
