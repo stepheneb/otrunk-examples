@@ -1,11 +1,12 @@
 // Holder for answers
 var answers =  {
-	c_fault1 : 0, // correct location of fault #1
+	c_fault1 : 0, //correct location of fault #1
 	s_fault1 : 0, // submitted location of fault #1
 	c_fault2 : 0, // correct location of fault #2	
 	s_fault2 : 0, // submitted location of fault #2
 	s_truthValues : "", // submitted answer to truth table question
 	c_truthValues : "10100100", // correct answer to truth table question
+	numHiddenProbes : 0, // number of redundant probes
 	numChanges : 0, // number of changes (input switch flips + probes)
 	time : 0 // total time taken
 }
@@ -55,7 +56,7 @@ function assess(assessment, madWrapper) {
 
 	var ttInd = parseInt(madWrapper.getLastCIValue("truthTableCorrect"))
 	var faultInd1 = answers.c_fault1 == answers.s_fault1 ? 1 : 0
-	var faultInd2 = answers.c_fault2 == answers.s_fault2 ? 1 : 0	
+	var faultInd2 = answers.c_fault2 == answers.s_fault2 ? 1 : 0
 	var numProbesInd = getNumProbesIndicator(madWrapper, faultInd1, faultInd2, answers.numChanges)
 	var timeInd = getTimeIndicator(answers.time, ttInd, faultInd1, faultInd2)
 	
@@ -63,6 +64,7 @@ function assess(assessment, madWrapper) {
 	indicators.put("truthTable", ttInd)
 	indicators.put("fault1", faultInd1)
 	indicators.put("fault2", faultInd2)	
+	indicators.put("redundantProbe", answers.numHiddenProbes)
 	indicators.put("numChanges", numProbesInd)
 	indicators.put("timeTotal", timeInd)
 	
@@ -71,28 +73,112 @@ function assess(assessment, madWrapper) {
 }
 
 function processUserEvents(madWrapper) {
-	var civs = madWrapper.getSortedCIVs();
+	var savedA = null
+	var savedB = null
+	var savedC = null
+	
+	// evident: true if the output of the circuit agrees with the truth table 
+	// of a non-faulty circuit 
+	var evident = false 
+	
+	var a = parseInt(madWrapper.getInitialCIValue("A")) //input switch A
+	var b = parseInt(madWrapper.getInitialCIValue("B")) //input switch B
+	var c = parseInt(madWrapper.getInitialCIValue("C")) //input switch C
+	var y = parseInt(madWrapper.getInitialCIValue("output")) //circuit output (LED)
+	var evident = isEvident(a, b, c, y)
+	
+	glob.activityLog += "Fault 1: Initial switch setting: A=" + a + " B=" + b + " C=" + c + " Y=" + y + "\n"
+
+	var fault2 = madWrapper.getLastCIV("fault2?")
+	var fault2Start = -1
+	if (fault2 != null) {
+		fault2Start = fault2.getTime()
+	}
+
+	var civs = madWrapper.getSortedCIVs()
+	var wasUserEvent = true
+	
 	for (var i = 0; i < civs.size(); ++i) {
 		var civ = civs.get(i)
 		var name = civ.getName()
-					
-		if (name == "A" || name == "B" || name == "C" || 
-			name == "Probe Location")
-		{
-			++ answers.numChanges;
-			glob.activityLog += getLogLine(civ)	
+		var value = civ.getValue()		
+		var timeString = glob.dateFormat.format(new Date(civ.getTime()))		
+		var isUserEvent = Math.abs(civ.getTime() - fault2Start) < 100 ? false : true
+		var isSwitchEvent = name == "A" || name == "B" || name == "C"  
+		
+		if (isSwitchEvent) {
+			if (name == "A") { a = value }
+			else if (name == "B") { b = value }
+			else if (name == "C") { c = value }
+		}
+		
+		if (name == "output") {
+			y = parseInt(value);
+		}
+		
+		evident = isEvident(a, b, c, y)
+		
+		if (isUserEvent) {
+			if (wasUserEvent == false) {
+				glob.activityLog += "Fault 2: initial switch setting: A=" + savedA + " B=" + savedB + " C=" + savedC + " Y=" + y + "\n"				
+			}
+			if (isSwitchEvent) {
+				glob.activityLog += timeString + " - Input " + name + " flipped to " + value + " (A=" + a + " B=" + b + " C=" + c + " Y=" + y + ")\n"
+				++ answers.numChanges
+			}
+			else if (name == "probeLocation") {
+				var ev = evident ? "(evident)" : "(hidden)"
+				glob.activityLog += timeString + " - Probed [" + 
+					viMap.probeMap[parseInt(value)] + "] " + ev + " \n"
+				++ answers.numChanges						
+				if (!evident) {
+					++ answers.numHiddenProbes
+				}					
+			}
+		}
+		else {
+			savedA = a
+			savedB = b
+			savedC = c
+		}			
+		wasUserEvent = isUserEvent
+	}
+}
+
+function isEvident(a, b, c, y) {
+	var x = -1
+	
+	if (a == 0) {
+		if (b == 0) {
+			if (c == 0) { x = 1 } //000
+			else { x = 0 } //001
+		}
+		else {
+			if (c == 0) { x = 1 } // 010
+			else { x = 0 } // 011
 		}
 	}
+	else {
+		if (b == 0) {
+			if (c == 0) { x = 0 } // 100
+			else { x = 1 } // 101
+		}
+		else {
+			if (c == 0) { x = 0 } // 110
+			else { x = 0 } // 111
+		}
+	}
+	return x != y
 }
 
 function getTimeIndicator(timeTotal, ttInd, faultInd1, faultInd2) {
 	if (ttInd == 0 && faultInd1 == 0 && faultInd2 == 0) {
 		return 0
 	}
-	if (timeTotal < 360) {
+	if (timeTotal < 900) {
 		return 2
 	}
-	else if (timeTotal < 600) {
+	else if (timeTotal < 1800) {
 		return 1
 	}
 	else {
@@ -104,10 +190,10 @@ function getNumProbesIndicator(madWrapper, faultInd1, faultInd2, numChanges) {
 	if (faultInd1 == 0 && faultInd2 == 0) {
 		return 0
 	}
-	if (numChanges < 20) {
+	if (numChanges < 25) {
 		return 2
 	}	
-	else if (numChanges < 30) {
+	else if (numChanges < 50) {
 		return 1
 	}
 	else {
@@ -123,19 +209,6 @@ function getSubmittedTruthValuesString(madWrapper) {
 		s += madWrapper.getLastCIValue(label)
 	}	
 	return s
-}
-
-function getLogLine(civ) {
-	var name = civ.getName()
-	var value = civ.getValue()
-	var time = glob.dateFormat.format(new Date(civ.getTime()))
-	
-	if (name == "A" || name == "B" || name == "C") {
-		return time + " - Input " + name + " flipped to " + value + "\n"
-	}
-	else if (name == "Probe Location") {
-		return time + " - Probed [" + viMap.probeMap[parseInt(value)] + "]\n"		
-	}		
 }
 
 function getTimeStringFromSeconds(s) {
