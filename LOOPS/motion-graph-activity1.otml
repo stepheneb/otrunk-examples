@@ -280,10 +280,10 @@
                     </OTDataGraphable>
                   </source>
                   <xDataAxis>
-                    <OTDataAxis max="20.497498" units="s" min="0.0" label="Time" />
+                    <OTDataAxis max="20.0" units="s" min="0.0" label="Time" />
                   </xDataAxis>
                   <yDataAxis>
-                    <OTDataAxis max="3.146732" units="" min="-0.0" label="" />
+                    <OTDataAxis max="3.25" units="" min="-0.0" label="Distance" />
                   </yDataAxis>
                 </OTDataCollector>
                 <OTDataCollector id="b1b9efd4-2053-11dd-b9fc-a3ab42a2d8de" name="Data graph" title="Data graph">
@@ -321,10 +321,10 @@
                     <object refid="${graphable_01}" />
                   </graphables>
                   <xDataAxis>
-                    <OTDataAxis max="20.497498" units="s" min="0.0" label="Time" />
+                    <OTDataAxis max="20.0" units="s" min="0.0" label="Time" />
                   </xDataAxis>
                   <yDataAxis>
-                    <OTDataAxis max="3.146732" units="" min="-0.0" label="" />
+                    <OTDataAxis max="3.25" units="" min="-0.0" label="Distance" />
                   </yDataAxis>
                 </OTDataCollector>
                 <OTDataGraphable local_id="graphable_01" name="modified" connectPoints="true" color="16711935" drawMarks="false" xColumn="0" yColumn="1" lineWidth="2.0">
@@ -368,11 +368,11 @@
                 </OTJRuby>
                 <OTScriptObject local_id="script_03">
                   <variables>
-                    <!-- <OTScriptVariable name="datastore_02">
+                    <OTScriptVariable name="datastore_02">
                       <reference>
                         <object refid="${datastore_02}" />
                       </reference>
-                    </OTScriptVariable> -->
+                    </OTScriptVariable>
                     <OTScriptVariable name="displayText">
                       <reference>
                         <object refid="${script_03_text_object}" />
@@ -382,13 +382,25 @@
                   <script>
                     <OTJRuby>
                       <script># 
-                        # This is intended to subtract 0.25 from the Y values of datastore_02
-                        # 
+                        # This is intended to subtract 0.25 from the Y values of datastore_02 ... someday
+                        # The variables passed in are referenced in JRuby as global variables.
+                        # That's why they are prefixed with the '$' character below.
                         require 'java' 
                         
                         def self.init
-                          puts "hello"
-                          puts self.methods.join(', ')
+                          require 'rbconfig'
+                          display = ""
+                          display += "Ruby version: JRuby #{RUBY_VERSION} (#{RUBY_RELEASE_DATE} [i386-jruby#{JRUBY_VERSION}]"
+                          display += ", platform: Java, version #{java.lang.System.getProperty('java.version')}" + "\n\n"
+                          display += "self.methods: " + self.methods.join(', ') + "\n\n"
+                          display += "$datastore_02.inspect: " + $datastore_02.inspect + "\n\n"
+                          display += "getNumberChannels: " + $datastore_02.getNumberChannels.to_s + "\n\n"
+                          display += "getValues.get(0): " + $datastore_02.getValues.get(0).to_s + "\n\n"
+                          display += "getValues.get(1): " + $datastore_02.getValues.get(1).to_s + "\n\n"
+                          display += "getValues.set(1, 0.5): " + $datastore_02.getValues.set(1, 0.5).to_s + "\n\n"
+                         
+                          $displayText.setText(display)
+                          # puts self.methods.join(', ')
                         end
                       </script>
                     </OTJRuby>
