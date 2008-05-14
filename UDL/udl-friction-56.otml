@@ -89,7 +89,7 @@
   <objects>
     <OTSystem local_id="system">
       <includes>
-        <OTInclude href="global-imports/udl-view-bundle.otml" />
+        <OTInclude href="http://continuum.concord.org/otrunk/examples/UDL/global-imports/udl-view-bundle.otml" />
       </includes>
       <bundles>
         <object refid="8d880970-c22a-11dc-95ff-0800200c9a66" />
@@ -100,10 +100,271 @@
         </OTScriptEngineBundle>
         <OTSharingBundle>
           <sharedObjects>
-            <object refid="d92b2983-8947-11dc-8cc4-df44ebcd54b4" />
-            <object refid="987be8a0-8948-11dc-8cc4-df44ebcd54b4" />
-            <object refid="71ac9ad8-8948-11dc-8cc4-df44ebcd54b4" />
-            <object refid="fe1bcc64-8947-11dc-8cc4-df44ebcd54b4" />
+            <OTDataCollector id="d92b2983-8947-11dc-8cc4-df44ebcd54b4" name="prediction" title="Force Prediction Graph" autoScaleEnabled="true">
+              <source>
+                <OTDataGraphable name="Prediction" connectPoints="true" yColumn="1" drawMarks="false" color="16711731" xColumn="0" lineWidth="2.0" controllable="true">
+                  <dataStore>
+                    <OTDataStore local_id="force-prediction-ds" numberChannels="2" />
+                  </dataStore>
+                </OTDataGraphable>
+              </source>
+              <xDataAxis>
+                <OTDataAxis max="60.0" units="s" min="0.0" label="Time" />
+              </xDataAxis>
+              <yDataAxis>
+                <OTDataAxis max="4.0" units="N" min="-4.0" label="Force" />
+              </yDataAxis>
+            </OTDataCollector>
+            <OTDataCollector id="987be8a0-8948-11dc-8cc4-df44ebcd54b4" name="Force - Three bottles" title="Force Sensor Graph" autoScaleEnabled="true" multipleGraphableEnabled="true">
+              <source>
+                <OTDataGraphable name="Three bottles" connectPoints="true" yColumn="1" drawMarks="false" color="52428" xColumn="0" lineWidth="2.0">
+                  <dataProducer>
+                    <OTSensorDataProxy id="987be8a0-8948-11dc-8cc4-df44ebcd54b4/source/dataProducer" name="dataproducer">
+                      <request>
+                        <OTExperimentRequest period="0.01">
+                          <sensorRequests>
+                            <OTSensorRequest stepSize="0.01" type="5" unit="N" port="0" requiredMax="4.0" displayPrecision="-2" requiredMin="-4.0" />
+                          </sensorRequests>
+                        </OTExperimentRequest>
+                      </request>
+                      <zeroSensor>
+                        <OTZeroSensor local_id="zero-force-3" sensorIndex="0" />
+                      </zeroSensor>
+                    </OTSensorDataProxy>
+                  </dataProducer>
+                  <dataStore>
+                    <OTDataStore id="987be8a0-8948-11dc-8cc4-df44ebcd54b4/source/dataStore" dt="0.01" numberChannels="1">
+                      <channelDescriptions>
+                        <OTDataChannelDescription name="dt" precision="2" numericData="true" />
+                        <OTDataChannelDescription name="" unit="N" precision="-2" numericData="true" />
+                      </channelDescriptions>
+                    </OTDataStore>
+                  </dataStore>
+                </OTDataGraphable>
+              </source>
+              <xDataAxis>
+                <OTDataAxis max="60.0" units="s" min="0.0" label="Time" />
+              </xDataAxis>
+              <yDataAxis>
+                <OTDataAxis max="4.0" units="N" min="-4.0" label="Force" />
+              </yDataAxis>
+            </OTDataCollector>
+            <OTDataCollector id="71ac9ad8-8948-11dc-8cc4-df44ebcd54b4" name="Force - Two bottles" title="Force Sensor Graph" autoScaleEnabled="true" multipleGraphableEnabled="true">
+              <source>
+                <OTDataGraphable name="Two bottles" connectPoints="true" yColumn="1" drawMarks="false" color="65280" xColumn="0" lineWidth="2.0">
+                  <dataProducer>
+                    <OTSensorDataProxy name="dataproducer">
+                      <request>
+                        <OTExperimentRequest period="0.01">
+                          <sensorRequests>
+                            <OTSensorRequest stepSize="0.01" type="5" unit="N" port="0" requiredMax="4.0" displayPrecision="-2" requiredMin="-4.0" />
+                          </sensorRequests>
+                        </OTExperimentRequest>
+                      </request>
+                      <zeroSensor>
+                        <OTZeroSensor local_id="zero-force-2" sensorIndex="0" />
+                      </zeroSensor>
+                    </OTSensorDataProxy>
+                  </dataProducer>
+                  <dataStore>
+                    <OTDataStore local_id="force-two-ds" dt="0.01" numberChannels="1">
+                      <channelDescriptions>
+                        <OTDataChannelDescription name="dt" precision="2" numericData="true" />
+                        <OTDataChannelDescription name="" unit="N" precision="-2" numericData="true" />
+                      </channelDescriptions>
+                    </OTDataStore>
+                  </dataStore>
+                </OTDataGraphable>
+              </source>
+              <xDataAxis>
+                <OTDataAxis max="30.0" units="s" min="0.0" label="Time" />
+              </xDataAxis>
+              <yDataAxis>
+                <OTDataAxis max="5.0" units="N" min="-0.0" label="Force" />
+              </yDataAxis>
+            </OTDataCollector>
+            <OTDataCollector id="fe1bcc64-8947-11dc-8cc4-df44ebcd54b4" name="Force with one bottle" title="Force Sensor Graph" multipleGraphableEnabled="true" autoScaleEnabled="true">
+              <source>
+                <OTDataGraphable name="One bottle" connectPoints="true" yColumn="1" drawMarks="false" color="3355647" xColumn="0" lineWidth="2.0">
+                  <dataProducer>
+                    <OTSensorDataProxy id="fe1bcc64-8947-11dc-8cc4-df44ebcd54b4/source/dataProducer" name="dataproducer">
+                      <request>
+                        <OTExperimentRequest period="0.01">
+                          <sensorRequests>
+                            <OTSensorRequest stepSize="0.01" type="5" unit="N" port="0" requiredMax="4.0" displayPrecision="-2" requiredMin="-4.0" />
+                          </sensorRequests>
+                        </OTExperimentRequest>
+                      </request>
+                      <zeroSensor>
+                        <OTZeroSensor local_id="zero-force-1" sensorIndex="0" />
+                      </zeroSensor>
+                    </OTSensorDataProxy>
+                  </dataProducer>
+                  <dataStore>
+                    <OTDataStore local_id="force-one-ds" dt="0.01" numberChannels="1">
+                      <channelDescriptions>
+                        <OTDataChannelDescription name="dt" precision="2" numericData="true" />
+                        <OTDataChannelDescription name="" unit="N" precision="-2" numericData="true" />
+                      </channelDescriptions>
+                    </OTDataStore>
+                  </dataStore>
+                </OTDataGraphable>
+              </source>
+              <xDataAxis>
+                <OTDataAxis max="30.0" units="s" min="0.0" label="Time" />
+              </xDataAxis>
+              <yDataAxis>
+                <OTDataAxis max="5.0" units="N" min="-0.0" label="Force" />
+              </yDataAxis>
+              <graphables>
+                <OTDataGraphable name="One bottle" connectPoints="true" yColumn="1" drawMarks="false" color="3355647" xColumn="0" lineWidth="2.0" locked="true">
+                  <dataProducer>
+                    <object refid="fe1bcc64-8947-11dc-8cc4-df44ebcd54b4/source/dataProducer" />
+                  </dataProducer>
+                  <dataStore>
+                    <object refid="${force-one-ds}" />
+                  </dataStore>
+                </OTDataGraphable>
+              </graphables>
+            </OTDataCollector>
+            <OTDataCollector id="f7971278-21d0-11dd-883b-015dfae2d4ec" name="Force - one bottle" title="Force Sensor Graph" autoScaleEnabled="true" multipleGraphableEnabled="true">
+              <source>
+                <OTDataGraphable name="one bottle" connectPoints="true" yColumn="1" drawMarks="false" color="13107" xColumn="0" lineWidth="2.0">
+                  <dataProducer>
+                    <OTSensorDataProxy id="f7971278-21d0-11dd-883b-015dfae2d4ec/source/dataProducer" name="dataproducer">
+                      <request>
+                        <OTExperimentRequest period="0.01">
+                          <sensorRequests>
+                            <OTSensorRequest stepSize="0.01" type="5" unit="N" port="0" requiredMax="4.0" displayPrecision="-2" requiredMin="-4.0" />
+                          </sensorRequests>
+                        </OTExperimentRequest>
+                      </request>
+                      <zeroSensor>
+                        <OTZeroSensor sensorIndex="0" />
+                      </zeroSensor>
+                    </OTSensorDataProxy>
+                  </dataProducer>
+                  <dataStore>
+                    <OTDataStore id="f7971278-21d0-11dd-883b-015dfae2d4ec/source/dataStore" dt="0.01" numberChannels="1">
+                      <channelDescriptions>
+                        <OTDataChannelDescription name="dt" precision="2" numericData="true" />
+                        <OTDataChannelDescription name="" unit="N" precision="-2" numericData="true" />
+                      </channelDescriptions>
+                    </OTDataStore>
+                  </dataStore>
+                </OTDataGraphable>
+              </source>
+              <xDataAxis>
+                <OTDataAxis max="30.0" units="s" min="0.0" label="Time" />
+              </xDataAxis>
+              <yDataAxis>
+                <OTDataAxis max="5.0" units="N" min="-0.0" label="Force" />
+              </yDataAxis>
+            </OTDataCollector>
+            <OTDataCollector name="Force - two" title="Force Sensor Graph" multipleGraphableEnabled="true" autoScaleEnabled="true">
+              <source>
+                <OTDataGraphable name="two bottles" connectPoints="true" yColumn="1" drawMarks="false" color="16711680" xColumn="0" lineWidth="2.0">
+                  <dataProducer>
+                    <OTSensorDataProxy name="dataproducer">
+                      <request>
+                        <OTExperimentRequest period="0.01">
+                          <sensorRequests>
+                            <OTSensorRequest stepSize="0.01" type="5" unit="N" port="0" requiredMax="4.0" displayPrecision="-2" requiredMin="-4.0" />
+                          </sensorRequests>
+                        </OTExperimentRequest>
+                      </request>
+                      <zeroSensor>
+                        <OTZeroSensor sensorIndex="0" />
+                      </zeroSensor>
+                    </OTSensorDataProxy>
+                  </dataProducer>
+                  <dataStore>
+                    <OTDataStore dt="0.01" numberChannels="1">
+                      <channelDescriptions>
+                        <OTDataChannelDescription name="dt" precision="2" numericData="true" />
+                        <OTDataChannelDescription name="" unit="N" precision="-2" numericData="true" />
+                      </channelDescriptions>
+                    </OTDataStore>
+                  </dataStore>
+                </OTDataGraphable>
+              </source>
+              <xDataAxis>
+                <OTDataAxis max="30.0" units="s" min="0.0" label="Time" />
+              </xDataAxis>
+              <yDataAxis>
+                <OTDataAxis max="5.0" units="N" min="-0.0" label="Force" />
+              </yDataAxis>
+              <graphables>
+                <OTDataGraphable name="one bottle" connectPoints="true" yColumn="1" drawMarks="false" color="13107" xColumn="0" lineWidth="2.0" locked="true">
+                  <dataProducer>
+                    <object refid="f7971278-21d0-11dd-883b-015dfae2d4ec/source/dataProducer" />
+                  </dataProducer>
+                  <dataStore>
+                    <object refid="f7971278-21d0-11dd-883b-015dfae2d4ec/source/dataStore" />
+                  </dataStore>
+                </OTDataGraphable>
+                <OTDataGraphable name="one bottle" connectPoints="true" yColumn="1" drawMarks="false" color="13107" xColumn="0" lineWidth="2.0" locked="true">
+                  <dataProducer>
+                    <object refid="f7971278-21d0-11dd-883b-015dfae2d4ec/source/dataProducer" />
+                  </dataProducer>
+                  <dataStore>
+                    <object refid="f7971278-21d0-11dd-883b-015dfae2d4ec/source/dataStore" />
+                  </dataStore>
+                </OTDataGraphable>
+                <OTDataGraphable name="Three bottles" connectPoints="true" yColumn="1" drawMarks="false" color="52428" xColumn="0" lineWidth="2.0" locked="true">
+                  <dataProducer>
+                    <object refid="987be8a0-8948-11dc-8cc4-df44ebcd54b4/source/dataProducer" />
+                  </dataProducer>
+                  <dataStore>
+                    <object refid="987be8a0-8948-11dc-8cc4-df44ebcd54b4/source/dataStore" />
+                  </dataStore>
+                </OTDataGraphable>
+              </graphables>
+            </OTDataCollector>
+            <OTDataCollector id="202483dd-21d4-11dd-883b-015dfae2d4ec" name="two bottles" title="Force Sensor Graph" multipleGraphableEnabled="true" autoScaleEnabled="true">
+              <source>
+                <OTDataGraphable name="two bottles" connectPoints="true" yColumn="1" drawMarks="false" color="255" xColumn="0" lineWidth="2.0">
+                  <dataProducer>
+                    <OTSensorDataProxy name="dataproducer">
+                      <request>
+                        <OTExperimentRequest period="0.01">
+                          <sensorRequests>
+                            <OTSensorRequest stepSize="0.01" type="5" unit="N" port="0" requiredMax="4.0" displayPrecision="-2" requiredMin="-4.0" />
+                          </sensorRequests>
+                        </OTExperimentRequest>
+                      </request>
+                      <zeroSensor>
+                        <OTZeroSensor sensorIndex="0" />
+                      </zeroSensor>
+                    </OTSensorDataProxy>
+                  </dataProducer>
+                  <dataStore>
+                    <OTDataStore dt="0.01" numberChannels="1">
+                      <channelDescriptions>
+                        <OTDataChannelDescription name="dt" precision="2" numericData="true" />
+                        <OTDataChannelDescription name="" unit="N" precision="-2" numericData="true" />
+                      </channelDescriptions>
+                    </OTDataStore>
+                  </dataStore>
+                </OTDataGraphable>
+              </source>
+              <xDataAxis>
+                <OTDataAxis max="30.0" units="s" min="0.0" label="Time" />
+              </xDataAxis>
+              <yDataAxis>
+                <OTDataAxis max="5.0" units="N" min="-0.0" label="Force" />
+              </yDataAxis>
+              <graphables>
+                <OTDataGraphable name="one bottle" connectPoints="true" yColumn="1" drawMarks="false" color="13107" xColumn="0" lineWidth="2.0" locked="true">
+                  <dataProducer>
+                    <object refid="f7971278-21d0-11dd-883b-015dfae2d4ec/source/dataProducer" />
+                  </dataProducer>
+                  <dataStore>
+                    <object refid="f7971278-21d0-11dd-883b-015dfae2d4ec/source/dataStore" />
+                  </dataStore>
+                </OTDataGraphable>
+              </graphables>
+            </OTDataCollector>
           </sharedObjects>
         </OTSharingBundle>
         <OTInterfaceManager>
@@ -117,7 +378,7 @@
         <OTOverlay>
           <deltaObjectMap>
             <entry key="${authoring_script.js}">
-              <OTJavascript src="scripts/student_script.js" />
+              <OTJavascript src="http://continuum.concord.org/otrunk/examples/UDL/scripts/student_script.js" />
             </entry>
           </deltaObjectMap>
         </OTOverlay>
@@ -397,15 +658,14 @@
                                   <object refid="b2a95e13-fba2-11dc-8b26-87d692f0bb5d" />
                                   <br />
                                   <br />
-                                  6) Box A weighed 100 kg and Box B weighed 200 kg, but otherwise they 
-          were the same. For each box, three measurements were taken of the 
-          force needed to push it along the floor.
+                                  6) Box A had a mass of 100 kg and Box B had a mass of 200 kg, but 
+          otherwise they were the same. For each box, three measurements were 
+          taken of the force needed to pull it along the floor.
                                   <br />
                                   <br />
-                                  <img src="http://udl.concord.org/artwork/friction_56/pushing_barchart/fr_56_pushing_barchart_small.jpg/" />
+                                  <img src="http://udl.concord.org/artwork/friction_56/pulling_barchart/fr_56_pulling_barchart_small.jpg/" />
                                   <br />
                                   <object refid="d9382051-fba2-11dc-8b26-87d692f0bb5d" />
-                                  <br />
                                   <br />
                                   <br />
                                   <object refid="0f8186cb-fba3-11dc-8b26-87d692f0bb5d" />
@@ -577,11 +837,11 @@
                                       </td>
                                     </tr>
                                   </table>
-                                  What causes friction?
+                                  What does friction do?
                                   <br />
                                   <br />
                                   <blockquote>
-                                    <img src="http://udl.concord.org/artwork/friction_56/slipping_on_ice/fr_56_slipping_on_ice.png" border="1" />
+                                    <img border="1" src="http://udl.concord.org/artwork/friction_56/slipping_on_ice/fr_56_slipping_on_ice.png" />
                                   </blockquote>
                                   <br />
                                   Explore what happens when two surfaces rub together and create 
@@ -606,84 +866,150 @@
                                       </td>
                                     </tr>
                                   </table>
-                                  Friction is the name given to the force that makes something slow down and stop when it is sliding across another surface.
+                                  Friction is the name given to the force that makes something slow 
+          down and stop when it is sliding across another surface.
                                   <br />
                                   <br />
-                                  Name two surfaces (besides ice) that are very, very slippery!
+                                  <object refid="6aa3f3a7-2043-11dd-b1ad-2b4a10de0301" />
+                                  <br />
+                                  <object refid="7aee54e9-2043-11dd-b1ad-2b4a10de0301" />
                                   <br />
                                   <br />
-                                  <object refid="1f95e7cf-78d4-11dc-82f7-4bde662316f0" />
-                                  <br />
-                                  <br />
-                                  List the features that you think make a surface slippery. You can use a drawing to help show the features.
-                                  <br />
-                                  <br />
-                                  <object refid="4b3e0d90-78d4-11dc-82f7-4bde662316f0" />
-                                  <br />
-                                  <br />
-                                  <object refid="4e33f501-78d4-11dc-82f7-4bde662316f0" />
                                 </div>
                               </div>
                             </div>
                           </bodyText>
                           <documentRefs>
-                            <OTText id="1f95e7cf-78d4-11dc-82f7-4bde662316f0" name="Text field" />
-                            <OTText id="4b3e0d90-78d4-11dc-82f7-4bde662316f0" name="Text field" />
-                            <OTDrawingTool2 id="4e33f501-78d4-11dc-82f7-4bde662316f0" name="Draw tool">
-                              <graphables>
-                                <OTDrawingShape type="" fillType="clear" x="0.0" y="0.0" width="0.0" height="0.0" color="0x000000" />
-                              </graphables>
-                            </OTDrawingTool2>
+                            <OTUDLQuestion id="6aa3f3a7-2043-11dd-b1ad-2b4a10de0301" name="Question" showConvertButton="true">
+                              <prompt>
+                                <OTCompoundDoc>
+                                  <bodyText>Why do you think sandpaper has a lot of friction?</bodyText>
+                                </OTCompoundDoc>
+                              </prompt>
+                              <input>
+                                <OTText />
+                              </input>
+                            </OTUDLQuestion>
+                            <OTUDLQuestion id="7aee54e9-2043-11dd-b1ad-2b4a10de0301" name="Question" showConvertButton="true">
+                              <prompt>
+                                <OTCompoundDoc>
+                                  <bodyText>Why do you think ice has very little friction?</bodyText>
+                                </OTCompoundDoc>
+                              </prompt>
+                              <input>
+                                <OTText />
+                              </input>
+                            </OTUDLQuestion>
                           </documentRefs>
                         </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc name="%7f4d6285-78d4-11dc-82f7-4bde662316f0">
+                        <OTUDLCompoundDoc id="c2421ed2-2048-11dd-b1ad-2b4a10de0301" name="%c2421ed2-2048-11dd-b1ad-2b4a10de0301">
                           <bodyText>
                             <div class="buffer">
                               <div class="border">
                                 <div class="body">
                                   <table width="100%">
                                     <tr>
-                                      <td />
+                                      <td>
+                                        <div class="subtitle" />
+                                      </td>
                                       <td align="right">
                                         <div class="page-number">3</div>
                                       </td>
                                     </tr>
                                   </table>
-                                  <br />
-                                  Now name two surfaces that have a
-                                  <b>lot</b>
-                                  of friction.
+                                  Friction produces heat energy.
                                   <br />
                                   <br />
-                                  <object refid="9b49ff26-78d4-11dc-82f7-4bde662316f0">
-                                    <br />
-                                    <br />
-                                  </object>
-                                  List 
-          the features that you think make a surface have friction. You can 
-          use a drawing to help show the features.
+                                  Push your hands together and 
+          rub them hard.
                                   <br />
                                   <br />
-                                  <object refid="c001de57-78d4-11dc-82f7-4bde662316f0" />
+                                  <object refid="36639508-2049-11dd-b1ad-2b4a10de0301" />
                                   <br />
+                                  <object refid="bff971fd-2049-11dd-b1ad-2b4a10de0301" />
                                   <br />
-                                  <object refid="d052a828-78d4-11dc-82f7-4bde662316f0">
-                                    <br />
-                                    <br />
-                                  </object>
                                 </div>
                               </div>
                             </div>
                           </bodyText>
                           <documentRefs>
-                            <OTText id="9b49ff26-78d4-11dc-82f7-4bde662316f0" name="Text field" />
-                            <OTText id="c001de57-78d4-11dc-82f7-4bde662316f0" name="Text field" />
-                            <OTDrawingTool2 id="d052a828-78d4-11dc-82f7-4bde662316f0" name="Draw tool">
-                              <graphables>
-                                <OTDrawingShape type="" fillType="clear" x="0.0" y="0.0" width="0.0" height="0.0" color="0x000000" />
-                                <OTDrawingShape type="" fillType="clear" x="0.0" y="0.0" width="0.0" height="0.0" color="0x000000" />
-                              </graphables>
-                            </OTDrawingTool2>
+                            <OTUDLQuestion id="36639508-2049-11dd-b1ad-2b4a10de0301" name="Question" showConvertButton="true">
+                              <prompt>
+                                <OTCompoundDoc>
+                                  <bodyText>Do you think the warming up of your hands is an example of heat energy produced by friction?</bodyText>
+                                </OTCompoundDoc>
+                              </prompt>
+                              <input>
+                                <OTChoice name="Multiple choice" alignContent="0">
+                                  <choices>
+                                    <OTCompoundDoc name="yes">
+                                      <bodyText>yes</bodyText>
+                                    </OTCompoundDoc>
+                                    <OTCompoundDoc name="no">
+                                      <bodyText>no</bodyText>
+                                    </OTCompoundDoc>
+                                  </choices>
+                                </OTChoice>
+                              </input>
+                            </OTUDLQuestion>
+                            <OTUDLQuestion id="bff971fd-2049-11dd-b1ad-2b4a10de0301" name="Question" showConvertButton="true">
+                              <prompt>
+                                <OTCompoundDoc>
+                                  <bodyText>Explain your thoughts. Be prepared to share your answer with the class.</bodyText>
+                                </OTCompoundDoc>
+                              </prompt>
+                              <input>
+                                <OTText />
+                              </input>
+                            </OTUDLQuestion>
+                          </documentRefs>
+                        </OTUDLCompoundDoc>
+                        <OTUDLCompoundDoc id="8df05f0d-2047-11dd-b1ad-2b4a10de0301" name="%8df05f0d-2047-11dd-b1ad-2b4a10de0301">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <table width="100%">
+                                    <tr>
+                                      <td>
+                                        <div class="subtitle" />
+                                      </td>
+                                      <td align="right">
+                                        <div class="page-number">4</div>
+                                      </td>
+                                    </tr>
+                                  </table>
+                                  Friction always slows things down that are moving.
+                                  <br />
+                                  <br />
+                                  <object refid="f5f90fd3-2047-11dd-b1ad-2b4a10de0301" />
+                                  <br />
+                                  <object refid="03111ce0-2048-11dd-b1ad-2b4a10de0301" />
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                          <documentRefs>
+                            <OTUDLQuestion id="f5f90fd3-2047-11dd-b1ad-2b4a10de0301" name="Question" showConvertButton="true">
+                              <prompt>
+                                <OTCompoundDoc>
+                                  <bodyText>Give an example of a situation where friction is very useful.</bodyText>
+                                </OTCompoundDoc>
+                              </prompt>
+                              <input>
+                                <OTText />
+                              </input>
+                            </OTUDLQuestion>
+                            <OTUDLQuestion id="03111ce0-2048-11dd-b1ad-2b4a10de0301" name="Question" showConvertButton="true">
+                              <prompt>
+                                <OTCompoundDoc>
+                                  <bodyText>Give an example of a situation where friction is a problem, and you would like to reduce it.</bodyText>
+                                </OTCompoundDoc>
+                              </prompt>
+                              <input>
+                                <OTText />
+                              </input>
+                            </OTUDLQuestion>
                           </documentRefs>
                         </OTUDLCompoundDoc>
                       </cards>
@@ -695,7 +1021,7 @@
                   <header>
                     <OTUDLCompoundDoc id="78f125db-78d1-11dc-82f7-4bde662316f0" showEditBar="false" name="%78f125db-78d1-11dc-82f7-4bde662316f0">
                       <bodyText>
-                        <div class="title">What causes friction?</div>
+                        <div class="title">What does friction do?</div>
                       </bodyText>
                     </OTUDLCompoundDoc>
                   </header>
@@ -3043,7 +3369,7 @@
                     <object refid="0be2278e-78d5-11dc-82f7-4bde662316f0" />
                   </south>
                 </OTUDLSection>
-                <OTUDLSection local_id="section_4" name="Penny heat" isComputerBased="true" isIntroduction="false" isMath="false" isPosttest="false" isPretest="false" isReading="false" isWrapup="false">
+                <OTUDLSection local_id="section_4" name="Penny warming" isComputerBased="true" isIntroduction="false" isMath="false" isPosttest="false" isPretest="false" isReading="false" isWrapup="false">
                   <content>
                     <OTCardContainer id="364b1692-78d5-11dc-82f7-4bde662316f0" contentsMayScroll="true" loadViewOnlyOnDemand="true" closeViewOnExit="false">
                       <cards>
@@ -3625,7 +3951,7 @@ and stick the temperature sensor to it. This will be your "insulator" so that th
                             <OTText id="b1374f39-78e8-11dc-8275-3da1b6a57fd9" name="Text field" />
                           </documentRefs>
                           <coachStatements>
-                            <OTUDLCoachStatement>
+                            <OTUDLCoachStatement timesClicked="1">
                               <coach>
                                 <object refid="${character_affective}" />
                               </coach>
@@ -3642,7 +3968,7 @@ and stick the temperature sensor to it. This will be your "insulator" so that th
                                 </OTUDLCompoundDoc>
                               </statement>
                             </OTUDLCoachStatement>
-                            <OTUDLCoachStatement>
+                            <OTUDLCoachStatement timesClicked="1">
                               <coach>
                                 <object refid="${character_strategic}" />
                               </coach>
@@ -3659,7 +3985,7 @@ and stick the temperature sensor to it. This will be your "insulator" so that th
                                 </OTUDLCompoundDoc>
                               </statement>
                             </OTUDLCoachStatement>
-                            <OTUDLCoachStatement>
+                            <OTUDLCoachStatement timesClicked="1">
                               <coach>
                                 <object refid="${character_recognition}" />
                               </coach>
@@ -4289,15 +4615,12 @@ and stick the temperature sensor to it. This will be your "insulator" so that th
                       <currentCard>
                         <object refid="364b1691-78d5-11dc-82f7-4bde662316f0" />
                       </currentCard>
-                      <viewedCards>
-                        <object refid="364b1691-78d5-11dc-82f7-4bde662316f0" />
-                      </viewedCards>
                     </OTCardContainer>
                   </content>
                   <header>
                     <OTUDLCompoundDoc id="364b1693-78d5-11dc-82f7-4bde662316f0" showEditBar="false" name="%364b1693-78d5-11dc-82f7-4bde662316f0">
                       <bodyText>
-                        <div class="title">Does friction create heat?</div>
+                        <div class="title">Penny warming</div>
                       </bodyText>
                     </OTUDLCompoundDoc>
                   </header>
@@ -4462,13 +4785,13 @@ and stick the temperature sensor to it. This will be your "insulator" so that th
                                 <OTZoomTransform scale="0.5" topLeftX="30.0" topLeftY="115.0" />
                               </transforms>
                               <images>
-                                <OTImage imageBytes="images/red-box-zoom-1-sm.png" />
-                                <OTImage imageBytes="images/red-box-zoom-2-sm.png" />
-                                <OTImage imageBytes="images/red-box-zoom-3-sm.png" />
-                                <OTImage imageBytes="images/red-box-zoom-4-sm.png" />
-                                <OTImage imageBytes="images/red-box-zoom-5-sm.png" />
-                                <OTImage imageBytes="images/red-box-zoom-6-sm.png" />
-                                <OTImage imageBytes="images/red-box-zoom-7-sm.png" />
+                                <OTImage imageBytes="http://continuum.concord.org/otrunk/examples/UDL/images/red-box-zoom-1-sm.png" />
+                                <OTImage imageBytes="http://continuum.concord.org/otrunk/examples/UDL/images/red-box-zoom-2-sm.png" />
+                                <OTImage imageBytes="http://continuum.concord.org/otrunk/examples/UDL/images/red-box-zoom-3-sm.png" />
+                                <OTImage imageBytes="http://continuum.concord.org/otrunk/examples/UDL/images/red-box-zoom-4-sm.png" />
+                                <OTImage imageBytes="http://continuum.concord.org/otrunk/examples/UDL/images/red-box-zoom-5-sm.png" />
+                                <OTImage imageBytes="http://continuum.concord.org/otrunk/examples/UDL/images/red-box-zoom-6-sm.png" />
+                                <OTImage imageBytes="http://continuum.concord.org/otrunk/examples/UDL/images/red-box-zoom-7-sm.png" />
                               </images>
                             </OTZoom>
                             <OTUDLLeveledQuestions id="02cf5203-c39f-11dc-8344-8f07a6b29f14">
@@ -5220,11 +5543,11 @@ and stick the temperature sensor to it. This will be your "insulator" so that th
                                   <br />
                                   <br />
                                   <blockquote>
-                                    <img src="http://udl.concord.org/artwork/friction_56/get_moving/fr_56_get_moving.png" border="1" />
+                                    <img border="1" src="http://udl.concord.org/artwork/friction_56/get_moving/fr_56_get_moving.png" />
                                   </blockquote>
                                   <br />
                                   In this activity, you will measure the amount of force needed to 
-          make a box start to move and continue to move.
+          overcome the force of friction.
                                   <br />
                                   <br />
                                 </div>
@@ -5232,7 +5555,29 @@ and stick the temperature sensor to it. This will be your "insulator" so that th
                             </div>
                           </bodyText>
                         </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc name="%aec55759-7908-11dc-b03e-ed6d4a0c2086">
+                        <OTUDLCompoundDoc id="4f162840-2044-11dd-b1ad-2b4a10de0301" name="%4f15da1f-2044-11dd-b1ad-2b4a10de0301">
+                          <documentRefs>
+                            <OTUDLQuestion id="f252e740-2043-11dd-b1ad-2b4a10de0301" name="Question" showConvertButton="true">
+                              <prompt>
+                                <OTCompoundDoc>
+                                  <bodyText>Think of something that needs a big push or pull (force) to move it.</bodyText>
+                                </OTCompoundDoc>
+                              </prompt>
+                              <input>
+                                <OTText />
+                              </input>
+                            </OTUDLQuestion>
+                            <OTUDLQuestion id="f66f4d5d-2043-11dd-b1ad-2b4a10de0301" name="Question" showConvertButton="true">
+                              <prompt>
+                                <OTCompoundDoc>
+                                  <bodyText>Think of something that needs a small push or pull (force) to move it.</bodyText>
+                                </OTCompoundDoc>
+                              </prompt>
+                              <input>
+                                <OTText />
+                              </input>
+                            </OTUDLQuestion>
+                          </documentRefs>
                           <bodyText>
                             <div class="buffer">
                               <div class="border">
@@ -5240,59 +5585,216 @@ and stick the temperature sensor to it. This will be your "insulator" so that th
                                   <table width="100%">
                                     <tr>
                                       <td>
-                                        <div class="subtitle">Engage</div>
+                                        <div class="subtitle" />
                                       </td>
                                       <td align="right">
                                         <div class="page-number">2</div>
                                       </td>
                                     </tr>
                                   </table>
-                                  One simple way to measure the force of friction is to put a weight 
-          in a box and push it with a force sensor.
+                                  Friction is the name given to the force that makes something slow 
+          down and stop when it is sliding across another surface.
                                   <br />
                                   <br />
-                                  <center>
-                                    <img src="http://udl.concord.org/artwork/friction_56/push_one_bottle/fr_56_push_one_bottle.png" border="1" />
-                                  </center>
-                                  <br />
-                                  Suppose you pushed very lightly on the force sensor, then harder and 
-          harder until the box started sliding. Predict what the graph of 
-          force against time would look like by drawing on the graph below 
-          with the pencil tool.
+                                  Force 
+          is the amount of push or pull. To make something move, you must pull 
+          on it with enough force to overcome the force of friction.
                                   <br />
                                   <br />
-                                  Note: on this graph, a pushing force is
-                                  <b>negative.</b>
-                                  That is, the larger the pushing force, the larger the negative 
-          number for force.
+                                  <object refid="f252e740-2043-11dd-b1ad-2b4a10de0301" />
                                   <br />
-                                  <br />
-                                  <object refid="d92b2983-8947-11dc-8cc4-df44ebcd54b4" />
+                                  <object refid="f66f4d5d-2043-11dd-b1ad-2b4a10de0301" />
                                   <br />
                                   <br />
                                 </div>
                               </div>
                             </div>
                           </bodyText>
-                          <documentRefs>
-                            <OTDataCollector id="d92b2983-8947-11dc-8cc4-df44ebcd54b4" name="prediction" title="Force Prediction Graph" autoScaleEnabled="true">
-                              <source>
-                                <OTDataGraphable name="Prediction" connectPoints="true" yColumn="1" drawMarks="false" color="16711731" xColumn="0" lineWidth="2.0" controllable="true">
-                                  <dataStore>
-                                    <OTDataStore local_id="force-prediction-ds" numberChannels="2" />
-                                  </dataStore>
-                                </OTDataGraphable>
-                              </source>
-                              <xDataAxis>
-                                <OTDataAxis max="60.0" units="s" min="0.0" label="Time" />
-                              </xDataAxis>
-                              <yDataAxis>
-                                <OTDataAxis max="4.0" units="N" min="-4.0" label="Force" />
-                              </yDataAxis>
-                            </OTDataCollector>
-                          </documentRefs>
                         </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc id="b180b8b5-7906-11dc-b03e-ed6d4a0c2086/cards[2]" name="%ce75a648-790b-11dc-ab2b-cb448e5223d3">
+                        <OTUDLCompoundDoc id="a40196a0-2051-11dd-b1ad-2b4a10de0301" name="%a400fa5f-2051-11dd-b1ad-2b4a10de0301">
+                          <documentRefs>
+                            <OTUDLQuestion id="e70bcbe3-2052-11dd-b1ad-2b4a10de0301" name="Question" showConvertButton="true">
+                              <prompt>
+                                <OTCompoundDoc>
+                                  <bodyText>Which part of this experiment required the greatest pull?</bodyText>
+                                </OTCompoundDoc>
+                              </prompt>
+                              <input>
+                                <OTText />
+                              </input>
+                            </OTUDLQuestion>
+                          </documentRefs>
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <table width="100%">
+                                    <tr>
+                                      <td>
+                                        <div class="subtitle" />
+                                      </td>
+                                      <td align="right">
+                                        <div class="page-number">3</div>
+                                      </td>
+                                    </tr>
+                                  </table>
+                                  In this activity, you will experiment with
+                                  <b>a box, two water 
+          bottles, and a force sensor</b>
+                                  . The water bottles should be about 1 
+          liter (1 quart). The box should be able to hold two upright water 
+          bottles.
+                                  <br />
+                                  <br />
+                                  To start with, don't use the force sensor.
+                                  <br />
+                                  <br />
+                                  Make 
+          a hook on the box by bending a paper clip and poking it through the 
+          box. Use a pen to make a hole if you need to.
+                                  <br />
+                                  <br />
+                                  Put one water 
+          bottle in the box.
+                                  <br />
+                                  <br />
+                                  <center>
+                                    <img border="1" src="http://udl.concord.org/artwork/friction_56/push_one_bottle/fr_56_pull_one_bottle_hand.jpg" />
+                                  </center>
+                                  <br />
+                                  Pull very gently on the box. Then pull harder and harder until the 
+          box starts to move. Then pull the box
+                                  <b>slowly and steadily</b>
+                                  across the table.
+                                  <br />
+                                  <br />
+                                  <object refid="e70bcbe3-2052-11dd-b1ad-2b4a10de0301" />
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                        </OTUDLCompoundDoc>
+                        <OTUDLCompoundDoc id="5ed5b0bb-2053-11dd-b1ad-2b4a10de0301" name="%5ed4c65a-2053-11dd-b1ad-2b4a10de0301">
+                          <documentRefs>
+                            <OTDrawingTool2 id="f9a9da26-2055-11dd-b1ad-2b4a10de0301" name="Draw tool" backgroundImage="http://udl.concord.org/artwork/friction_56/pull_box_graph/fr_56_pull_box_graph_1.png" backgroundImageURL="http://udl.concord.org/artwork/friction_56/pull_box_graph/fr_56_pull_box_graph_1.png">
+                              <graphables>
+                                <OTDrawingShape id="f9a9da26-2055-11dd-b1ad-2b4a10de0301/graphables[0]" type="" fillType="clear" x="0.0" y="0.0" width="0.0" height="0.0" color="0x000000" strokeWidth="2.0" />
+                                <OTDrawingShape id="18af69a1-2059-11dd-9229-a9436af9d9b4" type="" fillType="clear" x="0.0" y="0.0" width="0.0" height="0.0" color="0x000000" strokeWidth="0.3" />
+                                <OTDrawingShape id="f9a9da26-2055-11dd-b1ad-2b4a10de0301/graphables[2]" type="" fillType="clear" x="0.0" y="0.0" width="0.0" height="0.0" color="0x000000" strokeWidth="0.3" />
+                                <object refid="f9a9da26-2055-11dd-b1ad-2b4a10de0301/graphables[0]" />
+                                <object refid="18af69a1-2059-11dd-9229-a9436af9d9b4" />
+                                <OTDrawingShape id="f9a9da26-2055-11dd-b1ad-2b4a10de0301/graphables[5]" type="" fillType="clear" x="0.0" y="0.0" width="0.0" height="0.0" color="0x000000" strokeWidth="2.0" />
+                                <OTDrawingShape id="146ee404-21bd-11dd-883b-015dfae2d4ec" type="" fillType="clear" x="0.0" y="0.0" width="0.0" height="0.0" color="0x000000" strokeWidth="0.3" />
+                                <OTDrawingShape id="1cc59866-21bd-11dd-883b-015dfae2d4ec" type="" fillType="clear" x="0.0" y="0.0" width="0.0" height="0.0" color="0x000000" strokeWidth="0.3" />
+                                <object refid="f9a9da26-2055-11dd-b1ad-2b4a10de0301/graphables[0]" />
+                                <object refid="18af69a1-2059-11dd-9229-a9436af9d9b4" />
+                                <object refid="f9a9da26-2055-11dd-b1ad-2b4a10de0301/graphables[2]" />
+                                <object refid="f9a9da26-2055-11dd-b1ad-2b4a10de0301/graphables[5]" />
+                                <object refid="146ee404-21bd-11dd-883b-015dfae2d4ec" />
+                                <OTPointTextLabel id="843c4283-21bd-11dd-883b-015dfae2d4ec" x="3.0" y="0.0" color="0xffffff" text="Text" />
+                                <OTDrawingShape id="0ba30a75-21be-11dd-883b-015dfae2d4ec" type="" fillType="clear" x="0.0" y="0.0" width="0.0" height="0.0" color="0x000000" strokeWidth="0.3" />
+                                <OTDrawingShape id="11e584d7-21be-11dd-883b-015dfae2d4ec" type="" fillType="clear" x="0.0" y="0.0" width="0.0" height="0.0" color="0x000000" strokeWidth="0.3" />
+                                <object refid="f9a9da26-2055-11dd-b1ad-2b4a10de0301/graphables[0]" />
+                                <object refid="18af69a1-2059-11dd-9229-a9436af9d9b4" />
+                                <object refid="f9a9da26-2055-11dd-b1ad-2b4a10de0301/graphables[2]" />
+                                <object refid="f9a9da26-2055-11dd-b1ad-2b4a10de0301/graphables[5]" />
+                                <object refid="146ee404-21bd-11dd-883b-015dfae2d4ec" />
+                                <object refid="1cc59866-21bd-11dd-883b-015dfae2d4ec" />
+                                <object refid="843c4283-21bd-11dd-883b-015dfae2d4ec" />
+                                <OTPointTextLabel id="d5deb284-21bd-11dd-883b-015dfae2d4ec" x="0.0" y="0.0" color="0xffffff" text="Text" />
+                                <object refid="0ba30a75-21be-11dd-883b-015dfae2d4ec" />
+                                <object refid="f9a9da26-2055-11dd-b1ad-2b4a10de0301/graphables[0]" />
+                                <object refid="18af69a1-2059-11dd-9229-a9436af9d9b4" />
+                                <object refid="f9a9da26-2055-11dd-b1ad-2b4a10de0301/graphables[2]" />
+                                <object refid="f9a9da26-2055-11dd-b1ad-2b4a10de0301/graphables[5]" />
+                                <object refid="146ee404-21bd-11dd-883b-015dfae2d4ec" />
+                                <object refid="1cc59866-21bd-11dd-883b-015dfae2d4ec" />
+                                <object refid="843c4283-21bd-11dd-883b-015dfae2d4ec" />
+                                <object refid="d5deb284-21bd-11dd-883b-015dfae2d4ec" />
+                                <object refid="0ba30a75-21be-11dd-883b-015dfae2d4ec" />
+                                <object refid="11e584d7-21be-11dd-883b-015dfae2d4ec" />
+                                <OTDrawingShape id="243468a1-21be-11dd-883b-015dfae2d4ec" type="" fillType="clear" x="0.0" y="0.0" width="0.0" height="0.0" color="0x000000" strokeWidth="0.3" />
+                                <OTDrawingShape type="" fillType="clear" x="0.0" y="0.0" width="0.0" height="0.0" color="0x000000" strokeWidth="0.3" />
+                                <object refid="f9a9da26-2055-11dd-b1ad-2b4a10de0301/graphables[0]" />
+                                <object refid="18af69a1-2059-11dd-9229-a9436af9d9b4" />
+                                <object refid="f9a9da26-2055-11dd-b1ad-2b4a10de0301/graphables[2]" />
+                                <object refid="f9a9da26-2055-11dd-b1ad-2b4a10de0301/graphables[5]" />
+                                <object refid="146ee404-21bd-11dd-883b-015dfae2d4ec" />
+                                <object refid="1cc59866-21bd-11dd-883b-015dfae2d4ec" />
+                                <object refid="843c4283-21bd-11dd-883b-015dfae2d4ec" />
+                                <object refid="0ba30a75-21be-11dd-883b-015dfae2d4ec" />
+                                <object refid="11e584d7-21be-11dd-883b-015dfae2d4ec" />
+                                <object refid="d5deb284-21bd-11dd-883b-015dfae2d4ec" />
+                                <object refid="243468a1-21be-11dd-883b-015dfae2d4ec" />
+                                <OTDrawingShape type="circle" fillType="clear" x="0.0" y="0.0" width="0.0" height="0.0" color="0x000000" strokeWidth="2.0" />
+                                <OTDrawingShape type="" fillType="clear" x="0.0" y="0.0" width="0.0" height="0.0" color="0x000000" strokeWidth="2.0" />
+                              </graphables>
+                            </OTDrawingTool2>
+                            <OTUDLQuestion id="7f9ef766-21be-11dd-883b-015dfae2d4ec" name="Question" showConvertButton="true">
+                              <prompt>
+                                <OTCompoundDoc>
+                                  <bodyText>Mark the point on the graph where you think the box started moving. Why did you pick that point?</bodyText>
+                                </OTCompoundDoc>
+                              </prompt>
+                              <input>
+                                <OTText />
+                              </input>
+                            </OTUDLQuestion>
+                            <OTUDLQuestion id="93efecc3-21be-11dd-883b-015dfae2d4ec" name="Question" showConvertButton="true">
+                              <prompt>
+                                <OTCompoundDoc>
+                                  <bodyText>Was there a force on the box even before it started moving? Explain why you think so.</bodyText>
+                                </OTCompoundDoc>
+                              </prompt>
+                              <input>
+                                <OTText />
+                              </input>
+                            </OTUDLQuestion>
+                            <OTUDLQuestion id="b148970a-21be-11dd-883b-015dfae2d4ec" name="Question" showConvertButton="true">
+                              <prompt>
+                                <OTCompoundDoc>
+                                  <bodyText>What was the average force needed to keep the box moving?</bodyText>
+                                </OTCompoundDoc>
+                              </prompt>
+                              <input>
+                                <OTText />
+                              </input>
+                            </OTUDLQuestion>
+                          </documentRefs>
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <table width="100%">
+                                    <tr>
+                                      <td>
+                                        <div class="subtitle" />
+                                      </td>
+                                      <td align="right">
+                                        <div class="page-number">4</div>
+                                      </td>
+                                    </tr>
+                                  </table>
+                                  Here is a sample graph of pulling a box with a force sensor.
+                                  <br />
+                                  <br />
+                                  <object refid="f9a9da26-2055-11dd-b1ad-2b4a10de0301" />
+                                  <br />
+                                  <br />
+                                  <object refid="7f9ef766-21be-11dd-883b-015dfae2d4ec" />
+                                  <br />
+                                  <object refid="93efecc3-21be-11dd-883b-015dfae2d4ec" />
+                                  <br />
+                                  <object refid="b148970a-21be-11dd-883b-015dfae2d4ec" />
+                                  <br />
+                                  <br />
+                                  <br />
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                        </OTUDLCompoundDoc>
+                        <OTUDLCompoundDoc name="%ce75a648-790b-11dc-ab2b-cb448e5223d3">
                           <bodyText>
                             <div class="buffer">
                               <div class="border">
@@ -5303,21 +5805,28 @@ and stick the temperature sensor to it. This will be your "insulator" so that th
                                         <div class="subtitle">Materials</div>
                                       </td>
                                       <td align="right">
-                                        <div class="page-number">3</div>
+                                        <div class="page-number">5</div>
                                       </td>
                                     </tr>
                                   </table>
                                   <ul>
                                     <li>force sensor</li>
-                                    <li>cardboard box just large enough to hold three water bottles</li>
-                                    <li>three water bottles filled with water</li>
+                                    <li>cardboard box large enough to hold two water bottles</li>
+                                    <li>
+                                      two water bottles (about 1 liter or 1 quart) filled with water
+                                      <br />
+                                    </li>
+                                    <li>
+                                      paper clip
+                                      <br />
+                                    </li>
                                   </ul>
                                 </div>
                               </div>
                             </div>
                           </bodyText>
                         </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc id="b180b8b5-7906-11dc-b03e-ed6d4a0c2086/cards[3]" name="%7dcff04d-790c-11dc-aaef-f7a1df3f6032">
+                        <OTUDLCompoundDoc name="%7dcff04d-790c-11dc-aaef-f7a1df3f6032">
                           <bodyText>
                             <div class="buffer">
                               <div class="border">
@@ -5328,156 +5837,73 @@ and stick the temperature sensor to it. This will be your "insulator" so that th
                                         <div class="subtitle">Explore</div>
                                       </td>
                                       <td align="right">
-                                        <div class="page-number">4</div>
+                                        <div class="page-number">6</div>
                                       </td>
                                     </tr>
                                   </table>
-                                  1. Find a small cardboard box that will hold your three water 
-          bottles.
+                                  1. Put one bottle into the box.
                                   <br />
                                   <br />
-                                  2. Fill the bottles with water. Put one bottle into 
-          the box.
+                                  2. Hook the force sensor 
+          through the paper clip.
+                                  <br />
                                   <br />
                                   <br />
                                   <center>
-                                    <img src="http://udl.concord.org/artwork/friction_56/push_one_bottle/fr_56_push_one_bottle.png" border="1" />
+                                    <img border="1" src="http://udl.concord.org/artwork/friction_56/push_one_bottle/fr_56_paperclip_sensor.jpg" />
+                                    <br />
                                     <br />
                                   </center>
                                   3. Attach the force sensor to the computer. Click on the magnifying 
           glass
                                   <a href="http://udl.concord.org/artwork/technical_hints/tech-hint-force-v.htm">
-                                    <img src="http://udl.concord.org/artwork/general/mag_glass/mag_glass.png" border="0" />
+                                    <img border="0" src="http://udl.concord.org/artwork/general/mag_glass/mag_glass.png" />
                                   </a>
                                   for 
-          a technical hint.
+          a technical hint. Be sure the force sensor is set to
+                                  <b>10 N and not 
+          50 N</b>
+                                  .
                                   <br />
                                   <br />
-                                  4. Set the force to zero before you start, 
-          using the zero force button.
-                                  <br />
-                                  <br />
-                                  5. Start recording with the 
-          force sensor by clicking on the start button. Click on the 
-          magnifying glass
+                                  4. Start recording with the force sensor by 
+          clicking on the start button. Click on the magnifying glass
                                   <a href="http://udl.concord.org/artwork/tool_hints/graph_tool_hints/graph_tool_hints.html">
-                                    <img src="http://udl.concord.org/artwork/general/mag_glass/mag_glass.png" border="0" />
+                                    <img border="0" src="http://udl.concord.org/artwork/general/mag_glass/mag_glass.png" />
                                   </a>
                                   for 
           a movie showing how to use the data collection graph.
                                   <br />
-                                  6. Push the box with the force sensor. Gradually push harder and harder until 
-          the box starts to slide. Keep pushing so that the box slides at a 
+                                  <br />
+                                  5. Set 
+          the force to zero, using the zero force button. The graph should go 
+          to force = 0 when you do this.
+                                  <br />
+                                  <br />
+                                  6. Pull the box
+                                  <b>very gently</b>
+                                  with the force sensor. Gradually pull harder and harder until the 
+          box starts to slide. Keep pulling so that the box slides slowly at a 
           constant speed.
                                   <br />
                                   <br />
-                                  <object refid="fe1bcc64-8947-11dc-8cc4-df44ebcd54b4" />
-                                  <table>
-                                    <tr>
-                                      <td>
-                                        <object refid="${zero-force-button-1}" />
-                                      </td>
-                                    </tr>
-                                  </table>
-                                  <br />
-                                  Stop recording. Describe your graph.
+                                  <center>
+                                    <img border="1" src="http://udl.concord.org/artwork/friction_56/push_one_bottle/fr_56_pull_one_bottle.jpg" />
+                                    <br />
+                                  </center>
                                   <br />
                                   <br />
-                                  <object refid="a1a85943-ceb1-11dc-a3fc-f936421791a9" />
-                                  <p />
-                                  <object refid="a4729d07-ceb1-11dc-a3fc-f936421791a9" />
-                                  <p />
-                                  <object refid="a72ba1c0-ceb1-11dc-a3fc-f936421791a9" />
-                                  <p />
-                                  <object refid="399ada6b-88b5-11dc-ace3-c72d315b29fd" />
+                                  <object refid="f7971278-21d0-11dd-883b-015dfae2d4ec" />
                                   <br />
+                                  7. Stop recording. If you want to try again, hit Clear and repeat the 
+          experiment.
                                   <br />
-                                  <object refid="7653aa84-ceb1-11dc-a3fc-f936421791a9" />
                                 </div>
                               </div>
                             </div>
                           </bodyText>
                           <documentRefs>
-                            <OTDataCollector id="fe1bcc64-8947-11dc-8cc4-df44ebcd54b4" name="Force - One bottle" title="Force Sensor Graph" multipleGraphableEnabled="true" autoScaleEnabled="true">
-                              <source>
-                                <OTDataGraphable name="One bottle" connectPoints="true" yColumn="1" drawMarks="false" color="3355647" xColumn="0" lineWidth="2.0">
-                                  <dataProducer>
-                                    <OTSensorDataProxy id="fe1bcc64-8947-11dc-8cc4-df44ebcd54b4/source/dataProducer" name="dataproducer">
-                                      <request>
-                                        <OTExperimentRequest period="0.01">
-                                          <sensorRequests>
-                                            <OTSensorRequest stepSize="0.01" type="5" unit="N" port="0" requiredMax="4.0" displayPrecision="-2" requiredMin="-4.0" />
-                                          </sensorRequests>
-                                        </OTExperimentRequest>
-                                      </request>
-                                      <zeroSensor>
-                                        <OTZeroSensor local_id="zero-force-1" sensorIndex="0" />
-                                      </zeroSensor>
-                                    </OTSensorDataProxy>
-                                  </dataProducer>
-                                  <dataStore>
-                                    <OTDataStore local_id="force-one-ds" dt="0.01" numberChannels="1">
-                                      <channelDescriptions>
-                                        <OTDataChannelDescription name="dt" precision="2" numericData="true" />
-                                        <OTDataChannelDescription name="" unit="N" precision="-2" numericData="true" />
-                                      </channelDescriptions>
-                                    </OTDataStore>
-                                  </dataStore>
-                                </OTDataGraphable>
-                              </source>
-                              <xDataAxis>
-                                <OTDataAxis max="60.0" units="s" min="0.0" label="Time" />
-                              </xDataAxis>
-                              <yDataAxis>
-                                <OTDataAxis max="4.0" units="N" min="-4.0" label="Force" />
-                              </yDataAxis>
-                            </OTDataCollector>
-                            <OTButton local_id="zero-force-button-1" text="Zero Force">
-                              <action>
-                                <object refid="${zero-force-1}" />
-                              </action>
-                            </OTButton>
-                            <OTUDLQuestion id="a1a85943-ceb1-11dc-a3fc-f936421791a9" name="Question" showConvertButton="true">
-                              <prompt>
-                                <OTUDLCompoundDoc>
-                                  <bodyText>What did the graph look like before the box started moving?</bodyText>
-                                </OTUDLCompoundDoc>
-                              </prompt>
-                              <input>
-                                <OTText />
-                              </input>
-                            </OTUDLQuestion>
-                            <OTUDLQuestion id="a4729d07-ceb1-11dc-a3fc-f936421791a9" name="Question" showConvertButton="true">
-                              <prompt>
-                                <OTUDLCompoundDoc>
-                                  <bodyText>What happened to the force just when the box started moving?</bodyText>
-                                </OTUDLCompoundDoc>
-                              </prompt>
-                              <input>
-                                <OTText />
-                              </input>
-                            </OTUDLQuestion>
-                            <OTUDLQuestion id="a72ba1c0-ceb1-11dc-a3fc-f936421791a9" name="Question" showConvertButton="true">
-                              <prompt>
-                                <OTUDLCompoundDoc>
-                                  <bodyText>What happened to the force after the box stopped moving?</bodyText>
-                                </OTUDLCompoundDoc>
-                              </prompt>
-                              <input>
-                                <OTText />
-                              </input>
-                            </OTUDLQuestion>
-                            <OTText id="399ada6b-88b5-11dc-ace3-c72d315b29fd" name="Text field" />
-                            <OTUDLQuestion id="7653aa84-ceb1-11dc-a3fc-f936421791a9" name="Question" showConvertButton="true">
-                              <prompt>
-                                <OTUDLCompoundDoc>
-                                  <bodyText>How good was your prediction?</bodyText>
-                                </OTUDLCompoundDoc>
-                              </prompt>
-                              <input>
-                                <OTText />
-                              </input>
-                            </OTUDLQuestion>
+                            <object refid="f7971278-21d0-11dd-883b-015dfae2d4ec" />
                           </documentRefs>
                           <coachStatements>
                             <OTUDLCoachStatement>
@@ -5530,7 +5956,83 @@ and stick the temperature sensor to it. This will be your "insulator" so that th
                             </OTUDLCoachStatement>
                           </coachStatements>
                         </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc id="b180b8b5-7906-11dc-b03e-ed6d4a0c2086/cards[4]" name="%0c88cdce-790d-11dc-aaef-f7a1df3f6032">
+                        <OTUDLCompoundDoc id="d798b2f1-21c7-11dd-883b-015dfae2d4ec" name="%d79864d0-21c7-11dd-883b-015dfae2d4ec">
+                          <documentRefs>
+                            <OTDataCollector id="582da299-21d1-11dd-883b-015dfae2d4ec" name="Force (5N)" title="Force Sensor Graph" multipleGraphableEnabled="true" autoScaleEnabled="true">
+                              <source>
+                                <OTDataGraphable name="Sensor" connectPoints="true" yColumn="1" drawMarks="false" color="255" xColumn="0" lineWidth="2.0">
+                                  <dataProducer>
+                                    <OTSensorDataProxy name="dataproducer">
+                                      <request>
+                                        <OTExperimentRequest period="0.01">
+                                          <sensorRequests>
+                                            <OTSensorRequest stepSize="0.01" type="5" unit="N" port="0" requiredMax="4.0" displayPrecision="-2" requiredMin="-4.0" />
+                                          </sensorRequests>
+                                        </OTExperimentRequest>
+                                      </request>
+                                      <zeroSensor>
+                                        <OTZeroSensor sensorIndex="0" />
+                                      </zeroSensor>
+                                    </OTSensorDataProxy>
+                                  </dataProducer>
+                                  <dataStore>
+                                    <OTDataStore dt="0.01" numberChannels="1">
+                                      <channelDescriptions>
+                                        <OTDataChannelDescription name="dt" precision="2" numericData="true" />
+                                        <OTDataChannelDescription name="" unit="N" precision="-2" numericData="true" />
+                                      </channelDescriptions>
+                                    </OTDataStore>
+                                  </dataStore>
+                                </OTDataGraphable>
+                              </source>
+                              <xDataAxis>
+                                <OTDataAxis max="30.0" units="s" min="0.0" label="Time" />
+                              </xDataAxis>
+                              <yDataAxis>
+                                <OTDataAxis max="5.0" units="N" min="-0.0" label="Force" />
+                              </yDataAxis>
+                              <graphables>
+                                <OTDataGraphable name="one bottle" connectPoints="true" yColumn="1" drawMarks="false" color="13107" xColumn="0" lineWidth="2.0" locked="true">
+                                  <dataProducer>
+                                    <object refid="f7971278-21d0-11dd-883b-015dfae2d4ec/source/dataProducer" />
+                                  </dataProducer>
+                                  <dataStore>
+                                    <object refid="f7971278-21d0-11dd-883b-015dfae2d4ec/source/dataStore" />
+                                  </dataStore>
+                                </OTDataGraphable>
+                              </graphables>
+                            </OTDataCollector>
+                            <OTUDLQuestion id="a1a85943-ceb1-11dc-a3fc-f936421791a9" name="Question" showConvertButton="true">
+                              <prompt>
+                                <OTUDLCompoundDoc>
+                                  <bodyText>What did the graph look like before the box started moving?</bodyText>
+                                </OTUDLCompoundDoc>
+                              </prompt>
+                              <input>
+                                <OTText />
+                              </input>
+                            </OTUDLQuestion>
+                            <OTUDLQuestion id="a4729d07-ceb1-11dc-a3fc-f936421791a9" name="Question" showConvertButton="true">
+                              <prompt>
+                                <OTUDLCompoundDoc>
+                                  <bodyText>What happened to the force just when the box started moving?</bodyText>
+                                </OTUDLCompoundDoc>
+                              </prompt>
+                              <input>
+                                <OTText />
+                              </input>
+                            </OTUDLQuestion>
+                            <OTUDLQuestion id="a72ba1c0-ceb1-11dc-a3fc-f936421791a9" name="Question" showConvertButton="true">
+                              <prompt>
+                                <OTUDLCompoundDoc>
+                                  <bodyText>What happened to the force while the box was moving?</bodyText>
+                                </OTUDLCompoundDoc>
+                              </prompt>
+                              <input>
+                                <OTText />
+                              </input>
+                            </OTUDLQuestion>
+                          </documentRefs>
                           <bodyText>
                             <div class="buffer">
                               <div class="border">
@@ -5541,45 +6043,74 @@ and stick the temperature sensor to it. This will be your "insulator" so that th
                                         <div class="subtitle" />
                                       </td>
                                       <td align="right">
-                                        <div class="page-number">5</div>
+                                        <div class="page-number">7</div>
+                                      </td>
+                                    </tr>
+                                  </table>
+                                  Describe your graph.
+                                  <br />
+                                  <br />
+                                  <object refid="582da299-21d1-11dd-883b-015dfae2d4ec" />
+                                  <br />
+                                  <object refid="a1a85943-ceb1-11dc-a3fc-f936421791a9" />
+                                  <p />
+                                  <object refid="a4729d07-ceb1-11dc-a3fc-f936421791a9" />
+                                  <p />
+                                  <object refid="a72ba1c0-ceb1-11dc-a3fc-f936421791a9" />
+                                  <br />
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                        </OTUDLCompoundDoc>
+                        <OTUDLCompoundDoc name="%0c88cdce-790d-11dc-aaef-f7a1df3f6032">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <table width="100%">
+                                    <tr>
+                                      <td>
+                                        <div class="subtitle" />
+                                      </td>
+                                      <td align="right">
+                                        <div class="page-number">8</div>
                                       </td>
                                     </tr>
                                   </table>
                                   Label your graph, using the label tool. Mark where you first started 
           pushing. Mark where the box first started to move. Mark the greatest 
-          force value (which will be a negative number).
+          force value.
                                   <br />
                                   <br />
-                                  <object refid="fe1bcc64-8947-11dc-8cc4-df44ebcd54b4" />
+                                  <object refid="582da299-21d1-11dd-883b-015dfae2d4ec" />
                                   <table>
                                     <tr>
-                                      <td>
-                                        <object refid="${zero-force-button-1}" />
-                                        <br />
-                                        The graph won't be smooth, but it should vary around a roughly 
-                constant value. You can estimate that average value by eye. 
-                Record the average value of the moving friction force with one 
-                bottle in the table below.
-                                        <br />
-                                        <br />
-                                        <object refid="15894d54-8954-11dc-b5ab-63fc32fee219" />
-                                        <br />
-                                        <br />
-                                      </td>
+                                      <td />
                                     </tr>
                                   </table>
+                                  The graph won't be smooth, but it should vary around a roughly 
+          constant value if you pull the box at a constant slow speed. You can 
+          estimate that average value by eye.
+                                  <br />
+                                  Record the average value of the moving friction force with one bottle in the 
+          table below.
+                                  <br />
+                                  <br />
+                                  <object refid="15894d54-8954-11dc-b5ab-63fc32fee219" />
+                                  <br />
+                                  <br />
                                 </div>
                               </div>
                             </div>
                           </bodyText>
                           <documentRefs>
-                            <object refid="fe1bcc64-8947-11dc-8cc4-df44ebcd54b4" />
-                            <object refid="${zero-force-button-1}" />
+                            <object refid="582da299-21d1-11dd-883b-015dfae2d4ec" />
                             <OTDataTable id="15894d54-8954-11dc-b5ab-63fc32fee219" name="Data table" showLastRowForAddingNew="true">
                               <dataStore>
                                 <OTDataStore numberChannels="2">
                                   <channelDescriptions>
-                                    <OTDataChannelDescription name="number of bottles" numericData="false" />
+                                    <OTDataChannelDescription name="number of bottles" numericData="false" locked="true" />
                                     <OTDataChannelDescription name="friction force" numericData="false" />
                                   </channelDescriptions>
                                   <values>
@@ -5587,7 +6118,7 @@ and stick the temperature sensor to it. This will be your "insulator" so that th
                                     <string />
                                     <string>two</string>
                                     <string />
-                                    <string>three</string>
+                                    <string />
                                     <string />
                                   </values>
                                 </OTDataStore>
@@ -5595,7 +6126,54 @@ and stick the temperature sensor to it. This will be your "insulator" so that th
                             </OTDataTable>
                           </documentRefs>
                         </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc id="b180b8b5-7906-11dc-b03e-ed6d4a0c2086/cards[5]" name="%cc3911cf-790d-11dc-aaef-f7a1df3f6032">
+                        <OTUDLCompoundDoc name="%906176b7-21d5-11dd-883b-015dfae2d4ec">
+                          <documentRefs>
+                            <OTUDLQuestion id="b7b4cbe0-21d6-11dd-883b-015dfae2d4ec" name="Question" showConvertButton="true">
+                              <prompt>
+                                <OTCompoundDoc>
+                                  <bodyText>
+                                    What are two things you could change about your experiment that would
+                                    <b>increase</b>
+                                    the amount of friction force?
+                                  </bodyText>
+                                </OTCompoundDoc>
+                              </prompt>
+                              <input>
+                                <OTText />
+                              </input>
+                            </OTUDLQuestion>
+                            <OTUDLQuestion id="30330cae-21d7-11dd-883b-015dfae2d4ec" name="Question" showConvertButton="true">
+                              <prompt>
+                                <OTCompoundDoc>
+                                  <bodyText>
+                                    What are two things you could change about your experiment that would
+                                    <b>decrease</b>
+                                    the amount of friction force?
+                                  </bodyText>
+                                </OTCompoundDoc>
+                              </prompt>
+                              <input>
+                                <OTText />
+                              </input>
+                            </OTUDLQuestion>
+                          </documentRefs>
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle">Explain</div>
+                                  <br />
+                                  <object refid="b7b4cbe0-21d6-11dd-883b-015dfae2d4ec" />
+                                  <br />
+                                  <br />
+                                  <object refid="30330cae-21d7-11dd-883b-015dfae2d4ec" />
+                                  <br />
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                        </OTUDLCompoundDoc>
+                        <OTUDLCompoundDoc name="%cc3911cf-790d-11dc-aaef-f7a1df3f6032">
                           <bodyText>
                             <div class="buffer">
                               <div class="border">
@@ -5603,10 +6181,10 @@ and stick the temperature sensor to it. This will be your "insulator" so that th
                                   <table width="100%">
                                     <tr>
                                       <td>
-                                        <div class="subtitle" />
+                                        <div class="subtitle">Elaborate</div>
                                       </td>
                                       <td align="right">
-                                        <div class="page-number">6</div>
+                                        <div class="page-number">9</div>
                                       </td>
                                     </tr>
                                   </table>
@@ -5614,27 +6192,27 @@ and stick the temperature sensor to it. This will be your "insulator" so that th
                                   <br />
                                   <br />
                                   <center>
-                                    <img src="http://udl.concord.org/artwork/friction_56/push_two_bottles/fr_56_push_two_bottles.png" border="1" />
+                                    <img border="1" src="http://udl.concord.org/artwork/friction_56/push_two_bottles/fr_56_push_two_bottles.png" />
                                   </center>
                                   <br />
                                   2. Select the dataset "two bottles" and repeat your experiment.
                                   <br />
-                                  3. Stop recording and look at your graph. Be sure to label the new line you 
-          have made on your graph.
+                                  <br />
+                                  3. 
+          Stop recording and look at your graph. Be sure to label the new line 
+          you have made on your graph.
                                   <br />
                                   <br />
-                                  <object refid="71ac9ad8-8948-11dc-8cc4-df44ebcd54b4" />
-                                  <table>
-                                    <tr>
-                                      <td>
-                                        <object refid="${zero-force-button-2}" />
-                                      </td>
-                                    </tr>
-                                  </table>
                                   <br />
                                   <br />
-                                  Record the average value of the moving friction force with two 
-          bottles.
+                                  <object refid="202483dd-21d4-11dd-883b-015dfae2d4ec" />
+                                  <br />
+                                  <br />
+                                  4. 
+          Record the
+                                  <b>average</b>
+                                  value of the moving friction force with 
+          two bottles.
                                   <br />
                                   <br />
                                   <object refid="15894d54-8954-11dc-b5ab-63fc32fee219" />
@@ -5646,45 +6224,7 @@ and stick the temperature sensor to it. This will be your "insulator" so that th
                             </div>
                           </bodyText>
                           <documentRefs>
-                            <OTDataCollector id="71ac9ad8-8948-11dc-8cc4-df44ebcd54b4" name="Force - Two bottles" title="Force Sensor Graph" autoScaleEnabled="true" multipleGraphableEnabled="true">
-                              <source>
-                                <OTDataGraphable name="Two bottles" connectPoints="true" yColumn="1" drawMarks="false" color="65280" xColumn="0" lineWidth="2.0">
-                                  <dataProducer>
-                                    <OTSensorDataProxy id="71ac9ad8-8948-11dc-8cc4-df44ebcd54b4/source/dataProducer" name="dataproducer">
-                                      <request>
-                                        <OTExperimentRequest period="0.01">
-                                          <sensorRequests>
-                                            <OTSensorRequest stepSize="0.01" type="5" unit="N" port="0" requiredMax="4.0" displayPrecision="-2" requiredMin="-4.0" />
-                                          </sensorRequests>
-                                        </OTExperimentRequest>
-                                      </request>
-                                      <zeroSensor>
-                                        <OTZeroSensor local_id="zero-force-2" sensorIndex="0" />
-                                      </zeroSensor>
-                                    </OTSensorDataProxy>
-                                  </dataProducer>
-                                  <dataStore>
-                                    <OTDataStore local_id="force-two-ds" dt="0.01" numberChannels="1">
-                                      <channelDescriptions>
-                                        <OTDataChannelDescription name="dt" precision="2" numericData="true" />
-                                        <OTDataChannelDescription name="" unit="N" precision="-2" numericData="true" />
-                                      </channelDescriptions>
-                                    </OTDataStore>
-                                  </dataStore>
-                                </OTDataGraphable>
-                              </source>
-                              <xDataAxis>
-                                <OTDataAxis max="60.0" units="s" min="0.0" label="Time" />
-                              </xDataAxis>
-                              <yDataAxis>
-                                <OTDataAxis max="4.0" units="N" min="-4.0" label="Force" />
-                              </yDataAxis>
-                            </OTDataCollector>
-                            <OTButton local_id="zero-force-button-2" text="Zero Force">
-                              <action>
-                                <object refid="${zero-force-2}" />
-                              </action>
-                            </OTButton>
+                            <object refid="202483dd-21d4-11dd-883b-015dfae2d4ec" />
                             <object refid="15894d54-8954-11dc-b5ab-63fc32fee219" />
                             <OTUDLLeveledQuestions id="4d59af60-c524-11dc-8c9f-5d0909ba389b">
                               <questions>
@@ -5695,7 +6235,7 @@ and stick the temperature sensor to it. This will be your "insulator" so that th
                                     </OTUDLCompoundDoc>
                                   </prompt>
                                   <input>
-                                    <OTText />
+                                    <OTText rows="1" />
                                   </input>
                                 </OTUDLQuestion>
                                 <OTUDLQuestion name="L4" showConvertButton="false" showScaffolding="true">
@@ -5771,7 +6311,7 @@ and stick the temperature sensor to it. This will be your "insulator" so that th
                             </OTUDLLeveledQuestions>
                           </documentRefs>
                         </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc id="b180b8b5-7906-11dc-b03e-ed6d4a0c2086/cards[6]" name="%e49bace2-790f-11dc-aaef-f7a1df3f6032">
+                        <OTUDLCompoundDoc name="%e49bace2-790f-11dc-aaef-f7a1df3f6032">
                           <bodyText>
                             <div class="buffer">
                               <div class="border">
@@ -5779,10 +6319,10 @@ and stick the temperature sensor to it. This will be your "insulator" so that th
                                   <table width="100%">
                                     <tr>
                                       <td>
-                                        <div class="subtitle">Explain</div>
+                                        <div class="subtitle" />
                                       </td>
                                       <td align="right">
-                                        <div class="page-number">7</div>
+                                        <div class="page-number">10</div>
                                       </td>
                                     </tr>
                                   </table>
@@ -5790,7 +6330,6 @@ and stick the temperature sensor to it. This will be your "insulator" so that th
                                   <br />
                                   <br />
                                   <object refid="15894d54-8954-11dc-b5ab-63fc32fee219" />
-                                  <br />
                                   <br />
                                   <br />
                                   <object refid="b0c4e9b4-e3db-11dc-beaa-cdc9f3ab4400" />
@@ -5801,13 +6340,11 @@ and stick the temperature sensor to it. This will be your "insulator" so that th
                                   <br />
                                   <br />
                                   Divide 
-          the larger by the smaller. What is the exact ratio?
+          the larger by the smaller. You can use a calculator. What is the 
+          exact ratio?
                                   <br />
                                   <br />
                                   <object refid="db589256-e3db-11dc-beaa-cdc9f3ab4400" />
-                                  <br />
-                                  <br />
-                                  <br />
                                   <br />
                                 </div>
                               </div>
@@ -5856,243 +6393,7 @@ and stick the temperature sensor to it. This will be your "insulator" so that th
                             </OTUDLQuestion>
                           </documentRefs>
                         </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc id="b180b8b5-7906-11dc-b03e-ed6d4a0c2086/cards[7]" name="%9972d764-7910-11dc-aaef-f7a1df3f6032">
-                          <bodyText>
-                            <div class="buffer">
-                              <div class="border">
-                                <div class="body">
-                                  <table width="100%">
-                                    <tr>
-                                      <td>
-                                        <div class="subtitle">Elaborate</div>
-                                      </td>
-                                      <td align="right">
-                                        <div class="page-number">8</div>
-                                      </td>
-                                    </tr>
-                                  </table>
-                                  Here are your results again.
-                                  <br />
-                                  <br />
-                                  <object refid="15894d54-8954-11dc-b5ab-63fc32fee219" />
-                                  <br />
-                                  <br />
-                                  Use 
-          the values you collected to
-                                  <b>predict</b>
-                                  what the friction force 
-          would be with three bottles of water in the box.
-                                  <br />
-                                  <br />
-                                  <object refid="a53cfd57-e3dc-11dc-beaa-cdc9f3ab4400" />
-                                  <br />
-                                  <br />
-                                  Now 
-          put three water bottles in the box. Select dataset "three bottles" 
-          and repeat your experiment. Stop recording and study your graph. Be 
-          sure to label the new line you have made on your graph.
-                                  <br />
-                                  <br />
-                                  <object refid="987be8a0-8948-11dc-8cc4-df44ebcd54b4" />
-                                  <table>
-                                    <tr>
-                                      <td>
-                                        <object refid="${zero-force-button-3}" />
-                                      </td>
-                                    </tr>
-                                  </table>
-                                  <br />
-                                  Record the average value of the moving friction force for three 
-          bottles.
-                                  <br />
-                                  <br />
-                                  <object refid="15894d54-8954-11dc-b5ab-63fc32fee219" />
-                                  <br />
-                                  <br />
-                                  <object refid="cdcaeae2-e3dc-11dc-beaa-cdc9f3ab4400" />
-                                  <br />
-                                  <br />
-                                  <br />
-                                  <object refid="da38d53f-e3dc-11dc-beaa-cdc9f3ab4400" />
-                                  <br />
-                                  <br />
-                                  Calculate 
-          the exact ratio.
-                                  <br />
-                                  <br />
-                                  <object refid="eff8eb04-e3dc-11dc-beaa-cdc9f3ab4400" />
-                                  <br />
-                                  <br />
-                                </div>
-                              </div>
-                            </div>
-                          </bodyText>
-                          <documentRefs>
-                            <object refid="15894d54-8954-11dc-b5ab-63fc32fee219" />
-                            <OTUDLQuestion id="a53cfd57-e3dc-11dc-beaa-cdc9f3ab4400" name="Question" showConvertButton="true">
-                              <prompt>
-                                <OTUDLCompoundDoc>
-                                  <bodyText>The friction force with three bottles would be about:</bodyText>
-                                </OTUDLCompoundDoc>
-                              </prompt>
-                              <input>
-                                <OTText />
-                              </input>
-                            </OTUDLQuestion>
-                            <OTDataCollector id="987be8a0-8948-11dc-8cc4-df44ebcd54b4" name="Force - Three bottles" title="Force Sensor Graph" autoScaleEnabled="true" multipleGraphableEnabled="true">
-                              <source>
-                                <OTDataGraphable name="Three bottles" connectPoints="true" yColumn="1" drawMarks="false" color="52428" xColumn="0" lineWidth="2.0">
-                                  <dataProducer>
-                                    <OTSensorDataProxy id="987be8a0-8948-11dc-8cc4-df44ebcd54b4/source/dataProducer" name="dataproducer">
-                                      <request>
-                                        <OTExperimentRequest period="0.01">
-                                          <sensorRequests>
-                                            <OTSensorRequest stepSize="0.01" type="5" unit="N" port="0" requiredMax="4.0" displayPrecision="-2" requiredMin="-4.0" />
-                                          </sensorRequests>
-                                        </OTExperimentRequest>
-                                      </request>
-                                      <zeroSensor>
-                                        <OTZeroSensor local_id="zero-force-3" sensorIndex="0" />
-                                      </zeroSensor>
-                                    </OTSensorDataProxy>
-                                  </dataProducer>
-                                  <dataStore>
-                                    <OTDataStore id="987be8a0-8948-11dc-8cc4-df44ebcd54b4/source/dataStore" dt="0.01" numberChannels="1">
-                                      <channelDescriptions>
-                                        <OTDataChannelDescription name="dt" precision="2" numericData="true" />
-                                        <OTDataChannelDescription name="" unit="N" precision="-2" numericData="true" />
-                                      </channelDescriptions>
-                                    </OTDataStore>
-                                  </dataStore>
-                                </OTDataGraphable>
-                              </source>
-                              <xDataAxis>
-                                <OTDataAxis max="60.0" units="s" min="0.0" label="Time" />
-                              </xDataAxis>
-                              <yDataAxis>
-                                <OTDataAxis max="4.0" units="N" min="-4.0" label="Force" />
-                              </yDataAxis>
-                            </OTDataCollector>
-                            <OTButton local_id="zero-force-button-3" text="Zero Force">
-                              <action>
-                                <object refid="${zero-force-3}" />
-                              </action>
-                            </OTButton>
-                            <object refid="15894d54-8954-11dc-b5ab-63fc32fee219" />
-                            <OTUDLQuestion id="cdcaeae2-e3dc-11dc-beaa-cdc9f3ab4400" name="Question" showConvertButton="true">
-                              <prompt>
-                                <OTUDLCompoundDoc>
-                                  <bodyText>How good was your prediction?</bodyText>
-                                </OTUDLCompoundDoc>
-                              </prompt>
-                              <input>
-                                <OTText />
-                              </input>
-                            </OTUDLQuestion>
-                            <OTUDLQuestion id="da38d53f-e3dc-11dc-beaa-cdc9f3ab4400" name="Question" showConvertButton="true">
-                              <prompt>
-                                <OTUDLCompoundDoc>
-                                  <bodyText>Is the friction force for three bottles about three times the friction force for one bottle?</bodyText>
-                                </OTUDLCompoundDoc>
-                              </prompt>
-                              <input>
-                                <OTChoice name="Multiple choice" alignContent="0">
-                                  <choices>
-                                    <OTCompoundDoc name="yes">
-                                      <bodyText>yes</bodyText>
-                                    </OTCompoundDoc>
-                                    <OTCompoundDoc name="no">
-                                      <bodyText>no</bodyText>
-                                    </OTCompoundDoc>
-                                  </choices>
-                                </OTChoice>
-                              </input>
-                            </OTUDLQuestion>
-                            <OTUDLQuestion id="eff8eb04-e3dc-11dc-beaa-cdc9f3ab4400" name="Question" showConvertButton="true">
-                              <prompt>
-                                <OTUDLCompoundDoc>
-                                  <bodyText>force with three bottles / force with one bottle =</bodyText>
-                                </OTUDLCompoundDoc>
-                              </prompt>
-                              <input>
-                                <OTText />
-                              </input>
-                            </OTUDLQuestion>
-                          </documentRefs>
-                        </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc id="b180b8b5-7906-11dc-b03e-ed6d4a0c2086/cards[8]" name="%d0dee3d1-e410-11dc-8a8a-cdd790c5cae1">
-                          <documentRefs>
-                            <OTDataCollector id="f5d21e53-e410-11dc-8a8a-cdd790c5cae1" name="Force (5N)" title="Force Sensor Graph" multipleGraphableEnabled="true" autoScaleEnabled="true">
-                              <source>
-                                <OTDataGraphable name="Sensor" connectPoints="true" yColumn="1" drawMarks="false" color="13369599" xColumn="0" lineWidth="2.0">
-                                  <dataProducer>
-                                    <OTSensorDataProxy name="dataproducer">
-                                      <request>
-                                        <OTExperimentRequest period="0.01">
-                                          <sensorRequests>
-                                            <OTSensorRequest stepSize="0.01" type="5" unit="N" port="0" requiredMax="4.0" displayPrecision="-2" requiredMin="-4.0" />
-                                          </sensorRequests>
-                                        </OTExperimentRequest>
-                                      </request>
-                                      <zeroSensor>
-                                        <OTZeroSensor sensorIndex="0" />
-                                      </zeroSensor>
-                                    </OTSensorDataProxy>
-                                  </dataProducer>
-                                  <dataStore>
-                                    <OTDataStore dt="0.01" numberChannels="1">
-                                      <channelDescriptions>
-                                        <OTDataChannelDescription name="dt" precision="2" numericData="true" />
-                                        <OTDataChannelDescription name="" unit="N" precision="-2" numericData="true" />
-                                      </channelDescriptions>
-                                    </OTDataStore>
-                                  </dataStore>
-                                </OTDataGraphable>
-                              </source>
-                              <xDataAxis>
-                                <OTDataAxis max="60.0" units="s" min="0.0" label="Time" />
-                              </xDataAxis>
-                              <yDataAxis>
-                                <OTDataAxis max="4.0" units="N" min="-4.0" label="Force" />
-                              </yDataAxis>
-                              <graphables>
-                                <OTDataGraphable name="Prediction" connectPoints="true" yColumn="1" drawMarks="false" color="16711731" xColumn="0" lineWidth="2.0" controllable="true" locked="true">
-                                  <dataStore>
-                                    <object refid="${force-prediction-ds}" />
-                                  </dataStore>
-                                </OTDataGraphable>
-                                <OTDataGraphable name="Three bottles" connectPoints="true" yColumn="1" drawMarks="false" color="52428" xColumn="0" lineWidth="2.0" locked="true">
-                                  <dataProducer>
-                                    <object refid="987be8a0-8948-11dc-8cc4-df44ebcd54b4/source/dataProducer" />
-                                  </dataProducer>
-                                  <dataStore>
-                                    <object refid="987be8a0-8948-11dc-8cc4-df44ebcd54b4/source/dataStore" />
-                                  </dataStore>
-                                </OTDataGraphable>
-                                <OTDataGraphable name="Two bottles" connectPoints="true" yColumn="1" drawMarks="false" color="65280" xColumn="0" lineWidth="2.0" locked="true">
-                                  <dataProducer>
-                                    <object refid="71ac9ad8-8948-11dc-8cc4-df44ebcd54b4/source/dataProducer" />
-                                  </dataProducer>
-                                  <dataStore>
-                                    <object refid="${force-two-ds}" />
-                                  </dataStore>
-                                </OTDataGraphable>
-                                <OTDataGraphable name="One bottle" connectPoints="true" yColumn="1" drawMarks="false" color="3355647" xColumn="0" lineWidth="2.0" locked="true">
-                                  <dataProducer>
-                                    <object refid="fe1bcc64-8947-11dc-8cc4-df44ebcd54b4/source/dataProducer" />
-                                  </dataProducer>
-                                  <dataStore>
-                                    <object refid="${force-one-ds}" />
-                                  </dataStore>
-                                </OTDataGraphable>
-                              </graphables>
-                            </OTDataCollector>
-                            <OTSnapshotButton id="2fd2724f-e411-11dc-8a8a-cdd790c5cae1" name="Snapshot button">
-                              <target>
-                                <object refid="f5d21e53-e410-11dc-8a8a-cdd790c5cae1" />
-                              </target>
-                            </OTSnapshotButton>
-                          </documentRefs>
+                        <OTUDLCompoundDoc name="%b3ec3295-7914-11dc-aaef-f7a1df3f6032">
                           <bodyText>
                             <div class="buffer">
                               <div class="border">
@@ -6103,42 +6404,12 @@ and stick the temperature sensor to it. This will be your "insulator" so that th
                                         <div class="subtitle" />
                                       </td>
                                       <td align="right">
-                                        <div class="page-number">9</div>
-                                      </td>
-                                    </tr>
-                                  </table>
-                                  Here are all of your results together. You can take a snapshot of 
-          your graph and save it.
-                                  <br />
-                                  <br />
-                                  <object refid="f5d21e53-e410-11dc-8a8a-cdd790c5cae1" />
-                                  <br />
-                                  <object refid="2fd2724f-e411-11dc-8a8a-cdd790c5cae1" />
-                                </div>
-                              </div>
-                            </div>
-                          </bodyText>
-                        </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc id="b180b8b5-7906-11dc-b03e-ed6d4a0c2086/cards[9]" name="%b3ec3295-7914-11dc-aaef-f7a1df3f6032">
-                          <bodyText>
-                            <div class="buffer">
-                              <div class="border">
-                                <div class="body">
-                                  <table width="100%">
-                                    <tr>
-                                      <td>
-                                        <div class="subtitle" />
-                                      </td>
-                                      <td align="right">
-                                        <div class="page-number">10</div>
+                                        <div class="page-number">12</div>
                                       </td>
                                     </tr>
                                   </table>
                                   Suppose you could zoom in to where the surface of box touches the 
           tabletop.
-                                  <br />
-                                  <br />
-                                  <object refid="2846ac00-e3dd-11dc-beaa-cdc9f3ab4400" />
                                   <br />
                                   <br />
                                   <object refid="35416d12-e3dd-11dc-beaa-cdc9f3ab4400" />
@@ -6148,29 +6419,19 @@ and stick the temperature sensor to it. This will be your "insulator" so that th
                             </div>
                           </bodyText>
                           <documentRefs>
-                            <OTUDLQuestion id="2846ac00-e3dd-11dc-beaa-cdc9f3ab4400" name="Question" showConvertButton="true">
-                              <prompt>
-                                <OTUDLCompoundDoc>
-                                  <bodyText>What causes the friction between the two surfaces?</bodyText>
-                                </OTUDLCompoundDoc>
-                              </prompt>
-                              <input>
-                                <OTText />
-                              </input>
-                            </OTUDLQuestion>
                             <OTUDLQuestion id="35416d12-e3dd-11dc-beaa-cdc9f3ab4400" name="Question" showConvertButton="true">
                               <prompt>
                                 <OTUDLCompoundDoc>
-                                  <bodyText>Draw what you think the two surfaces would look like that causes friction between them.</bodyText>
+                                  <bodyText>Describe what you think the two surfaces would look like that causes friction between them.</bodyText>
                                 </OTUDLCompoundDoc>
                               </prompt>
                               <input>
-                                <OTDrawingTool name="Drawing tool" />
+                                <OTText name="Open response" />
                               </input>
                             </OTUDLQuestion>
                           </documentRefs>
                         </OTUDLCompoundDoc>
-                        <OTUDLCompoundDoc id="b180b8b5-7906-11dc-b03e-ed6d4a0c2086/cards[10]" name="%6bc173e9-e3dd-11dc-beaa-cdc9f3ab4400">
+                        <OTUDLCompoundDoc name="%6bc173e9-e3dd-11dc-beaa-cdc9f3ab4400">
                           <bodyText>
                             <div class="buffer">
                               <div class="border">
@@ -6181,11 +6442,10 @@ and stick the temperature sensor to it. This will be your "insulator" so that th
                                         <div class="subtitle" />
                                       </td>
                                       <td align="right">
-                                        <div class="page-number">11</div>
+                                        <div class="page-number">13</div>
                                       </td>
                                     </tr>
                                   </table>
-                                  <br />
                                   <object refid="a606c035-e3dd-11dc-beaa-cdc9f3ab4400" />
                                   <br />
                                   <br />
@@ -6200,7 +6460,7 @@ and stick the temperature sensor to it. This will be your "insulator" so that th
                             <OTUDLQuestion id="a606c035-e3dd-11dc-beaa-cdc9f3ab4400" name="Question" showConvertButton="true">
                               <prompt>
                                 <OTUDLCompoundDoc>
-                                  <bodyText>Refer to your drawing to explain why the friction value increases as the weight increases.</bodyText>
+                                  <bodyText>Explain why you think the force of friction is greater for two bottles than for one.</bodyText>
                                 </OTUDLCompoundDoc>
                               </prompt>
                               <input>
@@ -6231,20 +6491,8 @@ and stick the temperature sensor to it. This will be your "insulator" so that th
                         </OTUDLCompoundDoc>
                       </cards>
                       <currentCard>
-                        <object refid="b180b8b5-7906-11dc-b03e-ed6d4a0c2086/cards[2]" />
-                      </currentCard>
-                      <viewedCards>
                         <object refid="b18091a4-7906-11dc-b03e-ed6d4a0c2086" />
-                        <object refid="b180b8b5-7906-11dc-b03e-ed6d4a0c2086/cards[3]" />
-                        <object refid="b180b8b5-7906-11dc-b03e-ed6d4a0c2086/cards[4]" />
-                        <object refid="b180b8b5-7906-11dc-b03e-ed6d4a0c2086/cards[5]" />
-                        <object refid="b180b8b5-7906-11dc-b03e-ed6d4a0c2086/cards[6]" />
-                        <object refid="b180b8b5-7906-11dc-b03e-ed6d4a0c2086/cards[7]" />
-                        <object refid="b180b8b5-7906-11dc-b03e-ed6d4a0c2086/cards[8]" />
-                        <object refid="b180b8b5-7906-11dc-b03e-ed6d4a0c2086/cards[9]" />
-                        <object refid="b180b8b5-7906-11dc-b03e-ed6d4a0c2086/cards[10]" />
-                        <object refid="b180b8b5-7906-11dc-b03e-ed6d4a0c2086/cards[2]" />
-                      </viewedCards>
+                      </currentCard>
                     </OTCardContainer>
                   </content>
                   <header>
@@ -8016,9 +8264,6 @@ and stick the temperature sensor to it. This will be your "insulator" so that th
                       <currentCard>
                         <object refid="e5837c4a-7e82-11dc-a02a-2fa3fd422b5e" />
                       </currentCard>
-                      <viewedCards>
-                        <object refid="e5837c4a-7e82-11dc-a02a-2fa3fd422b5e" />
-                      </viewedCards>
                     </OTCardContainer>
                   </content>
                   <header>
@@ -8417,12 +8662,12 @@ and stick the temperature sensor to it. This will be your "insulator" so that th
                                   <object refid="fdaacdee-fba4-11dc-8b26-87d692f0bb5d" />
                                   <br />
                                   <br />
-                                  6) Box A weighed 100 kg and box B weighed 200 kg, but otherwise they 
-          were the same. For each box, three measurements were taken of the 
-          force needed to push it along the floor.
+                                  6) Box A had a mass of 100 kg and box B had a mass of 200 kg, but 
+          otherwise they were the same. For each box, three measurements were 
+          taken of the force needed to pull it along the floor.
                                   <br />
                                   <br />
-                                  <img src="http://udl.concord.org/artwork/friction_56/pushing_barchart/fr_56_pushing_barchart_small.jpg" />
+                                  <img src="http://udl.concord.org/artwork/friction_56/pulling_barchart/fr_56_pulling_barchart_small.jpg" />
                                   <br />
                                   <br />
                                   <object refid="2e71aeb4-fba5-11dc-8b26-87d692f0bb5d" />
@@ -8581,11 +8826,10 @@ and stick the temperature sensor to it. This will be your "insulator" so that th
                 </OTUDLSection>
               </cards>
               <currentCard>
-                <object refid="${section_6}" />
+                <object refid="${section_1}" />
               </currentCard>
               <viewedCards>
                 <object refid="${section_1}" />
-                <object refid="${section_6}" />
               </viewedCards>
             </OTCardContainer>
           </content>
@@ -8649,8 +8893,8 @@ and stick the temperature sensor to it. This will be your "insulator" so that th
         <OTSnapshotAlbum local_id="album" />
         <OTDefinitionManager id="b6350a20-e3b4-11dc-95ff-0800200c9a66">
           <definitions>
-            <OTDefinitionList src="glossary/common-glossary.txt" />
-            <OTDefinitionList src="glossary/friction-glossary.txt" />
+            <OTDefinitionList src="http://continuum.concord.org/otrunk/examples/UDL/glossary/common-glossary.txt" />
+            <OTDefinitionList src="http://continuum.concord.org/otrunk/examples/UDL/glossary/friction-glossary.txt" />
           </definitions>
           <frame>
             <OTFrame local_id="definition_frame" width="300" height="190" borderlessPopup="true" />
@@ -8684,9 +8928,9 @@ and stick the temperature sensor to it. This will be your "insulator" so that th
             </OTUDLMenuRule>
           </rules>
         </OTUDLMenuRule>
-        <OTJavascript local_id="change_page.js" src="scripts/change_page.js" />
-        <OTJavascript local_id="show_message.js" src="scripts/show_message.js" />
-        <OTJavascript local_id="authoring_script.js" src="scripts/authoring_script.js" />
+        <OTJavascript local_id="change_page.js" src="http://continuum.concord.org/otrunk/examples/UDL/scripts/change_page.js" />
+        <OTJavascript local_id="show_message.js" src="http://continuum.concord.org/otrunk/examples/UDL/scripts/show_message.js" />
+        <OTJavascript local_id="authoring_script.js" src="http://continuum.concord.org/otrunk/examples/UDL/scripts/authoring_script.js" />
       </library>
     </OTSystem>
   </objects>
