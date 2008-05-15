@@ -80,7 +80,7 @@ dir.each do |path|
       end
 
       # Append: jnlp properties: otrunk.view.author=true and otrunk.view.mode=authoring
-      jnlp_url_tmpl_author = jnlp_url_tmpl + "&jnlp_properties=otrunk.view.author%253Dtrue%2526&otrunk.view.mode%253Dauthoring%2526"
+      jnlp_url_tmpl_author = jnlp_url_tmpl + "&jnlp_properties=otrunk.view.author%253Dtrue%2526otrunk.view.mode%253Dauthoring"
 
       subdir = Dir.new(path)
       otml_launchers = "<h4>Run Examples</h4> <table>"
