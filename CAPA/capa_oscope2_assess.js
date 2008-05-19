@@ -71,7 +71,7 @@ function assess(assessment, helper, madWrapper) {
 	var modulatorAmplitude = Double.parseDouble(madWrapper.getLastCIValue("amplitude2"))
 	var a = Double.parseDouble(madWrapper.getLastCIValue("A")) // modulation constant
 	
-	answers.c_crFreq = Double.parseDouble(madWrapper.getLastCIValue("frequency"))
+	answers.c_crFreq = Double.parseDouble(madWrapper.getLastCIValue("frequency1"))
 	answers.c_mdFreq = Double.parseDouble(madWrapper.getLastCIValue("frequency2"))
 	answers.c_mdIndex = modulatorAmplitude / a * 100.0
 	
