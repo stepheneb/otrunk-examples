@@ -178,7 +178,7 @@ function checkSettings(helper, madWrapper, amplitude) {
 	var voltsPerDivPoints = 0
 	
 	var timePerDivs = helper.getTimePerDivs()
-	var voltsPerDivs = helper.getVoltsPerDivs()
+	var voltsPerDivs = helper.getVoltsPerDivs("B")
 	
 	for (var i = 0; i < timePerDivs.size(); ++i) {
 		var pts = checkTimePerDiv(timePerDivs.get(i), answers.c_crFreq)
@@ -191,7 +191,7 @@ function checkSettings(helper, madWrapper, amplitude) {
 		}		
 	}
 	for (var i = 0; i < voltsPerDivs.size(); ++i) {
-		var pts = helper.getVoltsPerDivPoints(amplitude)
+		var pts = helper.getVoltsPerDivPoints("B", amplitude)
 		if (pts > voltsPerDivPoints) {
 			voltsPerDivPoints = pts
 		}

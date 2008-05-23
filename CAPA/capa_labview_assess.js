@@ -90,8 +90,8 @@ function checkSettings(helper, madWrapper) {
 		}
 	}
 	
-	var viewHeight = helper.getLastVoltsPerDiv() * 8
-	var voltsPerDivPoints = helper.getVoltsPerDivPoints(_correctAmp)
+	var viewHeight = helper.getLastVoltsPerDiv("B") * 8
+	var voltsPerDivPoints = helper.getVoltsPerDivPoints("B", _correctAmp)
 
 	// Check for channel selection
 	var channel = Integer.parseInt(madWrapper.getLastCIValue("SelectChannel"));
