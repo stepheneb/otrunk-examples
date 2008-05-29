@@ -84,6 +84,19 @@ dir.each do |path|
 
       subdir = Dir.new(path)
       otml_launchers = "<h4>Run Examples</h4> <table>"
+
+      description_of_jnlps = <<HERE
+<h4>Description of the difference between the learner and author mode jnlps</h4>
+<p>Running an OTrunk example in learner mode uses the default view mode which assumes a learner. In addition if you use the File manu to save the otml only the differences between the activty otml and the changes made will be saved. The otml saved is the learner difference otml and is often much smaller than activty otml.</p>
+<p>Running an OTrunk example in author mode sets the following jnlp properties:</p>
+<ul>
+  <li>otrunk.view.author=true</li>
+  <li>otrunk.view.mode=authoring</li>
+</ul>
+<p>Setting otrunk.view.author to true causes the entire OTrunk state to be saved as otml when a File save is performed. Setting otrunk.view.mode to authoring is used in the view system to enable authoring affordances in the views. Many examples do not have special authoring views. The Basic Example: document-edit.otml does have both authoring and student view modes.</p>
+<hr/>
+HERE
+
       java_web_start_warning = <<HERE
 <h4>MacOS X Java Web Start Problem</h4>
 <p>If you are using Java 1.5 on MacOS 10.4 or 10.5 you will almost certainly need to run some version of 
@@ -105,9 +118,10 @@ HERE
             svn_status_arr = svn_status.split(' ')
             
             otml_url = "http://continuum.concord.org/otrunk/examples/#{path}/#{subpath}"
+            trac_otml_url = "http://trac.cosmos.concord.org/projects/browser/trunk/common/java/otrunk/otrunk-examples/#{path}/#{subpath}"
             jnlp_url = jnlp_url_tmpl.sub(/%otml_url%/, otml_url)
             jnlp_author_url = jnlp_url_tmpl_author.sub(/%otml_url%/, otml_url)
-            otml_launchers += "<tr><td>#{subpath} - <a href=""#{jnlp_url}"">jnlp learner mode</a> - <a href=""#{jnlp_author_url}"">jnlp author mode</a> - <a href=""#{subpath}"">otml</a> rev #{svn_status_arr[1]} #{svn_status_arr[2]}</td></tr>"
+            otml_launchers += "<tr><td>#{subpath}</td><td><a href=""#{jnlp_url}"">jnlp learner mode</a></td><td><a href=""#{jnlp_author_url}"">jnlp author mode</a></td><td><a href=""#{subpath}"">otml</a></td><td><a href=#{trac_otml}>rev #{svn_status_arr[1]} #{svn_status_arr[2]}</a></td></tr>"
           end
           
           all_files += "<tr><td><a href=""#{subpath}"">#{subpath}</a></td></tr>"
