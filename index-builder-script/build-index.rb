@@ -87,7 +87,7 @@ dir.each do |path|
 
       description_of_jnlps = <<HERE
 <h4>Description of the difference between the learner and author mode jnlps</h4>
-<p>Running an OTrunk example in learner mode uses the default view mode which assumes a learner. In addition if you use the File manu to save the otml only the differences between the activty otml and the changes made will be saved. The otml saved is the learner difference otml and is often much smaller than activty otml.</p>
+<p>Running an OTrunk example in learner mode uses the default view mode which assumes a learner. In addition if you use the File manu to save the otml only the differences between the activity otml and the changes made will be saved. The otml saved is the learner difference otml and is often much smaller than activty otml.</p>
 <p>Running an OTrunk example in author mode sets the following jnlp properties:</p>
 <ul>
   <li>otrunk.view.author=true</li>
@@ -121,7 +121,7 @@ HERE
             trac_otml_url = "http://trac.cosmos.concord.org/projects/browser/trunk/common/java/otrunk/otrunk-examples/#{path}/#{subpath}"
             jnlp_url = jnlp_url_tmpl.sub(/%otml_url%/, otml_url)
             jnlp_author_url = jnlp_url_tmpl_author.sub(/%otml_url%/, otml_url)
-            otml_launchers += "<tr><td width=300><a href=#{subpath}>#{subpath}</a></td><td width=100><a href=""#{jnlp_url}"">learner mode</a></td><td width=100><a href=#{jnlp_author_url}>author mode</a></td><td width=100><a href=#{trac_otml_url}>rev #{svn_status_arr[1]} #{svn_status_arr[2]}</a></td></tr>"
+            otml_launchers += "<tr><td width=280><a href=#{subpath}>#{subpath}</a></td><td width=100><a href=""#{jnlp_url}"">learner mode</a></td><td width=100><a href=#{jnlp_author_url}>author mode</a></td><td width=100><a href=#{trac_otml_url}>rev #{svn_status_arr[1]} #{svn_status_arr[2]}</a></td></tr>"
           end
           
           all_files += "<tr><td><a href=""#{subpath}"">#{subpath}</a></td></tr>"
