@@ -87,7 +87,7 @@ dir.each do |path|
 
       description_of_jnlps = <<HERE
 <h4>Description of the difference between the learner and author mode jnlps</h4>
-<p>Running an OTrunk example in learner mode uses the default view mode which assumes a learner. In addition if you use the File manu to save the otml only the differences between the activity otml and the changes made will be saved. The otml saved is the learner difference otml and is often much smaller than activty otml.</p>
+<p>Running an OTrunk example in learner mode uses the default view mode which assumes a learner. In addition if you use the File menu to save the otml only the differences between the activity otml and the changes will be saved. The otml saved is the learner difference otml and is often much smaller than activty otml.</p>
 <p>Running an OTrunk example in author mode sets the following jnlp properties:</p>
 <ul>
   <li>otrunk.view.author=true</li>
