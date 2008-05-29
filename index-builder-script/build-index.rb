@@ -83,7 +83,7 @@ dir.each do |path|
       jnlp_url_tmpl_author = jnlp_url_tmpl + "&jnlp_properties=otrunk.view.author%253Dtrue%2526otrunk.view.mode%253Dauthoring"
 
       subdir = Dir.new(path)
-      otml_launchers = "<h4>Run Examples</h4> <table>"
+      otml_launchers = "<h4>Run Examples</h4> <table cellspacing=10>"
 
       description_of_jnlps = <<HERE
 <h4>Description of the difference between the learner and author mode jnlps</h4>
@@ -131,7 +131,7 @@ HERE
 
       index_page_body = "<a href=""../example-index.html"">Examples Index</a><br/>\n"  +  
         "<a href=""http://confluence.concord.org/display/CSP/#{path}"">Confluence Notes</a><br/>\n" +
-        otml_launchers + description_of_jnlps + java_web_start_warning + all_files
+        otml_launchers + java_web_start_warning + description_of_jnlps + all_files
 
       index_page_body += "<hr/>The jnlp urls were constructed using the following template:<br/>\n"
       index_page_body += jnlp_url_tmpl + "<br/>\n"
