@@ -121,7 +121,7 @@ HERE
             trac_otml_url = "http://trac.cosmos.concord.org/projects/browser/trunk/common/java/otrunk/otrunk-examples/#{path}/#{subpath}"
             jnlp_url = jnlp_url_tmpl.sub(/%otml_url%/, otml_url)
             jnlp_author_url = jnlp_url_tmpl_author.sub(/%otml_url%/, otml_url)
-            otml_launchers += "<tr><td>#{subpath}</td><td><a href=""#{jnlp_url}"">jnlp learner mode</a></td><td><a href=""#{jnlp_author_url}"">jnlp author mode</a></td><td><a href=""#{subpath}"">otml</a></td><td><a href=#{trac_otml}>rev #{svn_status_arr[1]} #{svn_status_arr[2]}</a></td></tr>"
+            otml_launchers += "<tr><td>#{subpath}</td><td><a href=""#{jnlp_url}"">jnlp learner mode</a></td><td><a href=""#{jnlp_author_url}"">jnlp author mode</a></td><td><a href=""#{subpath}"">otml</a></td><td><a href=#{trac_otml_url}>rev #{svn_status_arr[1]} #{svn_status_arr[2]}</a></td></tr>"
           end
           
           all_files += "<tr><td><a href=""#{subpath}"">#{subpath}</a></td></tr>"
