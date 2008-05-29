@@ -131,7 +131,7 @@ HERE
 
       index_page_body = "<a href=""../example-index.html"">Examples Index</a><br/>\n"  +  
         "<a href=""http://confluence.concord.org/display/CSP/#{path}"">Confluence Notes</a><br/>\n" +
-        otml_launchers + java_web_start_warning + all_files
+        otml_launchers + description_of_jnlps + java_web_start_warning + all_files
 
       index_page_body += "<hr/>The jnlp urls were constructed using the following template:<br/>\n"
       index_page_body += jnlp_url_tmpl + "<br/>\n"
