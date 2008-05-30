@@ -37,7 +37,6 @@ importPackage(Packages.java.awt.image);
 
 importPackage(Packages.javax.swing);
 importPackage(Packages.javax.imageio);
-importClass(Packages.java.text.SimpleDateFormat)
 importClass(Packages.java.text.DecimalFormat);
 
 importPackage(Packages.edu.colorado.phet.cck.model);
@@ -71,7 +70,6 @@ importClass(Packages.org.concord.otrunkcapa.CAPAUnitUtil);
  * viewContext
  */
 
-var	dateFormat = SimpleDateFormat.getInstance();
 var activityName = "Using the digital multimeter";
 
 //var startHTML = "<html><blockquote><p><font size=\"4\" face=\"Verdana\">";
@@ -198,7 +196,6 @@ function saveStateVariable(name, value)
 /** Initial set up if the GUI. This stuff eventually could be moved to the otml file */
 function setupGUI()
 {
-	dateFormat.applyPattern("MM/dd/yyyy HH:mm:ss zzz")	
 	answerBox.setBackground(new Color(1,1,0.7));
 	unitComboBox.setBackground(new Color(1,1,0.7));
 }
@@ -343,15 +340,13 @@ function setupAsessmentLogging()
 {
 	if (activityInitialized) {
 		var userName = getUserName();
-		var now = new Date();
-		var ms = now.getTime();
-		var timeString = dateFormat.format(now);
+		var ms = new Date().getTime();
 		
 		//Create assessment object
 		otAssessment = otObjectService.createObject(OTMultimeterAssessment);
+		otAssessment.setActivityName(activityName);
 		otAssessment.setUserName(userName);
 		otAssessment.setTime(ms);	
-		otAssessment.setTitle(activityName + " - " + timeString + " - " + userName);
 		otContents.add(otContents.size() - 1, otAssessment);
 	}
 	else{

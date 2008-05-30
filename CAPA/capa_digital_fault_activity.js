@@ -2,7 +2,6 @@ importClass(Packages.java.lang.System)
 importClass(Packages.java.lang.Integer)
 importClass(Packages.java.lang.Float)
 importClass(Packages.java.lang.Double)
-importClass(Packages.java.text.SimpleDateFormat)
 importClass(Packages.java.awt.Color)
 importClass(Packages.java.awt.event.ActionListener)
 importClass(Packages.javax.swing.JOptionPane)
@@ -35,7 +34,6 @@ var otc_submitButton
 var otc_reportButton
  	
 var glob = {
-	dateFormat : SimpleDateFormat.getInstance(),
 	info : null, // text to be added to the report
 	currentStep : 1,
 	lastStep : 1,
@@ -51,7 +49,6 @@ var glob = {
  */
 function init() {
 	System.out.println("Entered: init()")
-	glob.dateFormat.applyPattern("MM/dd/yyyy HH:mm:ss zzz")	
 	setupGUI();
     glob.monitor = controllerService.getRealObject(ot_monitor)		
     setupAssessmentLogging()
@@ -68,15 +65,13 @@ function save() {
 
 function setupAssessmentLogging() {
 	var userName = getUserName()
-	var now = new Date()
-	var ms = now.getTime()
-	var timeString = glob.dateFormat.format(now)
+	var ms = new Date().getTime()
 	
 	// Create assessment object
 	var assessment = otObjectService.createObject(OTAssessment)
+	assessment.setActivityName("Digital Troubleshooting")
 	assessment.setUserName(userName)
 	assessment.setTime(ms)	
-	assessment.setTitle("Digital Troubleshooting - " + timeString + " - " + userName)
 	otContents.add(assessment)
 	glob.otAssessment = assessment
 }

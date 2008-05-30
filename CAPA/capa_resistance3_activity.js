@@ -42,7 +42,6 @@ importPackage(Packages.java.awt.image);
 importPackage(Packages.javax.swing);
 importPackage(Packages.javax.imageio);
 importClass(Packages.java.text.DecimalFormat);
-importClass(Packages.java.text.SimpleDateFormat)
 
 importPackage(Packages.edu.colorado.phet.cck.model);
 importPackage(Packages.edu.colorado.phet.cck.model.components);
@@ -77,7 +76,6 @@ importClass(Packages.org.concord.framework.otrunk.view.OTUserListService)
  * viewContext
  */
 
-var	dateFormat = SimpleDateFormat.getInstance();
 var activityName = "Measuring Resistance 3.0";
 
 var startHTML = "<html><blockquote>";
@@ -284,7 +282,6 @@ function saveStateVariable(name, value)
 /** Initial set up if the GUI. This stuff eventually could be moved to the otml file */
 function setupGUI()
 {
-	dateFormat.applyPattern("MM/dd/yyyy HH:mm:ss zzz")	
 	answerBox.setBackground(new Color(1,1,0.7));
 	unitComboBox.setBackground(new Color(1,1,0.7));
 //	answerBox.setEditable(false);
@@ -423,15 +420,13 @@ function setupAsessmentLogging()
 {
 	if (activityInitialized) {
 		var userName = getUserName();
-		var now = new Date();
-		var ms = now.getTime();
-		var timeString = dateFormat.format(now);
+		var ms = new Date().getTime();
 		
 		//Create assessment object
 		otAssessment = otObjectService.createObject(OTAssessment);
+		otAssessment.setActivityName(activityName);
+		otAssessment.setTime(ms);			
 		otAssessment.setUserName(userName);
-		otAssessment.setTime(ms);	
-		otAssessment.setTitle(activityName + " - " + timeString + " - " + userName);
 		
 		//Create assessment object
 

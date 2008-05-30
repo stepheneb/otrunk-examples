@@ -25,7 +25,6 @@
 importClass(Packages.java.lang.System)
 importClass(Packages.java.lang.Integer)
 importClass(Packages.java.lang.Double)
-importClass(Packages.java.text.SimpleDateFormat)
 importClass(Packages.java.awt.Color)
 importClass(Packages.java.awt.event.ActionListener)
 importClass(Packages.javax.swing.JOptionPane)
@@ -73,8 +72,6 @@ var _assessUtil = null
 var _otAssessment = null
 var _info // text to be added to the report
 
-var	_dateFormat = SimpleDateFormat.getInstance()
-
 var _currentStep = 1
 var _lastStep = 1
 
@@ -94,8 +91,6 @@ var _submittedFrqUnit = ""
 
 function init() {
 	System.out.println("-------------------------- init --------------------------------")
-	
-	_dateFormat.applyPattern("MM/dd/yyyy HH:mm:ss zzz")
 	
     _monitor = controllerService.getRealObject(otMonitor)	
 
@@ -137,15 +132,13 @@ function setupGUI() {
 
 function setupAssessmentLogging() {
 	var userName = getUserName()
-	var now = new Date()
-	var ms = now.getTime()
-	var timeString = _dateFormat.format(now)
+	var ms = new Date().getTime()
 	
 	// Create assessment object
 	_otAssessment = otObjectService.createObject(OTAssessment)
+	_otAssessment.setActivityName("Using an Oscilloscope");
 	_otAssessment.setUserName(userName)
 	_otAssessment.setTime(ms)	
-	_otAssessment.setTitle("Using an Oscilloscope - " + timeString + " - " + userName)
 
 	otContents.add(_otAssessment)
 }
