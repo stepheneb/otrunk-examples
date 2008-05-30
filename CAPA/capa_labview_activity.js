@@ -25,6 +25,7 @@
 importClass(Packages.java.lang.System)
 importClass(Packages.java.lang.Integer)
 importClass(Packages.java.lang.Double)
+importClass(Packages.java.text.SimpleDateFormat)
 importClass(Packages.java.awt.Color)
 importClass(Packages.java.awt.event.ActionListener)
 importClass(Packages.javax.swing.JOptionPane)
@@ -81,7 +82,9 @@ var _submittedAmpUnit = ""
 
 var _correctFrq = 0.0
 var _submittedFrq = 0.0
-var _submittedFrqUnit = "" 
+var _submittedFrqUnit = ""
+
+var _dateFormat = SimpleDateFormat.getInstance() 
 
 /**
  * This function is called when the script starts up
@@ -92,6 +95,7 @@ var _submittedFrqUnit = ""
 function init() {
 	System.out.println("-------------------------- init --------------------------------")
 	
+	_dateFormat.applyPattern("MM/dd/yyyy HH:mm:ss zzz");
     _monitor = controllerService.getRealObject(otMonitor)	
 
 	setupGUI()

@@ -1,6 +1,7 @@
 importClass(Packages.java.lang.System)
 importClass(Packages.java.lang.Integer)
 importClass(Packages.java.lang.Double)
+importClass(Packages.java.text.SimpleDateFormat)
 importClass(Packages.java.awt.Color)
 importClass(Packages.java.awt.event.ActionListener)
 importClass(Packages.javax.swing.JOptionPane)
@@ -48,6 +49,7 @@ var otc_percentLabel
 var otc_launchButton 
  	
 var glob = {
+	dateFormat : SimpleDateFormat.getInstance(),
 	info : null, // text to be added to the report
 	currentStep : 1,
 	lastStep : 1,
@@ -63,6 +65,7 @@ var glob = {
 function init() {
 	System.out.println("Entered: init()")
 	
+	glob.dateFormat.applyPattern("MM/dd/yyyy HH:mm:ss zzz");
     glob.monitor = controllerService.getRealObject(ot_monitor)		
 	setupGUI()
     setupAssessmentLogging()
@@ -85,7 +88,7 @@ function setupAssessmentLogging() {
 	
 	// Create assessment object
 	var assessment = otObjectService.createObject(OTAssessment)
-	assessment.ActivityName("Amplitude Modulation")
+	assessment.setActivityName("Amplitude Modulation")
 	assessment.setUserName(userName)
 	assessment.setTime(ms)	
 

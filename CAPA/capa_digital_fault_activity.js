@@ -2,6 +2,7 @@ importClass(Packages.java.lang.System)
 importClass(Packages.java.lang.Integer)
 importClass(Packages.java.lang.Float)
 importClass(Packages.java.lang.Double)
+importClass(Packages.java.text.SimpleDateFormat)
 importClass(Packages.java.awt.Color)
 importClass(Packages.java.awt.event.ActionListener)
 importClass(Packages.javax.swing.JOptionPane)
@@ -34,6 +35,7 @@ var otc_submitButton
 var otc_reportButton
  	
 var glob = {
+	dateFormat : SimpleDateFormat.getInstance(),
 	info : null, // text to be added to the report
 	currentStep : 1,
 	lastStep : 1,
@@ -50,6 +52,7 @@ var glob = {
 function init() {
 	System.out.println("Entered: init()")
 	setupGUI();
+	glob.dateFormat.applyPattern("MM/dd/yyyy HH:mm:ss zzz");
     glob.monitor = controllerService.getRealObject(ot_monitor)		
     setupAssessmentLogging()
 	initLogging()
