@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE otrunk [
+<!ENTITY telslogo "<p align='center'><img src='http://www.telscenter.org/images/logo_home.jpg' /><br/></p>">
+]>
+<otrunk id="33754150-b594-11d9-9669-0800200c9a66">
+  <imports>
+    <import class="org.concord.otrunk.OTSystem" />
+    <import class="org.concord.otrunk.view.OTViewEntry" />
+    <import class="org.concord.otrunk.view.OTViewBundle" />
+    <import class="org.concord.biologica.state.OTChromosome" />
+    <import class="org.concord.biologica.state.OTStaticOrganism" />
+    <import class="org.concord.biologica.state.OTOrganism" />
+    <import class="org.concord.biologica.state.OTWorld" />
+    <import class="org.concord.otrunk.view.document.OTCompoundDoc" />
+  </imports>
+
+  <objects>
+    <OTSystem>
+
+      <bundles>
+        <OTViewBundle showLeftPanel="false">
+          <viewEntries>
+            <OTViewEntry
+              objectClass="org.concord.biologica.state.OTChromosome"
+              viewClass="org.concord.biologica.state.ui.OTChromosomeView" />
+            <OTViewEntry
+              objectClass="org.concord.biologica.state.OTStaticOrganism"
+              viewClass="org.concord.biologica.state.ui.OTStaticOrganismView" />
+            <OTViewEntry
+              objectClass="org.concord.otrunk.view.document.OTDocument"
+              viewClass="org.concord.otrunk.view.document.OTDocumentView" />
+          </viewEntries>
+        </OTViewBundle>
+      </bundles>
+
+      <root>
+        <OTCompoundDoc name="Static Organisms">
+          <bodyText>
+            <table>
+                  <tr height="310">
+                    <td width="250">
+                      <object refid="${maleStaticOrganism}" />
+                    </td>
+                    <td width="630">
+                      <object refid="${maleChromosome}" />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <object refid="${femaleStaticOrganism}" />
+                    </td>
+                    <td>
+                      <object refid="${femaleChromosome}" />
+                    </td>
+                  </tr>
+                </table>
+          </bodyText>
+          <documentRefs>
+            <OTChromosome local_id="maleChromosome"
+              name="maleChromosome" width="630" height="310">
+              <organism>
+                  <object refid="${maleOrganism}" />
+                </organism>
+            </OTChromosome>
+            <OTChromosome local_id="femaleChromosome"
+              name="femaleChromosome" width="630" height="310">
+              <organism>
+                  <object refid="${femaleOrganism}" />
+              </organism>
+            </OTChromosome>
+            <OTStaticOrganism local_id="maleStaticOrganism"
+              name="maleStaticOrganism">
+                <organism>
+                  <object refid="${maleOrganism}" />
+                </organism>
+            </OTStaticOrganism>
+            <OTStaticOrganism local_id="femaleStaticOrganism"
+              name="femaleStaticOrganism">
+              <organism>
+                  <object refid="${femaleOrganism}" />
+                </organism>
+            </OTStaticOrganism>
+
+            <OTOrganism local_id="femaleOrganism">
+              <name>female</name>
+              <sex>1</sex>
+              <world>
+                <object refid="${dragon_world}" />
+              </world>
+              <alleles>a:b,b:B</alleles>
+            </OTOrganism>
+            <OTOrganism local_id="maleOrganism">
+              <name>male</name>
+              <sex>0</sex>
+              <world>
+                <object refid="${dragon_world}" />
+              </world>
+              <alleles>a:B</alleles>
+            </OTOrganism>
+
+            <!-- World definition -->
+            <OTWorld
+              speciesPath="org/concord/biologica/worlds/dragon.xml"
+              local_id="dragon_world" />
+          </documentRefs>
+        </OTCompoundDoc>
+
+      </root>
+
+    </OTSystem>
+  </objects>
+</otrunk>
