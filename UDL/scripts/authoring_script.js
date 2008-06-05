@@ -195,7 +195,6 @@ var sectionCardContainers = [];
 var pages = [];
 
 function init() {
-	System.out.println("authoring script")
 	cardContainer.addOTChangeListener(sectionContainerListener);
 	
 	var pageIndex = 0;
@@ -210,6 +209,10 @@ function init() {
 			pages[pageIndex] = sectionCardContainers[i].getCards().get(j);
 			pages[pageIndex].addOTChangeListener(pageListener);
 			addPageNumber(pages[pageIndex], j+1);
+			// turn off definitions for pre- and post-
+			if (i == 0 || i == sectionCardContainers.length-1){
+				pages[pageIndex].setShowDefinitions(false);
+			}
 			pageIndex++;
 		}
 	}
