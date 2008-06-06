@@ -1,15 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <otrunk id="f080c070-7c8a-417c-a3fe-0737a7302806">
   <imports>
+	<import class="org.concord.graph.util.state.OTDrawingTool" />  
+    <import class="org.concord.framework.otrunk.view.OTFrame" />  
     <import class="org.concord.otrunk.OTSystem" />
     <import class="org.concord.otrunk.OTInclude" />
     <import class="org.concord.otrunk.view.OTViewBundle" />
     <import class="org.concord.otrunk.view.OTViewEntry" />
     <import class="org.concord.otrunk.view.OTMultiUserRoot" />
+    <import class="org.concord.otrunk.view.document.OTCompoundDoc" />
+    <import class="org.concord.otrunk.ui.OTText" />
+    <import class="org.concord.otrunk.ui.OTChoice" />
+    <import class="org.concord.otrunk.udl.question.OTUDLQuestion" />
     <import class="org.concord.otrunk.udl.report.OTUDLReport"/>
   </imports>
   <idMap>
-  	<idMapping local_id="section_card_container" id="2767fe20-6c7d-11dc-8314-0800200c9a66!/section-card-container"/>
+  	<idMapping local_id="udl_container" id="2767fe20-6c7d-11dc-8314-0800200c9a66!/udl_container"/>
   	<idMapping local_id="user_list" id="7a9876a6-e64c-11dc-bee7-001b631eb2da!/user_list"/>
   </idMap>
   <objects>
@@ -17,27 +23,42 @@
       <bundles>
         <OTViewBundle showLeftPanel="false">
           <views>
+            <OTViewEntry objectClass="org.concord.graph.util.state.OTDrawingTool" viewClass="org.concord.datagraph.state.OTDataDrawingToolView" />
             <OTViewEntry objectClass="org.concord.otrunk.view.OTMultiUserRoot" viewClass="org.concord.otrunk.view.OTMultiUserRootView" />
+            <OTViewEntry objectClass="org.concord.otrunk.view.document.OTCompoundDoc" viewClass="org.concord.otrunk.view.document.OTDocumentView" />
+            <OTViewEntry objectClass="org.concord.otrunk.ui.OTText" viewClass="org.concord.otrunk.ui.swing.OTTextEditView" />
+            <OTViewEntry objectClass="org.concord.otrunk.ui.OTChoice" viewClass="org.concord.otrunk.ui.swing.OTChoiceComboBoxView" />
+            <OTViewEntry objectClass="org.concord.otrunk.udl.question.OTUDLQuestion" viewClass="org.concord.otrunk.udl.question.OTUDLQuestionView" />                        
             <OTViewEntry objectClass="org.concord.otrunk.udl.report.OTUDLReport" viewClass="org.concord.otrunk.udl.report.OTUDLReportView" />
           </views>
         </OTViewBundle>
       </bundles>
       <includes>
+        <OTInclude href="http://continuum.concord.org/otrunk/examples/UDL/global-imports/udl-view-bundle.otml" />
         <OTInclude href="udl-electricity-34.otml" />
-        <OTInclude href="http://udldiy.concord.org/external_otrunk_activities/22/ot_learner_data.xml"/>
+        <OTInclude href="http://udldiy.concord.org/external_otrunk_activities/30/ot_learner_data.xml"/>
+        <!--<OTInclude href="http://rails.dev.concord.org/udl/external_otrunk_activities/30/ot_learner_data.xml"/>-->
       </includes>
       <root>
         <OTMultiUserRoot local_id="multi_user_root" userList="${user_list}">
           <reportTemplate>
             <OTUDLReport local_id="report">
-            	<sectionContainer>
-            		<object refid="${section_card_container}"/>
-            	</sectionContainer>
+            	<udlContainer>
+            		<object refid="${udl_container}"/>
+            	</udlContainer>
+            	<childFrame>
+            		<object refid="${child_frame}"/>
+            	</childFrame>
             </OTUDLReport>
           </reportTemplate>
         </OTMultiUserRoot>
       </root>
       <library>
+      	<OTFrame local_id="child_frame">
+      		<title>Questions</title>
+      		<width>800</width>
+      		<height>600</height>
+      	</OTFrame>
       </library>
     </OTSystem>
   </objects>

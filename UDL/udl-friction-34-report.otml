@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <otrunk id="ce0ec731-b4dd-4b7e-83e8-c0bab1ab3a2c">
   <imports>
+	<import class="org.concord.graph.util.state.OTDrawingTool" />  
+    <import class="org.concord.framework.otrunk.view.OTFrame" />  
     <import class="org.concord.otrunk.OTSystem" />
     <import class="org.concord.otrunk.OTInclude" />
     <import class="org.concord.otrunk.view.OTViewBundle" />
@@ -9,7 +11,7 @@
     <import class="org.concord.otrunk.udl.report.OTUDLReport"/>
   </imports>
   <idMap>
-  	<idMapping local_id="section_card_container" id="678b5190-0bcf-012a-b542-0017f2cc694e!/section-card-container"/>
+  	<idMapping local_id="udl_container" id="678b5190-0bcf-012a-b542-0017f2cc694e!/udl_container"/>
   	<idMapping local_id="user_list" id="7a9876a6-e64c-11dc-bee7-001b631eb2da!/user_list"/>
   </idMap>
   <objects>
@@ -17,27 +19,41 @@
       <bundles>
         <OTViewBundle showLeftPanel="false">
           <views>
+            <OTViewEntry objectClass="org.concord.graph.util.state.OTDrawingTool" viewClass="org.concord.datagraph.state.OTDataDrawingToolView" />
             <OTViewEntry objectClass="org.concord.otrunk.view.OTMultiUserRoot" viewClass="org.concord.otrunk.view.OTMultiUserRootView" />
+            <OTViewEntry objectClass="org.concord.otrunk.view.document.OTCompoundDoc" viewClass="org.concord.otrunk.view.document.OTDocumentView" />
+            <OTViewEntry objectClass="org.concord.otrunk.ui.OTText" viewClass="org.concord.otrunk.ui.swing.OTTextEditView" />
+            <OTViewEntry objectClass="org.concord.otrunk.ui.OTChoice" viewClass="org.concord.otrunk.ui.swing.OTChoiceComboBoxView" />
+            <OTViewEntry objectClass="org.concord.otrunk.udl.question.OTUDLQuestion" viewClass="org.concord.otrunk.udl.question.OTUDLQuestionView" />                        
             <OTViewEntry objectClass="org.concord.otrunk.udl.report.OTUDLReport" viewClass="org.concord.otrunk.udl.report.OTUDLReportView" />
           </views>
         </OTViewBundle>
       </bundles>
       <includes>
         <OTInclude href="udl-friction-34.otml" />
-        <OTInclude href="http://udldiy.concord.org/external_otrunk_activities/9/ot_learner_data.xml"/>
+        <OTInclude href="http://udldiy.concord.org/external_otrunk_activities/31/ot_learner_data.xml"/>
+        <!--<OTInclude href="http://udldiy.concord.org/external_otrunk_activities/31/ot_learner_data.xml"/>-->        
       </includes>
       <root>
         <OTMultiUserRoot local_id="multi_user_root" userList="${user_list}">
           <reportTemplate>
             <OTUDLReport local_id="report">
-            	<sectionContainer>
-            		<object refid="${section_card_container}"/>
-            	</sectionContainer>
+            	<udlContainer>
+            		<object refid="${udl_container}"/>
+            	</udlContainer>
+            	<childFrame>
+            		<object refid="${child_frame}"/>
+            	</childFrame>
             </OTUDLReport>
           </reportTemplate>
         </OTMultiUserRoot>
       </root>
       <library>
+      	<OTFrame local_id="child_frame">
+      		<title>Questions</title>
+      		<width>800</width>
+      		<height>600</height>
+      	</OTFrame>
       </library>
     </OTSystem>
   </objects>
