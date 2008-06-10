@@ -210,8 +210,10 @@ function init() {
 			pages[pageIndex].addOTChangeListener(pageListener);
 			addPageNumber(pages[pageIndex], j+1);
 			// turn off definitions for pre- and post-
-			if (i == 0 || i == sectionCardContainers.length-1){
+			if ((i == 0) || (i == (cardContainer.getCards().size()-1))){
 				pages[pageIndex].setShowDefinitions(false);
+			} else {
+				pages[pageIndex].setShowDefinitions(true);
 			}
 			pageIndex++;
 		}
