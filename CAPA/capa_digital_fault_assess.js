@@ -4,6 +4,8 @@ var answers =  {
 	s_fault1 : 0, // submitted location of fault #1
 	c_fault2 : 0, // correct location of fault #2	
 	s_fault2 : 0, // submitted location of fault #2
+	c_fault3 : 0, // correct location of fault #3	
+	s_fault3 : 0, // submitted location of fault #3
 	s_truthValues : "", // submitted answer to truth table question
 	c_truthValues : "10100100", // correct answer to truth table question
 	numHiddenProbes : 0, // number of redundant probes
@@ -42,6 +44,8 @@ function assess(assessment, madWrapper) {
 	answers.s_fault1 = parseInt(madWrapper.getLastCIValue("answer1")) 
 	answers.c_fault2 = parseInt(madWrapper.getLastCIValue("faultLocation2"))
 	answers.s_fault2 = parseInt(madWrapper.getLastCIValue("answer2")) 
+	answers.c_fault2 = parseInt(madWrapper.getLastCIValue("faultLocation3"))
+	answers.s_fault2 = parseInt(madWrapper.getLastCIValue("answer3")) 
 	answers.time = madWrapper.getTimeTotal()
 	
 	log("----------\n")
@@ -51,19 +55,23 @@ function assess(assessment, madWrapper) {
   	log("Submitted fault #1 location: " + viMap.gateToLabel[answers.s_fault1] + "\n")
 	log("Correct fault #2 location: " + viMap.gateToLabel[answers.c_fault2] + "\n")
   	log("Submitted fault #2 location: " + viMap.gateToLabel[answers.s_fault2] + "\n")
+	log("Correct fault #3 location: " + viMap.gateToLabel[answers.c_fault3] + "\n")
+  	log("Submitted fault #3 location: " + viMap.gateToLabel[answers.s_fault3] + "\n")
   	log("Number of changes (probes + input switch): " + answers.numChanges + "\n")
   	log("Time taken: " + getTimeStringFromSeconds(answers.time) + "\n")
 
 	var ttInd = parseInt(madWrapper.getLastCIValue("truthTableCorrect"))
 	var faultInd1 = answers.c_fault1 == answers.s_fault1 ? 1 : 0
 	var faultInd2 = answers.c_fault2 == answers.s_fault2 ? 1 : 0
-	var numProbesInd = getNumProbesIndicator(madWrapper, faultInd1, faultInd2, answers.numChanges)
-	var timeInd = getTimeIndicator(answers.time, ttInd, faultInd1, faultInd2)
+	var faultInd3 = answers.c_fault3 == answers.s_fault3 ? 1 : 0	
+	var numProbesInd = getNumProbesIndicator(madWrapper, faultInd1, faultInd2, faultInd3, answers.numChanges)
+	var timeInd = getTimeIndicator(answers.time, ttInd, faultInd1, faultInd2, faultInd3)
 	
 	var indicators = assessment.getIndicatorValues()
 	indicators.put("truthTable", ttInd)
 	indicators.put("fault1", faultInd1)
 	indicators.put("fault2", faultInd2)	
+	indicators.put("fault3", faultInd3)		
 	indicators.put("redundantProbe", answers.numHiddenProbes)
 	indicators.put("numChanges", numProbesInd)
 	indicators.put("timeTotal", timeInd)
@@ -89,22 +97,39 @@ function processUserEvents(madWrapper) {
 	
 	glob.activityLog += "Fault 1: Initial switch setting: A=" + a + " B=" + b + " C=" + c + " Y=" + y + "\n"
 
-	var fault2 = madWrapper.getLastCIV("fault2?")
 	var fault2Start = -1
-	if (fault2 != null) {
-		fault2Start = fault2.getTime()
+	var fault3Start = -1
+	
+	var steps = madWrapper.getSortedCIVs("step")
+	for (i = 0; i < steps.size(); ++i) {
+		var step = parseInt(steps.get(i).getValue())
+		var t = steps.get(i).getTime()
+		switch (step) {
+			case 1: fault2Start = t; break;
+			case 2: fault3Start = t; break;
+		}
 	}
-
+	
 	var civs = madWrapper.getSortedCIVs()
 	var wasUserEvent = true
-	
+
+	var fault = 1 
+		
 	for (var i = 0; i < civs.size(); ++i) {
 		var civ = civs.get(i)
 		var name = civ.getName()
 		var value = civ.getValue()		
-		var timeString = glob.dateFormat.format(new Date(civ.getTime()))		
-		var isUserEvent = Math.abs(civ.getTime() - fault2Start) < 100 ? false : true
-		var isSwitchEvent = name == "A" || name == "B" || name == "C"  
+		var timeString = glob.dateFormat.format(new Date(civ.getTime()))
+		var nearFault2Start = Math.abs(civ.getTime() - fault2Start) < 100
+		var nearFault3Start = Math.abs(civ.getTime() - fault3Start) < 100 		
+		var isUserEvent =  (nearFault2Start || nearFault3Start) ? false : true
+		var isSwitchEvent = name == "A" || name == "B" || name == "C"
+		
+		System.out.println("NAME=" + name + " VALUE=" + value + " UserEvent=" + isUserEvent + " SwitchEvent=" + isSwitchEvent + " " + timeString)
+		if (name.equals("step")) {
+			fault = parseInt(value) + 1
+			System.out.println("FAULT " + fault)
+		}
 		
 		if (isSwitchEvent) {
 			if (name == "A") { a = value }
@@ -120,7 +145,7 @@ function processUserEvents(madWrapper) {
 		
 		if (isUserEvent) {
 			if (wasUserEvent == false) {
-				glob.activityLog += "Fault 2: initial switch setting: A=" + savedA + " B=" + savedB + " C=" + savedC + " Y=" + y + "\n"				
+				glob.activityLog += "Fault " + fault + ": initial switch setting: A=" + savedA + " B=" + savedB + " C=" + savedC + " Y=" + y + "\n"				
 			}
 			if (isSwitchEvent) {
 				glob.activityLog += timeString + " - Input " + name + " flipped to " + value + " (A=" + a + " B=" + b + " C=" + c + " Y=" + y + ")\n"
@@ -171,8 +196,8 @@ function isEvident(a, b, c, y) {
 	return x != y
 }
 
-function getTimeIndicator(timeTotal, ttInd, faultInd1, faultInd2) {
-	if (ttInd == 0 && faultInd1 == 0 && faultInd2 == 0) {
+function getTimeIndicator(timeTotal, ttInd, faultInd1, faultInd2, faultInd3) {
+	if (ttInd == 0 && faultInd1 == 0 && faultInd2 == 0 && faultInd3 == 0) {
 		return 0
 	}
 	if (timeTotal < 900) {
@@ -186,8 +211,8 @@ function getTimeIndicator(timeTotal, ttInd, faultInd1, faultInd2) {
 	}
 }
 
-function getNumProbesIndicator(madWrapper, faultInd1, faultInd2, numChanges) {
-	if (faultInd1 == 0 && faultInd2 == 0) {
+function getNumProbesIndicator(madWrapper, faultInd1, faultInd2, faultInd3, numChanges) {
+	if (faultInd1 == 0 && faultInd2 == 0 && faultInd3 == 0) {
 		return 0
 	}
 	if (numChanges < 25) {
