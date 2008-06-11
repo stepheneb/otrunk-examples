@@ -125,10 +125,8 @@ function processUserEvents(madWrapper) {
 		var isUserEvent =  (nearFault2Start || nearFault3Start) ? false : true
 		var isSwitchEvent = name == "A" || name == "B" || name == "C"
 		
-		System.out.println("NAME=" + name + " VALUE=" + value + " UserEvent=" + isUserEvent + " SwitchEvent=" + isSwitchEvent + " " + timeString)
 		if (name.equals("step")) {
 			fault = parseInt(value) + 1
-			System.out.println("FAULT " + fault)
 		}
 		
 		if (isSwitchEvent) {
