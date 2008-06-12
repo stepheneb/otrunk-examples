@@ -44,8 +44,8 @@ function assess(assessment, madWrapper) {
 	answers.s_fault1 = parseInt(madWrapper.getLastCIValue("answer1")) 
 	answers.c_fault2 = parseInt(madWrapper.getLastCIValue("faultLocation2"))
 	answers.s_fault2 = parseInt(madWrapper.getLastCIValue("answer2")) 
-	answers.c_fault2 = parseInt(madWrapper.getLastCIValue("faultLocation3"))
-	answers.s_fault2 = parseInt(madWrapper.getLastCIValue("answer3")) 
+	answers.c_fault3 = parseInt(madWrapper.getLastCIValue("faultLocation3"))
+	answers.s_fault3 = parseInt(madWrapper.getLastCIValue("answer3")) 
 	answers.time = madWrapper.getTimeTotal()
 	
 	log("----------\n")
