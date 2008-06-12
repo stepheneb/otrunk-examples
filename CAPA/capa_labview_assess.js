@@ -60,7 +60,12 @@ function checkSettings(helper, madWrapper) {
 	var waveLength = 1.0 / _correctFrq
 	var timePerDivPoints = 0
 	var voltsPerDivPoints = 0
-
+	var channel = "A"
+	
+	if (madWrapper.getLastCIValue("port_b").equals("1")) {
+		channel = "B"
+	}
+	
 	if (helper.optimalTimePerDivPossible(waveLength)) {
 		if (viewWidth < 0.5 * waveLength) {
 			timePerDivPoints = 0
@@ -90,15 +95,9 @@ function checkSettings(helper, madWrapper) {
 		}
 	}
 	
-	var viewHeight = helper.getLastVoltsPerDiv("B") * 8
-	var voltsPerDivPoints = helper.getVoltsPerDivPoints("B", _correctAmp)
+	var viewHeight = helper.getLastVoltsPerDiv(channel) * 8
+	var voltsPerDivPoints = helper.getVoltsPerDivPoints(channel, _correctAmp)
 
-	// Check for channel selection
-	var channel = Integer.parseInt(madWrapper.getLastCIValue("SelectChannel"));
-	if (channel == 2) {
-		return 0 // bad: channel A has no signal 
-	}
-	
 	if (timePerDivPoints == 2 && voltsPerDivPoints == 2) {
 		return 3
 	}
