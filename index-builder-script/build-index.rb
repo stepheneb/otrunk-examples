@@ -83,7 +83,7 @@ dir.each do |path|
       jnlp_url_tmpl_author = jnlp_url_tmpl + "&jnlp_properties=otrunk.view.author%253Dtrue%2526otrunk.view.mode%253Dauthoring"
 
       subdir = Dir.new(path)
-      otml_launchers = "<h4>Run Examples</h4> <table cellspacing=2><tr><td><b>otml file</b></td><td colspan=2><b>java web start jnlps</b></td><td><b>most recent revision</b></td></tr>"
+      otml_launchers = "<h4>Run Examples</h4> <table cellspacing=2><tr><td><b>example</b></td><td colspan=2><b>java web start jnlps</b></td><td><b>otml file</b></td><td><b>most recent revision</b></td></tr>"
 
       description_of_jnlps = <<HERE
 <h4>Description of the difference between the learner and author mode jnlps</h4>
@@ -117,11 +117,12 @@ HERE
             svn_status = svn_status[8,svn_status.length-8]
             svn_status_arr = svn_status.split(' ')
             
+            example_name = subpath[/(.*)\.otml/, 1]
             otml_url = "http://continuum.concord.org/otrunk/examples/#{path}/#{subpath}"
             trac_otml_url = "http://trac.cosmos.concord.org/projects/browser/trunk/common/java/otrunk/otrunk-examples/#{path}/#{subpath}"
             jnlp_url = jnlp_url_tmpl.sub(/%otml_url%/, otml_url)
             jnlp_author_url = jnlp_url_tmpl_author.sub(/%otml_url%/, otml_url)
-            otml_launchers += "<tr><td width=280><a href=#{subpath}>#{subpath}</a></td><td width=100><a href=""#{jnlp_url}"">learner mode</a></td><td width=140><a href=#{jnlp_author_url}>author mode</a></td><td width=180><a href=#{trac_otml_url}>rev #{svn_status_arr[1]} #{svn_status_arr[2]}</a></td></tr>"
+            otml_launchers += "<tr><td width=240>#{example_name}</td><td width=100><a href=""#{jnlp_url}"">learner mode</a></td><td width=140><a href=#{jnlp_author_url}>author mode</a></td><td width=280><a href=#{subpath}>#{subpath}</a></td><td width=180><a href=#{trac_otml_url}>rev #{svn_status_arr[1]} #{svn_status_arr[2]}</a></td></tr>"
           end
           
           all_files += "<tr><td><a href=""#{subpath}"">#{subpath}</a></td></tr>"
