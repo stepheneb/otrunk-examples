@@ -137,7 +137,7 @@ HERE
       index_page_body += "<hr/>The jnlp urls were constructed using the following template:<br/>\n"
       index_page_body += jnlp_url_tmpl + "<br/>\n"
       index_page_body += "You can change this string by putting it in a file named: <b>jnlp_url.tmpl</b> in this directory"
-      writeHtmlPage("#{path} Examples", index_page_body, "#{path}/ot-index.html");
+      writeHtmlPage("#{path} Examples ...", index_page_body, "#{path}/ot-index.html");
     end    
   end
 end
