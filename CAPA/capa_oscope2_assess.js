@@ -1,3 +1,23 @@
+// Constants
+var const2 = {
+	VPD_A : "VOLTS/DIV A",
+	VPD_B : "VOLTS/DIV B",
+	TPD : "TIME/DIV",
+	CHANNEL : "SelectChannel",
+	PORT_A : "port_a",
+	PORT_B : "port_b",
+	SOURCE : "Source",
+	POWER : "POWER" 
+}
+
+// Variables to keep track of the oscilloscope states while traversing the log
+var oscope = {
+	channel : null, // 0, 1, or 2 (0: A&B, 1: B, 2: A)
+	triggerSource : null, // "A" or "B"
+	port : null, // "A" or "B"
+	power : null // true or false
+}
+
 // Holder for answers
 var answers =  { 
 	s_crFreq : 0, // submitted carrier frequency value in Hz
@@ -11,7 +31,7 @@ var answers =  {
 }
 
 function validateAnswers() {
-	p("ENTER: validateAnswers()")
+	//p("ENTER: validateAnswers()")
 	
 	var carrierFrequency = 0.0
 	var modulatorFrequency = 0.0
@@ -65,14 +85,14 @@ function validateAnswers() {
 /**
  * This function must be called AFTER the LabVIEW has exited, and AFTER validateAnswers().
  */
-function assess(assessment, helper, madWrapper) {
+function assess(assessment) {
 	p("ENTER: assess()")
 	
-	var modulatorAmplitude = Double.parseDouble(madWrapper.getLastCIValue("amplitude2"))
-	var a = Double.parseDouble(madWrapper.getLastCIValue("A")) // modulation constant
+	var modulatorAmplitude = Double.parseDouble(glob.madw.getLastCIValue("amplitude2"))
+	var a = Double.parseDouble(glob.madw.getLastCIValue("A")) // modulation constant
 	
-	answers.c_crFreq = Double.parseDouble(madWrapper.getLastCIValue("frequency1"))
-	answers.c_mdFreq = Double.parseDouble(madWrapper.getLastCIValue("frequency2"))
+	answers.c_crFreq = Double.parseDouble(glob.madw.getLastCIValue("frequency1"))
+	answers.c_mdFreq = Double.parseDouble(glob.madw.getLastCIValue("frequency2"))
 	answers.c_mdIndex = modulatorAmplitude / a * 100.0
 	
 	var carrierFrqUnit = answers.s_crFreqUnit.getAbbreviation()
@@ -84,7 +104,7 @@ function assess(assessment, helper, madWrapper) {
 	log(etime + " - Correct modulator frequency = " + ScopeAssessmentUtil.getFrequencyString(answers.c_mdFreq) + " (T = " + ScopeAssessmentUtil.getPeriodString(1/answers.c_mdFreq) + ")" + "\n")
 	log(etime + " - Correct modulation index = " + answers.c_mdIndex + "%\n")	
 	
-	var numChanges = madWrapper.getNumChanges()
+	var numChanges = glob.madw.getNumChanges()
 
   	log(etime + " - Answer submitted: carrier frequency = " + answers.s_crFreq + " " + carrierFrqUnit + "\n")
   	log(etime + " - Answer submitted: modulator frequency = " + answers.s_mdFreq + " " + modFrqUnit + "\n")
@@ -97,8 +117,8 @@ function assess(assessment, helper, madWrapper) {
 	var carrierFrqUnitIndicator = checkFrqUnit(carrierFrqUnit)
 	var modFrqUnitIndicator = checkFrqUnit(carrierFrqUnit)
 
-	var timeTotal = madWrapper.getTimeTotal()
-	var tpdIndicator = checkSettings(helper, madWrapper, modulatorAmplitude + a)
+	var timeTotal = glob.madw.getTimeTotal()
+	var tpdIndicator = checkSettings(modulatorAmplitude + a)
 	
 	assessment.setLabel("Oscilloscope")
 	var indicators = assessment.getIndicatorValues()
@@ -112,7 +132,7 @@ function assess(assessment, helper, madWrapper) {
 	indicators.put("controlSetting", tpdIndicator)
 	
 	log("----------\n")		
-	log(helper.getChangeLog())
+	log(glob.helper.getChangeLog())
 }
 
 function checkFrequency(correctValue, answer, unit) {
@@ -173,37 +193,47 @@ function checkModIndex() {
 	return (d < 5) ? 1 : 0 	
 }
 
-function checkSettings(helper, madWrapper, amplitude) {
+function checkSettings(amplitude) {
+	var civs = glob.madw.getSortedCIVs()
 	var timePerDivPoints = 0
 	var voltsPerDivPoints = 0
 	
-	var timePerDivs = helper.getTimePerDivs()
-	var voltsPerDivs = helper.getVoltsPerDivs("B")
+	initScopeState()
 	
-	for (var i = 0; i < timePerDivs.size(); ++i) {
-		var pts = checkTimePerDiv(timePerDivs.get(i), answers.c_crFreq)
-		if (pts > timePerDivPoints) {
-			timePerDivPoints = pts
-		}		
-		pts = checkTimePerDiv(timePerDivs.get(i), answers.c_mdFreq)
-		if (pts > timePerDivPoints) {
-			timePerDivPoints = pts
-		}		
-	}
-	for (var i = 0; i < voltsPerDivs.size(); ++i) {
-		var pts = helper.getVoltsPerDivPoints("B", amplitude)
-		if (pts > voltsPerDivPoints) {
-			voltsPerDivPoints = pts
+	for (var i = 0; i < civs.size(); ++i) {
+		var civ = civs.get(i)
+		var name = civ.getName()
+		var value = civ.getValue()
+		var time = civ.getTime()
+		
+		updateScopeState(name, value)
+		
+		if (!channelSettingsAreConsistent()) {
+			continue
+		}
+		
+		if (needScoring(name, value)) {
+			var tpd = glob.helper.tpdTickToSeconds(parseInt(value))
+			var pts = checkTimePerDiv(tpd, answers.c_crFreq)
+			if (pts > timePerDivPoints) {
+				timePerDivPoints = pts
+			}		
+			pts = checkTimePerDiv(tpd, answers.c_mdFreq)
+			if (pts > timePerDivPoints) {
+				timePerDivPoints = pts
+			}
+			
+			if (oscope.port == "A") {
+				pts = glob.helper.getVoltsPerDivPoints("A", amplitude)
+			}
+			else {
+				pts = glob.helper.getVoltsPerDivPoints("B", amplitude)
+			}
+			if (pts > voltsPerDivPoints) {
+				voltsPerDivPoints = pts
+			}
 		}
 	}
-	
-	// Check for channel selection
-	var channel = Integer.parseInt(madWrapper.getLastCIValue("SelectChannel"));
-	
-	if (channel == 2) {
-		return 0 // bad: channel A has no signal 
-	}
-	
 	if (timePerDivPoints == 2 && voltsPerDivPoints == 2) {
 		return 3
 	}
@@ -216,6 +246,55 @@ function checkSettings(helper, madWrapper, amplitude) {
 	else {
 		return 0
 	}
+}
+
+function initScopeState() {
+	var tracked = [ const2.SOURCE, const2.CHANNEL, const2.PORT_A, const2.PORT_B, const2.POWER ]
+	
+	for (var i = 0; i < tracked.length; ++i) {
+		updateScopeState(tracked[i], glob.madw.getInitialCIValue(tracked[i]))
+	}	
+}
+
+function updateScopeState(name, value) {
+	if (name.equals(const2.SOURCE)) {
+		oscope.triggerSource = value.equals("1") ? "A" : "B"
+	}	
+	else if (name.equals(const2.CHANNEL)) {
+		oscope.channel = parseInt(value)
+	}
+	else if (name.equals(const2.PORT_A) && value.equals("1")) {
+		oscope.port = "A"
+	}
+	else if (name.equals(const2.PORT_B) && value.equals("1")) {
+		oscope.port = "B"
+	}
+	else if (name.equals(const2.POWER)) {
+		oscope.power = value.equals("0") ? false : true
+	}
+}
+
+function channelSettingsAreConsistent() {
+	var ok = false
+
+	if (oscope.power == false) {
+		return false
+	}	
+	if (oscope.port == "A") {
+		return oscope.triggerSource == "A" && (oscope.channel == 0 || oscope.channel == 2)
+	}
+	else if (oscope.port == "B") {
+		return oscope.triggerSource == "B" && (oscope.channel == 0 || oscope.channel == 1)
+	} 
+}
+
+function needScoring(name, value) {
+	return (name == const2.TPD ||
+			name == const2.VPD_A ||
+			name == const2.VPD_B ||
+			name == const2.SOURCE || 
+			(name == const2.PORT_A && value == "1") || 
+			(name == const2.PORT_B && value == "1"))
 }
 
 function checkTimePerDiv(tpd, correctFrq) {

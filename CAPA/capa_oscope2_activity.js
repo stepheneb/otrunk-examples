@@ -55,6 +55,8 @@ var glob = {
 	lastStep : 1,
 	monitor : null, // "real object" for ot_monitor
 	otAssessment : null,
+	madw : null, // MadWrapper, a facade for OTModelActivityData
+	helper: null // ScopeAssessmentUtil 
 }
 
  /**
@@ -63,7 +65,7 @@ var glob = {
  * was successful or not.
  */
 function init() {
-	System.out.println("Entered: init()")
+	//System.out.println("Enter: init()")
 	
 	glob.dateFormat.applyPattern("MM/dd/yyyy HH:mm:ss zzz");
     glob.monitor = controllerService.getRealObject(ot_monitor)		
@@ -77,7 +79,7 @@ function init() {
 }
 
 function save() {
-	System.out.println("Entered: save()")
+	//System.out.println("Enter: save()")
     otc_submitAnswerButton.removeActionListener(listeners.submitAnswerButtonListener)
 	return true
 }
@@ -163,12 +165,12 @@ function endActivity()
 function wrap_assess() {
 	var converter = new LabviewReportConverter(glob.monitor)
 	converter.markEndTime()
-	var madWrapper = converter.getMADWrapper()
-	var scopeHelper = new ScopeAssessmentUtil(madWrapper)
+	glob.madw = converter.getMADWrapper()
+	glob.helper = new ScopeAssessmentUtil(glob.madw)
 	glob.otAssessment.setLabel("Oscilloscope")
 	var inventory = glob.otAssessment.getInventory()
 	inventory.put("modelActivityData", converter.getOTModelActivityData())
-	assess(glob.otAssessment, scopeHelper, madWrapper)
+	assess(glob.otAssessment)
 }
 
 var listeners = {
@@ -179,7 +181,7 @@ var listeners = {
 	    	}
 			var msg = "This will end your activity and close the LabVIEW window. Do you want to continue?"
 			var option = JOptionPane.showConfirmDialog(null, msg, "Submitting Answer", JOptionPane.OK_CANCEL_OPTION)
-		
+			
 			if (option == JOptionPane.OK_OPTION) {
 	  			glob.monitor.close()
 
