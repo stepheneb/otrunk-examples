@@ -15,21 +15,19 @@
 
 /**
  * assessment: the OTAssessment object
- * helper: a ScopeAssessmentUtil object
- * madwrapper: a MADWrapper object
  */
-function assess(assessment, helper, madwrapper) {
-	_correctAmp = 2 * Double.parseDouble(madwrapper.getLastCIValue("amplitude1")) //peak-to-peak amplitude
-	_correctFrq = Double.parseDouble(madwrapper.getLastCIValue("frequency1"))
+function assess(assessment) {
+	_correctAmp = 2 * Double.parseDouble(_madw.getLastCIValue("amplitude1")) //peak-to-peak amplitude
+	_correctFrq = Double.parseDouble(_madw.getLastCIValue("frequency1"))
 	
 	var ampUnit = _submittedAmpUnit.getAbbreviation()
 	var frqUnit = _submittedFrqUnit.getAbbreviation()
 	
 	var etime = _dateFormat.format(new Date())
-	log(etime + " - Correct amplitude = " + helper.getAmplitudeString(_correctAmp) + "\n")
-	log(etime + " - Correct frequency = " + helper.getFrequencyString(_correctFrq) + " (T = " + ScopeAssessmentUtil.getPeriodString(1/_correctFrq) + ")" + "\n")
+	log(etime + " - Correct amplitude = " + _helper.getAmplitudeString(_correctAmp) + "\n")
+	log(etime + " - Correct frequency = " + _helper.getFrequencyString(_correctFrq) + " (T = " + ScopeAssessmentUtil.getPeriodString(1/_correctFrq) + ")" + "\n")
 	
-	var numChanges = madwrapper.getNumChanges()
+	var numChanges = _madw.getNumChanges()
 	
     log(etime + " - Answer submitted: amplitude = " + _submittedAmp + " " + ampUnit + "\n")
   	log(etime + " - Answer submitted: frequency = " + _submittedFrq + " " + frqUnit + "\n")
@@ -38,8 +36,8 @@ function assess(assessment, helper, madwrapper) {
 	var frqIndicator = checkFrequency(_correctFrq, _submittedFrq, frqUnit)
 	var ampUnitIndicator = checkAmpUnit(ampUnit)
 	var frqUnitIndicator = checkFrqUnit(frqUnit)
-	var timeTotal = madwrapper.getTimeTotal()
-	var settingsIndicator = checkSettings(helper, madwrapper)
+	var timeTotal = _madw.getTimeTotal()
+	var settingsIndicator = checkSettings()
 	
 	var indicators = assessment.getIndicatorValues()
 	indicators.put("amplitudeValue", ampIndicator)
@@ -52,64 +50,28 @@ function assess(assessment, helper, madwrapper) {
 	
 
 	log("----------\n")
-	log(helper.getChangeLog())
+	log(_helper.getChangeLog())
 }
 
-function checkSettings(helper, madWrapper) {
-	var viewWidth = helper.getLastTimePerDiv() * 10
-	var waveLength = 1.0 / _correctFrq
-	var timePerDivPoints = 0
-	var voltsPerDivPoints = 0
+function checkSettings() {
+	var tpdTick = _madw.getLastCIValue(_helper.TPD)
 	var channel = "A"
+	var vpdTick = null
 	
-	if (madWrapper.getLastCIValue("port_b").equals("1")) {
+	if (_madw.getLastCIValue(_helper.PORT_B).equals("1")) {
 		channel = "B"
 	}
-	
-	if (helper.optimalTimePerDivPossible(waveLength)) {
-		if (viewWidth < 0.5 * waveLength) {
-			timePerDivPoints = 0
-		}
-		else if (viewWidth < waveLength) {
-			timePerDivPoints = 1 	
-		}
-		else if (viewWidth < 2 * waveLength) {
-			timePerDivPoints = 2
-		}
-		else if (viewWidth < 3 * waveLength) {
-			timePerDivPoints = 1
-		}
-		else {
-			timePerDivPoints = 0
-		}
+	if (channel == "A") {
+		vpdTick = _madw.getLastCIValue(_helper.VPD_A)
 	}
 	else {
-		if (viewWidth < 0.5 * waveLength) {
-			timePerDivPoints = 0
-		}
-		else if (viewWidth < 3 * waveLength) {
-			timePerDivPoints = 2
-		}
-		else {
-			timePerDivPoints = 0
-		}
+		vpdTick = _madw.getLastCIValue(_helper.VPD_B)
 	}
 	
-	var viewHeight = helper.getLastVoltsPerDiv(channel) * 8
-	var voltsPerDivPoints = helper.getVoltsPerDivPoints(channel, _correctAmp)
+	var timePerDivPoints = _helper.getTimePerDivPoints(_correctFrq, tpdTick)
+	var voltsPerDivPoints = _helper.getVoltsPerDivPoints(channel, _correctAmp, vpdTick)
 
-	if (timePerDivPoints == 2 && voltsPerDivPoints == 2) {
-		return 3
-	}
-	else if ((timePerDivPoints == 2 && voltsPerDivPoints == 1) || (timePerDivPoints == 1 && voltsPerDivPoints == 2)) {
-		return 2
-	}
-	else if (timePerDivPoints == 1 && voltsPerDivPoints == 1) {
-		return 1
-	}
-	else {
-		return 0
-	}
+	return timePerDivPoints + voltsPerDivPoints
 }
 
 function checkAmplitude(correctValue, answer, unit) {

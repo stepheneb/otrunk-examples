@@ -1,17 +1,8 @@
-// Constants
-var const2 = {
-	VPD_A : "VOLTS/DIV A",
-	VPD_B : "VOLTS/DIV B",
-	TPD : "TIME/DIV",
-	CHANNEL : "SelectChannel",
-	PORT_A : "port_a",
-	PORT_B : "port_b",
-	SOURCE : "Source",
-	POWER : "POWER" 
-}
-
 // Variables to keep track of the oscilloscope states while traversing the log
 var oscope = {
+	vpd_a : null,
+	vpd_b : null,
+	tpd : null,
 	channel : null, // 0, 1, or 2 (0: A&B, 1: B, 2: A)
 	triggerSource : null, // "A" or "B"
 	port : null, // "A" or "B"
@@ -86,7 +77,7 @@ function validateAnswers() {
  * This function must be called AFTER the LabVIEW has exited, and AFTER validateAnswers().
  */
 function assess(assessment) {
-	p("ENTER: assess()")
+	//p("ENTER: assess()")
 	
 	var modulatorAmplitude = Double.parseDouble(glob.madw.getLastCIValue("amplitude2"))
 	var a = Double.parseDouble(glob.madw.getLastCIValue("A")) // modulation constant
@@ -118,7 +109,7 @@ function assess(assessment) {
 	var modFrqUnitIndicator = checkFrqUnit(carrierFrqUnit)
 
 	var timeTotal = glob.madw.getTimeTotal()
-	var tpdIndicator = checkSettings(modulatorAmplitude + a)
+	var tpdIndicator = checkSettings()
 	
 	assessment.setLabel("Oscilloscope")
 	var indicators = assessment.getIndicatorValues()
@@ -193,63 +184,44 @@ function checkModIndex() {
 	return (d < 5) ? 1 : 0 	
 }
 
-function checkSettings(amplitude) {
+function checkSettings() {
 	var civs = glob.madw.getSortedCIVs()
-	var timePerDivPoints = 0
-	var voltsPerDivPoints = 0
+	var carrierTpdPoints = 0	
+	var modulatorTpdPoints = 0
+	var wasConsistent = false
+	var isConsistent = false
 	
 	initScopeState()
+	isConsistent =  channelSettingsAreConsistent()
+	if (isConsistent) {
+		carrierTpdPoints = updCarrierTpdPoints(oscope.tpd, carrierTpdPoints)		
+		modulatorTpdPoints = updModulatorTpdPoints(oscope.tpd, modulatorTpdPoints)
+	}
+	wasConsistent = isConsistent
 	
 	for (var i = 0; i < civs.size(); ++i) {
 		var civ = civs.get(i)
 		var name = civ.getName()
 		var value = civ.getValue()
 		var time = civ.getTime()
+		var vpd = null
+		var tpd = null
 		
 		updateScopeState(name, value)
 		
-		if (!channelSettingsAreConsistent()) {
-			continue
+		isConsistent = channelSettingsAreConsistent()
+		if (isConsistent && (name.equals(glob.helper.TPD) || !wasConsistent)) { 
+			carrierTpdPoints = updCarrierTpdPoints(oscope.tpd, carrierTpdPoints)		
+			modulatorTpdPoints = updModulatorTpdPoints(oscope.tpd, modulatorTpdPoints)
 		}
-		
-		if (needScoring(name, value)) {
-			var tpd = glob.helper.tpdTickToSeconds(parseInt(value))
-			var pts = checkTimePerDiv(tpd, answers.c_crFreq)
-			if (pts > timePerDivPoints) {
-				timePerDivPoints = pts
-			}		
-			pts = checkTimePerDiv(tpd, answers.c_mdFreq)
-			if (pts > timePerDivPoints) {
-				timePerDivPoints = pts
-			}
-			
-			if (oscope.port == "A") {
-				pts = glob.helper.getVoltsPerDivPoints("A", amplitude)
-			}
-			else {
-				pts = glob.helper.getVoltsPerDivPoints("B", amplitude)
-			}
-			if (pts > voltsPerDivPoints) {
-				voltsPerDivPoints = pts
-			}
-		}
+		wasConsistent = isConsistent
 	}
-	if (timePerDivPoints == 2 && voltsPerDivPoints == 2) {
-		return 3
-	}
-	else if ((timePerDivPoints == 2 && voltsPerDivPoints == 1) || (timePerDivPoints == 1 && voltsPerDivPoints == 2)) {
-		return 2
-	}
-	else if (timePerDivPoints == 1 && voltsPerDivPoints == 1) {
-		return 1
-	}
-	else {
-		return 0
-	}
+	return carrierTpdPoints + modulatorTpdPoints
 }
 
 function initScopeState() {
-	var tracked = [ const2.SOURCE, const2.CHANNEL, const2.PORT_A, const2.PORT_B, const2.POWER ]
+	var tracked = [ glob.helper.VPD_A, glob.helper.VPD_B, glob.helper.TPD, glob.helper.SOURCE, 
+		glob.helper.CHANNEL, glob.helper.PORT_A, glob.helper.PORT_B, glob.helper.POWER ]
 	
 	for (var i = 0; i < tracked.length; ++i) {
 		updateScopeState(tracked[i], glob.madw.getInitialCIValue(tracked[i]))
@@ -257,26 +229,33 @@ function initScopeState() {
 }
 
 function updateScopeState(name, value) {
-	if (name.equals(const2.SOURCE)) {
+	if (name.equals(glob.helper.VPD_A)) {
+		oscope.vpd_a = parseInt(value)
+	}
+	else if (name.equals(glob.helper.VPD_B)) {
+		oscope.vpd_b = parseInt(value)
+	}
+	else if (name.equals(glob.helper.TPD)) {
+		oscope.tpd = parseInt(value)		
+	}
+	else if (name.equals(glob.helper.SOURCE)) {
 		oscope.triggerSource = value.equals("1") ? "A" : "B"
 	}	
-	else if (name.equals(const2.CHANNEL)) {
+	else if (name.equals(glob.helper.CHANNEL)) {
 		oscope.channel = parseInt(value)
 	}
-	else if (name.equals(const2.PORT_A) && value.equals("1")) {
+	else if (name.equals(glob.helper.PORT_A) && value.equals("1")) {
 		oscope.port = "A"
 	}
-	else if (name.equals(const2.PORT_B) && value.equals("1")) {
+	else if (name.equals(glob.helper.PORT_B) && value.equals("1")) {
 		oscope.port = "B"
 	}
-	else if (name.equals(const2.POWER)) {
+	else if (name.equals(glob.helper.POWER)) {
 		oscope.power = value.equals("0") ? false : true
 	}
 }
 
 function channelSettingsAreConsistent() {
-	var ok = false
-
 	if (oscope.power == false) {
 		return false
 	}	
@@ -286,49 +265,17 @@ function channelSettingsAreConsistent() {
 	else if (oscope.port == "B") {
 		return oscope.triggerSource == "B" && (oscope.channel == 0 || oscope.channel == 1)
 	} 
+	return false
 }
 
-function needScoring(name, value) {
-	return (name == const2.TPD ||
-			name == const2.VPD_A ||
-			name == const2.VPD_B ||
-			name == const2.SOURCE || 
-			(name == const2.PORT_A && value == "1") || 
-			(name == const2.PORT_B && value == "1"))
+function updCarrierTpdPoints(tpdTick, oldPts) {
+	var pts = glob.helper.getTimePerDivPoints(answers.c_crFreq, tpdTick)
+	return pts > oldPts ? pts : oldPts
 }
 
-function checkTimePerDiv(tpd, correctFrq) {
-	var viewWidth = tpd * 10
-	var waveLength = 1.0 / correctFrq
-	
-	if (ScopeAssessmentUtil.optimalTimePerDivPossible(waveLength)) {
-		if (viewWidth < 0.5 * waveLength) {
-			return 0
-		}
-		else if (viewWidth < waveLength) {
-			return 1 	
-		}
-		else if (viewWidth < 2 * waveLength) {
-			return 2
-		}
-		else if (viewWidth < 3 * waveLength) {
-			return 1
-		}
-		else {
-			return 0
-		}
-	}
-	else {
-		if (viewWidth < 0.5 * waveLength) {
-			return 0
-		}
-		else if (viewWidth < 3 * waveLength) {
-			return 2
-		}
-		else {
-			return 0
-		}
-	}
+function updModulatorTpdPoints(tpdTick, oldPts) {
+	var pts = glob.helper.getTimePerDivPoints(answers.c_mdFreq, tpdTick)
+	return pts > oldPts ? pts : oldPts
 }
 
 function getDiff(a, b) {

@@ -84,7 +84,10 @@ var _correctFrq = 0.0
 var _submittedFrq = 0.0
 var _submittedFrqUnit = ""
 
-var _dateFormat = SimpleDateFormat.getInstance() 
+var _dateFormat = SimpleDateFormat.getInstance()
+
+var _helper = null
+var _madw = null  
 
 /**
  * This function is called when the script starts up
@@ -215,12 +218,12 @@ function endActivity()
 function wrap_assess() {
 	var converter = new LabviewReportConverter(_monitor)
 	converter.markEndTime()
-	var madwrapper = converter.getMADWrapper()
-	_assessUtil = new ScopeAssessmentUtil(madwrapper)
+	_madw = converter.getMADWrapper()
+	_helper = new ScopeAssessmentUtil(_madw)
 	_otAssessment.setLabel("Oscilloscope")
 	var madID = converter.getOTModelActivityData().getGlobalId()
 	_otAssessment.getInventory().put("modelActivityData", madID) 
-	assess(_otAssessment, _assessUtil, madwrapper)
+	assess(_otAssessment)
 }
 
 function getUserName() {

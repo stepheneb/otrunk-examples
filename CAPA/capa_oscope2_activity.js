@@ -65,7 +65,7 @@ var glob = {
  * was successful or not.
  */
 function init() {
-	//System.out.println("Enter: init()")
+	System.out.println("Enter: init()")
 	
 	glob.dateFormat.applyPattern("MM/dd/yyyy HH:mm:ss zzz");
     glob.monitor = controllerService.getRealObject(ot_monitor)		
@@ -79,7 +79,7 @@ function init() {
 }
 
 function save() {
-	//System.out.println("Enter: save()")
+	System.out.println("Enter: save()")
     otc_submitAnswerButton.removeActionListener(listeners.submitAnswerButtonListener)
 	return true
 }
