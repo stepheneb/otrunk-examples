@@ -104,7 +104,7 @@ HERE
   Dir.glob("#{path}/*").sort.each do |subpath|
     if subpath =~ /.*otml$/
       # look up the file in the .svn/entries file to gets its svn commit number 
-      # svn_status = `svn status -v #{path}/#{subpath}`
+      svn_status = `svn status -v #{subpath}`
       re = / *(\d*) *(\d*)/
       match = re.match(svn_status)
       svn_rev1 = match[1]
