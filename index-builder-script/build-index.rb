@@ -104,7 +104,6 @@ HERE
   Dir.glob("#{path}/*").sort.each do |subpath|
     if subpath =~ /.*otml$/
       # look up the file in the .svn/entries file to gets its svn commit number 
-
       svn_status = `svn status -v #{path}/#{subpath}`
       re = / *(\d*) *(\d*)/
       match = re.match(svn_status)
@@ -112,7 +111,7 @@ HERE
       svn_rev2 = match[2]
       
       
-      example_name = File.dirname(subpath)
+      example_name = subpath[/(.*)\.otml/, 1]
       otml_url = "http://continuum.concord.org/otrunk/examples/#{path}/#{subpath}"
       trac_otml_url = "http://trac.cosmos.concord.org/projects/browser/trunk/common/java/otrunk/otrunk-examples/#{path}/#{subpath}"
       jnlp_url = jnlp_url_tmpl.sub(/%otml_url%/, otml_url)
