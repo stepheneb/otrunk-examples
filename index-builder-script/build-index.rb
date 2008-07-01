@@ -76,7 +76,6 @@ otrunk_example_dirs.each do |path|
   # Append: jnlp properties: otrunk.view.author=true and otrunk.view.mode=authoring
   jnlp_url_tmpl_author = jnlp_url_tmpl + "&jnlp_properties=otrunk.view.author%253Dtrue%2526otrunk.view.mode%253Dauthoring"
 
-  subdir = Dir.new(path)
   otml_launchers = "<h4>Run Examples</h4> <table cellspacing=2 id='otml_launchers' class='sortable''><thead><tr><th class='sortfirstdec'><b>example</b></th><th colspan=2><b>java web start jnlps</b></th><th><b>otml file</b></th><th><b>most recent revision</b></th></tr></thead><tbody>"
 
   description_of_jnlps = <<HERE
@@ -102,7 +101,7 @@ you have run before -- if a jar file needs to be updated the download process wi
 HERE
   all_files = "<h4>All Files</h4><table>"
 
-  subdir.sort.each do |subpath|
+  Dir.glob("#{path}/*").sort.each do |subpath|
     if subpath =~ /.*otml$/
       # look up the file in the .svn/entries file to gets its svn commit number 
 
