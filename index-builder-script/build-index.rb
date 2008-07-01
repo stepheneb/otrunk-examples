@@ -83,7 +83,7 @@ dir.each do |path|
       jnlp_url_tmpl_author = jnlp_url_tmpl + "&jnlp_properties=otrunk.view.author%253Dtrue%2526otrunk.view.mode%253Dauthoring"
 
       subdir = Dir.new(path)
-      otml_launchers = "<h4>Run Examples</h4> <table cellspacing=2 id="otml_launchers"><thead><tr><td><b>example</b></td><td colspan=2><b>java web start jnlps</b></td><td><b>otml file</b></td><td><b>most recent revision</b></td></tr></thead><tbody>"
+      otml_launchers = "<h4>Run Examples</h4> <table cellspacing=2 id='otml_launchers'><thead><tr><td><b>example</b></td><td colspan=2><b>java web start jnlps</b></td><td><b>otml file</b></td><td><b>most recent revision</b></td></tr></thead><tbody>"
 
       description_of_jnlps = <<HERE
 <h4>Description of the difference between the learner and author mode jnlps</h4>
