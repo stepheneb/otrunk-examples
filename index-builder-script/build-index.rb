@@ -61,7 +61,8 @@ dir.sort.each do |path|
 end
 
 index_page_body += "</table>"
-index_page_body += "<hr/><br/><br/><a href=""http://continuum.concord.org/cgi-script/hello.rb"">Update Index</a>"
+index_page_body += "<hr/><br/><br/><a href=\"http://continuum.concord.org/cgi-script/build-index.rb
+\">Update Index</a>"
 
 writeHtmlPage("OTrunk Examples", index_page_body, "example-index.html")
 
