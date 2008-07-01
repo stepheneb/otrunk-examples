@@ -108,7 +108,7 @@ you have run before -- if a jar file needs to be updated the download process wi
 HERE
       all_files = "<h4>All Files</h4><table>"
 
-      subdir.each do |subpath|
+      subdir.sort.each do |subpath|
           if subpath =~ /.*otml$/
             # look up the file in the .svn/entries file to gets its svn commit number 
 
