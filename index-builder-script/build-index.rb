@@ -16,6 +16,9 @@ Dir.chdir("../otrunk/examples")
 puts "In directory "
 puts Dir.pwd
 
+# update the content directories
+puts `svn up`
+
 def writeHtmlPage(title, body, filename)
 
   html_text = <<end_of_html
