@@ -26,7 +26,7 @@ def writeHtmlPage(title, body, filename)
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en-US" xml:lang="en-US">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-  <link rel="stylesheet" type="text/css" media="all" href="style.css" />
+  <link rel="stylesheet" type="text/css" media="all" href="/otrunk/examples/index-builder-script/style.css" />
   <script type="text/javascript" src="/otrunk/examples/index-builder-script/prototype.js"></script>
   <script type="text/javascript" src="/otrunk/examples/index-builder-script/fastinit.js"></script>
   <script type="text/javascript" src="/otrunk/examples/index-builder-script/tablesort.js"></script>	
