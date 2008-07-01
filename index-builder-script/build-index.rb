@@ -118,7 +118,7 @@ HERE
       otml_launchers += "<tr><td width=280>#{example_name}</td><td width=100><a href=""#{jnlp_url}"">learner mode</a></td><td width=120><a href=#{jnlp_author_url}>author mode</a></td><td width=280><a href=#{subpath}>#{File.basename(subpath)}</a></td><td width=180><a href=#{trac_otml_url}>#{svn_rev2}</a></td></tr>"
     end
     
-    all_files += "<tr><td><a href=""#{subpath}"">#{subpath}</a></td></tr>"
+    all_files += "<tr><td><a href=""#{subpath}"">#{File.basename(subpath)}</a></td></tr>"
   end
   otml_launchers += "</tbody></table><hr/>"
   all_files += "</table>"
