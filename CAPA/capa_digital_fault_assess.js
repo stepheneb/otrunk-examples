@@ -20,8 +20,8 @@ var answers =  {
 // then by looking up gateToLabel[3] find that it means inverter U1C.
 var viMap = {
 	gateToLabel : [
-		"No faults", "Inverter U1A", "Inverter U1B", "Inverter U1C", "AND gate U2A", "AND gate U2B", "AND gate U3B", 
-		"OR gate U3A", "OR gate U3B", "OR gate U3C"		
+		"No answer", "Inverter U1A", "Inverter U1B", "Inverter U1C", "AND gate U2A", "AND gate U2B", 
+		"AND gate U3B", "OR gate U3A", "OR gate U3B", "No faults"		
 	],
 	probeMap : [ "No Connection", "U1A Input", "U1A Output", "U1B Input", "U1B Output",
 		"U1C Input", "U1C Output", "U1 Ground", "U1 VCC", "U2A Input1",
