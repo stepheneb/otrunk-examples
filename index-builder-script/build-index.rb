@@ -23,10 +23,11 @@ def writeHtmlPage(title, body, filename)
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en-US" xml:lang="en-US">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-  <TITLE>#{title}</TITLE>
-  <link rel="stylesheet" type="text/css" href="/otrunk/examples/index-builder-script/sorter.css" />
+  <link rel="stylesheet" type="text/css" media="all" href="style.css" />
   <script type="text/javascript" src="/otrunk/examples/index-builder-script/prototype.js"></script>
-  <script type="text/javascript" src="/otrunk/examples/index-builder-script/sorter.js"></script>
+  <script type="text/javascript" src="/otrunk/examples/index-builder-script/fastinit.js"></script>
+  <script type="text/javascript" src="/otrunk/examples/index-builder-script/tablesort.js"></script>	
+  <TITLE>#{title}</TITLE>
   <style type="text/css">
   h3 {margin-bottom: 0.5em; margin-top:2em; border-bottom: 1px solid }
   h4 {margin-bottom: 0.2em}
@@ -45,7 +46,7 @@ end
 
 otrunk_example_dirs = Dir.glob('*/*.otml').collect {|p| File.dirname(p)}.uniq
 
-index_page_body = "<table id='index'><thead><tr><td>Category</td><td>Date of last change</td><td>Number of examples</td></th></thead><tbody>"
+index_page_body = "<table id='index' class='sortable'><thead><tr><th class='sortfirstdec'>Category</th><th>Date of last change</th><th>Number of examples</th></thead><tbody>"
 
 otrunk_example_dirs.each do |path|  
   svn_props = YAML::load(`svn info #{path}`)
@@ -73,7 +74,7 @@ otrunk_example_dirs.each do |path|
   jnlp_url_tmpl_author = jnlp_url_tmpl + "&jnlp_properties=otrunk.view.author%253Dtrue%2526otrunk.view.mode%253Dauthoring"
 
   subdir = Dir.new(path)
-  otml_launchers = "<h4>Run Examples</h4> <table cellspacing=2 id='otml_launchers'><thead><tr><td><b>example</b></td><td colspan=2><b>java web start jnlps</b></td><td><b>otml file</b></td><td><b>most recent revision</b></td></tr></thead><tbody>"
+  otml_launchers = "<h4>Run Examples</h4> <table cellspacing=2 id='otml_launchers' class='sortable''><thead><tr><th class='sortfirstdec'><b>example</b></th><th colspan=2><b>java web start jnlps</b></th><th><b>otml file</b></th><th><b>most recent revision</b></th></tr></thead><tbody>"
 
   description_of_jnlps = <<HERE
 <h4>Description of the difference between the learner and author mode jnlps</h4>
