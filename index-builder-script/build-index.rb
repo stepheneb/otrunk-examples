@@ -45,11 +45,11 @@ end
 
 otrunk_example_dirs = Dir.glob('*/*.otml').collect {|p| File.dirname(p)}.uniq
 
-index_page_body = "<p>#{Dir.pwd}</p><p>#{otrunk_example_dirs}<table id='index'><thead><tr><td>Category</td><td>Date of last change</td><td>Number of examples</td></th></thead><tbody>"
+index_page_body = "<table id='index'><thead><tr><td>Category</td><td>Date of last change</td><td>Number of examples</td></th></thead><tbody>"
 
 otrunk_example_dirs.each do |path|  
   svn_props = YAML::load(`svn info #{path}`)
-  examples = Dir.glob("#{path}/*.otml").count
+  examples = Dir.glob("#{path}/*.otml").length
   index_page_body += "<tr><td><a href=""#{path}/ot-index.html"">#{path}</a></td>"
   index_page_body += "<td>#{svn_props["Last Changed Date"]}</td>"
   index_page_body += "<td>#{examples}</td></tr>\n"
