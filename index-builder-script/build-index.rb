@@ -1,6 +1,7 @@
 #! /usr/bin/ruby -w
 
 require 'find'
+require 'yaml'
 
 puts "Content-type: text/plain\n\n"
 
@@ -45,21 +46,16 @@ current.close
 
 end
 
-index_page_body = "<table>"
+index_page_body = "<table id='index'><thead><tr><td>Category</td><td>Date of last change</td><td>Revision</td></th></thead><tbody>"
 
-excludes = ["CVS",".svn",".",".."]
-
-dir = Dir.new(".")
-dir.sort.each do |path|
-  if FileTest.directory?(path)
-    if excludes.include?(File.basename(path))
-    else
-      index_page_body += "<tr><td><a href=""#{path}/ot-index.html"">#{path}</a></td></tr>"
-    end    
-  end
+Dir.glob('*/').sort.each do |path|  
+  index_page_body += "<tr><td><a href=""#{path}/ot-index.html"">#{path}</a></td>"
+  index_page_body += "<td>#{File.ctime(path)}</td>"
+  svn_props = YAML::load(`svn info #{path}`)
+  index_page_body += "<td>#{svn_props["Revision"]}</td></tr>"
 end
 
-index_page_body += "</table>"
+index_page_body += "</tbody></table>"
 index_page_body += "<hr/><br/><br/><a href=\"http://continuum.concord.org/cgi-script/build-index.rb
 \">Update Index</a>"
 
