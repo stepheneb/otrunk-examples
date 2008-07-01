@@ -52,7 +52,7 @@ otrunk_example_dirs.each do |path|
   examples = Dir.glob("#{path}/*.otml").count
   index_page_body += "<tr><td><a href=""#{path}/ot-index.html"">#{path}</a></td>"
   index_page_body += "<td>#{svn_props["Last Changed Date"]}</td>"
-  index_page_body += "<td>#{examples}</td>\n"
+  index_page_body += "<td>#{examples}</td></tr>\n"
 end
 
 index_page_body += "</tbody></table>"
