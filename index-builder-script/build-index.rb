@@ -51,7 +51,7 @@ otrunk_example_dirs.each do |path|
   svn_props = YAML::load(`svn info #{path}`)
   examples = Dir.glob("#{path}/*.otml").length
   index_page_body += "<tr><td><a href=""#{path}/ot-index.html"">#{path}</a></td>"
-  index_page_body += "<td>#{svn_props["Last Changed Date"]}</td>"
+  index_page_body += "<td>#{svn_props["Last Changed Date"][/(.*) -/, 1]}</td>"
   index_page_body += "<td>#{examples}</td></tr>\n"
 end
 
