@@ -112,7 +112,7 @@ HERE
       svn_rev2 = match[2]
       
       
-      example_name = File.basename(subpath)
+      example_name = File.dirname(subpath)
       otml_url = "http://continuum.concord.org/otrunk/examples/#{path}/#{subpath}"
       trac_otml_url = "http://trac.cosmos.concord.org/projects/browser/trunk/common/java/otrunk/otrunk-examples/#{path}/#{subpath}"
       jnlp_url = jnlp_url_tmpl.sub(/%otml_url%/, otml_url)
