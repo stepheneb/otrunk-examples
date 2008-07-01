@@ -15,23 +15,22 @@ Dir.chdir("../otrunk/examples")
 puts "In directory "
 puts Dir.pwd
 
-puts ""
-system("svn up")
-
 def writeHtmlPage(title, body, filename)
 
 html_text = <<end_of_html
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
-<HTML>
-
-<HEAD>
-<META HTTP-EQUIV="Content-Type" CONTENT="text/html;CHARSET=iso-8859-1">
-<TITLE>#{title}</TITLE>
-<style type="text/css">
-h3 {margin-bottom: 0.5em; margin-top:2em; border-bottom: 1px solid }
-h4 {margin-bottom: 0.2em}
-</style>
-</HEAD>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US" xml:lang="en-US">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <TITLE>#{title}</TITLE>
+  <link rel="stylesheet" type="text/css" href="/otrunk/examples/index-builder-script/sorter.css" />
+  <script type="text/javascript" src="/otrunk/examples/index-builder-script/prototype.js"></script>
+  <script type="text/javascript" src="/otrunk/examples/index-builder-script/sorter.js"></script>
+  <style type="text/css">
+  h3 {margin-bottom: 0.5em; margin-top:2em; border-bottom: 1px solid }
+  h4 {margin-bottom: 0.2em}
+  </style>
+</head>
 
 <BODY BGCOLOR="#FFFFFF">
 <h2>#{title}</h2>
@@ -84,7 +83,7 @@ dir.each do |path|
       jnlp_url_tmpl_author = jnlp_url_tmpl + "&jnlp_properties=otrunk.view.author%253Dtrue%2526otrunk.view.mode%253Dauthoring"
 
       subdir = Dir.new(path)
-      otml_launchers = "<h4>Run Examples</h4> <table cellspacing=2><tr><td><b>example</b></td><td colspan=2><b>java web start jnlps</b></td><td><b>otml file</b></td><td><b>most recent revision</b></td></tr>"
+      otml_launchers = "<h4>Run Examples</h4> <table cellspacing=2 id="otml_launchers"><thead><tr><td><b>example</b></td><td colspan=2><b>java web start jnlps</b></td><td><b>otml file</b></td><td><b>most recent revision</b></td></tr></thead><tbody>"
 
       description_of_jnlps = <<HERE
 <h4>Description of the difference between the learner and author mode jnlps</h4>
@@ -128,7 +127,7 @@ HERE
           
           all_files += "<tr><td><a href=""#{subpath}"">#{subpath}</a></td></tr>"
       end
-      otml_launchers += "</table><hr/>"
+      otml_launchers += "</tbody></table><hr/>"
       all_files += "</table>"
 
       index_page_body = "<a href=""../example-index.html"">Examples Index</a><br/>\n"  +  
