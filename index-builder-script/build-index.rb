@@ -18,7 +18,7 @@ puts Dir.pwd
 
 def writeHtmlPage(title, body, filename)
 
-html_text = <<end_of_html
+  html_text = <<end_of_html
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en-US" xml:lang="en-US">
 <head>
@@ -40,15 +40,12 @@ html_text = <<end_of_html
 </HTML>
 end_of_html
 
-current = File.open(filename, "w")
-current.write(html_text)
-current.close
-
+  File.open(filename, "w") {|f| f.write(html_text)}
 end
 
-index_page_body = "<p>#{Dir.pwd}</p><table id='index'><thead><tr><td>Category</td><td>Date of last change</td><td>Number of examples</td></th></thead><tbody>"
+otrunk_example_dirs = Dir.glob('*/*.otml').collect {|p| File.dirname(p)}.uniq
 
-otrunk_example_dirs = Dir.glob('otrunk/examples/*.otml').collect {|p| File.dirname(p)}.uniq
+index_page_body = "<p>#{Dir.pwd}</p><p>#{otrunk_example_dirs}<table id='index'><thead><tr><td>Category</td><td>Date of last change</td><td>Number of examples</td></th></thead><tbody>"
 
 otrunk_example_dirs.each do |path|  
   svn_props = YAML::load(`svn info #{path}`)
