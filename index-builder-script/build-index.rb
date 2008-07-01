@@ -48,9 +48,9 @@ end
 
 index_page_body = "<table id='index'><thead><tr><td>Category</td><td>Date of last change</td><td>Number of examples</td></th></thead><tbody>"
 
-dir = Dir.glob('*/*.otml').collect {|p| File.dirname(p)}.uniq
+otrunk_example_dirs = Dir.glob('*/*.otml').collect {|p| File.dirname(p)}.uniq
 
-dir.each do |path|  
+otrunk_example_dirs.each do |path|  
   svn_props = YAML::load(`svn info #{path}`)
   examples = Dir.glob("#{path}/*.otml").count
   index_page_body += "<tr><td><a href=""#{path}/ot-index.html"">#{path}</a></td>"
@@ -65,38 +65,32 @@ index_page_body += "<hr/><br/><br/><a href=\"http://continuum.concord.org/cgi-sc
 writeHtmlPage("OTrunk Examples", index_page_body, "example-index.html")
 
 
-dir.each do |path|
-  if FileTest.directory?(path)
-    if excludes.include?(File.basename(path))
-    else      
-      jnlp_url_tmpl = "http://rails.dev.concord.org/sds/2/offering/144/jnlp/540/view?sailotrunk.otmlurl=%otml_url%&sailotrunk.hidetree=false"
+otrunk_example_dirs.each do |path|
+  if File.exists("#{path}/jnlp_url.tmpl")
+    jnlp_url_tmpl = File.read("#{path}/jnlp_url.tmpl")
+  else      
+    jnlp_url_tmpl = "http://rails.dev.concord.org/sds/2/offering/144/jnlp/540/view?sailotrunk.otmlurl=%otml_url%&sailotrunk.hidetree=false"
+  end
 
-      jnlp_url_tmpl_file_name = "#{path}/jnlp_url.tmpl"
-      if FileTest.exists?(jnlp_url_tmpl_file_name)
-        tmp_io = File.open(jnlp_url_tmpl_file_name, "r")
-        jnlp_url_tmpl = tmp_io.read()
-        tmp_io.close()
-      end
+  # Append: jnlp properties: otrunk.view.author=true and otrunk.view.mode=authoring
+  jnlp_url_tmpl_author = jnlp_url_tmpl + "&jnlp_properties=otrunk.view.author%253Dtrue%2526otrunk.view.mode%253Dauthoring"
 
-      # Append: jnlp properties: otrunk.view.author=true and otrunk.view.mode=authoring
-      jnlp_url_tmpl_author = jnlp_url_tmpl + "&jnlp_properties=otrunk.view.author%253Dtrue%2526otrunk.view.mode%253Dauthoring"
+  subdir = Dir.new(path)
+  otml_launchers = "<h4>Run Examples</h4> <table cellspacing=2 id='otml_launchers'><thead><tr><td><b>example</b></td><td colspan=2><b>java web start jnlps</b></td><td><b>otml file</b></td><td><b>most recent revision</b></td></tr></thead><tbody>"
 
-      subdir = Dir.new(path)
-      otml_launchers = "<h4>Run Examples</h4> <table cellspacing=2 id='otml_launchers'><thead><tr><td><b>example</b></td><td colspan=2><b>java web start jnlps</b></td><td><b>otml file</b></td><td><b>most recent revision</b></td></tr></thead><tbody>"
-
-      description_of_jnlps = <<HERE
+  description_of_jnlps = <<HERE
 <h4>Description of the difference between the learner and author mode jnlps</h4>
 <p>Running an OTrunk example in learner mode uses the default view mode which assumes a learner. In addition if you use the File menu to save the otml only the differences between the activity otml and the changes will be saved. The otml saved is the learner difference otml and is often much smaller than activty otml.</p>
 <p>Running an OTrunk example in author mode sets the following jnlp properties:</p>
 <ul>
-  <li>otrunk.view.author=true</li>
-  <li>otrunk.view.mode=authoring</li>
+<li>otrunk.view.author=true</li>
+<li>otrunk.view.mode=authoring</li>
 </ul>
 <p>Setting otrunk.view.author to true causes the entire OTrunk state to be saved as otml when a File save is performed. Setting otrunk.view.mode to authoring is used in the view system to enable authoring affordances in the views. Many examples do not have special authoring views. The Basic Example: document-edit.otml does have both authoring and student view modes.</p>
 <hr/>
 HERE
 
-      java_web_start_warning = <<HERE
+  java_web_start_warning = <<HERE
 <h4>MacOS X Java Web Start Problem</h4>
 <p>If you are using Java 1.5 on MacOS 10.4 or 10.5 you will almost certainly need to run some version of 
 our <a href="http://confluence.concord.org/display/CCTR/WebStart+OSX+Java+1.5+Fix">Fix Java MacOS Web Start Scripts</a>,
@@ -105,38 +99,36 @@ need to fix this problem again. The problem appears on Mac OS X computers when s
 you have run before -- if a jar file needs to be updated the download process will freeze without completing.</p>
 <hr/>
 HERE
-      all_files = "<h4>All Files</h4><table>"
+  all_files = "<h4>All Files</h4><table>"
 
-      subdir.sort.each do |subpath|
-          if subpath =~ /.*otml$/
-            # look up the file in the .svn/entries file to gets its svn commit number 
+  subdir.sort.each do |subpath|
+    if subpath =~ /.*otml$/
+      # look up the file in the .svn/entries file to gets its svn commit number 
 
-            svn_status = `svn status -v #{path}/#{subpath}`
-            # trim off the first 8 chars as they are status info we dont' care about
-            svn_status = svn_status[8,svn_status.length-8]
-            svn_status_arr = svn_status.split(' ')
-            
-            example_name = subpath[/(.*)\.otml/, 1]
-            otml_url = "http://continuum.concord.org/otrunk/examples/#{path}/#{subpath}"
-            trac_otml_url = "http://trac.cosmos.concord.org/projects/browser/trunk/common/java/otrunk/otrunk-examples/#{path}/#{subpath}"
-            jnlp_url = jnlp_url_tmpl.sub(/%otml_url%/, otml_url)
-            jnlp_author_url = jnlp_url_tmpl_author.sub(/%otml_url%/, otml_url)
-            otml_launchers += "<tr><td width=280>#{example_name}</td><td width=100><a href=""#{jnlp_url}"">learner mode</a></td><td width=120><a href=#{jnlp_author_url}>author mode</a></td><td width=280><a href=#{subpath}>#{subpath}</a></td><td width=180><a href=#{trac_otml_url}>rev #{svn_status_arr[1]} #{svn_status_arr[2]}</a></td></tr>"
-          end
-          
-          all_files += "<tr><td><a href=""#{subpath}"">#{subpath}</a></td></tr>"
-      end
-      otml_launchers += "</tbody></table><hr/>"
-      all_files += "</table>"
-
-      index_page_body = "<a href=""../example-index.html"">Examples Index</a><br/>\n"  +  
-        "<a href=""http://confluence.concord.org/display/CSP/#{path}"">Confluence Notes</a><br/>\n" +
-        otml_launchers + java_web_start_warning + description_of_jnlps + all_files
-
-      index_page_body += "<hr/>The jnlp urls were constructed using the following template:<br/>\n"
-      index_page_body += jnlp_url_tmpl + "<br/>\n"
-      index_page_body += "You can change this string by putting it in a file named: <b>jnlp_url.tmpl</b> in this directory"
-      writeHtmlPage("#{path} Examples ..", index_page_body, "#{path}/ot-index.html");
-    end    
+      svn_status = `svn status -v #{path}/#{subpath}`
+      # trim off the first 8 chars as they are status info we dont' care about
+      svn_status = svn_status[8,svn_status.length-8]
+      svn_status_arr = svn_status.split(' ')
+      
+      example_name = subpath[/(.*)\.otml/, 1]
+      otml_url = "http://continuum.concord.org/otrunk/examples/#{path}/#{subpath}"
+      trac_otml_url = "http://trac.cosmos.concord.org/projects/browser/trunk/common/java/otrunk/otrunk-examples/#{path}/#{subpath}"
+      jnlp_url = jnlp_url_tmpl.sub(/%otml_url%/, otml_url)
+      jnlp_author_url = jnlp_url_tmpl_author.sub(/%otml_url%/, otml_url)
+      otml_launchers += "<tr><td width=280>#{example_name}</td><td width=100><a href=""#{jnlp_url}"">learner mode</a></td><td width=120><a href=#{jnlp_author_url}>author mode</a></td><td width=280><a href=#{subpath}>#{subpath}</a></td><td width=180><a href=#{trac_otml_url}>rev #{svn_status_arr[1]} #{svn_status_arr[2]}</a></td></tr>"
+    end
+    
+    all_files += "<tr><td><a href=""#{subpath}"">#{subpath}</a></td></tr>"
   end
+  otml_launchers += "</tbody></table><hr/>"
+  all_files += "</table>"
+
+  index_page_body = "<a href=""../example-index.html"">Examples Index</a><br/>\n"  +  
+    "<a href=""http://confluence.concord.org/display/CSP/#{path}"">Confluence Notes</a><br/>\n" +
+    otml_launchers + java_web_start_warning + description_of_jnlps + all_files
+
+  index_page_body += "<hr/>The jnlp urls were constructed using the following template:<br/>\n"
+  index_page_body += jnlp_url_tmpl + "<br/>\n"
+  index_page_body += "You can change this string by putting it in a file named: <b>jnlp_url.tmpl</b> in this directory"
+  writeHtmlPage("#{path} Examples ..", index_page_body, "#{path}/ot-index.html");
 end
