@@ -46,7 +46,7 @@ current.close
 
 end
 
-index_page_body = "<table id='index'><thead><tr><td>Category</td><td>Date of last change</td><td>Number of examples</td></th></thead><tbody>"
+index_page_body = "<p>#{dir.pwd}"</p><table id='index'><thead><tr><td>Category</td><td>Date of last change</td><td>Number of examples</td></th></thead><tbody>"
 
 otrunk_example_dirs = Dir.glob('otrunk/examples/*.otml').collect {|p| File.dirname(p)}.uniq
 
