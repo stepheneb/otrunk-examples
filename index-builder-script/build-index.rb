@@ -110,15 +110,16 @@ HERE
       svn_rev1 = match[1]
       svn_rev2 = match[2]
       
-      example_name = File.basename(subpath)[/(.*)\.otml/, 1]
+      filename = File.basename(subpath)
+      example_name = filename[/(.*)\.otml/, 1]
       otml_url = "http://continuum.concord.org/otrunk/examples/#{path}/#{subpath}"
       trac_otml_url = "http://trac.cosmos.concord.org/projects/browser/trunk/common/java/otrunk/otrunk-examples/#{path}/#{subpath}"
       jnlp_url = jnlp_url_tmpl.sub(/%otml_url%/, otml_url)
       jnlp_author_url = jnlp_url_tmpl_author.sub(/%otml_url%/, otml_url)
-      otml_launchers += "<tr><td width=280>#{example_name}</td><td width=100><a href=""#{jnlp_url}"">learner mode</a></td><td width=120><a href=#{jnlp_author_url}>author mode</a></td><td width=280><a href=#{subpath}>#{File.basename(subpath)}</a></td><td width=180><a href=#{trac_otml_url}>#{svn_rev2}</a></td></tr>"
+      otml_launchers += "<tr><td width=280>#{example_name}</td><td width=100><a href=""#{jnlp_url}"">learner mode</a></td><td width=120><a href=#{jnlp_author_url}>author mode</a></td><td width=280><a href=#{filename}>#{filename}</a></td><td width=180><a href=#{trac_otml_url}>#{svn_rev2}</a></td></tr>"
     end
     
-    all_files += "<tr><td><a href=""#{subpath}"">#{File.basename(subpath)}</a></td></tr>"
+    all_files += "<tr><td><a href=""#{filename}"">#{filename}</a></td></tr>"
   end
   otml_launchers += "</tbody></table><hr/>"
   all_files += "</table>"
