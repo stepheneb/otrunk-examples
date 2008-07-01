@@ -106,16 +106,14 @@ HERE
       # look up the file in the .svn/entries file to gets its svn commit number 
 
       svn_status = `svn status -v #{path}/#{subpath}`
-      # trim off the first 8 chars as they are status info we dont' care about
-      svn_status = svn_status[8,svn_status.length-8]
-      svn_status_arr = svn_status.split(' ')
+      svn_rev = svn_status[/ *(\d*)/, 1]
       
-      example_name = subpath[/(.*)\.otml/, 1]
+      example_name = File.basename(subpath)
       otml_url = "http://continuum.concord.org/otrunk/examples/#{path}/#{subpath}"
       trac_otml_url = "http://trac.cosmos.concord.org/projects/browser/trunk/common/java/otrunk/otrunk-examples/#{path}/#{subpath}"
       jnlp_url = jnlp_url_tmpl.sub(/%otml_url%/, otml_url)
       jnlp_author_url = jnlp_url_tmpl_author.sub(/%otml_url%/, otml_url)
-      otml_launchers += "<tr><td width=280>#{example_name}</td><td width=100><a href=""#{jnlp_url}"">learner mode</a></td><td width=120><a href=#{jnlp_author_url}>author mode</a></td><td width=280><a href=#{subpath}>#{subpath}</a></td><td width=180><a href=#{trac_otml_url}>rev #{svn_status_arr[1]} #{svn_status_arr[2]}</a></td></tr>"
+      otml_launchers += "<tr><td width=280>#{example_name}</td><td width=100><a href=""#{jnlp_url}"">learner mode</a></td><td width=120><a href=#{jnlp_author_url}>author mode</a></td><td width=280><a href=#{subpath}>#{subpath}</a></td><td width=180><a href=#{trac_otml_url}>rev #{svn_status_arr[1]} #{svn_rev}</a></td></tr>"
     end
     
     all_files += "<tr><td><a href=""#{subpath}"">#{subpath}</a></td></tr>"
