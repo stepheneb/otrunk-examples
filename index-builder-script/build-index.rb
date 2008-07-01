@@ -48,12 +48,14 @@ end
 
 index_page_body = "<table id='index'><thead><tr><td>Category</td><td>Date of last change</td><td>Number of examples</td></th></thead><tbody>"
 
-Dir.glob('*/*.otml').collect {|p| File.dirname(p)}.uniq do |path|  
+dir = Dir.glob('*/*.otml').collect {|p| File.dirname(p)}.uniq
+
+dir.each do |path|  
   svn_props = YAML::load(`svn info #{path}`)
   examples = Dir.glob("#{path}/*.otml").count
   index_page_body += "<tr><td><a href=""#{path}/ot-index.html"">#{path}</a></td>"
   index_page_body += "<td>#{svn_props["Last Changed Date"]}</td>"
-  index_page_body += "<td>#{examples}</td>"
+  index_page_body += "<td>#{examples}</td>\n"
 end
 
 index_page_body += "</tbody></table>"
