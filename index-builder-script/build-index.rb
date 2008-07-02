@@ -63,7 +63,7 @@ index_page_body = "<table id='index' class='sortable'><thead><tr><th class='sort
 #   "Wed, 02 Jul 2008 14:40:26 GMT"
 #
 def gmt_time_from_svn_time(svn_time)
-  iso8601_time = "#{svn_time[/(.*) -/, 1].gsub(/ /, 'T')}Z"
+  iso8601_time = "#{svn_time[/(.*) -/, 1].gsub(/ /, 'T')}"
   Time.xmlschema(iso8601_time).gmtime.strftime("%a, %d %b %Y %H:%M:%S GMT")
 end
 
@@ -72,7 +72,7 @@ otrunk_example_dirs.each do |path|
   gmt_time = gmt_time_from_svn_time(svn_props["Last Changed Date"])
   examples = Dir.glob("#{path}/*.otml").length
   index_page_body += "<tr><td><a href=""#{path}/ot-index.html"">#{path}</a></td>"
-  index_page_body += "<td>#{gmt_time}</td>"
+  index_page_body += "<td class='timestyle'>#{gmt_time}</td>"
   index_page_body += "<td>#{examples}</td></tr>\n"
 end
 
