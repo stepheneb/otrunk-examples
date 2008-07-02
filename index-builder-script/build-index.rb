@@ -76,7 +76,7 @@ otrunk_example_dirs.each do |path|
   # Append: jnlp properties: otrunk.view.author=true and otrunk.view.mode=authoring
   jnlp_url_tmpl_author = jnlp_url_tmpl + "&jnlp_properties=otrunk.view.author%253Dtrue%2526otrunk.view.mode%253Dauthoring"
 
-  otml_launchers = "<h4>Run Examples</h4> <table cellspacing=2 id='otml_launchers' class='sortable''><thead><tr><th><b>example</b></th><th class='nosort'><b>jnlp</b></th><th class='nosort'><b>jnlp</b></th><th><b>otml file</b></th><th class='number' class='sortfirstdesc'><b>most recent revision</b></th></tr></thead><tbody>"
+  otml_launchers = "<h4>Run Examples</h4> <table cellspacing=2 id='otml_launchers' class='sortable''><thead><tr><th><b>example</b></th><th class='nosort'><b>jnlp</b></th><th class='nosort'><b>jnlp</b></th><th><b>otml file</b></th><th class='number sortfirstdesc'><b>most recent revision</b></th></tr></thead><tbody>"
 
   description_of_jnlps = <<HERE
 <h4>Description of the difference between running an activity in learner mode and author mode</h4>
