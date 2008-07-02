@@ -72,7 +72,7 @@ otrunk_example_dirs.each do |path|
   gmt_time = gmt_time_from_svn_time(svn_props["Last Changed Date"])
   examples = Dir.glob("#{path}/*.otml").length
   index_page_body += "<tr><td><a href=""#{path}/ot-index.html"">#{path}</a></td>"
-  index_page_body += "<td>#{gmt_time}Z</td>"
+  index_page_body += "<td>#{gmt_time}</td>"
   index_page_body += "<td>#{examples}</td></tr>\n"
 end
 
