@@ -352,7 +352,7 @@ var SortableTable = {
 	},
 	getCellText : function(cell) {
 		if(!cell) return "";
-		return cell.textContent ? cell.textContent : cell.innerText;
+		return cell.textContent ? cell.textContent : cell.innerText ? cell.innerText : cell.firstChild.innerText;
 	},
 	getDataType : function(cell,index,table) {
 		cell = $(cell);
