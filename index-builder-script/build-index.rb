@@ -111,7 +111,7 @@ HERE
       svn_rev1 = match[1]
       svn_rev2 = match[2]
       example_name = filename[/(.*)\.otml/, 1]
-      otml_url = "http://continuum.concord.org/otrunk/examples/#{path}/#{subpath}"
+      otml_url = "http://continuum.concord.org/otrunk/examples/#{subpath}"
       trac_otml_url = "http://trac.cosmos.concord.org/projects/browser/trunk/common/java/otrunk/otrunk-examples/#{subpath}"
       jnlp_url = jnlp_url_tmpl.sub(/%otml_url%/, otml_url)
       jnlp_author_url = jnlp_url_tmpl_author.sub(/%otml_url%/, otml_url)
