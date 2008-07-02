@@ -49,7 +49,7 @@ end
 
 otrunk_example_dirs = Dir.glob('*/*.otml').collect {|p| File.dirname(p)}.uniq
 
-index_page_body = "<table id='index' class='sortable'><thead><tr><th class='sortfirstdec'>Category</th><th>Date of last change</th><th>Number of examples</th></thead><tbody>"
+index_page_body = "<table id='index' class='sortable'><thead><tr><th class='sortfirstasc'>Category</th><th>Date of last change</th><th>Number of examples</th></thead><tbody>"
 
 otrunk_example_dirs.each do |path|  
   svn_props = YAML::load(`svn info #{path}`)
@@ -76,7 +76,7 @@ otrunk_example_dirs.each do |path|
   # Append: jnlp properties: otrunk.view.author=true and otrunk.view.mode=authoring
   jnlp_url_tmpl_author = jnlp_url_tmpl + "&jnlp_properties=otrunk.view.author%253Dtrue%2526otrunk.view.mode%253Dauthoring"
 
-  otml_launchers = "<h4>Run Examples</h4> <table cellspacing=2 id='otml_launchers' class='sortable''><thead><tr><th class='sortfirstasc'><b>example</b></th><th class='nosort'><b>jnlp</b></th><th class='nosort'><b>jnlp</b></th><th><b>otml file</b></th><th class='number'><b>most recent revision</b></th></tr></thead><tbody>"
+  otml_launchers = "<h4>Run Examples</h4> <table cellspacing=2 id='otml_launchers' class='sortable''><thead><tr><th><b>example</b></th><th class='nosort'><b>jnlp</b></th><th class='nosort'><b>jnlp</b></th><th><b>otml file</b></th><th class='number' class='sortfirstdesc'><b>most recent revision</b></th></tr></thead><tbody>"
 
   description_of_jnlps = <<HERE
 <h4>Description of the difference between running an activity in learner mode and author mode</h4>
@@ -115,7 +115,7 @@ HERE
       trac_otml_url = "http://trac.cosmos.concord.org/projects/browser/trunk/common/java/otrunk/otrunk-examples/#{subpath}"
       jnlp_url = jnlp_url_tmpl.sub(/%otml_url%/, otml_url)
       jnlp_author_url = jnlp_url_tmpl_author.sub(/%otml_url%/, otml_url)
-      otml_launchers += "<tr><td width=280>#{example_name}</td><td width=100><a href=""#{jnlp_url}"">learner</a></td><td width=120><a href=#{jnlp_author_url}>author</a></td><td width=280><a href=#{filename}>#{filename}</a></td><td width=180 class='sortfirstdesc'><a href=#{trac_otml_url}>#{svn_rev2}</a></td></tr>\n"
+      otml_launchers += "<tr><td width=280>#{example_name}</td><td width=100><a href=""#{jnlp_url}"">learner</a></td><td width=120><a href=#{jnlp_author_url}>author</a></td><td width=280><a href=#{filename}>#{filename}</a></td><td width=180><a href=#{trac_otml_url}>#{svn_rev2}</a></td></tr>\n"
     end
     
     all_files += "<tr><td><a href=""#{filename}"">#{filename}</a></td></tr>\n"
