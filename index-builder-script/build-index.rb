@@ -2,6 +2,7 @@
 
 require 'find'
 require 'yaml'
+require 'time'
 
 puts "Content-type: text/plain\n\n"
 
@@ -49,13 +50,29 @@ end
 
 otrunk_example_dirs = Dir.glob('*/*.otml').collect {|p| File.dirname(p)}.uniq
 
-index_page_body = "<table id='index' class='sortable'><thead><tr><th class='sortfirstasc'>Category</th><th>Date of last change</th><th>Number of examples</th></thead><tbody>"
+index_page_body = "<table id='index' class='sortable'><thead><tr><th class='sortfirstasc'>Category</th><th class='date'>Date of last change</th><th>Number of examples</th></thead><tbody>"
+
+# == gmt_time_from_svn_time ==
+#
+# convert svn format times like this:
+#
+#   "2008-07-02 10:40:26 -0400 (Wed, 02 Jul 2008)"
+#
+# to a GMT format like this:
+#
+#   "Wed, 02 Jul 2008 14:40:26 GMT"
+#
+def gmt_time_from_svn_time(svn_time)
+  iso8601_time = "#{svn_time[/(.*) -/, 1].gsub(/ /, 'T')}Z"
+  Time.xmlschema(iso8601_time).gmtime.strftime("%a, %d %b %Y %H:%M:%S GMT")
+end
 
 otrunk_example_dirs.each do |path|  
   svn_props = YAML::load(`svn info #{path}`)
+  gmt_time = gmt_time_from_svn_tim(svn_props["Last Changed Date"])
   examples = Dir.glob("#{path}/*.otml").length
   index_page_body += "<tr><td><a href=""#{path}/ot-index.html"">#{path}</a></td>"
-  index_page_body += "<td>#{svn_props["Last Changed Date"][/(.*) -/, 1].gsub(/ /, 'T')}Z</td>"
+  index_page_body += "<td>#{gmt_time}Z</td>"
   index_page_body += "<td>#{examples}</td></tr>\n"
 end
 
