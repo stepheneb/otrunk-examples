@@ -176,10 +176,14 @@ function wrap_assess() {
 var listeners = {
 	submitAnswerButtonListener : new ActionListener({
 		actionPerformed: function(evt) {
+			if (!glob.monitor.isRunning()) {
+				JOptionPane.showMessageDialog(null, "You should open the oscilloscope window first.")
+				return
+			}
 	    	if (validateAnswers() == false) {
 	    		return
 	    	}
-			var msg = "This will end your activity and close the LabVIEW window. Do you want to continue?"
+			var msg = "This will end your activity and close the oscilloscope. Do you want to continue?"
 			var option = JOptionPane.showConfirmDialog(null, msg, "Submitting Answer", JOptionPane.OK_CANCEL_OPTION)
 			
 			if (option == JOptionPane.OK_OPTION) {
