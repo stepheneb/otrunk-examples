@@ -106,7 +106,7 @@ function assess(assessment) {
 	var modIndexIndicator = checkModIndex()
 	
 	var carrierFrqUnitIndicator = checkFrqUnit(carrierFrqUnit)
-	var modFrqUnitIndicator = checkFrqUnit(carrierFrqUnit)
+	var modFrqUnitIndicator = checkFrqUnit(modFrqUnit)
 
 	var timeTotal = glob.madw.getTimeTotal()
 	var tpdIndicator = checkSettings()
