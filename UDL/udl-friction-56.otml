@@ -13,6 +13,7 @@
     <import class="org.concord.datagraph.state.OTPluginView" />
     <import class="org.concord.datagraph.state.OTDataBarGraphable" />
     <import class="org.concord.framework.otrunk.view.OTFrame" />
+    <import class="org.concord.framework.otrunk.wrapper.OTBlob" />
     <import class="org.concord.graph.util.state.OTDrawingTool" />
     <import class="org.concord.graph.util.state.OTDrawingStamp" />
     <import class="org.concord.graph.util.state.OTDrawingImageIcon" />
@@ -31,6 +32,7 @@
     <import class="org.concord.otrunk.script.OTScriptEngineBundle" />
     <import class="org.concord.otrunk.script.OTScriptEngineEntry" />
     <import class="org.concord.otrunk.udl.OTAuthorNote" />
+    <import class="org.concord.otrunk.udl.OTUDLLabPage" />
     <import class="org.concord.otrunk.udl.coach.OTUDLCoach" />
     <import class="org.concord.otrunk.udl.coach.OTUDLCoachGroup" />
     <import class="org.concord.otrunk.udl.coach.OTUDLCoachStatement" />
@@ -53,8 +55,11 @@
     <import class="org.concord.otrunk.ui.OTChoice" />
     <import class="org.concord.otrunk.ui.OTChoiceMultiple" />
     <import class="org.concord.otrunk.ui.OTImage" />
+    <import class="org.concord.otrunk.ui.OTImageMap" />
     <import class="org.concord.otrunk.ui.OTModeSwitcher" />
     <import class="org.concord.otrunk.ui.OTText" />
+    <import class="org.concord.otrunk.ui.OTPlacement"/>
+    <import class="org.concord.otrunk.ui.OTPlacementContainer"/>
     <import class="org.concord.otrunk.ui.snapshot.OTSnapshot" />
     <import class="org.concord.otrunk.ui.snapshot.OTSnapshotButton" />
     <import class="org.concord.otrunk.ui.snapshot.OTSnapshotAlbum" />
@@ -80,6 +85,7 @@
     <import class="org.concord.sensor.state.OTSensorDataProxy" />
     <import class="org.concord.sensor.state.OTSensorRequest" />
     <import class="org.concord.sensor.state.OTZeroSensor" />
+    <import class="org.concord.otrunk.udl.OTUDLNavBar"/>
     <import class="org.concord.otrunk.udl.question.OTUDLQuestion" />
     <import class="org.concord.otrunk.udl.OTZoom" />
     <import class="org.concord.otrunk.udl.OTZoomTransform" />
@@ -90,7 +96,7 @@
   <objects>
     <OTSystem local_id="system">
       <includes>
-        <OTInclude href="http://continuum.concord.org/otrunk/examples/UDL/global-imports/udl-view-bundle.otml" />
+        <OTInclude href="global-imports/udl-view-bundle-nav.otml" />
       </includes>
       <bundles>
         <object refid="8d880970-c22a-11dc-95ff-0800200c9a66" />
@@ -404,49 +410,64 @@
         </OTOverlay>
       </overlays>
       <root>
-        <OTUDLContainer local_id="udl_container" name="UDL Activity">
-          <cssColor>
-            <object refid="31193bb0-c44f-11dc-95ff-0800200c9a66" />
-          </cssColor>
-          <title>
-            <OTCompoundDoc local_id="title" showEditBar="false">
-              <bodyText>
-                <div class="leftpanel">
-                  <img src="http://udl.concord.org/share/udl-tree-only.png" width="70" height="73" />
-                  <br />
-                  <div class="activity-title">UDL Friction</div>
-                </div>
-              </bodyText>
-            </OTCompoundDoc>
-          </title>
-          <menu>
-            <OTViewChild useScrollPane="true" scrollPanelHasBorder="false">
-              <object>
-                <object refid="${menu}" />
-              </object>
-            </OTViewChild>
-          </menu>
-          <topBar>
-            <object refid="175ae3d0-e610-11dc-95ff-0800200c9a66" />
-          </topBar>
-          <characters>
-            <OTUDLCoachGroup local_id="character-group">
-              <topLevelCardContainer>
-                <object refid="${section-card-container}" />
-              </topLevelCardContainer>
-              <characters>
-                <OTUDLCoach local_id="character_affective" inactiveImageURL="http://udl.concord.org/share/shared-images/blah-head.png" activeImageURL="http://udl.concord.org/share/shared-images/blah-anim.gif" />
-                <OTUDLCoach local_id="character_strategic" inactiveImageURL="http://udl.concord.org/share/shared-images/clunk-head.png" activeImageURL="http://udl.concord.org/share/shared-images/clunk-anim.gif" />
-                <OTUDLCoach local_id="character_recognition" inactiveImageURL="http://udl.concord.org/share/shared-images/roxy-head.png" activeImageURL="http://udl.concord.org/share/shared-images/roxy-anim.gif" />
-              </characters>
-              <speechFrame>
-                <OTFrame local_id="speech_frame" width="380" height="340" borderlessPopup="false" />
-              </speechFrame>
-            </OTUDLCoachGroup>
-          </characters>
-          <content>
             <OTCardContainer local_id="section-card-container" loadViewOnlyOnDemand="true" closeViewOnExit="false">
               <cards>
+                <OTUDLSection local_id="section_0" name="Home" isComputerBased="false" isIntroduction="false" isMath="false" isPosttest="false" isPretest="true" isReading="false" isWrapup="false">
+                  <!-- 
+                  <header>
+                    <OTCompoundDoc showEditBar="false">
+                      <bodyText>
+                        <div class="activity-title"><div style="text-align: center;">UDL Friction</div></div>
+                      </bodyText>
+                    </OTCompoundDoc>
+                  </header>
+                  -->
+                  <content>
+                  	<OTUDLLabPage>
+                  		<backgroundImage>
+                  			<OTBlob src="images/udl-lab-3.png"/>
+                  		</backgroundImage>
+                  		<map>
+                  			<OTPlacementContainer>
+                  				<placements>
+	                  				<OTPlacement name="Introduction" x="78" y="110" height="150" width="130">
+	                  					<components>
+	                  						<object refid="${section_2}"/>
+	                  					</components>
+	                  				</OTPlacement>
+	                  				<OTPlacement name="Math" x="368" y="120" height="150" width="130">
+	                  					<components>
+	                  						<object refid="${section_8}"/>
+	                  					</components>
+	                  				</OTPlacement>
+	                  				<OTPlacement name="Story" x="700" y="150" height="150" width="130">
+	                  					<components>
+	                  						<object refid="${section_3}"/>
+	                  					</components>
+	                  				</OTPlacement>
+	                  				<OTPlacement name="Computer" x="130" y="280" height="150" width="130">
+	                  					<components>
+	                  						<object refid="${section_5}"/>
+	                  						<object refid="${section_7}"/>
+	                  					</components>
+	                  				</OTPlacement>
+	                  				<OTPlacement name="Bench" x="540" y="350" height="180" width="150">
+	                  					<components>
+	                  						<object refid="${section_4}"/>
+	                  						<object refid="${section_6}"/>
+	                  					</components>
+	                  				</OTPlacement>
+                  				</placements>
+                  			</OTPlacementContainer>
+                  		</map>
+                  		<cardContainer>
+                  			<object refid="${section-card-container}"/>
+                  		</cardContainer>
+                  	</OTUDLLabPage>
+                  </content>
+                  <footer>
+                  </footer>
+                </OTUDLSection>
                 <OTUDLSection local_id="section_1" name="Pre-test" isComputerBased="false" isIntroduction="false" isMath="false" isPosttest="false" isPretest="true" isReading="false" isWrapup="false">
                   <header>
                     <OTCompoundDoc id="2767fe20-6c7d-11dc-8314-0800200c9a66!/section_1/header" showEditBar="false">
@@ -895,36 +916,7 @@
                     </OTCardContainer>
                   </content>
                   <footer>
-                    <OTCompoundDoc id="2767fe20-6c7d-11dc-8314-0800200c9a66!/section_1/footer" showEditBar="false">
-                      <bodyText>
-                        <div align="center">
-                          <table width="100%">
-                            <tr>
-                              <td width="10%" />
-                              <td width="80%">
-                                <div align="center">
-                                  <table>
-                                    <tr>
-                                      <td>
-                                        <object viewid="29dc5ef0-c453-11dc-95ff-0800200c9a66" refid="${section-1-menu}" />
-                                      </td>
-                                    </tr>
-                                  </table>
-                                </div>
-                              </td>
-                              <td width="10%">
-                                <object refid="${album}" />
-                              </td>
-                            </tr>
-                          </table>
-                        </div>
-                      </bodyText>
-                      <documentRefs>
-                        <object refid="29dc5ef0-c453-11dc-95ff-0800200c9a66" />
-                        <object refid="${section-1-menu}" />
-                        <object refid="${album}" />
-                      </documentRefs>
-                    </OTCompoundDoc>
+                  	<object refid="${nav-bar}"/>
                   </footer>
                   <center>
                     <object refid="${section-1-card-container}" />
@@ -936,7 +928,7 @@
                     <object refid="2767fe20-6c7d-11dc-8314-0800200c9a66!/section_1/footer" />
                   </south>
                 </OTUDLSection>
-                <OTUDLSection local_id="section_2" name="Introduction" isComputerBased="false" isIntroduction="true" isMath="false" isPosttest="false" isPretest="false" isReading="false" isWrapup="false">
+                <OTUDLSection local_id="section_2" description="What would happen if there were no friction?" name="Introduction" isComputerBased="false" isIntroduction="true" isMath="false" isPosttest="false" isPretest="false" isReading="false" isWrapup="false">
                   <content>
                     <OTCardContainer id="78f125da-78d1-11dc-82f7-4bde662316f0" contentsMayScroll="true" loadViewOnlyOnDemand="true" closeViewOnExit="false">
                       <cards>
@@ -1144,42 +1136,7 @@
                     </OTUDLCompoundDoc>
                   </header>
                   <footer>
-                    <OTUDLCompoundDoc id="78f125dc-78d1-11dc-82f7-4bde662316f0" showEditBar="false" name="%78f125dc-78d1-11dc-82f7-4bde662316f0">
-                      <bodyText>
-                        <div align="center">
-                          <table width="100%">
-                            <tr>
-                              <td width="10%" />
-                              <td width="80%">
-                                <div align="center">
-                                  <table>
-                                    <tr>
-                                      <td>
-                                        <object refid="78f173fd-78d1-11dc-82f7-4bde662316f0" viewid="29dc5ef0-c453-11dc-95ff-0800200c9a66" />
-                                      </td>
-                                    </tr>
-                                  </table>
-                                </div>
-                              </td>
-                              <td width="10%">
-                                <object refid="${album}" />
-                              </td>
-                            </tr>
-                          </table>
-                        </div>
-                      </bodyText>
-                      <documentRefs>
-                        <OTUDLMenu id="78f173fd-78d1-11dc-82f7-4bde662316f0">
-                          <cardContainer>
-                            <object refid="78f125da-78d1-11dc-82f7-4bde662316f0" />
-                          </cardContainer>
-                          <menuRule>
-                            <object refid="${page-rule}" />
-                          </menuRule>
-                        </OTUDLMenu>
-                        <object refid="29dc5ef0-c453-11dc-95ff-0800200c9a66" />
-                      </documentRefs>
-                    </OTUDLCompoundDoc>
+                    <object refid="${nav-bar}"/>
                   </footer>
                   <north>
                     <object refid="78f125db-78d1-11dc-82f7-4bde662316f0" />
@@ -1191,7 +1148,7 @@
                     <object refid="78f125dc-78d1-11dc-82f7-4bde662316f0" />
                   </south>
                 </OTUDLSection>
-                <OTUDLSection local_id="section_3" name="Frictional adventure" isComputerBased="false" isIntroduction="false" isMath="false" isPosttest="false" isPretest="false" isReading="true" isWrapup="false">
+                <OTUDLSection local_id="section_3" description="Read the story of Martin and Emily's Wonderful Summer: A Frictional Adventure" name="Frictional adventure" isComputerBased="false" isIntroduction="false" isMath="false" isPosttest="false" isPretest="false" isReading="true" isWrapup="false">
                   <content>
                     <OTCardContainer id="0be2278c-78d5-11dc-82f7-4bde662316f0" contentsMayScroll="true" loadViewOnlyOnDemand="true" closeViewOnExit="false">
                       <cards>
@@ -3437,42 +3394,7 @@
                     </OTUDLCompoundDoc>
                   </header>
                   <footer>
-                    <OTUDLCompoundDoc id="0be2278e-78d5-11dc-82f7-4bde662316f0" showEditBar="false" name="%0be2278e-78d5-11dc-82f7-4bde662316f0">
-                      <bodyText>
-                        <div align="center">
-                          <table width="100%">
-                            <tr>
-                              <td width="10%" />
-                              <td width="80%">
-                                <div align="center">
-                                  <table>
-                                    <tr>
-                                      <td>
-                                        <object refid="0be24e9f-78d5-11dc-82f7-4bde662316f0" viewid="416eeab0-c453-11dc-95ff-0800200c9a66" />
-                                      </td>
-                                    </tr>
-                                  </table>
-                                </div>
-                              </td>
-                              <td width="10%">
-                                <object refid="${album}" />
-                              </td>
-                            </tr>
-                          </table>
-                        </div>
-                      </bodyText>
-                      <documentRefs>
-                        <OTUDLMenu id="0be24e9f-78d5-11dc-82f7-4bde662316f0">
-                          <cardContainer>
-                            <object refid="0be2278c-78d5-11dc-82f7-4bde662316f0" />
-                          </cardContainer>
-                          <menuRule>
-                            <object refid="${page-rule}" />
-                          </menuRule>
-                        </OTUDLMenu>
-                        <object refid="29dc5ef0-c453-11dc-95ff-0800200c9a66" />
-                      </documentRefs>
-                    </OTUDLCompoundDoc>
+                    <object refid="${nav-bar}"/>
                   </footer>
                   <north>
                     <object refid="0be2278d-78d5-11dc-82f7-4bde662316f0" />
@@ -3484,7 +3406,7 @@
                     <object refid="0be2278e-78d5-11dc-82f7-4bde662316f0" />
                   </south>
                 </OTUDLSection>
-                <OTUDLSection local_id="section_4" name="Penny warming" isComputerBased="true" isIntroduction="false" isMath="false" isPosttest="false" isPretest="false" isReading="false" isWrapup="false">
+                <OTUDLSection local_id="section_4" description="How can you get the most warming from friction?" name="Penny warming" isComputerBased="true" isIntroduction="false" isMath="false" isPosttest="false" isPretest="false" isReading="false" isWrapup="false">
                   <content>
                     <OTCardContainer id="364b1692-78d5-11dc-82f7-4bde662316f0" contentsMayScroll="true" loadViewOnlyOnDemand="true" closeViewOnExit="false">
                       <cards>
@@ -4755,42 +4677,7 @@
                     </OTUDLCompoundDoc>
                   </header>
                   <footer>
-                    <OTUDLCompoundDoc id="364b3da4-78d5-11dc-82f7-4bde662316f0" showEditBar="false" name="%364b3da4-78d5-11dc-82f7-4bde662316f0">
-                      <bodyText>
-                        <div align="center">
-                          <table width="100%">
-                            <tr>
-                              <td width="10%" />
-                              <td width="80%">
-                                <div align="center">
-                                  <table>
-                                    <tr>
-                                      <td>
-                                        <object refid="364b64b5-78d5-11dc-82f7-4bde662316f0" viewid="29dc5ef0-c453-11dc-95ff-0800200c9a66" />
-                                      </td>
-                                    </tr>
-                                  </table>
-                                </div>
-                              </td>
-                              <td width="10%">
-                                <object refid="${album}" />
-                              </td>
-                            </tr>
-                          </table>
-                        </div>
-                      </bodyText>
-                      <documentRefs>
-                        <OTUDLMenu id="364b64b5-78d5-11dc-82f7-4bde662316f0">
-                          <cardContainer>
-                            <object refid="364b1692-78d5-11dc-82f7-4bde662316f0" />
-                          </cardContainer>
-                          <menuRule>
-                            <object refid="${page-rule}" />
-                          </menuRule>
-                        </OTUDLMenu>
-                        <object refid="29dc5ef0-c453-11dc-95ff-0800200c9a66" />
-                      </documentRefs>
-                    </OTUDLCompoundDoc>
+                    <object refid="${nav-bar}"/>
                   </footer>
                   <north>
                     <object refid="364b1693-78d5-11dc-82f7-4bde662316f0" />
@@ -4802,7 +4689,7 @@
                     <object refid="364b3da4-78d5-11dc-82f7-4bde662316f0" />
                   </south>
                 </OTUDLSection>
-                <OTUDLSection local_id="section_5" name="Hot stuff" isComputerBased="true" isIntroduction="false" isMath="false" isPosttest="false" isPretest="false" isReading="false" isWrapup="false">
+                <OTUDLSection local_id="section_5" description="Why does a surface heat up when you rub it against another surface?" name="Hot stuff" isComputerBased="true" isIntroduction="false" isMath="false" isPosttest="false" isPretest="false" isReading="false" isWrapup="false">
                   <content>
                     <OTCardContainer id="5fc8c8e5-78ff-11dc-b03e-ed6d4a0c2086" contentsMayScroll="true" loadViewOnlyOnDemand="true" closeViewOnExit="false">
                       <cards>
@@ -5687,42 +5574,7 @@
                     </OTUDLCompoundDoc>
                   </header>
                   <footer>
-                    <OTUDLCompoundDoc id="5fc8eff7-78ff-11dc-b03e-ed6d4a0c2086" showEditBar="false" name="%5fc8eff7-78ff-11dc-b03e-ed6d4a0c2086">
-                      <bodyText>
-                        <div align="center">
-                          <table width="100%">
-                            <tr>
-                              <td width="10%" />
-                              <td width="80%">
-                                <div align="center">
-                                  <table>
-                                    <tr>
-                                      <td>
-                                        <object refid="5fc98c38-78ff-11dc-b03e-ed6d4a0c2086" viewid="29dc5ef0-c453-11dc-95ff-0800200c9a66" />
-                                      </td>
-                                    </tr>
-                                  </table>
-                                </div>
-                              </td>
-                              <td width="10%">
-                                <object refid="${album}" />
-                              </td>
-                            </tr>
-                          </table>
-                        </div>
-                      </bodyText>
-                      <documentRefs>
-                        <OTUDLMenu id="5fc98c38-78ff-11dc-b03e-ed6d4a0c2086">
-                          <cardContainer>
-                            <object refid="5fc8c8e5-78ff-11dc-b03e-ed6d4a0c2086" />
-                          </cardContainer>
-                          <menuRule>
-                            <object refid="${page-rule}" />
-                          </menuRule>
-                        </OTUDLMenu>
-                        <object refid="29dc5ef0-c453-11dc-95ff-0800200c9a66" />
-                      </documentRefs>
-                    </OTUDLCompoundDoc>
+                    <object refid="${nav-bar}"/>
                   </footer>
                   <north>
                     <object refid="5fc8c8e6-78ff-11dc-b03e-ed6d4a0c2086" />
@@ -5734,7 +5586,7 @@
                     <object refid="5fc8eff7-78ff-11dc-b03e-ed6d4a0c2086" />
                   </south>
                 </OTUDLSection>
-                <OTUDLSection local_id="section_6" name="Start moving" isComputerBased="true" isIntroduction="false" isMath="false" isPosttest="false" isPretest="false" isReading="false" isWrapup="false">
+                <OTUDLSection local_id="section_6" name="Start moving" description="How strong is the force of friction?" isComputerBased="true" isIntroduction="false" isMath="false" isPosttest="false" isPretest="false" isReading="false" isWrapup="false">
                   <content>
                     <OTCardContainer id="b180b8b5-7906-11dc-b03e-ed6d4a0c2086" contentsMayScroll="true" loadViewOnlyOnDemand="true" closeViewOnExit="false">
                       <cards>
@@ -6758,42 +6610,7 @@
                     </OTUDLCompoundDoc>
                   </header>
                   <footer>
-                    <OTUDLCompoundDoc id="b180b8b7-7906-11dc-b03e-ed6d4a0c2086" showEditBar="false" name="%b180b8b7-7906-11dc-b03e-ed6d4a0c2086">
-                      <bodyText>
-                        <div align="center">
-                          <table width="100%">
-                            <tr>
-                              <td width="10%" />
-                              <td width="80%">
-                                <div align="center">
-                                  <table>
-                                    <tr>
-                                      <td>
-                                        <object refid="b18106d8-7906-11dc-b03e-ed6d4a0c2086" viewid="29dc5ef0-c453-11dc-95ff-0800200c9a66" />
-                                      </td>
-                                    </tr>
-                                  </table>
-                                </div>
-                              </td>
-                              <td width="10%">
-                                <object refid="${album}" />
-                              </td>
-                            </tr>
-                          </table>
-                        </div>
-                      </bodyText>
-                      <documentRefs>
-                        <OTUDLMenu id="b18106d8-7906-11dc-b03e-ed6d4a0c2086">
-                          <cardContainer>
-                            <object refid="b180b8b5-7906-11dc-b03e-ed6d4a0c2086" />
-                          </cardContainer>
-                          <menuRule>
-                            <object refid="${page-rule}" />
-                          </menuRule>
-                        </OTUDLMenu>
-                        <object refid="29dc5ef0-c453-11dc-95ff-0800200c9a66" />
-                      </documentRefs>
-                    </OTUDLCompoundDoc>
+                    <object refid="${nav-bar}"/>
                   </footer>
                   <north>
                     <object refid="b180b8b6-7906-11dc-b03e-ed6d4a0c2086" />
@@ -6805,7 +6622,7 @@
                     <object refid="b180b8b7-7906-11dc-b03e-ed6d4a0c2086" />
                   </south>
                 </OTUDLSection>
-                <OTUDLSection local_id="section_7" name="Halt!" isComputerBased="true" isIntroduction="false" isMath="false" isPosttest="false" isPretest="false" isReading="false" isWrapup="false">
+                <OTUDLSection local_id="section_7" name="Halt!" description="When an object slows down, where does the energy go?" isComputerBased="true" isIntroduction="false" isMath="false" isPosttest="false" isPretest="false" isReading="false" isWrapup="false">
                   <content>
                     <OTCardContainer id="fb397b2b-7dab-11dc-8e17-cd1de991f5de" contentsMayScroll="true" loadViewOnlyOnDemand="true" closeViewOnExit="false">
                       <cards>
@@ -7656,42 +7473,7 @@
                     </OTUDLCompoundDoc>
                   </header>
                   <footer>
-                    <OTUDLCompoundDoc id="fb397b2d-7dab-11dc-8e17-cd1de991f5de" showEditBar="false" name="%fb397b2d-7dab-11dc-8e17-cd1de991f5de">
-                      <bodyText>
-                        <div align="center">
-                          <table width="100%">
-                            <tr>
-                              <td width="10%" />
-                              <td width="80%">
-                                <div align="center">
-                                  <table>
-                                    <tr>
-                                      <td>
-                                        <object refid="fb3cd68e-7dab-11dc-8e17-cd1de991f5de" viewid="29dc5ef0-c453-11dc-95ff-0800200c9a66" />
-                                      </td>
-                                    </tr>
-                                  </table>
-                                </div>
-                              </td>
-                              <td width="10%">
-                                <object refid="${album}" />
-                              </td>
-                            </tr>
-                          </table>
-                        </div>
-                      </bodyText>
-                      <documentRefs>
-                        <OTUDLMenu id="fb3cd68e-7dab-11dc-8e17-cd1de991f5de">
-                          <cardContainer>
-                            <object refid="fb397b2b-7dab-11dc-8e17-cd1de991f5de" />
-                          </cardContainer>
-                          <menuRule>
-                            <object refid="${page-rule}" />
-                          </menuRule>
-                        </OTUDLMenu>
-                        <object refid="29dc5ef0-c453-11dc-95ff-0800200c9a66" />
-                      </documentRefs>
-                    </OTUDLCompoundDoc>
+                    <object refid="${nav-bar}"/>
                   </footer>
                   <north>
                     <object refid="fb397b2c-7dab-11dc-8e17-cd1de991f5de" />
@@ -7703,7 +7485,7 @@
                     <object refid="fb397b2d-7dab-11dc-8e17-cd1de991f5de" />
                   </south>
                 </OTUDLSection>
-                <OTUDLSection local_id="section_8" name="Measuring challenge" isComputerBased="false" isIntroduction="false" isMath="true" isPosttest="false" isPretest="false" isReading="false" isWrapup="false">
+                <OTUDLSection local_id="section_8" name="Measuring challenge" description="If a series of measurements vary, how do you decide on the best value" isComputerBased="false" isIntroduction="false" isMath="true" isPosttest="false" isPretest="false" isReading="false" isWrapup="false">
                   <content>
                     <OTCardContainer id="e5837c4b-7e82-11dc-a02a-2fa3fd422b5e" contentsMayScroll="true" loadViewOnlyOnDemand="true" closeViewOnExit="false">
                       <cards>
@@ -8504,42 +8286,7 @@
                     </OTUDLCompoundDoc>
                   </header>
                   <footer>
-                    <OTUDLCompoundDoc id="e5837c4d-7e82-11dc-a02a-2fa3fd422b5e" showEditBar="false" name="%e5837c4d-7e82-11dc-a02a-2fa3fd422b5e">
-                      <bodyText>
-                        <div align="center">
-                          <table width="100%">
-                            <tr>
-                              <td width="10%" />
-                              <td width="80%">
-                                <div align="center">
-                                  <table>
-                                    <tr>
-                                      <td>
-                                        <object refid="e5848dbe-7e82-11dc-a02a-2fa3fd422b5e" viewid="29dc5ef0-c453-11dc-95ff-0800200c9a66" />
-                                      </td>
-                                    </tr>
-                                  </table>
-                                </div>
-                              </td>
-                              <td width="10%">
-                                <object refid="${album}" />
-                              </td>
-                            </tr>
-                          </table>
-                        </div>
-                      </bodyText>
-                      <documentRefs>
-                        <OTUDLMenu id="e5848dbe-7e82-11dc-a02a-2fa3fd422b5e">
-                          <cardContainer>
-                            <object refid="e5837c4b-7e82-11dc-a02a-2fa3fd422b5e" />
-                          </cardContainer>
-                          <menuRule>
-                            <object refid="${page-rule}" />
-                          </menuRule>
-                        </OTUDLMenu>
-                        <object refid="29dc5ef0-c453-11dc-95ff-0800200c9a66" />
-                      </documentRefs>
-                    </OTUDLCompoundDoc>
+                    <object refid="${nav-bar}"/>
                   </footer>
                   <north>
                     <object refid="e5837c4c-7e82-11dc-a02a-2fa3fd422b5e" />
@@ -8551,7 +8298,7 @@
                     <object refid="e5837c4d-7e82-11dc-a02a-2fa3fd422b5e" />
                   </south>
                 </OTUDLSection>
-                <OTUDLSection local_id="section_9" name="Wrapping up" isComputerBased="false" isIntroduction="false" isMath="false" isPosttest="false" isPretest="false" isReading="false" isWrapup="false">
+                <OTUDLSection local_id="section_9" name="Wrapping up" description="Coming soon: summarize what you learned in this unit." isComputerBased="false" isIntroduction="false" isMath="false" isPosttest="false" isPretest="false" isReading="false" isWrapup="false">
                   <content>
                     <OTCardContainer id="3c3da311-7e83-11dc-a02a-2fa3fd422b5e" contentsMayScroll="true" loadViewOnlyOnDemand="true" closeViewOnExit="false">
                       <cards>
@@ -8649,42 +8396,7 @@
                     </OTUDLCompoundDoc>
                   </header>
                   <footer>
-                    <OTUDLCompoundDoc id="3c3da313-7e83-11dc-a02a-2fa3fd422b5e" showEditBar="false" name="%3c3da313-7e83-11dc-a02a-2fa3fd422b5e">
-                      <bodyText>
-                        <div align="center">
-                          <table width="100%">
-                            <tr>
-                              <td width="10%" />
-                              <td width="80%">
-                                <div align="center">
-                                  <table>
-                                    <tr>
-                                      <td>
-                                        <object refid="3c3dca24-7e83-11dc-a02a-2fa3fd422b5e" viewid="29dc5ef0-c453-11dc-95ff-0800200c9a66" />
-                                      </td>
-                                    </tr>
-                                  </table>
-                                </div>
-                              </td>
-                              <td width="10%">
-                                <object refid="${album}" />
-                              </td>
-                            </tr>
-                          </table>
-                        </div>
-                      </bodyText>
-                      <documentRefs>
-                        <OTUDLMenu id="3c3dca24-7e83-11dc-a02a-2fa3fd422b5e">
-                          <cardContainer>
-                            <object refid="3c3da311-7e83-11dc-a02a-2fa3fd422b5e" />
-                          </cardContainer>
-                          <menuRule>
-                            <object refid="${page-rule}" />
-                          </menuRule>
-                        </OTUDLMenu>
-                        <object refid="29dc5ef0-c453-11dc-95ff-0800200c9a66" />
-                      </documentRefs>
-                    </OTUDLCompoundDoc>
+                    <object refid="${nav-bar}"/>
                   </footer>
                   <north>
                     <object refid="3c3da312-7e83-11dc-a02a-2fa3fd422b5e" />
@@ -9125,43 +8837,7 @@
                     </OTUDLCompoundDoc>
                   </header>
                   <footer>
-                    <OTUDLCompoundDoc id="461662e9-7e83-11dc-a02a-2fa3fd422b5e" showEditBar="false" name="%461662e9-7e83-11dc-a02a-2fa3fd422b5e">
-                      <bodyText>
-                        <div align="center">
-                          <table width="100%">
-                            <tr>
-                              <td width="10%" />
-                              <td width="80%">
-                                <div align="center">
-                                  <table>
-                                    <tr>
-                                      <td>
-                                        <object viewid="29dc5ef0-c453-11dc-95ff-0800200c9a66" refid="461689fa-7e83-11dc-a02a-2fa3fd422b5e" />
-                                      </td>
-                                    </tr>
-                                  </table>
-                                </div>
-                              </td>
-                              <td width="10%">
-                                <object refid="${album}" />
-                              </td>
-                            </tr>
-                          </table>
-                        </div>
-                      </bodyText>
-                      <documentRefs>
-                        <object refid="29dc5ef0-c453-11dc-95ff-0800200c9a66" />
-                        <OTUDLMenu id="461689fa-7e83-11dc-a02a-2fa3fd422b5e">
-                          <cardContainer>
-                            <object refid="46163bd7-7e83-11dc-a02a-2fa3fd422b5e" />
-                          </cardContainer>
-                          <menuRule>
-                            <object refid="${page-rule}" />
-                          </menuRule>
-                        </OTUDLMenu>
-                        <object refid="${album}" />
-                      </documentRefs>
-                    </OTUDLCompoundDoc>
+                    <object refid="${nav-bar}"/>
                   </footer>
                   <north>
                     <object refid="461662e8-7e83-11dc-a02a-2fa3fd422b5e" />
@@ -9175,12 +8851,16 @@
                 </OTUDLSection>
               </cards>
               <currentCard>
-                <object refid="${section_1}" />
+                <object refid="${section_0}" />
               </currentCard>
+              <viewedCards>
+                <object refid="${section_0}" />
+              </viewedCards>
             </OTCardContainer>
-          </content>
-          <script>
-            <OTScriptObject>
+         
+      </root>
+      <library>
+      	<OTScriptObject>
               <variables>
                 <OTScriptVariable name="cardContainer">
                   <reference>
@@ -9213,10 +8893,6 @@
               </script>
               <scriptState />
             </OTScriptObject>
-          </script>
-        </OTUDLContainer>
-      </root>
-      <library>
         <OTUDLMenu local_id="menu">
           <cardContainer>
             <object refid="${section-card-container}" />
@@ -9227,6 +8903,9 @@
           <css>
             <object refid="31193bb0-c44f-11dc-95ff-0800200c9a66" />
           </css>
+          <hideElements>
+          	<object refid="${section_0}"/>
+          </hideElements>
         </OTUDLMenu>
         <OTUDLMenu local_id="section-1-menu">
           <cardContainer>
@@ -9274,9 +8953,52 @@
             </OTUDLMenuRule>
           </rules>
         </OTUDLMenuRule>
-        <OTJavascript local_id="change_page.js" src="http://continuum.concord.org/otrunk/examples/UDL/scripts/change_page.js" />
-        <OTJavascript local_id="show_message.js" src="http://continuum.concord.org/otrunk/examples/UDL/scripts/show_message.js" />
-        <OTJavascript local_id="authoring_script.js" src="http://continuum.concord.org/otrunk/examples/UDL/scripts/authoring_script.js" />
+        <OTJavascript local_id="change_page.js" src="scripts/change_page.js" />
+        <OTJavascript local_id="show_message.js" src="scripts/show_message.js" />
+        <OTJavascript local_id="authoring_script.js" src="scripts/authoring_script.js" />
+        <OTButton local_id="home-button" name="Button" text="Home" />
+                            <OTScriptObject local_id="home-script">
+                              <variables>
+                                <OTScriptVariable name="cardContainer">
+                                  <reference>
+                                    <object refid="${section-card-container}" />
+                                  </reference>
+                                </OTScriptVariable>
+                                <OTScriptVariableComponent name="button">
+                                  <reference>
+                                    <object refid="${home-button}" />
+                                  </reference>
+                                </OTScriptVariableComponent>
+                                <OTScriptVariable name="card">
+                                  <reference>
+                                    <object refid="${section_0}" />
+                                  </reference>
+                                </OTScriptVariable>
+                              </variables>
+                              <script>
+                                <object refid="${change_page.js}" />
+                              </script>
+                              <scriptState />
+                            </OTScriptObject>
+                            <OTUDLCoachGroup local_id="character-group">
+              <topLevelCardContainer>
+                <object refid="${section-card-container}" />
+              </topLevelCardContainer>
+              <characters>
+                <OTUDLCoach local_id="character_affective" inactiveImageURL="http://udl.concord.org/share/shared-images/blah-head.png" activeImageURL="http://udl.concord.org/share/shared-images/blah-anim.gif" />
+                <OTUDLCoach local_id="character_strategic" inactiveImageURL="http://udl.concord.org/share/shared-images/clunk-head.png" activeImageURL="http://udl.concord.org/share/shared-images/clunk-anim.gif" />
+                <OTUDLCoach local_id="character_recognition" inactiveImageURL="http://udl.concord.org/share/shared-images/roxy-head.png" activeImageURL="http://udl.concord.org/share/shared-images/roxy-anim.gif" />
+              </characters>
+              <speechFrame>
+                <OTFrame local_id="speech_frame" width="380" height="340" borderlessPopup="false" />
+              </speechFrame>
+            </OTUDLCoachGroup>
+           <OTUDLNavBar local_id="nav-bar"
+           		topLevelCardContainer="${section-card-container}" 
+           		coaches="${character-group}" 
+           		album="${album}" 
+           		menuView="29dc5ef0-c453-11dc-95ff-0800200c9a66" 
+           		cssColor="31193bb0-c44f-11dc-95ff-0800200c9a66"/>                 
       </library>
     </OTSystem>
   </objects>
