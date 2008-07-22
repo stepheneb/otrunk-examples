@@ -261,7 +261,7 @@ function assessment_text() {
 	else {
 		t += "<font color=\"900000\">Incorrect</font></td><td>0 points (out of 10)</td>"		
 	}
-	t += "</td></tr><tr></tr>"
+	t += "</td></tr><tr></tr><tr>"
 	
 	t += "<td colspan=\"2\"><b>Fault #1</b> (20 points for correct answer)</td>"
 	t += "</tr><tr>"
@@ -276,7 +276,7 @@ function assessment_text() {
 	else {
 		t += "<font color=\"900000\">Incorrect</font></td><td>0 points (out of 20)</td>"		
 	}
-	t += "</td></tr><tr></tr>"
+	t += "</td></tr><tr></tr><tr>"
   	
 	t += "<td colspan=\"2\"><b>Fault #2</b> (20 points for correct answer)</td>"
 	t += "</tr><tr>"
@@ -291,7 +291,7 @@ function assessment_text() {
 	else {
 		t += "<font color=\"900000\">Incorrect</font></td><td>0 points (out of 20)</td>"		
 	}
-	t += "</td></tr><tr></tr>"
+	t += "</td></tr><tr></tr><tr>"
 	
 	t += "<td colspan=\"2\"><b>Fault #3</b> (20 points for correct answer)</td>"
 	t += "</tr><tr>"
@@ -306,19 +306,19 @@ function assessment_text() {
 	else {
 		t += "<font color=\"900000\">Incorrect</font></td><td>0 points (out of 20)</td>"		
 	}
-	t += "</td></tr><tr></tr>"
+	t += "</td></tr><tr></tr><tr>"
 	
 	t += "<td colspan=\"2\"><nobr><b>Number of useless<sup><font color=\"009000\">*</font></sup> probes</b> (10 points for minimal number)</nobr></td>"
 	t += "</tr><tr>"
 	var pts = getPoints("uselessProbes")
 	t += "<td>" + answers.numHiddenProbes + "</td><td>" + pts[0] + " points (out of " + pts[1] + ")</td>"
-	t += "</tr><tr>"
+	t += "</tr><tr></tr><tr>"
 			
 	t += "<td colspan=\"2\"><nobr><b>Number of useful<sup><font color=\"009000\">**</font></sup> probes</b> (10 points for minimal number)</nobr></td>"
 	t += "</tr><tr>"
 	pts = getPoints("usefulProbes")
 	t += "<td>" + answers.numEvidentProbes + "</td><td>" + pts[0] + " points (out of " + pts[1] + ")</td>"
-	t += "</tr><tr>"	
+	t += "</tr><tr></tr><tr>"	
 	
 	t += "<td colspan=\"2\"><b>Time Taken</b> (10 points for minimal time) </td>"
 	t += "</tr><tr>"	
