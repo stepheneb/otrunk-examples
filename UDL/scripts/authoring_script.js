@@ -71,6 +71,20 @@ var pageHandler =
 				} else {
 					objectAboveSnapshotButton = referencedObject;
 				}
+				
+				if (referencedObject.getName().indexOf("Inner pages") > -1){
+					var doc = referencedObject;
+					var refs = doc.getDocumentRefs();
+					var cards = refs.get(0);
+					var menu = refs.get(1);
+					var text = doc.getBodyText();
+					
+					menu.setCardContainer(cards);
+					text = text.replaceAll("<!-- insert -->", 
+					"<object refid=\""+cards.getGlobalId().toExternalForm() + "\"/><br/>"+
+					"<object refid=\""+menu.getGlobalId().toExternalForm() + "\" viewId=\""+menuHorizontalView.getGlobalId().toExternalForm() +"\"/>");
+					doc.setBodyText(text);
+				}
 			} catch (e){
 				// could not get object from object service
 			}
