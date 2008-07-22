@@ -12,8 +12,11 @@ importClass(Packages.org.concord.framework.otrunk.view.OTUserListService)
 importClass(Packages.org.concord.otrunk.ui.OTText)
 importClass(Packages.org.concord.otrunk.ui.swing.OTCardContainerView)
 importClass(Packages.org.concord.otrunkcapa.rubric.OTAssessment)
+importClass(Packages.org.concord.otrunkcapa.rubric.OTAssessmentView)
+importClass(Packages.org.concord.otrunkcapa.rubric.RubricGradeUtil)
 importClass(Packages.org.concord.otrunk.labview.LabviewMonitor)
 importClass(Packages.org.concord.otrunk.labview.LabviewReportConverter)
+importClass(Packages.org.concord.otrunk.labview.MADWrapper)
 
 
 /*
@@ -31,6 +34,7 @@ importClass(Packages.org.concord.otrunk.labview.LabviewReportConverter)
  
 var ot_monitor
 var ot_cards
+var ot_assessment_view_config
  	
 var glob = {
 	dateFormat : SimpleDateFormat.getInstance(),
@@ -39,6 +43,7 @@ var glob = {
 	lastStep : 1,
 	monitor : null, // "real object" for ot_monitor
 	otAssessment : null,
+	madWrapper : null,
 	activityLog : ""
 }
 
@@ -51,7 +56,8 @@ function init() {
 	System.out.println("Entered: init()")
 	glob.dateFormat.applyPattern("MM/dd/yyyy HH:mm:ss zzz");
     glob.monitor = controllerService.getRealObject(ot_monitor)
-    glob.monitor.setExitListener(listeners.labviewExitListener)		
+    glob.monitor.setExitListener(listeners.labviewExitListener)
+    ot_assessment_view_config.setScript(listeners.assessmentViewScript)		
     setupAssessmentLogging()
 	initLogging()
 	OTCardContainerView.setCurrentCard(ot_cards, "main_card_1")	
@@ -89,7 +95,7 @@ function getUserName() {
 
 function initLogging() {
 	glob.info = otObjectService.createObject(OTText)
-	glob.info.setText("")
+	glob.info.setText("");
 	otContents.add(glob.info)
 }
 
@@ -100,12 +106,12 @@ function log(msg) {
 function wrap_assess() {
 	var converter = new LabviewReportConverter(glob.monitor)
 	converter.markEndTime()
-	var madWrapper = converter.getMADWrapper()
+	glob.madWrapper = converter.getMADWrapper()
 	glob.otAssessment.setLabel("Fault")
 	var inventory = glob.otAssessment.getInventory()
 	var madID = converter.getOTModelActivityData().getGlobalId()
 	inventory.put("modelActivityData", madID)
-	assess(glob.otAssessment, madWrapper)
+	assess(glob.otAssessment, glob.madWrapper)
 }
 
 var listeners = {
@@ -114,6 +120,12 @@ var listeners = {
 	    	wrap_assess() // must close labVIEW before assess()			
 			OTCardContainerView.setCurrentCard(ot_cards, "main_card_2")				
 		}	
+	}),
+	
+	assessmentViewScript : new OTAssessmentView.Script({
+		getXHTMLText: function() {
+			return assessment_text();
+		}
 	})
 }
 

@@ -8,7 +8,8 @@ var answers =  {
 	s_fault3 : 0, // submitted location of fault #3
 	s_truthValues : "", // submitted answer to truth table question
 	c_truthValues : "10100100", // correct answer to truth table question
-	numHiddenProbes : 0, // number of redundant probes
+	numHiddenProbes : 0, // number of useless probes
+	numEvidentProbes : 0, // number of useful probes
 	numChanges : 0, // number of changes (input switch flips + probes)
 	time : 0 // total time taken
 }
@@ -48,23 +49,11 @@ function assess(assessment, madWrapper) {
 	answers.s_fault3 = parseInt(madWrapper.getLastCIValue("answer3")) 
 	answers.time = madWrapper.getTimeTotal()
 	
-	log("----------\n")
-	log("Correct truth table values: " + answers.c_truthValues + "\n")
-	log("Submitted truth table values: " + getSubmittedTruthValuesString(madWrapper) + "\n")
-	log("Correct fault #1 location: " + viMap.gateToLabel[answers.c_fault1] + "\n")
-  	log("Submitted fault #1 location: " + viMap.gateToLabel[answers.s_fault1] + "\n")
-	log("Correct fault #2 location: " + viMap.gateToLabel[answers.c_fault2] + "\n")
-  	log("Submitted fault #2 location: " + viMap.gateToLabel[answers.s_fault2] + "\n")
-	log("Correct fault #3 location: " + viMap.gateToLabel[answers.c_fault3] + "\n")
-  	log("Submitted fault #3 location: " + viMap.gateToLabel[answers.s_fault3] + "\n")
-  	log("Number of changes (probes + input switch): " + answers.numChanges + "\n")
-  	log("Time taken: " + getTimeStringFromSeconds(answers.time) + "\n")
-
 	var ttInd = parseInt(madWrapper.getLastCIValue("truthTableCorrect"))
 	var faultInd1 = answers.c_fault1 == answers.s_fault1 ? 1 : 0
 	var faultInd2 = answers.c_fault2 == answers.s_fault2 ? 1 : 0
 	var faultInd3 = answers.c_fault3 == answers.s_fault3 ? 1 : 0	
-	var numProbesInd = getNumProbesIndicator(madWrapper, faultInd1, faultInd2, faultInd3, answers.numChanges)
+	//var numProbesInd = getNumProbesIndicator(madWrapper, faultInd1, faultInd2, faultInd3, answers.numChanges)
 	var timeInd = getTimeIndicator(answers.time, ttInd, faultInd1, faultInd2, faultInd3)
 	
 	var indicators = assessment.getIndicatorValues()
@@ -72,12 +61,9 @@ function assess(assessment, madWrapper) {
 	indicators.put("fault1", faultInd1)
 	indicators.put("fault2", faultInd2)	
 	indicators.put("fault3", faultInd3)		
-	indicators.put("redundantProbe", answers.numHiddenProbes)
-	indicators.put("numChanges", numProbesInd)
+	indicators.put("uselessProbes", answers.numHiddenProbes)
+	indicators.put("usefulProbes", answers.numEvidentProbes)
 	indicators.put("timeTotal", timeInd)
-	
-	log("----------\n")		
-	log(glob.activityLog)
 }
 
 function processUserEvents(madWrapper) {
@@ -154,7 +140,10 @@ function processUserEvents(madWrapper) {
 				glob.activityLog += timeString + " - Probed [" + 
 					viMap.probeMap[parseInt(value)] + "] " + ev + " \n"
 				++ answers.numChanges						
-				if (!evident) {
+				if (evident) {
+					++ answers.numEvidentProbes
+				}
+				else {
 					++ answers.numHiddenProbes
 				}					
 			}
@@ -238,4 +227,115 @@ function getTimeStringFromSeconds(s) {
 	var min = parseInt(s / 60)
 	var sec = s % 60
 	return "" + min + " minutes " + sec + " seconds"
+}
+
+function getPoints(indicatorName) {
+	var rubric = ot_assessment_view_config.getRubric()
+	var indicators = rubric.getIndicators();
+	var indicator = null
+	for (var i = 0; i < indicators.size(); ++i) {
+		indicator = indicators.get(i)
+		if (indicator.getName() == indicatorName) {
+			break;
+		}
+	}
+	var grade = RubricGradeUtil.getIndicatorGrade(glob.otAssessment, indicator, rubric)
+	return [grade.getPoints(), RubricGradeUtil.getMaximumPoints(indicator)]
+}
+
+function assessment_text() {
+	var t = ""
+	
+	t += "<h2>Details</h2>"
+	t += "<table><tr>"
+	t += "<td colspan=\"2\"><b>Truth Table</b> (10 points for correct answer)</td>"
+	t += "</tr><tr>"
+	t += "<td>Correct value</td><td>" + answers.c_truthValues + "</td>"
+	t += "</tr><tr>"
+	t += "<td>Submitted value</td><td>" + getSubmittedTruthValuesString(glob.madWrapper) + "</td>"
+	t += "</tr>"
+	t += "<tr><td colspan=\"2\""
+	if (answers.c_truthValues == getSubmittedTruthValuesString(glob.madWrapper)) {
+		t += "<font color=\"00e000\">Correct! 10 points (out of 10)</font>\n"
+	}
+	else {
+		t += "<font color=\"e00000\">Incorrect 0 points (out of 10)</font>\n"		
+	}
+	t += "</td></tr><tr></tr>"
+	
+	t += "<td colspan=\"2\"><b>Fault #1</b> (20 points for correct answer</td>"
+	t += "</tr><tr>"
+	t += "<td>Correct answer</td><td>" + viMap.gateToLabel[answers.c_fault1] + "</td>"
+	t += "</tr><tr>"
+  	t += "<td>Submitted answer</td><td>" + viMap.gateToLabel[answers.s_fault1] + "</td>"
+  	t += "</tr><tr>"
+	t += "<td colspan=\"2\""
+	if (answers.c_fault1 == answers.s_fault1) {
+		t += "<font color=\"00e000\">Correct! 20 points (out of 20)</font>\n"
+	}
+	else {
+		t += "<font color=\"e00000\">Incorrect 0 points (out of 20)</font>\n"		
+	}
+	t += "</td></tr><tr></tr>"
+  	
+	t += "<td colspan=\"2\"><b>Fault #2</b> (20 points for correct answer</td>"
+	t += "</tr><tr>"
+	t += "<td>Correct answer</td><td>" + viMap.gateToLabel[answers.c_fault2] + "</td>"
+	t += "</tr><tr>"
+  	t += "<td>Submitted answer</td><td>" + viMap.gateToLabel[answers.s_fault2] + "</td>"
+  	t += "</tr><tr>"
+	t += "<td colspan=\"2\""
+	if (answers.c_fault2 == answers.s_fault2) {
+		t += "<font color=\"00e000\">Correct! 20 points (out of 20)</font>\n"
+	}
+	else {
+		t += "<font color=\"e00000\">Incorrect 0 points (out of 20)</font>\n"		
+	}
+	t += "</td></tr><tr></tr>"
+	
+	t += "<td colspan=\"2\"><b>Fault #3</b> (20 points for correct answer</td>"
+	t += "</tr><tr>"
+	t += "<td>Correct answer</td><td>" + viMap.gateToLabel[answers.c_fault3] + "</td>"
+	t += "</tr><tr>"
+  	t += "<td>Submitted answer</td><td>" + viMap.gateToLabel[answers.s_fault3] + "</td>"
+  	t += "</tr><tr>"
+	t += "<td colspan=\"2\""
+	if (answers.c_fault3 == answers.s_fault3) {
+		t += "<font color=\"00e000\">Correct! 20 points (out of 20)</font>\n"
+	}
+	else {
+		t += "<font color=\"e00000\">Incorrect 0 points (out of 20)</font>\n"		
+	}
+	t += "</td></tr><tr></tr>"
+	
+	t += "<td colspan=\"2\"><b>Number of useless<sup><font color=\"009000\">*</font></sup> probes</b> (10 points for minimal number)</td>"
+	t += "</tr><tr>"
+	var pts = getPoints("uselessProbes")
+	t += "<td>" + answers.numHiddenProbes + "</td><td>" + pts[0] + " points (out of " + pts[1] + ")</td>"
+	t += "</tr><tr>"
+			
+	t += "<d colspan=\"2\"><b>Number of useful<sup><font color=\"009000\">**</font></sup> probes</b> (10 points for minimal number)</td>"
+	t += "</tr><tr>"
+	pts = getPoints("usefulProbes")
+	t += "<td>" + answers.numEvidentProbes + "</td><td>" + pts[0] + " points (out of " + pts[1] + ")</td>"
+	t += "</tr><tr>"	
+	
+	t += "<td colspan=\"2\"><b>Time Taken</b></td>"
+	t += "</tr><tr>"	
+	pts = getPoints("timeTotal");
+  	t += "<td>" + getTimeStringFromSeconds(answers.time) + "</td><td>" + pts[0] + " points (out of " + pts[1] + ")</td>"
+	t += "</tr></table>"
+	
+	t += "<font color=\"009000\">"
+	t += "<p><b>* </b> A probe measurement is useless if the inputs are set so that the circuit is functioning properly.<br/>"
+	t += "<b>**</b> A probe measurement is useful if the inputs are set so that the circuit is malfunctioning.</p>"
+	t += "</font>"	
+	
+	t += "<p/>---------- "			
+	t += " The information below this line is only for debugging purpose "
+	t += "----------<br/><pre>"		
+	t += glob.activityLog
+	t += "</pre><hr/>"
+	
+	return t
 }
