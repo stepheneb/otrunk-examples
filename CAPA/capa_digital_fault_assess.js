@@ -256,14 +256,14 @@ function assessment_text() {
 	t += "</tr>"
 	t += "<tr><td colspan=\"2\""
 	if (answers.c_truthValues == getSubmittedTruthValuesString(glob.madWrapper)) {
-		t += "<font color=\"00e000\">Correct! 10 points (out of 10)</font>\n"
+		t += "<font color=\"009000\">Correct! 10 points (out of 10)</font>\n"
 	}
 	else {
-		t += "<font color=\"e00000\">Incorrect 0 points (out of 10)</font>\n"		
+		t += "<font color=\"900000\">Incorrect 0 points (out of 10)</font>\n"		
 	}
 	t += "</td></tr><tr></tr>"
 	
-	t += "<td colspan=\"2\"><b>Fault #1</b> (20 points for correct answer</td>"
+	t += "<td colspan=\"2\"><b>Fault #1</b> (20 points for correct answer)</td>"
 	t += "</tr><tr>"
 	t += "<td>Correct answer</td><td>" + viMap.gateToLabel[answers.c_fault1] + "</td>"
 	t += "</tr><tr>"
@@ -271,14 +271,14 @@ function assessment_text() {
   	t += "</tr><tr>"
 	t += "<td colspan=\"2\""
 	if (answers.c_fault1 == answers.s_fault1) {
-		t += "<font color=\"00e000\">Correct! 20 points (out of 20)</font>\n"
+		t += "<font color=\"009000\">Correct! 20 points (out of 20)</font>\n"
 	}
 	else {
-		t += "<font color=\"e00000\">Incorrect 0 points (out of 20)</font>\n"		
+		t += "<font color=\"900000\">Incorrect 0 points (out of 20)</font>\n"		
 	}
 	t += "</td></tr><tr></tr>"
   	
-	t += "<td colspan=\"2\"><b>Fault #2</b> (20 points for correct answer</td>"
+	t += "<td colspan=\"2\"><b>Fault #2</b> (20 points for correct answer)</td>"
 	t += "</tr><tr>"
 	t += "<td>Correct answer</td><td>" + viMap.gateToLabel[answers.c_fault2] + "</td>"
 	t += "</tr><tr>"
@@ -286,14 +286,14 @@ function assessment_text() {
   	t += "</tr><tr>"
 	t += "<td colspan=\"2\""
 	if (answers.c_fault2 == answers.s_fault2) {
-		t += "<font color=\"00e000\">Correct! 20 points (out of 20)</font>\n"
+		t += "<font color=\"009000\">Correct! 20 points (out of 20)</font>\n"
 	}
 	else {
-		t += "<font color=\"e00000\">Incorrect 0 points (out of 20)</font>\n"		
+		t += "<font color=\"900000\">Incorrect 0 points (out of 20)</font>\n"		
 	}
 	t += "</td></tr><tr></tr>"
 	
-	t += "<td colspan=\"2\"><b>Fault #3</b> (20 points for correct answer</td>"
+	t += "<td colspan=\"2\"><b>Fault #3</b> (20 points for correct answer)</td>"
 	t += "</tr><tr>"
 	t += "<td>Correct answer</td><td>" + viMap.gateToLabel[answers.c_fault3] + "</td>"
 	t += "</tr><tr>"
@@ -301,10 +301,10 @@ function assessment_text() {
   	t += "</tr><tr>"
 	t += "<td colspan=\"2\""
 	if (answers.c_fault3 == answers.s_fault3) {
-		t += "<font color=\"00e000\">Correct! 20 points (out of 20)</font>\n"
+		t += "<font color=\"009000\">Correct! 20 points (out of 20)</font>\n"
 	}
 	else {
-		t += "<font color=\"e00000\">Incorrect 0 points (out of 20)</font>\n"		
+		t += "<font color=\"900000\">Incorrect 0 points (out of 20)</font>\n"		
 	}
 	t += "</td></tr><tr></tr>"
 	
@@ -320,7 +320,7 @@ function assessment_text() {
 	t += "<td>" + answers.numEvidentProbes + "</td><td>" + pts[0] + " points (out of " + pts[1] + ")</td>"
 	t += "</tr><tr>"	
 	
-	t += "<td colspan=\"2\"><b>Time Taken</b></td>"
+	t += "<td colspan=\"2\"><b>Time Taken</b> (10 points for minimal time) </td>"
 	t += "</tr><tr>"	
 	pts = getPoints("timeTotal");
   	t += "<td>" + getTimeStringFromSeconds(answers.time) + "</td><td>" + pts[0] + " points (out of " + pts[1] + ")</td>"
