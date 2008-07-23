@@ -216,20 +216,22 @@ function init() {
 		sections[i] = cardContainer.getCards().get(i);
 		sections[i].addOTChangeListener(sectionListener);
 		
-		sectionCardContainers[i] = sections[i].getContent();
-		sectionCardContainers[i].addOTChangeListener(pageContainerListener);
-		
-		for (var j = 0; j < sectionCardContainers[i].getCards().size(); j++){
-			pages[pageIndex] = sectionCardContainers[i].getCards().get(j);
-			pages[pageIndex].addOTChangeListener(pageListener);
-			addPageNumber(pages[pageIndex], j+1);
-			// turn off definitions for pre- and post-
-			if ((i == 0) || (i == (cardContainer.getCards().size()-1))){
-				pages[pageIndex].setShowDefinitions(false);
-			} else {
-				pages[pageIndex].setShowDefinitions(true);
+		if (sections[i].getContent() instanceof OTCardContainer){
+			sectionCardContainers[i] = sections[i].getContent();
+			sectionCardContainers[i].addOTChangeListener(pageContainerListener);
+			
+			for (var j = 0; j < sectionCardContainers[i].getCards().size(); j++){
+				pages[pageIndex] = sectionCardContainers[i].getCards().get(j);
+				pages[pageIndex].addOTChangeListener(pageListener);
+				addPageNumber(pages[pageIndex], j+1);
+				// turn off definitions for pre- and post-
+				if ((i == 0) || (i == (cardContainer.getCards().size()-1))){
+					pages[pageIndex].setShowDefinitions(false);
+				} else {
+					pages[pageIndex].setShowDefinitions(true);
+				}
+				pageIndex++;
 			}
-			pageIndex++;
 		}
 	}
 	
