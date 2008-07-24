@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<otrunk id="874b8410-3938-012a-b543-0017f2cc694e">
+	<imports>
+		<import class="org.concord.otrunk.OTSystem" />
+		<import class="org.concord.otrunk.view.OTViewEntry" />
+		<import class="org.concord.otrunk.view.OTViewBundle" />
+		<import class="org.concord.otrunk.view.document.OTCompoundDoc" />
+		<import class="org.concord.otrunk.view.document.OTTextObject" />
+		<import class="org.concord.otrunkmw.OTModelerPage" />
+		<import class="org.concord.otrunkmw.OTMwDataProducer" />
+		<import class="org.concord.otrunkmw.OTMwChannelData" />
+		<import class="org.concord.otrunk.ui.OTText" />
+		<import
+			class="org.concord.otrunk.view.document.OTDocumentViewConfig" />
+		<import class="org.concord.datagraph.state.OTDataGraph" />
+		<import class="org.concord.datagraph.state.OTDataCollector" />
+		<import class="org.concord.datagraph.state.OTDataAxis" />
+		<import class="org.concord.datagraph.state.OTDataGraphable" />
+		<import class="org.concord.data.state.OTDataStore" />
+		<import class="org.concord.data.state.OTDataChannelDescription" />
+		<import class="org.concord.otrunk.ui.OTTextPane" />
+		<import class="org.concord.otrunk.ui.OTPlacementContainer" />
+		<import class="org.concord.otrunk.ui.OTPlacement" />
+		<import class="org.concord.framework.otrunk.view.OTFrame" />
+	</imports>
+	<objects>
+		<OTSystem>
+			<bundles>
+				<OTViewBundle showLeftPanel="false">
+					<views>
+						<OTViewEntry
+							objectClass="org.concord.otrunkmw.OTModelerPage"
+							viewClass="org.concord.otrunkmw.OTModelerPageView" />
+						<OTViewEntry
+							objectClass="org.concord.otrunk.ui.OTTextPane"
+							viewClass="org.concord.otrunk.ui.swing.OTTextPaneView" />
+						<OTViewEntry
+							objectClass="org.concord.otrunk.ui.OTPlacementContainer"
+							viewClass="org.concord.otrunk.ui.swing.OTPlacementContainerView" />
+						<OTViewEntry
+							objectClass="org.concord.otrunk.script.ui.OTScriptObject"
+							viewClass="org.concord.otrunk.script.ui.OTScriptObjectView" />
+						<OTDocumentViewConfig
+							objectClass="org.concord.otrunk.view.document.OTDocument"
+							viewClass="org.concord.otrunk.view.document.OTDocumentView">
+							<css>
+								body { font-size: medium; font-family:
+								verdana; background-color: white; } .sub
+								{ font-size: x-small; } .header {
+								font-size: large; font-weight: bold; }
+							</css>
+						</OTDocumentViewConfig>
+						<OTViewEntry
+							objectClass="org.concord.otrunk.ui.snapshot.OTSnapshotButton"
+							viewClass="org.concord.otrunk.ui.snapshot.OTSnapshotButtonView" />
+						<OTViewEntry
+							objectClass="org.concord.otrunk.ui.snapshot.OTSnapshotAlbum"
+							viewClass="org.concord.otrunk.ui.snapshot.OTSnapshotAlbumView" />
+						<OTViewEntry
+							objectClass="org.concord.datagraph.state.OTDataGraph"
+							viewClass="org.concord.datagraph.state.OTDataGraphView" />
+						<OTViewEntry
+							objectClass="org.concord.datagraph.state.OTDataCollector"
+							viewClass="org.concord.datagraph.state.OTDataCollectorView" />
+					</views>
+					<frame>
+						<OTFrame width="800" height="600" />
+					</frame>
+				</OTViewBundle>
+			</bundles>
+			<root>
+				<OTCompoundDoc>
+					<bodyText>
+						<p>
+							<center>
+								<font size="6">
+									<b>
+										Graphing the temperature of two compartments
+									</b>
+								</font>
+							</center>
+						</p>
+						<p>
+							<font size="4">
+								This page will be used in the Cloud Activity.
+								<br></br>
+								<br></br>
+								<hr></hr>
+								<br></br>
+								<br></br>
+							</font>
+						</p>
+						<center>
+							<object refid="${model}" />
+							<object refid="${graph}" />
+						</center>
+					</bodyText>
+					<documentRefs>
+						<OTModelerPage local_id="model"
+							authoredDataURL="resources/liquidgas.cml" />
+						<OTDataCollector name="Model Data"
+							local_id="graph" multipleGraphableEnabled="false"
+							autoScaleEnabled="false">
+							<source>
+								<OTDataGraphable connectPoints="true"
+									color="0xff0000" drawMarks="false" name="Temperature"
+									xColumn="0" yColumn="1">
+									<dataProducer>
+										<OTMwDataProducer
+											local_id="dp">
+											<model>
+												<object
+													refid="${model}" />
+											</model>
+											<data>
+												<OTMwChannelData
+													channel="0" />
+												<OTMwChannelData
+													channel="1" />
+											</data>
+										</OTMwDataProducer>
+									</dataProducer>
+								</OTDataGraphable>
+							</source>
+							<graphables>
+								<OTDataGraphable connectPoints="true"
+									color="0x0000ff" drawMarks="false" name="Temperature"
+									xColumn="0" yColumn="2">
+									<dataProducer>
+										<object refid="${dp}" />
+									</dataProducer>
+								</OTDataGraphable>
+							</graphables>
+							<xDataAxis>
+								<OTDataAxis min="0" max="100"
+									label="Time" units="fs" local_id="xAxis">
+								</OTDataAxis>
+							</xDataAxis>
+							<yDataAxis>
+								<OTDataAxis min="0" max="5000"
+									label="Temperature" units="K" local_id="yAxis">
+								</OTDataAxis>
+							</yDataAxis>
+						</OTDataCollector>
+					</documentRefs>
+				</OTCompoundDoc>
+			</root>
+		</OTSystem>
+	</objects>
+</otrunk>
