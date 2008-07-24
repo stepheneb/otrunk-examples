@@ -108,7 +108,7 @@ otrunk_example_dirs.each do |path|
 HERE
 
   java_web_start_warning = <<HERE
-<h4>MacOS X Java Web Start Problem</h4>
+<h4>MacOS X Java Web Start Problem:</h4>
 <p>If you are using Java 1.5 on MacOS 10.4 or 10.5 you will almost certainly need to run some version of 
 our <a href="http://confluence.concord.org/display/CCTR/WebStart+OSX+Java+1.5+Fix">Fix Java MacOS Web Start Scripts</a>,
 once on each computer you run the Concord SAIL-OTrunk activities on. If you update Java on your Macintosh you will
