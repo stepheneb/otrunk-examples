@@ -54,7 +54,7 @@ function getTableView(rubrics, labels, users, contentsMap, indicatorMap) {
 	var b = new StringBuffer("")
 	b.append("<table border=\"1\">\n")
 	b.append("<tr><td></td><td colspan=\"3\">Voltage</td><td colspan=\"3\">Current</td><td colspan=\"3\">Resistance</td>")
-	b.append("<td rowspan=\"2\">Total</td><td rowspan=\"2\">Time (s)</td><td rowspan=\"2\">Blown Meters</td></tr>")
+	b.append("<td rowspan=\"2\">Final Grade</td><td rowspan=\"2\">Time (s)</td><td rowspan=\"2\">Blown Meters</td></tr>")
 	b.append("<tr><td></td><td>Leads</td><td>Circuit</td><td>Score</td><td>Leads</td><td>Circuit</td><td>Score</td><td>Leads</td><td>Circuit</td><td>Score</td>")
 	for (var i = 0; i < users.size(); ++i) {
 		var user = users.get(i)
@@ -124,7 +124,7 @@ function getUserLine(uname, assessment, rubrics, indicatorMap) {
 	s.blowUp.push(total_blowup)
 	
 	b.append("<td><font color=\"#2020f0\"><b>" +  totalPoints + "</b></font></td>")
-	b.append("<td>" + total_time.toFixed(1) + "</td>")
+	b.append("<td>" + total_time.toFixed(0) + "</td>")
 	b.append("<td>" + total_blowup + "</td>")	
 	
 	return b.toString() + "</tr>\n"
@@ -149,7 +149,7 @@ function getSummaryLine() {
 	b.append(ctd("<b>" + avg(s.resistance.score).toFixed(0) + "</b>"))
 	b.append(ctd("<b>" + avg(s.total).toFixed(0) + "</b>"))		
 	b.append(ctd("<b>" + avg(s.time).toFixed(0) + "</b>"))			
-	b.append(ctd("<b>" + avg(s.blowUp).toFixed(2) + "</b>"))		
+	b.append(ctd("<b>" + avg(s.blowUp).toFixed(0) + "</b>"))		
 	b.append("</tr>")
 	return b.toString()
 }
