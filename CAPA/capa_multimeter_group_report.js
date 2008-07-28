@@ -53,9 +53,9 @@ function getText() {
 function getTableView(rubrics, labels, users, contentsMap, indicatorMap) {
 	var b = new StringBuffer("")
 	b.append("<table border=\"1\">\n")
-	b.append("<tr><td></td><td colspan=\"3\">Voltage</td><td colspan=\"3\">Current</td><td colspan=\"3\">Resistance</td>")
+	b.append("<tr><td rowspan=\"2\"></td><td colspan=\"3\">Voltage</td><td colspan=\"3\">Current</td><td colspan=\"3\">Resistance</td>")
 	b.append("<td rowspan=\"2\">Final Grade</td><td rowspan=\"2\">Time (s)</td><td rowspan=\"2\">Blown Meters</td></tr>")
-	b.append("<tr><td></td><td>Leads</td><td>Circuit</td><td>Score</td><td>Leads</td><td>Circuit</td><td>Score</td><td>Leads</td><td>Circuit</td><td>Score</td>")
+	b.append("<tr><td>Leads</td><td>Circuit</td><td>Score</td><td>Leads</td><td>Circuit</td><td>Score</td><td>Leads</td><td>Circuit</td><td>Score</td>")
 	for (var i = 0; i < users.size(); ++i) {
 		var user = users.get(i)
 		var uname = user.getName()
