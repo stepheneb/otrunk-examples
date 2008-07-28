@@ -1,0 +1,38 @@
+<%# This is an example of what an erb version of the UDL unit summary report might look like %>
+
+<style type=\"text/css\">table {border-width: 1;} td {border-width: 1; border-color: ffc0d0;}</style>
+<h1><%= @unitName </h1>
+<table>
+<tr>
+  <th></th>
+  <% @sections.each do |section| %>
+  <th>  
+    <% if @helper.sectionHasQuestions(section) %>
+      <%# the linkToSectionReport method needs to figure out if it should include the mode attribute
+           so the pretest style report is used or not %>
+      <%= @helper.linkToSectionReport(section) %>
+    <% else %>            
+      <%= section.getName() %>
+    <% end %>
+  </th>  	
+  <% end %>  
+</tr>
+
+<% @users.each do |user| %>
+  <%  visitedSections = @helper.getVisitedSections(user) %>
+<tr>
+  <td><%= user.getName() %></td>
+  <% sections.each do |section| %>
+  <td>
+    <% if visitedSections.contains(section.getName()) %>
+      <% doc = @helper.userAnswersForSectionDoc(section, user) %>
+      <% if doc == nil %>
+        <img src="images/tick.png"/>
+      <% else %>
+        <a target="<%= @frameId =>" href="<%= doc.otExternalId() %>"><img src="images/tick.png"/></a>
+      <% end %>
+    <% end %>  
+  </td>  
+  <% end %>					
+</tr>
+</table>
