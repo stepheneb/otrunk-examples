@@ -47,26 +47,58 @@ function getText() {
 		indicatorMap[indicator.getName()] = indicator
 	}		
 	
-	return "<h3>CAPA Aggregate Report</h3>\n" +	getTableView(rubrics, labels, users, contentsMap, indicatorMap)
+	return "<h3>Using Digital Multimeter</h3>\n" +	getTableView(rubrics, labels, users, contentsMap, indicatorMap)
 }
 
 function getTableView(rubrics, labels, users, contentsMap, indicatorMap) {
 	var b = new StringBuffer("")
 	b.append("<table border=\"1\">\n")
 	b.append("<tr><td rowspan=\"2\"></td><td colspan=\"3\">Voltage</td><td colspan=\"3\">Current</td><td colspan=\"3\">Resistance</td>")
-	b.append("<td rowspan=\"2\">Final Grade</td><td rowspan=\"2\">Time (s)</td><td rowspan=\"2\">Blown Meters</td></tr>")
+	b.append("<td rowspan=\"2\">Final Grade (out of 100)</td><td rowspan=\"2\">Total Time (s)</td><td rowspan=\"2\">Blown Meters</td></tr>")
 	b.append("<tr><td>Leads</td><td>Circuit</td><td>Score</td><td>Leads</td><td>Circuit</td><td>Score</td><td>Leads</td><td>Circuit</td><td>Score</td>")
+	
+	var lines = []
+	
 	for (var i = 0; i < users.size(); ++i) {
 		var user = users.get(i)
 		var uname = user.getName()
 		var assessment = getAssessment(contentsMap.get(uname))
 		if (assessment != null) {
-			b.append(getUserLine(uname, assessment, rubrics, indicatorMap))
+			lines.push([uname, getUserLine(uname, assessment, rubrics, indicatorMap)])
 		}
+	}
+	lines.sort(compLine);
+	for (var i = 0; i < lines.length; ++i) {
+		b.append(lines[i][1])
 	}
 	b.append(getSummaryLine())
 	b.append("</table>")
-	return b.toString();
+	return b.toString()
+}
+
+function compLine(a, b) {
+	var name1 = a[0].split(" ")
+	var name2 = b[0].split(" ")
+	var last1 = name1[name1.length-1]
+	var last2 = name2[name2.length-1]
+	var first1 = name1[0]
+	var first2 = name2[0]
+	
+	if (last1 < last2) {
+		return -1
+	}
+	else if (last1 > last2) {
+		return 1
+	}
+	else if (first1 < first2) {
+		return -1
+	}
+	else if (first1 > first2) {
+		return 1
+	}
+	else {
+		return 0
+	}
 }
 
 function getAssessment(contents) { 
