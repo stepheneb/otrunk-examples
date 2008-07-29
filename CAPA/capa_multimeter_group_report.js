@@ -47,7 +47,15 @@ function getText() {
 		indicatorMap[indicator.getName()] = indicator
 	}		
 	
-	return "<h3>Using Digital Multimeter</h3>\n" +	getTableView(rubrics, labels, users, contentsMap, indicatorMap)
+	var teacherName = System.getProperty("report.teacher.name")
+	var className = System.getProperty("report.class.name")
+	
+	var b = new StringBuffer()
+	b.append("<h3>Using Digital Multimeter</h3>\n")
+	b.append("<p>Teacher: " + teacherName + "<br/>")
+	b.append("Class: " + className + "</p>")
+	b.append(getTableView(rubrics, labels, users, contentsMap, indicatorMap))
+	return b.toString()
 }
 
 function getTableView(rubrics, labels, users, contentsMap, indicatorMap) {
