@@ -20,7 +20,8 @@ var s = {
 	total : [],
 	time : [],
 	blowUp : [],
-	color : "#000000"
+	color : "#000000",
+	blue : "#3030f0"
 } 
  
 function init() {
@@ -48,12 +49,18 @@ function getText() {
 	}		
 	
 	var teacherName = System.getProperty("report.teacher.name")
+	if (teacherName == null) {
+		teacherName = "Unknown"
+	}
 	var className = System.getProperty("report.class.name")
+	if (className == null) {
+		className = "Unknown"
+	}
 	
 	var b = new StringBuffer()
 	b.append("<h3>Using Digital Multimeter</h3>\n")
-	b.append("<p>Teacher: " + teacherName + "<br/>")
-	b.append("Class: " + className + "</p>")
+	b.append("<p>Teacher: <font color=\"" + s.blue + "\">" + teacherName + "</font><br/>")
+	b.append("Class: <font color=\"" + s.blue + "\">" + className + "</font></p>")
 	b.append(getTableView(rubrics, labels, users, contentsMap, indicatorMap))
 	return b.toString()
 }
@@ -163,7 +170,7 @@ function getUserLine(uname, assessment, rubrics, indicatorMap) {
 	s.time.push(total_time)
 	s.blowUp.push(total_blowup)
 	
-	b.append("<td><font color=\"#2020f0\"><b>" +  totalPoints + "</b></font></td>")
+	b.append("<td><font color=\"" + s.blue + "\"><b>" +  totalPoints + "</b></font></td>")
 	b.append("<td>" + total_time.toFixed(0) + "</td>")
 	b.append("<td>" + total_blowup + "</td>")	
 	
