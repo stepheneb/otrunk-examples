@@ -64,9 +64,9 @@ def multiUserGraph(dataGraph, dataStore)
         graphable.color = nextColor
         graphable.xColumn=0
         graphable.yColumn=1
-		graphable.locked=true
-		graphable.drawMarks=false
-		graphable.dataStore = userObject(dataStore,user)
+        graphable.locked=true
+        graphable.drawMarks=false
+        graphable.dataStore = userObject(dataStore,user)
       })
     }  
   }   
