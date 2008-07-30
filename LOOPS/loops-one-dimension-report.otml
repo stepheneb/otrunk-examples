@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<otrunk id="f080c070-7c8a-417c-a3fe-0737a7302806">
+	<imports>
+		<import class="org.concord.graph.util.state.OTDrawingTool" />
+		<import class="org.concord.otrunk.OTSystem" />
+		<import class="org.concord.otrunk.OTInclude" />
+		<import class="org.concord.otrunk.OTIncludeRootObject" />
+		<import class="org.concord.otrunk.view.OTViewBundle" />
+		<import class="org.concord.otrunk.view.OTViewMode" />
+		<import class="org.concord.otrunk.view.OTViewEntry" />
+		<import class="org.concord.otrunk.view.OTMultiUserRoot" />
+		<import class="org.concord.otrunk.script.ui.OTXHTMLScript" />
+		<import class="org.concord.otrunk.script.jruby.OTJRuby" />
+		<import class="org.concord.otrunk.script.OTScriptEngineBundle" />
+		<import class="org.concord.otrunk.script.OTScriptEngineEntry" />
+		<import class="org.concord.otrunk.script.ui.OTScriptVariable" />
+		<import class="org.concord.framework.otrunk.wrapper.OTBlob" />
+		<import class="org.concord.otrunk.view.OTViewChild"/>
+	</imports>
+	<idMap>
+		<idMapping local_id="activity_root"
+			id="2767fe20-6c7d-11dc-8314-0800200c9a66!/udl_container" />
+	</idMap>
+	<objects>
+		<OTSystem local_id="system">
+			<bundles>
+        <!-- include the view bundle used by the activity -->
+				<object refid="8d880970-c22a-11dc-95ff-0800200c9a66" />
+				<OTViewBundle showLeftPanel="false">
+					<views>
+						<OTViewEntry objectClass="org.concord.otrunk.view.OTMultiUserRoot"
+							viewClass="org.concord.otrunk.view.OTMultiUserRootView" />
+						<OTViewEntry objectClass="org.concord.otrunk.script.ui.OTXHTMLScript"
+							viewClass="org.concord.otrunk.script.ui.OTXHTMLScriptView" />
+					</views>
+				</OTViewBundle>
+				<OTScriptEngineBundle>
+					<engines>
+						<OTScriptEngineEntry objectClass="org.concord.otrunk.script.jruby.OTJRuby"
+							engineClass="org.concord.otrunk.script.jruby.OTJRubyEngine" />
+					</engines>
+				</OTScriptEngineBundle>
+			</bundles>
+			<includes>
+				<OTInclude href="loops-document-motion-OneD-carolyn.otml" />
+			</includes>
+			<root>
+				<OTViewChild useScrollPane="true">
+					<object>
+						<OTMultiUserRoot local_id="multi_user_root">
+							<userList>
+								<!--
+									the local_id is so this can be used as a report template in the
+									DIY
+								-->
+								<OTIncludeRootObject local_id="external_user_list_url"
+									href="http://loops.diy.concord.org/external_otrunk_activities/4/ot_learner_data.xml" />
+							</userList>
+							<reportTemplate>
+								<OTXHTMLScript local_id="report">
+									<script>
+										<OTJRuby name="script" local_id="script"
+											src="scripts/loops-one-dimension-report.rb" />
+									</script>
+									<variables>
+										<OTScriptVariable name="activityRoot"
+											reference="${activity_root}" />
+										<OTScriptVariable name="template">
+											<reference>
+												<OTBlob src="scripts/loops-one-dimension-report.html.erb" />
+											</reference>
+										</OTScriptVariable>
+										<OTScriptVariable name="predictionGraph"
+											reference="7e6ce1b3-538a-11dd-aff4-5f18ea6ea8d4" />
+										<OTScriptVariable name="predictionData"
+											reference="7e6da507-538a-11dd-aff4-5f18ea6ea8d4" />
+										<OTScriptVariable name="describeMotionQuestion"
+											reference="0a15ee79-5cdd-11dd-b9ff-fbe695d792ce"/>
+										<OTScriptVariable name="describeMotionAnswer"
+											reference="0a15ee79-5cdd-11dd-b9ff-fbe695d792ce/input"/>
+									</variables>
+								</OTXHTMLScript>
+							</reportTemplate>
+						</OTMultiUserRoot>
+					</object>
+				</OTViewChild>
+			</root>
+			<library>
+			</library>
+		</OTSystem>
+	</objects>
+</otrunk>
