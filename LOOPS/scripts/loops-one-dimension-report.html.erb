@@ -1,14 +1,22 @@
 <div id="content">
-  <h1><%= $activityRoot.name %> Report <%= $discoverySection.name %></h1>
-  <h2><%= $discoverySection.content.cards.get(0).body_text %><h2>
-
+  <h1><%= $activityRoot.name %> Report: <%= $discoverySection.name %> Section </h1>
+  <p>Investigations into one dimensional motion using the motion sensor and graphs with tables.</p>
+  <p>Predict Motion</p>
   <h3>Users</h3>
-  <%= (users.collect do | user |
-    user.name
-  end).join "," %>
+  <p><%= users.collect { |user| user.name }.join ", " %></p>
 
   <h3>Predictions</h3>
-  <%= embedObject multiUserGraph($predictionGraph, $predictionData) %>
+
+  <table border="0" width="900" cellspacing="20">
+    <tr>
+      <td width="800">
+        <%= embedObject multiUserGraph($predictionGraph, $predictionData) %>
+      </td>
+      <td>
+        These are all the predictions each student made.
+      </td>
+    </tr>
+  </table>
 
   <h3>Describe Motion </h3>
   <%= embedObject $describeMotionQuestion.prompt %><br/>

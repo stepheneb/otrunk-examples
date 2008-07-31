@@ -39,7 +39,7 @@ def otCreate(rconstant, &block)
 end
 
 def colors
-  ["FF0000", "00FF00", "0000FF", "FFFF00", "FF00FF", "00FFFF"]
+  ["74C789", "FFA774", "CE8AFF", "80AACE", "FF88AF", "B5D537"]
 end
 
 def nextColor
