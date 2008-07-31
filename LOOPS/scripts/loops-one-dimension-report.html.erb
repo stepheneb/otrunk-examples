@@ -1,11 +1,21 @@
 <div id="content">
   <h1><%= $activityRoot.name %> Report: <%= $discoverySection.name %> Section </h1>
   <p>Investigations into one dimensional motion using the motion sensor and graphs with tables.</p>
-  <p>Predict Motion</p>
-  <h3>Users</h3>
-  <p><%= users.collect { |user| user.name }.join ", " %></p>
+  
+  <br />
+  <h3>Predicting Motion</h3>
+ 
+  <% users_who_made_prediction_graph =  users.find_all {|user| hasUserModified $predictionData, user } %>
+  <% users_who_did_not_make_prediction_graph =  users.find_all {|user| ! hasUserModified $predictionData, user } %>
 
-  <h3>Predictions</h3>
+  <p>
+    <%= users_who_made_prediction_graph.length %> out of <%= users.length %> users created a prediction graph: 
+    <%= users_who_made_prediction_graph.collect { |user| user.name }.join(', ') %>
+  </p>
+  <p> 
+    <%= users_who_did_not_make_prediction_graph.length %> out of <%= users.length %> users did not make a prediction graph: 
+    <%= users_who_did_not_make_prediction_graph.collect { |user| user.name }.join(', ') %>
+  </p>
 
   <table border="0" width="900" cellspacing="20">
     <tr>
@@ -13,12 +23,13 @@
         <%= embedObject multiUserGraph($predictionGraph, $predictionData) %>
       </td>
       <td>
-        These are all the predictions each student made.
+        This graph has all of the student predictions for this question.
       </td>
     </tr>
   </table>
 
-  <h3>Describe Motion </h3>
+  <br />
+  <h3>Describing Motion </h3>
   <%= embedObject $describeMotionQuestion.prompt %><br/>
   <table border="1">
     <tr><th>User</th><th>Answer</th><tr/>
