@@ -5,6 +5,9 @@ include_class 'org.concord.datagraph.state.OTDataGraph'
 include_class 'org.concord.datagraph.state.OTDataGraphable'
 
 def getText
+  if $model
+    return "<h1> Here</h1>"
+  end
   @otrunk = $viewContext.getViewService(OTrunk.java_class);
     
   erb = ERB.new Java::JavaLang::String.new($template.src).to_s
@@ -39,7 +42,7 @@ def otCreate(rconstant, &block)
 end
 
 def colors
-  ["74C789", "FFA774", "CE8AFF", "80AACE", "FF88AF", "B5D537"]
+  ["65AE24", "E08024", "905BF5", "568AD8", "B03A7F", "99A62A"]
 end
 
 def nextColor
@@ -71,3 +74,24 @@ def multiUserGraph(dataGraph, dataStore)
     }  
   }   
 end
+
+def linkToSubViewObject
+  "<a href=\"#{$activityRoot.otExternalId}\" viewid=\"#{$linkedViewEntry.otExternalId}\">link test</a>"
+end
+
+def linkToObject(link_text, obj, view=nil)
+  if view
+    "<a href=\"#{obj.otExternalId}\" viewid=\"#{view.otExternalId}\">#{link_text}</a>"
+  else
+    "<a href=\"#{obj.otExternalId}\">#{link_text}</a>"    
+  end
+end
+
+
+
+
+
+
+
+
+

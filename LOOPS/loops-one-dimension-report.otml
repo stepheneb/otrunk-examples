@@ -8,6 +8,7 @@
 		<import class="org.concord.otrunk.view.OTViewBundle" />
 		<import class="org.concord.otrunk.view.OTViewMode" />
 		<import class="org.concord.otrunk.view.OTViewEntry" />
+		<import class="org.concord.otrunk.script.ui.OTXHTMLScriptViewEntry" />
 		<import class="org.concord.otrunk.view.OTMultiUserRoot" />
 		<import class="org.concord.otrunk.view.document.OTCompoundDoc"/>
 		<import class="org.concord.otrunk.view.document.OTDocumentViewConfig"/>
@@ -29,11 +30,11 @@
 				<!-- include the view bundle used by the activity -->
 				<object refid="8d880970-c22a-11dc-95ff-0800200c9a66"/>
 				<OTViewBundle showLeftPanel="false">
-					<views>
+					<viewEntries>
 						<OTViewEntry objectClass="org.concord.otrunk.view.OTMultiUserRoot"
 							viewClass="org.concord.otrunk.view.OTMultiUserRootView"/>
 						<OTViewEntry objectClass="org.concord.otrunk.script.ui.OTXHTMLScript"
-							viewClass="org.concord.otrunk.script.ui.OTXHTMLScriptView"/>
+						viewClass="org.concord.otrunk.script.ui.OTXHTMLScriptView"/>						
 						<OTDocumentViewConfig
 							objectClass="org.concord.otrunk.view.document.OTDocument"
 							viewClass="org.concord.otrunk.view.document.OTDocumentView"
@@ -44,7 +45,7 @@
               h2 { color:#FFD32C; font-size:1.1em; margin: 2em 0em 1em 0em; }
               #content { margin:5px; padding:5px; }
               "/>
-					</views>
+					</viewEntries>
 				</OTViewBundle>
 				<OTScriptEngineBundle>
 					<engines>
@@ -69,19 +70,25 @@
 									href="http://loops.diy.concord.org/external_otrunk_activities/4/ot_learner_data.xml" />
 							</userList>
 							<reportTemplate>
-								<OTXHTMLScript local_id="report">
+								<OTXHTMLScript local_id="report_view_entry1">
 									<script>
-										<OTJRuby name="script" local_id="script"
+										<OTJRuby name="script" local_id="report_script"
 											src="scripts/loops-one-dimension-report.rb" />
 									</script>
 									<variables>
-										<OTScriptVariable name="activityRoot"
-											reference="${activity_root}" />
 										<OTScriptVariable name="template">
 											<reference>
 												<OTBlob src="scripts/loops-one-dimension-report.html.erb" />
 											</reference>
 										</OTScriptVariable>
+										<OTScriptVariable name="activityRoot"
+											reference="${activity_root}" />
+										<OTScriptVariable name="reportViewEntry1"
+											reference="${report_view_entry1}" />										
+										<OTScriptVariable name="reportViewEntry2"
+											reference="${report_view_entry2}" />										
+										<OTScriptVariable name="reportViewEntry3"
+											reference="${report_view_entry3}" />										
 										<OTScriptVariable name="discoverySection"
 											reference="c99c4031-535c-11dd-b184-ab198ff930c1" />
 										<OTScriptVariable name="predictionGraph"
@@ -100,6 +107,66 @@
 				</OTViewChild>
 			</root>
 			<library>
+				<OTXHTMLScriptViewEntry local_id="report_view_entry2" 
+					objectClass="org.concord.framework.otrunk.OTObject"
+					viewClass="org.concord.otrunk.script.ui.OTXHTMLScriptView"
+					script="${report_script}">
+					<variables>
+						<OTScriptVariable name="template">
+							<reference>
+								<OTBlob src="scripts/loops-one-dimension-report2.html.erb" />
+							</reference>
+						</OTScriptVariable>
+						<OTScriptVariable name="activityRoot"
+							reference="${activity_root}" />
+						<OTScriptVariable name="reportViewEntry1"
+							reference="${report_view_entry1}" />										
+						<OTScriptVariable name="reportViewEntry2"
+							reference="${report_view_entry2}" />										
+						<OTScriptVariable name="reportViewEntry3"
+							reference="${report_view_entry3}" />										
+						<OTScriptVariable name="discoverySection"
+							reference="c99c4031-535c-11dd-b184-ab198ff930c1" />
+						<OTScriptVariable name="predictionGraph"
+							reference="7e6ce1b3-538a-11dd-aff4-5f18ea6ea8d4" />
+						<OTScriptVariable name="predictionData"
+							reference="7e6da507-538a-11dd-aff4-5f18ea6ea8d4" />
+						<OTScriptVariable name="describeMotionQuestion"
+							reference="0a15ee79-5cdd-11dd-b9ff-fbe695d792ce"/>
+						<OTScriptVariable name="describeMotionAnswer"
+							reference="0a15ee79-5cdd-11dd-b9ff-fbe695d792ce/input"/>
+					</variables>
+				</OTXHTMLScriptViewEntry>
+				<OTXHTMLScriptViewEntry local_id="report_view_entry3" 
+					objectClass="org.concord.framework.otrunk.OTObject"
+					viewClass="org.concord.otrunk.script.ui.OTXHTMLScriptView"
+					script="${report_script}">
+					<variables>
+						<OTScriptVariable name="template">
+							<reference>
+								<OTBlob src="scripts/loops-one-dimension-report3.html.erb" />
+							</reference>
+						</OTScriptVariable>
+						<OTScriptVariable name="activityRoot"
+							reference="${activity_root}" />
+						<OTScriptVariable name="reportViewEntry1"
+							reference="${report_view_entry1}" />										
+						<OTScriptVariable name="reportViewEntry2"
+							reference="${report_view_entry2}" />										
+						<OTScriptVariable name="reportViewEntry3"
+							reference="${report_view_entry3}" />										
+						<OTScriptVariable name="discoverySection"
+							reference="c99c4031-535c-11dd-b184-ab198ff930c1" />
+						<OTScriptVariable name="predictionGraph"
+							reference="7e6ce1b3-538a-11dd-aff4-5f18ea6ea8d4" />
+						<OTScriptVariable name="predictionData"
+							reference="7e6da507-538a-11dd-aff4-5f18ea6ea8d4" />
+						<OTScriptVariable name="describeMotionQuestion"
+							reference="0a15ee79-5cdd-11dd-b9ff-fbe695d792ce"/>
+						<OTScriptVariable name="describeMotionAnswer"
+							reference="0a15ee79-5cdd-11dd-b9ff-fbe695d792ce/input"/>
+					</variables>
+				</OTXHTMLScriptViewEntry>
 			</library>
 		</OTSystem>
 	</objects>
