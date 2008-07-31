@@ -1,18 +1,25 @@
-<h3>Users</h3>
-<%= (users.collect do | user |
-       user.name
-     end).join "," %>
-     
-<h3>Predictions</h3>
-<%= embedObject multiUserGraph($predictionGraph, $predictionData) %>
+<div id="content">
+  <h1><%= $activityRoot.name %> Report <%= $discoverySection.name %></h1>
+  <h2><%= $discoverySection.content.cards.get(0).body_text %><h2>
 
-<h3>Describe Motion </h3>
-<%= embedObject $describeMotionQuestion.prompt %><br/>
-<table border="1">
-<tr><th>User</th><th>Answer</th></tr>
-<% users.each do |user| %> 
-<%   next unless hasUserModified $describeMotionAnswer, user %>
-<tr><td><%= user.name %></td><td><%= userObject($describeMotionAnswer, user).text %></td></tr>
-<% end %>
-</table>
+  <h3>Users</h3>
+  <%= (users.collect do | user |
+    user.name
+  end).join "," %>
 
+  <h3>Predictions</h3>
+  <%= embedObject multiUserGraph($predictionGraph, $predictionData) %>
+
+  <h3>Describe Motion </h3>
+  <%= embedObject $describeMotionQuestion.prompt %><br/>
+  <table border="1">
+    <tr><th>User</th><th>Answer</th><tr/>
+    <% users.each do |user| %> 
+    <% next unless hasUserModified $describeMotionAnswer, user %>
+    <tr>
+      <td><%= user.name %></td>
+      <td><%= userObject($describeMotionAnswer, user).text %></td>
+    </tr>
+    <% end %>
+  </table>
+</div>
