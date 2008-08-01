@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<otrunk id="f080c070-7c8a-417c-a3fe-0737a7302806">
+	<imports>
+		<import class="org.concord.otrunk.OTSystem" />
+		<import class="org.concord.otrunk.view.OTViewBundle" />
+		<import class="org.concord.otrunk.view.OTViewEntry" />
+		<import class="org.concord.otrunk.script.ui.OTXHTMLScriptViewEntry" />
+		<import class="org.concord.otrunk.script.jruby.OTJRuby" />
+		<import class="org.concord.otrunk.script.OTScriptEngineBundle" />
+		<import class="org.concord.otrunk.script.OTScriptEngineEntry" />
+		<import class="org.concord.otrunk.script.ui.OTScriptVariable" />
+		<import class="org.concord.framework.otrunk.wrapper.OTBlob" />
+		<import class="org.concord.otrunk.view.OTFolderObject"/>
+	</imports>
+	<objects>
+		<OTSystem local_id="system">
+			<bundles>
+				<OTViewBundle showLeftPanel="false">
+					<viewEntries>
+						<OTXHTMLScriptViewEntry objectClass="org.concord.otrunk.view.OTFolderObject"
+							viewClass="org.concord.otrunk.script.ui.OTXHTMLScriptView">
+							<script>
+								<OTJRuby src="scripts/erb-controller.rb" />
+							</script>
+							<variables>
+								<OTScriptVariable name="template">
+									<reference>
+										<OTBlob src="scripts/xhtml-erb-view.html.erb" />
+									</reference>
+								</OTScriptVariable>
+							</variables>
+						</OTXHTMLScriptViewEntry>
+                        <OTViewEntry objectClass="org.concord.otrunk.view.document.OTDocument" viewClass="org.concord.otrunk.view.document.OTDocumentView" />
+					</viewEntries>
+				</OTViewBundle>
+				<OTScriptEngineBundle>
+					<engines>
+						<OTScriptEngineEntry objectClass="org.concord.otrunk.script.jruby.OTJRuby"
+							engineClass="org.concord.otrunk.script.jruby.OTJRubyEngine" />
+					</engines>
+				</OTScriptEngineBundle>
+			</bundles>
+			<root>
+				<OTFolderObject name="folder"/>
+			</root>
+			<library>
+			</library>
+		</OTSystem>
+	</objects>
+</otrunk>
