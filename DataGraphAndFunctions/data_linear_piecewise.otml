@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<otrunk id="33754150-b594-11d9-9669-0800200c9a66" >
+  <imports>
+    <import class="org.concord.otrunk.OTSystem"/>
+    <import class="org.concord.otrunk.view.OTFolderObject"/>
+    <import class="org.concord.otrunk.view.OTViewEntry"/>
+    <import class="org.concord.otrunk.view.OTViewService"/>
+    <import class="org.concord.otrunk.view.OTViewBundle"/>
+    <import class="org.concord.otrunk.view.OTViewChild"/>
+    <import class="org.concord.otrunk.view.document.OTCompoundDoc"/>
+    <import class="org.concord.framework.otrunk.view.OTFrame"/>
+    <import class="org.concord.datagraph.state.OTDataGraph"/>
+    <import class="org.concord.datagraph.state.OTDataAxis"/>
+    <import class="org.concord.datagraph.state.OTDataGraphable"/>
+    <import class="org.concord.data.state.OTDataStore"/>
+    <import class="org.concord.data.state.OTDataChannelDescription"/>
+    <import class="org.concord.graphfunction.state.OTGraphFunctionList"/>
+    <import class="org.concord.graphfunction.state.OTSelectableList"/>
+    <import class="org.concord.graphfunction.state.OTValue"/>
+    <import class="org.concord.graphfunction.state.OTLinearPiecewise"/>
+    <import class="org.concord.graphfunction.state.OTLinearSegment"/>
+  </imports>
+  <objects>
+    <OTSystem>
+      <bundles>
+        <OTViewBundle>
+          <viewEntries>
+            <OTViewEntry 
+              objectClass="org.concord.datagraph.state.OTDataGraph" 
+              viewClass="org.concord.datagraph.state.OTDataGraphView"/>
+            <OTViewEntry
+              objectClass="org.concord.otrunk.view.document.OTDocument" 
+              viewClass="org.concord.otrunk.view.document.OTDocumentView"/>
+            <OTViewEntry 
+              objectClass="org.concord.graphfunction.ui.main.OTGraphFunctionsScreen" 
+              viewClass="org.concord.graphfunction.ui.main.OTGraphFunctionsScreenView"/>
+          </viewEntries>
+        </OTViewBundle>
+      </bundles>
+      <root>
+        <OTCompoundDoc name="Main Page">
+          <bodyText>
+          	This is a test showing Linear Piecewise
+          	<br/>
+          	<object refid="${data_graph1}"/>
+          	<br/>
+            <object refid="${fsymbolic}"/>
+            <br/>
+            <object refid="${piecewise_toolbox}"/>
+          </bodyText>
+        </OTCompoundDoc>
+      </root>
+      <library>
+        <OTViewEntry local_id="piecewise_toolbox_view"
+          objectClass="org.concord.graphfunction.state.OTGraphFunctionList" 
+          viewClass="org.concord.graphfunction.state.OTPiecewiseToolBoxView"/>
+        <OTViewEntry local_id="symbolic_view"
+          objectClass="org.concord.graphfunction.state.OTGraphFunctionList" 
+          viewClass="org.concord.graphfunction.state.OTGraphFunctionSymbolicView"/>
+      	<OTViewChild local_id="fsymbolic" name="Symbolic View" 
+      		viewid="${symbolic_view}" object="${function_list}"/>
+      	<OTViewChild local_id="piecewise_toolbox" name="Piecewise Toolbox"
+      		viewid="${piecewise_toolbox_view}" object="${function_list}"/>
+      		
+        <OTGraphFunctionList local_id="function_list" name="Function List">
+	     	<graphables>
+	     		<OTLinearPiecewise color="0xFF00AA" selected="true" 
+	     			functionName="Linear Piecewise Function">
+	     			<segments>
+         				<OTSelectableList>
+			     			<graphables>
+	    	 					<OTLinearSegment domainStart="0" domainEnd="1" slope="4"/>
+		    	 			</graphables>
+		     			</OTSelectableList>
+	     			</segments>	
+	     		</OTLinearPiecewise>
+	     	</graphables>
+        </OTGraphFunctionList>
+        <OTDataGraph name="Predefined Data" local_id="data_graph1">
+          <graphables>
+            <OTDataGraphable local_id="graphable01"
+              connectPoints="true" color="0x0000FF" drawMarks="false"
+              name="Dataset1" xColumn="0" yColumn="1">
+              <dataStore>
+                <OTDataStore local_id="datastore" numberChannels="2">
+                  <channelDescriptions>
+                    <OTDataChannelDescription precision="0" unit="s"/>
+                    <OTDataChannelDescription precision="-2"/>
+                  </channelDescriptions>
+                  <valuesString> 0 1 0.5 5 1 7.5 1.5 4.5 2 5.0 2.5 6.5 3 4 3.5 3.5 4 2</valuesString>
+                </OTDataStore>
+              </dataStore>
+            </OTDataGraphable>
+          </graphables>
+          <extraGraphables>
+          	<object refid="${function_list}"/>
+          </extraGraphables>
+          <xDataAxis>
+            <OTDataAxis min="0" max="5" label="Time" units="s"/>
+          </xDataAxis>
+          <yDataAxis>
+            <OTDataAxis min="0" max="10" label="Value"/>
+          </yDataAxis>
+        </OTDataGraph>        
+      </library>
+    </OTSystem>
+  </objects>
+</otrunk>
