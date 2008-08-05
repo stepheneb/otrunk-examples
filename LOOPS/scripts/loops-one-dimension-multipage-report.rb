@@ -44,7 +44,7 @@ def linkToObject(link_text, obj)
 end
 
 def linkToObjectAction(link_text, obj, action)
-  viewEntryCopy = $otObjectService.copyObject($viewEntry, -1)
+  viewEntryCopy = $otObjectService.copyObject($viewEntry, 1)
   viewEntryCopy.variables.add(otCreate(OTScriptVariable){|scriptVar|
     scriptVar.name="action"
     scriptVar.reference = otCreate(OTString){|str|
