@@ -19,6 +19,7 @@
 		<import class="org.concord.otrunk.ui.OTTextPane" />
 		<import class="org.concord.otrunk.script.OTScriptEngineBundle" />
 		<import class="org.concord.otrunk.script.OTScriptEngineEntry" />
+		<import class="org.concord.otrunk.script.ui.OTXHTMLScript"/>
 		<import class="org.concord.otrunk.script.ui.OTScriptObject" />
 		<import class="org.concord.otrunk.script.ui.OTScriptVariable" />
 		<import	class="org.concord.otrunk.script.ui.OTScriptVariableComponent" />
@@ -55,6 +56,9 @@
 						<OTViewEntry
 							objectClass="org.concord.otrunk.ui.OTCardContainer"
 							viewClass="org.concord.otrunk.ui.swing.OTCardContainerView" />
+						<OTViewEntry
+							objectClass="org.concord.otrunk.script.ui.OTXHTMLScript"
+							viewClass="org.concord.otrunk.script.ui.OTXHTMLScriptView"/>
 						<OTViewEntry 
 							objectClass="org.concord.otrunk.script.ui.OTScriptObject"
 							viewClass="org.concord.otrunk.script.ui.OTScriptObjectView"/>
@@ -73,7 +77,7 @@
                         <OTViewEntry local_id="moz-swing-view" 
                         	objectClass="org.concord.otrunk.browser.mozswing.OTMozSwing" 
                         	viewClass="org.concord.otrunk.browser.mozswing.OTMozSwingView" />
-						<OTAssessmentViewConfig local_id="assessment_view_config"
+						<OTAssessmentViewConfig id="f19b8540-5de8-11dd-ad8b-0800200c9a66" 
 							objectClass="org.concord.otrunkcapa.rubric.OTAssessment"
 							viewClass="org.concord.otrunkcapa.rubric.OTAssessmentView"
 							showFromScript="true"
@@ -81,6 +85,9 @@
 							<rubric>
 								<object	refid="02d179b3-db94-4014-ad2c-f689512ea3c5" />
 							</rubric>
+							<script>
+								<object refid="${report_script}"/>
+							</script>
 						</OTAssessmentViewConfig>
 						<OTViewEntry
 							objectClass="org.concord.otrunk.labview.OTLabviewMonitor"
@@ -158,7 +165,7 @@ so try to make as few measurements as possible, but be confident that you're rig
 				</OTCardContainer>
 				<OTCompoundDoc local_id="flash_page" name="Flash Demo">
 					<bodyText>
-						<h2 align="center">Using the oscilloscope</h2>
+						<h2 align="center">Digital Troubleshooting</h2>
 						<center>
 						The movie below will help you complete this assessment. After it loads, click on the movie to <b>Play</b>. 
 						When done, click the <b>"Continue"</b> link below.
@@ -258,8 +265,16 @@ so try to make as few measurements as possible, but be confident that you're rig
 						<object refid="${script_report_view}" />
 					</viewid>
 				</OTViewChild>
+				<OTAssessment local_id="assessment"
+					activityName="Digital Troubleshooting">
+				</OTAssessment>
 				<OTScriptObject local_id="activity_script">
 					<variables>
+						<OTScriptVariable name="ot_assessment">
+							<reference>
+								<object refid="${assessment}"/>
+							</reference>
+						</OTScriptVariable>
 						<OTScriptVariable name="ot_cards">
 							<reference>
 								<object refid="${main_cards}" />
@@ -268,11 +283,6 @@ so try to make as few measurements as possible, but be confident that you're rig
 						<OTScriptVariable name="ot_monitor">
 							<reference>
 								<object	refid="${launch_labview_button}" />
-							</reference>
-						</OTScriptVariable>
-						<OTScriptVariable name="ot_assessment_view_config">
-							<reference>
-								<object refid="${assessment_view_config}"/>
 							</reference>
 						</OTScriptVariable>
 					</variables>
@@ -287,6 +297,23 @@ so try to make as few measurements as possible, but be confident that you're rig
 						</OTJavascript>
 					</script>
 				</OTScriptObject>
+				<OTXHTMLScript local_id="report_script">
+					<variables>
+						<OTScriptVariable name="ot_assessment">
+							<reference>
+								<object refid="${assessment}"/>
+							</reference>
+						</OTScriptVariable>
+						<OTScriptVariable name="ot_rubric">
+							<reference>
+								<object refid="02d179b3-db94-4014-ad2c-f689512ea3c5"/>
+							</reference>
+						</OTScriptVariable>
+					</variables>
+					<script>
+						<OTJavascript src="capa_digital_fault_report.js"/>
+					</script>
+				</OTXHTMLScript>
 			</library>
 		</OTSystem>
 	</objects>
