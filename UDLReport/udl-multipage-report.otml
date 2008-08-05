@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<otrunk id="f080c070-7c8a-417c-a3fe-0737a7302806">
+	<imports>
+		<import class="org.concord.graph.util.state.OTDrawingTool" />
+		<import class="org.concord.otrunk.OTSystem" />
+		<import class="org.concord.otrunk.OTInclude" />
+		<import class="org.concord.otrunk.OTIncludeRootObject" />
+		<import class="org.concord.otrunk.view.OTViewBundle" />
+		<import class="org.concord.otrunk.view.OTViewMode" />
+		<import class="org.concord.otrunk.view.OTViewEntry" />
+		<import class="org.concord.otrunk.script.ui.OTXHTMLScriptViewEntry" />
+		<import class="org.concord.otrunk.view.OTMultiUserRoot" />
+		<import class="org.concord.otrunk.view.document.OTCompoundDoc"/>
+		<import class="org.concord.otrunk.view.document.OTDocumentViewConfig"/>
+		<import class="org.concord.otrunk.script.ui.OTXHTMLScript" />
+		<import class="org.concord.otrunk.script.jruby.OTJRuby" />
+		<import class="org.concord.otrunk.script.OTScriptEngineBundle" />
+		<import class="org.concord.otrunk.script.OTScriptEngineEntry" />
+		<import class="org.concord.otrunk.script.ui.OTScriptVariable" />
+		<import class="org.concord.framework.otrunk.wrapper.OTBlob" />
+		<import class="org.concord.otrunk.view.OTViewChild"/>
+	</imports>
+	<objects>
+		<OTSystem local_id="system">
+			<includes>
+				<OTInclude href="../UDL/global-imports/udl-view-bundle.otml" />
+			</includes>
+			<bundles>
+				<!-- include the global udl view bundle -->
+				<object refid="8d880970-c22a-11dc-95ff-0800200c9a66"/>
+				<OTViewBundle showLeftPanel="false" >
+					<viewEntries>
+						<OTDocumentViewConfig
+							objectClass="org.concord.otrunk.view.document.OTDocument"
+							viewClass="org.concord.otrunk.view.document.OTDocumentView"
+							css="
+							body { background-color:#FFFFFF; color:#333333; font-family:Tahoma,'Trebuchet MS',sans-serif; line-height:1.5em; }
+              h1 { color:#FFD32C; font-size:1.5em; margin-bottom:0px; }
+              h2 { color:#FFD32C; font-size:1.3em; margin-bottom:0px; }
+              h2 { color:#FFD32C; font-size:1.1em; margin: 2em 0em 1em 0em; }
+              #content { margin:5px; padding:5px; }
+              "/>
+					</viewEntries>
+				</OTViewBundle>
+				<OTScriptEngineBundle>
+					<engines>
+						<OTScriptEngineEntry objectClass="org.concord.otrunk.script.jruby.OTJRuby"
+							engineClass="org.concord.otrunk.script.jruby.OTJRubyEngine"/>
+					</engines>
+				</OTScriptEngineBundle>
+			</bundles>
+			<root>
+				<OTViewChild useScrollPane="true">
+					<object>
+						<OTMultiUserRoot local_id="multi_user_root" 
+							reportTemplateViewEntry="${udl_report_main_view}">
+							<userList>
+								<!--
+									the local_id is so this can be used as a report template in the
+									DIY
+								-->
+								<OTIncludeRootObject local_id="external_user_list_url"
+									href="http://loops.diy.concord.org/external_otrunk_activities/4/ot_learner_data.xml" />
+							</userList>
+							<reportTemplate>
+								<OTIncludeRootObject local_id="external_otml_url"
+								    href="../UDL/udl-clouds-34.otml"/>							   
+							</reportTemplate>							
+						</OTMultiUserRoot>
+					</object>
+				</OTViewChild>
+			</root>
+			<library>
+				<OTXHTMLScriptViewEntry 
+				   local_id="udl_report_main_view"
+				   objectClass="org.concord.otrunk.view.OTMultiUserRoot"
+							viewClass="org.concord.otrunk.script.ui.OTXHTMLScriptView">
+							<script>
+								<OTJRuby src="scripts/udl-multipage-report.rb" />
+							</script>
+							<variables>
+								<OTScriptVariable name="template">
+									<reference>
+ 									   <OTBlob src="scripts/summary.html.erb" />
+									</reference>
+								</OTScriptVariable>
+							</variables>
+						</OTXHTMLScriptViewEntry>
+			</library>
+		</OTSystem>
+	</objects>
+</otrunk>
