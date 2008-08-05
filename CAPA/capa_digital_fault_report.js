@@ -30,9 +30,6 @@ function getText() {
 	var activityLog = inv.get("activityLog")
 	var t = ""
 	
-	System.out.println("c_fault3=" + c_fault3)
-	System.out.println("s_fault3=" + s_fault3)
-
 	var points = getPoints("truthTable")
 	t += "<h2>Details</h2>"
 	t += "<table><tr>"

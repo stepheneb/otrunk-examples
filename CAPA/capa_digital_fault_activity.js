@@ -34,7 +34,6 @@ importClass(Packages.org.concord.otrunk.labview.MADWrapper)
  
 var ot_monitor
 var ot_cards
-var ot_assessment_view_config
  	
 var glob = {
 	dateFormat : SimpleDateFormat.getInstance(),
@@ -57,7 +56,6 @@ function init() {
 	glob.dateFormat.applyPattern("MM/dd/yyyy HH:mm:ss zzz");
     glob.monitor = controllerService.getRealObject(ot_monitor)
     glob.monitor.setExitListener(listeners.labviewExitListener)
-    ot_assessment_view_config.setScript(listeners.assessmentViewScript)		
     setupAssessmentLogging()
 	initLogging()
 	OTCardContainerView.setCurrentCard(ot_cards, "main_card_1")	
@@ -72,9 +70,7 @@ function save() {
 function setupAssessmentLogging() {
 	var userName = getUserName()
 	var ms = new Date().getTime()
-	
-	// Create assessment object
-	var assessment = otObjectService.createObject(OTAssessment)
+	var assessment = ot_assessment
 	assessment.setActivityName("Digital Troubleshooting")
 	assessment.setUserName(userName)
 	assessment.setTime(ms)	
@@ -120,16 +116,5 @@ var listeners = {
 	    	wrap_assess() // must close labVIEW before assess()			
 			OTCardContainerView.setCurrentCard(ot_cards, "main_card_2")				
 		}	
-	}),
-	
-	assessmentViewScript : new OTAssessmentView.Script({
-		getXHTMLText: function() {
-			return assessment_text();
-		}
 	})
-}
-
-// for debugging
-function p(s) {
-	System.out.println(s)
 }
