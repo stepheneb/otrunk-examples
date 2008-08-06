@@ -24,6 +24,10 @@ def page2
   render $template_page2
 end
 
+def page3
+  render $template_page3
+end
+
 def render(templateBlob)
   erb = ERB.new Java::JavaLang::String.new(templateBlob.src).to_s
   erb.result(binding)   
