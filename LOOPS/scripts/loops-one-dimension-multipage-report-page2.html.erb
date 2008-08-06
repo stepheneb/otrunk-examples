@@ -1,46 +1,54 @@
+<div class="menu">
+  <table>
+    <tr>
+      <td><div class="menu_item"><%= linkToObjectAction "Discover", $model, "page1" %></div></td>
+      <td><div class="menu_item selected"><%= linkToObjectAction "Challenge Motion", $model, "page2" %></div></td>
+      <td><div class="menu_item"><%= linkToObjectAction "Challenge Slider", $model, "page3" %></div></td>
+    </tr>
+  </table>
+</div>
+<hr />
 <div id="content">
-  <%= linkToObjectAction "Page 1", $model, "page1" %>
-  
-  <h1>2: <%= $activityRoot.name %> Report: <%= $discoverySection.name %> Section </h1>
+  <h1><%= $activityRoot.name %> Report: Challenge Motion</h1>
   <p>Investigations into one dimensional motion using the motion sensor and graphs with tables.</p>
   
   <br />
-  <h3>Predicting Motion</h3>
+  <h3>Creating a motion graph that is similar to a previous graph</h3>
  
-  <% users_who_made_prediction_graph =  users.find_all {|user| hasUserModified $predictionData, user } %>
-  <% users_who_did_not_make_prediction_graph =  users.find_all {|user| ! hasUserModified $predictionData, user } %>
+  <% users_who_made_motion_graph =  users.find_all {|user| hasUserModified $objectMotionData1, user } %>
+  <% users_who_did_not_make_motion_graph =  users.find_all {|user| ! hasUserModified $objectMotionData1, user } %>
 
 
   <p>
-    <%= users_who_made_prediction_graph.length %> out of <%= users.length %> users created a prediction graph: 
-    <%= users_who_made_prediction_graph.collect { |user| user.name }.join(', ') %>
+    <%= users_who_made_motion_graph.length %> out of <%= users.length %> users created a motion graph: 
+    <%= users_who_made_motion_graph.collect { |user| user.name }.join(', ') %>
   </p>
   <p> 
-    <%= users_who_did_not_make_prediction_graph.length %> out of <%= users.length %> users did not make a prediction graph: 
-    <%= users_who_did_not_make_prediction_graph.collect { |user| user.name }.join(', ') %>
+    <%= users_who_did_not_make_motion_graph.length %> out of <%= users.length %> users did not make a motion graph: 
+    <%= users_who_did_not_make_motion_graph.collect { |user| user.name }.join(', ') %>
   </p>
 
   <table border="0" width="900" cellspacing="20">
     <tr>
       <td width="800">
-        <%= embedObject multiUserGraph($predictionGraph, $predictionData) %>
+        <%= embedObject multiUserGraph($objectMotionGraph1, $objectMotionData1) %>
       </td>
       <td>
-        This graph has all of the student predictions for this question.
+        This graph has all of the student motion graphs for this question.
       </td>
     </tr>
   </table>
 
   <br />
-  <h3>Describing Motion </h3>
-  <%= embedObject $describeMotionQuestion.prompt %><br/>
+  <h3>Comparing the two graphs</h3>
+  <%= embedObject $howCloseMotionGraph1.prompt %><br/>
   <table border="1">
     <tr><th>User</th><th>Answer</th><tr/>
     <% users.each do |user| %> 
-    <% next unless hasUserModified $describeMotionAnswer, user %>
+    <% next unless hasUserModified $howCloseMotionGraph1Answer, user %>
     <tr>
       <td><%= user.name %></td>
-      <td><%= userObject($describeMotionAnswer, user).text %></td>
+      <td><%= userObject($howCloseMotionGraph1Answer, user).text %></td>
     </tr>
     <% end %>
   </table>
