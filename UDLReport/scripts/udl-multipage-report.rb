@@ -109,6 +109,20 @@ def truncate (string, length)
   string[0...length] + postFix
 end
 
+def popupFrame
+  return @frame if @frame 
+  
+  @frame = otCreate(org.concord.framework.otrunk.view.OTFrame) { |frame|
+   }
+end
+
+def popupLinkToObject(link_text, obj, viewEntry=nil)
+  frame = popupFrame
+  link = "<a href=\"#{ obj.otExternalId() }\" "
+  link += "viewid=\"#{ viewEntry.otExternalId() }\" "  if viewEntry
+  link += " target=\"#{ popupFrame.otExternalId }\">#{link_text}</a>"  
+end
+
 # --------- udl report specific -------------------
 
 def linkToUnitPage(link_text)
