@@ -1,4 +1,6 @@
+require 'jruby'
 require 'erb'
+include_class 'java.lang.System'
 include_class 'org.concord.framework.otrunk.view.OTUserListService'
 include_class 'org.concord.framework.otrunk.OTrunk'
 include_class 'org.concord.datagraph.state.OTDataGraph'
@@ -8,6 +10,7 @@ include_class 'org.concord.framework.otrunk.wrapper.OTString'
 
 def getText
   @otrunk = $viewContext.getViewService(OTrunk.java_class);
+  @debug = true
   if $action
     actionStr = $action.string
   else
@@ -39,8 +42,10 @@ def otCreate(rconstant, &block)
   otObj
 end
 
-def linkToObject(link_text, obj)
-  "<a href=\"#{ obj.otExternalId() }\">#{link_text}</a>"
+def linkToObject(link_text, obj, viewEntry=nil)
+  link = "<a href=\"#{ obj.otExternalId() }\" "
+  link += "viewid=\"#{ viewEntry.otExternalId() }\" "  if viewEntry
+  link += ">#{link_text}</a>"
 end
 
 def linkToObjectAction(link_text, obj, action)
@@ -77,36 +82,60 @@ def otCreate(rconstant, &block)
   otObj
 end
 
-def colors
-  ["65AE24", "E08024", "905BF5", "568AD8", "B03A7F", "99A62A"]
+def findFirstChild(rconstant, startObject)
+  # check if the startObject is one of theses
+  # if not go through all of its children objects
+  # perhaps we should just do this in java
 end
 
-def nextColor
-  color = colors[@colorIndex % colors.length].hex
-  @colorIndex += 1
-  color
+def log(message)
+  System.err.println(message)
 end
 
-def multiUserGraph(dataGraph, dataStore)
-  otCreate(OTDataGraph) { |multiUserGraph|
-    multiUserGraph.title = dataGraph.title
-    multiUserGraph.showGraphableList=true
-    multiUserGraph.graphableListEditable=false
-    multiUserGraph.xDataAxis = dataGraph.xDataAxis
-    multiUserGraph.yDataAxis = dataGraph.yDataAxis
-    @colorIndex = 0
-    graphables = multiUserGraph.graphables
-    users.each { |user|
-      next unless hasUserModified(dataStore,user)
-      graphables.add(otCreate(OTDataGraphable) { | graphable |
-        graphable.name = user.name
-        graphable.color = nextColor
-        graphable.xColumn=0
-        graphable.yColumn=1
-        graphable.locked=true
-        graphable.drawMarks=false
-        graphable.dataStore = userObject(dataStore,user)
-      })
-    }  
-  }   
+def checkType?(obj, klass)
+  return true if obj.instanceof? klass
+  
+  log "obj is a #{obj.java_class} instead of being a #{klass.java_class.name}"
+  false
+end
+
+def rootObject
+  @otrunk.root
+end
+
+# --------- udl report specific -------------------
+
+def linkToUnitPage(link_text)
+  firstObject = rootObject.object.reportTemplate
+  firstView = rootObject.object.reportTemplateViewEntry
+  linkToObject link_text, firstObject, firstView
+end
+
+def layeredContainer
+  modeSwitcher = rootObject.object.reportTemplate.reference
+  modeSwitcher.otObject
+end
+
+def activityTitle
+  return layeredContainer.name
+end
+
+def activitySectionContainer
+  layeredContainer.layers.get(0)
+end
+
+def activitySections
+  activitySectionContainer.cards.vector
+end
+
+def visitedSections(user)
+  userSectionContainer = userObject(activitySectionContainer, user)
+  userSectionContainer.viewedCards.vector
+end
+
+# ----- summary specific --------------
+
+# ---- section specific -------------
+def sectionTitle
+  return $model.name
 end
