@@ -166,6 +166,8 @@ end
 def basicSectionQuestions
   questions = []
   
+  return questions unless $model.content.is_a? org.concord.otrunk.ui.OTCardContainer
+  
   pageCards = $model.content.cards.vector
 
   pageCards.each do | doc |
@@ -230,5 +232,28 @@ def questionAnswer(question)
   end
   
   answer = "No Answer" if answer == nil
-  truncate answer, 40
+  truncate answer, 30
+end
+
+# this takes a userQuestion
+def questionCorrect (question)
+  return nil unless question.correctAnswer
+
+  return nil if question.input.is_a? org.concord.otrunk.ui.OTText
+
+  if question.input.is_a? org.concord.otrunk.ui.OTChoice
+	return question.correctAnswer == question.input.currentChoice
+
+  end
+  
+end
+
+# this takes a userQuestion
+def questionAnswerHtml(question)
+  correct = questionCorrect question
+  text = questionAnswer question
+
+  return text if correct == nil
+  return "<font color=\"ff0000\">#{text}</font>" unless correct
+  return "<font color=\"00ff00\">#{text}</font>"    
 end

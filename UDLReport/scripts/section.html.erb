@@ -10,8 +10,6 @@
 
   <% section = $model %>
   <h2>Section: <%= sectionTitle %></h2>
-
-    <h2>Report for <%= sectionTitle %></h2>
   
     <% questions = basicSectionQuestions %>
 
@@ -19,7 +17,7 @@
       <tr>
        <th>User</th>
        <% questions.each do |question| %>
-        <th><%= popupLinkToObject truncate(promptText(question), 40), question %></th>  
+        <th><%= popupLinkToObject truncate(promptText(question), 30), question %></th>  
        <% end %>
       </tr>
       <% line_toggle = true %>
@@ -27,11 +25,13 @@
         <tr BGCOLOR = <%= line_toggle ? ROWCOLOR1 : ROWCOLOR2 %>>
           <% line_toggle = !line_toggle %>
           <td><%= linkToObject user.name, user, $user_view %></td>
-          <% questions.each do |question| %>
-            <% userQuestion = userObject(question, user) %>
-            <td><%= questionAnswer userQuestion %></td>  
-         <% end %>
+         <% questions.each do |question| %>
+          <% userQuestion = userObject(question, user) %>
+          <td>
+            <%= questionAnswerHtml userQuestion %> 
+          </td>  
+         <% end %>        
         </tr>
-      <% end %>
+      <% end %>    
     </table>
 </div>
