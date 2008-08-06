@@ -93,7 +93,7 @@ def log(message)
 end
 
 def checkType?(obj, klass)
-  return true if obj.instanceof? klass
+  return true if obj.is_a? klass
   
   log "obj is a #{obj.java_class} instead of being a #{klass.java_class.name}"
   false
@@ -138,4 +138,68 @@ end
 # ---- section specific -------------
 def sectionTitle
   return $model.name
+end
+
+def basicSectionQuestions
+  questions = []
+  
+  pageCards = $model.content.cards.vector
+
+  pageCards.each do | doc |
+    questions.concat documentQuestions(doc)
+  end
+
+  questions
+end
+
+def documentQuestions(doc)
+  questions = []
+  
+  doc.documentRefs.each do | ref |
+    questions << ref if ref.is_a? org.concord.otrunk.udl.question.OTUDLQuestion
+  end
+
+  questions  
+end
+
+def promptText(question)
+  prompt = question.prompt
+  text = ""
+  if prompt.is_a? org.concord.otrunk.view.document.OTCompoundDoc
+    text = prompt.bodyText
+  end
+  toPlainText(text)
+end
+
+def toPlainText(text)
+  text = text.gsub(/<.*?>/, "")
+  text.gsub(/\s+/, " ").strip
+end
+
+def choiceLabel( chooser) 
+  labels = ( 'a'..'f').to_a
+
+  answer = chooser.currentChoice
+  return nil if answer == nil
+  
+  i = 0
+  chooser.choices.vector.each do |choice|    
+    return labels[i] if answer == choice 
+    i += 1
+  end
+end
+
+# this takes a userQuestion
+def questionAnswer(question)
+  input = question.input
+  if input.is_a? org.concord.otrunk.ui.OTText
+    answer = input.text
+  else 
+    if input.is_a? org.concord.otrunk.ui.OTChoice
+      answer = choiceLabel input
+    end
+  end
+  
+  answer = "No Answer" if answer == nil
+  answer
 end

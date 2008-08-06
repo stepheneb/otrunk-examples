@@ -1,7 +1,33 @@
+<% section = $model %>
 <h2>Section: <%= sectionTitle %></h2>
 <% if @debug %>
-ID: <%= $model.otExternalId %>
+ID: <%= section.otExternalId %>
 <% end %>
+
+  <h2>Report for <%= sectionTitle %></h2>
+  
+  <% questions = basicSectionQuestions %>
+
+  <table>
+    <tr>
+     <th>User</th>
+     <% questions.each do |question| %>
+      <th><%= promptText(question)[0..40] %>...</th>  
+     <% end %>
+    </tr>
+    <% users.each do |user| %>
+      <tr>
+        <td><%= linkToObject user.name, user, $user_view %></td>
+       <% questions.each do |question| %>
+        <% userQuestion = userObject(question, user) %>
+        <td>
+          <%= questionAnswer userQuestion %> 
+        </td>  
+       <% end %>        
+      </tr>
+    <% end %>    
+  </table>
+
 
 <hr/>
 <%= linkToUnitPage "Back to Unit Report" %> 
