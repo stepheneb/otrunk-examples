@@ -9,10 +9,19 @@ require 'time'
 
 LOCAL_ROOT = Dir.pwd
 
-if File.exists?('local_sds_path')
-  LOCAL_SDS = File.read('local_sds_path')
+USE_LOCAL_APACHE = true
+if USE_LOCAL_APACHE
+  PATH_TO_JAVASCRIPT_RESOURCES = ''
 else
-  LOCAL_SDS = "http://saildataservice/4/offering/2/jnlp/2/view"
+  PATH_TO_JAVASCRIPT_RESOURCES = LOCAL_ROOT
+end
+
+if File.exists?('index-builder-script/local_sds_path')
+  LOCAL_SDS = File.read('index-builder-script/local_sds_path').chop
+else
+  puts "*** you need to create the file: index-builder-script/local_sds_path and with the"
+  puts "*** value for the OTrunk Testing SDS view path"
+  exit
 end
 
 def writeHtmlPage(title, body, filename)
@@ -22,10 +31,10 @@ def writeHtmlPage(title, body, filename)
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en-US" xml:lang="en-US">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-  <link rel="stylesheet" type="text/css" media="all" href="#{LOCAL_ROOT}/index-builder-script/style.css" />
-  <script type="text/javascript" src="#{LOCAL_ROOT}/index-builder-script/prototype.js"></script>
-  <script type="text/javascript" src="#{LOCAL_ROOT}/index-builder-script/fastinit.js"></script>
-  <script type="text/javascript" src="#{LOCAL_ROOT}/index-builder-script/tablesort.js"></script>	
+  <link rel="stylesheet" type="text/css" media="all" href="#{PATH_TO_JAVASCRIPT_RESOURCES}/index-builder-script/style.css" />
+  <script type="text/javascript" src="#{PATH_TO_JAVASCRIPT_RESOURCES}/index-builder-script/prototype.js"></script>
+  <script type="text/javascript" src="#{PATH_TO_JAVASCRIPT_RESOURCES}/index-builder-script/fastinit.js"></script>
+  <script type="text/javascript" src="#{PATH_TO_JAVASCRIPT_RESOURCES}/index-builder-script/tablesort.js"></script>	
   <TITLE>#{title}</TITLE>
   <style type="text/css">
   h3 {margin-bottom: 0.5em; margin-top:2em; border-bottom: 1px solid }
