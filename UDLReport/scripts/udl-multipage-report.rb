@@ -103,16 +103,22 @@ def rootObject
   @otrunk.root
 end
 
+def truncate (string, length)
+  postFix = ""
+  postFix = "..." if string.length > length
+  string[0...length] + postFix
+end
+
 # --------- udl report specific -------------------
 
 def linkToUnitPage(link_text)
-  firstObject = rootObject.object.reportTemplate
-  firstView = rootObject.object.reportTemplateViewEntry
+  firstObject = rootObject.reportTemplate
+  firstView = rootObject.reportTemplateViewEntry
   linkToObject link_text, firstObject, firstView
 end
 
 def layeredContainer
-  modeSwitcher = rootObject.object.reportTemplate.reference
+  modeSwitcher = rootObject.reportTemplate.reference
   modeSwitcher.otObject
 end
 
@@ -163,17 +169,16 @@ def documentQuestions(doc)
 end
 
 def promptText(question)
-  prompt = question.prompt
-  text = ""
-  if prompt.is_a? org.concord.otrunk.view.document.OTCompoundDoc
-    text = prompt.bodyText
-  end
-  toPlainText(text)
+  toPlainText(question.prompt)
 end
 
-def toPlainText(text)
-  text = text.gsub(/<.*?>/, "")
-  text.gsub(/\s+/, " ").strip
+def toPlainText(obj)
+  text = ""
+  if obj.is_a? org.concord.otrunk.view.document.OTCompoundDoc
+    text = obj.bodyText.gsub(/<.*?>/, "")
+    test = text.gsub(/\s+/, " ").strip
+  end
+  text
 end
 
 def choiceLabel( chooser) 
@@ -189,6 +194,13 @@ def choiceLabel( chooser)
   end
 end
 
+def currentChoiceText( chooser)
+  answer = chooser.currentChoice
+  return nil if answer == nil
+  
+  return toPlainText(answer)
+end
+
 # this takes a userQuestion
 def questionAnswer(question)
   input = question.input
@@ -196,10 +208,10 @@ def questionAnswer(question)
     answer = input.text
   else 
     if input.is_a? org.concord.otrunk.ui.OTChoice
-      answer = choiceLabel input
+      answer = currentChoiceText input
     end
   end
   
   answer = "No Answer" if answer == nil
-  answer
+  truncate answer, 40
 end
