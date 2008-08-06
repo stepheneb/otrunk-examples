@@ -22,16 +22,16 @@
         <th><%= popupLinkToObject truncate(promptText(question), 40), question %></th>  
        <% end %>
       </tr>
+      <% line_toggle = true %>
       <% users.each do |user| %>
-        <tr>
+        <tr BGCOLOR = <%= line_toggle ? ROWCOLOR1 : ROWCOLOR2 %>>
+          <% line_toggle = !line_toggle %>
           <td><%= linkToObject user.name, user, $user_view %></td>
-         <% questions.each do |question| %>
-          <% userQuestion = userObject(question, user) %>
-          <td>
-            <%= questionAnswer userQuestion %> 
-          </td>  
-         <% end %>        
+          <% questions.each do |question| %>
+            <% userQuestion = userObject(question, user) %>
+            <td><%= questionAnswer userQuestion %></td>  
+         <% end %>
         </tr>
-      <% end %>    
+      <% end %>
     </table>
 </div>

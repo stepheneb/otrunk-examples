@@ -8,6 +8,9 @@ include_class 'org.concord.datagraph.state.OTDataGraphable'
 include_class 'org.concord.otrunk.script.ui.OTScriptVariable'
 include_class 'org.concord.framework.otrunk.wrapper.OTString'
 
+ROWCOLOR1 = "#FFFEE9"
+ROWCOLOR2 = "#FFFFFF"
+
 def getText
   @otrunk = $viewContext.getViewService(OTrunk.java_class);
   @debug = true
