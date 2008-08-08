@@ -75,7 +75,8 @@ otrunk_example_dirs.each do |path|
   svn_props = YAML::load(`svn info #{path}`)
   gmt_time = gmt_time_from_svn_time(svn_props["Last Changed Date"])
   examples = Dir.glob("#{path}/*.otml").length
-  index_page_body += "<tr><td><a href=""#{path}/ot-index.html"">#{File.basename(path)}</a></td>"
+  local_http_path = path[/.*otrunk-examples(.*)/, 1]
+  index_page_body += "<tr><td><a href=""#{local_http_path}/ot-index.html"">#{File.basename(path)}</a></td>"
   index_page_body += "<td class='timestyle'>#{gmt_time}</td>"
   index_page_body += "<td>#{examples}</td></tr>\n"
 end
