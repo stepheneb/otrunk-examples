@@ -89,7 +89,23 @@ writeHtmlPage("OTrunk Examples", index_page_body, "example-index.html")
 
 otrunk_example_dirs.each do |path|
   if File.exists?("#{path}/jnlp_url.tmpl")
-    jnlp_url_tmpl = File.read("#{path}/jnlp_url.tmpl")
+    if File.exists?("#{path}/local_jnlp_url.tmpl")
+      jnlp_url_tmpl = File.read("#{path}/local_jnlp_url.tmpl")
+    else
+      jnlp_url_tmpl = File.read("#{path}/jnlp_url.tmpl")
+      puts "\n" + "-" * 64 + "\n\n"
+      puts "Using jnlp tempate:\n\n"
+      puts "   #{path}/jnlp_url.tmpl"
+      puts "\nfor #{File.basename(path)}\n"
+      puts "\nThe otml examples in #{File.basename(path)} require the jnlp in the offering in this remote SDS:\n\n"
+      puts "   " + jnlp_url_tmpl[/(.*)\/jnlp/, 1]
+      puts "\nLocal operation will be faster if you host a copy of the remote jnlp and jar resources referenced"
+      puts "in the offering in the remote SDS in your local jnlp server and provide a reference to a new offering"
+      puts "in your local SDS. Replace the remote 'view' url in the existing jnlp_url.tmpl with your new 'view' url"
+      puts "and save the new copy of this url to this file:\n\n"
+      puts "   #{path}/local_jnlp_url.tmpl"
+      puts "\n"
+    end
   else
     jnlp_url_tmpl = "#{LOCAL_SDS}?sailotrunk.otmlurl=%otml_url%&sailotrunk.hidetree=false"
   end
