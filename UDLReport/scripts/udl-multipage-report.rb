@@ -134,17 +134,37 @@ def linkToUnitPage(link_text)
   linkToObject link_text, firstObject, firstView
 end
 
+def activityRoot
+  rootObject.reportTemplate.reference
+end
+
+def udlFormatVersion
+  return :version_2 if activityRoot.is_a? org.concord.otrunk.ui.OTModeSwitcher
+  return :version_1 if activityRoot.is_a? org.concord.otrunk.udl3.OTUDLContainer
+end
+
 def layeredContainer
-  modeSwitcher = rootObject.reportTemplate.reference
-  modeSwitcher.otObject
+  activityRoot.otObject
 end
 
 def activityTitle
-  return layeredContainer.name
+  case udlFormatVersion
+  when :version_2
+    layeredContainer.name
+  when :version_1
+    toPlainText( activityRoot.title )
+  end
+  
+  nil
 end
 
 def activitySectionContainer
-  layeredContainer.layers.get(0)
+  case udlFormatVersion
+  when :version_2
+	layeredContainer.layers.get(0)
+  when :version_1
+    activityRoot.content
+  end 
 end
 
 def activitySections
