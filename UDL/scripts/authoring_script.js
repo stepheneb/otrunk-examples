@@ -183,8 +183,8 @@ var pageContainerHandler =
 		{
 			if (evt.getProperty().equalsIgnoreCase("cards") &&
 				evt.getOperation().equals(OTChangeEvent.OP_ADD)) {
-				var numCards = evt.getSource().getCards().size();
-				var doc = evt.getSource().getCards().get(numCards-1);
+				// In an add event the value is object that was added
+				var doc = evt.getValue()
 				doc.setBodyText("<div class=\"buffer\">"+
 									"<div class=\"border\">"+
 										"<div class=\"body\">"+
@@ -195,8 +195,10 @@ var pageContainerHandler =
 										"\n</div>"+
 									"</div>"+
 								"</div>");
+				doc.addOTChangeListener(pageListener)
+				// The doc is saved here so it doesn't get garbage collected.  If it 
+				// was garbage collected then the listener wouldn't catch the events anymore
 				pages.push(doc)	
-				pages[pages.length-1].addOTChangeListener(pageListener);
 			} else if (evt.getProperty().equalsIgnoreCase("currentCard")) {
 				objectAboveSnapshotButton = null;
 			}
