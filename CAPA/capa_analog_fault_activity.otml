@@ -24,9 +24,11 @@
 		<import	class="org.concord.otrunk.script.ui.OTScriptVariableComponent" />
 		<import class="org.concord.otrunk.script.ui.OTXHTMLScript"/>
 		<import class="org.concord.otrunk.script.js.OTJavascript" />
+		<import class="org.concord.otrunk.browser.mozswing.OTMozSwing" />
+		<import class="org.concord.otrunk.labview.OTLabviewMonitor" />		
+    	<import class="org.concord.otrunk.capa.util.OTCAPAChecker" />		
 		<import class="org.concord.otrunkcapa.OTUnit" />
 		<import	class="org.concord.otrunkcapa.rubric.OTAssessmentViewConfig" />
-		<import class="org.concord.otrunk.labview.OTLabviewMonitor" />
 		<import class="org.concord.otrunkcapa.rubric.OTAssessment" />
 	</imports>
 	<objects>
@@ -61,6 +63,12 @@
 						<OTViewEntry
 							objectClass="org.concord.otrunk.script.ui.OTXHTMLScript"
 							viewClass="org.concord.otrunk.script.ui.OTXHTMLScriptView"/>
+                        <OTViewEntry local_id="moz-swing-view" 
+                        	objectClass="org.concord.otrunk.browser.mozswing.OTMozSwing" 
+                        	viewClass="org.concord.otrunk.browser.mozswing.OTMozSwingView" />
+						<OTViewEntry 
+							objectClass="org.concord.otrunk.capa.util.OTCAPAChecker" 
+							viewClass="org.concord.otrunk.capa.util.OTCAPACheckerView" /> 
 						<OTViewEntry
 							objectClass="org.concord.otrunkcapa.rubric.OTRubric"
 							viewClass="org.concord.otrunkcapa.rubric.view.OTRubricSplitPaneView" />
@@ -116,7 +124,14 @@
 				<OTInclude href="capa_analog_fault_rubric.otml" />
 			</includes>
 			<root>
-				<OTCompoundDoc local_id="intro_page">
+      			<OTCAPAChecker local_id="checker" name="Checker" 
+      				nextToShow="0661cc3a-8dd2-4aa1-adf7-f92b4a4ac825" mozSwing="f87bba84-5dd8-47cd-b2b5-1a4d593e3cff"
+      				windowsOnly="true"
+      				checkFlashPlugin="true" flashPluginRequiredVersion="8"
+      				checkLabviewRuntime="true" labviewRuntimeRequiredVersion="8.5"/>      		
+			</root>
+			<library>
+				<OTCompoundDoc id="0661cc3a-8dd2-4aa1-adf7-f92b4a4ac825" local_id="intro_page">
 					<bodyText>
 						<div
 							style="padding-top: 15mm; padding-bottom: 15mm; padding-left: 30mm; padding-right: 30mm;">
@@ -133,8 +148,6 @@
 						</div>
 					</bodyText>
 				</OTCompoundDoc>
-			</root>
-			<library>
 				<OTViewEntry local_id="script_report_view"
 					objectClass="org.concord.otrunk.script.ui.OTScriptObject"
 					viewClass="org.concord.otrunk.script.ui.OTScriptObjectContentsReportView" />
@@ -269,6 +282,10 @@
 						<OTJavascript src="capa_analog_fault_report.js"/>
 					</script>
 				</OTXHTMLScript>
+				<OTMozSwing id="f87bba84-5dd8-47cd-b2b5-1a4d593e3cff" name="Direct to flash install site" 
+					url="http://www.adobe.com/shockwave/download/download.cgi?P1_Prod_Version=ShockwaveFlash" 
+					showToolbar="false" showStatusBar="false" 
+					preferredWidth="800" preferredHeight="300" />
 			</library>
 		</OTSystem>
 	</objects>
