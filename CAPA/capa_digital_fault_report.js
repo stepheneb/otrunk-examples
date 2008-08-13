@@ -99,7 +99,7 @@ function getText() {
 	t += " The information below this line is only for debugging purpose "
 	t += "----------<br/><pre>"		
 	t += activityLog
-	t += "</pre><hr/>"
+	t += "</pre>"
 	
 	return t
 }
