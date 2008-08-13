@@ -167,7 +167,6 @@ function wrap_assess() {
 	converter.markEndTime()
 	glob.madw = converter.getMADWrapper()
 	glob.helper = new ScopeAssessmentUtil(glob.madw)
-	glob.otAssessment.setLabel("Oscilloscope")
 	var inventory = glob.otAssessment.getInventory()
 	inventory.put("modelActivityData", converter.getOTModelActivityData())
 	assess(glob.otAssessment)

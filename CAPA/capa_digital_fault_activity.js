@@ -103,7 +103,6 @@ function wrap_assess() {
 	var converter = new LabviewReportConverter(glob.monitor)
 	converter.markEndTime()
 	glob.madWrapper = converter.getMADWrapper()
-	glob.otAssessment.setLabel("Fault")
 	var inventory = glob.otAssessment.getInventory()
 	var madID = converter.getOTModelActivityData().getGlobalId()
 	inventory.put("modelActivityData", madID)

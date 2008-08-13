@@ -220,7 +220,6 @@ function wrap_assess() {
 	converter.markEndTime()
 	_madw = converter.getMADWrapper()
 	_helper = new ScopeAssessmentUtil(_madw)
-	_otAssessment.setLabel("Oscilloscope")
 	var madID = converter.getOTModelActivityData().getGlobalId()
 	_otAssessment.getInventory().put("modelActivityData", madID) 
 	assess(_otAssessment)
