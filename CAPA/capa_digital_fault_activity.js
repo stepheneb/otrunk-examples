@@ -37,7 +37,6 @@ var ot_cards
  	
 var glob = {
 	dateFormat : SimpleDateFormat.getInstance(),
-	info : null, // text to be added to the report
 	currentStep : 1,
 	lastStep : 1,
 	monitor : null, // "real object" for ot_monitor
@@ -57,7 +56,6 @@ function init() {
     glob.monitor = controllerService.getRealObject(ot_monitor)
     glob.monitor.setExitListener(listeners.labviewExitListener)
     setupAssessmentLogging()
-	initLogging()
 	OTCardContainerView.setCurrentCard(ot_cards, "main_card_1")	
 	return true
 }
@@ -87,16 +85,6 @@ function getUserName() {
 	else {
 		return users.get(0).getName()
 	}
-}
-
-function initLogging() {
-	glob.info = otObjectService.createObject(OTText)
-	glob.info.setText("");
-	otContents.add(glob.info)
-}
-
-function log(msg) {
-	glob.info.setText(glob.info.getText() + msg)
 }
 
 function wrap_assess() {
