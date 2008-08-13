@@ -76,12 +76,9 @@ function processUserEvents(madWrapper) {
 		var nearFault3Start = Math.abs(civ.getTime() - fault3Start) < 500 		
 		var nearTransition =  (nearFault2Start || nearFault3Start) ? true : false
 		
-		if (name.equals("step")) {
-			fault = parseInt(value) + 1
-		}
-		
 		if (nearTransition) {
 			if (wasNearTransition == false) {
+				fault += 1
 				glob.activityLog += "Fault " + fault + "\n"				
 			}
 		}
