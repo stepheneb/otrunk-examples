@@ -262,10 +262,12 @@ def questionCorrect (question)
   return nil if question.input.is_a? org.concord.otrunk.ui.OTText
 
   if question.input.is_a? org.concord.otrunk.ui.OTChoice
-	return question.correctAnswer == question.input.currentChoice
-
+    if question.input.currentChoice == nil
+      return nil
+    else
+	    return question.correctAnswer == question.input.currentChoice
+    end
   end
-  
 end
 
 # this takes a userQuestion
