@@ -1,0 +1,59 @@
+<% section = $model %>
+
+<div class="menu">
+  <table>
+    <tr>
+      <td><div class="menu_item"><%= linkToUnitPage "Unit Summary" %></div></td>
+	  <td><div class="menu_item"><%= linkToObject sectionTitle, section, $section_view %></div></td>
+    </tr>
+  </table>
+</div>
+
+<hr />
+
+<% sep = '|' #field seperator %>
+
+<% text1 = '' %>
+<% text2 = '' %> 
+<% questions = basicSectionQuestions %>
+<% text1 += sep %>
+<% questions.size.times do |i| %>
+  <% text1 += (i+1).to_s + sep %>
+<% end %>
+<% text1 += "\n" %>
+
+<% text1 += 'User' + sep %>
+<% questions.each do |question| %>
+  <% text1 += truncate(promptText(question), 30) + sep %>
+<% end %>
+<% text1 += "\n" %>
+
+<% users.each do |user| %>
+  <% text1 += user.name + sep %>
+  <% questions.each do |question| %>
+    <% userQuestion = userObject(question, user) %>
+    <% text1 += questionAnswer(userQuestion) + sep %> 
+  <% end %>
+  <% text1 += "\n" %>        
+<% end %>
+
+<% text2 += 'Index' + sep + 'Prompt' + sep + 'Correct Answer' + sep + 'Choice 1' + sep + 'Choice 2' + sep + 'Choice 3' + sep + 'Choice 4' + "\n" %>    
+<% questions.size.times do |i| %>
+  <% text2 += (i+1).to_s + sep %>
+  <% text2 += promptText(questions[i]) + sep %>
+  <% text2 += correctAnswerLabel(questions[i]) + sep %>
+  <% if questions[i].input.is_a? org.concord.otrunk.ui.OTChoice %>
+    <% choices = questions[i].input.choices %>
+    <% choices.size.times do |i| %>
+      <% text2 += toPlainText(choices.get(i)) + sep %>
+    <% end %>
+  <% end %>  
+  <% text2 += "\n" %>
+<% end %>
+
+<h2>Section: <%= sectionTitle %></h2>
+<p/>
+<pre>
+<%=text1%>
+
+<%=text2%>

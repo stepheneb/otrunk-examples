@@ -218,22 +218,34 @@ def toPlainText(obj)
     test = text.gsub(/\s+/, " ").strip
   end
   text
+  test
 end
 
-def choiceLabel( chooser) 
+def choiceLabel(chooser, answer) 
   labels = ( 'a'..'f').to_a
 
-  answer = chooser.currentChoice
   return nil if answer == nil
   
-  i = 0
-  chooser.choices.vector.each do |choice|    
-    return labels[i] if answer == choice 
-    i += 1
+  chooser.choices.vector.size.times do |i|    
+    return labels[i] if answer == chooser.choices.vector[i] 
   end
 end
 
-def currentChoiceText( chooser)
+# Return user answer for a multi-choice question as a label (a, b, c, etc.)
+def answerLabel(chooser) 
+  return choiceLabel(chooser, chooser.currentChoice)
+end
+
+# Return correct answer for a multi-choice question as a label (a, b, c, etc.)
+def correctAnswerLabel(question)
+	label = nil
+	if question.input.is_a? org.concord.otrunk.ui.OTChoice
+		label = choiceLabel(question.input, question.correctAnswer)
+	end
+	return label ? label : 'Not Available'	
+end
+
+def currentChoiceText(chooser)
   answer = chooser.currentChoice
   return nil if answer == nil
   
@@ -279,3 +291,4 @@ def questionAnswerHtml(question)
   return "<font color=\"ff0000\">#{text}</font>" unless correct
   return "<font color=\"00ff00\">#{text}</font>"    
 end
+
