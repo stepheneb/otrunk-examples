@@ -17,6 +17,7 @@
  */
 
 importClass(Packages.java.awt.event.ActionListener);
+importClass(Packages.java.lang.System);
                           					
 function init()
 {
@@ -50,7 +51,10 @@ function save()
 var button1Listener = new ActionListener()
 {
 	actionPerformed: function(evt) {
-		scriptView.getViewContainer().getUpdateableContainer().setCurrentObject(replacementObject1);
+		var currentSection = scriptView.getViewContainer().getUpdateableContainer().getCurrentObject();
+		cardContainer.getCards().add(replacementObject1)
+		cardContainer.setCurrentCard(replacementObject1);
+		cardContainer.remove(currentSection);
 		replacementObject1.getContent().setCurrentCard(firstPage1);
 		
 	}
@@ -59,7 +63,10 @@ var button1Listener = new ActionListener()
 var button2Listener = new ActionListener()
 {
 	actionPerformed: function(evt) {
-		scriptView.getViewContainer().getUpdateableContainer().setCurrentObject(replacementObject2);
+		var currentSection = scriptView.getViewContainer().getUpdateableContainer().getCurrentObject();
+		cardContainer.getCards().add(replacementObject2)
+		cardContainer.setCurrentCard(replacementObject2);
+		cardContainer.remove(currentSection);
 		replacementObject2.getContent().setCurrentCard(firstPage2);
 		
 	}
@@ -68,7 +75,10 @@ var button2Listener = new ActionListener()
 var button3Listener = new ActionListener()
 {
 	actionPerformed: function(evt) {
-		scriptView.getViewContainer().getUpdateableContainer().setCurrentObject(replacementObject3);
+		var currentSection = scriptView.getViewContainer().getUpdateableContainer().getCurrentObject();
+		cardContainer.getCards().add(replacementObject3)
+		cardContainer.setCurrentCard(replacementObject3);
+		cardContainer.remove(currentSection);
 		replacementObject3.getContent().setCurrentCard(firstPage3);
 		
 	}
@@ -77,7 +87,10 @@ var button3Listener = new ActionListener()
 var button4Listener = new ActionListener()
 {
 	actionPerformed: function(evt) {
-		scriptView.getViewContainer().getUpdateableContainer().setCurrentObject(replacementObject4);
+		var currentSection = scriptView.getViewContainer().getUpdateableContainer().getCurrentObject();
+		cardContainer.getCards().add(replacementObject4)
+		cardContainer.setCurrentCard(replacementObject4);
+		cardContainer.remove(currentSection);
 		replacementObject4.getContent().setCurrentCard(firstPage4);
 		
 	}
