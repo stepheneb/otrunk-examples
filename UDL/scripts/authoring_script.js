@@ -106,6 +106,7 @@ var sectionContainerHandler =
 				var section = evt.getSource().getCards().get(numCards-1);
 				section.getContent().addOTChangeListener(pageContainerListener);
 			}
+			/*
 			if (evt.getProperty().equalsIgnoreCase("cards")) {
 				var numCards = evt.getSource().getCards().size();
 				var section = evt.getSource().getCards().get(numCards-1);
@@ -159,6 +160,7 @@ var sectionContainerHandler =
 				section.getContent().addOTChangeListener(pageContainerListener);
 				section.addOTChangeListener(sectionListener);
 			}
+			*/
 		}
 };
 var sectionContainerListener = new OTChangeListener(sectionContainerHandler);
