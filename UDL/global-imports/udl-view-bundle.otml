@@ -53,6 +53,7 @@
     <import class="org.concord.otrunk.udl.question.OTUDLQuestion" />
     <import class="org.concord.otrunk.udl.question.OTUDLLeveledQuestions" />
     <import class="org.concord.otrunk.udl.question.OTUDLQuestionViewConfig" />
+    <import class="org.concord.otrunk.udl.util.OTSmartGraphScriptButton"/>
     <import class="org.concord.otrunk.udl3.OTUDLMenu" />
     <import class="org.concord.otrunk.udl3.OTUDLContainer" />
     <import class="org.concord.otrunk.udl3.OTUDLSection" />
@@ -305,6 +306,52 @@
 							<OTSmartGraph />
 						</smartGraph>
                       </OTSmartGraphQuestion>
+                      <OTSmartGraphScriptButton name="Smart question script"  text="Check answer">
+                      	<script>
+                      		<OTJavascript>
+                      			<script>
+importClass(Packages.javax.swing.JOptionPane);
+
+function clicked(){
+
+}
+
+function showMessage(message){
+    JOptionPane.showMessageDialog(null, message);
+}
+
+function highlight(start, end){
+    smart.showRegionLabel(start, end);
+}
+
+function getLabelX(){
+    return getLastValidLabel().getXData();
+}
+
+function getLabelY(){
+    return getLastValidLabel().getYData();
+}
+
+function getLastValidLabel(){
+    var labels = graph.getLabels();
+    
+   	if (labels.size() == 0){
+   	   return null;
+   	}
+   	
+   	for (i=labels.size()-1; i>0; i--){
+   	   var label = labels.get(i);
+   	   if (label.getX() &lt; 100000){
+   	      return label;
+   	   }
+   	}
+   	return null;
+}
+                      			</script>
+                      		</OTJavascript>
+                      	</script>
+                      </OTSmartGraphScriptButton>
+                      <OTSmartGraph name="Smart graph"/>
                     </objectsToInsert>
                   </OTDocumentEditViewConfig>
                 </entry>
@@ -345,6 +392,12 @@
                 <entry key="${script-button-view}">
                 	<OTViewEntry objectClass="org.concord.otrunk.script.ui.OTScriptButton" viewClass="org.concord.otrunk.script.ui.OTScriptButtonEditView"/>
                 </entry>
+                <entry key="${smart-graph-script-view}">
+                	<OTViewEntry objectClass="org.concord.otrunk.udl.util.OTSmartGraphScriptButton" viewClass="org.concord.otrunk.udl.util.OTSmartGraphScriptButtonEditView"/>
+                </entry>
+                <entry key="${smart-graph-view}">
+                	<OTViewEntry objectClass="org.concord.smartgraph.OTSmartGraph" viewClass="org.concord.smartgraph.OTSmartGraphEditView" />
+                </entry>
               </map>
             </OTViewMode>
           </modes>
@@ -356,13 +409,14 @@
 						  The default scaffolding level just uses the order of the items inside OTUDLLeveledQuestions/questions. It is not aware of the names
 						  such as "L1", "L2", etc. -->
             <OTUDLQuestionViewConfig id="c0e33320-e611-11dc-95ff-0800200c9a66" isLevelFrozen="false" defaultScaffoldLevel="0" objectClass="org.concord.otrunk.udl.question.OTUDLLeveledQuestions" viewClass="org.concord.otrunk.udl.question.OTUDLLeveledQuestionsCardView" />
+            <OTViewEntry local_id="smart-graph-script-view" objectClass="org.concord.otrunk.udl.util.OTSmartGraphScriptButton" viewClass="org.concord.otrunk.script.ui.OTScriptButtonView"/>
             <OTViewEntry objectClass="org.concord.otrunk.ui.OTObjectSet" viewClass="org.concord.otrunk.ui.swing.OTObjectSetView"/>
             <OTViewEntry local_id="script-button-view" objectClass="org.concord.otrunk.script.ui.OTScriptButton" viewClass="org.concord.otrunk.script.ui.OTScriptButtonView"/>
             <OTViewEntry objectClass="org.concord.otrunk.udl.document.OTGlossary" viewClass="org.concord.otrunk.udl.document.OTGlossaryView"/>
             <OTViewEntry objectClass="org.concord.otrunk.udl.document.OTDefinition" viewClass="org.concord.otrunk.udl.document.OTDefinitionView"/>
             <OTViewEntry objectClass="org.concord.otrunk.ui.OTLayerContainer" viewClass="org.concord.otrunk.ui.swing.OTLayerContainerView"/>
             <OTViewEntry local_id="smart-graph-question-view" objectClass="org.concord.smartgraph.OTSmartGraphQuestion" viewClass="org.concord.smartgraph.OTSmartGraphQuestionView" />
-			<OTViewEntry objectClass="org.concord.smartgraph.OTSmartGraph" viewClass="org.concord.smartgraph.OTSmartGraphHiddenView" />
+			<OTViewEntry local_id="smart-graph-view" objectClass="org.concord.smartgraph.OTSmartGraph" viewClass="org.concord.smartgraph.OTSmartGraphHiddenView" />
             <OTViewEntry objectClass="org.concord.otrunk.udl.OTUDLNavBar" viewClass="org.concord.otrunk.udl.ui.OTUDLNavBarView"/>
             <OTViewEntry local_id="lab-page-view" objectClass="org.concord.otrunk.udl.OTUDLLabPage" viewClass="org.concord.otrunk.udl.ui.OTUDLLabPageView"/>
             <OTViewEntry local_id="sound-grapher-view" viewClass="org.concord.multimedia.state.ui.OTSoundDataCollectorView" objectClass="org.concord.multimedia.state.OTSoundDataCollector" />
