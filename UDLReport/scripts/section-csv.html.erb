@@ -11,20 +11,29 @@
 
 <hr />
 
-<% sep = '|' #field seperator %>
+<% sep = '|' %> <!--field separator-->
 
+<!-- Build first table: users/answers --> 
+<!-- Header 1 -->
 <% text1 = '' %>
 <% text2 = '' %> 
 <% questions = basicSectionQuestions %>
 <% text1 += sep %>
 <% questions.size.times do |i| %>
   <% text1 += (i+1).to_s + sep %>
+  <% if not isChoiceQuestion(questions[i]) %>
+    <% text1 += sep %>
+  <% end %>
 <% end %>
 <% text1 += "\n" %>
 
+<!-- Header 2 -->
 <% text1 += 'User' + sep %>
 <% questions.each do |question| %>
-  <% text1 += truncate(promptText(question), 30) + sep %>
+  <% text1 += truncate(promptText(question), 16) + sep %>
+  <% if not isChoiceQuestion(question) %>
+    <% text1 += sep %>
+  <% end %>
 <% end %>
 <% text1 += "\n" %>
 
@@ -32,17 +41,23 @@
   <% text1 += user.name + sep %>
   <% questions.each do |question| %>
     <% userQuestion = userObject(question, user) %>
-    <% text1 += answerLabel(userQuestion) + sep %> 
+    <% text1 += answerLabel(userQuestion) + sep %>
+    <% if not isChoiceQuestion(userQuestion) %>
+      <% text1 += sep %>
+    <% end %>
   <% end %>
   <% text1 += "\n" %>        
 <% end %>
 
-<% text2 += 'Index' + sep + 'Prompt' + sep + 'Correct Answer' + sep + 'Choice 1' + sep + 'Choice 2' + sep + 'Choice 3' + sep + 'Choice 4' + "\n" %>    
+<!-- Build second table: questions/question attributes -->
+<!-- Header -->
+<% text2 += 'Index' + sep + 'Prompt' + sep + 'Correct Answer' + sep + 'Choice 1' + sep + 'Choice 2' + sep + 'Choice 3' + sep + 'Choice 4' + "\n" %>
+    
 <% questions.size.times do |i| %>
   <% text2 += (i+1).to_s + sep %>
   <% text2 += promptText(questions[i]) + sep %>
   <% text2 += correctAnswerLabel(questions[i]) + sep %>
-  <% if questions[i].input.is_a? org.concord.otrunk.ui.OTChoice %>
+  <% if isChoiceQuestion(questions[i]) %>
     <% choices = questions[i].input.choices %>
     <% choices.size.times do |i| %>
       <% text2 += toPlainText(choices.get(i)) + sep %>
@@ -57,3 +72,4 @@
 <%=text1%>
 
 <%=text2%>
+</pre>

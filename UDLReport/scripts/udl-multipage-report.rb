@@ -64,7 +64,27 @@ end
 
 def users
   userListService = $viewContext.getViewService(OTUserListService.java_class)
-  userListService.getUserList()
+  userListService.getUserList().sort do |u1, u2| 
+    sep = /[\s,]+/
+ 	n1 = u1.name.split(sep)
+	n2 = u2.name.split(sep)
+	last1 = n1[n1.length-1]
+	last2 = n2[n2.length-1]
+	first1 = n1.length > 1 ? n1[0] : ''
+	first2 = n2.length > 1 ? n2[0] : ''
+	
+	if last1 < last2 
+		-1
+	elsif last1 > last2
+		1
+	elsif first1 < first2
+		-1
+	elsif first1 > first2
+		1
+	else
+		0
+	end
+  end
 end
 
 def embedUserObject(obj, user)
@@ -294,5 +314,9 @@ def questionAnswerHtml(question)
   return text if correct == nil
   return "<font color=\"ff0000\">#{text}</font>" unless correct
   return "<font color=\"00ff00\">#{text}</font>"    
+end
+
+def isChoiceQuestion(question)
+  return question.input.is_a? org.concord.otrunk.ui.OTChoice
 end
 
