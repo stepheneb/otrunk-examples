@@ -93,6 +93,12 @@
     <import class="org.concord.otrunkmw.OTModelerPage" />
     <import class="org.concord.otrunk.ui.OTSoundPlayer" />
     <import class="org.concord.otrunk.util.OTReference" />
+    <import class="org.concord.smartgraph.OTSmartGraph" />
+    <import class="org.concord.otrunk.udl.util.OTSmartGraphScriptButton" />
+    <import class="org.concord.framework.otrunk.wrapper.OTBoolean" />
+    <import class="org.concord.framework.otrunk.wrapper.OTInt" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariableRealObject" />
+    <import class="org.concord.datagraph.state.OTDataPointLabel" />
   </imports>
   <objects>
     <OTSystem local_id="system">
@@ -154,6 +160,12 @@
                 <OTDataAxis max="10.0" units="V" min="-10.0" label="Voltage" />
               </yDataAxis>
             </OTDataCollector>
+            <object refid="37cafb27-6d55-11dd-ac9a-cb602d69c6ea" />
+            <OTSmartGraph id="3a237a4c-6e08-11dd-95a8-85971a6fcfae" name="smart_crank_voltage">
+              <dataCollector>
+                <object refid="37cafb27-6d55-11dd-ac9a-cb602d69c6ea" />
+              </dataCollector>
+            </OTSmartGraph>
           </sharedObjects>
         </OTSharingBundle>
         <OTInterfaceManager>
@@ -4886,7 +4898,7 @@ Mark whether they are a conductor or an insulator.</td>
                                 </div>
                               </bodyText>
                             </OTUDLCompoundDoc>
-                            <OTUDLCompoundDoc name="%bbf06c4a-cdc1-11dc-bd2b-dd05e7961664" showDefinitions="true">
+                            <OTUDLCompoundDoc id="4e5e0956-cdc1-11dc-bd2b-dd05e7961664/cards[1]" name="%bbf06c4a-cdc1-11dc-bd2b-dd05e7961664" showDefinitions="true">
                               <bodyText>
                                 <div class="buffer">
                                   <div class="border">
@@ -4932,7 +4944,7 @@ Mark whether they are a conductor or an insulator.</td>
                                 </OTDrawingTool2>
                               </documentRefs>
                             </OTUDLCompoundDoc>
-                            <OTUDLCompoundDoc name="%fbc0f0bc-cdc1-11dc-bd2b-dd05e7961664" showDefinitions="true">
+                            <OTUDLCompoundDoc id="4e5e0956-cdc1-11dc-bd2b-dd05e7961664/cards[2]" name="%fbc0f0bc-cdc1-11dc-bd2b-dd05e7961664" showDefinitions="true">
                               <bodyText>
                                 <div class="buffer">
                                   <div class="border">
@@ -4959,7 +4971,7 @@ Mark whether they are a conductor or an insulator.</td>
                                 </div>
                               </bodyText>
                             </OTUDLCompoundDoc>
-                            <OTUDLCompoundDoc name="%8d184670-cdc2-11dc-bd2b-dd05e7961664" showDefinitions="true">
+                            <OTUDLCompoundDoc id="4e5e0956-cdc1-11dc-bd2b-dd05e7961664/cards[3]" name="%8d184670-cdc2-11dc-bd2b-dd05e7961664" showDefinitions="true">
                               <bodyText>
                                 <div class="buffer">
                                   <div class="border">
@@ -5034,6 +5046,9 @@ Mark whether they are a conductor or an insulator.</td>
                                       <currentCard>
                                         <object refid="8dfa12ee-64b4-11dd-a5e7-1d9a5ad8173d" />
                                       </currentCard>
+                                      <viewedCards>
+                                        <object refid="8dfa12ee-64b4-11dd-a5e7-1d9a5ad8173d" />
+                                      </viewedCards>
                                     </OTCardContainer>
                                     <OTUDLMenu id="8df9ebdd-64b4-11dd-a5e7-1d9a5ad8173d" showBorder="false">
                                       <cardContainer>
@@ -5071,7 +5086,7 @@ Mark whether they are a conductor or an insulator.</td>
                                         <tr>
                                           <td width="40%">
                                             <br />
-                                            <div style="margin-bottom: 5px; margin-top: 5px; border-right-width: 1px; margin-left: 5px; padding-top: 2px; border-bottom-width: 1px; border-left-width: 1px; padding-bottom: 2px; padding-left: 2px; border-color: black; margin-right: 5px; border-top-width: 1px; padding-right: 2px; border-style: solid">
+                                            <div style="border-left-width: 1px; margin-bottom: 5px; padding-bottom: 2px; border-top-width: 1px; border-right-width: 1px; margin-left: 5px; border-bottom-width: 1px; padding-left: 2px; margin-top: 5px; padding-top: 2px; padding-right: 2px; margin-right: 5px; border-color: black; border-style: solid">
                                               <object refid="8000e4bc-6d56-11dd-b57e-df02d2f36b2a" />
                                               <br />
                                               <object viewid="29dc5ef0-c453-11dc-95ff-0800200c9a66" refid="8000e4bd-6d56-11dd-b57e-df02d2f36b2a" />
@@ -5079,11 +5094,14 @@ Mark whether they are a conductor or an insulator.</td>
                                           </td>
                                           <td width="60%">
                                             <object refid="37cafb27-6d55-11dd-ac9a-cb602d69c6ea" />
+                                            <br />
+                                            <br />
+                                            <object refid="3a237a4c-6e08-11dd-95a8-85971a6fcfae" />
                                           </td>
                                         </tr>
                                       </table>
                                       Here is an example of voltage produced by a Genecon lighting a bulb. 
-          Here was the procedure:
+          This was the procedure:
                                       <br />
                                       <ul>
                                         <li>crank slowly.</li>
@@ -5091,18 +5109,23 @@ Mark whether they are a conductor or an insulator.</td>
                                         <li>crank at medium speed.</li>
                                         <li>stop.</li>
                                         <li>crank fast.</li>
-                                        <li>stop.</li>
+                                        <li>
+                                          stop.
+                                          <br />
+                                        </li>
                                       </ul>
-                                      What was the voltage when cranking slowly?  .7-1.0
+                                      Mark the part of the graph where the student was cranking slowly.
                                       <br />
-                                      What was the 
-          voltage when cranking at medium speed? 1.8-2.5
+                                      What 
+          was the voltage when cranking slowly? .7-1.0
                                       <br />
-                                      What was the 
-          voltage when cranking fast? 3.5-5
+                                      What was the voltage 
+          when cranking at medium speed? 1.8-2.5
                                       <br />
                                       What was the voltage when 
-          stopped? 0
+          cranking fast? 3.5-5
+                                      <br />
+                                      What was the voltage when stopped? 0
                                       <br />
                                     </div>
                                   </div>
@@ -5112,12 +5135,218 @@ Mark whether they are a conductor or an insulator.</td>
                                 <OTCardContainer id="8000e4bc-6d56-11dd-b57e-df02d2f36b2a">
                                   <cards>
                                     <OTUDLCompoundDoc id="80010bce-6d56-11dd-b57e-df02d2f36b2a">
-                                      <bodyText />
+                                      <bodyText>
+                                        Mark the part of the graph where the student was cranking slowly.
+                                        <br />
+                                        <br />
+                                        <object refid="8ef61b9d-6e08-11dd-95a8-85971a6fcfae" />
+                                      </bodyText>
+                                      <documentRefs>
+                                        <OTSmartGraphScriptButton id="8ef61b9d-6e08-11dd-95a8-85971a6fcfae" name="Smart question script" text="Check answer">
+                                          <script>
+                                            <OTJavascript>
+                                              <script>importClass(Packages.javax.swing.JOptionPane);
+
+function clicked(){
+   highlight(2.5, 6)
+  var xvalue = getLabelX()
+  showMessage(xvalue) 
+  if (xvalue &gt;  2.5 &amp;&amp; xvalue &lt; 6){
+       showMessage ("Correct!" )
+       correct.setValue(true)
+  } 
+  else {
+   showMessage ("Look for the lowest voltage that is greater than zero.")
+   incorrect()
+  }
+  
+}
+
+
+function showMessage(message){
+    JOptionPane.showMessageDialog(null, message);
+}
+
+function highlight(start, end){
+    smart.showRegionLabel(start, end);
+}
+
+function removeHighlight(){
+    smart.removeAllRegionLabels();
+}
+
+function getLabelX(){
+    return getLastValidLabel().getXData();
+}
+
+function getLabelY(){
+    return getLastValidLabel().getYData();
+}
+
+function getLastValidLabel(){
+    var labels = graph.getLabels();
+    
+   	if (labels.size() == 0){
+   	   return null;
+   	}
+   	
+   	for (i=labels.size()-1; i&gt;0; i--){
+   	   var label = labels.get(i);
+   	   if (label.getX() &lt; 100000){
+   	      return label;
+   	   }
+   	}
+   	return null;
+}
+
+function incorrect(){
+  times_incorrect.setValue(times_incorrect.getValue() + 1)
+  correct.setValue(false)
+}</script>
+                                            </OTJavascript>
+                                          </script>
+                                          <scriptVariables>
+                                            <OTScriptVariable name="graph">
+                                              <reference>
+                                                <object refid="37cafb27-6d55-11dd-ac9a-cb602d69c6ea" />
+                                              </reference>
+                                            </OTScriptVariable>
+                                            <OTScriptVariable name="correct">
+                                              <reference>
+                                                <OTBoolean />
+                                              </reference>
+                                            </OTScriptVariable>
+                                            <OTScriptVariable name="times_incorrect">
+                                              <reference>
+                                                <OTInt />
+                                              </reference>
+                                            </OTScriptVariable>
+                                            <OTScriptVariableRealObject name="smart">
+                                              <reference>
+                                                <object refid="3a237a4c-6e08-11dd-95a8-85971a6fcfae" />
+                                              </reference>
+                                            </OTScriptVariableRealObject>
+                                          </scriptVariables>
+                                        </OTSmartGraphScriptButton>
+                                      </documentRefs>
+                                    </OTUDLCompoundDoc>
+                                    <OTUDLCompoundDoc id="64e30d57-6e0b-11dd-a670-0b92e05a3563" name="%64e30d57-6e0b-11dd-a670-0b92e05a3563" showEditBar="true">
+                                      <documentRefs>
+                                        <OTUDLQuestion id="9479915d-6e10-11dd-a670-0b92e05a3563" name="Question" showConvertButton="true">
+                                          <prompt>
+                                            <OTCompoundDoc>
+                                              <bodyText>What was the voltage when cranking slowly?</bodyText>
+                                            </OTCompoundDoc>
+                                          </prompt>
+                                          <input>
+                                            <OTText />
+                                          </input>
+                                        </OTUDLQuestion>
+                                        <OTSmartGraphScriptButton id="9010fa08-6e0b-11dd-a670-0b92e05a3563" name="Smart question script" text="Check answer">
+                                          <script>
+                                            <OTJavascript>
+                                              <script>importClass(Packages.javax.swing.JOptionPane);
+
+function clicked(){
+  var answer = question.getInput().getText()
+   if (answer &gt;  0.5 &amp;&amp; answer &lt;= 1){
+       showMessage ("Correct!" )
+       correct.setValue(true)
+  } 
+  else {
+   showMessage ("Look for the lowest voltage that is greater than zero.")
+  incorrect()
+  }
+
+
+}
+
+function showMessage(message){
+    JOptionPane.showMessageDialog(null, message);
+}
+
+function highlight(start, end){
+    smart.showRegionLabel(start, end);
+}
+
+function removeHighlight(){
+    smart.removeAllRegionLabels();
+}
+
+function getLabelX(){
+    return getLastValidLabel().getXData();
+}
+
+function getLabelY(){
+    return getLastValidLabel().getYData();
+}
+
+function getLastValidLabel(){
+    var labels = graph.getLabels();
+    
+   	if (labels.size() == 0){
+   	   return null;
+   	}
+   	
+   	for (i=labels.size()-1; i&gt;0; i--){
+   	   var label = labels.get(i);
+   	   if (label.getX() &lt; 100000){
+   	      return label;
+   	   }
+   	}
+   	return null;
+}
+
+function incorrect(){
+  times_incorrect.setValue(times_incorrect.getValue() + 1)
+  correct.setValue(false)
+}</script>
+                                            </OTJavascript>
+                                          </script>
+                                          <scriptVariables>
+                                            <OTScriptVariable name="graph">
+                                              <reference>
+                                                <object refid="37cafb27-6d55-11dd-ac9a-cb602d69c6ea" />
+                                              </reference>
+                                            </OTScriptVariable>
+                                            <OTScriptVariable name="correct">
+                                              <reference>
+                                                <OTBoolean />
+                                              </reference>
+                                            </OTScriptVariable>
+                                            <OTScriptVariable name="times_incorrect">
+                                              <reference>
+                                                <OTInt />
+                                              </reference>
+                                            </OTScriptVariable>
+                                            <OTScriptVariableRealObject name="smart">
+                                              <reference>
+                                                <object refid="3a237a4c-6e08-11dd-95a8-85971a6fcfae" />
+                                              </reference>
+                                            </OTScriptVariableRealObject>
+                                            <OTScriptVariable name="question">
+                                              <reference>
+                                                <object refid="9479915d-6e10-11dd-a670-0b92e05a3563" />
+                                              </reference>
+                                            </OTScriptVariable>
+                                          </scriptVariables>
+                                        </OTSmartGraphScriptButton>
+                                      </documentRefs>
+                                      <bodyText>
+                                        <object refid="9479915d-6e10-11dd-a670-0b92e05a3563" />
+                                        <br />
+                                        <br />
+                                        <object refid="9010fa08-6e0b-11dd-a670-0b92e05a3563" />
+                                      </bodyText>
                                     </OTUDLCompoundDoc>
                                   </cards>
                                   <currentCard>
                                     <object refid="80010bce-6d56-11dd-b57e-df02d2f36b2a" />
                                   </currentCard>
+                                  <viewedCards>
+                                    <object refid="80010bce-6d56-11dd-b57e-df02d2f36b2a" />
+                                    <object refid="64e30d57-6e0b-11dd-a670-0b92e05a3563" />
+                                  </viewedCards>
                                 </OTCardContainer>
                                 <object refid="29dc5ef0-c453-11dc-95ff-0800200c9a66" />
                                 <OTUDLMenu id="8000e4bd-6d56-11dd-b57e-df02d2f36b2a" showBorder="false">
@@ -5125,9 +5354,9 @@ Mark whether they are a conductor or an insulator.</td>
                                     <object refid="8000e4bc-6d56-11dd-b57e-df02d2f36b2a" />
                                   </cardContainer>
                                 </OTUDLMenu>
-                                <OTDataCollector id="37cafb27-6d55-11dd-ac9a-cb602d69c6ea" name="Voltage" title="light a bulb: example" autoScaleEnabled="true">
+                                <OTDataCollector id="37cafb27-6d55-11dd-ac9a-cb602d69c6ea" name="crank_voltage_example" title="light a bulb: example" autoScaleEnabled="true">
                                   <source>
-                                    <OTDataGraphable name="Sensor" connectPoints="true" yColumn="1" drawMarks="false" color="255" xColumn="0" lineWidth="2.0">
+                                    <OTDataGraphable id="37cafb27-6d55-11dd-ac9a-cb602d69c6ea/source" name="Sensor" connectPoints="true" yColumn="1" drawMarks="false" color="255" xColumn="0" lineWidth="2.0">
                                       <dataProducer>
                                         <OTSensorDataProxy name="dataproducer">
                                           <request>
@@ -5339,10 +5568,69 @@ Mark whether they are a conductor or an insulator.</td>
                                   <yDataAxis>
                                     <OTDataAxis max="6.0" units="V" min="-1.0" label="Voltage" />
                                   </yDataAxis>
+                                  <labels>
+                                    <OTDataPointLabel id="20109a55-6e0a-11dd-bb18-ab6c2c6cb206" x="5.3723865" y="2.311829" color="0xffffbe" fontSize="10" text="test1" xData="4.3" yData="1.003418">
+                                      <dataGraphable>
+                                        <object refid="37cafb27-6d55-11dd-ac9a-cb602d69c6ea/source" />
+                                      </dataGraphable>
+                                    </OTDataPointLabel>
+                                    <object refid="20109a55-6e0a-11dd-bb18-ab6c2c6cb206" />
+                                    <object refid="20109a55-6e0a-11dd-bb18-ab6c2c6cb206" />
+                                    <object refid="20109a55-6e0a-11dd-bb18-ab6c2c6cb206" />
+                                    <object refid="20109a55-6e0a-11dd-bb18-ab6c2c6cb206" />
+                                    <object refid="20109a55-6e0a-11dd-bb18-ab6c2c6cb206" />
+                                    <object refid="20109a55-6e0a-11dd-bb18-ab6c2c6cb206" />
+                                    <object refid="20109a55-6e0a-11dd-bb18-ab6c2c6cb206" />
+                                    <object refid="20109a55-6e0a-11dd-bb18-ab6c2c6cb206" />
+                                    <object refid="20109a55-6e0a-11dd-bb18-ab6c2c6cb206" />
+                                    <object refid="20109a55-6e0a-11dd-bb18-ab6c2c6cb206" />
+                                    <object refid="20109a55-6e0a-11dd-bb18-ab6c2c6cb206" />
+                                    <object refid="20109a55-6e0a-11dd-bb18-ab6c2c6cb206" />
+                                    <object refid="20109a55-6e0a-11dd-bb18-ab6c2c6cb206" />
+                                    <object refid="20109a55-6e0a-11dd-bb18-ab6c2c6cb206" />
+                                    <object refid="20109a55-6e0a-11dd-bb18-ab6c2c6cb206" />
+                                    <OTDataPointLabel id="2874e346-6e0a-11dd-bb18-ab6c2c6cb206" x="5.172386" y="2.1412358" color="0xffffbe" fontSize="10" text="Data Point" xData="4.1" yData="0.8328247">
+                                      <dataGraphable>
+                                        <object refid="37cafb27-6d55-11dd-ac9a-cb602d69c6ea/source" />
+                                      </dataGraphable>
+                                    </OTDataPointLabel>
+                                    <object refid="2874e346-6e0a-11dd-bb18-ab6c2c6cb206" />
+                                    <object refid="2874e346-6e0a-11dd-bb18-ab6c2c6cb206" />
+                                    <object refid="2874e346-6e0a-11dd-bb18-ab6c2c6cb206" />
+                                    <object refid="2874e346-6e0a-11dd-bb18-ab6c2c6cb206" />
+                                    <object refid="2874e346-6e0a-11dd-bb18-ab6c2c6cb206" />
+                                    <object refid="2874e346-6e0a-11dd-bb18-ab6c2c6cb206" />
+                                    <object refid="2874e346-6e0a-11dd-bb18-ab6c2c6cb206" />
+                                    <object refid="2874e346-6e0a-11dd-bb18-ab6c2c6cb206" />
+                                    <object refid="2874e346-6e0a-11dd-bb18-ab6c2c6cb206" />
+                                    <object refid="2874e346-6e0a-11dd-bb18-ab6c2c6cb206" />
+                                    <object refid="2874e346-6e0a-11dd-bb18-ab6c2c6cb206" />
+                                    <object refid="2874e346-6e0a-11dd-bb18-ab6c2c6cb206" />
+                                    <object refid="2874e346-6e0a-11dd-bb18-ab6c2c6cb206" />
+                                    <object refid="2874e346-6e0a-11dd-bb18-ab6c2c6cb206" />
+                                    <object refid="2874e346-6e0a-11dd-bb18-ab6c2c6cb206" />
+                                    <OTDataPointLabel id="463ddb77-6e0a-11dd-bb18-ab6c2c6cb206" x="Infinity" y="Infinity" color="0xffffbe" fontSize="10" text="Data Point" />
+                                    <object refid="463ddb77-6e0a-11dd-bb18-ab6c2c6cb206" />
+                                    <object refid="463ddb77-6e0a-11dd-bb18-ab6c2c6cb206" />
+                                    <object refid="463ddb77-6e0a-11dd-bb18-ab6c2c6cb206" />
+                                    <object refid="463ddb77-6e0a-11dd-bb18-ab6c2c6cb206" />
+                                    <object refid="463ddb77-6e0a-11dd-bb18-ab6c2c6cb206" />
+                                    <object refid="463ddb77-6e0a-11dd-bb18-ab6c2c6cb206" />
+                                    <object refid="463ddb77-6e0a-11dd-bb18-ab6c2c6cb206" />
+                                    <object refid="463ddb77-6e0a-11dd-bb18-ab6c2c6cb206" />
+                                    <object refid="463ddb77-6e0a-11dd-bb18-ab6c2c6cb206" />
+                                    <object refid="463ddb77-6e0a-11dd-bb18-ab6c2c6cb206" />
+                                    <object refid="463ddb77-6e0a-11dd-bb18-ab6c2c6cb206" />
+                                    <object refid="463ddb77-6e0a-11dd-bb18-ab6c2c6cb206" />
+                                    <object refid="463ddb77-6e0a-11dd-bb18-ab6c2c6cb206" />
+                                    <object refid="463ddb77-6e0a-11dd-bb18-ab6c2c6cb206" />
+                                    <object refid="463ddb77-6e0a-11dd-bb18-ab6c2c6cb206" />
+                                  </labels>
                                 </OTDataCollector>
+                                <object refid="3a237a4c-6e08-11dd-95a8-85971a6fcfae" />
                               </documentRefs>
                             </OTUDLCompoundDoc>
-                            <OTUDLCompoundDoc name="%d6ce5d21-cdc2-11dc-bd2b-dd05e7961664" showDefinitions="true">
+                            <OTUDLCompoundDoc id="4e5e0956-cdc1-11dc-bd2b-dd05e7961664/cards[5]" name="%d6ce5d21-cdc2-11dc-bd2b-dd05e7961664" showDefinitions="true">
                               <bodyText>
                                 <div class="buffer">
                                   <div class="border">
@@ -5377,7 +5665,7 @@ Mark whether they are a conductor or an insulator.</td>
                                 </div>
                               </bodyText>
                             </OTUDLCompoundDoc>
-                            <OTUDLCompoundDoc name="%b986268c-d5ac-11dc-bdbd-611bcc97c71c" showDefinitions="true">
+                            <OTUDLCompoundDoc id="4e5e0956-cdc1-11dc-bd2b-dd05e7961664/cards[6]" name="%b986268c-d5ac-11dc-bdbd-611bcc97c71c" showDefinitions="true">
                               <bodyText>
                                 <div class="buffer">
                                   <div class="border">
@@ -5497,6 +5785,9 @@ Mark whether they are a conductor or an insulator.</td>
                                   <currentCard>
                                     <object refid="4662c8b9-64b5-11dd-a5e7-1d9a5ad8173d" />
                                   </currentCard>
+                                  <viewedCards>
+                                    <object refid="4662c8b9-64b5-11dd-a5e7-1d9a5ad8173d" />
+                                  </viewedCards>
                                 </OTCardContainer>
                                 <object refid="29dc5ef0-c453-11dc-95ff-0800200c9a66" />
                                 <OTUDLMenu id="4662c8b8-64b5-11dd-a5e7-1d9a5ad8173d" showBorder="false">
@@ -6078,8 +6369,17 @@ Mark whether they are a conductor or an insulator.</td>
                             </OTUDLCompoundDoc>
                           </cards>
                           <currentCard>
-                            <object refid="4e5e0955-cdc1-11dc-bd2b-dd05e7961664" />
+                            <object refid="e1385726-6d50-11dd-ac9a-cb602d69c6ea" />
                           </currentCard>
+                          <viewedCards>
+                            <object refid="4e5e0955-cdc1-11dc-bd2b-dd05e7961664" />
+                            <object refid="4e5e0956-cdc1-11dc-bd2b-dd05e7961664/cards[1]" />
+                            <object refid="4e5e0956-cdc1-11dc-bd2b-dd05e7961664/cards[2]" />
+                            <object refid="4e5e0956-cdc1-11dc-bd2b-dd05e7961664/cards[3]" />
+                            <object refid="e1385726-6d50-11dd-ac9a-cb602d69c6ea" />
+                            <object refid="4e5e0956-cdc1-11dc-bd2b-dd05e7961664/cards[5]" />
+                            <object refid="4e5e0956-cdc1-11dc-bd2b-dd05e7961664/cards[6]" />
+                          </viewedCards>
                         </OTCardContainer>
                       </content>
                       <header>
@@ -7790,8 +8090,12 @@ and each
                     </OTUDLSection>
                   </cards>
                   <currentCard>
-                    <object refid="${section_0}" />
+                    <object refid="${section_5}" />
                   </currentCard>
+                  <viewedCards>
+                    <object refid="${section_0}" />
+                    <object refid="${section_5}" />
+                  </viewedCards>
                 </OTCardContainer>
                 <object refid="${authoring-script}" />
               </layers>
