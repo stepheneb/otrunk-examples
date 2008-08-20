@@ -3,22 +3,7 @@ require 'java'
 include_class 'javax.swing.JOptionPane'
 
 def self.init
-  # correct_range = 5..16
-  # response_key = {
-  #   :no_label_entered => { :text => "Use the label tool to add a label to the graph!" },
-  #   :correct => 
-  #     { :text => "That's correct!\nNow you can move on to the next page", 
-  #       :hightlight_region => false },
-  #   :first_wrong_answer => 
-  #     { :text => "Oops, that's not correct.\nWhere is the line going slowly upwards?" },
-  #   :second_wrong_answer => 
-  #     { :text => "Oops, that's not correct.\nThe area where the line is going slowly upwards in now marked.\nTry adding a label in that region.", 
-  #       :hightlight_region => true },
-  #   :multiple_wrong_answers => 
-  #     { :text => "Oops, that's not correct.\nThe area where the line is going slowly upwards in now marked.\nTry adding a label in that region.", 
-  #       :hightlight_region => true }
-  # }
-  # @label_range_response = LabelRangeResponse.new(correct_range, response_key)
+  puts "self.init called"
 end
 
 def self.clicked
@@ -51,34 +36,32 @@ class LabelRangeResponse
   end
   
   def clicked
-    labels = $graph.getLabels
-    lastLabel = getLastValidLabel(labels)
-    if lastLabel == nil
+    unless lastLabel = getLastValidLabel($graph.getLabels)
       $correct.setValue(false)
-      updateRegionHighlighting(@response_key[:no_label_entered][:hightlight_region])
-      showMessage(@response_key[:no_label_entered][:text])
+      update(@response_key[:no_label_entered])
     else
       x = lastLabel.getXData
       if checkConditionWithParamaters(x, correct_range)
         $correct.setValue(true)
-        updateRegionHighlighting(@response_key[:correct][:hightlight_region])
-        showMessage(@response_key[:correct][:text])
+        update(@response_key[:correct])
       else
         $correct.setValue(false)
         $times_incorrect.setValue($times_incorrect.getValue + 1)
         case $times_incorrect.getValue
         when 1
-          updateRegionHighlighting(@response_key[:first_wrong_answer][:hightlight_region])
-          showMessage(@response_key[:first_wrong_answer][:text])
+          update(@response_key[:first_wrong_answer])
         when 2
-          updateRegionHighlighting(@response_key[:second_wrong_answer][:hightlight_region])
-          showMessage(@response_key[:second_wrong_answer][:text])                     
+          update(@response_key[:second_wrong_answer])
         else
-          updateRegionHighlighting(@response_key[:multiple_wrong_answers][:hightlight_region])
-          showMessage(@response_key[:multiple_wrong_answers][:text])           
+          update(@response_key[:multiple_wrong_answers])
         end
       end
     end
+  end
+
+  def update(key)
+    updateRegionHighlighting(key[:hightlight_region])
+    showMessage(key[:text])
   end
   
   def updateRegionHighlighting(highlight_state)
