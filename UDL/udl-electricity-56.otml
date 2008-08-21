@@ -91,6 +91,11 @@
     <import class="org.concord.otrunk.udl.OTZoomTransform" />
     <import class="org.concord.otrunkmw.OTModelerPage" />
     <import class="org.concord.otrunk.util.OTReference" />
+    <import class="org.concord.smartgraph.OTSmartGraphTool" />
+    <import class="org.concord.otrunk.udl.util.OTSmartGraphScriptButton" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariableRealObject" />
+    <import class="org.concord.framework.otrunk.wrapper.OTBoolean" />
+    <import class="org.concord.framework.otrunk.wrapper.OTInt" />
   </imports>
   <objects>
     <OTSystem local_id="system">
@@ -312,6 +317,11 @@
                 <OTDataAxis max="10.0" units="V" min="-10.0" label="Voltage" />
               </yDataAxis>
             </OTDataCollector>
+            <OTSmartGraphTool id="9aedfa20-6faf-11dd-8a2b-9f533eb76c64" name="bulb_temperature">
+              <dataCollector>
+                <object refid="213b7ef4-6d63-11dd-b85b-496ae4e138ca" />
+              </dataCollector>
+            </OTSmartGraphTool>
           </sharedObjects>
         </OTSharingBundle>
         <OTInterfaceManager>
@@ -4367,28 +4377,377 @@ Some energy is always lost as heat when it is transferred. So the amount of ligh
                                             Here is a sample graph of a temperature sensor attached to a 
                 light bulb with tape.
                                             <br />
+                                            <div style="border-left-width: 1px; border-color: black; margin-right: 5px; border-bottom-width: 1px; padding-right: 2px; margin-left: 5px; padding-bottom: 2px; border-top-width: 1px; padding-top: 2px; border-style: solid; padding-left: 2px; border-right-width: 1px; margin-bottom: 5px; margin-top: 5px">
+                                              <object refid="0e0a78a4-6faf-11dd-8a2b-9f533eb76c64" />
+                                              <br />
+                                              <object viewid="29dc5ef0-c453-11dc-95ff-0800200c9a66" refid="0e0a78a5-6faf-11dd-8a2b-9f533eb76c64" />
+                                            </div>
+                                            <br />
                                           </td>
-                                          <td style="padding-left: 20px; padding-right: 20px" width="60%">
+                                          <td width="60%" style="padding-right: 20px; padding-left: 20px">
                                             <object refid="213b7ef4-6d63-11dd-b85b-496ae4e138ca" />
+                                            <br />
+                                            <object refid="9aedfa20-6faf-11dd-8a2b-9f533eb76c64" />
+                                            <br />
+                                            <object refid="8ee5fd8f-6faf-11dd-8a2b-9f533eb76c64" />
                                           </td>
                                         </tr>
                                       </table>
-                                      <br />
-                                      Label the graph where the light bulb was connected to the battery.
-                                      <br />
-                                      Label 
-          where the light bulb was disconnected.
-                                      <br />
-                                      For how many seconds was 
-          the light bulb connected?
-                                      <br />
-                                      What was the change in temperature of 
-          the bulb while it was connected?
                                     </div>
                                   </div>
                                 </div>
                               </bodyText>
                               <documentRefs>
+                                <OTCardContainer id="0e0a78a4-6faf-11dd-8a2b-9f533eb76c64">
+                                  <cards>
+                                    <OTUDLCompoundDoc id="0e0a9fb6-6faf-11dd-8a2b-9f533eb76c64">
+                                      <documentRefs>
+                                        <OTSmartGraphScriptButton id="c1eb5c81-6faf-11dd-8a2b-9f533eb76c64" name="Smart question script" text="Check answer">
+                                          <script>
+                                            <OTJavascript>
+                                              <script>importClass(Packages.javax.swing.JOptionPane);
+
+function clicked(){
+
+}
+
+function showMessage(message){
+    JOptionPane.showMessageDialog(null, message);
+}
+
+function highlight(start, end){
+    smart.showRegionLabel(start, end);
+}
+
+function removeHighlight(){
+    smart.removeAllRegionLabels();
+}
+
+function getLabelX(){
+    return getLastValidLabel().getXData();
+}
+
+function getLabelY(){
+    return getLastValidLabel().getYData();
+}
+
+function getLastValidLabel(){
+    var labels = graph.getLabels();
+    
+   	if (labels.size() == 0){
+   	   return null;
+   	}
+   	
+   	for (i=labels.size()-1; i&gt;0; i--){
+   	   var label = labels.get(i);
+   	   if (label.getX() &lt; 100000){
+   	      return label;
+   	   }
+   	}
+   	return null;
+}</script>
+                                            </OTJavascript>
+                                          </script>
+                                          <scriptVariables>
+                                            <OTScriptVariableRealObject name="smart">
+                                              <reference>
+                                                <object refid="9aedfa20-6faf-11dd-8a2b-9f533eb76c64" />
+                                              </reference>
+                                            </OTScriptVariableRealObject>
+                                            <OTScriptVariable name="graph">
+                                              <reference>
+                                                <object refid="213b7ef4-6d63-11dd-b85b-496ae4e138ca" />
+                                              </reference>
+                                            </OTScriptVariable>
+                                            <OTScriptVariable name="correct">
+                                              <reference>
+                                                <OTBoolean />
+                                              </reference>
+                                            </OTScriptVariable>
+                                            <OTScriptVariable name="times_incorrect">
+                                              <reference>
+                                                <OTInt />
+                                              </reference>
+                                            </OTScriptVariable>
+                                          </scriptVariables>
+                                        </OTSmartGraphScriptButton>
+                                      </documentRefs>
+                                      <bodyText>
+                                        Label the graph where the light bulb was connected to the battery.
+                                        <br />
+                                        <br />
+                                        <object refid="c1eb5c81-6faf-11dd-8a2b-9f533eb76c64" />
+                                        <br />
+                                      </bodyText>
+                                    </OTUDLCompoundDoc>
+                                    <OTUDLCompoundDoc name="%15f60f27-6faf-11dd-8a2b-9f533eb76c64" showEditBar="true">
+                                      <documentRefs>
+                                        <OTSmartGraphScriptButton id="ccd95d99-6faf-11dd-8a2b-9f533eb76c64" name="Smart question script" text="Check answer">
+                                          <script>
+                                            <OTJavascript>
+                                              <script>importClass(Packages.javax.swing.JOptionPane);
+
+function clicked(){
+
+}
+
+function showMessage(message){
+    JOptionPane.showMessageDialog(null, message);
+}
+
+function highlight(start, end){
+    smart.showRegionLabel(start, end);
+}
+
+function removeHighlight(){
+    smart.removeAllRegionLabels();
+}
+
+function getLabelX(){
+    return getLastValidLabel().getXData();
+}
+
+function getLabelY(){
+    return getLastValidLabel().getYData();
+}
+
+function getLastValidLabel(){
+    var labels = graph.getLabels();
+    
+   	if (labels.size() == 0){
+   	   return null;
+   	}
+   	
+   	for (i=labels.size()-1; i&gt;0; i--){
+   	   var label = labels.get(i);
+   	   if (label.getX() &lt; 100000){
+   	      return label;
+   	   }
+   	}
+   	return null;
+}</script>
+                                            </OTJavascript>
+                                          </script>
+                                          <scriptVariables>
+                                            <OTScriptVariableRealObject name="smart">
+                                              <reference>
+                                                <object refid="9aedfa20-6faf-11dd-8a2b-9f533eb76c64" />
+                                              </reference>
+                                            </OTScriptVariableRealObject>
+                                            <OTScriptVariable name="graph">
+                                              <reference>
+                                                <object refid="213b7ef4-6d63-11dd-b85b-496ae4e138ca" />
+                                              </reference>
+                                            </OTScriptVariable>
+                                            <OTScriptVariable name="correct">
+                                              <reference>
+                                                <OTBoolean />
+                                              </reference>
+                                            </OTScriptVariable>
+                                            <OTScriptVariable name="times_incorrect">
+                                              <reference>
+                                                <OTInt />
+                                              </reference>
+                                            </OTScriptVariable>
+                                          </scriptVariables>
+                                        </OTSmartGraphScriptButton>
+                                      </documentRefs>
+                                      <bodyText>
+                                        Label where the light bulb was disconnected.
+                                        <br />
+                                        <br />
+                                        <object refid="ccd95d99-6faf-11dd-8a2b-9f533eb76c64" />
+                                      </bodyText>
+                                    </OTUDLCompoundDoc>
+                                    <OTUDLCompoundDoc name="%21c7b978-6faf-11dd-8a2b-9f533eb76c64" showEditBar="true">
+                                      <documentRefs>
+                                        <OTUDLQuestion id="364934b5-6faf-11dd-8a2b-9f533eb76c64" name="Question" showConvertButton="true">
+                                          <prompt>
+                                            <OTCompoundDoc>
+                                              <bodyText>For how many seconds was the light bulb connected?</bodyText>
+                                            </OTCompoundDoc>
+                                          </prompt>
+                                          <input>
+                                            <OTText />
+                                          </input>
+                                        </OTUDLQuestion>
+                                        <OTSmartGraphScriptButton id="da8482e1-6faf-11dd-8a2b-9f533eb76c64" name="Smart question script" text="Check answer">
+                                          <script>
+                                            <OTJavascript>
+                                              <script>importClass(Packages.javax.swing.JOptionPane);
+
+function clicked(){
+
+}
+
+function showMessage(message){
+    JOptionPane.showMessageDialog(null, message);
+}
+
+function highlight(start, end){
+    smart.showRegionLabel(start, end);
+}
+
+function removeHighlight(){
+    smart.removeAllRegionLabels();
+}
+
+function getLabelX(){
+    return getLastValidLabel().getXData();
+}
+
+function getLabelY(){
+    return getLastValidLabel().getYData();
+}
+
+function getLastValidLabel(){
+    var labels = graph.getLabels();
+    
+   	if (labels.size() == 0){
+   	   return null;
+   	}
+   	
+   	for (i=labels.size()-1; i&gt;0; i--){
+   	   var label = labels.get(i);
+   	   if (label.getX() &lt; 100000){
+   	      return label;
+   	   }
+   	}
+   	return null;
+}</script>
+                                            </OTJavascript>
+                                          </script>
+                                          <scriptVariables>
+                                            <OTScriptVariableRealObject name="smart">
+                                              <reference>
+                                                <object refid="9aedfa20-6faf-11dd-8a2b-9f533eb76c64" />
+                                              </reference>
+                                            </OTScriptVariableRealObject>
+                                            <OTScriptVariable name="graph">
+                                              <reference>
+                                                <object refid="213b7ef4-6d63-11dd-b85b-496ae4e138ca" />
+                                              </reference>
+                                            </OTScriptVariable>
+                                            <OTScriptVariable name="correct">
+                                              <reference>
+                                                <OTBoolean />
+                                              </reference>
+                                            </OTScriptVariable>
+                                            <OTScriptVariable name="times_incorrect">
+                                              <reference>
+                                                <OTInt />
+                                              </reference>
+                                            </OTScriptVariable>
+                                          </scriptVariables>
+                                        </OTSmartGraphScriptButton>
+                                      </documentRefs>
+                                      <bodyText>
+                                        <object refid="364934b5-6faf-11dd-8a2b-9f533eb76c64" />
+                                        <br />
+                                        <br />
+                                        <object refid="da8482e1-6faf-11dd-8a2b-9f533eb76c64" />
+                                      </bodyText>
+                                    </OTUDLCompoundDoc>
+                                    <OTUDLCompoundDoc name="%3bd4bb2d-6faf-11dd-8a2b-9f533eb76c64" showEditBar="true">
+                                      <documentRefs>
+                                        <OTUDLQuestion id="4626f173-6faf-11dd-8a2b-9f533eb76c64" name="Question" showConvertButton="true">
+                                          <prompt>
+                                            <OTCompoundDoc>
+                                              <bodyText>What was the change in temperature of the bulb while it was connected?</bodyText>
+                                            </OTCompoundDoc>
+                                          </prompt>
+                                          <input>
+                                            <OTText />
+                                          </input>
+                                        </OTUDLQuestion>
+                                        <OTSmartGraphScriptButton id="1135f9fe-6fb0-11dd-8a2b-9f533eb76c64" name="Smart question script" text="Check answer">
+                                          <script>
+                                            <OTJavascript>
+                                              <script>importClass(Packages.javax.swing.JOptionPane);
+
+function clicked(){
+
+}
+
+function showMessage(message){
+    JOptionPane.showMessageDialog(null, message);
+}
+
+function highlight(start, end){
+    smart.showRegionLabel(start, end);
+}
+
+function removeHighlight(){
+    smart.removeAllRegionLabels();
+}
+
+function getLabelX(){
+    return getLastValidLabel().getXData();
+}
+
+function getLabelY(){
+    return getLastValidLabel().getYData();
+}
+
+function getLastValidLabel(){
+    var labels = graph.getLabels();
+    
+   	if (labels.size() == 0){
+   	   return null;
+   	}
+   	
+   	for (i=labels.size()-1; i&gt;0; i--){
+   	   var label = labels.get(i);
+   	   if (label.getX() &lt; 100000){
+   	      return label;
+   	   }
+   	}
+   	return null;
+}</script>
+                                            </OTJavascript>
+                                          </script>
+                                          <scriptVariables>
+                                            <OTScriptVariableRealObject name="smart">
+                                              <reference>
+                                                <object refid="9aedfa20-6faf-11dd-8a2b-9f533eb76c64" />
+                                              </reference>
+                                            </OTScriptVariableRealObject>
+                                            <OTScriptVariable name="graph">
+                                              <reference>
+                                                <object refid="213b7ef4-6d63-11dd-b85b-496ae4e138ca" />
+                                              </reference>
+                                            </OTScriptVariable>
+                                            <OTScriptVariable name="correct">
+                                              <reference>
+                                                <OTBoolean />
+                                              </reference>
+                                            </OTScriptVariable>
+                                            <OTScriptVariable name="times_incorrect">
+                                              <reference>
+                                                <OTInt />
+                                              </reference>
+                                            </OTScriptVariable>
+                                          </scriptVariables>
+                                        </OTSmartGraphScriptButton>
+                                      </documentRefs>
+                                      <bodyText>
+                                        <object refid="4626f173-6faf-11dd-8a2b-9f533eb76c64" />
+                                        <br />
+                                        <br />
+                                        <object refid="1135f9fe-6fb0-11dd-8a2b-9f533eb76c64" />
+                                      </bodyText>
+                                    </OTUDLCompoundDoc>
+                                  </cards>
+                                  <currentCard>
+                                    <object refid="0e0a9fb6-6faf-11dd-8a2b-9f533eb76c64" />
+                                  </currentCard>
+                                </OTCardContainer>
+                                <object refid="29dc5ef0-c453-11dc-95ff-0800200c9a66" />
+                                <OTUDLMenu id="0e0a78a5-6faf-11dd-8a2b-9f533eb76c64" showBorder="false">
+                                  <cardContainer>
+                                    <object refid="0e0a78a4-6faf-11dd-8a2b-9f533eb76c64" />
+                                  </cardContainer>
+                                </OTUDLMenu>
                                 <OTDataCollector id="213b7ef4-6d63-11dd-b85b-496ae4e138ca" name="Temperature" title="light bulb temperature: example" autoScaleEnabled="true">
                                   <source>
                                     <OTDataGraphable name="Sensor" connectPoints="true" yColumn="1" drawMarks="false" color="255" xColumn="0" lineWidth="2.0">
@@ -5127,6 +5486,15 @@ Some energy is always lost as heat when it is transferred. So the amount of ligh
                                     <OTDataAxis max="26.081478" units="degC" min="22.971663" label="Temperature" />
                                   </yDataAxis>
                                 </OTDataCollector>
+                                <object refid="9aedfa20-6faf-11dd-8a2b-9f533eb76c64" />
+                                <OTSnapshotButton id="8ee5fd8f-6faf-11dd-8a2b-9f533eb76c64" name="Snapshot button">
+                                  <target>
+                                    <object refid="9aedfa20-6faf-11dd-8a2b-9f533eb76c64" />
+                                  </target>
+                                  <snapshotAlbum>
+                                    <object refid="${album}" />
+                                  </snapshotAlbum>
+                                </OTSnapshotButton>
                               </documentRefs>
                             </OTUDLCompoundDoc>
                             <OTUDLCompoundDoc name="%3d912e89-9e96-11dc-917a-010dbc42e73e" showDefinitions="true">
