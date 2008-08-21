@@ -4,24 +4,63 @@ require 'find'
 require 'yaml'
 require 'time'
 
-# cd to the otrunk-examples folder and then run this script
-# ruby index-builder-script/build-index-local.rb 
+# run: ruby index-builder-script/build-index-local.rb 
+# to rebuild the local indexs for otrunk-examples
 
-LOCAL_ROOT = Dir.pwd
+LOCAL_DIR = File.dirname(File.expand_path(__FILE__))
+LOCAL_ROOT = File.dirname(LOCAL_DIR)
 
-USE_LOCAL_APACHE = true
+Dir.chdir(LOCAL_ROOT)
+
+begin
+ local_properties = YAML.load_file("#{LOCAL_DIR}/local_properties.yaml")
+ USE_LOCAL_APACHE = local_properties[:use_local_apache]
+ USE_TEXTMATE_URLS = local_properties[:use_textmate_urls]
+ LOCAL_SDS = local_properties[:local_sds_path]
+rescue Errno::ENOENT
+  puts "\n" + "-" * 64 + "\n\n"
+  puts "Creating new default properties file for #{__FILE__}\n\n"
+  puts "  #{LOCAL_DIR}/local_properties.yaml]\n\n"
+  puts "You will need to edit the values in this properties file."
+  local_properties = { 
+    :properties_version => 1, 
+    :use_local_apache => true, 
+    :use_textmate_urls => true, 
+    :local_sds_path => "http://saildataservice/4/offering/2/jnlp/2/view" 
+  }
+  File.open("#{LOCAL_DIR}/local_properties.yaml", "w") {|f| YAML.dump(local_properties, f)}
+  USE_LOCAL_APACHE = local_properties[:use_local_apache]
+  USE_TEXTMATE_URLS = local_properties[:use_textmate_urls]
+  LOCAL_SDS = local_properties[:local_sds_path]
+end
+
+# local_properties:
+#
+# :use_local_apache
+#
+#   when :use_local_apache is set to true the urls constructed are http
+#   urls that will work if you are serving the otrunk-examples directory 
+#   from a local Apache vhost.
+#
+# See: http://www.telscenter.org/confluence/display/SAIL/Setup+a+Full+SAIL+Stack+on+MacOS+10.5#SetupaFullSAILStackonMacOS10.5-Generatethelocalotindex.htmlfiles
+#
+# :use_textmate_urls
+#
+#   setting :use_textmate_urls to true in local properties will support
+#   opening the otml files directly in textmate when clicking on the link
+# 
+# See: http://blog.macromates.com/2007/the-textmate-url-scheme/
+#
+# :local_sds_path
+#
+# This should be a url that points to an offering for running the OTrunk Example in a local SDS
+#
+# See: http://www.telscenter.org/confluence/display/SAIL/Setup+a+Full+SAIL+Stack+on+MacOS+10.5#SetupaFullSAILStackonMacOS10.5-CreateanSDSPortalrealmandassociatedresourcesforotrunkexamples
+
 if USE_LOCAL_APACHE
   PATH_TO_JAVASCRIPT_RESOURCES = ''
 else
   PATH_TO_JAVASCRIPT_RESOURCES = LOCAL_ROOT
-end
-
-if File.exists?('index-builder-script/local_sds_path')
-  LOCAL_SDS = File.read('index-builder-script/local_sds_path').chop
-else
-  puts "*** you need to create the file: index-builder-script/local_sds_path and with the"
-  puts "*** value for the OTrunk Testing SDS view path"
-  exit
 end
 
 def writeHtmlPage(title, body, filename)
@@ -82,8 +121,7 @@ otrunk_example_dirs.each do |path|
 end
 
 index_page_body += "</tbody></table>"
-index_page_body += "<hr/><br/><br/><a href=\"http://continuum.concord.org/cgi-script/build-index.rb
-\">Update Index</a>"
+index_page_body += "<hr/><p>Update the local otrunk-examples indexs by running this code in a shell:</p><p><code> ruby #{File.expand_path(__FILE__)}</code></p>"
 
 writeHtmlPage("OTrunk Examples", index_page_body, "example-index.html")
 
@@ -141,7 +179,6 @@ HERE
   Dir.glob("#{path}/*").sort.each do |subpath|
     filename = File.basename(subpath)
     if subpath =~ /.*otml$/
-      # look up the file in the .svn/entries file to gets its svn commit number 
       svn_status = `svn status -v #{subpath}`
       re = / *(\d*) *(\d*)/
       match = re.match(svn_status)
@@ -150,14 +187,24 @@ HERE
       local_http_path = subpath[/.*otrunk-examples(.*)/, 1]
       example_name = filename[/(.*)\.otml/, 1]
       otml_url = "http://otrunk-examples#{local_http_path}"
-      trac_otml_url = "http://trac.cosmos.concord.org/projects/browser/trunk/common/java/otrunk/otrunk-examples/#{subpath}"
+      trac_otml_url = "http://trac.cosmos.concord.org/projects/browser/trunk/common/java/otrunk/otrunk-examples#{local_http_path}"
       jnlp_url = jnlp_url_tmpl.sub(/%otml_url%/, otml_url)
       jnlp_author_url = jnlp_url_tmpl_author.sub(/%otml_url%/, otml_url)
-      otml_launchers += "<tr><td width=280>#{example_name}</td><td width=100><a href=""#{jnlp_url}"">learner</a></td><td width=120><a href=#{jnlp_author_url}>author</a></td><td width=280><a href=#{filename}>#{filename}</a></td><td width=180><a href=#{trac_otml_url}>#{svn_rev2}</a></td></tr>\n"
-    end
-    
+      if USE_TEXTMATE_URLS
+        otml_display_url = "txmt://open?url=file://#{File.expand_path(subpath)}"
+      else
+        otml_display_url = "#{filename}"
+      end
+      otml_launchers += "<tr><td width=280>#{example_name}</td><td width=100><a href=""#{jnlp_url}"">learner</a></td><td width=120><a href=#{jnlp_author_url}>author</a></td><td width=280><a href=#{otml_display_url}>#{filename}</a></td>\n"
+      if svn_rev2.empty? 
+        otml_launchers += "<td width=180>not in svn</td></tr>"
+      else
+        otml_launchers += "<td width=180><a href=#{trac_otml_url}>#{svn_rev2}</a></td></tr>"
+      end
+    end   
     all_files += "<tr><td><a href=""#{filename}"">#{filename}</a></td></tr>\n"
   end
+  
   otml_launchers += "</tbody></table><hr/>"
   all_files += "</table>"
 
@@ -165,8 +212,9 @@ HERE
     "<a href=""http://confluence.concord.org/display/CSP/#{path}"">Confluence Notes</a><br/>\n" +
     otml_launchers + java_web_start_warning + description_of_jnlps + all_files
 
-  index_page_body += "<hr/>The jnlp urls were constructed using the following template:<br/>\n"
-  index_page_body += jnlp_url_tmpl + "<br/>\n"
-  index_page_body += "You can change this string by putting it in a file named: <b>jnlp_url.tmpl</b> in this directory"
-  writeHtmlPage("#{path} Examples", index_page_body, "#{path}/ot-index.html");
+  index_page_body += "<hr/><p>The jnlp urls for #{File.basename(path)} were constructed using the following template:<p/>\n"
+  index_page_body += "<p><code>#{jnlp_url_tmpl}</code></p>\n"
+  index_page_body += "<p>You can change this string by putting it in a file named: <b>jnlp_url.tmpl</b> in the directory #{File.dirname(path)}</p>"
+  
+  writeHtmlPage("#{File.basename(path)} Examples", index_page_body, "#{path}/ot-index.html");
 end
