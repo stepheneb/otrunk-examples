@@ -7,22 +7,6 @@ importPackage(Packages.java.lang);
 importClass(Packages.java.awt.event.ActionListener);
 importClass(Packages.java.net.URL);
 
-/////////////////////////////////////////////
-//The only specific thing for this node is this:
-//The rest should be the same code for all nodes
-var simulationScale = 1
-var initialVelocity = 3
-var originPositionPx = 60
-var maxTime = 6;
-
-function distributeSpecific()
-{
-	atomIconFile = "http://continuum.concord.org/otrunk/examples/LOOPS/images/rollerblader.gif"
-	atomIniPosX = 0
-	// setupPlayButton("play")
-	return true
-}
-//////////////////////////////////////////////
 var showTimer = true;
 var blnDoStop = false;
 var index;
@@ -278,7 +262,7 @@ function setupView()
 	objView.setWorldOrigin(20,60);
 	objView.setNeedScreenResolution(30 / simulationScale)
 	world.setDesirableSimulationDT(30)
-	objView.setBackground(new Color(255/255,214/255,240/255));
+	objView.setBackground(new Color(140/255,214/255,240/255));
 
 	//objView.setGrid(0,objView.getHeight()-30,objView.getWidth(),15)
 	objView.setGrid(0,objView.getHeight()-30,620,15)
