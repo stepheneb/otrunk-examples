@@ -75,6 +75,7 @@
     <import class="org.concord.sensor.state.OTZeroSensor" />
     <import class="org.concord.otrunkmw.OTModelerPage" />
     <import class="org.concord.otrunk.script.ui.OTScriptButton" />
+    <import class="org.concord.otrunk.collisions.OTGUIPanel" />
   </imports>
   <objects>
     <OTSystem local_id="system">
@@ -82,6 +83,11 @@
         <OTInclude href="../UDL/global-imports/udl-view-bundle.otml" />
       </includes>
       <bundles>
+      <OTViewBundle showLeftPanel="false">
+                    <viewEntries>
+                        <OTViewEntry objectClass="org.concord.otrunk.collisions.OTGUIPanel" viewClass="org.concord.otrunk.collisions.ui.OTGUIPanelView" />
+                        </viewEntries>
+                        </OTViewBundle>
         <OTSharingBundle />
         <object refid="8d880970-c22a-11dc-95ff-0800200c9a66" />
         <OTScriptEngineBundle>
@@ -120,7 +126,21 @@
                           </ol>
                           <p />
                           <center>
-                            <h2>MODEL</h2>
+                            <table width='690'>
+                            <tr>
+                                <td><object refid="${gui_panel}" /></td>
+                                <td><object refid="${lblTimer}" /></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <object refid="${runpause_button}" />
+                                    <object refid="${reset_button}" />
+                                </td>
+                                <td>
+                                    <object refid="${script}" />
+                                </td>
+                            </tr>
+                        </table>
                           </center>
                           <p />
                           <object refid="42efca12-706d-11dd-a791-a14c6b8a6d08" />
@@ -449,6 +469,21 @@
             <object refid="${section-1-card-container}" />
           </cardContainer>
         </OTUDLMenu>
+        <OTGUIPanel local_id="gui_panel" width='630' height='90' />
+                        <OTButton text="Run" local_id="runpause_button" />
+                        <OTButton text="Reset" local_id="reset_button" />
+                        <OTText local_id="lblTimer" text="0" />
+                        <OTScriptObject local_id="script">
+                          <variables>
+                            <OTScriptVariableComponent name="objView" reference="${gui_panel}" />
+                            <OTScriptVariableComponent name="runpause_button" reference="${runpause_button}" />
+                            <OTScriptVariableComponent name="reset_button" reference="${reset_button}" />
+                            <OTScriptVariableComponent name="lblTimer" reference="${lblTimer}" />
+                          </variables>
+                          <script>
+                            <OTJavascript src="loops-vector-motion.js" />
+                          </script>
+                        </OTScriptObject>
       </library>
     </OTSystem>
   </objects>
