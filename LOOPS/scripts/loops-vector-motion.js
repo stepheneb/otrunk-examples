@@ -166,8 +166,8 @@ function distributeAll()
 		objView.setWorldOrigin(originPositionPx,objView.getHeight()-20)  //JPartWorld.getPxFromCm(2.5))
 		//System.out.println(JPartWorld.getPxFromCm(0.5+atomIniPosX));
 		// Car
-		System.err.println("creating ball at: " + atomIniPosX + ", " + velArray[index])
-		ball=createBall(atomIniPosX,0,velArray[index],0)
+
+		ball=createBall(atomIniPosX,0,velArray[index],0,"Location Mark")
 		ball.setDraggable(false)
 		ball.setIconFromURL(new URL(atomIconFile))//,132,36,false)
 		//ball.setVelColor(totalVelColor)
@@ -175,7 +175,7 @@ function distributeAll()
 
 		
 //Let's add another stupid thing to this activity: a BALL that travels with the car. The AA collisions are OFF anyway!
-		startLine = createBall(atomIniPosX,-0.1,velArray[index],0)
+		startLine = createBall(atomIniPosX,-0.1,velArray[index],0,"ball2")
 		startLine.setShowVelocity(false)
 		startLine.setR(4)
 
@@ -227,13 +227,13 @@ function setAtom(atom, mass, color)
 	atom.setTraceProperties(0,1,0.2*objView.getWorldModel().getPxFromCm(1));
 }
 
-function createBall(x,y,vx,vy)
+function createBall(x,y,vx,vy,nameStr)
 {
 	//Create balls
 	var atom = JAtom.createAtom(JPartWorld.getPxFromCm(x),JPartWorld.getPxFromCm(y),vx,vy)
 	atom.setMass(1);
 	atom.setR(15);
-	atom.setName("ball")
+	atom.setName(nameStr)
 	objView.addElement(atom);
 	//atom.setProperty("showvel",true);
 	//atom.setProperty("showvelnumber",true);
