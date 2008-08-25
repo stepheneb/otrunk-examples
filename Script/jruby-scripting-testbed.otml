@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<otrunk id="b6d7d50b-fe2f-4265-80b6-c9769184a258">
+  <imports>
+    <import class="org.concord.framework.otrunk.view.OTFrame" />
+    <import class="org.concord.framework.otrunk.wrapper.OTBlob" />
+    <import class="org.concord.otrunk.OTSystem" />
+    <import class="org.concord.otrunk.script.jruby.OTJRuby" />
+    <import class="org.concord.otrunk.script.OTScriptEngineBundle" />
+    <import class="org.concord.otrunk.script.OTScriptEngineEntry" />
+    <import class="org.concord.otrunk.script.ui.OTScriptButton" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariable" />
+    <import class="org.concord.otrunk.script.ui.OTXHTMLScript" />
+    <import class="org.concord.otrunk.script.ui.OTXHTMLScriptViewEntry" />
+    <import class="org.concord.otrunk.ui.OTText" />
+    <import class="org.concord.otrunk.view.document.OTCompoundDoc" />
+    <import class="org.concord.otrunk.view.document.OTDocumentViewConfig" />
+    <import class="org.concord.otrunk.view.OTFolderObject" />
+    <import class="org.concord.otrunk.view.OTViewBundle" />
+    <import class="org.concord.otrunk.view.OTViewChild" />
+    <import class="org.concord.otrunk.view.OTViewEntry" />
+  </imports>
+  <objects>
+    <OTSystem>
+      <bundles>
+        <OTViewBundle>
+          <frame>
+            <OTFrame width="1100" height="600" name="xhtml-script-jruby-tester"/>
+          </frame>
+          <viewEntries>
+            <OTViewEntry objectClass="org.concord.otrunk.view.OTFolderObject" viewClass="org.concord.otrunk.view.OTFolderObjectView"/>
+            <OTViewEntry objectClass="org.concord.otrunk.script.ui.OTScriptButton" viewClass="org.concord.otrunk.script.ui.OTScriptButtonView"/>
+            <OTViewEntry local_id="script_edit_view" objectClass="org.concord.otrunk.script.OTScript" viewClass="org.concord.otrunk.script.ui.OTScriptEditView"/>
+            <OTViewEntry objectClass="org.concord.otrunk.script.ui.OTXHTMLScript" viewClass="org.concord.otrunk.script.ui.OTXHTMLScriptView"  />
+            <OTDocumentViewConfig 
+              objectClass="org.concord.otrunk.view.document.OTDocument" 
+              viewClass="org.concord.otrunk.view.document.OTDocumentView"
+              css="
+                  body { background-color:#FFFFFF; color:#333333; font-family:Tahoma,'Trebuchet MS',sans-serif; line-height:1.5em; }
+                  h1 { color:#FFD32C; font-size:1.5em; margin-bottom:0px; }
+                  h2 { color:#FFD32C; font-size:1.3em; margin-bottom:0px; }
+                  h3 { color:#FFD32C; font-size:1.1em; margin: 2em 0em 1em 0em; }
+                  .menu { color: #982f10; background-color: #fffee9;  color: #982f10; margin: 0px 1px; padding: 5px; }
+                  .menu_item { background-color: #fffee9; color: #982f10; margin: 1px 0px; padding: 0px 10px; }
+                  .menu_item a { color: #51a656; }
+                  .menu_item.selected a { color: #318636; }
+                  #navlist ul { margin: 0; padding: 0; list-style: none; width: 150px; }
+                  #navlist li { display: inline; list-style-type: none;list-style-type: none; padding-right: 10px; }
+                  #content { margin:5px; padding:5px; } 
+                  code { font-family:Courier,monospace; font-size:95%; }
+                  .code { background-color: #fffee9; border-style: outset; margin: 10px 20px 10px 10px; padding: 5px 10px; }
+                  
+                " />
+          </viewEntries>
+        </OTViewBundle>
+        <OTScriptEngineBundle>
+          <engines>
+            <OTScriptEngineEntry objectClass="org.concord.otrunk.script.jruby.OTJRuby"
+              engineClass="org.concord.otrunk.script.jruby.OTJRubyEngine" />
+          </engines>
+        </OTScriptEngineBundle>
+      </bundles>
+      <root>
+        <OTFolderObject>
+          <name>JRuby Script Testing</name>
+          <children>
+            <OTJRuby local_id="jruby_script" name="OTXHTMLScript1">
+              <script>def getText
+  &lt;&lt;CONTENT
+&lt;div id="content"&gt;
+&lt;h2&gt;Using JRuby to generate XHTML content for an OTXHTMLScript View&lt;/h2&gt;
+&lt;p&gt;
+  OTrunk views can be constructed using XHTML using the using the OTrunk integration of the 
+  &lt;a href="http://java.sun.com/j2se/1.5.0/docs/api/javax/swing/text/html/HTMLEditorKit.html"&gt;Java 1.5 HTML EditorKit&lt;/a&gt;.
+  In addition OTrunk objects can be embedded into the XHTML document. Java's HTML Editor kit implementation includes partial 
+  support for CSS styling (somewhere between CSS 1.0 and 2). See the 
+  &lt;a href="http://java.sun.com/j2se/1.5.0/docs/api/javax/swing/text/html/CSS.html"&gt;Java 1.5 HTML Editor Kit CSS documentation&lt;/a&gt;
+  for more details.
+&lt;/p&gt;
+&lt;p&gt;
+  The OTXHTMLScriptView object requests the content to render by calling the scripts 
+  &lt;code&gt;&lt;b&gt;getText&lt;/b&gt;&lt;/code&gt; method.  
+  This Ruby script uses Ruby's &lt;code&gt;heredoc&lt;/code&gt; functionality to make 
+  construction of a multiline string easier.
+&lt;/p&gt;
+&lt;p&gt;
+  All content in the lines between &lt;code&gt;&lt;b&gt;&amp;lt;&amp;lt;&lt;i&gt;identifier&lt;/i&gt;&lt;/b&gt;&lt;/code&gt; 
+  and &lt;code&gt;&lt;b&gt;&lt;i&gt;identifier&lt;/i&gt;&lt;/b&gt;&lt;/code&gt; will be used to construct the string.
+&lt;/p&gt;
+&lt;p&gt;
+  In the example below showing what the form of this script looks like, the original heredoc string 
+  identifier &lt;code&gt;CONTENT&lt;/code&gt; has been replaced with  &lt;code&gt;EXAMPLECONTENT&lt;/code&gt; 
+  otherwise the actual heredoc string would be truncated prematurely.
+&lt;/p&gt;
+&lt;div class=&quot;code&quot;&gt;&lt;pre&gt;&lt;code&gt;
+def getText
+  &amp;lt;&amp;lt;EXAMPLECONTENT
+&amp;lt;h1&gt;Using JRuby to generate XHTML content for an OTXHTMLScript View&amp;lt;/h1&gt;
+&amp;lt;p&gt;
+  The OTXHTMLScriptView object requests the content to render by calling the scripts 
+  &amp;lt;code&gt;&amp;lt;b&gt;getText&amp;lt;/b&gt;&amp;lt;/code&gt; method.  
+  This Ruby script uses Ruby's &amp;lt;code&gt;heredoc&amp;lt;/code&gt; functionality to make 
+  construction of a multiline string easier.
+&amp;lt;/p&gt;
+&amp;lt;p&gt;
+  All content in the lines between &amp;lt;code&gt;&amp;lt;b&gt;&amp;lt;&amp;lt;&amp;lt;i&gt;identifier&amp;lt;/i&gt;&amp;lt;/b&gt;&amp;lt;/code&gt;
+  and &amp;lt;code&gt;&amp;lt;b&gt;&amp;lt;i&gt;identifier&amp;lt;/i&gt;&amp;lt;/b&gt;&amp;lt;/code&gt;
+  will be used to construct the string.
+&amp;lt;/p&gt;
+EXAMPLECONTENT
+end
+&lt;/code&gt;
+&lt;/pre&gt;
+&lt;/div&gt;
+&lt;h3&gt;Escaping XML characters which have special meaning&lt;/h3&gt;
+&lt;p&gt;
+  When a script is embedded in the otml file like this one (instead of being an external reference) any characters 
+  which have special meaning in an xml document must be escaped. For example any occurrence of the &lt;b&gt;&amp;lt;&lt;/b&gt; 
+  character must be replaced with the character entity &lt;b&gt;&amp;amp;lt;&lt;/b&gt;. Similarly any use of the 
+  &lt;b&gt;&amp;&lt;/b&gt; character must be replaced by the character entity &lt;b&gt;&amp;amp;amp;&lt;/b&gt;. 
+  There are two additional character entities pre-defined in otml: &lt;b&gt;&amp;gt;&lt;/b&gt; (&lt;b&gt;&amp;amp;gt;&lt;/b&gt;)
+  and &lt;b&gt;&amp;quot;&lt;/b&gt; (&lt;b&gt;&amp;amp;quot;&lt;/b&gt;). As long as the &lt;b&gt;&amp;lt;&lt;/b&gt; is escaped
+  with a character entity the matching &lt;b&gt;&amp;gt;&lt;/b&gt; will not need to be escaped.
+  The result of this requirement for escaping characters is that editing script code in the raw otml file can become 
+  much more difficult to read and write when compared to editing the same script in an external resource.  Just take a look 
+  at this section of this script directly in the raw otml file for a good example.
+&lt;/p&gt;
+&lt;/div&gt;
+CONTENT
+end</script>
+            </OTJRuby>
+            <OTXHTMLScript script="${jruby_script}" name="OTXHTMLScript1 output" />
+            <OTXHTMLScript local_id="script_object" name="OTXHTMLScript2 - external script">
+              <script>
+                <OTJRuby local_id="script" name="script" src="scripts/external-jruby-xhtml-script.rb" />
+              </script>
+            </OTXHTMLScript>
+            <OTCompoundDoc name="Basic Document With CSS">
+              <bodyText>
+                <h1>Hello World</h1>
+                This document should have a different font.  It is using blocks of css instead of 
+                just a single css string.
+              </bodyText>
+            </OTCompoundDoc>      
+            
+          </children>
+        </OTFolderObject>
+      </root>
+    </OTSystem>
+  </objects>
+</otrunk>
