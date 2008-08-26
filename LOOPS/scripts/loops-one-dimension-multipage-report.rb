@@ -37,12 +37,6 @@ def embedObject(obj)
   "<object refid=\"#{ obj.otExternalId() }\"/>"
 end
 
-def otCreate(rconstant, &block)
-  otObj = $otObjectService.createObject(rconstant.java_class)
-  yield otObj
-  otObj
-end
-
 def linkToObject(link_text, obj)
   "<a href=\"#{ obj.otExternalId() }\">#{link_text}</a>"
 end
