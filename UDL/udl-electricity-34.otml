@@ -114,19 +114,35 @@
         </OTScriptEngineBundle>
         <OTSharingBundle>
           <sharedObjects>
-            <OTDataCollector id="99b1b3a0-cdca-11dc-8ae1-ef1e138f3b5b" name="predict-voltage" title="Voltage Prediction" multipleGraphableEnabled="false">
+            <OTDataCollector id="99b1b3a0-cdca-11dc-8ae1-ef1e138f3b5b" name="Voltage" title="Voltage Sensor Graph" multipleGraphableEnabled="false" autoScaleEnabled="true">
               <source>
-                <OTDataGraphable name="Data Graph" connectPoints="true" controllable="true" yColumn="1" drawMarks="false" color="16711680" xColumn="0" lineWidth="2.0">
+                <OTDataGraphable name="Sensor" connectPoints="true" yColumn="1" drawMarks="false" color="255" xColumn="0" lineWidth="2.0">
+                  <dataProducer>
+                    <OTSensorDataProxy name="dataproducer">
+                      <request>
+                        <OTExperimentRequest period="0.1">
+                          <sensorRequests>
+                            <OTSensorRequest stepSize="0.1" type="4" unit="V" port="0" requiredMax="10.0" displayPrecision="-2" requiredMin="-10.0" />
+                          </sensorRequests>
+                        </OTExperimentRequest>
+                      </request>
+                    </OTSensorDataProxy>
+                  </dataProducer>
                   <dataStore>
-                    <OTDataStore id="99b1b3a4-cdca-11dc-8ae1-ef1e138f3b5b" numberChannels="2" />
+                    <OTDataStore dt="0.1" numberChannels="1">
+                      <channelDescriptions>
+                        <OTDataChannelDescription name="dt" precision="2" numericData="true" />
+                        <OTDataChannelDescription name="" unit="V" precision="-2" numericData="true" />
+                      </channelDescriptions>
+                    </OTDataStore>
                   </dataStore>
                 </OTDataGraphable>
               </source>
               <xDataAxis>
-                <OTDataAxis max="30.0" units="s" min="0.0" label="Time" />
+                <OTDataAxis max="60.0" units="s" min="0.0" label="Time" />
               </xDataAxis>
               <yDataAxis>
-                <OTDataAxis max="10.0" units="V" min="-10.0" label="" />
+                <OTDataAxis max="10.0" units="V" min="-10.0" label="Voltage" />
               </yDataAxis>
             </OTDataCollector>
             <OTDataCollector id="29c12135-cdcb-11dc-8ae1-ef1e138f3b5b" name="voltage-1" title="Voltage Graph" multipleGraphableEnabled="true" autoScaleEnabled="true">
@@ -822,7 +838,7 @@
                         <object refid="${nav-bar}" />
                       </south>
                     </OTUDLSection>
-                    <OTUDLSection local_id="section_2" name="Introduction" isComputerBased="false" isIntroduction="true" isMath="false" isPosttest="false" isPretest="false" isReading="false" isWrapup="false" description="What is electricity?">
+                    <OTUDLSection local_id="section_2" name="Introduction" isComputerBased="false" isIntroduction="true" isMath="false" isPosttest="false" isPretest="false" isReading="false" isWrapup="false" description="What is electricity? This unit will help you explore electricity.">
                       <content>
                         <OTCardContainer id="163543bf-775f-11dc-88e0-f91e4efaa30a" contentsMayScroll="true" loadViewOnlyOnDemand="true">
                           <cards>
@@ -843,13 +859,13 @@
                                       </table>
                                       <table width="100%">
                                         <tr>
-                                          <td style="padding:40px">
-                                            <img src="http://udl.concord.org/artwork/elect_34/kite/el_34_kite.png" border="0" />
+                                          <td style=" padding-left: 40px; padding-right: 40px">
+                                            <img border="0" src="http://udl.concord.org/artwork/elect_34/kite/el_34_kite.png" />
                                           </td>
                                           <td>Electricity is a part of modern life. Almost everyone has 
-          electricity in their house and uses it in dozens of ways all day 
-          long. But most people don't know what electricity is or how it 
-          works! This unit will help you explore electricity.</td>
+                electricity in their house and uses it in dozens of ways all 
+                day long. But most people don't know what electricity is or 
+                how it works! This unit will help you explore electricity.</td>
                                         </tr>
                                       </table>
                                     </div>
@@ -857,7 +873,7 @@
                                 </div>
                               </bodyText>
                             </OTUDLCompoundDoc>
-                            <OTUDLCompoundDoc name="%35c73ef2-7763-11dc-88e0-f91e4efaa30a" showDefinitions="true">
+                            <OTUDLCompoundDoc id="163543bf-775f-11dc-88e0-f91e4efaa30a/cards[1]" name="%35c73ef2-7763-11dc-88e0-f91e4efaa30a" showDefinitions="true">
                               <bodyText>
                                 <div class="buffer">
                                   <div class="border">
@@ -905,8 +921,12 @@
                             </OTUDLCompoundDoc>
                           </cards>
                           <currentCard>
-                            <object refid="163543be-775f-11dc-88e0-f91e4efaa30a" />
+                            <object refid="163543bf-775f-11dc-88e0-f91e4efaa30a/cards[1]" />
                           </currentCard>
+                          <viewedCards>
+                            <object refid="163543be-775f-11dc-88e0-f91e4efaa30a" />
+                            <object refid="163543bf-775f-11dc-88e0-f91e4efaa30a/cards[1]" />
+                          </viewedCards>
                         </OTCardContainer>
                       </content>
                       <header>
@@ -4886,7 +4906,7 @@ Mark whether they are a conductor or an insulator.</td>
                                       </table>
                                       <table width="100%">
                                         <tr>
-                                          <td style="padding:40px">
+                                          <td style="padding-right:40px">
                                             <img src="http://udl.concord.org/artwork/elect_34/measuring_electricity/el_34_measuring_electricity.png" border="0" />
                                           </td>
                                           <td>In this activity you will examine a light bulb and make it glow 
@@ -4898,7 +4918,7 @@ Mark whether they are a conductor or an insulator.</td>
                                 </div>
                               </bodyText>
                             </OTUDLCompoundDoc>
-                            <OTUDLCompoundDoc name="%bbf06c4a-cdc1-11dc-bd2b-dd05e7961664" showDefinitions="true">
+                            <OTUDLCompoundDoc id="4e5e0956-cdc1-11dc-bd2b-dd05e7961664/cards[1]" name="%bbf06c4a-cdc1-11dc-bd2b-dd05e7961664" showDefinitions="true">
                               <bodyText>
                                 <div class="buffer">
                                   <div class="border">
@@ -4925,12 +4945,15 @@ Mark whether they are a conductor or an insulator.</td>
                 a circle around the filament and label it "filament," using 
                 the drawing tool.
                                           </td>
-                                          <td width="60%" style="padding-top: 20px; padding-right: 20px; padding-left: 20px; padding-bottom: 20px">
+                                          <td style="padding-left: 20px; padding-right: 20px" width="60%">
                                             <object refid="da903bbb-cdc1-11dc-bd2b-dd05e7961664" />
+                                            <br />
+                                            <br />
+                                            <object refid="124c75ef-7388-11dd-9e8a-efc9ed032a7a" />
+                                            <br />
                                           </td>
                                         </tr>
                                       </table>
-                                      <p />
                                     </div>
                                   </div>
                                 </div>
@@ -4942,36 +4965,17 @@ Mark whether they are a conductor or an insulator.</td>
                                     <OTDrawingShape type="" fillType="clear" x="0.0" y="0.0" width="0.0" height="0.0" color="0x000000" strokeWidth="2.0" />
                                   </graphables>
                                 </OTDrawingTool2>
+                                <OTSnapshotButton id="124c75ef-7388-11dd-9e8a-efc9ed032a7a" name="Snapshot button">
+                                  <target>
+                                    <object refid="da903bbb-cdc1-11dc-bd2b-dd05e7961664" />
+                                  </target>
+                                  <snapshotAlbum>
+                                    <object refid="${album}" />
+                                  </snapshotAlbum>
+                                </OTSnapshotButton>
                               </documentRefs>
                             </OTUDLCompoundDoc>
-                            <OTUDLCompoundDoc name="%fbc0f0bc-cdc1-11dc-bd2b-dd05e7961664" showDefinitions="true">
-                              <bodyText>
-                                <div class="buffer">
-                                  <div class="border">
-                                    <div class="body">
-                                      <table width="100%">
-                                        <tr>
-                                          <td>
-                                            <div class="subtitle">Materials</div>
-                                          </td>
-                                          <td align="right">
-                                            <div class="page-number">3</div>
-                                          </td>
-                                        </tr>
-                                      </table>
-                                      <ul>
-                                        <li>Genecon hand generator</li>
-                                        <li>
-                                          <a href="http://udl.concord.org/artwork/technical_hints/tech-hint-voltage-v.html">voltage sensor</a>
-                                        </li>
-                                        <li>two holiday lights</li>
-                                      </ul>
-                                    </div>
-                                  </div>
-                                </div>
-                              </bodyText>
-                            </OTUDLCompoundDoc>
-                            <OTUDLCompoundDoc name="%8d184670-cdc2-11dc-bd2b-dd05e7961664" showDefinitions="true">
+                            <OTUDLCompoundDoc id="4e5e0956-cdc1-11dc-bd2b-dd05e7961664/cards[2]" name="%fbc0f0bc-cdc1-11dc-bd2b-dd05e7961664" showDefinitions="true">
                               <bodyText>
                                 <div class="buffer">
                                   <div class="border">
@@ -4982,86 +4986,115 @@ Mark whether they are a conductor or an insulator.</td>
                                             <div class="subtitle">Explore</div>
                                           </td>
                                           <td align="right">
+                                            <div class="page-number">3</div>
+                                          </td>
+                                        </tr>
+                                      </table>
+                                      You will need these materials:
+                                      <ul>
+                                        <li>Genecon hand generator</li>
+                                        <li>
+                                          <a href="http://udl.concord.org/artwork/technical_hints/tech-hint-voltage-v.html">voltage 
+              sensor</a>
+                                        </li>
+                                        <li>two holiday lights</li>
+                                      </ul>
+                                    </div>
+                                  </div>
+                                </div>
+                              </bodyText>
+                            </OTUDLCompoundDoc>
+                            <OTUDLCompoundDoc id="4e5e0956-cdc1-11dc-bd2b-dd05e7961664/cards[3]" name="%8d184670-cdc2-11dc-bd2b-dd05e7961664" showDefinitions="true">
+                              <bodyText>
+                                <div class="buffer">
+                                  <div class="border">
+                                    <div class="body">
+                                      <table width="100%">
+                                        <tr>
+                                          <td>
+                                            <div class="subtitle" />
+                                          </td>
+                                          <td align="right">
                                             <div class="page-number">4</div>
                                           </td>
                                         </tr>
                                       </table>
-                                      <object refid="8df9ebdb-64b4-11dd-a5e7-1d9a5ad8173d" />
+                                      <div style="padding-bottom: 2px; border-right-width: 1px; margin-bottom: 5px; border-bottom-width: 1px; margin-left: 5px; border-top-width: 1px; border-left-width: 1px; padding-top: 2px; border-style: solid; padding-left: 2px; border-color: black; margin-right: 5px; padding-right: 2px; margin-top: 5px">
+                                        <object refid="8df9ebdc-64b4-11dd-a5e7-1d9a5ad8173d" />
+                                        <br />
+                                        <object viewid="29dc5ef0-c453-11dc-95ff-0800200c9a66" refid="8df9ebdd-64b4-11dd-a5e7-1d9a5ad8173d" />
+                                      </div>
                                     </div>
                                   </div>
                                 </div>
                               </bodyText>
                               <documentRefs>
-                                <OTCompoundDoc id="8df9ebdb-64b4-11dd-a5e7-1d9a5ad8173d" name="Inner pages" showEditBar="false">
-                                  <documentRefs>
-                                    <OTCardContainer id="8df9ebdc-64b4-11dd-a5e7-1d9a5ad8173d">
-                                      <cards>
-                                        <OTUDLCompoundDoc id="8dfa12ee-64b4-11dd-a5e7-1d9a5ad8173d">
-                                          <bodyText>
-                                            1 Connect a holiday light to the Genecon hand generator.
-                                            <br />
-                                            <img src="http://udl.concord.org/artwork/elect_56/genecon_light/el_56_genecon_light.jpg" border="1" />
-                                          </bodyText>
-                                        </OTUDLCompoundDoc>
-                                        <OTUDLCompoundDoc id="929c71df-64b4-11dd-a5e7-1d9a5ad8173d" name="%929c71df-64b4-11dd-a5e7-1d9a5ad8173d" showEditBar="true">
-                                          <bodyText>2. Crank the Genecon, but not too hard – you may burn out the bulb!</bodyText>
-                                        </OTUDLCompoundDoc>
-                                        <OTUDLCompoundDoc id="b4885fd0-64b4-11dd-a5e7-1d9a5ad8173d" name="%b4885fd0-64b4-11dd-a5e7-1d9a5ad8173d" showEditBar="true">
-                                          <bodyText>3. Look closely at the bulb. See if you can recognize the filament.</bodyText>
-                                        </OTUDLCompoundDoc>
-                                        <OTUDLCompoundDoc id="bb2d93a1-64b4-11dd-a5e7-1d9a5ad8173d" name="%bb2d93a1-64b4-11dd-a5e7-1d9a5ad8173d" showEditBar="true">
-                                          <bodyText>4. Notice that the filament is connected to a tiny wire at each end. Each 
+                                <OTCardContainer id="8df9ebdc-64b4-11dd-a5e7-1d9a5ad8173d">
+                                  <cards>
+                                    <OTUDLCompoundDoc id="8dfa12ee-64b4-11dd-a5e7-1d9a5ad8173d">
+                                      <bodyText>
+                                        1 Connect a holiday light to the Genecon hand generator.
+                                        <br />
+                                        <img src="http://udl.concord.org/artwork/elect_56/genecon_light/el_56_genecon_light.jpg" border="1" />
+                                      </bodyText>
+                                    </OTUDLCompoundDoc>
+                                    <OTUDLCompoundDoc id="929c71df-64b4-11dd-a5e7-1d9a5ad8173d" name="%929c71df-64b4-11dd-a5e7-1d9a5ad8173d" showEditBar="true">
+                                      <bodyText>2. Crank the Genecon, but not too hard – you may burn out the bulb!</bodyText>
+                                    </OTUDLCompoundDoc>
+                                    <OTUDLCompoundDoc id="b4885fd0-64b4-11dd-a5e7-1d9a5ad8173d" name="%b4885fd0-64b4-11dd-a5e7-1d9a5ad8173d" showEditBar="true">
+                                      <bodyText>3. Look closely at the bulb. See if you can recognize the filament.</bodyText>
+                                    </OTUDLCompoundDoc>
+                                    <OTUDLCompoundDoc id="bb2d93a1-64b4-11dd-a5e7-1d9a5ad8173d" name="%bb2d93a1-64b4-11dd-a5e7-1d9a5ad8173d" showEditBar="true">
+                                      <bodyText>4. Notice that the filament is connected to a tiny wire at each end. Each 
     wire is connected to the bigger wire that you attached to the Genecon. 
     This is how the electricity gets to the filament from the genecon.</bodyText>
-                                        </OTUDLCompoundDoc>
-                                        <OTUDLCompoundDoc id="c589dc02-64b4-11dd-a5e7-1d9a5ad8173d" name="%c589dc02-64b4-11dd-a5e7-1d9a5ad8173d" showEditBar="true">
-                                          <documentRefs>
-                                            <OTDrawingTool2 id="951ffa37-ce92-11dc-a8f3-27c5e0d9700c" name="Draw tool">
-                                              <graphables>
-                                                <OTDrawingShape type="" fillType="clear" x="0.0" y="0.0" width="0.0" height="0.0" color="0x000000" strokeWidth="2.0" />
-                                                <OTDrawingShape type="" fillType="clear" x="0.0" y="0.0" width="0.0" height="0.0" color="0x000000" strokeWidth="2.0" />
-                                                <OTDrawingShape type="" fillType="clear" x="0.0" y="0.0" width="0.0" height="0.0" color="0x000000" strokeWidth="2.0" />
-                                                <OTDrawingShape type="" fillType="clear" x="0.0" y="0.0" width="0.0" height="0.0" color="0x000000" strokeWidth="2.0" />
-                                              </graphables>
-                                            </OTDrawingTool2>
-                                            <OTSnapshotButton id="c06f51a2-ce92-11dc-a8f3-27c5e0d9700c" name="Snapshot button" componentIndices="">
-                                              <target>
-                                                <object refid="951ffa37-ce92-11dc-a8f3-27c5e0d9700c" />
-                                              </target>
-                                              <snapshotAlbum>
-                                                <object refid="${album}" />
-                                              </snapshotAlbum>
-                                            </OTSnapshotButton>
-                                          </documentRefs>
-                                          <bodyText>
-                                            5. Draw a picture of the holiday light, showing the filament and the two 
-    wires that connect to the circuit.
-                                            <br />
+                                    </OTUDLCompoundDoc>
+                                    <OTUDLCompoundDoc id="c589dc02-64b4-11dd-a5e7-1d9a5ad8173d" name="%c589dc02-64b4-11dd-a5e7-1d9a5ad8173d" showEditBar="true">
+                                      <documentRefs>
+                                        <OTDrawingTool2 id="951ffa37-ce92-11dc-a8f3-27c5e0d9700c" name="Draw tool">
+                                          <graphables>
+                                            <OTDrawingShape type="" fillType="clear" x="0.0" y="0.0" width="0.0" height="0.0" color="0x000000" strokeWidth="2.0" />
+                                            <OTDrawingShape type="" fillType="clear" x="0.0" y="0.0" width="0.0" height="0.0" color="0x000000" strokeWidth="2.0" />
+                                            <OTDrawingShape type="" fillType="clear" x="0.0" y="0.0" width="0.0" height="0.0" color="0x000000" strokeWidth="2.0" />
+                                            <OTDrawingShape type="" fillType="clear" x="0.0" y="0.0" width="0.0" height="0.0" color="0x000000" strokeWidth="2.0" />
+                                          </graphables>
+                                        </OTDrawingTool2>
+                                        <OTSnapshotButton id="c06f51a2-ce92-11dc-a8f3-27c5e0d9700c" name="Snapshot button" componentIndices="">
+                                          <target>
                                             <object refid="951ffa37-ce92-11dc-a8f3-27c5e0d9700c" />
-                                            <p />
-                                            <object refid="c06f51a2-ce92-11dc-a8f3-27c5e0d9700c" />
-                                          </bodyText>
-                                        </OTUDLCompoundDoc>
-                                      </cards>
-                                      <currentCard>
-                                        <object refid="8dfa12ee-64b4-11dd-a5e7-1d9a5ad8173d" />
-                                      </currentCard>
-                                    </OTCardContainer>
-                                    <OTUDLMenu id="8df9ebdd-64b4-11dd-a5e7-1d9a5ad8173d" showBorder="false">
-                                      <cardContainer>
-                                        <object refid="8df9ebdc-64b4-11dd-a5e7-1d9a5ad8173d" />
-                                      </cardContainer>
-                                    </OTUDLMenu>
-                                    <object refid="29dc5ef0-c453-11dc-95ff-0800200c9a66" />
-                                  </documentRefs>
-                                  <bodyText>
-                                    <div style="border-width:1px; border-color:black; border-style:solid; margin: 5px; padding:2px;">
-                                      <object refid="8df9ebdc-64b4-11dd-a5e7-1d9a5ad8173d" />
-                                      <br />
-                                      <object refid="8df9ebdd-64b4-11dd-a5e7-1d9a5ad8173d" viewId="29dc5ef0-c453-11dc-95ff-0800200c9a66" />
-                                    </div>
-                                  </bodyText>
-                                </OTCompoundDoc>
+                                          </target>
+                                          <snapshotAlbum>
+                                            <object refid="${album}" />
+                                          </snapshotAlbum>
+                                        </OTSnapshotButton>
+                                      </documentRefs>
+                                      <bodyText>
+                                        5. Draw a picture of the holiday light, showing the filament and the two 
+    wires that connect to the circuit.
+                                        <br />
+                                        <object refid="951ffa37-ce92-11dc-a8f3-27c5e0d9700c" />
+                                        <p />
+                                        <object refid="c06f51a2-ce92-11dc-a8f3-27c5e0d9700c" />
+                                      </bodyText>
+                                    </OTUDLCompoundDoc>
+                                  </cards>
+                                  <currentCard>
+                                    <object refid="c589dc02-64b4-11dd-a5e7-1d9a5ad8173d" />
+                                  </currentCard>
+                                  <viewedCards>
+                                    <object refid="8dfa12ee-64b4-11dd-a5e7-1d9a5ad8173d" />
+                                    <object refid="929c71df-64b4-11dd-a5e7-1d9a5ad8173d" />
+                                    <object refid="b4885fd0-64b4-11dd-a5e7-1d9a5ad8173d" />
+                                    <object refid="bb2d93a1-64b4-11dd-a5e7-1d9a5ad8173d" />
+                                    <object refid="c589dc02-64b4-11dd-a5e7-1d9a5ad8173d" />
+                                  </viewedCards>
+                                </OTCardContainer>
+                                <object refid="29dc5ef0-c453-11dc-95ff-0800200c9a66" />
+                                <OTUDLMenu id="8df9ebdd-64b4-11dd-a5e7-1d9a5ad8173d" showBorder="false">
+                                  <cardContainer>
+                                    <object refid="8df9ebdc-64b4-11dd-a5e7-1d9a5ad8173d" />
+                                  </cardContainer>
+                                </OTUDLMenu>
                               </documentRefs>
                             </OTUDLCompoundDoc>
                             <OTUDLCompoundDoc id="e1385726-6d50-11dd-ac9a-cb602d69c6ea" name="%e1385726-6d50-11dd-ac9a-cb602d69c6ea" showEditBar="true" showDefinitions="true">
@@ -5091,7 +5124,7 @@ Mark whether they are a conductor or an insulator.</td>
                                             </ul>
                                             .
                                             <br />
-                                            <div style="margin-right: 5px; padding-top: 2px; margin-left: 5px; border-bottom-width: 1px; border-right-width: 1px; border-top-width: 1px; padding-right: 2px; border-left-width: 1px; margin-bottom: 5px; margin-top: 5px; border-style: solid; padding-bottom: 2px; border-color: black; padding-left: 2px">
+                                            <div style="padding-bottom: 2px; border-right-width: 1px; margin-bottom: 5px; border-bottom-width: 1px; margin-left: 5px; border-top-width: 1px; border-left-width: 1px; padding-top: 2px; border-style: solid; padding-left: 2px; padding-right: 2px; margin-right: 5px; border-color: black; margin-top: 5px">
                                               <object refid="8000e4bc-6d56-11dd-b57e-df02d2f36b2a" />
                                               <br />
                                               <object viewid="29dc5ef0-c453-11dc-95ff-0800200c9a66" refid="8000e4bd-6d56-11dd-b57e-df02d2f36b2a" />
@@ -5099,6 +5132,9 @@ Mark whether they are a conductor or an insulator.</td>
                                           </td>
                                           <td width="60%">
                                             <object refid="37cafb27-6d55-11dd-ac9a-cb602d69c6ea" />
+                                            <br />
+                                            <object refid="52a0f77f-7388-11dd-9e8a-efc9ed032a7a" />
+                                            <br />
                                             <br />
                                             <br />
                                             <object refid="3a237a4c-6e08-11dd-95a8-85971a6fcfae" />
@@ -5670,6 +5706,9 @@ function getLastValidLabel(){
                                   <currentCard>
                                     <object refid="80010bce-6d56-11dd-b57e-df02d2f36b2a" />
                                   </currentCard>
+                                  <viewedCards>
+                                    <object refid="80010bce-6d56-11dd-b57e-df02d2f36b2a" />
+                                  </viewedCards>
                                 </OTCardContainer>
                                 <object refid="29dc5ef0-c453-11dc-95ff-0800200c9a66" />
                                 <OTUDLMenu id="8000e4bd-6d56-11dd-b57e-df02d2f36b2a" showBorder="false">
@@ -5892,10 +5931,18 @@ function getLastValidLabel(){
                                     <OTDataAxis max="6.0" units="V" min="-1.0" label="Voltage" />
                                   </yDataAxis>
                                 </OTDataCollector>
+                                <OTSnapshotButton id="52a0f77f-7388-11dd-9e8a-efc9ed032a7a" name="Snapshot button">
+                                  <target>
+                                    <object refid="37cafb27-6d55-11dd-ac9a-cb602d69c6ea" />
+                                  </target>
+                                  <snapshotAlbum>
+                                    <object refid="${album}" />
+                                  </snapshotAlbum>
+                                </OTSnapshotButton>
                                 <object refid="3a237a4c-6e08-11dd-95a8-85971a6fcfae" />
                               </documentRefs>
                             </OTUDLCompoundDoc>
-                            <OTUDLCompoundDoc name="%d6ce5d21-cdc2-11dc-bd2b-dd05e7961664" showDefinitions="true">
+                            <OTUDLCompoundDoc id="4e5e0956-cdc1-11dc-bd2b-dd05e7961664/cards[5]" name="%d6ce5d21-cdc2-11dc-bd2b-dd05e7961664" showDefinitions="true">
                               <bodyText>
                                 <div class="buffer">
                                   <div class="border">
@@ -5910,27 +5957,36 @@ function getLastValidLabel(){
                                           </td>
                                         </tr>
                                       </table>
-                                      6. Connect a holiday light to the Genecon. This time, also connect 
-          the voltage sensor. Click on the magnifying glass
-                                      <a href="http://udl.concord.org/artwork/technical_hints/tech-hint-voltage-v.html">
-                                        <img src="http://udl.concord.org/artwork/general/mag_glass/mag_glass.png" border="0" />
-                                      </a>
-                                      for 
-          a technical hint.
+                                      <table width="100%">
+                                        <tr>
+                                          <td width="50%">
+                                            6. Connect a holiday light to the Genecon. This time, also 
+                connect the voltage sensor. Click on the magnifying glass
+                                            <a href="http://udl.concord.org/artwork/technical_hints/tech-hint-voltage-v.html">
+                                              <img border="0" src="http://udl.concord.org/artwork/general/mag_glass/mag_glass.png" />
+                                            </a>
+                                            for 
+                a technical hint.
+                                            <br />
+                                            <br />
+                                            The voltage is a measure of how hard the electric charges are being pushed 
+                through the circuit.
+                                          </td>
+                                          <td style="padding-left: 20px; padding-right: 20px" width="50%">
+                                            <img border="1" src="http://udl.concord.org/artwork/elect_56/genecon_bulb_voltsensor/el_56_genecon_bulb_voltsensor.png" />
+                                          </td>
+                                        </tr>
+                                      </table>
                                       <br />
                                       <br />
-                                      <center>
-                                        <img src="http://udl.concord.org/artwork/elect_56/genecon_bulb_voltsensor/el_56_genecon_bulb_voltsensor.png" border="1" />
-                                      </center>
+                                      <center />
                                       <br />
-                                      The voltage is a measure of how hard the electric charges are being 
-          pushed through the circuit.
                                     </div>
                                   </div>
                                 </div>
                               </bodyText>
                             </OTUDLCompoundDoc>
-                            <OTUDLCompoundDoc name="%b986268c-d5ac-11dc-bdbd-611bcc97c71c" showDefinitions="true">
+                            <OTUDLCompoundDoc id="4e5e0956-cdc1-11dc-bd2b-dd05e7961664/cards[6]" name="%b986268c-d5ac-11dc-bdbd-611bcc97c71c" showDefinitions="true">
                               <bodyText>
                                 <div class="buffer">
                                   <div class="border">
@@ -5948,7 +6004,7 @@ function getLastValidLabel(){
                                       <table width="100%">
                                         <tr>
                                           <td width="40%">
-                                            <div style="padding-right: 2px; border-top-width: 1px; border-bottom-width: 1px; margin-left: 5px; padding-left: 2px; margin-bottom: 5px; border-left-width: 1px; padding-top: 2px; border-style: solid; padding-bottom: 2px; border-color: black; border-right-width: 1px; margin-right: 5px; margin-top: 5px">
+                                            <div style="padding-bottom: 2px; border-right-width: 1px; margin-bottom: 5px; border-bottom-width: 1px; margin-left: 5px; border-top-width: 1px; border-left-width: 1px; padding-top: 2px; border-style: solid; padding-left: 2px; border-color: black; padding-right: 2px; margin-right: 5px; margin-top: 5px">
                                               <object refid="4662c8b7-64b5-11dd-a5e7-1d9a5ad8173d" />
                                               <br />
                                               <object viewid="29dc5ef0-c453-11dc-95ff-0800200c9a66" refid="4662c8b8-64b5-11dd-a5e7-1d9a5ad8173d" />
@@ -5956,6 +6012,9 @@ function getLastValidLabel(){
                                           </td>
                                           <td width="60%">
                                             <object refid="4f72223a-cdca-11dc-8ae1-ef1e138f3b5b" />
+                                            <br />
+                                            <object refid="03c2e16c-7389-11dd-9e8a-efc9ed032a7a" />
+                                            <br />
                                           </td>
                                         </tr>
                                       </table>
@@ -6050,6 +6109,9 @@ function getLastValidLabel(){
                                   <currentCard>
                                     <object refid="4662c8b9-64b5-11dd-a5e7-1d9a5ad8173d" />
                                   </currentCard>
+                                  <viewedCards>
+                                    <object refid="4662c8b9-64b5-11dd-a5e7-1d9a5ad8173d" />
+                                  </viewedCards>
                                 </OTCardContainer>
                                 <object refid="29dc5ef0-c453-11dc-95ff-0800200c9a66" />
                                 <OTUDLMenu id="4662c8b8-64b5-11dd-a5e7-1d9a5ad8173d" showBorder="false">
@@ -6088,9 +6150,17 @@ function getLastValidLabel(){
                                     <OTDataAxis max="10.0" units="V" min="-10.0" label="Voltage" />
                                   </yDataAxis>
                                 </OTDataCollector>
+                                <OTSnapshotButton id="03c2e16c-7389-11dd-9e8a-efc9ed032a7a" name="Snapshot button">
+                                  <target>
+                                    <object refid="4f72223a-cdca-11dc-8ae1-ef1e138f3b5b" />
+                                  </target>
+                                  <snapshotAlbum>
+                                    <object refid="${album}" />
+                                  </snapshotAlbum>
+                                </OTSnapshotButton>
                               </documentRefs>
                             </OTUDLCompoundDoc>
-                            <OTUDLCompoundDoc name="%8e47d05a-cdc3-11dc-bd2b-dd05e7961664" showDefinitions="true">
+                            <OTUDLCompoundDoc id="4e5e0956-cdc1-11dc-bd2b-dd05e7961664/cards[7]" name="%8e47d05a-cdc3-11dc-bd2b-dd05e7961664" showDefinitions="true">
                               <bodyText>
                                 <div class="buffer">
                                   <div class="border">
@@ -6115,8 +6185,8 @@ function getLastValidLabel(){
                                               <li>
                                                 Crank the Genecon gently for 5 seconds,
                                                 <br />
-                                                so that the light 
-              glows just a little.
+                                                so that the 
+                    light glows just a little.
                                               </li>
                                               <li>Wait 5 seconds.</li>
                                               <li>Crank the Genecon at a medium speed.</li>
@@ -6128,6 +6198,10 @@ function getLastValidLabel(){
                                           </td>
                                           <td width="60%">
                                             <object refid="99b1b3a0-cdca-11dc-8ae1-ef1e138f3b5b" />
+                                            <br />
+                                            <br />
+                                            <object refid="3bf10d7b-7389-11dd-9e8a-efc9ed032a7a" />
+                                            <br />
                                           </td>
                                         </tr>
                                       </table>
@@ -6137,9 +6211,17 @@ function getLastValidLabel(){
                               </bodyText>
                               <documentRefs>
                                 <object refid="99b1b3a0-cdca-11dc-8ae1-ef1e138f3b5b" />
+                                <OTSnapshotButton id="3bf10d7b-7389-11dd-9e8a-efc9ed032a7a" name="Snapshot button">
+                                  <target>
+                                    <object refid="99b1b3a0-cdca-11dc-8ae1-ef1e138f3b5b" />
+                                  </target>
+                                  <snapshotAlbum>
+                                    <object refid="${album}" />
+                                  </snapshotAlbum>
+                                </OTSnapshotButton>
                               </documentRefs>
                             </OTUDLCompoundDoc>
-                            <OTUDLCompoundDoc name="%c2e5c90b-cdc6-11dc-bd2b-dd05e7961664" showDefinitions="true">
+                            <OTUDLCompoundDoc id="4e5e0956-cdc1-11dc-bd2b-dd05e7961664/cards[8]" name="%c2e5c90b-cdc6-11dc-bd2b-dd05e7961664" showDefinitions="true">
                               <bodyText>
                                 <div class="buffer">
                                   <div class="border">
@@ -6197,7 +6279,7 @@ function getLastValidLabel(){
                                 </OTSnapshotButton>
                               </documentRefs>
                             </OTUDLCompoundDoc>
-                            <OTUDLCompoundDoc name="%893a7d8c-cdc7-11dc-bd2b-dd05e7961664" showDefinitions="true">
+                            <OTUDLCompoundDoc id="4e5e0956-cdc1-11dc-bd2b-dd05e7961664/cards[9]" name="%893a7d8c-cdc7-11dc-bd2b-dd05e7961664" showDefinitions="true">
                               <bodyText>
                                 <div class="buffer">
                                   <div class="border">
@@ -6219,7 +6301,7 @@ function getLastValidLabel(){
                 prediction.
                                             <br />
                                             <br />
-                                            <div style="padding-right: 2px; border-top-width: 1px; border-bottom-width: 1px; margin-left: 5px; padding-left: 2px; margin-bottom: 5px; border-left-width: 1px; padding-top: 2px; border-style: solid; padding-bottom: 2px; border-color: black; border-right-width: 1px; margin-right: 5px; margin-top: 5px">
+                                            <div style="padding-bottom: 2px; border-right-width: 1px; margin-bottom: 5px; border-bottom-width: 1px; margin-left: 5px; border-top-width: 1px; border-left-width: 1px; padding-top: 2px; border-style: solid; padding-left: 2px; border-color: black; padding-right: 2px; margin-right: 5px; margin-top: 5px">
                                               <object refid="29e95411-64b8-11dd-81ae-a16f389bc712" />
                                               <br />
                                               <object viewid="29dc5ef0-c453-11dc-95ff-0800200c9a66" refid="29e95412-64b8-11dd-81ae-a16f389bc712" />
@@ -6228,6 +6310,10 @@ function getLastValidLabel(){
                                           </td>
                                           <td width="60%">
                                             <object refid="2f95c024-e0c3-11dc-8b8f-579135bdfd8c" />
+                                            <br />
+                                            <br />
+                                            <object refid="536a931f-7389-11dd-9e8a-efc9ed032a7a" />
+                                            <br />
                                           </td>
                                         </tr>
                                       </table>
@@ -6293,6 +6379,9 @@ function getLastValidLabel(){
                                   <currentCard>
                                     <object refid="29e9a233-64b8-11dd-81ae-a16f389bc712" />
                                   </currentCard>
+                                  <viewedCards>
+                                    <object refid="29e9a233-64b8-11dd-81ae-a16f389bc712" />
+                                  </viewedCards>
                                 </OTCardContainer>
                                 <object refid="29dc5ef0-c453-11dc-95ff-0800200c9a66" />
                                 <OTUDLMenu id="29e95412-64b8-11dd-81ae-a16f389bc712" showBorder="false">
@@ -6333,7 +6422,7 @@ function getLastValidLabel(){
                                   <graphables>
                                     <OTDataGraphable name="Data Graph" connectPoints="true" controllable="true" yColumn="1" drawMarks="false" color="16711680" xColumn="0" lineWidth="2.0" locked="true">
                                       <dataStore>
-                                        <object refid="99b1b3a4-cdca-11dc-8ae1-ef1e138f3b5b" />
+                                        <OTDataStore id="99b1b3a4-cdca-11dc-8ae1-ef1e138f3b5b" numberChannels="2" />
                                       </dataStore>
                                     </OTDataGraphable>
                                     <OTDataGraphable name="test-volts" connectPoints="true" yColumn="1" drawMarks="false" color="255" xColumn="0" lineWidth="2.0" locked="true">
@@ -6346,9 +6435,17 @@ function getLastValidLabel(){
                                     </OTDataGraphable>
                                   </graphables>
                                 </OTDataCollector>
+                                <OTSnapshotButton id="536a931f-7389-11dd-9e8a-efc9ed032a7a" name="Snapshot button">
+                                  <target>
+                                    <object refid="2f95c024-e0c3-11dc-8b8f-579135bdfd8c" />
+                                  </target>
+                                  <snapshotAlbum>
+                                    <object refid="${album}" />
+                                  </snapshotAlbum>
+                                </OTSnapshotButton>
                               </documentRefs>
                             </OTUDLCompoundDoc>
-                            <OTUDLCompoundDoc name="%d61b6e5d-cdc7-11dc-bd2b-dd05e7961664" showDefinitions="true">
+                            <OTUDLCompoundDoc id="4e5e0956-cdc1-11dc-bd2b-dd05e7961664/cards[10]" name="%d61b6e5d-cdc7-11dc-bd2b-dd05e7961664" showDefinitions="true">
                               <bodyText>
                                 <div class="buffer">
                                   <div class="border">
@@ -6367,7 +6464,7 @@ function getLastValidLabel(){
                                         <tr>
                                           <td width="40%">
                                             <br />
-                                            <div style="padding-right: 2px; border-top-width: 1px; border-bottom-width: 1px; margin-left: 5px; padding-left: 2px; margin-bottom: 5px; border-left-width: 1px; padding-top: 2px; border-style: solid; padding-bottom: 2px; border-color: black; border-right-width: 1px; margin-right: 5px; margin-top: 5px">
+                                            <div style="padding-bottom: 2px; border-right-width: 1px; margin-bottom: 5px; border-bottom-width: 1px; margin-left: 5px; border-top-width: 1px; border-left-width: 1px; padding-top: 2px; border-style: solid; padding-left: 2px; border-color: black; padding-right: 2px; margin-right: 5px; margin-top: 5px">
                                               <object refid="f7f4abd7-64b8-11dd-81ae-a16f389bc712" />
                                               <br />
                                               <object viewid="29dc5ef0-c453-11dc-95ff-0800200c9a66" refid="f7f4abd8-64b8-11dd-81ae-a16f389bc712" />
@@ -6375,6 +6472,10 @@ function getLastValidLabel(){
                                           </td>
                                           <td width="60%">
                                             <object refid="4d015ea5-cdcc-11dc-8ae1-ef1e138f3b5b" />
+                                            <br />
+                                            <br />
+                                            <object refid="6feaded2-7389-11dd-9e8a-efc9ed032a7a" />
+                                            <br />
                                           </td>
                                         </tr>
                                       </table>
@@ -6429,6 +6530,9 @@ function getLastValidLabel(){
                                   <currentCard>
                                     <object refid="7637d28b-64b9-11dd-81ae-a16f389bc712" />
                                   </currentCard>
+                                  <viewedCards>
+                                    <object refid="7637d28b-64b9-11dd-81ae-a16f389bc712" />
+                                  </viewedCards>
                                 </OTCardContainer>
                                 <object refid="29dc5ef0-c453-11dc-95ff-0800200c9a66" />
                                 <OTUDLMenu id="f7f4abd8-64b8-11dd-81ae-a16f389bc712" showBorder="false">
@@ -6482,9 +6586,17 @@ function getLastValidLabel(){
                                     </OTDataGraphable>
                                   </graphables>
                                 </OTDataCollector>
+                                <OTSnapshotButton id="6feaded2-7389-11dd-9e8a-efc9ed032a7a" name="Snapshot button">
+                                  <target>
+                                    <object refid="4d015ea5-cdcc-11dc-8ae1-ef1e138f3b5b" />
+                                  </target>
+                                  <snapshotAlbum>
+                                    <object refid="${album}" />
+                                  </snapshotAlbum>
+                                </OTSnapshotButton>
                               </documentRefs>
                             </OTUDLCompoundDoc>
-                            <OTUDLCompoundDoc name="%e8a2d1a0-cdc8-11dc-bd2b-dd05e7961664" showDefinitions="true">
+                            <OTUDLCompoundDoc id="4e5e0956-cdc1-11dc-bd2b-dd05e7961664/cards[11]" name="%e8a2d1a0-cdc8-11dc-bd2b-dd05e7961664" showDefinitions="true">
                               <bodyText>
                                 <div class="buffer">
                                   <div class="border">
@@ -6499,14 +6611,18 @@ function getLastValidLabel(){
                                           </td>
                                         </tr>
                                       </table>
-                                      Draw a picture of the circuit that you made with the Genecon, the 
+                                      <table width="100%">
+                                        <tr>
+                                          <td width="30%">Draw a picture of the circuit that you made with the Genecon, the 
           two holiday lights and the voltage sensor. You can use the stamp 
-          tools on the right.
-                                      <br />
-                                      <br />
-                                      <object refid="ae7a10f7-cdcc-11dc-8ae1-ef1e138f3b5b" />
-                                      <br />
-                                      <object refid="99a7e847-fc0b-11dc-b1aa-698c3162a725" />
+          tools on the right.</td>
+                                          <td width="70%" style="padding-left: 20px; padding-right: 20px">
+                                            <object refid="ae7a10f7-cdcc-11dc-8ae1-ef1e138f3b5b" />
+                                            <br />
+                                            <object refid="99a7e847-fc0b-11dc-b1aa-698c3162a725" />
+                                          </td>
+                                        </tr>
+                                      </table>
                                     </div>
                                   </div>
                                 </div>
@@ -6514,9 +6630,9 @@ function getLastValidLabel(){
                               <documentRefs>
                                 <OTDrawingTool2 id="ae7a10f7-cdcc-11dc-8ae1-ef1e138f3b5b" name="Draw tool">
                                   <stamps>
-                                    <OTDrawingStamp id="ae7a10f7-cdcc-11dc-8ae1-ef1e138f3b5b/stamps[0]" src="http://udl.concord.org/artwork/elect_56/bulb_stamp/el_56_bulb_stamp.jpg" imageURL="http://udl.concord.org/artwork/elect_56/bulb_stamp/el_56_bulb_stamp.jpg" />
+                                    <OTDrawingStamp src="http://udl.concord.org/artwork/elect_56/bulb_stamp/el_56_bulb_stamp.jpg" imageURL="http://udl.concord.org/artwork/elect_56/bulb_stamp/el_56_bulb_stamp.jpg" />
                                     <OTDrawingStamp src="http://udl.concord.org/artwork/http://udl.concord.org/artwork/elect_56/genecon-stamp/el_56_genecon_stamp.jpgel_56_genecon_stamp.jpg" imageURL="http://udl.concord.org/artwork/http://udl.concord.org/artwork/elect_56/genecon-stamp/el_56_genecon_stamp.jpgel_56_genecon_stamp.jpg" />
-                                    <OTDrawingStamp id="ae7a10f7-cdcc-11dc-8ae1-ef1e138f3b5b/stamps[2]" src="http://udl.concord.org/artwork/elect_34/voltsensor_stamp/el_34_voltsensor_stamp.jpg" imageURL="http://udl.concord.org/artwork/elect_34/voltsensor_stamp/el_34_voltsensor_stamp.jpg" />
+                                    <OTDrawingStamp src="http://udl.concord.org/artwork/elect_34/voltsensor_stamp/el_34_voltsensor_stamp.jpg" imageURL="http://udl.concord.org/artwork/elect_34/voltsensor_stamp/el_34_voltsensor_stamp.jpg" />
                                   </stamps>
                                   <graphables>
                                     <OTDrawingShape type="" fillType="clear" x="443.0" y="-182.0" width="0.0" height="0.0" color="0x000000" strokeWidth="2.0" />
@@ -6536,16 +6652,6 @@ function getLastValidLabel(){
                                     <object refid="b95c06b9-e163-11dc-98aa-41cb5a58d76d" />
                                     <OTDrawingShape type="" fillType="clear" x="0.0" y="0.0" width="0.0" height="0.0" color="0x000000" strokeWidth="2.0" />
                                     <OTDrawingShape type="" fillType="clear" x="0.0" y="0.0" width="0.0" height="0.0" color="0x000000" strokeWidth="2.0" />
-                                    <OTDrawingImageIcon x="392.0" y="-71.0">
-                                      <stamp>
-                                        <object refid="ae7a10f7-cdcc-11dc-8ae1-ef1e138f3b5b/stamps[0]" />
-                                      </stamp>
-                                    </OTDrawingImageIcon>
-                                    <OTDrawingImageIcon x="217.0" y="-151.0">
-                                      <stamp>
-                                        <object refid="ae7a10f7-cdcc-11dc-8ae1-ef1e138f3b5b/stamps[2]" />
-                                      </stamp>
-                                    </OTDrawingImageIcon>
                                     <OTDrawingShape type="" fillType="clear" x="0.0" y="0.0" width="0.0" height="0.0" color="0x000000" strokeWidth="2.0" />
                                   </graphables>
                                 </OTDrawingTool2>
@@ -6559,7 +6665,7 @@ function getLastValidLabel(){
                                 </OTSnapshotButton>
                               </documentRefs>
                             </OTUDLCompoundDoc>
-                            <OTUDLCompoundDoc name="%2292aa82-cdc9-11dc-bd2b-dd05e7961664" showDefinitions="true">
+                            <OTUDLCompoundDoc id="4e5e0956-cdc1-11dc-bd2b-dd05e7961664/cards[12]" name="%2292aa82-cdc9-11dc-bd2b-dd05e7961664" showDefinitions="true">
                               <bodyText>
                                 <div class="buffer">
                                   <div class="border">
@@ -6631,8 +6737,23 @@ function getLastValidLabel(){
                             </OTUDLCompoundDoc>
                           </cards>
                           <currentCard>
-                            <object refid="4e5e0955-cdc1-11dc-bd2b-dd05e7961664" />
+                            <object refid="4e5e0956-cdc1-11dc-bd2b-dd05e7961664/cards[12]" />
                           </currentCard>
+                          <viewedCards>
+                            <object refid="4e5e0955-cdc1-11dc-bd2b-dd05e7961664" />
+                            <object refid="4e5e0956-cdc1-11dc-bd2b-dd05e7961664/cards[1]" />
+                            <object refid="4e5e0956-cdc1-11dc-bd2b-dd05e7961664/cards[2]" />
+                            <object refid="4e5e0956-cdc1-11dc-bd2b-dd05e7961664/cards[3]" />
+                            <object refid="e1385726-6d50-11dd-ac9a-cb602d69c6ea" />
+                            <object refid="4e5e0956-cdc1-11dc-bd2b-dd05e7961664/cards[5]" />
+                            <object refid="4e5e0956-cdc1-11dc-bd2b-dd05e7961664/cards[6]" />
+                            <object refid="4e5e0956-cdc1-11dc-bd2b-dd05e7961664/cards[7]" />
+                            <object refid="4e5e0956-cdc1-11dc-bd2b-dd05e7961664/cards[8]" />
+                            <object refid="4e5e0956-cdc1-11dc-bd2b-dd05e7961664/cards[9]" />
+                            <object refid="4e5e0956-cdc1-11dc-bd2b-dd05e7961664/cards[10]" />
+                            <object refid="4e5e0956-cdc1-11dc-bd2b-dd05e7961664/cards[11]" />
+                            <object refid="4e5e0956-cdc1-11dc-bd2b-dd05e7961664/cards[12]" />
+                          </viewedCards>
                         </OTCardContainer>
                       </content>
                       <header>
@@ -8345,6 +8466,11 @@ and each
                   <currentCard>
                     <object refid="${section_0}" />
                   </currentCard>
+                  <viewedCards>
+                    <object refid="${section_0}" />
+                    <object refid="${section_2}" />
+                    <object refid="${section_5}" />
+                  </viewedCards>
                 </OTCardContainer>
                 <object refid="${authoring-script}" />
               </layers>
