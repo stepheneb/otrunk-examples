@@ -1,24 +1,15 @@
 
-puts "ruby script: 'check_penny_answer.rb' evaluated"
+DEBUG=true
 
-# require $otrunk_ruby_script_tools
-# require $label_range_response
 eval Java::JavaLang::String.new($otrunk_ruby_script_tools.src).to_s
 eval Java::JavaLang::String.new($label_range_response.src).to_s
 
-def self.init
-  # This is currently not called when the script is run from an OTScriptButton object.
-  # The init method is only called when a script is run from an OTScriptObject onject.
-  puts "self.init called"
-end
+# correct_range = { :range => 5..14, :axis => :x }
+correct_range = { :range => 30.0..31.0, :axis => :y }
 
-def self.clicked
-  @label_range_response.clicked
-end
-
-correct_range = 5..16
 response_key = {
-  :no_label_entered => { :text => "Use the label tool to add a label to the graph!" },
+  :response_type => :label,
+  :no_answer_entered => { :text => "Use the label tool to add a label to the graph!" },
   :correct => 
     { :text => "That's correct!\nNow you can move on to the next page", 
       :hightlight_region => false },
@@ -31,4 +22,9 @@ response_key = {
     { :text => "Oops, that's not correct.\nThe area where the line is going slowly upwards in now marked.\nTry adding a label in that region.", 
       :hightlight_region => true }
 }
+
 @label_range_response = LabelRangeResponse.new($graph, $smart, $correct, $times_incorrect, correct_range, response_key)
+
+def self.clicked
+  @label_range_response.clicked
+end

@@ -15,7 +15,10 @@ class LabelRangeResponse
   # Within a class deﬁnition, Ruby will parse 'correct ='
   # as an assignment to a local variable named 'correct'.
   #
-  # So within the class definition
+  # So within the class definition I need to use this form:
+  #
+  #   self.correct = 
+  #
   def correct=(value)
     @ot_correct.setValue(value)
   end
@@ -33,12 +36,12 @@ class LabelRangeResponse
   end
   
   def clicked
-    unless lastLabel = last_valid_label(ot_graph.getLabels)
+    response = get_response
+    unless response
       self.correct = false
-      update(@response_key[:no_label_entered])
+      update(@response_key[:no_answer_entered])
     else
-      x = lastLabel.getXData
-      if check_condition_with_paramaters(x, correct_range)
+      if response[:correct]
         self.correct = true
         update(@response_key[:correct])
       else
@@ -56,6 +59,20 @@ class LabelRangeResponse
     end
   end
 
+  def get_response
+    case @response_key[:response_type]
+    when :label
+      if lastLabel = last_valid_label(@ot_graph.getLabels)
+        response = { :x => lastLabel.getXData, :y => lastLabel.getYData }
+        response.merge!( { :correct => check_condition_with_parameters(response[@correct_range[:axis]], @correct_range[:range]) })
+      else
+        false
+      end
+    when :number
+      false
+    end
+  end
+
   def update(key)
     update_region_highlighting(key[:hightlight_region])
     show_message(key[:text])
@@ -64,15 +81,48 @@ class LabelRangeResponse
   def update_region_highlighting(highlight_state)
     case highlight_state
     when true
-      ot_smart.showRegionLabel(@correct_range.first, @correct_range.last)
+      case @correct_range[:axis]
+      when :x
+        @ot_smart.showRegionLabel(@correct_range[:range].first, @correct_range[:range].last)
+      when :y
+        data = get_graph_data(@ot_graph)
+        regions = find_y_regions(data, @correct_range[:range])
+        regions.each { |region| @ot_smart.showRegionLabel(region.first, region.last) }
+      end
     when false
       ot_smart.removeAllRegionLabels      
     end
   end
   
+  def find_y_regions(data, yrange)
+    regions = []
+    point = data[0]
+    if yrange.include?(point[1])
+      region_started = point[0]
+    else
+      region_started = false
+    end
+    data.each do |point|
+      if region_started && ! yrange.include?(point[1])
+        regions << (region_started..point[0])
+        region_started = false
+      end
+      next if region_started
+      region_started = point[0] if yrange.include?(point[1])
+    end
+    regions << (region_started..data.last[0]) if region_started
+    if DEBUG 
+      puts "find_y_regions: #{regions.length}"
+      puts data.length
+      data.each { |p| puts p.join(', ') }
+      puts regions.join(', ')
+    end
+    regions
+  end
+  
   # returns true if value is within range
   # returns false otherwise
-  def check_condition_with_paramaters(value, range)
+  def check_condition_with_parameters(value, range)
     range.include?(value)
   end
 end
