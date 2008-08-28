@@ -67,6 +67,7 @@
     <import class="org.concord.otrunk.ui.OTObjectSet"/>
     <import class="org.concord.otrunk.ui.OTSoundPlayer" />
     <import class="org.concord.otrunk.ui.OTText" />
+    <import class="org.concord.otrunk.ui.question.OTQuestionViewConfig" />
     <import class="org.concord.otrunk.ui.snapshot.OTSnapshot" />
     <import class="org.concord.otrunk.ui.snapshot.OTSnapshotButton" />
     <import class="org.concord.otrunk.ui.snapshot.OTSnapshotAlbum" />
@@ -184,7 +185,86 @@
                   <OTViewEntry objectClass="org.concord.otrunk.udl3.OTUDLMenu" viewClass="org.concord.otrunk.udl.ui.OTUDLMenuPageEditView" />
                 </entry>
                 <entry key="${question-view}">
-                  <OTViewEntry objectClass="org.concord.otrunk.udl.question.OTUDLQuestion" viewClass="org.concord.otrunk.udl.question.OTUDLQuestionEditView" />
+                  <OTQuestionViewConfig objectClass="org.concord.otrunk.udl.question.OTUDLQuestion" viewClass="org.concord.otrunk.udl.question.OTUDLQuestionEditView">
+                  	<additionalInputTypes>
+                  	    <OTCompoundDoc name="Smart graph label" showEditBar="false">
+                  			<bodyText>
+                  				<table>
+                  					<tr>
+                  						<td width="100px">
+                  							<object refid="${smart-script-button}"/>
+                  						</td>
+                  						<td width="100px">
+                  							<object refid="${smart-script-button-setup}" viewid="${script-button-for-authors}"/>
+                  						</td>
+                  					</tr>
+                  				</table>
+                  			</bodyText>
+                  			<documentRefs>
+                  				<OTText local_id="smart-text-input"/>
+                  				<OTScriptButton local_id="smart-script-button" text="Check answer">
+                  					<script>
+			                      		<OTJavascript>
+			                      			<script>
+function clicked(){
+
+}
+			                      			</script>
+			                      		</OTJavascript>
+			                      	</script>
+                      			</OTScriptButton>
+                  				<OTScriptButton local_id="smart-script-button-setup" text="Setup">
+                  					<script>
+                  						<OTJavascript src="../scripts/set-up-smartgraph-button-script.js"/>
+			                      	</script>
+			                      	<scriptVariables>
+			                      		<OTScriptVariable name="script_button" reference="${smart-script-button}"/>
+			                      		<OTScriptVariableComponent name="script_button_component" reference="${smart-script-button}"/>
+			                      	</scriptVariables>
+                  				</OTScriptButton>
+                  			</documentRefs>
+                  		</OTCompoundDoc>
+                  		<OTCompoundDoc name="Smart graph text" showEditBar="false">
+                  			<bodyText>
+                  				<object refid="${smart-text-input-text}"/><br/>
+                  				<table>
+                  					<tr>
+                  						<td width="100px">
+                  							<object refid="${smart-script-button-text}"/>
+                  						</td>
+                  						<td width="100px">
+                  							<object refid="${smart-script-button-setup-text}" viewid="${script-button-for-authors}"/>
+                  						</td>
+                  					</tr>
+                  				</table>
+                  			</bodyText>
+                  			<documentRefs>
+                  				<OTText local_id="smart-text-input-text"/>
+                  				<OTScriptButton local_id="smart-script-button-text" text="Check answer">
+                  					<script>
+			                      		<OTJavascript>
+			                      			<script>
+function clicked(){
+
+}
+			                      			</script>
+			                      		</OTJavascript>
+			                      	</script>
+                      			</OTScriptButton>
+                  				<OTScriptButton local_id="smart-script-button-setup-text" text="Setup">
+                  					<script>
+                  						<OTJavascript src="../scripts/set-up-smartgraph-button-script.js"/>
+			                      	</script>
+			                      	<scriptVariables>
+			                      		<OTScriptVariable name="text_field" reference="${smart-text-input}"/>
+			                      		<OTScriptVariable name="script_button" reference="${smart-script-button-text}"/>
+			                      		<OTScriptVariableComponent name="script_button_component" reference="${smart-script-button-text}"/>
+			                      	</scriptVariables>
+                  				</OTScriptButton>
+                  			</documentRefs>
+                  		</OTCompoundDoc>
+                  	</additionalInputTypes>
+                  </OTQuestionViewConfig>
                 </entry>
                 <entry key="${menu-vertical}">
                   <OTViewEntry objectClass="org.concord.otrunk.udl3.OTUDLMenu" viewClass="org.concord.otrunk.udl.ui.OTUDLMenuSectionEditView" />
@@ -272,7 +352,7 @@
                       		</div>				
                       	</bodyText>
                       	<documentRefs>
-                      		<OTCardContainer local_id="inner_page_cards">
+                      		<OTCardContainer local_id="inner_page_cards" contentsMayScroll="false">
                       			<cards>
                       				<OTUDLCompoundDoc bodyText=""/>
                       			</cards>
@@ -396,6 +476,9 @@ function getLastValidLabel(){
                 <entry key="${script-button-view}">
                 	<OTViewEntry objectClass="org.concord.otrunk.script.ui.OTScriptButton" viewClass="org.concord.otrunk.script.ui.OTScriptButtonEditView"/>
                 </entry>
+                <entry key="${script-button-for-authors}">
+                	<OTViewEntry objectClass="org.concord.otrunk.script.ui.OTScriptButton" viewClass="org.concord.otrunk.script.ui.OTScriptButtonView"/>
+                </entry>
                 <entry key="${smart-graph-script-view}">
                 	<OTViewEntry objectClass="org.concord.otrunk.udl.util.OTSmartGraphScriptButton" viewClass="org.concord.otrunk.udl.util.OTSmartGraphScriptButtonEditView"/>
                 </entry>
@@ -416,6 +499,7 @@ function getLastValidLabel(){
             <OTViewEntry local_id="smart-graph-script-view" objectClass="org.concord.otrunk.udl.util.OTSmartGraphScriptButton" viewClass="org.concord.otrunk.script.ui.OTScriptButtonView"/>
             <OTViewEntry objectClass="org.concord.otrunk.ui.OTObjectSet" viewClass="org.concord.otrunk.ui.swing.OTObjectSetView"/>
             <OTViewEntry local_id="script-button-view" objectClass="org.concord.otrunk.script.ui.OTScriptButton" viewClass="org.concord.otrunk.script.ui.OTScriptButtonView"/>
+            <OTViewEntry local_id="script-button-for-authors" objectClass="org.concord.otrunk.script.ui.OTScriptButton" viewClass="org.concord.otrunk.ui.swing.OTNullView"/>
             <OTViewEntry objectClass="org.concord.otrunk.udl.document.OTGlossary" viewClass="org.concord.otrunk.udl.document.OTGlossaryView"/>
             <OTViewEntry objectClass="org.concord.otrunk.udl.document.OTDefinition" viewClass="org.concord.otrunk.udl.document.OTDefinitionView"/>
             <OTViewEntry objectClass="org.concord.otrunk.ui.OTLayerContainer" viewClass="org.concord.otrunk.ui.swing.OTLayerContainerView"/>
