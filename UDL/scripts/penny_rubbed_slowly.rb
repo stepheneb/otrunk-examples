@@ -24,7 +24,7 @@ response_key = {
       :hightlight_region => true }
 }
 
-@label_range_response = LabelRangeResponse.new(response_key, $graph, $smart, $correct, $times_incorrect)
+@label_range_response = LabelRangeResponse.new(response_key, $graph, $smart, $correct, $times_incorrect, $Question)
 
 def self.clicked
   @label_range_response.clicked
