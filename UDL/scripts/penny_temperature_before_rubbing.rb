@@ -16,10 +16,10 @@ response_key = {
   :first_wrong_answer => 
     { :text => "Oops, that's not correct.\nThink about the change in the penny's temperature after the rubbing started.\nNow look at the graph just before that change." },
   :second_wrong_answer => 
-    { :text => "Oops, that's still not correct.\nThe area before the penny was rubbed is now marked.\nTry adding a label in that region.", 
+    { :text => "Oops, that's still not correct.\nThe region on the graph before the penny was rubbed is now marked.\nWhat temperature is the penny in that region.", 
       :hightlight_region => true },
   :multiple_wrong_answers => 
-  { :text => "Oops, that's still not correct.\nThe area before the penny was rubbed is marked.\nTry adding a label in that region.", 
+  { :text => "Oops, that's still not correct.\nThe region on the graph before the penny was rubbed is now marked.\nWhat temperature is the penny in that region.", 
       :hightlight_region => true }
 }
 

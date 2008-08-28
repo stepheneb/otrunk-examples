@@ -19,12 +19,14 @@ class LabelRangeResponse
     if @prompt && @ot_question
       @ot_question.getPrompt.setBodyText(@prompt)
     end
+    @ot_smart.removeAllRegionLabels
   end
   
-  # Within a class deﬁnition, Ruby will parse 'correct ='
+  # Within a class deﬁnition, Ruby will parse the method 'correct='
   # as an assignment to a local variable named 'correct'.
   #
-  # So within the class definition I need to use this form:
+  # So within the class definition I need to use this form
+  # to access the method:
   #
   #   self.correct = 
   #
@@ -121,7 +123,7 @@ class LabelRangeResponse
         regions.each { |region| @ot_smart.showRegionLabel(region.first, region.last) }
       end
     when false
-      ot_smart.removeAllRegionLabels      
+      @ot_smart.removeAllRegionLabels      
     end
   end
   
