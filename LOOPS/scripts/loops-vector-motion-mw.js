@@ -12,6 +12,7 @@ var showTimer = true;
 var blnDoStop = false;
 var integerTimeToStop = -1;
 var playButtonEnabled = true
+var maxTime = scriptState.get("maxTime")
 
 var pageListener = new PageListener() {
 	pageUpdate: function(event) {
@@ -106,6 +107,10 @@ var updateHandler =
 		if (showTimer)
 		{
 			lblTimer.setText(java.lang.Integer.toString(seconds));
+			if ((seconds + 1) > maxTime) {
+				blnDoStop = true;
+				playButtonEnabled = false
+			}
 		}
 		if (blnDoStop){
 			if (integerTimeToStop == -1){

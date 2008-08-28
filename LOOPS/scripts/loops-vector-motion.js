@@ -123,7 +123,7 @@ var stepsHandler =
 		if (showTimer)
 		{
 			lblTimer.setText(java.lang.Integer.toString(seconds));
-			if ((seconds + 1) >= maxTime) {
+			if ((seconds + 1) > maxTime) {
 				blnDoStop = true;
 				playButtonEnabled = false
 			}
