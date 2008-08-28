@@ -10,6 +10,8 @@ function clicked(){
 	if (smart_tool == null){
 		return;
 	}
+	script_button.getScriptVariables().removeAll()
+	
 	script_button.getScriptVariables().add(createScriptVariable(smart_tool, "smart"))
 	
 	var graph = smart_tool.getDataCollector();
@@ -24,6 +26,7 @@ function clicked(){
 	var question = viewContainer.getParentContainer().getParentContainer().getCurrentObject()
 	if (question != null){
 		script_button.getScriptVariables().add(createScriptVariable(question, "question"))
+		question.setContext(graph)
 	}
 	
 	try {
