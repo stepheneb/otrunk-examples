@@ -19,7 +19,7 @@ class LabelRangeResponse
     if @prompt && @ot_question
       @ot_question.getPrompt.setBodyText(@prompt)
     end
-    @ot_smart.removeAllRegionLabels
+    # @ot_smart.removeAllRegionLabels
   end
   
   # Within a class deﬁnition, Ruby will parse the method 'correct='
