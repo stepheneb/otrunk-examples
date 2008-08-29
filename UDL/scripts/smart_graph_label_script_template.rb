@@ -19,14 +19,25 @@ response_key = {
   # learner responds to the question by entering a data point label. 
   :response_type => :label,
   
-  # The value for the :range key is a Ruby Range object.
-  #   <start_of_range>..<end_of_range>
-  # The values for start_of_range and end_of_range can be
-  # Fixnums (Integers) or Floats. Specify a floating point 
-  # by including a decimal point and at least one one digit
-  # to the right of the decimal point.
+  # The value for a :range key can be any of the following:
+  #
+  #   a Ruby Range object
+  #
+  #     <start_of_range>..<end_of_range>
+  #
+  #   The values for start_of_range and end_of_range can be
+  #   Fixnums (Integers) or Floats. Specify a floating point 
+  #   by including a decimal point and at least one one digit
+  #   to the right of the decimal point.
+  #
+  #   Example: 30.0..31.5
+  #
+  #   a Ruby number (Fixnum or Float)
+  #
+  #   Examples: 26, 30.0
   #
   # valid axis values are :x and :y
+  #
   :correct_range => { :range => 0.0..5.0, :axis => :x },
   
   # Optional: specify the highlight_range if it is different than the correct_range

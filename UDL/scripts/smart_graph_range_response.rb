@@ -70,9 +70,9 @@
 class SmartGraphRangeResponse
   include OTrunkRubyScriptTools
   
-  attr_reader :response_key, :ot_graph, :ot_smart, :ot_correct, :ot_times_incorrect, :ot_question
+  attr_reader :response_key, :ot_graph, :ot_smart, :ot_correct, :ot_times_incorrect, :ot_question, :ot_question_text_field
   
-  def initialize(response_key, ot_graph, ot_smart, ot_correct, ot_times_incorrect, ot_question=nil)
+  def initialize(response_key, ot_graph, ot_smart, ot_correct, ot_times_incorrect, ot_question, ot_question_text_field=nil)
     puts "\n\ninitializing new SmartGraphRangeResponse object ...\n" if debugging?
     @response_key = response_key
     @correct_range = @response_key[:correct_range]
@@ -82,6 +82,7 @@ class SmartGraphRangeResponse
     @ot_correct = ot_correct
     @ot_times_incorrect = ot_times_incorrect
     @ot_question = ot_question
+    @ot_question_text_field = ot_question_text_field
     @prompt = @response_key[:prompt]
     if debugging?
       @prompt = "<small><i>(Response Type: #{@response_key[:response_type]}, axis: #{@response_key[:correct_range][:axis]})</i></small><br />" + @prompt
@@ -124,18 +125,6 @@ class SmartGraphRangeResponse
     @ot_times_incorrect.getValue
   end
   
-  def question_number_answer
-    if @ot_question && response = @ot_question.getInput.getText
-      begin
-        answer = Float(response)
-      rescue ArgumentError
-        false
-      end
-    else
-      false
-    end
-  end
-  
   def clicked
     response = get_response
     unless response
@@ -165,22 +154,49 @@ class SmartGraphRangeResponse
     when :label
       if lastLabel = last_valid_label(@ot_graph.getLabels)
         response = { :x => lastLabel.getXData, :y => lastLabel.getYData }
-        response.merge!( { :correct => check_condition_with_parameters(response[@correct_range[:axis]], @correct_range[:range]) })
+        response.merge!( { :correct => (@correct_range[:range] === response[@correct_range[:axis]]) })
       else
         false
       end
     when :number
+      answer = question_number_answer
+      puts "get_response: #{answer}" if debugging?
       if answer = question_number_answer
         case @correct_range[:axis]
         when :x
            response = { :x => answer, :y => nil }
+           puts ":x response: #{response.inspect}" if debugging?
         when :y
           response = { :x => nil, :y => answer }
+          puts ":y response: #{response.inspect}" if debugging?
         end
-        response.merge!( { :correct => check_condition_with_parameters(response[@correct_range[:axis]], @correct_range[:range]) })
+        response.merge!( { :correct => (@correct_range[:range] === response[@correct_range[:axis]]) })
+        if debugging?
+          puts "response[@correct_range[:axis]]: #{response[@correct_range[:axis]]}"
+          puts "@correct_range[:range]: #{@correct_range[:range]}"
+          puts "response result: #{response.inspect}" if debugging?
+        end
+        response
       else
         false
       end
+    end
+  end
+  
+  def question_number_answer
+    if debugging?
+      puts "question_number_answer:"
+      puts "#{@ot_question_text_field}"
+      puts "#{@ot_question_text_field.getText}"
+    end
+    if @ot_question_text_field && response = @ot_question_text_field.getText
+      begin
+        answer = Float(response)
+      rescue ArgumentError
+        false
+      end
+    else
+      false
     end
   end
 
@@ -231,9 +247,4 @@ class SmartGraphRangeResponse
     regions
   end
   
-  # returns true if value is within range
-  # returns false otherwise
-  def check_condition_with_parameters(value, range)
-    range.include?(value)
-  end
 end
