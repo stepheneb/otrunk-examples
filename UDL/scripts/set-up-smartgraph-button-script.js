@@ -4,6 +4,7 @@ importClass(Packages.org.concord.otrunk.util.ObjectChooserUtil);
 
 importClass(Packages.java.lang.System);
 importClass(Packages.java.lang.Class);
+importClass(Packages.java.net.URL);
 
 function clicked(){
 	var smart_tool = getSmartGraphTool()
@@ -12,7 +13,9 @@ function clicked(){
 	}
 	script_button.getScriptVariables().removeAll()
 	
-	script_button.getScriptVariables().add(createScriptVariable(smart_tool, "smart"))
+	script_button.getScriptVariables().add(createScriptVariableRealObject(smart_tool, "smart"))
+	script_button.getScriptVariables().add(createScriptVariable(smart_graph_range_response, "smart_graph_range_response"))
+	script_button.getScriptVariables().add(createScriptVariable(otrunk_ruby_script_tools, "otrunk_ruby_script_tools"))
 	
 	var graph = smart_tool.getDataCollector();
 	script_button.getScriptVariables().add(createScriptVariable(graph, "graph"))
@@ -42,6 +45,13 @@ function getSmartGraphTool(){
 
 function createScriptVariable(ot_object, variable_name){
 	var script_variable = createOTObject("org.concord.otrunk.script.ui.OTScriptVariable")
+	script_variable.setReference(ot_object)
+	script_variable.setName(variable_name)
+	return script_variable
+}
+
+function createScriptVariableRealObject(ot_object, variable_name){
+	var script_variable = createOTObject("org.concord.otrunk.script.ui.OTScriptVariableRealObject")
 	script_variable.setReference(ot_object)
 	script_variable.setName(variable_name)
 	return script_variable

@@ -32,6 +32,7 @@
     <import class="org.concord.otrunk.script.ui.OTScriptVariableComponent" />
     <import class="org.concord.otrunk.script.ui.OTScriptVariableView" />
     <import class="org.concord.otrunk.script.js.OTJavascript" />
+    <import class="org.concord.otrunk.script.jruby.OTJRuby"/>
     <import class="org.concord.otrunk.script.OTScriptEngineBundle" />
     <import class="org.concord.otrunk.script.OTScriptEngineEntry" />
     <import class="org.concord.otrunk.udl.OTUDLVersionContainer" />
@@ -96,7 +97,8 @@
     <import class="org.concord.sensor.state.OTSensorRequest" />
     <import class="org.concord.sensor.state.OTZeroSensor" />
     <import class="org.concord.smartgraph.OTSmartGraphTool" />
-	<import class="org.concord.smartgraph.OTSmartGraphQuestion" />
+    <import class="org.concord.smartgraph.OTSmartGraphQuestion" />
+    <import class="org.concord.framework.otrunk.wrapper.OTBlob" />
   </imports>
   <idMap>
   	<idMapping local_id="css-font" id="23cc14f0-c44f-11dc-95ff-0800200c9a66"/>
@@ -187,83 +189,95 @@
                 <entry key="${question-view}">
                   <OTQuestionViewConfig objectClass="org.concord.otrunk.udl.question.OTUDLQuestion" viewClass="org.concord.otrunk.udl.question.OTUDLQuestionEditView">
                   	<additionalInputTypes>
-                  	    <OTCompoundDoc name="Smart graph label" showEditBar="false">
-                  			<bodyText>
-                  				<table>
-                  					<tr>
-                  						<td width="100px">
-                  							<object refid="${smart-script-button}"/>
-                  						</td>
-                  						<td width="100px">
-                  							<object refid="${smart-script-button-setup}" viewid="${script-button-for-authors}"/>
-                  						</td>
-                  					</tr>
-                  				</table>
-                  			</bodyText>
-                  			<documentRefs>
-                  				<OTText local_id="smart-text-input"/>
-                  				<OTScriptButton local_id="smart-script-button" text="Check answer">
-                  					<script>
-			                      		<OTJavascript>
-			                      			<script>
-function clicked(){
-
-}
-			                      			</script>
-			                      		</OTJavascript>
-			                      	</script>
-                      			</OTScriptButton>
-                  				<OTScriptButton local_id="smart-script-button-setup" text="Setup">
-                  					<script>
-                  						<OTJavascript src="../scripts/set-up-smartgraph-button-script.js"/>
-			                      	</script>
-			                      	<scriptVariables>
-			                      		<OTScriptVariable name="script_button" reference="${smart-script-button}"/>
-			                      		<OTScriptVariableComponent name="script_button_component" reference="${smart-script-button}"/>
-			                      	</scriptVariables>
-                  				</OTScriptButton>
-                  			</documentRefs>
-                  		</OTCompoundDoc>
-                  		<OTCompoundDoc name="Smart graph text" showEditBar="false">
-                  			<bodyText>
-                  				<object refid="${smart-text-input-text}"/><br/>
-                  				<table>
-                  					<tr>
-                  						<td width="100px">
-                  							<object refid="${smart-script-button-text}"/>
-                  						</td>
-                  						<td width="100px">
-                  							<object refid="${smart-script-button-setup-text}" viewid="${script-button-for-authors}"/>
-                  						</td>
-                  					</tr>
-                  				</table>
-                  			</bodyText>
-                  			<documentRefs>
-                  				<OTText local_id="smart-text-input-text"/>
-                  				<OTScriptButton local_id="smart-script-button-text" text="Check answer">
-                  					<script>
-			                      		<OTJavascript>
-			                      			<script>
-function clicked(){
-
-}
-			                      			</script>
-			                      		</OTJavascript>
-			                      	</script>
-                      			</OTScriptButton>
-                  				<OTScriptButton local_id="smart-script-button-setup-text" text="Setup">
-                  					<script>
-                  						<OTJavascript src="../scripts/set-up-smartgraph-button-script.js"/>
-			                      	</script>
-			                      	<scriptVariables>
-			                      		<OTScriptVariable name="text_field" reference="${smart-text-input}"/>
-			                      		<OTScriptVariable name="script_button" reference="${smart-script-button-text}"/>
-			                      		<OTScriptVariableComponent name="script_button_component" reference="${smart-script-button-text}"/>
-			                      	</scriptVariables>
-                  				</OTScriptButton>
-                  			</documentRefs>
-                  		</OTCompoundDoc>
-                  	</additionalInputTypes>
+                      <OTCompoundDoc name="Smart graph label" showEditBar="false">
+                        <bodyText>
+                          <table>
+                            <tr>
+                              <td width="100px">
+                                <object refid="${smart-script-button}"/>
+                              </td>
+                              <td width="100px">
+                                <object refid="${smart-script-button-setup}" viewid="${script-button-for-authors}"/>
+                              </td>
+                            </tr>
+                          </table>
+                        </bodyText>
+                        <documentRefs>
+                          <OTText local_id="smart-text-input"/>
+                          <OTScriptButton local_id="smart-script-button" text="Check answer">
+                            <script>
+                              <OTJRuby src="../scripts/smart_graph_label_script_template.rb">
+                                <script />
+                              </OTJRuby>
+                            </script>
+                          </OTScriptButton>
+                          <OTScriptButton local_id="smart-script-button-setup" text="Setup">
+                            <script>
+                              <OTJavascript src="../scripts/set-up-smartgraph-button-script.js"/>
+                            </script>
+                            <scriptVariables>
+                              <OTScriptVariable name="script_button" reference="${smart-script-button}"/>
+                              <OTScriptVariableComponent name="script_button_component" reference="${smart-script-button}"/>
+                              <OTScriptVariable name="smart_graph_range_response">
+                                <reference>
+                                  <OTBlob src="../scripts/smart_graph_range_response.rb" />
+                                </reference>
+                              </OTScriptVariable>
+                              <OTScriptVariable name="otrunk_ruby_script_tools">
+                                <reference>
+                                  <OTBlob src="../scripts/otrunk_ruby_script_tools.rb" />
+                                </reference>
+                              </OTScriptVariable>
+                            </scriptVariables>
+                          </OTScriptButton>
+                        </documentRefs>
+                      </OTCompoundDoc>
+                      <OTCompoundDoc name="Smart graph number" showEditBar="false">
+                        <bodyText>
+                          <object refid="${smart-text-input-text}"/><br/>
+                          <table>
+                            <tr>
+                              <td width="100px">
+                                <object refid="${smart-script-button-text}"/>
+                              </td>
+                              <td width="100px">
+                                <object refid="${smart-script-button-setup-text}" viewid="${script-button-for-authors}"/>
+                              </td>
+                            </tr>
+                          </table>
+                        </bodyText>
+                        <documentRefs>
+                          <OTText local_id="smart-text-input-text"/>
+                          <OTScriptButton local_id="smart-script-button-text" text="Check answer">
+                            <script>
+                              <OTJRuby src="../scripts/smart_graph_number_script_template.rb">
+                                <script />
+                              </OTJRuby>
+                            </script>
+                          </OTScriptButton>
+                          <OTScriptButton local_id="smart-script-button-setup-text" text="Setup">
+                            <script>
+                              <OTJavascript src="../scripts/set-up-smartgraph-button-script.js"/>
+                            </script>
+                            <scriptVariables>
+                              <OTScriptVariable name="text_field" reference="${smart-text-input}"/>
+                              <OTScriptVariable name="script_button" reference="${smart-script-button-text}"/>
+                              <OTScriptVariableComponent name="script_button_component" reference="${smart-script-button-text}"/>
+                              <OTScriptVariable name="smart_graph_range_response">
+                                <reference>
+                                  <OTBlob src="../scripts/smart_graph_range_response.rb" />
+                                </reference>
+                              </OTScriptVariable>
+                              <OTScriptVariable name="otrunk_ruby_script_tools">
+                                <reference>
+                                  <OTBlob src="../scripts/otrunk_ruby_script_tools.rb" />
+                                </reference>
+                              </OTScriptVariable>
+                            </scriptVariables>
+                          </OTScriptButton>
+                        </documentRefs>
+                      </OTCompoundDoc>
+                    </additionalInputTypes>
                   </OTQuestionViewConfig>
                 </entry>
                 <entry key="${menu-vertical}">

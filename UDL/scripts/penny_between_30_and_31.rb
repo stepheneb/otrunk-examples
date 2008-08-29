@@ -2,7 +2,7 @@
 DEBUG=true
 
 eval Java::JavaLang::String.new($otrunk_ruby_script_tools.src).to_s
-eval Java::JavaLang::String.new($label_range_response.src).to_s
+eval Java::JavaLang::String.new($smart_graph_range_response.src).to_s
 
 response_key = {
   :prompt => "Add a label to the graph showing one of the places where the penny was between 30 and 31 degrees C. Then click the button below to check your answer",
@@ -23,8 +23,8 @@ response_key = {
       :hightlight_region => true }
 }
 
-@label_range_response = LabelRangeResponse.new(response_key, $graph, $smart, $correct, $times_incorrect, $Question)
+@smart_graph_range_response = SmartGraphRangeResponse.new(response_key, $graph, $smart, $correct, $times_incorrect, $Question)
 
 def self.clicked
-  @label_range_response.clicked
+  @smart_graph_range_response.clicked
 end

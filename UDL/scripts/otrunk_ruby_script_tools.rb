@@ -1,5 +1,9 @@
 module OTrunkRubyScriptTools
 
+  def debugging?
+    (defined? DEBUG) && DEBUG == true
+  end
+  
   include_class 'javax.swing.JOptionPane'
 
   # displays message in dialog
@@ -34,7 +38,7 @@ module OTrunkRubyScriptTools
     (ot_resource_list.size-1).times {|i| values << ot_resource_list.get(i) }
     x_values = []
     y_values = []
-    puts "numberChannels #{ot_data_store.getNumberChannels}" if DEBUG 
+    puts "numberChannels #{ot_data_store.getNumberChannels}" if debugging?
     case ot_data_store.getNumberChannels
     when 1
       y_values = values

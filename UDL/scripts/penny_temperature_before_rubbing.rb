@@ -2,7 +2,7 @@
 DEBUG=true
 
 eval Java::JavaLang::String.new($otrunk_ruby_script_tools.src).to_s
-eval Java::JavaLang::String.new($label_range_response.src).to_s
+eval Java::JavaLang::String.new($smart_graph_range_response.src).to_s
 
 response_key = {
   :prompt => "What was the temperature of the penny before the rubbing started? Hint: Look at the Y axis scale on the left, where it says \"Temperature (deg C)\".",
@@ -23,8 +23,8 @@ response_key = {
       :hightlight_region => true }
 }
 
-@label_range_response = LabelRangeResponse.new(response_key, $graph, $smart, $correct, $times_incorrect, $Question)
+@smart_graph_range_response = SmartGraphRangeResponse.new(response_key, $graph, $smart, $correct, $times_incorrect, $Question)
 
 def self.clicked
-  @label_range_response.clicked
+  @smart_graph_range_response.clicked
 end
