@@ -70,10 +70,11 @@ class MyActionListener
     if (evt.getSource().equals( $runpause_button ))
       
       if($model.isRunning())
-          $stderr.puts "pause clicked"
+          # $stderr.puts "pause clicked"
           $blnDoStop = true
       else
-        $stderr.puts "starting model"
+      	$integerTimeToStop = -1
+        # $stderr.puts "starting model"
         $blnDoStop = false
         $model.runScript("run")
 
@@ -120,11 +121,11 @@ def setupPlayButton(strL, enabled)
 end
 
 def postMWInit() 
-  $stderr.puts "MW initialized"
+  # $stderr.puts "MW initialized"
   models = $page.getEmbeddedComponent(org.concord.modeler.ModelCanvas).values().toArray();
   if (models != nil) 
     for i in 0..models.length-1
-      $stderr.puts "Model initialized"
+      # $stderr.puts "Model initialized"
       $model = models[i].getContainer().getModel();
       $model.addUpdateListener($updateListener);
     end

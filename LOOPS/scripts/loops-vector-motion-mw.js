@@ -46,15 +46,15 @@ var actionHandler =
 	{
 		if (evt.getSource().equals( runpause_button ))
 		{
-			blnDoStop = false
-
 			if(model.isRunning())
 			{
-					blnDoStop = true
+				blnDoStop = true
 			}
 			else
 			{
-				System.err.println("starting model")
+				integerTimeToStop = -1
+				// System.err.println("starting model")
+				blnDoStop = false
 				model.runScript("run")
 
 				setupPlayButton("pause", playButtonEnabled)			 
@@ -135,11 +135,11 @@ var updateHandler =
 var updateListener = new UpdateListener(updateHandler);
 
 function postMWInit() {
-	System.err.println("MW initialized")
+	// System.err.println("MW initialized")
 	var models = page.getEmbeddedComponent(Class.forName("org.concord.modeler.ModelCanvas")).values().toArray();
 	if (models != null) {
 		for (var i = 0; i < models.length; i++) {
-			System.err.println("Model initialized")
+			// System.err.println("Model initialized")
 			model = models[i].getContainer().getModel();
 			model.addUpdateListener(updateListener);
 		}
