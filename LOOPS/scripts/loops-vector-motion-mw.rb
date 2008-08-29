@@ -52,7 +52,7 @@ class MyUpdateListener
         $lblTimer.setText($integerTimeToStop.to_s);    
 
         $model.runScript("stop immediately")
-        setupPlayButton("play", $playButtonEnabled)
+        setupPlayButton("start", $playButtonEnabled)
 
         $integerTimeToStop = -1
 
@@ -78,13 +78,13 @@ class MyActionListener
         $blnDoStop = false
         $model.runScript("run")
 
-        setupPlayButton("pause", $playButtonEnabled)      
+        setupPlayButton("stop", $playButtonEnabled)      
       end
     elsif (evt.getSource().equals( $reset_button ))
       $blnDoStop = false
       
       $playButtonEnabled = true
-      setupPlayButton("play", $playButtonEnabled)
+      setupPlayButton("start", $playButtonEnabled)
       $model.runScript("stop; reset")
 
       $lblTimer.setText("0")
@@ -112,10 +112,10 @@ def save()
 end
 
 def setupPlayButton(strL, enabled)
-  if (strL == "play")
-    $runpause_button.setText("Play")
-  elsif (strL == "pause")
-    $runpause_button.setText("Pause")
+  if (strL == "start")
+    $runpause_button.setText("Start")
+  elsif (strL == "stop")
+    $runpause_button.setText("Stop")
   end
   $runpause_button.setEnabled(enabled)
 end

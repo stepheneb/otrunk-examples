@@ -57,7 +57,7 @@ var actionHandler =
 				blnDoStop = false
 				model.runScript("run")
 
-				setupPlayButton("pause", playButtonEnabled)			 
+				setupPlayButton("stop", playButtonEnabled)			 
 			}
 				
 		}
@@ -66,7 +66,7 @@ var actionHandler =
 			blnDoStop = false
 			
 			playButtonEnabled = true
-			setupPlayButton("play", playButtonEnabled)
+			setupPlayButton("start", playButtonEnabled)
 			model.runScript("stop; reset")
 
 			lblTimer.setText("0")
@@ -83,17 +83,17 @@ var actionListener = new ActionListener(actionHandler);
 
 function setupPlayButton(strL, enabled)
 {
-	if (strL.equals("play"))
+	if (strL.equals("start"))
 	{
 //Get rid of icon
 //		startButton.setIcon(playIcon);
-		runpause_button.setText("Play")
+		runpause_button.setText("Start")
 	}
-	else if (strL.equals("pause"))
+	else if (strL.equals("stop"))
 	{
 //Get rid of icon
 //		startButton.setIcon(pauseIcon);
-		runpause_button.setText("Pause")
+		runpause_button.setText("Stop")
 	}
 	runpause_button.setEnabled(enabled)
 }
@@ -123,7 +123,7 @@ var updateHandler =
 				lblTimer.setText(integerTimeToStop);		
 
 				model.runScript("stop")
-				setupPlayButton("play", playButtonEnabled)
+				setupPlayButton("start", playButtonEnabled)
 
 				integerTimeToStop = -1
 
