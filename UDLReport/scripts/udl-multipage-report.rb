@@ -249,6 +249,9 @@ def choiceLabel(chooser, answer)
   chooser.choices.vector.size.times do |i|    
     return labels[i] if answer == chooser.choices.vector[i] 
   end
+  
+  $stderr.puts('udl-multipage-report.rb:choiceLabel: correct answer doesn\'t match any of the choices')  
+  return '-'
 end
 
 # Return user answer for a multi-choice question as a label (a, b, c, etc.)
