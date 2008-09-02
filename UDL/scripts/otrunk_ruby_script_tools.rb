@@ -1,3 +1,4 @@
+
 module OTrunkRubyScriptTools
 
   def debugging?
@@ -5,6 +6,34 @@ module OTrunkRubyScriptTools
   end
   
   include_class 'javax.swing.JOptionPane'
+  include_class 'org.concord.framework.otrunk.view.OTUserListService'
+  include_class 'org.concord.framework.otrunk.OTrunk'
+  include_class 'org.concord.datagraph.state.OTDataGraph'
+  include_class 'org.concord.datagraph.state.OTDataGraphable'
+  include_class 'org.concord.datagraph.state.OTDataGraphManager'
+  include_class 'org.concord.otrunk.script.ui.OTScriptVariable'
+  include_class 'org.concord.framework.otrunk.wrapper.OTString'
+  include_class 'org.concord.framework.otrunk.wrapper.OTInt'
+  
+  def users
+    userListService = $viewContext.getViewService(OTUserListService.java_class)
+    userListService.getUserList()
+  end
+
+  def hasUserModified(obj, user)
+    @otrunk.hasUserModified(obj, user)
+  end
+
+  def userObject(obj, user)
+    @otrunk.getUserRuntimeObject(obj, user);
+  end
+
+  def otCreate(rconstant, &block)
+    otObj = $otObjectService.createObject(rconstant.java_class)
+    yield otObj
+    otObj
+  end
+  
 
   # displays message in dialog
   def show_message(message)
@@ -31,6 +60,9 @@ module OTrunkRubyScriptTools
     end
   end
 
+  # Returns the values for the first channel of the
+  # ot_data_collector's data_store. The values are returned
+  # in an array of 2-element arrays consiting of [x, y] values
   def get_graph_data(ot_data_collector)
     ot_data_store = ot_data_collector.getSource.getDataStore
     ot_resource_list = ot_data_store.getValues
@@ -55,4 +87,20 @@ module OTrunkRubyScriptTools
     end
     [x_values, y_values].transpose
   end
+  
+  # returns the real data_graph object referenced by 
+  # and ot_data_collector
+  def get_real_data_graph(ot_data_collector)
+    # $viewContext.getViewByObject is not yet implemented so this doesn't work
+    # ot_data_collector_view = $viewContext.getViewByObject(ot_data_collector)
+    # data_collector_view = ot_data_collector_view.getDataCollectorView
+    # data_graph = data_collector_view.getDataGraph
+    
+    # this doesn't work either
+    # data_graph = $controllerService.getRealObject(ot_data_collector)
+    
+    # also this doesn't work
+    # $viewContext.getViewService(DataGraphManager)
+  end
+
 end

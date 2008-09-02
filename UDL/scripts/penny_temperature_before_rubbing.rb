@@ -12,15 +12,15 @@ response_key = {
   :no_answer_entered => { :text => "Enter your estimate into the text entry box." },
   :correct => 
     { :text => "That's correct!\nNow you can move on to the next page", 
-      :hightlight_region => false },
+      :highlight_region => false },
   :first_wrong_answer => 
     { :text => "Oops, that's not correct.\nThink about the change in the penny's temperature after the rubbing started.\nNow look at the graph just before that change." },
   :second_wrong_answer => 
     { :text => "Oops, that's still not correct.\nThe region on the graph before the penny was rubbed is now marked.\nWhat temperature is the penny in that region.", 
-      :hightlight_region => true },
+      :highlight_region => true },
   :multiple_wrong_answers => 
   { :text => "Oops, that's still not correct.\nThe region on the graph before the penny was rubbed is now marked.\nWhat temperature is the penny in that region.", 
-      :hightlight_region => true }
+      :highlight_region => true }
 }
 
 @smart_graph_range_response = SmartGraphRangeResponse.new(response_key, $graph, $smart, $correct, $times_incorrect, $Question)

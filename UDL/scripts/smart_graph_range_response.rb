@@ -49,7 +49,7 @@
 # 
 # Elements that specify the interaction when the "Check Answer" button is clicked:
 # 
-#   All of these elements can optionally include a boolean value for :hightlight_region. 
+#   All of these elements can optionally include a boolean value for :highlight_region. 
 #   Valid values are true and false.
 # 
 #   :no_answer_entered
@@ -60,25 +60,25 @@
 # 
 #   Examples:
 #   
-#     :correct => { :text => "That's correct!\nNow you can move on to the next page", :hightlight_region => false }
+#     :correct => { :text => "That's correct!\nNow you can move on to the next page", :highlight_region => false }
 #     
 #     :second_wrong_answer => 
 #       { :text => "Oops, that's still not correct.\nThe region on the graph when the penny was being heated is now marked.\nSubtract the time on the X axis at the start of that region\nfrom the time on the X axis at end of that region.", 
-#         :hightlight_region => true }
+#         :highlight_region => true }
 
       
 class SmartGraphRangeResponse
   include OTrunkRubyScriptTools
   
-  attr_reader :response_key, :ot_graph, :ot_smart, :ot_correct, :ot_times_incorrect, :ot_question, :ot_question_text_field
+  attr_reader :response_key, :ot_data_collector, :smart_graph_tool, :ot_correct, :ot_times_incorrect, :ot_question, :ot_question_text_field, :data_graph
   
-  def initialize(response_key, ot_graph, ot_smart, ot_correct, ot_times_incorrect, ot_question, ot_question_text_field=nil)
+  def initialize(response_key, ot_data_collector, smart_graph_tool, ot_correct, ot_times_incorrect, ot_question, ot_question_text_field=nil)
     puts "\n\ninitializing new SmartGraphRangeResponse object ...\n" if debugging?
     @response_key = response_key
     @correct_range = @response_key[:correct_range]
     @highlight_range = @response_key[:highlight_range] || @correct_range
-    @ot_graph = ot_graph
-    @ot_smart = ot_smart
+    @ot_data_collector = ot_data_collector
+    @smart_graph_tool = smart_graph_tool
     @ot_correct = ot_correct
     @ot_times_incorrect = ot_times_incorrect
     @ot_question = ot_question
@@ -98,7 +98,23 @@ class SmartGraphRangeResponse
         puts "resulting prompt:\n#{@ot_question.getPrompt.getBodyText}\n"
       end
     end
-    @ot_smart.removeAllRegionLabels
+    @smart_graph_tool.removeAllRegionLabels
+    if debugging?
+      puts "-"*20
+      puts "ot_data_collector data: #{@ot_data_collector.class}"
+      puts "-"*20
+      puts "smart_graph_tool data: #{@smart_graph_tool.class}"
+      p_start = @smart_graph_tool.getStart
+      puts "start: #{p_start.class}, #{p_start}"
+      p_end = @smart_graph_tool.getEnd
+      puts "end: #{p_end.class}, #{p_end}"
+      # p_interesting = @smart_graph_tool.getInterestingPoints
+      # puts "interesting: #{p_interesting.class}, #{p_interesting}"
+      # generates error:
+      #   org/concord/data/state/OTDataStoreRealObject.java:214:in 
+      #   `getIndex': java.lang.IndexOutOfBoundsException: 
+      #    Trying to lookup an invalid channel: 1 (NativeException)
+    end
   end
   
   # Within a class deﬁnition, Ruby will parse the method 'correct='
@@ -126,17 +142,33 @@ class SmartGraphRangeResponse
   end
   
   def clicked
+    # I don't yet have function access to the real datagraph object
+    # so this setup for later test of access to the real object is commented out
+    # @data_graph = get_real_data_graph(@ot_data_collector) unless @data_graph
+    # @original_data_graph_title = @data_graph.getTitle unless @original_data_graph_title
     response = get_response
     unless response
       self.correct = false
       update(@response_key[:no_answer_entered])
+      
+      # I don't yet have function access to the real datagraph object
+      # so this test is commented out
+      # @data_graph.setTitle(@original_data_graph_title + "no answer")
     else
       if response[:correct]
         self.correct = true
         update(@response_key[:correct])
+
+        # I don't yet have function access to the real datagraph object
+        # so this test is commented out
+        # @data_graph.setTitle(@original_data_graph_title + "correct")
       else
         self.correct = false
         self.times_incorrect += 1
+
+        # I don't yet have function access to the real datagraph object
+        # so this test is commented out
+        # @data_graph.setTitle(@original_data_graph_title + "times incorrect: #{times_incorrect}")
         case times_incorrect
         when 1
           update(@response_key[:first_wrong_answer])
@@ -152,7 +184,7 @@ class SmartGraphRangeResponse
   def get_response
     case @response_key[:response_type]
     when :label
-      if lastLabel = last_valid_label(@ot_graph.getLabels)
+      if lastLabel = last_valid_label(@ot_data_collector.getLabels)
         response = { :x => lastLabel.getXData, :y => lastLabel.getYData }
         response.merge!( { :correct => (@correct_range[:range] === response[@correct_range[:axis]]) })
       else
@@ -201,7 +233,7 @@ class SmartGraphRangeResponse
   end
 
   def update(key)
-    update_region_highlighting(key[:hightlight_region])
+    update_region_highlighting(key[:highlight_region])
     show_message(key[:text])
   end
   
@@ -210,14 +242,14 @@ class SmartGraphRangeResponse
     when true
       case @highlight_range[:axis]
       when :x
-        @ot_smart.showRegionLabel(@highlight_range[:range].first, @highlight_range[:range].last)
+        @smart_graph_tool.showRegionLabel(@highlight_range[:range].first, @highlight_range[:range].last)
       when :y
-        data = get_graph_data(@ot_graph)
+        data = get_graph_data(@ot_data_collector)
         regions = find_y_regions(data, @highlight_range[:range])
-        regions.each { |region| @ot_smart.showRegionLabel(region.first, region.last) }
+        regions.each { |region| @smart_graph_tool.showRegionLabel(region.first, region.last) }
       end
     when false
-      @ot_smart.removeAllRegionLabels      
+      @smart_graph_tool.removeAllRegionLabels      
     end
   end
   

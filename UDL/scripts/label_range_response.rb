@@ -107,7 +107,7 @@ class LabelRangeResponse
   end
 
   def update(key)
-    update_region_highlighting(key[:hightlight_region])
+    update_region_highlighting(key[:highlight_region])
     show_message(key[:text])
   end
   
