@@ -43,15 +43,15 @@ response_key = {
   # Optional: specify the highlight_range if it is different than the correct_range
   # :highlight_range => { :range => 5..30, :axis => :x },
   :no_answer_entered => 
-    { :text => "Use the label tool to add a label to the graph.", :hightlight_region => false  },
+    { :text => "Use the label tool to add a label to the graph.", :_region => false  },
   :correct => 
-    { :text => "Correct!\nGo on to the next page.", :hightlight_region => false },
+    { :text => "Correct!\nGo on to the next page.", :_region => false },
   :first_wrong_answer => 
-    { :text => "That's not correct.\n", :hightlight_region => false  },
+    { :text => "That's not correct.\n", :_region => false  },
   :second_wrong_answer => 
-    { :text => "That's still not correct.\n", :hightlight_region => true },
+    { :text => "That's still not correct.\n", :_region => true },
   :multiple_wrong_answers => 
-    { :text => "That's still not correct.\n", :hightlight_region => true }
+    { :text => "That's still not correct.\n", :_region => true }
 }
 
 # Create a new SmartGraphRangeResponse object with your response_key and the 
