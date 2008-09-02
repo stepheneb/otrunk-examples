@@ -42,17 +42,17 @@ response_key = {
   
   # Optional: specify the highlight_range if it is different than the correct_range
   # :highlight_range => { :range => 5..30, :axis => :x },
-  :no_answer_entered => { :text => "Use the label tool to add a label to the graph!" },
+  :no_answer_entered => { :text => "Use the label tool to add a label to the graph." },
   :correct => 
-    { :text => "That's correct!\nNow you can move on to the next page", 
+    { :text => "Correct!\nGo on to the next page.", 
       :hightlight_region => false },
   :first_wrong_answer => 
-    { :text => "Oops, that's not correct.\n" },
+    { :text => "That's not correct.\n" },
   :second_wrong_answer => 
-    { :text => "Oops, that's still not correct.\n", 
+    { :text => "That's still not correct.\n", 
       :hightlight_region => true },
   :multiple_wrong_answers => 
-    { :text => "Oops, that's still not correct.\n", 
+    { :text => "That's still not correct.\n", 
       :hightlight_region => true }
 }
 
