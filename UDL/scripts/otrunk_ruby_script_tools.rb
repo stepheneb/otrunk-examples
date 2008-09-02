@@ -10,7 +10,7 @@ module OTrunkRubyScriptTools
   include_class 'org.concord.framework.otrunk.OTrunk'
   include_class 'org.concord.datagraph.state.OTDataGraph'
   include_class 'org.concord.datagraph.state.OTDataGraphable'
-  include_class 'org.concord.datagraph.state.OTDataGraphManager'
+  include_class 'org.concord.datagraph.state.OTDataGraphView'
   include_class 'org.concord.otrunk.script.ui.OTScriptVariable'
   include_class 'org.concord.framework.otrunk.wrapper.OTString'
   include_class 'org.concord.framework.otrunk.wrapper.OTInt'
