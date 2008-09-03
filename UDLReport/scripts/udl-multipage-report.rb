@@ -196,6 +196,32 @@ def visitedSections(user)
   userSectionContainer.viewedCards.vector
 end
 
+# INPUT questions: ruby array of OTUDLQuesiton objects
+# RETURNS array of array of indices
+#         e.g. [[1], [0,2]] means the first question is related to activity 1, 
+#              the second question to activity 0 and 2. 
+def getActivityRefs(questions)
+  activities = activitySections
+  refs = []
+  for question in questions do
+  	questionRefs = []
+    refList = question.getActivityReferences
+    puts 'numrefs=' + refList.size.to_s
+    puts 'numActivities=' + activities.size.to_s
+    $stdout.flush
+    refList.size.times do |i|
+      activities.size.times do |j|
+      	puts i.to_s + ',' + j.to_s + " " + refList.get(i).getReferencedObject.otExternalId + "," + activities[j].otExternalId
+        if activities[j].otExternalId == refList.get(i).getReferencedObject.otExternalId
+      		questionRefs << j  
+        end
+      end
+    end
+    refs << questionRefs
+  end
+  return refs
+end
+
 # ----- summary specific --------------
 
 # ---- section specific -------------
