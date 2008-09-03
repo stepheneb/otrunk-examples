@@ -45,13 +45,13 @@ response_key = {
   :no_answer_entered => 
     { :text => "Use the label tool to add a label to the graph.", :highlight_region => false  },
   :correct => 
-    { :text => "Correct!\nGo on to the next page.", :highlight_region => false },
+    { :text => "Correct! Go on to the next page.", :highlight_region => false },
   :first_wrong_answer => 
-    { :text => "That's not correct.\n", :highlight_region => false  },
+    { :text => "That's not correct. ", :highlight_region => false  },
   :second_wrong_answer => 
-    { :text => "That's still not correct.\n", :highlight_region => true },
+    { :text => "That's still not correct. Add a label to the highlighted part of the graph.", :highlight_region => true },
   :multiple_wrong_answers => 
-    { :text => "That's still not correct.\n", :highlight_region => true }
+    { :text => "That's still not correct. ", :highlight_region => true }
 }
 
 # Create a new SmartGraphRangeResponse object with your response_key and the 
