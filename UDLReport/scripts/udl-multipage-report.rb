@@ -3,23 +3,31 @@ require 'erb'
 include_class 'java.lang.System'
 include_class 'org.concord.framework.otrunk.view.OTUserListService'
 include_class 'org.concord.framework.otrunk.OTrunk'
+include_class 'org.concord.framework.otrunk.wrapper.OTString'
 include_class 'org.concord.datagraph.state.OTDataGraph'
 include_class 'org.concord.datagraph.state.OTDataGraphable'
 include_class 'org.concord.otrunk.script.ui.OTScriptVariable'
-include_class 'org.concord.framework.otrunk.wrapper.OTString'
+include_class 'org.concord.otrunk.udl.UDLContentHelper'
 
 ROWCOLOR1 = "#FFFEE9"
 ROWCOLOR2 = "#FFFFFF"
 
+# Called when the script view is loaded
 def getText
-  @otrunk = $viewContext.getViewService(OTrunk.java_class);
-  @debug = true
+  init
   if $action
     actionStr = $action.string
   else
     actionStr = "default_template"
   end
   eval(actionStr)
+end
+
+def init
+  # Order of statements is probably important here
+  @debug = true  
+  @otrunk = $viewContext.getViewService(OTrunk.java_class)
+  @contentHelper = UDLContentHelper.getUDLContentHelper(activityRoot)  
 end
 
 def default_template
@@ -158,41 +166,20 @@ def activityRoot
   rootObject.reportTemplate.reference
 end
 
-def udlFormatVersion
-  return :version_2 if activityRoot.is_a? org.concord.otrunk.ui.OTModeSwitcher
-  return :version_1 if activityRoot.is_a? org.concord.otrunk.udl3.OTUDLContainer
+def unitTitle
+  return @contentHelper.unitTitle
 end
 
-def layeredContainer
-  activityRoot.otObject
-end
-
-def activityTitle
-  case udlFormatVersion
-  when :version_2
-    layeredContainer.name
-  when :version_1
-    toPlainText( activityRoot.title )
-  end
-  
-  nil
-end
-
-def activitySectionContainer
-  case udlFormatVersion
-  when :version_2
-	layeredContainer.layers.get(0)
-  when :version_1
-    activityRoot.content
-  end 
+def sectionsContainer
+  return @contentHelper.sectionsContainer
 end
 
 def activitySections
-  activitySectionContainer.cards.vector
+  sectionsContainer.cards.vector
 end
 
 def visitedSections(user)
-  userSectionContainer = userObject(activitySectionContainer, user)
+  userSectionContainer = userObject(sectionsContainer, user)
   userSectionContainer.viewedCards.vector
 end
 
