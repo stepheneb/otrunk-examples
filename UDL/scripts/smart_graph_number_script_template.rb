@@ -46,13 +46,16 @@ response_key = {
   # Optional: specify the highlight_range if it is different than the correct_range
   # :highlight_range => { :range => 5..30, :axis => :x },
   :no_answer_entered => 
-    { :text => "Enter your estimate in the box below. Use numbers, no letters.", :highlight_region => false  },
+    { :text => "Enter your estimate in the box below. Use a number, no letters.", :highlight_region => false  },
   :correct => 
     { :text => "Good job! Go to the next page.", :highlight_region => false },
   :first_wrong_answer => 
     { :text => "That's not correct. ", :highlight_region => false  },
   :second_wrong_answer => 
-    { :text => "That's still not correct. ", :highlight_region => true },
+    { :text => "That's still not correct. Read the value of the highlighted part of the graph from the y-axis on the left.", 
+  # { :text => "That's still not correct. Read the value of the highlighted part of the graph from the x-axis along the bottom.", 
+
+    :highlight_region => true },
   :multiple_wrong_answers => 
     { :text => "That's still not correct. ", :highlight_region => true }
 }
