@@ -206,12 +206,8 @@ def getActivityRefs(questions)
   for question in questions do
   	questionRefs = []
     refList = question.getActivityReferences
-    puts 'numrefs=' + refList.size.to_s
-    puts 'numActivities=' + activities.size.to_s
-    $stdout.flush
     refList.size.times do |i|
       activities.size.times do |j|
-      	puts i.to_s + ',' + j.to_s + " " + refList.get(i).getReferencedObject.otExternalId + "," + activities[j].otExternalId
         if activities[j].otExternalId == refList.get(i).getReferencedObject.otExternalId
       		questionRefs << j  
         end
