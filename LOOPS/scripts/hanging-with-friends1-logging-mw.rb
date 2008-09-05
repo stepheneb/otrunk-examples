@@ -9,7 +9,7 @@ import org.concord.modeler.event.ModelEvent
 # import java.lang.Class
 import java.lang.System
 
-$page = $objView.getComponent(0);
+$page = $objView.getPage();
 
 class MyPageListener
   include org.concord.modeler.event.PageListener

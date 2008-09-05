@@ -11,7 +11,7 @@ import java.awt.event.ActionListener
 import java.awt.Font
 
 $model = nil;
-$page = $objView.getComponent(0);
+$page = $objView.getPage();
 $showTimer = true;
 $blnDoStop = false;
 $integerTimeToStop = -1;
