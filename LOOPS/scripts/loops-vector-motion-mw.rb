@@ -112,17 +112,20 @@ def save()
 end
 
 def setupPlayButton(strL, enabled)
+  puts "got #{strL} for playButton"
   if (strL == "start")
-    $runpause_button.setText("Start")
+    puts "Start"
+    $ot_runpause_button.setText("Start")
   elsif (strL == "stop")
-    $runpause_button.setText("Stop")
+    puts "Stop"
+    $ot_runpause_button.setText("Stop")
   end
   $runpause_button.setEnabled(enabled)
 end
 
 def postMWInit() 
   # $stderr.puts "MW initialized"
-  models = $page.getEmbeddedComponent(org.concord.modeler.ModelCanvas).values().toArray();
+  models = $page.getEmbeddedComponent(java.lang.Class.forName("org.concord.modeler.ModelCanvas")).values().toArray();
   if (models != nil) 
     for i in 0..models.length-1
       # $stderr.puts "Model initialized"

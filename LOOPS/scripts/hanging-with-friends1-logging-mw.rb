@@ -56,7 +56,7 @@ end
 
 
 def postMWInit() 
-  models = $page.getEmbeddedComponent(org.concord.modeler.ModelCanvas).values().toArray()
+  models = $page.getEmbeddedComponent(java.lang.Class.forName("org.concord.modeler.ModelCanvas")).values().toArray()
   if (models != nil)
     for i in 0..models.length-1
       $model = models[i].getContainer().getModel()
