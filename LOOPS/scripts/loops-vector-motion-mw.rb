@@ -112,12 +112,12 @@ def save()
 end
 
 def setupPlayButton(strL, enabled)
-  puts "got #{strL} for playButton"
+  # puts "got #{strL} for playButton"
   if (strL == "start")
-    puts "Start"
+    # puts "Start"
     $ot_runpause_button.setText("Start")
   elsif (strL == "stop")
-    puts "Stop"
+    # puts "Stop"
     $ot_runpause_button.setText("Stop")
   end
   $runpause_button.setEnabled(enabled)

@@ -68,7 +68,7 @@ end
 def log_location()
    x = $model.getModelTime()/1000;
    cmX = x.round
-   $stderr.puts "X is: " + x.to_s + ", " + cmX.to_s
+   # $stderr.puts "X is: " + x.to_s + ", " + cmX.to_s
    log_ci("Location", cmX.to_s)
 end
 
