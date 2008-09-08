@@ -227,6 +227,14 @@ def basicSectionQuestions
 end
 
 def documentQuestions(doc)
+  if @contentHelper.version == 1
+    v = @contentHelper.getDocumentQuestions(doc)
+    ret = []
+    for e in v do 
+      ret << e
+    end
+    return ret
+  end
   questions = []
   
   doc.documentRefs.each do | ref |
