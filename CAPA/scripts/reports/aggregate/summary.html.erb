@@ -1,0 +1,54 @@
+<h3>CAPA Aggregate Report</h3>
+<p>
+Class: <%= className %><br/>
+Teacher: <%= teacherName %>
+</p> 
+<p/>
+
+<% indicators = $rubric.getIndicators %>
+<% sums = [0] * (indicators.size + 1) %>
+<% numRows = 0 %>
+
+<table border="1">
+  <tr>
+    <td></td>
+    <% indicators.size.times do |i| %>
+      <%= '<td>' + indicators.get(i).getLabel + '</td>' %>
+    <% end %>
+    <td>Final Grade</td>
+  </tr>
+  <% users.size.times do |i| %>
+    <% user = users.get(i) %>
+    <% name = user.getName %>
+    <% assessment = getLastAssessment(name) %>
+    <% if assessment %>
+      <% numRows += 1 %>
+      <tr>
+        <% indicatorValues = assessment.getIndicatorValues %>
+        <td><%= name %></td>
+        <% indicators.size.times do |j| %>
+          <% indicator = indicators.get(j) %>
+          <% indicatorGrade = RubricGradeUtil.getIndicatorGrade(assessment, indicator, $rubric) %>
+	      <% if indicatorGrade == nil %>
+	        <td><font title="hoho">N/A</font></td>
+          <% else %>
+            <% points = indicatorGrade.getPoints() %> 					
+			<td><%= points %></td>
+			<% sums[j] += points %>
+	      <% end %>
+        <% end %>
+        <% points = RubricGradeUtil.getTotalGrade(assessment, $rubric).getPoints() %> 
+        <td><%= points %></td>
+        <% sums[sums.length-1] += points %>
+      </tr>
+    <% else %>
+      <% info("No assessment data for student [#{name}]") %>
+    <% end %>
+  <% end %>
+  
+  <td>Average</td>
+  <% (indicators.size + 1).times do |i| %>
+    <td><%= '%.2f' % (sums[i].to_f / numRows) %></td>
+  <% end %>
+</table>
+
