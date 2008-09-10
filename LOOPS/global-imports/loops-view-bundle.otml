@@ -25,17 +25,23 @@
     <import class="org.concord.otrunk.OTSystem" />
     <import class="org.concord.otrunk.browser.mozswing.OTMozSwing" />
     <import class="org.concord.otrunk.graph.OTDataCollectorViewConfig" />
+    <import class="org.concord.otrunk.labbook.OTLabbook" />
+    <import class="org.concord.otrunk.labbook.OTLabbookButton" />
+    <import class="org.concord.otrunk.labbook.OTLabbookEntryChooser" />
     <import class="org.concord.otrunk.overlay.OTOverlay" />
+    <import class="org.concord.otrunk.script.ui.OTScriptButton" />
     <import class="org.concord.otrunk.script.ui.OTScriptObject" />
     <import class="org.concord.otrunk.script.ui.OTScriptVariable" />
     <import class="org.concord.otrunk.script.ui.OTScriptVariableComponent" />
     <import class="org.concord.otrunk.script.ui.OTScriptVariableView" />
     <import class="org.concord.otrunk.script.js.OTJavascript" />
+    <import class="org.concord.otrunk.script.jruby.OTJRuby"/>
     <import class="org.concord.otrunk.script.OTScriptEngineBundle" />
     <import class="org.concord.otrunk.script.OTScriptEngineEntry" />
     <import class="org.concord.otrunk.udl.OTUDLVersionContainer" />
     <import class="org.concord.otrunk.udl.OTUDLVersionedObject" />
     <import class="org.concord.otrunk.udl.OTAuthorNote" />
+    <import class="org.concord.otrunk.udl.OTTeacherNote" />
     <import class="org.concord.otrunk.udl.OTZoom" />
     <import class="org.concord.otrunk.udl.coach.OTUDLCoach" />
     <import class="org.concord.otrunk.udl.coach.OTUDLCoachGroup" />
@@ -44,12 +50,14 @@
     <import class="org.concord.otrunk.udl.document.OTDefinition" />
     <import class="org.concord.otrunk.udl.document.OTDefinitionList" />
     <import class="org.concord.otrunk.udl.document.OTDefinitionManager" />
+    <import class="org.concord.otrunk.udl.document.OTGlossary" />
     <import class="org.concord.otrunk.udl.document.OTUDLCompoundDoc" />
     <import class="org.concord.otrunk.udl.document.OTUDLDocumentViewConfig" />
     <import class="org.concord.otrunk.udl.friction.OTFrictionModel" />
     <import class="org.concord.otrunk.udl.question.OTUDLQuestion" />
     <import class="org.concord.otrunk.udl.question.OTUDLLeveledQuestions" />
     <import class="org.concord.otrunk.udl.question.OTUDLQuestionViewConfig" />
+    <import class="org.concord.otrunk.udl.util.OTSmartGraphScriptButton"/>
     <import class="org.concord.otrunk.udl3.OTUDLMenu" />
     <import class="org.concord.otrunk.udl3.OTUDLContainer" />
     <import class="org.concord.otrunk.udl3.OTUDLSection" />
@@ -57,15 +65,21 @@
     <import class="org.concord.otrunk.ui.OTCardContainer" />
     <import class="org.concord.otrunk.ui.OTChoice" />
     <import class="org.concord.otrunk.ui.OTChoiceMultiple" />
+    <import class="org.concord.otrunk.ui.OTCurriculumUnit"/>
     <import class="org.concord.otrunk.ui.OTImage" />
+    <import class="org.concord.otrunk.ui.OTLayerContainer"/>
     <import class="org.concord.otrunk.ui.OTModeSwitcher" />
+    <import class="org.concord.otrunk.ui.OTObjectSet"/>
     <import class="org.concord.otrunk.ui.OTSoundPlayer" />
     <import class="org.concord.otrunk.ui.OTText" />
+    <import class="org.concord.otrunk.ui.question.OTQuestionViewConfig" />
     <import class="org.concord.otrunk.ui.snapshot.OTSnapshot" />
     <import class="org.concord.otrunk.ui.snapshot.OTSnapshotButton" />
     <import class="org.concord.otrunk.ui.snapshot.OTSnapshotAlbum" />
     <import class="org.concord.otrunk.ui.snapshot.OTSnapshotChooser" />
     <import class="org.concord.otrunk.ui.swing.OTChoiceViewConfig" />
+    <import class="org.concord.otrunk.util.OTLabbookBundle" />
+    <import class="org.concord.otrunk.util.OTLabbookEntry" />
     <import class="org.concord.otrunk.view.OTFolderObject" />
     <import class="org.concord.otrunk.view.OTObjectEditViewConfig" />
     <import class="org.concord.otrunk.view.OTViewChild" />
@@ -88,6 +102,9 @@
     <import class="org.concord.sensor.state.OTSensorDataProxy" />
     <import class="org.concord.sensor.state.OTSensorRequest" />
     <import class="org.concord.sensor.state.OTZeroSensor" />
+    <import class="org.concord.smartgraph.OTSmartGraphTool" />
+    <import class="org.concord.smartgraph.OTSmartGraphQuestion" />
+    <import class="org.concord.framework.otrunk.wrapper.OTBlob" />
   </imports>
   <idMap>
   	<idMapping local_id="css-font" id="23cc14f0-c44f-11dc-95ff-0800200c9a66"/>
@@ -124,8 +141,42 @@
                 </entry>
               </map>
             </OTViewMode>
+            <OTViewMode name="teacher">
+            	<map>
+            		<entry key="${lab-page-view}">
+	              		<OTViewEntry objectClass="org.concord.otrunk.udl.OTUDLLabPage" viewClass="org.concord.otrunk.udl.ui.OTUDLLabPageTeacherView"/>
+	              	</entry>
+            		<entry key="${teacher-note-view}">
+            			<OTViewEntry objectClass="org.concord.otrunk.udl.OTTeacherNote" viewClass="org.concord.otrunk.udl.OTTeacherNoteTeacherView" />
+            		</entry>
+            		<entry key="${menu-vertical}">
+	                  <OTViewEntry objectClass="org.concord.otrunk.udl3.OTUDLMenu" viewClass="org.concord.otrunk.udl.ui.OTUDLMenuSectionReportView" />
+	                </entry>
+	                <entry key="${question-view}">
+	                  <OTViewEntry objectClass="org.concord.otrunk.udl.question.OTUDLQuestion" viewClass="org.concord.otrunk.udl.question.OTUDLQuestionTeacherView" />
+	                </entry>
+            	</map>
+            </OTViewMode>
             <OTViewMode name="authoring">
               <map>
+              	<entry key="${labbook-button-view}">
+              		<OTViewEntry objectClass="org.concord.otrunk.labbook.OTLabbookButton" viewClass="org.concord.otrunk.labbook.ui.OTLabbookButtonEditView" />
+              	</entry>
+              	<entry key="${labbook-entry-chooser-view}">
+              		<OTViewEntry objectClass="org.concord.otrunk.labbook.OTLabbookEntryChooser" viewClass="org.concord.otrunk.labbook.ui.OTLabbookEntryChooserEditView" />
+              	</entry>
+                <entry key="${curriculum-unit-view}">
+                	<OTViewEntry objectClass="org.concord.otrunk.ui.OTCurriculumUnit" viewClass="org.concord.otrunk.ui.swing.OTCurriculumUnitEditView"/>
+                </entry>
+              	<entry key="${lab-page-view}">
+              		<OTViewEntry objectClass="org.concord.otrunk.udl.OTUDLLabPage" viewClass="org.concord.otrunk.udl.ui.OTUDLLabPageEditView"/>
+              	</entry>
+              	<entry key="${mode-switcher-view}">
+              		<OTViewEntry objectClass="org.concord.otrunk.ui.OTModeSwitcher" viewClass="org.concord.otrunk.ui.swing.OTModeSwitcherView" />
+              	</entry>
+                <entry key="${smart-graph-question-view}">
+					<OTViewEntry objectClass="org.concord.smartgraph.OTSmartGraphQuestion" viewClass="org.concord.smartgraph.OTSmartGraphQuestionEditView" />
+				</entry>
                 <entry key="${sound-grapher-view}">
                 	<OTViewEntry viewClass="org.concord.multimedia.state.ui.OTSoundDataCollectorEditView" objectClass="org.concord.multimedia.state.OTSoundDataCollector" />
                 </entry>
@@ -151,7 +202,98 @@
                   <OTViewEntry objectClass="org.concord.otrunk.udl3.OTUDLMenu" viewClass="org.concord.otrunk.udl.ui.OTUDLMenuPageEditView" />
                 </entry>
                 <entry key="${question-view}">
-                  <OTViewEntry objectClass="org.concord.otrunk.udl.question.OTUDLQuestion" viewClass="org.concord.otrunk.udl.question.OTUDLQuestionEditView" />
+                  <OTQuestionViewConfig objectClass="org.concord.otrunk.udl.question.OTUDLQuestion" viewClass="org.concord.otrunk.udl.question.OTUDLQuestionEditView">
+                  	<additionalInputTypes>
+                      <OTCompoundDoc name="Smart graph label" showEditBar="false">
+                        <bodyText>
+                          <table>
+                            <tr>
+                              <td width="100px">
+                                <object refid="${smart-script-button}"/>
+                              </td>
+                              <td width="100px">
+                                <object refid="${smart-script-button-setup}" viewid="${script-button-for-authors}"/>
+                              </td>
+                            </tr>
+                          </table>
+                        </bodyText>
+                        <documentRefs>
+                          <OTText />
+                          <OTScriptButton local_id="smart-script-button" text="Check answer">
+                            <script>
+                              <OTJRuby src="../scripts/smart_graph_label_script_template.rb">
+                                <script />
+                              </OTJRuby>
+                            </script>
+                          </OTScriptButton>
+                          <OTScriptButton local_id="smart-script-button-setup" text="Setup">
+                            <script>
+                              <OTJavascript src="../scripts/set-up-smartgraph-button-script.js"/>
+                            </script>
+                            <scriptVariables>
+                              <OTScriptVariable name="script_button" reference="${smart-script-button}"/>
+                              <OTScriptVariableComponent name="script_button_component" reference="${smart-script-button}"/>
+                              <OTScriptVariable name="smart_graph_range_response">
+                                <reference>
+                                  <OTBlob src="../scripts/smart_graph_range_response.rb" />
+                                </reference>
+                              </OTScriptVariable>
+                              <OTScriptVariable name="otrunk_ruby_script_tools">
+                                <reference>
+                                  <OTBlob src="../scripts/otrunk_ruby_script_tools.rb" />
+                                </reference>
+                              </OTScriptVariable>
+                            </scriptVariables>
+                          </OTScriptButton>
+                        </documentRefs>
+                      </OTCompoundDoc>
+                      <OTCompoundDoc name="Smart graph number" showEditBar="false">
+                        <bodyText>
+                          <object refid="${smart-text-input}"/><br/>
+                          <table>
+                            <tr>
+                              <td width="100px">
+                                <object refid="${smart-script-button-text}"/>
+                              </td>
+                              <td width="100px">
+                                <object refid="${smart-script-button-setup-text}" viewid="${script-button-for-authors}"/>
+                              </td>
+                            </tr>
+                          </table>
+                        </bodyText>
+                        <documentRefs>
+                          <OTText local_id="smart-text-input"/>
+                          <OTScriptButton local_id="smart-script-button-text" text="Check answer">
+                            <script>
+                              <OTJRuby src="../scripts/smart_graph_number_script_template.rb">
+                                <script />
+                              </OTJRuby>
+                            </script>
+                          </OTScriptButton>
+                          <OTScriptButton local_id="smart-script-button-setup-text" text="Setup">
+                            <script>
+                              <OTJavascript src="../scripts/set-up-smartgraph-button-script.js"/>
+                            </script>
+                            <scriptVariables>
+                              <OTScriptVariable name="text_field" reference="${smart-text-input}"/>
+                              <OTScriptVariable name="script_button" reference="${smart-script-button-text}"/>
+                              <OTScriptVariableComponent name="script_button_component" reference="${smart-script-button-text}"/>
+                              <OTScriptVariable name="smart_graph_range_response">
+                                <reference>
+                                  <OTBlob src="../scripts/smart_graph_range_response.rb" />
+                                </reference>
+                              </OTScriptVariable>
+                              <OTScriptVariable name="otrunk_ruby_script_tools">
+                                <reference>
+                                  <OTBlob src="../scripts/otrunk_ruby_script_tools.rb" />
+                                </reference>
+                              </OTScriptVariable>
+                            </scriptVariables>
+                          </OTScriptButton>
+                        </documentRefs>
+                      </OTCompoundDoc>
+                    </additionalInputTypes>
+                  </OTQuestionViewConfig>
                 </entry>
                 <entry key="${menu-vertical}">
                   <OTViewEntry objectClass="org.concord.otrunk.udl3.OTUDLMenu" viewClass="org.concord.otrunk.udl.ui.OTUDLMenuSectionEditView" />
@@ -206,6 +348,11 @@
                           <OTText />
                         </note>
                       </OTAuthorNote>
+                      <OTTeacherNote name="Teacher note">
+                        <note>
+                          <OTCompoundDoc showEditBar="false" bodyText="" />
+                        </note>
+                      </OTTeacherNote>
                       <OTSoundPlayer name="Sound player"/>
                       <OTSoundDataCollector name="Sound grapher" title="Data graph">
                         <source>
@@ -226,6 +373,98 @@
                         </yDataAxis>
                       </OTSoundDataCollector>
                       <OTModelerPage name="Molecular workbench" authoredDataURL="http://mw2.concord.org/public/student/classic/motion/undershotwaterwheel.cml"/>
+                      <OTCompoundDoc name="Inner pages" showEditBar="false">
+                      	<bodyText>
+                      		<div style="border-width:1px; border-color:black; border-style:solid; margin: 5px; padding:2px;">
+        					   <object refid="${inner_page_cards}" /><br/>
+					           <object refid="${inner_page_menu}" viewId="${menu-horizontal-circle}" />
+                      		</div>				
+                      	</bodyText>
+                      	<documentRefs>
+                      		<OTCardContainer local_id="inner_page_cards" contentsMayScroll="false" loadViewOnlyOnDemand="true" closeViewOnExit="true">
+                      			<cards>
+                      				<OTUDLCompoundDoc bodyText=""/>
+                      			</cards>
+                      		</OTCardContainer>
+                      		<OTUDLMenu local_id="inner_page_menu" showBorder="false" cardContainer="${inner_page_cards}">
+                      			<menuRule>
+									<object refid="${page-rule}" />
+								</menuRule>
+                      		</OTUDLMenu>
+                      	</documentRefs>
+                      </OTCompoundDoc>
+                      <OTScriptButton name="Script button">
+                      	<script>
+                      		<OTJavascript>
+                      			<script>
+                      				function clicked(){
+                      				
+                      				}
+                      			</script>
+                      		</OTJavascript>
+                      	</script>
+                      </OTScriptButton>
+                      <OTSmartGraphQuestion name="Smart question">
+                      	<question>
+                      		<OTUDLCompoundDoc>
+                      			<bodyText>
+                      			</bodyText>
+                      		</OTUDLCompoundDoc>
+						</question>
+						<smartGraph>
+							<OTSmartGraphTool />
+						</smartGraph>
+                      </OTSmartGraphQuestion>
+                      <OTSmartGraphScriptButton name="Smart question script"  text="Check answer">
+                      	<script>
+                      		<OTJavascript>
+                      			<script>
+importClass(Packages.javax.swing.JOptionPane);
+
+function clicked(){
+
+}
+
+function showMessage(message){
+    JOptionPane.showMessageDialog(null, message);
+}
+
+function highlight(start, end){
+    smart.showRegionLabel(start, end);
+}
+
+function removeHighlight(){
+    smart.removeAllRegionLabels();
+}
+
+function getLabelX(){
+    return getLastValidLabel().getXData();
+}
+
+function getLabelY(){
+    return getLastValidLabel().getYData();
+}
+
+function getLastValidLabel(){
+    var labels = graph.getLabels();
+    
+   	if (labels.size() == 0){
+   	   return null;
+   	}
+   	
+   	for (i=labels.size()-1; i>0; i--){
+   	   var label = labels.get(i);
+   	   if (label.getX() &lt; 100000){
+   	      return label;
+   	   }
+   	}
+   	return null;
+}
+                      			</script>
+                      		</OTJavascript>
+                      	</script>
+                      </OTSmartGraphScriptButton>
+                      <OTSmartGraphTool name="Smart graph tool"/>
                     </objectsToInsert>
                   </OTDocumentEditViewConfig>
                 </entry>
@@ -248,6 +487,9 @@
                 <entry key="${drawing-view}">
                   <OTViewEntry viewClass="org.concord.otrunk.graph.OTDataDrawingToolEditView" objectClass="org.concord.graph.util.state.OTDrawingTool" />
                 </entry>
+                <entry key="${teacher-note-view}">
+                  <OTViewEntry objectClass="org.concord.otrunk.udl.OTTeacherNote" viewClass="org.concord.otrunk.udl.OTTeacherNoteEditView" />
+                </entry>
                 <entry key="${author-note-view}">
                   <OTViewEntry objectClass="org.concord.otrunk.udl.OTAuthorNote" viewClass="org.concord.otrunk.udl.OTAuthorNoteEditView" />
                 </entry>
@@ -260,31 +502,56 @@
                 <entry key="${mw-view}">
                 	<OTViewEntry objectClass="org.concord.otrunkmw.OTModelerPage" viewClass="org.concord.otrunkmw.OTModelerPageEditView" />
                 </entry>
-                <entry key="${slider-view}">
-                  <OTViewEntry objectClass="org.concord.otrunk.ui.OTSlider" viewClass="org.concord.otrunk.ui.swing.OTSliderEditView" />
+                <entry key="${script-button-view}">
+                	<OTViewEntry objectClass="org.concord.otrunk.script.ui.OTScriptButton" viewClass="org.concord.otrunk.script.ui.OTScriptButtonEditView"/>
+                </entry>
+                <entry key="${script-button-for-authors}">
+                	<OTViewEntry objectClass="org.concord.otrunk.script.ui.OTScriptButton" viewClass="org.concord.otrunk.script.ui.OTScriptButtonView"/>
+                </entry>
+                <entry key="${smart-graph-script-view}">
+                	<OTViewEntry objectClass="org.concord.otrunk.udl.util.OTSmartGraphScriptButton" viewClass="org.concord.otrunk.udl.util.OTSmartGraphScriptButtonEditView"/>
+                </entry>
+                <entry key="${smart-graph-view}">
+                	<OTViewEntry objectClass="org.concord.smartgraph.OTSmartGraphTool" viewClass="org.concord.smartgraph.OTSmartGraphToolEditView" />
                 </entry>
               </map>
             </OTViewMode>
           </modes>
           <frame>
-            <OTFrame useScrollPane="false" width="1100" height="650" positionX="20" positionY="40"/>
+            <OTFrame useScrollPane="false" width="850" height="600" />
           </frame>
           <views>
             <!-- The OTUDLQuestionViewConfig can be used to set the default scaffolding level, and whether the student can navigate through the levels.
 						  The default scaffolding level just uses the order of the items inside OTUDLLeveledQuestions/questions. It is not aware of the names
 						  such as "L1", "L2", etc. -->
             <OTUDLQuestionViewConfig id="c0e33320-e611-11dc-95ff-0800200c9a66" isLevelFrozen="false" defaultScaffoldLevel="0" objectClass="org.concord.otrunk.udl.question.OTUDLLeveledQuestions" viewClass="org.concord.otrunk.udl.question.OTUDLLeveledQuestionsCardView" />
-            <OTViewEntry local_id="slider-view" objectClass="org.concord.otrunk.ui.OTSlider" viewClass="org.concord.otrunk.ui.swing.OTSliderView" />
+            <OTViewEntry objectClass="org.concord.otrunk.labbook.OTLabbook" viewClass="org.concord.otrunk.labbook.ui.OTLabbookView" />
+            <OTViewEntry local_id="labbook-button-view" objectClass="org.concord.otrunk.labbook.OTLabbookButton" viewClass="org.concord.otrunk.labbook.ui.OTLabbookButtonView" />
+            <OTViewEntry local_id="labbook-entry-chooser-view" objectClass="org.concord.otrunk.labbook.OTLabbookEntryChooser" viewClass="org.concord.otrunk.labbook.ui.OTLabbookEntryChooserView" />
+            <OTViewEntry local_id="container_view" objectClass="org.concord.otrunk.udl3.OTUDLContainer" viewClass="org.concord.otrunk.udl3.OTUDLContainerView" />
+            <OTViewEntry objectClass="org.concord.framework.otrunk.wrapper.OTBlob" viewClass="org.concord.otrunk.ui.swing.OTBlobImageView"/>
+            <OTViewEntry local_id="curriculum-unit-view" objectClass="org.concord.otrunk.ui.OTCurriculumUnit" viewClass="org.concord.otrunk.ui.swing.OTCurriculumUnitView"/>
+            <OTViewEntry local_id="smart-graph-script-view" objectClass="org.concord.otrunk.udl.util.OTSmartGraphScriptButton" viewClass="org.concord.otrunk.script.ui.OTScriptButtonView"/>
+            <OTViewEntry objectClass="org.concord.otrunk.ui.OTObjectSet" viewClass="org.concord.otrunk.ui.swing.OTObjectSetView"/>
+            <OTViewEntry local_id="script-button-view" objectClass="org.concord.otrunk.script.ui.OTScriptButton" viewClass="org.concord.otrunk.script.ui.OTScriptButtonView"/>
+            <OTViewEntry local_id="script-button-for-authors" objectClass="org.concord.otrunk.script.ui.OTScriptButton" viewClass="org.concord.otrunk.ui.swing.OTNullView"/>
+            <OTViewEntry objectClass="org.concord.otrunk.udl.document.OTGlossary" viewClass="org.concord.otrunk.udl.document.OTGlossaryView"/>
+            <OTViewEntry objectClass="org.concord.otrunk.udl.document.OTDefinition" viewClass="org.concord.otrunk.udl.document.OTDefinitionView"/>
+            <OTViewEntry objectClass="org.concord.otrunk.ui.OTLayerContainer" viewClass="org.concord.otrunk.ui.swing.OTLayerContainerView"/>
+            <OTViewEntry local_id="smart-graph-question-view" objectClass="org.concord.smartgraph.OTSmartGraphQuestion" viewClass="org.concord.smartgraph.OTSmartGraphQuestionView" />
+			<OTViewEntry local_id="smart-graph-view" objectClass="org.concord.smartgraph.OTSmartGraphTool" viewClass="org.concord.smartgraph.OTSmartGraphToolHiddenView" />
+            <OTViewEntry objectClass="org.concord.otrunk.udl.OTUDLNavBar" viewClass="org.concord.otrunk.udl.ui.OTUDLNavBarView"/>
+            <OTViewEntry local_id="lab-page-view" objectClass="org.concord.otrunk.udl.OTUDLLabPage" viewClass="org.concord.otrunk.udl.ui.OTUDLLabPageView"/>
             <OTViewEntry local_id="sound-grapher-view" viewClass="org.concord.multimedia.state.ui.OTSoundDataCollectorView" objectClass="org.concord.multimedia.state.OTSoundDataCollector" />
             <OTViewEntry local_id="mw-view" objectClass="org.concord.otrunkmw.OTModelerPage" viewClass="org.concord.otrunkmw.OTModelerPageView" />
             <OTViewEntry objectClass="org.concord.otrunk.OTIncludeRootObject" viewClass="org.concord.otrunk.OTIncludeRootObjectView" />
             <OTViewEntry objectClass="org.concord.otrunk.udl.OTZoom" viewClass="org.concord.otrunk.udl.OTZoomView" />
             <OTViewEntry objectClass="org.concord.otrunk.udl.OTUDLVersionContainer" viewClass="org.concord.otrunk.udl.OTUDLVersionContainerView" />
-            <OTViewEntry local_id="author-note-view" objectClass="org.concord.otrunk.udl.OTAuthorNote" viewClass="org.concord.otrunk.udl.OTAuthorNoteView" />
+            <OTViewEntry local_id="teacher-note-view" objectClass="org.concord.otrunk.udl.OTTeacherNote" viewClass="org.concord.otrunk.ui.swing.OTNullView" />
+            <OTViewEntry local_id="author-note-view" objectClass="org.concord.otrunk.udl.OTAuthorNote" viewClass="org.concord.otrunk.ui.swing.OTNullView" />
             <OTViewEntry local_id="moz-swing-view" objectClass="org.concord.otrunk.browser.mozswing.OTMozSwing" viewClass="org.concord.otrunk.browser.mozswing.OTMozSwingView" />
-            <OTViewEntry objectClass="org.concord.otrunk.ui.OTModeSwitcher" viewClass="org.concord.otrunk.ui.swing.OTModeSwitcherView" />
+            <OTViewEntry local_id="mode-switcher-view" objectClass="org.concord.otrunk.ui.OTModeSwitcher" viewClass="org.concord.otrunk.ui.swing.OTModeSwitcherBypassView" />
             <OTViewEntry objectClass="org.concord.otrunk.ui.OTImage" viewClass="org.concord.otrunk.ui.swing.OTImageView" />
-            <OTViewEntry objectClass="org.concord.otrunk.ui.OTModeSwitcher" viewClass="org.concord.otrunk.ui.swing.OTModeSwitcherView" />
             <OTUDLQuestionViewConfig local_id="questions-on-off-view" isLevelFrozen="false" defaultScaffoldLevel="1" objectClass="org.concord.otrunk.udl.question.OTUDLLeveledQuestions" viewClass="org.concord.otrunk.udl.question.OTUDLLeveledQuestionsOnOffView" />
             <OTViewEntry local_id="snapshot_button_view" objectClass="org.concord.otrunk.ui.snapshot.OTSnapshotButton" viewClass="org.concord.otrunk.ui.snapshot.OTSnapshotButtonView" />
             <OTViewEntry local_id="snapshot-chooser-view" objectClass="org.concord.otrunk.ui.snapshot.OTSnapshotChooser" viewClass="org.concord.otrunk.ui.snapshot.OTSnapshotChooserView" />
@@ -296,9 +563,8 @@
             <OTViewEntry local_id="question-view" objectClass="org.concord.otrunk.udl.question.OTUDLQuestion" viewClass="org.concord.otrunk.udl.question.OTUDLQuestionView" />
             <OTViewEntry local_id="character-group-view" objectClass="org.concord.otrunk.udl.coach.OTUDLCoachGroup" viewClass="org.concord.otrunk.udl.coach.OTUDLCoachGroupView" />
             <OTViewEntry objectClass="org.concord.otrunk.udl3.OTUDLSection" viewClass="org.concord.otrunk.udl3.OTUDLSectionView" />
-            <OTViewEntry local_id="container_view" objectClass="org.concord.otrunk.udl3.OTUDLContainer" viewClass="org.concord.otrunk.udl3.OTUDLContainerView" />
             <OTViewEntry id="1b0cb6e0-c453-11dc-95ff-0800200c9a66" objectClass="org.concord.otrunk.udl3.OTUDLMenu" viewClass="org.concord.otrunk.udl.ui.OTUDLMenuSectionView" />
-            <OTViewEntry id="29dc5ef0-c453-11dc-95ff-0800200c9a66" objectClass="org.concord.otrunk.udl3.OTUDLMenu" viewClass="org.concord.otrunk.udl.ui.OTUDLMenuPageView" />
+            <OTViewEntry id="29dc5ef0-c453-11dc-95ff-0800200c9a66" objectClass="org.concord.otrunk.udl3.OTUDLMenu" viewClass="org.concord.otrunk.udl.ui.OTUDLMenuPageExpandView" />
             <OTViewEntry id="416eeab0-c453-11dc-95ff-0800200c9a66" objectClass="org.concord.otrunk.udl3.OTUDLMenu" viewClass="org.concord.otrunk.udl.ui.OTUDLMenuPageBookView" />
             <OTChoiceViewConfig local_id="choice-checkbox-view" objectClass="org.concord.otrunk.ui.OTChoiceMultiple" viewClass="org.concord.otrunk.ui.swing.OTChoiceCheckBoxView" useViewsAsChoices="true" />
             <OTChoiceViewConfig local_id="choice-radio-view" objectClass="org.concord.otrunk.ui.OTChoice" viewClass="org.concord.otrunk.ui.swing.OTChoiceRadioButtonView" useViewsAsChoices="true" />
