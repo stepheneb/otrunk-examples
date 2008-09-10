@@ -74,6 +74,7 @@ function assess(assessment, madWrapper) {
 	inv.put("s_fault2", answers.s_fault2)	
 	inv.put("c_fault3", answers.c_fault3)
 	inv.put("s_fault3", answers.s_fault3)
+	inv.put("timeTotal", answers.time)
 	inv.put("activityLog", glob.activityLog)	
 }
 

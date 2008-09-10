@@ -26,10 +26,9 @@ function getText() {
 	var s_fault3 = parseInt(inv.get("s_fault3"))	
 	var numUselessProbes = parseInt(indicators.get("uselessProbes"))								
 	var numUsefulProbes = parseInt(indicators.get("usefulProbes"))
-	var totalTime = parseFloat(indicators.get("timeTotal")).toFixed(1)							
+	var totalTime = inv.get("timeTotal")
 	var activityLog = inv.get("activityLog")
 	var t = ""
-	
 	var points = getPoints("truthTable")
 	t += "<h2>Details</h2>"
 	t += "<table><tr>"
@@ -39,7 +38,7 @@ function getText() {
 	t += "</tr><tr>"
 	t += "<td>Submitted value</td><td>" + s_truthValues + "</td>"
 	t += "</tr>"
-	t += getAnswerLine(c_truthValues == s_truthValues, points[0], points[1])
+	t += getAnswerLine(c_truthValues.equals(s_truthValues), points[0], points[1])
 	t += "<tr></tr><tr>"
 	
 	points = getPoints("fault1")
