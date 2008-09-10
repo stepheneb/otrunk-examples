@@ -84,20 +84,7 @@ def _createContentsMap
   # users is a Java vector returned by OTUserListService.getUserList 
   # Ruby presents Java vectors as enumerables. This means you can use
   # any of the methods that Ruby's Enumerable module mixes in.
-  #
-  # note: 
-  # Any Java object with a camelcase methodname in this form: 
-  #
-  #  objectInstance.getName();
-  #
-  # can be accessed from JRuby as either: 
-  #
-  #   objectInstance.getName or objectInstance.get_name
-  #
-  puts users[2]
-  users.each { |u| contentsMap[u.get_name] = @otrunk.getUserRuntimeObject($scriptObject, u).getContents }
-  # the return value for any Ruby method is the value of the last statement executed
-  # there is normall no need for an explcit return statement at the end of a method
+  users.each { |u| contentsMap[u] = @otrunk.getUserRuntimeObject($scriptObject, u).getContents }
   contentsMap
 end
 
@@ -210,9 +197,9 @@ def linkToUnitPage(link_text)
   linkToObject link_text, firstObject, firstView
 end
 
-def getLastAssessment(userName)
+def getLastAssessment(user)
   assessment = nil
-  contents = contentsMap[userName]
+  contents = contentsMap[user]
   contents.size.times do |i| 
     if contents.get(i).kind_of?(OTAssessment)
       assessment = contents.get(i)
