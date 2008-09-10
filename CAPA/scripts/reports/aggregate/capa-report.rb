@@ -81,12 +81,24 @@ end
 
 def _createContentsMap
   contentsMap = {} #{ userName => contentsList } 
-  users.size.times do |i|
-    user = users.get(i)
-    runtimeObject = @otrunk.getUserRuntimeObject($scriptObject, user)
-    contentsMap[user.getName] = runtimeObject.getContents
-  end
-  return contentsMap
+  # users is a Java vector returned by OTUserListService.getUserList 
+  # Ruby presents Java vectors as enumerables. This means you can use
+  # any of the methods that Ruby's Enumerable module mixes in.
+  #
+  # note: 
+  # Any Java object with a camelcase methodname in this form: 
+  #
+  #  objectInstance.getName();
+  #
+  # can be accessed from JRuby as either: 
+  #
+  #   objectInstance.getName or objectInstance.get_name
+  #
+  puts users[2]
+  users.each { |u| contentsMap[u.get_name] = @otrunk.getUserRuntimeObject($scriptObject, u).getContents }
+  # the return value for any Ruby method is the value of the last statement executed
+  # there is normall no need for an explcit return statement at the end of a method
+  contentsMap
 end
 
 def default_template
