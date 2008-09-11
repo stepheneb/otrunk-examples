@@ -13,28 +13,43 @@
 
 <div id="content">
   <h2>Section: <%= sectionTitle %></h2>
-  
-    <% questions = basicSectionQuestions %>
-
-    <table>
-      <tr>
-       <th>User</th>
-       <% questions.each do |question| %>
+  <table>
+    <tr>
+      <th>User</th>
+      <% questions = basicSectionQuestions %>
+      <% questions.each do |question| %>
         <th><%= popupLinkToObject truncate(promptText(question), 30), question %></th>  
-       <% end %>
-      </tr>
-      <% line_toggle = true %>
-      <% users.each do |user| %>
-        <tr BGCOLOR = <%= line_toggle ? ROWCOLOR1 : ROWCOLOR2 %>>
-          <% line_toggle = !line_toggle %>
-          <td><%= linkToObject user.name, user, $user_view %></td>
-         <% questions.each do |question| %>
+      <% end %>
+    </tr>
+    <% line_toggle = true %>
+    <% users.each do |user| %>
+      <tr BGCOLOR = <%= line_toggle ? ROWCOLOR1 : ROWCOLOR2 %>>
+        <% line_toggle = !line_toggle %>
+        <td><%= linkToObject user.name, user, $user_view %></td>
+        <% questions.each do |question| %>
           <% userQuestion = userObject(question, user) %>
-          <td>
-            <%= questionAnswerHtml userQuestion %> 
-          </td>  
-         <% end %>        
-        </tr>
-      <% end %>    
+          <td><%= questionAnswerHtml userQuestion %></td>  
+        <% end %>        
+      </tr>
+    <% end %>
+    <% if preOrPost? %>
+      <tr BGCOLOR = <%= line_toggle ? ROWCOLOR1 : ROWCOLOR2 %>>
+        <% line_toggle = !line_toggle %>
+        <td>Activity References</td>
+        <% questions.each do |question| %>
+          <td><%= activityRefString(question) %></td>
+        <% end %>
+      </tr>
+    <% end %>
+  </table>
+
+  <% if preOrPost? %>
+    <p/>
+    <h4>Activity Index</h4>
+    <table>  
+      <% activitySections.size.times do |i| %>
+        <tr><td><%= i.to_s %></td><td><%= activitySections[i].getName %></td></tr>
+      <% end %>
     </table>
+  <% end %>
 </div>

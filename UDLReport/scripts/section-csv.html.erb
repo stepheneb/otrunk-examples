@@ -17,7 +17,6 @@
 <% text2 = '' %> 
 <% text3 = '' %> 
 <% questions = basicSectionQuestions %>
-<% activityRefs = getActivityRefs(questions) %>
 
 <!-- Build first table: users/answers --> 
 <!-- Header 1 -->
@@ -53,14 +52,16 @@
 <% end %>
 
 <!-- last row: activity references -->
-<% text1 += 'Activity References' + sep %>
-<% questions.size.times do |i| %>
-  <% text1 += activityRefs[i].join(',') + sep %>
-  <% if not isChoiceQuestion(questions[i]) %>
-    <% text1 += sep %>
+<% if preOrPost? %>
+  <% text1 += 'Activity References' + sep %>
+  <% questions.each do |question| %>
+    <% text1 += activityRefString(question) + sep %>
+    <% if not isChoiceQuestion(question) %>
+      <% text1 += sep %>
+    <% end %>
   <% end %>
+  <% text1 += "\n" %>
 <% end %>
-<% text1 += "\n" %>
 
 <!-- Build second table: questions/question attributes -->
 <!-- Header -->
@@ -80,13 +81,14 @@
 <% end %>
 
 <!-- Build third table: activity index -->
-<% activities = activitySections %>
-<% activities.size.times do |i| %>
-  <% text3 += i.to_s + sep %>
-<% end %>
-<% text3 += "\n" %> 
-<% activities.size.times do |i| %>
-  <% text3 += activities[i].getName + sep %>
+<% if preOrPost? %>
+  <% activitySections.size.times do |i| %>
+    <% text3 += i.to_s + sep %>
+  <% end %>
+  <% text3 += "\n" %> 
+  <% activitySections.each do |s| %>
+    <% text3 += s.getName + sep %>
+  <% end %>
 <% end %>
 
 <h2>Section: <%= sectionTitle %></h2>
@@ -99,7 +101,10 @@
 <pre>
 <%=text2%>
 </pre>
-<h3>Activity Index</h3>
-<pre>
+
+<% if preOrPost? %>
+  <h3>Activity Index</h3>
+  <pre>
 <%=text3%>
-</pre>
+  </pre>
+<% end %>
