@@ -2,11 +2,22 @@
   <h1>Hanging With Friends Report</h1>
   
   <h3>Roller Blade Runs</h3>
-  <ul>
+  <table>
+  	<tr><td>Name</td><td>Rollerblade model</td><td>Bus model</td><td>Racecar model</td></tr>
   <% users.each do |user|
-    userRollerbladeScriptObject = userObject( $rollerbladeScriptObject, user)
+    models = []
+    models << userObject( $rollerbladeScriptObject, user)
+    models << userObject( $busScriptObject, user)
+    models << userObject( $racecarScriptObject, user)
     %>
-    <li><%= user.name %> ran the model <%= userRollerbladeScriptObject.contents.size %> times</li>
+    <tr><td><%= user.name ? user.name : "Anonymous" %></td>
+    <% models.each do |model| %>
+	    <td>
+	    <% total = 0 %>
+	    <%= model.contents.select{|o| o.respond_to? "model_runs"}.collect{|o| total += o.model_runs.size} %> times
+	    </td>
+    <% end %>
+    </tr>
   <% end %>
-  </ul>
+  </table>
 </div>
