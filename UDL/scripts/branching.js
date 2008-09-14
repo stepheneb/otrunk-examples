@@ -6,8 +6,10 @@
  * I don't know if there's a clever way to import arrays of variables, so
  * for now we have up to four buttons that control up to four objects.
  *
+ *
  * @author sfentress
  */
+ 
   
 /* *** Variables brought in by the script object: ***
  * var scriptView - The view of this script, to get the updateable container
