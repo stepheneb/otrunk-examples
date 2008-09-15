@@ -1,0 +1,102 @@
+<% magenta = '#a030a0' %>
+
+<% rubrics = [] %>
+<% rubrics[0] = $rubric.getVoltageRubric %>
+<% rubrics[1] = $rubric.getCurrentRubric %>
+<% rubrics[2] = $rubric.getResistanceRubric %>
+
+<% indicatorMap = {} %>
+<% indicators = rubrics[0].getIndicators.getVector %>
+<% for indicator in indicators %>
+  <% indicatorMap[indicator.getName] = indicator %>
+<% end %>
+
+<% scores = [{ :lead => [], :circuit => [], :points => [] }] * 3 %>
+<% totalPointsList = [] %>
+<% timeList = [] %>
+<% blowupsList = [] %>
+
+<h3><%= $title.getText %></h3>
+
+<p>
+Class: <font color="#3030f0"> <%= className %> </font><br/>
+Teacher: <font color="#3030f0"> <%= teacherName %> </font>
+</p> 
+
+<table>
+  <tr>
+    <td rowspan="2"></td>
+    <td colspan="3">Voltage</td><td colspan="3">Current</td><td colspan="3">Resistance</td>
+	<td rowspan="2">Final Grade (out of 100)</td><td rowspan="2">Total Time (s)</td>
+	<td rowspan="2">Blown Meters</td>
+  </tr>
+  <tr>
+    <td>Leads</td><td>Circuit</td><td>Score</td>
+    <td>Leads</td><td>Circuit</td><td>Score</td>
+    <td>Leads</td><td>Circuit</td><td>Score</td>
+  </tr>
+  <% for user in users %>
+    <% multimeterAssessment = getLastMultimeterAssessment(user) %>
+    <% if multimeterAssessment == nil %>
+      <% $stderr.puts("Assessment not present for user [#{user.getName}]") %> 
+      <% next %>
+    <% end %>
+    <% assessments = multimeterAssessment.getAnswers.getVector %>
+    <% if assessments == nil or assessments.length == 0 %>
+      <% $stderr.puts("Assessment not present for user [#{user.getName}]") %> 
+      <% next %>
+    <% end %> 
+    <% total_time = 0 %>
+    <% total_blowups = 0 %>
+    <tr>
+      <td><%= user.getName %></td>
+      <% assessments.size.times do |i| %>
+      	<% assessment = assessments[i] %>
+      	<% rubric = rubrics[i] %>
+      	<% indicatorValues = assessment.getIndicatorValues %>
+	    <% points = RubricGradeUtil.getTotalGrade(assessment, rubric).getPoints %>
+		<% total_time += indicatorValues.get('time').to_f %>
+		<% total_blowups += indicatorValues.get('brokenDMM').to_i %>
+		<% leadInd = indicatorValues.get('leadPlacement').to_i %>
+		<% scores[i][:lead] << (leadInd > 1 ? 1 : 0) %>
+		<% circuitInd = indicatorValues.get('circuitSetting').to_i %>
+		<% scores[i][:circuit] << (circuitInd > 0 ? 1 : 0) %>
+		<% scores[i][:points] << points %>
+			
+		<td><%= getRubricLabel(indicatorMap["leadPlacement"], assessment, rubric) %></td>
+		<td><%= getRubricLabel(indicatorMap["circuitSetting"], assessment, rubric) %></td>
+		<td><%= points %></td>
+      <% end %>
+      
+	  <% totalPoints = OTMultimeterAsessmentGradeUtil.getTotalGrade(multimeterAssessment, $rubric).getPoints %>
+	  <% totalPointsList << totalPoints %>
+	  <% timeList << total_time %>
+	  <% blowupsList << total_blowups %>
+	
+	  <td><font color="#3030f0"><%= totalPoints %></font></td>
+	  <td><%= '%.0f' % total_time %></td>
+	  <td><%= total_blowups %></td>
+    </tr>
+  <% end %>
+      
+  <tr>
+	<td><font color="<%= magenta %>">Average</font></td>
+	<!-- Voltage -->
+	<td><font color="<%= magenta %>"><%= '%.0f' % (avg(scores[0][:lead]) * 100) %>%</font></td>
+	<td><font color="<%= magenta %>"><%= '%.0f' % (avg(scores[0][:circuit]) * 100) %>%</font></td>
+	<td><font color="<%= magenta %>"><%= '%.0f' % avg(scores[0][:points]) %></font></td>
+	<!-- Current -->	  
+	<td><font color="<%= magenta %>"><%= '%.0f' % (avg(scores[1][:lead]) * 100) %>%</font></td>
+	<td><font color="<%= magenta %>"><%= '%.0f' % (avg(scores[1][:circuit]) * 100) %>%</font></td>
+	<td><font color="<%= magenta %>"><%= '%.0f' % avg(scores[1][:points]) %></font></td>
+	<!-- Resistance -->	  
+	<td><font color="<%= magenta %>"><%= '%.0f' % (avg(scores[2][:lead]) * 100) %>%</font></td>
+	<td><font color="<%= magenta %>"><%= '%.0f' % (avg(scores[2][:circuit]) * 100) %>%</font></td>
+	<td><font color="<%= magenta %>"><%= '%.0f' % avg(scores[2][:points]) %></font></td>	  
+	  
+	<td><font color="<%= magenta %>"><%= '%.0f' % avg(totalPointsList) %></font></td>
+	<td><font color="<%= magenta %>"><%= '%.0f' % avg(timeList) %></font></td>	  	  
+	<td><font color="<%= magenta %>"><%= '%.0f' % avg(blowupsList) %></font></td>	  
+  </tr>
+</table> 
+

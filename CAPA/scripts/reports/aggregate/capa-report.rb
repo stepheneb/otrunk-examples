@@ -1,15 +1,15 @@
 require 'jruby'
 require 'erb'
+
 include_class 'java.lang.System'
 include_class 'org.concord.framework.otrunk.view.OTUserListService'
 include_class 'org.concord.framework.otrunk.OTrunk'
 include_class 'org.concord.framework.otrunk.wrapper.OTString'
 include_class 'org.concord.otrunk.script.ui.OTScriptVariable'
+include_class 'org.concord.otrunkcapa.OTMultimeterAssessment'
+include_class 'org.concord.otrunkcapa.OTMultimeterAsessmentGradeUtil'
 include_class 'org.concord.otrunkcapa.rubric.OTAssessment'
 include_class 'org.concord.otrunkcapa.rubric.RubricGradeUtil'
-
-ROWCOLOR1 = "#FFFEE9"
-ROWCOLOR2 = "#FFFFFF"
 
 # Called when the script view is loaded
 def getText
@@ -84,7 +84,7 @@ def _createContentsMap
   # users is a Java vector returned by OTUserListService.getUserList 
   # Ruby presents Java vectors as enumerables. This means you can use
   # any of the methods that Ruby's Enumerable module mixes in.
-  users.each { |u| contentsMap[u] = @otrunk.getUserRuntimeObject($scriptObject, u).getContents }
+  users.each { |u| contentsMap[u] = @otrunk.getUserRuntimeObject($scriptObject, u).getContents.getVector }
   contentsMap
 end
 
@@ -198,12 +198,28 @@ def linkToUnitPage(link_text)
 end
 
 def getLastAssessment(user)
-  assessment = nil
-  contents = contentsMap[user]
-  contents.size.times do |i| 
-    if contents.get(i).kind_of?(OTAssessment)
-      assessment = contents.get(i)
-    end 
+  getLastContent(user, OTAssessment)
+end
+
+def getLastMultimeterAssessment(user)
+  getLastContent(user, OTMultimeterAssessment)
+end
+
+## Get last item in user script object contents that is a sub-type of contentType 
+def getLastContent(user, contentType)
+  last = nil
+  for content in contentsMap[user] 
+    last = content if content.kind_of?(contentType) 
   end
-  return assessment  
+  last
+end
+
+## Get label for rubric indicator
+def getRubricLabel(indicator, assessment, rubric)
+  indicatorGrade = RubricGradeUtil.getIndicatorGrade(assessment, indicator, rubric)
+  indicatorGrade.getOTIndicatorGrade().getLabel
+end
+
+def avg(list)
+  list.inject(0) { |sum, e| sum + e } / list.length.to_f
 end
