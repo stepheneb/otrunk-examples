@@ -94,7 +94,8 @@ function setupLabbookQuestionListeners(){
 	curnitHelper = OTCurriculumUnitHelper.getActivityHelper(viewContext)
 	for (var i=0; i<otids.length; i++){
 		var question = otObjectService.getOTObject(otObjectService.getOTID(otids[i]))
-		if (question != null){
+		if (question != null && question.toString().indexOf("Question") > 0 && 
+						!(question.toString().indexOf("Leveled") > 0)){
 			inputs[i] = question.getInput()
 			questionMap.put(inputs[i], question)
 			inputs[i].addOTChangeListener(inputListener)
