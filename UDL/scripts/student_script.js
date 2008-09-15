@@ -87,10 +87,11 @@ var curnitHelper
 
 function setupLabbookQuestionListeners(){
 	var provider = viewContext.getViewService(OTLabbookManagerProvider)
-	labbook = provider.getLabbookManager(otObjectService)
-	if (labbook == null){
+	if (provider == null){
 		return;
 	}
+	labbook = provider.getLabbookManager(otObjectService)
+	
 	curnitHelper = OTCurriculumUnitHelper.getActivityHelper(viewContext)
 	for (var i=0; i<otids.length; i++){
 		var question = otObjectService.getOTObject(otObjectService.getOTID(otids[i]))
