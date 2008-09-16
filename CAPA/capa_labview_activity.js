@@ -143,7 +143,7 @@ function setupAssessmentLogging() {
 	
 	// Create assessment object
 	_otAssessment = otObjectService.createObject(OTAssessment)
-	_otAssessment.setActivityName("Using an Oscilloscope");
+	_otAssessment.setTitle("Using an Oscilloscope");
 	_otAssessment.setUserName(userName)
 	_otAssessment.setTime(ms)	
 

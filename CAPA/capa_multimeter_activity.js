@@ -135,27 +135,16 @@ var activityDone = false;
 function init()
 {
 	System.out.println("-------------------------- init --------------------------------");
-
 	setupGUI();
-	
 	setupApparatusPanel();
-	
 	initLogging();
-
 	setupMultimeter();	
-	
 	setupCircuitListener();
-	
 	setupAnswerButton();
-	
 	setupActivity();
-	
 	setupAsessmentLogging();
-	
 	setupCircuitAnalyzer();
-    
 	initializationDone = true;
-        
 	return initializationDone;
 }
 
@@ -344,7 +333,7 @@ function setupAsessmentLogging()
 		
 		//Create assessment object
 		otAssessment = otObjectService.createObject(OTMultimeterAssessment);
-		otAssessment.setActivityName(activityName);
+		otAssessment.setTitle(activityName);
 		otAssessment.setUserName(userName);
 		otAssessment.setTime(ms);	
 		otContents.add(otContents.size() - 1, otAssessment);
@@ -950,6 +939,8 @@ function findBranch(name)
 /** Checks the answer and creates messages according to the answer submitted */
 function checkAnswer()
 {
+	var questionObj
+	
 	/////
 	//Get answer
 	//The answer is at: 
@@ -978,21 +969,25 @@ function checkAnswer()
 	answerObj = otObjectService.createObject(OTUnitValue);
 	answerObj.setValue(val);
 	answerObj.setUnit(unit);
-	/////
 
 	/////
 	//Get correct answer
 	var correctAnswerObj = null;
 	if (getCurrentAnswerType().equalsIgnoreCase("voltage")){
 		correctAnswerObj = solutionObj.voltage;
+		questionObj = question1	
 	}
 	else if (getCurrentAnswerType().equalsIgnoreCase("current")){
 		correctAnswerObj = solutionObj.current;
+		questionObj = question2
 	}
 	else if (getCurrentAnswerType().equalsIgnoreCase("resistance")){
 		correctAnswerObj = solutionObj.resistance;
+		questionObj = question3
 	}
 	/////
+	questionObj.setInput(answerObj)
+	questionObj.setCorrectAnswer(correctAnswerObj)
 
 	checkAnswerValue(correctAnswerObj);
 
@@ -1591,3 +1586,4 @@ function setupHelpButton()
 	var helpButtonListener = new ActionListener(helpButtonHandler);
 	helpButton.addActionListener(helpButtonListener);
 }
+

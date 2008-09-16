@@ -90,7 +90,7 @@ function setupAssessmentLogging() {
 	
 	// Create assessment object
 	var assessment = otObjectService.createObject(OTAssessment)
-	assessment.setActivityName("Amplitude Modulation")
+	assessment.setTitle("Amplitude Modulation")
 	assessment.setUserName(userName)
 	assessment.setTime(ms)	
 

@@ -69,7 +69,6 @@ function setupAssessmentLogging() {
 	var userName = getUserName()
 	var ms = new Date().getTime()
 	var assessment = ot_assessment
-	assessment.setActivityName("Digital Troubleshooting")
 	assessment.setUserName(userName)
 	assessment.setTime(ms)	
 	otContents.add(assessment)
