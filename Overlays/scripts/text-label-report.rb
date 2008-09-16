@@ -11,32 +11,6 @@ include_class 'java.net.URL'
 include_class 'java.io.BufferedReader'
 include_class 'java.io.InputStreamReader'
 
-# class MyActionListener
-#   include java.awt.event.ActionListener
-#   
-#   def actionPerformed(event)
-#     $overlays.each do |overlay|
-#         objService = $map[overlay.getGlobalId]
-#     	db = objService.getCreationDb
-#     	url = URL.new("http://rails.dev.concord.org/webdav/" + overlay.getGlobalId + ".otml")
-# 			
-# 		$otrunk.remoteSaveData(db, url, "PUT")
-#     end
-#   end
-# end
-# $buttonListener = MyActionListener.new
-
-# class MyRunnable
-#   include java.lang.Runnable
-#   
-#   def run
-#     $stderr.puts "#{$viewContext}: #{$viewContext.methods.inspect}"
-#     buttonView = $viewContext.getViewByObject($otButton)
-#     buttonCompnent = buttonView.getComponent($otButton)
-#     buttonComponent.addActionListener $buttonListener unless buttonComponent == nil
-#   end
-# end
-
 def render(templateBlob)
   erb = ERB.new Java::JavaLang::String.new(templateBlob.src).to_s
   erb.result(binding)   
@@ -57,7 +31,12 @@ def getText
   # strObjServices = ""
   
   $overlays.each do |overlay|
-  	myoverlay = OverlayImpl.new overlay
+    myoverlay = nil
+    if overlay.respond_to? "getReference"
+      myoverlay = OverlayImpl.new overlay.getReference
+    else
+      myoverlay = OverlayImpl.new overlay
+  	end
   	db = CompositeDatabase.new $otrunk.getDataObjectFinder, myoverlay
   	# strOverlays << "overlay: #{myoverlay.inspect}\n"
   	# db = myoverlay.getOverlayDatabase();
