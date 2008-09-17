@@ -47,7 +47,7 @@ function assess(assessment, madWrapper) {
 }
 
 function processUserEvents(madWrapper) {
-	glob.activityLog += "Fault 1\n"
+	glob.activityLog += "Circuit 1\n"
 
 	var fault2Start = -1
 	var fault3Start = -1
@@ -79,7 +79,7 @@ function processUserEvents(madWrapper) {
 		if (nearTransition) {
 			if (wasNearTransition == false) {
 				fault += 1
-				glob.activityLog += "Fault " + fault + "\n"				
+				glob.activityLog += "Circuit " + fault + "\n"				
 			}
 		}
 		if (name == "DMM Dial") {
