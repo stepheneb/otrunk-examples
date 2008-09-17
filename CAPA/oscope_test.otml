@@ -1,0 +1,717 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<otrunk id="2767fe20-6c7d-11dc-8314-0800200c9a66">
+  <imports>
+    <import class="org.concord.data.state.OTDataStore" />
+    <import class="org.concord.data.state.OTDataChannelDescription" />
+    <import class="org.concord.data.state.OTDataField" />
+    <import class="org.concord.data.state.OTDataTable" />
+    <import class="org.concord.datagraph.state.OTDataGraph" />
+    <import class="org.concord.datagraph.state.OTDataAxis" />
+    <import class="org.concord.datagraph.state.OTDataGraphable" />
+    <import class="org.concord.datagraph.state.OTDataCollector" />
+    <import class="org.concord.datagraph.state.OTMultiDataGraph" />
+    <import class="org.concord.datagraph.state.OTPluginView" />
+    <import class="org.concord.datagraph.state.OTDataBarGraphable" />
+    <import class="org.concord.framework.otrunk.view.OTFrame" />
+    <import class="org.concord.framework.otrunk.wrapper.OTBlob" />
+    <import class="org.concord.graph.util.state.OTDrawingTool" />
+    <import class="org.concord.graph.util.state.OTDrawingStamp" />
+    <import class="org.concord.graph.util.state.OTDrawingImageIcon" />
+    <import class="org.concord.graph.util.state.OTDrawingShape" />
+    <import class="org.concord.graph.util.state.OTDrawingTool2" />
+    <import class="org.concord.graph.util.state.OTPointTextLabel" />
+    <import class="org.concord.otrunk.OTInclude" />
+    <import class="org.concord.otrunk.OTSystem" />
+    <import class="org.concord.otrunk.browser.mozswing.OTMozSwing" />
+    <import class="org.concord.otrunk.overlay.OTOverlay" />
+    <import class="org.concord.otrunk.script.ui.OTScriptObject" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariable" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariableComponent" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariableView" />
+    <import class="org.concord.otrunk.script.js.OTJavascript" />
+    <import class="org.concord.otrunk.script.OTScriptEngineBundle" />
+    <import class="org.concord.otrunk.script.OTScriptEngineEntry" />
+    <import class="org.concord.otrunk.udl.OTAuthorNote" />
+    <import class="org.concord.otrunk.udl.OTUDLLabPage" />
+    <import class="org.concord.otrunk.udl.coach.OTUDLCoach" />
+    <import class="org.concord.otrunk.udl.coach.OTUDLCoachGroup" />
+    <import class="org.concord.otrunk.udl.coach.OTUDLCoachStatement" />
+    <import class="org.concord.otrunk.udl.OTUDLMenuRule" />
+    <import class="org.concord.otrunk.udl.document.OTDefinition" />
+    <import class="org.concord.otrunk.udl.document.OTDefinitionList" />
+    <import class="org.concord.otrunk.udl.document.OTDefinitionManager" />
+    <import class="org.concord.otrunk.udl.document.OTGlossary" />
+    <import class="org.concord.otrunk.udl.document.OTUDLCompoundDoc" />
+    <import class="org.concord.otrunk.udl.document.OTUDLDocumentViewConfig" />
+    <import class="org.concord.otrunk.graph.OTDataCollectorViewConfig" />
+    <import class="org.concord.otrunk.udl.question.OTUDLQuestion" />
+    <import class="org.concord.otrunk.udl.question.OTUDLLeveledQuestions" />
+    <import class="org.concord.otrunk.udl.question.OTUDLQuestionViewConfig" />
+    <import class="org.concord.otrunk.udl3.OTUDLMenu" />
+    <import class="org.concord.otrunk.udl3.OTUDLContainer" />
+    <import class="org.concord.otrunk.udl3.OTUDLSection" />
+    <import class="org.concord.otrunk.ui.OTButton" />
+    <import class="org.concord.otrunk.ui.OTCardContainer" />
+    <import class="org.concord.otrunk.ui.OTChoice" />
+    <import class="org.concord.otrunk.ui.OTChoiceMultiple" />
+    <import class="org.concord.otrunk.ui.OTCurriculumUnit" />
+    <import class="org.concord.otrunk.ui.OTImage" />
+    <import class="org.concord.otrunk.ui.OTImageMap" />
+    <import class="org.concord.otrunk.ui.OTLayerContainer" />
+    <import class="org.concord.otrunk.ui.OTModeSwitcher" />
+    <import class="org.concord.otrunk.ui.OTText" />
+    <import class="org.concord.otrunk.ui.OTPlacement" />
+    <import class="org.concord.otrunk.ui.OTPlacementContainer" />
+    <import class="org.concord.otrunk.ui.snapshot.OTSnapshot" />
+    <import class="org.concord.otrunk.ui.snapshot.OTSnapshotButton" />
+    <import class="org.concord.otrunk.ui.snapshot.OTSnapshotAlbum" />
+    <import class="org.concord.otrunk.ui.snapshot.OTSnapshotChooser" />
+    <import class="org.concord.otrunk.ui.swing.OTChoiceViewConfig" />
+    <import class="org.concord.otrunk.util.OTSharingBundle" />
+    <import class="org.concord.otrunk.view.OTObjectEditViewConfig" />
+    <import class="org.concord.otrunk.view.OTViewChild" />
+    <import class="org.concord.otrunk.view.OTViewEntry" />
+    <import class="org.concord.otrunk.view.OTViewBundle" />
+    <import class="org.concord.otrunk.view.OTViewMode" />
+    <import class="org.concord.otrunk.view.document.OTCompoundDoc" />
+    <import class="org.concord.otrunk.view.document.OTCssText" />
+    <import class="org.concord.otrunk.view.prototype.OTPrototypeViewEntry" />
+    <import class="org.concord.otrunk.view.prototype.OTPrototypeEventController" />
+    <import class="org.concord.otrunk.view.prototype.OTPrototypeMapEntry" />
+    <import class="org.concord.otrunknl4.OTNLogoModel" />
+    <import class="org.concord.sensor.state.OTDeviceConfig" />
+    <import class="org.concord.sensor.state.OTExperimentRequest" />
+    <import class="org.concord.sensor.state.OTInterfaceManager" />
+    <import class="org.concord.sensor.state.OTSensorDataProxy" />
+    <import class="org.concord.sensor.state.OTSensorRequest" />
+    <import class="org.concord.sensor.state.OTZeroSensor" />
+    <import class="org.concord.otrunk.udl.OTUDLNavBar" />
+    <import class="org.concord.datagraph.state.OTDataPointLabel" />
+    <import class="org.concord.otrunk.udl.OTZoom" />
+    <import class="org.concord.otrunk.udl.OTZoomTransform" />
+    <import class="org.concord.otrunkmw.OTModelerPage" />
+    <import class="org.concord.otrunkmw.OTMwDataProducer" />
+    <import class="org.concord.otrunkmw.OTMwChannelData" />
+    <import class="org.concord.otrunk.ui.OTSoundPlayer" />
+    <import class="org.concord.otrunk.util.OTReference" />
+    <import class="org.concord.smartgraph.OTSmartGraphTool" />
+    <import class="org.concord.otrunk.script.ui.OTScriptButton" />
+    <import class="org.concord.otrunk.script.jruby.OTJRuby" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariableRealObject" />
+    <import class="org.concord.framework.otrunk.wrapper.OTInt" />
+    <import class="org.concord.framework.otrunk.wrapper.OTBoolean" />
+  </imports>
+  <objects>
+    <OTSystem local_id="system">
+      <includes>
+        <OTInclude href="http://continuum.concord.org/otrunk/examples/LOOPS/global-imports/loops-view-bundle.otml" />
+      </includes>
+      <bundles>
+        <object refid="8d880970-c22a-11dc-95ff-0800200c9a66" />
+        <OTScriptEngineBundle>
+          <engines>
+            <OTScriptEngineEntry objectClass="org.concord.otrunk.script.jruby.OTJRuby" engineClass="org.concord.otrunk.script.jruby.OTJRubyEngine" />
+            <OTScriptEngineEntry objectClass="org.concord.otrunk.script.js.OTJavascript" engineClass="org.concord.otrunk.script.js.OTJavascriptEngine" />
+          </engines>
+        </OTScriptEngineBundle>
+        <OTSharingBundle />
+        <OTInterfaceManager>
+          <deviceConfigs>
+            <OTDeviceConfig configString="none" deviceId="10" />
+          </deviceConfigs>
+        </OTInterfaceManager>
+      </bundles>
+      <overlays>
+        <object refid="6cc8e2b0-c44e-11dc-95ff-0800200c9a66" />
+        <object refid="b5d8b4a0-db35-11dc-95ff-0800200c9a66" />
+        <OTOverlay>
+          <deltaObjectMap>
+            <entry key="${authoring_script.js}">
+              <OTJavascript src="http://continuum.concord.org/otrunk/examples/LOOPS/scripts/student_script.js" />
+            </entry>
+          </deltaObjectMap>
+        </OTOverlay>
+      </overlays>
+      <root>
+        <OTCurriculumUnit version="2" name="LOOPS Activity">
+          <activity>
+            <OTUDLSection local_id="section_1">
+              <header>
+                <OTCompoundDoc id="2767fe20-6c7d-11dc-8314-0800200c9a66!/section_1/header" showEditBar="false">
+                  <bodyText>
+                    <div class="title">Oscilloscope Test</div>
+                  </bodyText>
+                </OTCompoundDoc>
+              </header>
+              <content>
+                <OTCardContainer local_id="activity-card-container" contentsMayScroll="true" loadViewOnlyOnDemand="true">
+                  <cards>
+                    <OTCompoundDoc local_id="page-1" name="1">
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <img src="images/oscopetest-scope.gif" alt="Oscilloscope" />
+                              <br />
+                              1. The switch labeled “Channel” has three settings: A, B, and A&amp;B. 
+          This switch set to “A” would be appropriate when
+                              <br />
+                              <br />
+                              <object refid="928f0e93-84ec-11dd-8e77-6de0332e65e5" />
+                              <br />
+                              <br />
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                        <OTUDLQuestion id="928f0e93-84ec-11dd-8e77-6de0332e65e5" name="Question" showConvertButton="false">
+                          <prompt>
+                            <OTCompoundDoc>
+                              <bodyText />
+                            </OTCompoundDoc>
+                          </prompt>
+                          <input>
+                            <OTChoice name="Multiple choice" alignContent="0">
+                              <choices>
+                                <OTCompoundDoc name="a. The Source switch is set to “EXT.”">
+                                  <bodyText>a. The Source switch is set to “EXT.”</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="b. You want Channel A to appear on the top of the screen, and Channel B on the bottom.">
+                                  <bodyText>b. You want Channel A to appear on the top of the screen, and Channel B on the bottom.</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="c. You want to watch television channel A.">
+                                  <bodyText>c. You want to watch television channel A.</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc id="b3bc1968-84ec-11dd-8e77-6de0332e65e5" name="d. You wish to study the signal from the cable plugged into the CH A jack.">
+                                  <bodyText>d. You wish to study the signal from the cable plugged into the CH A jack.</bodyText>
+                                </OTCompoundDoc>
+                              </choices>
+                            </OTChoice>
+                          </input>
+                          <correctAnswer>
+                            <object refid="b3bc1968-84ec-11dd-8e77-6de0332e65e5" />
+                          </correctAnswer>
+                        </OTUDLQuestion>
+                      </documentRefs>
+                    </OTCompoundDoc>
+                    <OTCompoundDoc id="4f4086ec-84ec-11dd-8e77-6de0332e65e5" name="%4f4086ec-84ec-11dd-8e77-6de0332e65e5" showEditBar="true">
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <img src="images/oscopetest-scope.gif" alt="Oscilloscope" />
+                              <br />
+                              2. Which of the following is usually the first step in measuring the 
+          amplitude of an input signal?
+                              <br />
+                              <br />
+                              <object refid="d4a5d9a1-84ec-11dd-8e77-6de0332e65e5" />
+                              <br />
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                        <OTUDLQuestion id="d4a5d9a1-84ec-11dd-8e77-6de0332e65e5" name="Question" showConvertButton="false">
+                          <prompt>
+                            <OTCompoundDoc>
+                              <bodyText />
+                            </OTCompoundDoc>
+                          </prompt>
+                          <input>
+                            <OTChoice name="Multiple choice" alignContent="0">
+                              <choices>
+                                <OTCompoundDoc name="a. Set the TRIGGER to a Positive slope.">
+                                  <bodyText>a. Set the TRIGGER to a Positive slope.</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="b. Turn the X-Position and Y-Position fully counterclockwise.">
+                                  <bodyText>b. Turn the X-Position and Y-Position fully counterclockwise.</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="c. Turn the TIME/DIV knob until the trace is visible on the screen.">
+                                  <bodyText>c. Turn the TIME/DIV knob until the trace is visible on the screen.</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc id="f0c01076-84ec-11dd-8e77-6de0332e65e5" name="d. Turn ON the oscilloscope.">
+                                  <bodyText>d. Turn ON the oscilloscope.</bodyText>
+                                </OTCompoundDoc>
+                              </choices>
+                            </OTChoice>
+                          </input>
+                          <correctAnswer>
+                            <object refid="f0c01076-84ec-11dd-8e77-6de0332e65e5" />
+                          </correctAnswer>
+                        </OTUDLQuestion>
+                      </documentRefs>
+                    </OTCompoundDoc>
+                    <OTCompoundDoc id="02ae5dab-84ed-11dd-8e77-6de0332e65e5" name="%02ae5dab-84ed-11dd-8e77-6de0332e65e5" showEditBar="true">
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <img src="images/oscopetest-scope.gif" alt="Oscilloscope" />
+                              <br />
+                              3. The VOLTS/DIV knob is used to
+                              <br />
+                              <br />
+                              <object refid="239fe610-84ed-11dd-8e77-6de0332e65e5" />
+                              <br />
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                        <OTUDLQuestion id="239fe610-84ed-11dd-8e77-6de0332e65e5" name="Question" showConvertButton="false">
+                          <prompt>
+                            <OTCompoundDoc>
+                              <bodyText />
+                            </OTCompoundDoc>
+                          </prompt>
+                          <input>
+                            <OTChoice name="Multiple choice" alignContent="0">
+                              <choices>
+                                <OTCompoundDoc name="a. Calibrate the voltage sensitivity of the oscilloscope.">
+                                  <bodyText>a. Calibrate the voltage sensitivity of the oscilloscope.</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc id="41380a53-84ed-11dd-8e77-6de0332e65e5" name="b. Make the wave from peak-to-peak fit in the display.">
+                                  <bodyText>b. Make the wave from peak-to-peak fit in the display.</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="c. Move the curve on the display up or down.">
+                                  <bodyText>c. Move the curve on the display up or down.</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="d. Move the curve on the display left or right.">
+                                  <bodyText>d. Move the curve on the display left or right.</bodyText>
+                                </OTCompoundDoc>
+                              </choices>
+                            </OTChoice>
+                          </input>
+                          <correctAnswer>
+                            <object refid="41380a53-84ed-11dd-8e77-6de0332e65e5" />
+                          </correctAnswer>
+                        </OTUDLQuestion>
+                      </documentRefs>
+                    </OTCompoundDoc>
+                    <OTCompoundDoc id="49b818aa-84ed-11dd-8e77-6de0332e65e5" name="%49b818aa-84ed-11dd-8e77-6de0332e65e5" showEditBar="true">
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <img src="images/oscopetest-scope.gif" alt="Oscilloscope" />
+                              <br />
+                              4. The TIME/DIV knob is used to
+                              <br />
+                              <br />
+                              <object refid="6711ad3f-84ed-11dd-8e77-6de0332e65e5" />
+                              <br />
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                        <OTUDLQuestion id="6711ad3f-84ed-11dd-8e77-6de0332e65e5" name="Question" showConvertButton="false">
+                          <prompt>
+                            <OTCompoundDoc>
+                              <bodyText />
+                            </OTCompoundDoc>
+                          </prompt>
+                          <input>
+                            <OTChoice name="Multiple choice" alignContent="0">
+                              <choices>
+                                <OTCompoundDoc id="89db5111-84ed-11dd-8e77-6de0332e65e5" name="a. Make between one and two cycles of the wave visible in the display.">
+                                  <bodyText>a. Make between one and two cycles of the wave visible in the display.</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="b. Compensate for a positive or negative trigger setting.">
+                                  <bodyText>b. Compensate for a positive or negative trigger setting.</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="c. Adjust the display to measure the peak-to-peak value.">
+                                  <bodyText>c. Adjust the display to measure the peak-to-peak value.</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="d. Adjust the frequency of the input signal.">
+                                  <bodyText>d. Adjust the frequency of the input signal.</bodyText>
+                                </OTCompoundDoc>
+                              </choices>
+                            </OTChoice>
+                          </input>
+                          <correctAnswer>
+                            <object refid="89db5111-84ed-11dd-8e77-6de0332e65e5" />
+                          </correctAnswer>
+                        </OTUDLQuestion>
+                      </documentRefs>
+                    </OTCompoundDoc>
+                    <OTCompoundDoc id="a5d555a9-84ed-11dd-8e77-6de0332e65e5" name="%a5d555a9-84ed-11dd-8e77-6de0332e65e5" showEditBar="true">
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <img src="images/oscopetest-scope.gif" alt="Oscilloscope" />
+                              <br />
+                              5. Which of the following knobs would you use to adjust the display 
+          to better determine the peak-to-peak amplitude?
+                              <br />
+                              <br />
+                              <object refid="b645b56e-84ed-11dd-8e77-6de0332e65e5" />
+                              <br />
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                        <OTUDLQuestion id="b645b56e-84ed-11dd-8e77-6de0332e65e5" name="Question" showConvertButton="false">
+                          <prompt>
+                            <OTCompoundDoc>
+                              <bodyText />
+                            </OTCompoundDoc>
+                          </prompt>
+                          <input>
+                            <OTChoice name="Multiple choice" alignContent="0">
+                              <choices>
+                                <OTCompoundDoc name="a. Level">
+                                  <bodyText>a. Level</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc id="c785c051-84ed-11dd-8e77-6de0332e65e5" name="b. Y-POS">
+                                  <bodyText>b. Y-POS</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="c. CHANNEL">
+                                  <bodyText>c. CHANNEL</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="d. Source">
+                                  <bodyText>d. Source</bodyText>
+                                </OTCompoundDoc>
+                              </choices>
+                            </OTChoice>
+                          </input>
+                          <correctAnswer>
+                            <object refid="c785c051-84ed-11dd-8e77-6de0332e65e5" />
+                          </correctAnswer>
+                        </OTUDLQuestion>
+                      </documentRefs>
+                    </OTCompoundDoc>
+                    <OTCompoundDoc id="d0fed4a8-84ed-11dd-8e77-6de0332e65e5" name="%d0fed4a8-84ed-11dd-8e77-6de0332e65e5" showEditBar="true">
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <img src="images/oscopetest-scope.gif" alt="Oscilloscope" />
+                              <br />
+                              6. After adjusting the display, you count 5½ grid squares from the 
+          bottom of the wave to the top of the wave. The TIME/DIV setting is 
+          “0.2 ms,” and the VOLTS/DIV setting is 50 mV. The peak-to-peak 
+          amplitude of this signal is
+                              <br />
+                              <br />
+                              <object refid="e692d14d-84ed-11dd-8e77-6de0332e65e5" />
+                              <br />
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                        <OTUDLQuestion id="e692d14d-84ed-11dd-8e77-6de0332e65e5" name="Question" showConvertButton="false">
+                          <prompt>
+                            <OTCompoundDoc>
+                              <bodyText />
+                            </OTCompoundDoc>
+                          </prompt>
+                          <input>
+                            <OTChoice name="Multiple choice" alignContent="0">
+                              <choices>
+                                <OTCompoundDoc id="fbc6858f-84ed-11dd-8e77-6de0332e65e5" name="a. 275 mV">
+                                  <bodyText>a. 275 mV</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="b. 5.5 mV">
+                                  <bodyText>b. 5.5 mV</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="c. 10 mV">
+                                  <bodyText>c. 10 mV</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="d. 1.1 mV">
+                                  <bodyText>d. 1.1 mV</bodyText>
+                                </OTCompoundDoc>
+                              </choices>
+                            </OTChoice>
+                          </input>
+                          <correctAnswer>
+                            <object refid="fbc6858f-84ed-11dd-8e77-6de0332e65e5" />
+                          </correctAnswer>
+                        </OTUDLQuestion>
+                      </documentRefs>
+                    </OTCompoundDoc>
+                    <OTCompoundDoc id="0542a727-84ee-11dd-8e77-6de0332e65e5" name="%0542a727-84ee-11dd-8e77-6de0332e65e5" showEditBar="true">
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <img src="images/oscopetest-scope.gif" alt="Oscilloscope" />
+                              <br />
+                              7. Seeing the signal shown in the illustration, which of the 
+          following adjustments would improve the display to better measure 
+          the amplitude of the signal?
+                              <br />
+                              <br />
+                              <object refid="16bcd5cc-84ee-11dd-8e77-6de0332e65e5" />
+                              <br />
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                        <OTUDLQuestion id="16bcd5cc-84ee-11dd-8e77-6de0332e65e5" name="Question" showConvertButton="false">
+                          <prompt>
+                            <OTCompoundDoc>
+                              <bodyText />
+                            </OTCompoundDoc>
+                          </prompt>
+                          <input>
+                            <OTChoice name="Multiple choice" alignContent="0">
+                              <choices>
+                                <OTCompoundDoc name="a. Adjusting the Level knob to more negative.">
+                                  <bodyText>a. Adjusting the Level knob to more negative.</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc id="351a45df-84ee-11dd-8e77-6de0332e65e5" name="b. Turning the VOLTS/DIV knob clockwise.">
+                                  <bodyText>b. Turning the VOLTS/DIV knob clockwise.</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="c. Turning the TIME/DIV knob counter-clockwise.">
+                                  <bodyText>c. Turning the TIME/DIV knob counter-clockwise.</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="d. Sliding CHANNEL switch to the A position.">
+                                  <bodyText>d. Sliding CHANNEL switch to the A position.</bodyText>
+                                </OTCompoundDoc>
+                              </choices>
+                            </OTChoice>
+                          </input>
+                          <correctAnswer>
+                            <object refid="351a45df-84ee-11dd-8e77-6de0332e65e5" />
+                          </correctAnswer>
+                        </OTUDLQuestion>
+                      </documentRefs>
+                    </OTCompoundDoc>
+                    <OTCompoundDoc id="3d664be6-84ee-11dd-8e77-6de0332e65e5" name="%3d664be6-84ee-11dd-8e77-6de0332e65e5" showEditBar="true">
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <img src="images/oscopetest-scope.gif" alt="Oscilloscope" />
+                              <br />
+                              8. After adjusting the display, you count 9.2 grid squares between 
+          two consecutive peaks of the wave (left to right). The TIME/DIV 
+          setting is “10 ms,” and the VOLTS/DIV setting is 20 V. The period of 
+          this signal is
+                              <br />
+                              <br />
+                              <object refid="4e2c1eab-84ee-11dd-8e77-6de0332e65e5" />
+                              <br />
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                        <OTUDLQuestion id="4e2c1eab-84ee-11dd-8e77-6de0332e65e5" name="Question" showConvertButton="false">
+                          <prompt>
+                            <OTCompoundDoc>
+                              <bodyText />
+                            </OTCompoundDoc>
+                          </prompt>
+                          <input>
+                            <OTChoice name="Multiple choice" alignContent="0">
+                              <choices>
+                                <OTCompoundDoc name="a. 10.8 sec">
+                                  <bodyText>a. 10.8 sec</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="b. 0.102 sec">
+                                  <bodyText>b. 0.102 sec</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc id="6198806f-84ee-11dd-8e77-6de0332e65e5" name="c. 0.092 sec">
+                                  <bodyText>c. 0.092 sec</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="d. 184 sec">
+                                  <bodyText>d. 184 sec</bodyText>
+                                </OTCompoundDoc>
+                              </choices>
+                            </OTChoice>
+                          </input>
+                          <correctAnswer>
+                            <object refid="6198806f-84ee-11dd-8e77-6de0332e65e5" />
+                          </correctAnswer>
+                        </OTUDLQuestion>
+                      </documentRefs>
+                    </OTCompoundDoc>
+                    <OTCompoundDoc id="6ce395a5-84ee-11dd-8e77-6de0332e65e5" name="%6ce395a5-84ee-11dd-8e77-6de0332e65e5" showEditBar="true">
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <img src="images/oscopetest-scope.gif" alt="Oscilloscope" />
+                              <br />
+                              9. The signal described in the previous question has a frequency of
+                              <br />
+                              <br />
+                              <object refid="7c2d019a-84ee-11dd-8e77-6de0332e65e5" />
+                              <br />
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                        <OTUDLQuestion id="7c2d019a-84ee-11dd-8e77-6de0332e65e5" name="Question" showConvertButton="false">
+                          <prompt>
+                            <OTCompoundDoc>
+                              <bodyText />
+                            </OTCompoundDoc>
+                          </prompt>
+                          <input>
+                            <OTChoice name="Multiple choice" alignContent="0">
+                              <choices>
+                                <OTCompoundDoc id="8f5618cc-84ee-11dd-8e77-6de0332e65e5" name="a. 10.8 Hz">
+                                  <bodyText>a. 10.8 Hz</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="b. 5.4 kHz">
+                                  <bodyText>b. 5.4 kHz</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="c. 9.2 mHz">
+                                  <bodyText>c. 9.2 mHz</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="d. 102 MHz">
+                                  <bodyText>d. 102 MHz</bodyText>
+                                </OTCompoundDoc>
+                              </choices>
+                            </OTChoice>
+                          </input>
+                          <correctAnswer>
+                            <object refid="8f5618cc-84ee-11dd-8e77-6de0332e65e5" />
+                          </correctAnswer>
+                        </OTUDLQuestion>
+                      </documentRefs>
+                    </OTCompoundDoc>
+                    <OTCompoundDoc id="9882e1e4-84ee-11dd-8e77-6de0332e65e5" name="%9882e1e4-84ee-11dd-8e77-6de0332e65e5" showEditBar="true">
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <img src="images/oscopetest-scope.gif" alt="Oscilloscope" />
+                              <br />
+                              10. A signal with a very high frequency would require you to
+                              <br />
+                              <br />
+                              <object refid="a7caa029-84ee-11dd-8e77-6de0332e65e5" />
+                              <br />
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                        <OTUDLQuestion id="a7caa029-84ee-11dd-8e77-6de0332e65e5" name="Question" showConvertButton="false">
+                          <prompt>
+                            <OTCompoundDoc>
+                              <bodyText />
+                            </OTCompoundDoc>
+                          </prompt>
+                          <input>
+                            <OTChoice name="Multiple choice" alignContent="0">
+                              <choices>
+                                <OTCompoundDoc id="cacb598b-84ee-11dd-8e77-6de0332e65e5" name="a. Turn the TIME/DIV knob far clockwise.">
+                                  <bodyText>a. Turn the TIME/DIV knob far clockwise.</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="b. Turn the X-POS and Y-POS knobs almost all the way counter-clockwise.">
+                                  <bodyText>b. Turn the X-POS and Y-POS knobs almost all the way counter-clockwise.</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="c. Change to Channel A.">
+                                  <bodyText>c. Change to Channel A.</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="d. Adjust the VOLTS/DIV so the peak-to-peak amplitude fits within one grid square.">
+                                  <bodyText>d. Adjust the VOLTS/DIV so the peak-to-peak amplitude fits within one grid square.</bodyText>
+                                </OTCompoundDoc>
+                              </choices>
+                            </OTChoice>
+                          </input>
+                          <correctAnswer>
+                            <object refid="cacb598b-84ee-11dd-8e77-6de0332e65e5" />
+                          </correctAnswer>
+                        </OTUDLQuestion>
+                      </documentRefs>
+                    </OTCompoundDoc>
+                  </cards>
+                  <currentCard>
+                  </currentCard>
+                  <viewedCards>
+                    <object refid="${page-1}" />
+                    <object refid="4f4086ec-84ec-11dd-8e77-6de0332e65e5" />
+                    <object refid="02ae5dab-84ed-11dd-8e77-6de0332e65e5" />
+                    <object refid="49b818aa-84ed-11dd-8e77-6de0332e65e5" />
+                    <object refid="a5d555a9-84ed-11dd-8e77-6de0332e65e5" />
+                    <object refid="d0fed4a8-84ed-11dd-8e77-6de0332e65e5" />
+                    <object refid="0542a727-84ee-11dd-8e77-6de0332e65e5" />
+                    <object refid="3d664be6-84ee-11dd-8e77-6de0332e65e5" />
+                    <object refid="6ce395a5-84ee-11dd-8e77-6de0332e65e5" />
+                    <object refid="9882e1e4-84ee-11dd-8e77-6de0332e65e5" />
+                  </viewedCards>
+                </OTCardContainer>
+              </content>
+              <footer>
+                <object refid="${nav-bar}" />
+              </footer>
+              <north>
+                <object refid="2767fe20-6c7d-11dc-8314-0800200c9a66!/section_1/header" />
+              </north>
+              <center>
+                <object refid="${activity-card-container}" />
+              </center>
+              <south>
+                <object refid="${nav-bar}" />
+              </south>
+            </OTUDLSection>
+          </activity>
+          <script>
+            <object refid="${authoring-script}" />
+          </script>
+        </OTCurriculumUnit>
+      </root>
+      <library>
+        <object refid="b6350a20-e3b4-11dc-95ff-0800200c9a66" />
+        <OTUDLMenu local_id="section-1-menu">
+          <cardContainer>
+            <object refid="${activity-card-container}" />
+          </cardContainer>
+          <menuRule>
+            <object refid="${page-rule}" />
+          </menuRule>
+        </OTUDLMenu>
+        <OTSnapshotAlbum local_id="album" />
+        <OTUDLMenuRule local_id="page-rule" jumpToViewedCard="true" stepAhead="true" />
+        <OTJavascript local_id="change_page.js" src="http://continuum.concord.org/otrunk/examples/LOOPS/scripts/change_page.js" />
+        <OTJavascript local_id="show_message.js" src="http://continuum.concord.org/otrunk/examples/LOOPS/scripts/show_message.js" />
+        <OTJavascript local_id="loops_authoring_script.js" src="http://continuum.concord.org/otrunk/examples/LOOPS/scripts/loops_authoring_script.js" />
+        <OTScriptObject local_id="authoring-script">
+          <variables>
+            <OTScriptVariable name="cardContainer">
+              <reference>
+                <object refid="${activity-card-container}" />
+              </reference>
+            </OTScriptVariable>
+            <OTScriptVariable name="system">
+              <reference>
+                <object refid="${system}" />
+              </reference>
+            </OTScriptVariable>
+            <OTScriptVariable name="menuPageRule">
+              <reference>
+                <object refid="${page-rule}" />
+              </reference>
+            </OTScriptVariable>
+          </variables>
+          <script>
+            <object refid="${loops_authoring_script.js}" />
+          </script>
+          <scriptState />
+        </OTScriptObject>
+        <OTUDLNavBar local_id="nav-bar">
+          <menuView>
+            <object refid="29dc5ef0-c453-11dc-95ff-0800200c9a66" />
+          </menuView>
+          <cssColor>
+            <object refid="31193bb0-c44f-11dc-95ff-0800200c9a66" />
+          </cssColor>
+        </OTUDLNavBar>
+      </library>
+    </OTSystem>
+  </objects>
+</otrunk>
+
