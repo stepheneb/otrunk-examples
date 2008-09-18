@@ -24,6 +24,12 @@ var numCards;
 var currentcard;
 var passwordfield;
 
+function enableEverything(enable){
+	for(var i=0; i<cardContainer.getCards().size(); i++) {
+		cardContainer.getCards().get(i).setEnabled(enable)
+	}
+}
+
 var buttonHandler =
 {
 		actionPerformed: function(evt)
@@ -38,7 +44,17 @@ var buttonHandler =
 				return;
 			}
 		}
-				cardContainer.setCurrentCard(card);
+				cardContainer.setCurrentCard(cardContainer.getCards().get(0));
+				var cards = cardContainer.getCards()
+				if (cards.get(1).getEnabled()){
+					enableEverything(true)
+					cards.get(1).setEnabled(false)
+					cards.get(cards.size()-1).setEnabled(true)  // for now
+				} else {
+					enableEverything(false)
+					cards.get(cards.size()-1).setEnabled(true)
+				}
+				
 		}
 };
 var buttonListener = new ActionListener(buttonHandler);
