@@ -43,8 +43,10 @@ def render(templateBlob)
   erb.result(binding)   
 end 
 
-def embedObject(obj)
-  "<object refid=\"#{ obj.otExternalId() }\"/>"
+def embedObject(obj, viewEntry=nil)
+  tag = "<object refid=\"#{ obj.otExternalId() }\""
+  tag += "viewid=\"#{ viewEntry.otExternalId() }\" "  if viewEntry
+  tag += "/>"
 end
 
 def otCreate(rconstant, &block)
