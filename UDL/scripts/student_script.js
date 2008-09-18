@@ -92,7 +92,6 @@ function setupLabbookQuestionListeners(){
 	}
 	labbook = provider.getLabbookManager(otObjectService)
 	
-	curnitHelper = OTCurriculumUnitHelper.getActivityHelper(viewContext)
 	for (var i=0; i<otids.length; i++){
 		var question = otObjectService.getOTObject(otObjectService.getOTID(otids[i]))
 		if (question != null && question.toString().indexOf("Question") > 0 && 
@@ -104,8 +103,41 @@ function setupLabbookQuestionListeners(){
 	}
 	return true;
 }
+
+function turnOffDefinitions(){
+	var sections = curnitHelper.getSections()
+	
+	var pages = sections.get(1).getContent().getCards()
+	turnOffDefinitionsFor(pages)
+	
+	pages = sections.get(sections.size() - 1).getContent().getCards()
+	turnOffDefinitionsFor(pages)
+}
+
+function turnOffDefinitionsFor(pages){
+	for(var i=0; i<pages.size(); i++) {
+		pages.get(i).setShowDefinitions(false);
+	}
+}
+
+var sectionChangeHandler = 
+{
+	stateChanged: function(evt)
+	{
+		
+	}
+	
+}
+var sectionChangeListener = new OTChangeListener(sectionChangeHandler);
+
+function setupSectionEnabling(){
+	curnitHelper.addSectionChangeListener(sectionChangeListener)
+}
   			
 function init() {
+	curnitHelper = OTCurriculumUnitHelper.getActivityHelper(otObjectService)
+	setupSectionEnabling()
+	turnOffDefinitions()
 	setupLabbookQuestionListeners()
 }
 
