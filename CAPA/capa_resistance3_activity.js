@@ -80,8 +80,10 @@ importClass(Packages.org.concord.framework.otrunk.view.OTUserListService)
   * Variables from otml
   * ===================
   * otAssessment
-  * otQuestion
   */
+
+
+var otQuestion = otAssessment.getQuestions().get(0)
 
 var activityName = "Measuring Resistance 3.0";
 
