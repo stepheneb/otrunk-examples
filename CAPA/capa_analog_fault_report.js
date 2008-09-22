@@ -15,14 +15,14 @@ var red = "b02020"
 function getText() {
 	var indicators = ot_assessment.getIndicatorValues()
  	var inv = ot_assessment.getInventory()
+ 	var questions = ot_assessment.getQuestions()
  	
-	var c_fault1 = parseInt(inv.get("c_fault1"))
-	var s_fault1 = parseInt(inv.get("s_fault1"))	
-	var c_fault2 = parseInt(inv.get("c_fault2"))
-	var s_fault2 = parseInt(inv.get("s_fault2"))	
-	var c_fault3 = parseInt(inv.get("c_fault3"))
-	var s_fault3 = parseInt(inv.get("s_fault3"))	
-	var totalTime = parseFloat(inv.get("time"))
+	var c_fault1 = questions.get(0).getCorrectAnswer().getValue()
+	var s_fault1 = questions.get(0).getInput().getValue()
+	var c_fault2 = questions.get(1).getCorrectAnswer().getValue()
+	var s_fault2 = questions.get(1).getInput().getValue()
+	var c_fault3 = questions.get(2).getCorrectAnswer().getValue()
+	var s_fault3 = questions.get(2).getInput().getValue()
 	var activityLog = inv.get("activityLog")
 	var t = ""
 	
@@ -57,13 +57,7 @@ function getText() {
   	t += "</tr>"
 	t += getAnswerLine(c_fault3 == s_fault3, points[0], points[1])		
 	t += "<tr></tr><tr>"
-
-	pts = getPoints("timeTotal");
-	t += "<td colspan=\"2\"><b>Time Taken</b> (10 points for minimal time) </td>"
-	t += "</tr><tr>"	
-  	t += "<td>" + getTimeStringFromSeconds(totalTime) + "</td><td>" + pts[0] + " points (out of " + pts[1] + ")</td>"
-	t += "</tr></table>"
-	
+		
 	t += "<p/>---------- "			
 	t += " The information below this line is only for debugging purpose "
 	t += "----------<br/><pre>"		

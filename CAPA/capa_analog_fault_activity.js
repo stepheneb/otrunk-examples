@@ -8,6 +8,7 @@ importClass(Packages.java.awt.event.ActionListener)
 importClass(Packages.javax.swing.JOptionPane)
 importClass(Packages.java.math.RoundingMode)
 
+importClass(Packages.org.concord.framework.otrunk.wrapper.OTInt)
 importClass(Packages.org.concord.otrunk.ui.OTText)
 importClass(Packages.org.concord.otrunk.ui.swing.OTCardContainerView)
 importClass(Packages.org.concord.otrunkcapa.rubric.OTAssessment)
@@ -16,22 +17,25 @@ importClass(Packages.org.concord.otrunk.labview.LabviewReportConverter)
 importClass(Packages.org.concord.otrunk.labview.AnalogDCUtil)
 
 /*
- * Variables from OTScriptObject
+ * Variables from OTScriptObject:
  * 
  * otContents
+ * otObjectService
  * controllerService
  */
  
 /*
- * Variables from otml 
- * otc_ : component variables
+ * Variables from otml:
+ *  
+ * ot_monitor
+ * otAssessment
+ * ot_cards
+ * otc_reportButton
+ * otQuestion1
+ * otQuestion2
+ * otQuestion3
  */
- 
-var ot_monitor
-var ot_assessment
-var ot_cards
-var otc_reportButton
- 	
+
 var glob = {
 	dateFormat : SimpleDateFormat.getInstance(),
 	currentStep : 1,
@@ -63,7 +67,7 @@ function save() {
 
 function setupAssessmentLogging() {
 	// Create assessment object
-	otContents.add(ot_assessment)
+	otContents.add(otAssessment)
 }
 
 function setupGUI() {
@@ -77,14 +81,14 @@ function endActivity() {
 
 function wrap_assess() {
 	var ms = new Date().getTime()
-	ot_assessment.setTime(ms)	
+	otAssessment.setTime(ms)	
 	var converter = new LabviewReportConverter(glob.monitor)
 	converter.markEndTime()
 	var madWrapper = converter.getMADWrapper()
-	var inventory = ot_assessment.getInventory()
+	var inventory = otAssessment.getInventory()
 	var madID = converter.getOTModelActivityData().getGlobalId()
 	inventory.put("modelActivityData", madID)
-	assess(ot_assessment, madWrapper)
+	assess(otAssessment, madWrapper)
 }
 
 var listeners = {
@@ -94,4 +98,10 @@ var listeners = {
 			OTCardContainerView.setCurrentCard(ot_cards, "main_card_2")				
 		}	
 	})
+}
+
+function otCreateInt(i) {
+	var otInt = otObjectService.createObject(OTInt)
+	otInt.setValue(i)
+	return otInt
 }
