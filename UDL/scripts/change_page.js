@@ -49,7 +49,7 @@ var buttonHandler =
 				if (cards.get(1).getEnabled()){
 					enableEverything(true)
 					cards.get(1).setEnabled(false)
-					cards.get(cards.size()-1).setEnabled(true)  // for now
+					cards.get(cards.size()-1).setEnabled(false)  // for now
 				} else {
 					enableEverything(false)
 					cards.get(cards.size()-1).setEnabled(true)
