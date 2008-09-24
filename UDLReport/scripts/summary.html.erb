@@ -17,14 +17,18 @@
       <th><%= linkToObject section.name, section, $section_view %></th>  
      <% end %>
     </tr>
-    <% if $dashboard %>
     <tr>
-     <td>Enable Activity</td>
+     <td>Enabled</td>
      <% activitySections.each do |section| %>
-      <td><%= embedObject section, $section_enable_view %></td>  
+      <td>
+        <% if $dashboard %>
+          <%= embedObject section, $section_enable_view %>  
+        <% else %>
+          <%= "X" if section.enabled %>
+        <% end %>
+      </td>
      <% end %>
     </tr> 
-    <% end %>   
     <% line_toggle = true %>
     <% users.each do |user| %>
     <tr BGCOLOR = <%= line_toggle ? ROWCOLOR1 : ROWCOLOR2 %>>
@@ -33,7 +37,7 @@
        <% userVisitedSections = visitedSections(user) %>
        <% activitySections.each do |section| %>
         <% userSection = userObject(section, user) %>
-        <td>
+        <td style="text-align: center">
           <% if userVisitedSections.include? userSection %>
             <img src="../UDL/images/tick.png"/>
           <% end %>

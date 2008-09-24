@@ -208,11 +208,20 @@ def sectionTitle
 end
 
 def basicSectionQuestions
+  return sectionQuestions($model)
+end
+
+
+def sectionQuestions(section)
   questions = []
+
+  puts "looking for section questions"
   
-  return questions unless $model.content.is_a? org.concord.otrunk.ui.OTCardContainer
+  return questions unless section.content.is_a? org.concord.otrunk.ui.OTCardContainer
   
-  pageCards = $model.content.cards.vector
+  puts "section.content is a card container"
+  
+  pageCards = section.content.cards.vector
 
   pageCards.each do | doc |
     questions.concat documentQuestions(doc)
@@ -291,8 +300,7 @@ def currentChoiceText(chooser)
   return toPlainText(answer)
 end
 
-# this takes a userQuestion
-def questionAnswer(question)
+def questionAnswerRaw(question)
   input = question.input
   if input.is_a? org.concord.otrunk.ui.OTText
     answer = input.text
@@ -301,6 +309,13 @@ def questionAnswer(question)
       answer = currentChoiceText input
     end
   end
+  
+  answer
+end
+
+# this takes a userQuestion
+def questionAnswer(question)
+  answer = questionAnswerRaw(question)
   
   answer = "No Answer" if answer == nil
   truncate answer, 30
@@ -321,6 +336,15 @@ def questionCorrect (question)
   end
 end
 
+def questionAnswered (question)
+  questionAnswerRaw(question) != nil
+end
+
+# this takes an authored question
+def questionGradable (question)
+  return true if question.input.is_a? org.concord.otrunk.ui.OTChoice and question.correctAnswer  
+end
+
 # this takes a userQuestion
 def questionAnswerHtml(question)
   correct = questionCorrect question
@@ -339,4 +363,26 @@ def preOrPost?
   title = sectionTitle.downcase
   title == "pre-test" or title == "post-test"
 end
+
+# takes an authored section
+def relatedQuestions(section)
+  relQuestions = []
+
+  questions = sectionQuestions(pretest())
+  questions.each do |question|
+    question.getActivityReferences.getVector.each do |reference|
+      if reference.getReferencedObject.equals(section)
+        relQuestions << question
+        break
+      end
+    end
+  end
   
+  relQuestions
+end  
+
+def pretest
+  activitySections().each do |section|
+    return section if section.getIsPretest()
+  end
+end

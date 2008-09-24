@@ -10,10 +10,41 @@
   <% user = $model %>
   <h2>User: <%= user.name %></h2>
 
-  <h3>Visited Sections</h3>
-  <ul>
-  <% visitedSections(user).each do |section| %>
-    <li><%= linkToObject section.name, section, $section_view %></li>
+  <% userVisitedSections = visitedSections(user) %>
+
+  <h3>Sections</h3>
+  <table>
+  <tr><th>Section</th><th>Visited</th><th>Enabled</th><th>Related Score</th><tr>
+  
+  <% activitySections.each do |section| %>
+    <tr>
+      <td><%= section.name %></td>
+      <td style="text-align: center">
+        <% userSection = userObject(section, user) %>
+        <% if userVisitedSections.include? userSection %>
+          X<!-- img src="../UDL/images/tick.png"/ -->
+        <% end %>
+      </td> 
+      <td style="text-align: center">
+        <% if $dashboard %>
+          <%= embedObject userSection, $section_enable_view %>  
+        <% else %>
+          <%= if userSection.enabled then "X" else " " end %>
+        <% end %>
+      </td>
+      <td style="text-align: center">
+        <!-- need to lookup the pre test, go through each question
+            and see if that question references this section
+            then get the users score on that question. -->
+        <% numQuestions = 0
+           numCorrect = 0 %>
+		<% (relatedQuestions section).each do |question| 
+		    numQuestions += 1
+		    numCorrect += 1 if questionCorrect(userObject(question, user))
+		   end %>
+		<%= numCorrect %>/<%= numQuestions %>         
+      </td>
+    </tr>        
   <% end %>
-  </ul>
+  
 </div>

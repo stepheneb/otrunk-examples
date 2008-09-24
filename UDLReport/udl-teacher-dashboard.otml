@@ -76,70 +76,80 @@
 						<!--
 							the local_id is so this can be used as a report template in the
 							DIY
+							example learner data:
+							http://rails.dev.concord.org/udl/external_otrunk_activities/42/ot_learner_data.xml
 						-->
 						<OTIncludeRootObject local_id="external_user_list_url"
-							href="http://rails.dev.concord.org/udl/external_otrunk_activities/42/ot_learner_data.xml" />
+							href="http://udl.diy.concord.org/external_otrunk_activities/46/ot_learner_data?users=1242%2C1243%2C1245%2C1246%2C1247%2C1248%2C1249%2C1250%2C1251%2C1252%2C1253%2C1254%2C1255%2C1256%2C1257"
+							/>
 					</userList>
 					<reportTemplate>
 						<OTIncludeRootObject local_id="external_activity_url"
-							href="../UDL/udl-plants-56.otml" />
+							href="http://svn.concord.org/svn/projects/tags/java/common/otrunk/otrunk-examples/UDL-fresno-08-08-05/udl-clouds-34.otml" />
 					</reportTemplate>
 				</OTMultiUserRoot>
 			</root>
 			<library>
-				<OTXHTMLScriptViewEntry local_id="report_unit_view"
-					objectClass="org.concord.framework.otrunk.OTObject" viewClass="org.concord.otrunk.script.ui.OTXHTMLScriptView">
+				<OTXHTMLScriptViewEntry local_id="template_report_view"
+					objectClass="org.concord.framework.otrunk.OTObject" 
+					viewClass="org.concord.otrunk.script.ui.OTXHTMLScriptView">
 					<script>
 						<OTJRuby local_id="erb_controller" src="scripts/udl-multipage-report.rb" />
 					</script>
+					<variables>
+						<OTScriptVariable name="section_view" reference="${report_section_view}" />
+						<OTScriptVariable name="user_view" reference="${report_user_view}" />
+                        <OTScriptVariable name="section_enable_view" reference="${section_enable_edit}"/>
+						<OTScriptVariable name="section_csv_view" reference="${report_section_csv_view}" />
+                        <OTScriptVariable name="dashboard" reference="${true}"/>
+					</variables>
+				</OTXHTMLScriptViewEntry>			
+				<OTXHTMLScriptViewEntry local_id="report_unit_view" 
+				    template="${template_report_view}"
+					objectClass="org.concord.framework.otrunk.OTObject" 
+					viewClass="org.concord.otrunk.script.ui.OTXHTMLScriptView">
 					<variables>
 						<OTScriptVariable name="template">
 							<reference>
 								<OTBlob src="scripts/summary.html.erb" />
 							</reference>
 						</OTScriptVariable>
-						<OTScriptVariable name="section_view" reference="${report_section_view}" />
-						<OTScriptVariable name="user_view" reference="${report_user_view}" />
-                        <OTScriptVariable name="section_enable_view" reference="${section_enable_edit}"/>
-                        <OTScriptVariable name="dashboard" reference="${true}"/>
 					</variables>
 				</OTXHTMLScriptViewEntry>
-				<OTXHTMLScriptViewEntry local_id="report_section_view"
-					objectClass="org.concord.framework.otrunk.OTObject" viewClass="org.concord.otrunk.script.ui.OTXHTMLScriptView"
-					script="${erb_controller}">
+				<OTXHTMLScriptViewEntry local_id="report_section_view" 
+				    template="${template_report_view}"
+					objectClass="org.concord.framework.otrunk.OTObject" 
+					viewClass="org.concord.otrunk.script.ui.OTXHTMLScriptView">
 					<variables>
 						<OTScriptVariable name="template">
 							<reference>
 								<OTBlob src="scripts/section.html.erb" />
 							</reference>
 						</OTScriptVariable>
-						<OTScriptVariable name="section_csv_view"
-							reference="${report_section_csv_view}" />
-						<OTScriptVariable name="user_view" reference="${report_user_view}" />
 					</variables>
 				</OTXHTMLScriptViewEntry>
 				<OTXHTMLScriptViewEntry local_id="report_section_csv_view"
-					objectClass="org.concord.framework.otrunk.OTObject" viewClass="org.concord.otrunk.script.ui.OTXHTMLScriptView"
-					script="${erb_controller}">
+				    template="${template_report_view}"
+					objectClass="org.concord.framework.otrunk.OTObject"
+					viewClass="org.concord.otrunk.script.ui.OTXHTMLScriptView">
 					<variables>
 						<OTScriptVariable name="template">
 							<reference>
 								<OTBlob src="scripts/section-csv.html.erb" />
 							</reference>
 						</OTScriptVariable>
-						<OTScriptVariable name="section_view" reference="${report_section_view}" />
 					</variables>
 				</OTXHTMLScriptViewEntry>
 				<OTXHTMLScriptViewEntry local_id="report_user_view"
-					objectClass="org.concord.framework.otrunk.OTObject" viewClass="org.concord.otrunk.script.ui.OTXHTMLScriptView"
-					script="${erb_controller}">
+				    template="${template_report_view}"
+					objectClass="org.concord.framework.otrunk.OTObject" 
+					viewClass="org.concord.otrunk.script.ui.OTXHTMLScriptView">
 					<variables>
 						<OTScriptVariable name="template">
 							<reference>
 								<OTBlob src="scripts/user.html.erb" />
 							</reference>
 						</OTScriptVariable>
-						<OTScriptVariable name="section_view" reference="${report_section_view}" />
 					</variables>
 				</OTXHTMLScriptViewEntry>
 				<OTPrototypeViewEntry local_id="section_enable_edit"
