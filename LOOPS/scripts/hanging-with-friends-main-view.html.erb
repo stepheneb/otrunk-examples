@@ -10,14 +10,14 @@
     models << userObject( $busScriptObject, user)
     models << userObject( $racecarScriptObject, user)
     %>
-    <tr><td><%= user.name ? user.name : user.inspect %></td>
+    <tr><td><%= user.name ? user.name : user.id %></td>
     <% models.each do |model| %>
 	    <td>
 	    <% total = 0 %>
       <% model_sessions = model.contents.vector
          model_sessions.select{|o| o.respond_to? "model_runs"}.collect{|o| total += o.model_runs.size.to_i}
        %>
-      <%= total %><%= total == 1 ? "time" : "times" %>
+      <%= total %> <%= total == 1 ? "time" : "times" %>
       <!--
         model sessions: <%= model_sessions.size %>
         <% model_sessions.each do |ms| %>
