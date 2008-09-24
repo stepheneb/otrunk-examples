@@ -14,7 +14,14 @@
     <% models.each do |model| %>
 	    <td>
 	    <% total = 0 %>
-	    <%= model.contents.vector.select{|o| o.respond_to? "model_runs"}.collect{|o| total += o.model_runs.size} %> <%= total == 1 ? "time" : "times" %>
+      <% model_sessions = model.contents.vector %>
+	    <%= model_sessions.select{|o| o.respond_to? "model_runs"}.collect{|o| total += o.model_runs.size} %> <%= total == 1 ? "time" : "times" %>
+      <!--
+        model sessions: <%= model_sessions.size %>
+        <% model_sessions.each do |ms| %>
+          session: <%= ms.model_runs.size %> runs
+        <% end %>
+      -->
 	    </td>
     <% end %>
     </tr>
