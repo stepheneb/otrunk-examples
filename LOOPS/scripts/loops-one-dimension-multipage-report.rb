@@ -56,11 +56,11 @@ def linkToObjectAction(link_text, obj, action)
 end
 
 def teacher_name
-  System.getProperty("system.report.teacher.name") || "not available"
+  System.getProperty("report.teacher.name") || "not available"
 end
 
 def class_name
-  System.getProperty("system.report.class.name") || "not available"
+  System.getProperty("report.class.name") || "not available"
 end
 
 def users
