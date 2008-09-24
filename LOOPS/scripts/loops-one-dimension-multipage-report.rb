@@ -1,4 +1,7 @@
 require 'erb'
+
+import java.lang.System
+
 include_class 'org.concord.framework.otrunk.view.OTUserListService'
 include_class 'org.concord.framework.otrunk.OTrunk'
 include_class 'org.concord.datagraph.state.OTDataGraph'
@@ -50,6 +53,14 @@ def linkToObjectAction(link_text, obj, action)
     }
   })
   "<a href=\"#{ obj.otExternalId() }\" viewid=\"#{viewEntryCopy.otExternalId()}\">#{link_text}</a>"
+end
+
+def teacher_name
+  System.getProperty("system.report.teacher.name") || "not available"
+end
+
+def class_name
+  System.getProperty("system.report.class.name") || "not available"
 end
 
 def users
