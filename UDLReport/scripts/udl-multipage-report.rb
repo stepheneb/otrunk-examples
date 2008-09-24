@@ -214,13 +214,9 @@ end
 
 def sectionQuestions(section)
   questions = []
-
-  puts "looking for section questions"
   
   return questions unless section.content.is_a? org.concord.otrunk.ui.OTCardContainer
-  
-  puts "section.content is a card container"
-  
+    
   pageCards = section.content.cards.vector
 
   pageCards.each do | doc |
