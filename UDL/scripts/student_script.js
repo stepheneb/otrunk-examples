@@ -96,24 +96,9 @@ function turnOffDefinitionsFor(pages){
 		pages.get(i).setShowDefinitions(false);
 	}
 }
-
-var sectionChangeHandler = 
-{
-	stateChanged: function(evt)
-	{
-		
-	}
-	
-}
-var sectionChangeListener = new OTChangeListener(sectionChangeHandler);
-
-function setupSectionEnabling(){
-	curnitHelper.addSectionChangeListener(sectionChangeListener)
-}
   			
 function init() {
 	curnitHelper = OTCurriculumUnitHelper.getActivityHelper(otObjectService)
-	setupSectionEnabling()
 	turnOffDefinitions()
 	setupLabbookQuestionListeners()
 }
