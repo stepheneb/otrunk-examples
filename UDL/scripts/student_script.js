@@ -10,13 +10,12 @@
 importClass(Packages.java.lang.Class);
 importClass(Packages.java.lang.System);
 importClass(Packages.java.util.HashMap);
+importClass(Packages.java.util.regex.Matcher);
+importClass(Packages.java.util.regex.Pattern);
 importClass(Packages.org.concord.framework.otrunk.OTChangeEvent);
 importClass(Packages.org.concord.framework.otrunk.OTChangeListener);
 importClass(Packages.org.concord.framework.otrunk.view.OTLabbookManagerProvider);
 importClass(Packages.org.concord.otrunk.ui.OTCurriculumUnitHelper)
-
-
-
   			
 var questionInputHandler = 
 {
@@ -96,9 +95,115 @@ function turnOffDefinitionsFor(pages){
 		pages.get(i).setShowDefinitions(false);
 	}
 }
+
+/**
+ * Setup the wrapup so that all pages pertaining to a section
+ * are hidden if the section has not been visited and shown
+ * if it has been. The pertaining section is determined by
+ * looking at the LabbookEntryChooser.
+ * 
+ * After hiding the necessary pages, we also have to check if
+ * there are any previously hidden ones to add, in case the
+ * student left the wrapup and came back.
+ */
+function setupWrapupPages(wrapup){
+	addRemoveWrapupPages(wrapup, true)
+	addRemoveWrapupPages(wrapup, false)
+}
+
+/**
+ * If hide is true, this searches all the visible pages
+ * and hides those whose section has not been visited. Otherwise
+ * this seaches the hidden pages and shows those whose section
+ * has been visited.
+ */
+function addRemoveWrapupPages(wrapup, hide){
+	var cards
+	if (hide){
+		cards = wrapup.getContent().getCards()
+	} else {
+		cards = wrapup.getContent().getHiddenCards()
+	}
+	
+	for(var i=0; i<cards.size(); i++) {
+		var page = cards.get(i)
+		var section = null
+		// first check wither the entry chooser is pointing to a section
+		for(var j=0; j<page.getDocumentRefsAsObjectList().size(); j++) {
+			var entryChooser = null
+			var docRef = page.getDocumentRefsAsObjectList().get(j)
+			if (docRef.toString().indexOf("Chooser") > -1){
+				entryChooser = docRef
+			}
+			if (entryChooser != null){
+				section = entryChooser.getDefaultSection()
+				break
+			}
+		}
+		// if it wasn't, check the titles
+		if (section == null){
+			var text = page.getBodyText()
+			var titlePattern = Pattern.compile("class=\"subtitle\">([^>]*)<")
+			var matcher = titlePattern.matcher(text)
+			while (matcher.find()) {
+				var title = matcher.group(1).trim()
+				for(var k=0; k<curnitHelper.getSections().size(); k++) {
+					var checkSection = curnitHelper.getSections().get(k)
+					if (checkSection.getName().equalsIgnoreCase(title)){
+						section = checkSection
+						break
+					}
+				}
+			}
+		}
+		if (section != null){
+			var hidden = addRemoveWrapupPage(page, section, wrapup, hide)
+			if (hidden)
+				i--
+		}
+	}
+}
+
+/**
+ * If hide is true and entrychooser points to a section not visited,
+ * the page is hidden. If hide is false and entrychooser points to
+ * a section visited, the page is shown.
+ */
+function addRemoveWrapupPage(page, section, wrapup, hide){
+	var cards = wrapup.getContent().getCards()
+	
+	if (hide && !curnitHelper.getSectionsContainer().getViewedCards().getVector().contains(section)){
+		wrapup.getContent().getHiddenCards().add(page)
+		cards.remove(page)
+		return true
+	} else if (!hide && curnitHelper.getSectionsContainer().getViewedCards().getVector().contains(section)){
+		cards.add(cards.size()-2, page)
+		wrapup.getContent().getHiddenCards().remove(page)
+	}
+	return false
+}
+
+var sectionChangeHandler = 
+{
+	stateChanged: function(evt)
+	{
+		if (evt.getProperty().equalsIgnoreCase("currentCard") &&
+				evt.getValue().getName().indexOf("Wrap") > -1){
+			setupWrapupPages(evt.getValue())
+		}
+		
+	}
+	
+}
+var sectionChangeListener = new OTChangeListener(sectionChangeHandler);
+
+function setupWrapupEnabling(){
+	curnitHelper.addSectionChangeListener(sectionChangeListener)
+}
   			
 function init() {
 	curnitHelper = OTCurriculumUnitHelper.getActivityHelper(otObjectService)
+	setupWrapupEnabling()
 	turnOffDefinitions()
 	setupLabbookQuestionListeners()
 }
