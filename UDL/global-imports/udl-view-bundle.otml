@@ -28,7 +28,9 @@
     <import class="org.concord.otrunk.labbook.OTLabbook" />
     <import class="org.concord.otrunk.labbook.OTLabbookButton" />
     <import class="org.concord.otrunk.labbook.OTLabbookEntryChooser" />
+    <import class="org.concord.otrunk.overlay.OTAddOverlayAction" />
     <import class="org.concord.otrunk.overlay.OTOverlay" />
+    <import class="org.concord.otrunk.overlay.OTOverlayGroup" />
     <import class="org.concord.otrunk.script.ui.OTScriptButton" />
     <import class="org.concord.otrunk.script.ui.OTScriptObject" />
     <import class="org.concord.otrunk.script.ui.OTScriptVariable" />
@@ -89,9 +91,6 @@
     <import class="org.concord.otrunk.view.document.OTCompoundDoc" />
     <import class="org.concord.otrunk.view.document.OTCssText" />
     <import class="org.concord.otrunk.view.document.edit.OTDocumentEditViewConfig" />
-    <import class="org.concord.otrunk.view.prototype.OTPrototypeViewEntry" />
-    <import class="org.concord.otrunk.view.prototype.OTPrototypeEventController" />
-    <import class="org.concord.otrunk.view.prototype.OTPrototypeMapEntry" />
     <import class="org.concord.otrunkmw.OTModelerPage" />
     <import class="org.concord.otrunknl4.OTNLogoModel" />
     <import class="org.concord.otrunkcck.OTCCKModel" />
@@ -111,7 +110,6 @@
   	<idMapping local_id="css-color" id="31193bb0-c44f-11dc-95ff-0800200c9a66"/>
   	<idMapping local_id="css-layout" id="3cefc800-c44f-11dc-95ff-0800200c9a66"/>
   	<idMapping local_id="imported-view-bundle" id="8d880970-c22a-11dc-95ff-0800200c9a66"/>
-  	<idMapping local_id="overlays-pulldown-menus" id="234e6400-c450-11dc-95ff-0800200c9a66"/>
   	<idMapping local_id="menu-vertical" id="1b0cb6e0-c453-11dc-95ff-0800200c9a66"/>
 	<idMapping local_id="menu-horizontal-circle" id="29dc5ef0-c453-11dc-95ff-0800200c9a66"/>
 	<idMapping local_id="menu-horizontal-book" id="416eeab0-c453-11dc-95ff-0800200c9a66"/>
@@ -576,75 +574,27 @@ password so you can take a short test.
                 <OTCssText id="3cefc800-c44f-11dc-95ff-0800200c9a66" src="../css/otrunk-normal-layout.css" />
               </cssBlocks>
             </OTUDLDocumentViewConfig>
-            <OTPrototypeViewEntry id="textsize-choice-view" objectClass="org.concord.otrunk.OTSystem" viewClass="org.concord.otrunk.view.prototype.OTPrototypeView" copyPrototype="false">
-              <viewEntry>
-                <object refid="${choice-combo-view}" />
-              </viewEntry>
-              <prototype>
-                <OTChoice>
-                  <choices>
-                    <OTOverlay id="da41a2a0-c44e-11dc-95ff-0800200c9a66" name="Small text">
-                      <deltaObjectMap>
-                        <entry key="${css-font}">
-                          <OTCssText src="../css/otrunk-small-font.css" />
-                        </entry>
-                      </deltaObjectMap>
-                    </OTOverlay>
-                    <OTOverlay id="6cc8e2b0-c44e-11dc-95ff-0800200c9a66" name="Medium text" />
-                    <OTOverlay id="7ba31210-c44e-11dc-95ff-0800200c9a66" name="Large text">
-                      <deltaObjectMap>
-                        <entry key="${css-font}">
-                          <OTCssText src="../css/otrunk-large-font.css" />
-                        </entry>
-                      </deltaObjectMap>
-                    </OTOverlay>
-                  </choices>
-                </OTChoice>
-              </prototype>
-              <controller>
-                <OTPrototypeEventController>
-                  <mapping>
-                    <OTPrototypeMapEntry modelProperty="overlays[0]" prototypeProperty="currentChoice" />
-                  </mapping>
-                </OTPrototypeEventController>
-              </controller>
-            </OTPrototypeViewEntry>
-            <OTPrototypeViewEntry id="language-choice-view" objectClass="org.concord.otrunk.OTSystem" viewClass="org.concord.otrunk.view.prototype.OTPrototypeView" copyPrototype="false">
-              <viewEntry>
-                <object refid="${choice-combo-view}" />
-              </viewEntry>
-              <prototype>
-                <OTChoice>
-                  <choices>
-                    <OTOverlay id="english-overlay" name="English" />
-                    <OTOverlay id="spanish-overlay" name="Español" />
-                  </choices>
-                </OTChoice>
-              </prototype>
-              <controller>
-                <OTPrototypeEventController>
-                  <mapping>
-                    <OTPrototypeMapEntry modelProperty="overlays[1]" prototypeProperty="currentChoice" />
-                  </mapping>
-                </OTPrototypeEventController>
-              </controller>
-            </OTPrototypeViewEntry>
             <OTViewEntry objectClass="org.concord.graph.util.state.OTDrawingTool2" viewClass="org.concord.datagraph.state.OTDataDrawingToolView" />
           </views>
         </OTViewBundle>
       </bundles>
       <library>
-      	<OTDefinitionManager id="b6350a20-e3b4-11dc-95ff-0800200c9a66">
-          <definitions>
-          	<OTDefinitionList src="../glossary/common-glossary.txt"/>
-          </definitions>
-          <frame>
-            <OTFrame local_id="definition_frame" width="300" height="190" borderlessPopup="true" />
-          </frame>
-        </OTDefinitionManager>
-        <OTCompoundDoc id="234e6400-c450-11dc-95ff-0800200c9a66" name="overlays-pulldown-menus"  showEditBar="false">
-        	<bodyText />
-        </OTCompoundDoc>
+      	<OTOverlayGroup name="Text size group" id="11444C03-DBC1-4BA3-848D-244D5FAC57B5"/>
+        <OTOverlay id="da41a2a0-c44e-11dc-95ff-0800200c9a66" name="Small text">
+          <deltaObjectMap>
+            <entry key="${css-font}">
+              <OTCssText src="../css/otrunk-small-font.css" />
+            </entry>
+          </deltaObjectMap>
+        </OTOverlay>
+        <OTOverlay id="6cc8e2b0-c44e-11dc-95ff-0800200c9a66" name="Medium text" />
+        <OTOverlay id="7ba31210-c44e-11dc-95ff-0800200c9a66" name="Large text">
+          <deltaObjectMap>
+            <entry key="${css-font}">
+              <OTCssText src="../css/otrunk-large-font.css" />
+            </entry>
+          </deltaObjectMap>
+        </OTOverlay>
         <OTOverlay id="bfc60e90-db35-11dc-95ff-0800200c9a66">
           <deltaObjectMap>
             <entry key="${css-color}">
@@ -659,19 +609,37 @@ password so you can take a short test.
             </entry>
           </deltaObjectMap>
         </OTOverlay>
-        <OTCompoundDoc id="175ae3d0-e610-11dc-95ff-0800200c9a66" name="top-menu" showEditBar="false">
-           <bodyText>
-             <div class="top-menu">
-               <table>
-                 <tr>
-                   <td>
-                     <object refid="${[no menu in author mode]}" viewid="textsize-choice-view" />
-                   </td>
-                 </tr>
-               </table>
-             </div>
-           </bodyText>
-         </OTCompoundDoc>
+        <OTChoice name="Options" id="16C37C27-7784-4C64-B8D0-BA3752D676CE">
+       		<choices>
+       			<OTChoice name="Text size">
+       				<choices>
+       					<OTAddOverlayAction name="Small" overlayGroup="11444C03-DBC1-4BA3-848D-244D5FAC57B5">
+       						<overlay>
+       							<object refid="da41a2a0-c44e-11dc-95ff-0800200c9a66"/>
+       						</overlay>
+       					</OTAddOverlayAction>
+       					<OTAddOverlayAction name="Medium" overlayGroup="11444C03-DBC1-4BA3-848D-244D5FAC57B5">
+       						<overlay>
+       							<object refid="6cc8e2b0-c44e-11dc-95ff-0800200c9a66"/>
+       						</overlay>
+       					</OTAddOverlayAction>
+       					<OTAddOverlayAction name="Large" overlayGroup="11444C03-DBC1-4BA3-848D-244D5FAC57B5">
+       						<overlay>
+       							<object refid="7ba31210-c44e-11dc-95ff-0800200c9a66"/>
+       						</overlay>
+       					</OTAddOverlayAction>
+       				</choices>
+       			</OTChoice>
+       		</choices>
+       	</OTChoice>
+        <OTDefinitionManager id="b6350a20-e3b4-11dc-95ff-0800200c9a66">
+          <definitions>
+          	<OTDefinitionList src="../glossary/common-glossary.txt"/>
+          </definitions>
+          <frame>
+            <OTFrame local_id="definition_frame" width="300" height="190" borderlessPopup="true" />
+          </frame>
+        </OTDefinitionManager>
       </library>
     </OTSystem>
   </objects>
