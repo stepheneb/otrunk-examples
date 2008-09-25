@@ -293,4 +293,6 @@ var otids = ["e07ec17d-e3c8-11dc-ac60-9facaf86308a",
 		"93da4320-0d8c-11dd-91fa-c12e917b8f18",
 		"21e76cfb-25eb-11dd-8aea-49a3dbad775f",	
 		"debf0aee-25ea-11dd-8aea-49a3dbad775f",	
-		"69b7f136-2c24-11dd-a948-0d59c68f631b"]
+		"69b7f136-2c24-11dd-a948-0d59c68f631b",
+		"51af985b-7cd6-11dc-ab8f-f5a7386e7836",
+		"678b5190-0bcf-012a-b542-0017f2cc694e!/act2-elab-ques1"]
