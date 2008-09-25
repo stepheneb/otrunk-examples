@@ -17,11 +17,15 @@ end
 
 def embedObjectFromUserOverlay(obj, user)
 	obj = $overlayManager.getOTObject(user, obj.getGlobalId())
-	begin
-	  "<object refid=\"#{ obj.getGlobalId().toInternalForm() }\" />"
-	rescue NoMethodError
-	  "<object refid=\"#{ obj.otExternalId() }\" />"
-	end
+  if obj
+  	begin
+  	  "<object refid=\"#{ obj.getGlobalId().toInternalForm() }\" />"
+  	rescue NoMethodError
+  	  "<object refid=\"#{ obj.otExternalId() }\" />"
+  	end
+  else
+    ""
+  end
 end
 
 def users
