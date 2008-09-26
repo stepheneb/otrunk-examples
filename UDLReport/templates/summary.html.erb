@@ -2,6 +2,9 @@
   <table>
     <tr>
       <td><div class="menu_item"><%= linkToUnitPage "Unit Summary" %></div></td>
+      <% if $dashboard %>
+	    <td><%= embedObject $overlay_save_button %></td>
+	  <% end %>
     </tr>
   </table>
 </div>
@@ -9,6 +12,14 @@
 <div id="content">
   
   <h2>Report for <%= unitTitle %></h2>
+
+  <% if $dashboard %>
+  <h3>Manage</h3>
+    <%= linkToObject "Enable Activities for Class and Individual Students", activityRoot(), $enable_activities_view %><br/>
+    <%= linkToObject "Configure UDL Parameters for Class and Individual Students", activityRoot(), $udl_properties_view %><br/>    
+  <% end #dashboard %>
+
+  <h3>Status</h3>
 
   <table>
     <tr>
@@ -33,7 +44,10 @@
     <% users.each do |user| %>
     <tr BGCOLOR = <%= line_toggle ? ROWCOLOR1 : ROWCOLOR2 %>>
       <% line_toggle = !line_toggle %>
-        <td><%= linkToObject user.name, user, $user_view %></td>
+        <% user_name = user.name
+           if user_name == nil or user_name.empty? then user_name = "blank" end
+         %>
+        <td><%= linkToObject user_name, user, $user_view %></td>
        <% userVisitedSections = visitedSections(user) %>
        <% activitySections.each do |section| %>
         <% userSection = userObject(section, user) %>

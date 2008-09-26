@@ -21,10 +21,11 @@
 		<import class="org.concord.framework.otrunk.wrapper.OTBoolean" />
 		<import class="org.concord.otrunk.view.OTViewChild" />
 		<import class="org.concord.framework.otrunk.view.OTFrame" />
-		<import class="org.concord.otrunk.view.prototype.OTPrototypeEventController"/>
-		<import class="org.concord.otrunk.view.prototype.OTPrototypeViewEntry"/>
-		<import class="org.concord.otrunk.view.prototype.OTPrototypeMapEntry"/>
-		<import class="org.concord.otrunk.ui.OTCheckBox"/>
+		<import class="org.concord.otrunk.view.prototype.OTPrototypeEventController" />
+		<import class="org.concord.otrunk.view.prototype.OTPrototypeViewEntry" />
+		<import class="org.concord.otrunk.view.prototype.OTPrototypeMapEntry" />
+		<import class="org.concord.otrunk.ui.OTCheckBox" />
+		<import class="org.concord.otrunk.ui.OTOverlaySaveButton" />
 	</imports>
 	<objects>
 		<OTSystem local_id="system">
@@ -41,6 +42,8 @@
 					<viewEntries>
 						<OTViewEntry objectClass="org.concord.otrunk.view.OTMultiUserRoot"
 							viewClass="org.concord.otrunk.view.OTMultiUserRootView" />
+						<OTViewEntry objectClass="org.concord.otrunk.ui.OTOverlaySaveButton"
+							viewClass="org.concord.otrunk.ui.swing.OTOverlaySaveButtonView" />
 						<OTDocumentViewConfig
 							objectClass="org.concord.otrunk.view.document.OTDocument"
 							viewClass="org.concord.otrunk.view.document.OTDocumentView"
@@ -57,9 +60,8 @@
               #navlist li { display: inline; list-style-type: none;list-style-type: none; padding-right: 10px; }
               #content { margin:5px; padding:5px; }
               " />
-                       <OTViewEntry
-                          objectClass="org.concord.otrunk.ui.OTCheckBox" 
-                          viewClass="org.concord.otrunk.ui.swing.OTCheckBoxView"/>                       
+						<OTViewEntry objectClass="org.concord.otrunk.ui.OTCheckBox"
+							viewClass="org.concord.otrunk.ui.swing.OTCheckBoxView" />
 					</viewEntries>
 				</OTViewBundle>
 				<OTScriptEngineBundle>
@@ -75,88 +77,117 @@
 					<userList>
 						<!--
 							the local_id is so this can be used as a report template in the
-							DIY
-							example learner data:
+							DIY example learner data:
 							http://rails.dev.concord.org/udl/external_otrunk_activities/42/ot_learner_data.xml
 						-->
 						<OTIncludeRootObject local_id="external_user_list_url"
-							href="http://udl.diy.concord.org/external_otrunk_activities/46/ot_learner_data?users=1242%2C1243%2C1245%2C1246%2C1247%2C1248%2C1249%2C1250%2C1251%2C1252%2C1253%2C1254%2C1255%2C1256%2C1257"
-							/>
+							href="http://rails.dev.concord.org/diy/external_otrunk_activities/25/ot_learner_data" />
 					</userList>
 					<reportTemplate>
 						<OTIncludeRootObject local_id="external_activity_url"
-							href="http://svn.concord.org/svn/projects/tags/java/common/otrunk/otrunk-examples/UDL-fresno-08-08-05/udl-clouds-34.otml" />
+							href="../UDL/udl-friction-34.otml" />
 					</reportTemplate>
 				</OTMultiUserRoot>
 			</root>
 			<library>
 				<OTXHTMLScriptViewEntry local_id="template_report_view"
-					objectClass="org.concord.framework.otrunk.OTObject" 
-					viewClass="org.concord.otrunk.script.ui.OTXHTMLScriptView">
+					objectClass="org.concord.framework.otrunk.OTObject" viewClass="org.concord.otrunk.script.ui.OTXHTMLScriptView">
 					<script>
 						<OTJRuby local_id="erb_controller" src="scripts/udl-multipage-report.rb" />
 					</script>
 					<variables>
 						<OTScriptVariable name="section_view" reference="${report_section_view}" />
 						<OTScriptVariable name="user_view" reference="${report_user_view}" />
-                        <OTScriptVariable name="section_enable_view" reference="${section_enable_edit}"/>
-						<OTScriptVariable name="section_csv_view" reference="${report_section_csv_view}" />
-                        <OTScriptVariable name="dashboard" reference="${true}"/>
-					</variables>
-				</OTXHTMLScriptViewEntry>			
-				<OTXHTMLScriptViewEntry local_id="report_unit_view" 
-				    template="${template_report_view}"
-					objectClass="org.concord.framework.otrunk.OTObject" 
-					viewClass="org.concord.otrunk.script.ui.OTXHTMLScriptView">
-					<variables>
-						<OTScriptVariable name="template">
+						<OTScriptVariable name="section_enable_view"
+							reference="${section_enable_edit}" />
+						<OTScriptVariable name="section_csv_view"
+							reference="${report_section_csv_view}" />
+						<OTScriptVariable name="dashboard" reference="${true}" />
+						<OTScriptVariable name="udl_options"
+							reference="16C37C27-7784-4C64-B8D0-BA3752D676CE" />
+						<OTScriptVariable name="udl_options_view"
+							reference="8E15A570-16A7-4FAD-8775-778CB385BB8A" />
+						<OTScriptVariable name="enable_activities_view"
+							reference="${enable_activities_view}" />
+						<OTScriptVariable name="udl_parameters_view"
+							reference="${udl_parameters_view}" />
+						<OTScriptVariable name="overlay_save_button">							
 							<reference>
-								<OTBlob src="scripts/summary.html.erb" />
+								<OTOverlaySaveButton name="Save" />
 							</reference>
 						</OTScriptVariable>
 					</variables>
 				</OTXHTMLScriptViewEntry>
-				<OTXHTMLScriptViewEntry local_id="report_section_view" 
-				    template="${template_report_view}"
-					objectClass="org.concord.framework.otrunk.OTObject" 
+				<OTXHTMLScriptViewEntry local_id="report_unit_view"
+					template="${template_report_view}" objectClass="org.concord.framework.otrunk.OTObject"
 					viewClass="org.concord.otrunk.script.ui.OTXHTMLScriptView">
 					<variables>
 						<OTScriptVariable name="template">
 							<reference>
-								<OTBlob src="scripts/section.html.erb" />
+								<OTBlob src="templates/summary.html.erb" />
+							</reference>
+						</OTScriptVariable>
+					</variables>
+				</OTXHTMLScriptViewEntry>
+				<OTXHTMLScriptViewEntry local_id="report_section_view"
+					template="${template_report_view}" objectClass="org.concord.framework.otrunk.OTObject"
+					viewClass="org.concord.otrunk.script.ui.OTXHTMLScriptView">
+					<variables>
+						<OTScriptVariable name="template">
+							<reference>
+								<OTBlob src="templates/section.html.erb" />
 							</reference>
 						</OTScriptVariable>
 					</variables>
 				</OTXHTMLScriptViewEntry>
 				<OTXHTMLScriptViewEntry local_id="report_section_csv_view"
-				    template="${template_report_view}"
-					objectClass="org.concord.framework.otrunk.OTObject"
+					template="${template_report_view}" objectClass="org.concord.framework.otrunk.OTObject"
 					viewClass="org.concord.otrunk.script.ui.OTXHTMLScriptView">
 					<variables>
 						<OTScriptVariable name="template">
 							<reference>
-								<OTBlob src="scripts/section-csv.html.erb" />
+								<OTBlob src="templates/section-csv.html.erb" />
 							</reference>
 						</OTScriptVariable>
 					</variables>
 				</OTXHTMLScriptViewEntry>
 				<OTXHTMLScriptViewEntry local_id="report_user_view"
-				    template="${template_report_view}"
-					objectClass="org.concord.framework.otrunk.OTObject" 
+					template="${template_report_view}" objectClass="org.concord.framework.otrunk.OTObject"
 					viewClass="org.concord.otrunk.script.ui.OTXHTMLScriptView">
 					<variables>
 						<OTScriptVariable name="template">
 							<reference>
-								<OTBlob src="scripts/user.html.erb" />
+								<OTBlob src="templates/user.html.erb" />
+							</reference>
+						</OTScriptVariable>
+					</variables>
+				</OTXHTMLScriptViewEntry>
+				<OTXHTMLScriptViewEntry local_id="enable_activities_view"
+					template="${template_report_view}" objectClass="org.concord.framework.otrunk.OTObject"
+					viewClass="org.concord.otrunk.script.ui.OTXHTMLScriptView">
+					<variables>
+						<OTScriptVariable name="template">
+							<reference>
+								<OTBlob src="templates/enable-activities.html.erb" />
+							</reference>
+						</OTScriptVariable>
+					</variables>
+				</OTXHTMLScriptViewEntry>
+				<OTXHTMLScriptViewEntry local_id="udl_parameters_view"
+					template="${template_report_view}" objectClass="org.concord.framework.otrunk.OTObject"
+					viewClass="org.concord.otrunk.script.ui.OTXHTMLScriptView">
+					<variables>
+						<OTScriptVariable name="template">
+							<reference>
+								<OTBlob src="templates/udl-parameters-view.html.erb" />
 							</reference>
 						</OTScriptVariable>
 					</variables>
 				</OTXHTMLScriptViewEntry>
 				<OTPrototypeViewEntry local_id="section_enable_edit"
-					objectClass="org.concord.otrunk.udl3.OTUDLSection" 
-					viewClass="org.concord.otrunk.view.prototype.OTPrototypeView">
+					objectClass="org.concord.otrunk.udl3.OTUDLSection" viewClass="org.concord.otrunk.view.prototype.OTPrototypeView">
 					<prototype>
-						<OTCheckBox selected="false"/>
+						<OTCheckBox selected="false" />
 					</prototype>
 					<controller>
 						<OTPrototypeEventController>
@@ -167,7 +198,7 @@
 						</OTPrototypeEventController>
 					</controller>
 				</OTPrototypeViewEntry>
-				<OTBoolean local_id="true" value="true"/>
+				<OTBoolean local_id="true" value="true" />
 			</library>
 		</OTSystem>
 	</objects>
