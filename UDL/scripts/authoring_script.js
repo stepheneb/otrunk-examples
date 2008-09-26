@@ -24,6 +24,8 @@ importClass(Packages.org.concord.otrunk.ui.OTCardContainer);
 importClass(Packages.org.concord.otrunk.udl3.OTUDLMenu);
 importPackage(Packages.org.concord.framework.otrunk);
 importClass(Packages.java.lang.System);
+importClass(Packages.java.util.regex.Matcher);
+importClass(Packages.java.util.regex.Pattern);
 importClass(Packages.javax.swing.JOptionPane);
 
 var objectAboveSnapshotButton;
@@ -194,17 +196,43 @@ var pageContainerHandler =
 };
 var pageContainerListener = new OTChangeListener(pageContainerHandler);
 
+function addOptionsMenu(section){
+	System.out.println("adding options")
+	var header = section.getHeader();
+	
+	if (header == null) return
+	
+	var text = header.getBodyText();
+	var titleRegEx = "<div class=\"title\">[^>]*</div>"
+	var titlePattern = Pattern.compile(titleRegEx, Pattern.MULTILINE)
+	var matcher = titlePattern.matcher(text)
+	if (matcher.find()){
+		var replacement = matcher.replaceAll("<table width=\"100%\">"+
+											"<tr>" +
+											"<td style=\"text-align: left\">" +
+											matcher.group(0) +
+											"</td>" +
+											"<td width=\"50px\">" +
+											"<object refid=\"16c37c27-7784-4c64-b8d0-ba3752d676ce\" viewid=\"8e15a570-16a7-4fad-8775-778cb385bb8a\" />" +
+											"</td></tr></table>")
+	} else {
+		System.out.println("No match for "+text)
+	}
+	header.setBodyText(replacement)
+}
+
 var sections = [];
 var sectionCardContainers = [];
 var pages = [];
 
 function init() {
 	cardContainer.addOTChangeListener(sectionContainerListener);
-	
+	System.out.println
 	var pageIndex = 0;
 	for (var i = 0; i < cardContainer.getCards().size(); i++){
 		sections[i] = cardContainer.getCards().get(i);
 		sections[i].addOTChangeListener(sectionListener);
+		addOptionsMenu(sections[i])
 		
 		if (sections[i].getContent() instanceof OTCardContainer){
 			sectionCardContainers[i] = sections[i].getContent();
@@ -213,8 +241,6 @@ function init() {
 			for (var j = 0; j < sectionCardContainers[i].getCards().size(); j++){
 				pages[pageIndex] = sectionCardContainers[i].getCards().get(j);
 				pages[pageIndex].addOTChangeListener(pageListener);
-				addPageNumber(pages[pageIndex], j+1);
-				// turn off definitions for pre- and post-
 				if ((i == 0) || (i == (cardContainer.getCards().size()-1))){
 					pages[pageIndex].setShowDefinitions(false);
 				} else {
