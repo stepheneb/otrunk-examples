@@ -232,7 +232,7 @@ function init() {
 	for (var i = 0; i < cardContainer.getCards().size(); i++){
 		sections[i] = cardContainer.getCards().get(i);
 		sections[i].addOTChangeListener(sectionListener);
-		addOptionsMenu(sections[i])
+	//	addOptionsMenu(sections[i])
 		
 		if (sections[i].getContent() instanceof OTCardContainer){
 			sectionCardContainers[i] = sections[i].getContent();
