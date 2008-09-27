@@ -30,6 +30,9 @@ def init
   @otrunk = $viewContext.getViewService(OTrunk.java_class)
   @contentHelper = UDLContentHelper.getUDLContentHelper(activityRoot)  
   @userListService = $viewContext.getViewService(OTUserListService.java_class)
+  @users = @userListService.getUserList().sort_by {|user| 
+    (user.name && !user.name.empty?) ? user.name.split.values_at(-1, 0) : [""] 
+  }
   @overlayManager = $viewContext.getViewService(OTUserOverlayManager.java_class)
 end
 
@@ -85,7 +88,7 @@ end
 
 def popupLinkToObject(link_text, obj, viewEntry=nil)
   frame = popupFrame()
-  linkToObject(link_test, object, viewEntry, frame)
+  linkToObject(link_text, obj, viewEntry, frame)
 end
 
 def linkToObjectAction(link_text, obj, action)
