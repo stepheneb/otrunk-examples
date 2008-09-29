@@ -15,9 +15,9 @@ function isPasswordCorrect(){
 
 function unlockPostTestAndExit(){
 	var curnitHelper = OTCurriculumUnitHelper.getActivityHelper(otObjectService)
-	var sectionHolder = curnitHelper.getSectionsContainer()
-	unlockPostTest(sectionHolder)
-	sectionHolder.setCurrentCard(sectionHolder.getCards().get(0))
+	curnitHelper.getRoot().setHasUnlockedPosttest(true)
+	var sections = curnitHelper.getSectionsContainer()
+	sections.setCurrentCard(sections.getCards().get(0))
 }
 
 function unlockPostTest(sectionHolder){

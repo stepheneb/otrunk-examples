@@ -19,47 +19,44 @@ importClass(Packages.java.awt.event.ActionListener);
 importClass(Packages.java.util.Vector);
 importClass(Packages.org.concord.framework.otrunk.OTObjectList);
 importClass(Packages.javax.swing.JOptionPane);
+importClass(Packages.org.concord.otrunk.ui.OTCurriculumUnitHelper)
 
 var numCards;
 var currentcard;
 var passwordfield;
-
-function enableEverything(enable){
-	for(var i=0; i<cardContainer.getCards().size(); i++) {
-		cardContainer.getCards().get(i).setEnabled(enable)
-	}
-}
 
 var buttonHandler =
 {
 		actionPerformed: function(evt)
 		{
 			if (passwordfield != null){
-			var passwordAttempt = passwordfield.getText();
-			if (passwordAttempt.equalsIgnoreCase(password.getText())){
-				cardContainer.setCurrentCard(card);
-				return;
-			} else {
-				JOptionPane.showMessageDialog(null, "Sorry, that's not the correct password.");
-				return;
-			}
-		}
-				cardContainer.setCurrentCard(cardContainer.getCards().get(0));
-				var cards = cardContainer.getCards()
-				if (cards.get(1).getEnabled()){
-					enableEverything(true)
-					cards.get(1).setEnabled(false)
-					cards.get(cards.size()-1).setEnabled(false)  // for now
+				var passwordAttempt = passwordfield.getText();
+				if (passwordAttempt.equalsIgnoreCase(password.getText())){
+					cardContainer.setCurrentCard(card);
+					return;
 				} else {
-					enableEverything(false)
-					cards.get(cards.size()-1).setEnabled(true)
+					JOptionPane.showMessageDialog(null, "Sorry, that's not the correct password.");
+					return;
 				}
+			}
+			
+			if (!udlCurriculumUnit.getHasCompletedPretest()){
+				udlCurriculumUnit.setHasCompletedPretest(true)
+			} else {
+				udlCurriculumUnit.setHasUnlockedPosttest(true)
+			}
+			var sections = curnitHelper.getSectionsContainer()
+			sections.setCurrentCard(sections.getCards().get(0))
 				
 		}
 };
 var buttonListener = new ActionListener(buttonHandler);
 
+var udlCurriculumUnit
+
 function init() {
+	curnitHelper = OTCurriculumUnitHelper.getActivityHelper(otObjectService)
+	udlCurriculumUnit = curnitHelper.getRoot()
 	button.addActionListener(buttonListener);
 
 	return true;
