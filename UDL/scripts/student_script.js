@@ -16,6 +16,7 @@ importClass(Packages.org.concord.framework.otrunk.OTChangeEvent);
 importClass(Packages.org.concord.framework.otrunk.OTChangeListener);
 importClass(Packages.org.concord.framework.otrunk.view.OTLabbookManagerProvider);
 importClass(Packages.org.concord.otrunk.ui.OTCurriculumUnitHelper)
+importClass(Packages.org.concord.otrunk.udl.ui.OTUDLLabPageView)
   			
 var questionInputHandler = 
 {
@@ -92,7 +93,7 @@ function turnOffDefinitions(){
 
 function turnOffDefinitionsFor(pages){
 	for(var i=0; i<pages.size(); i++) {
-		pages.get(i).setShowDefinitions(false);
+		pages.get(i).setShowDefinitions(false)
 	}
 }
 
@@ -200,12 +201,43 @@ var sectionChangeListener = new OTChangeListener(sectionChangeHandler);
 function setupWrapupEnabling(){
 	curnitHelper.addSectionChangeListener(sectionChangeListener)
 }
+
+// listen for changes to status of pre- and post-tests
+// runtime-unlock sections if pretest is complete
+var curnitChangeHandler = 
+{
+	stateChanged: function(evt)
+	{
+		if (evt.getSource() == curnitHelper.getRoot()){
+			checkActivityEnabling()
+		}
+	}
+	
+}
+var curnitChangeListener = new OTChangeListener(curnitChangeHandler);
+
+function checkActivityEnabling(){
+	for(var i=0; i<curnitHelper.getSections().size(); i++) {
+		var activity = curnitHelper.getSections().get(i)
+		if (activity.getIsPretest()){
+			OTUDLLabPageView.enable(activity, !curnitHelper.getRoot().getHasCompletedPretest())
+		} else if (activity.getIsPosttest()){
+			OTUDLLabPageView.enable(activity, curnitHelper.getRoot().getHasUnlockedPosttest())
+		} else {
+			var doEnable = (curnitHelper.getRoot().getHasCompletedPretest() &&
+							!curnitHelper.getRoot().getHasUnlockedPosttest())
+			OTUDLLabPageView.enable(activity, doEnable)
+		}
+	}
+}
   			
 function init() {
 	curnitHelper = OTCurriculumUnitHelper.getActivityHelper(otObjectService)
+	curnitHelper.addOTChangeListener(curnitChangeListener)
 	setupWrapupEnabling()
 	turnOffDefinitions()
 	setupLabbookQuestionListeners()
+	checkActivityEnabling()
 }
 
 function save() {
