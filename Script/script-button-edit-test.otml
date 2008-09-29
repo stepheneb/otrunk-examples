@@ -1,62 +1,76 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<otrunk id="33754150-b594-11d9-9669-0800200c9a66" >
-
+<otrunk id="33754150-b594-11d9-9669-0800200c9a66">
   <imports>
     <import class="org.concord.otrunk.OTSystem"/>
     <import class="org.concord.otrunk.view.OTViewBundle"/>
     <import class="org.concord.otrunk.view.OTViewEntry"/>
     <import class="org.concord.otrunk.script.ui.OTScriptButton"/>
     <import class="org.concord.otrunk.script.js.OTJavascript"/>
+    <import class="org.concord.otrunk.script.jruby.OTJRuby"/>
+    <import class="org.concord.otrunk.script.jython.OTJython"/>
     <import class="org.concord.otrunk.script.OTScriptEngineBundle"/>
     <import class="org.concord.otrunk.script.OTScriptEngineEntry"/>
+    <import class="org.concord.otrunk.view.document.OTCompoundDoc"/>
     <import class="org.concord.otrunk.view.OTFolderObject"/>
   </imports>
-  
   <objects>
     <OTSystem>
       <bundles>
         <OTViewBundle>
           <views>
-            <OTViewEntry
-              objectClass="org.concord.otrunk.script.ui.OTScriptButton" 
-              viewClass="org.concord.otrunk.script.ui.OTScriptButtonView"/>
-            <OTViewEntry
-              objectClass="org.concord.otrunk.view.OTFolderObject"
-              viewClass="org.concord.otrunk.view.OTFolderObjectView"/>
-		  <OTViewEntry
-			  objectClass="org.concord.otrunk.script.OTScript"
-			  viewClass="org.concord.otrunk.script.ui.OTScriptEditView"
-			  local_id="script_edit_view"/>
+            <OTViewEntry objectClass="org.concord.otrunk.script.ui.OTScriptButton" viewClass="org.concord.otrunk.script.ui.OTScriptButtonView"/>
+            <OTViewEntry objectClass="org.concord.otrunk.view.OTFolderObject" viewClass="org.concord.otrunk.view.OTFolderObjectView"/>
+            <OTViewEntry objectClass="org.concord.otrunk.script.OTScript" viewClass="org.concord.otrunk.script.ui.OTScriptEditView" local_id="script_edit_view"/>
           </views>
         </OTViewBundle>
         <OTScriptEngineBundle>
           <engines>
-             <OTScriptEngineEntry 
-             	objectClass="org.concord.otrunk.script.js.OTJavascript"
-             	engineClass="org.concord.otrunk.script.js.OTJavascriptEngine"/>
+            <OTScriptEngineEntry objectClass="org.concord.otrunk.script.js.OTJavascript"    
+              engineClass="org.concord.otrunk.script.js.OTJavascriptEngine"/>
+            <OTScriptEngineEntry objectClass="org.concord.otrunk.script.jruby.OTJRuby"
+              engineClass="org.concord.otrunk.script.jruby.OTJRubyEngine"/>
           </engines>
         </OTScriptEngineBundle>
       </bundles>
-      
       <root>
         <OTFolderObject>
           <children>
-        <OTScriptButton script="${script}">
-          <text>Click Me</text>
-        </OTScriptButton>
-            <OTJavascript local_id="script">
+            <OTScriptButton name="Javascript Button" script="${script_javascript}">
+              <text>Click Me (JavaScript)</text>
+            </OTScriptButton>
+            <OTScriptButton name="JRuby Button" script="${script_jruby}">
+              <text>Click Me (JRuby)</text>
+            </OTScriptButton>
+            <OTScriptButton name="Jython Button" script="${script_jython}">
+              <text>Click Me (Jython)</text>
+            </OTScriptButton>
+            <OTJavascript name="Javascript Button Script" local_id="script_javascript">
               <script>
-                importClass(Packages.javax.swing.JOptionPane);
-                function clicked(){
-                	java.lang.System.out.println("clicked");
-				}
+importClass(Packages.javax.swing.JOptionPane);
+function clicked(){
+	JOptionPane.showMessageDialog(null, "clicked (Javascript)");
+}
               </script>
             </OTJavascript>
-
+            <OTJRuby name="JRuby Button Script" local_id="script_jruby">
+              <script>
+include_class 'javax.swing.JOptionPane'
+def self.clicked
+  JOptionPane.showMessageDialog(nil, "clicked (JRuby)")
+end
+              </script>
+            </OTJRuby>
+            <OTJython name="Jython Button Script" local_id="script_jython">
+              <script>
+from javax.swing import JOptionPane
+def clicked():
+    JOptionPane.showMessageDialog(None, "clicked (Jython)")
+    return True
+              </script>
+            </OTJython>
           </children>
         </OTFolderObject>
       </root>
-      
     </OTSystem>
   </objects>
 </otrunk>
