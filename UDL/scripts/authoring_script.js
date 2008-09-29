@@ -197,7 +197,6 @@ var pageContainerHandler =
 var pageContainerListener = new OTChangeListener(pageContainerHandler);
 
 function addOptionsMenu(section){
-	System.out.println("adding options")
 	var header = section.getHeader();
 	
 	if (header == null) return
@@ -227,7 +226,6 @@ var pages = [];
 
 function init() {
 	cardContainer.addOTChangeListener(sectionContainerListener);
-	System.out.println
 	var pageIndex = 0;
 	for (var i = 0; i < cardContainer.getCards().size(); i++){
 		sections[i] = cardContainer.getCards().get(i);
