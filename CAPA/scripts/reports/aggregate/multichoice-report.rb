@@ -176,13 +176,22 @@ def dtAnswerText(user, dataTable)
   text
 end
 
+def surveyAnswerText(user, question)
+  userQuestion = userObject(question, user)
+  if question.is_a?(OTQuestion) && question.input.is_a?(OTChoice)
+    answer = userQuestion.input.getCurrentChoice
+    return answer ? answer.getBodyText : '-'
+  elsif question.is_a?(OTText)
+    return userQuestion.getText
+  end
+end
+
 def isCorrect(user, question)
   if question.is_a?(OTQuestion) and question.input.is_a?(OTChoice)
     userQuestion = userObject(question, user)  
     userAnswer = userQuestion.getInput.getCurrentChoice
-    if userAnswer
-      correctAnswer = question.getCorrectAnswer
-      return correctAnswer.otExternalId == userAnswer.otExternalId
+    if userAnswer and question.getCorrectAnswer
+      return question.correctAnswer.otExternalId == userAnswer.otExternalId
     end
   end
   false
@@ -233,6 +242,19 @@ def getCsvText
       t << answerText(user, question) + sep
     end 
     t << getPoints(user).to_s
+    t << "\n" 
+  end
+  t 
+end
+
+def getSurveyCsvText
+  sep = "|"
+  t = ""
+  for user in users 
+    t << user.getName + sep
+    for question in questions 
+      t << surveyAnswerText(user, question) + sep
+    end 
     t << "\n" 
   end
   t 
