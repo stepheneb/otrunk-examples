@@ -134,6 +134,7 @@ def isCorrect(userQuestion)
   input = userQuestion.getInput
   if input.is_a?(OTChoice)
     userAnswer = input.getCurrentChoice
+    return false if userAnswer == nil
     correctAnswer = userQuestion.getCorrectAnswer
     return correctAnswer.otExternalId == userAnswer.otExternalId
   else
