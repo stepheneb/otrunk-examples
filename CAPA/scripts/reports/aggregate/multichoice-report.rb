@@ -2,6 +2,7 @@ require 'jruby'
 require 'erb'
 
 include_class 'java.lang.System'
+include_class 'org.concord.data.state.OTDataTable'
 include_class 'org.concord.framework.otrunk.view.OTUserListService'
 include_class 'org.concord.framework.otrunk.OTrunk'
 include_class 'org.concord.framework.otrunk.OTXMLString'
@@ -40,6 +41,12 @@ def render(templateBlob)
   erb = ERB.new Java::JavaLang::String.new(templateBlob.src).to_s
   erb.result(binding)   
 end 
+
+def linkToObject(link_text, obj, viewEntry=nil)
+  link = "<a href=\"#{obj.otExternalId()}\" "
+  link += "viewid=\"#{viewEntry.otExternalId()}\" "  if viewEntry
+  link += ">#{link_text}</a>"
+end
 
 ### END View/Controller Stuff ###
 
@@ -103,52 +110,87 @@ end
 
 # @param question an OTQuestion with an input of OTChoice
 def correctAnswerNum(question)
-  input = question.getInput
-  if input.is_a?(OTChoice) 
-    answer = question.getCorrectAnswer
-    choices = input.getChoices.getVector
-    num = _choiceNum(choices, answer)
-    if num == 0
-      err("correctAnswerNum: Correct answer not found")
-    end
-    return num
+  answer = question.getCorrectAnswer
+  choices = question.getInput.getChoices.getVector
+  num = _choiceNum(choices, answer)
+  if num == 0
+    err("correctAnswerNum: Correct answer not found")
+  end
+  return num
+end
+
+def correctAnswerText(question)
+  if question.is_a?(OTQuestion) and question.input.is_a?(OTChoice)
+    return correctAnswerNum(question).to_s
   else
-    err("correctAnswerNum: input is not an OTChoice")
+    return 'N/A'
+  end
+end
+
+def answerNum(user, question)
+  userQuestion = userObject(question, user)
+  answer = userQuestion.getInput.getCurrentChoice
+  if answer == nil
     return 0
+  else
+    return _choiceNum(userQuestion.getInput.getChoices.getVector, answer)
   end
 end
 
 def answerText(user, question)
-    userQuestion = userObject(question, user)
-    answer = userQuestion.getInput.getCurrentChoice
-    if answer == nil
-      return '<font color="red">-</font>'
+  if question.is_a?(OTQuestion) && question.input.is_a?(OTChoice)
+    num = answerNum(user, question)
+    if num == 0
+      return '-'
     else
-      answerNum = _choiceNum(userQuestion.getInput.getChoices.getVector, answer)
-      color = isCorrect(userQuestion) ? "green" : "red"
-      return "<b><font color=\"#{color}\">#{answerNum}</font></b>"
+      return num.to_s
     end
-end
-
-def isCorrect(userQuestion)
-  input = userQuestion.getInput
-  if input.is_a?(OTChoice)
-    userAnswer = input.getCurrentChoice
-    return false if userAnswer == nil
-    correctAnswer = userQuestion.getCorrectAnswer
-    return correctAnswer.otExternalId == userAnswer.otExternalId
-  else
-    return true
+  elsif question.is_a?(OTDataTable)
+    return dtAnswerText(user, question)
+  elsif question.is_a?(OTText)
+    return userObject(question, user).getText
   end
 end
 
-def getPoints(user)
-    sum = 0;
-    for question in questions
-      userQuestion = userObject(question, user)
-      sum += 1 if isCorrect(userQuestion)
+def answerHtmlText(user, question)
+  text = answerText(user, question)
+  if question.is_a?(OTQuestion) && question.input.is_a?(OTChoice)
+    color = isCorrect(user, question) ? 'green' : 'red'
+    return "<b><font color=\"#{color}\">#{text}</font></b>"
+  elsif question.is_a?(OTDataTable)
+    return dtAnswerText(user, question)
+  elsif question.is_a?(OTText)
+    return userObject(question, user).getText
+  end
+end
+
+def dtAnswerText(user, dataTable)
+  text = ''
+  dt = userObject(dataTable, user)
+  values = dt.getDataStore.getValues
+  numChannels = dt.getDataStore.getNumberChannels
+  values.size.times { |i|
+    if i % numChannels == numChannels - 1
+      text << values.get(i)
+      log(i.to_s + ' ' + text)
+    end  }
+  text
+end
+
+def isCorrect(user, question)
+  if question.is_a?(OTQuestion) and question.input.is_a?(OTChoice)
+    userQuestion = userObject(question, user)  
+    userAnswer = userQuestion.getInput.getCurrentChoice
+    if userAnswer
+      correctAnswer = question.getCorrectAnswer
+      return correctAnswer.otExternalId == userAnswer.otExternalId
     end
-    sum
+  end
+  false
+end
+
+def getPoints(user)
+  questions.inject(0) { |sum, question| sum + (isCorrect(user, question) ? 1 : 0) }
 end
 
 def _getQuestions
@@ -157,17 +199,45 @@ def _getQuestions
   for doc in cards
     refs = doc.getDocumentRefs
     for ref in refs
-      if ref.is_a? OTQuestion
+      if ref.is_a?(OTQuestion) or ref.is_a?(OTDataTable) or ref.is_a?(OTText)
         questions << ref
       end
     end
   end
   questions
-end 
+end
 
 ### END Assessment Related ###
 
-### BEGIN Misc ###
+### BEGIN Other ###
+
+def getCsvText
+  sep = "|"
+  t = ""
+  
+  t << "Question Number" + sep 
+  questions.size.times do |i| 
+    t << (i + 1).to_s + sep 
+  end
+  t << "Points"
+  t << "\n"
+   
+  t << "Correct Answer" + sep
+  for question in questions 
+      t << correctAnswerText(question).to_s + sep 
+  end 
+  t << "\n"
+  
+  for user in users 
+    t << user.getName + sep
+    for question in questions 
+      t << answerText(user, question) + sep
+    end 
+    t << getPoints(user).to_s
+    t << "\n" 
+  end
+  t 
+end
 
 def err(msg)
   System.err.println('multichoice-report.rb:' + msg)
@@ -177,4 +247,5 @@ def log(msg)
   System.out.println('multichoice-report.rb:' + msg)
 end
 
-### END Misc ### 
+### END Other ###
+
