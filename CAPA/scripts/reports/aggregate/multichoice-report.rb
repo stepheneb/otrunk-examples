@@ -172,7 +172,6 @@ def dtAnswerText(user, dataTable)
   values.size.times { |i|
     if i % numChannels == numChannels - 1
       text << values.get(i)
-      log(i.to_s + ' ' + text)
     end  }
   text
 end
