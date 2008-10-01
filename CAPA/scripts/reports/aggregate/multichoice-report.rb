@@ -171,7 +171,7 @@ def dtAnswerText(user, dataTable)
   numChannels = dt.getDataStore.getNumberChannels
   values.size.times { |i|
     if i % numChannels == numChannels - 1
-      text << values.get(i)
+      text << (values.get(i) ? values.get(i) : '-')
     end  }
   text
 end
@@ -184,6 +184,7 @@ def surveyAnswerText(user, question)
   elsif question.is_a?(OTText)
     return userQuestion.getText
   end
+  return 'ERROR'
 end
 
 def isCorrect(user, question)
