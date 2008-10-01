@@ -24,6 +24,7 @@ importClass(Packages.org.concord.otrunk.ui.OTCurriculumUnitHelper)
 var numCards;
 var currentcard;
 var passwordfield;
+var card;
 
 var buttonHandler =
 {
@@ -40,13 +41,18 @@ var buttonHandler =
 				}
 			}
 			
-			if (!udlCurriculumUnit.getHasCompletedPretest()){
-				udlCurriculumUnit.setHasCompletedPretest(true)
+			if (card != null){
+				cardContainer.setCurrentCard(card);
 			} else {
-				udlCurriculumUnit.setHasUnlockedPosttest(true)
+				// hijack this script for pre and post test unlocking...
+				if (!udlCurriculumUnit.getHasCompletedPretest()){
+					udlCurriculumUnit.setHasCompletedPretest(true)
+				} else {
+					udlCurriculumUnit.setHasUnlockedPosttest(true)
+				}
+				var sections = curnitHelper.getSectionsContainer()
+				sections.setCurrentCard(sections.getCards().get(0))
 			}
-			var sections = curnitHelper.getSectionsContainer()
-			sections.setCurrentCard(sections.getCards().get(0))
 				
 		}
 };
