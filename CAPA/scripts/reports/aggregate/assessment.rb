@@ -23,12 +23,12 @@ end
 ## Get label for rubric indicator
 def getIndicatorLabel(indicator, assessment, rubric)
   indicatorGrade = RubricGradeUtil.getIndicatorGrade(assessment, indicator, rubric)
-  return indicatorGrade.getOTIndicatorGrade().getLabel
+  return indicatorGrade ? indicatorGrade.getOTIndicatorGrade().getLabel : 'NO RECORD'
 end
 
 def getIndicatorPoints(indicator, assessment, rubric)
   indicatorGrade = RubricGradeUtil.getIndicatorGrade(assessment, indicator, rubric)
-  return indicatorGrade.getPoints
+  return indicatorGrade ? indicatorGrade.getPoints : 0
 end
 
 def questions
