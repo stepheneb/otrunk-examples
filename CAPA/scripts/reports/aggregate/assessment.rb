@@ -8,7 +8,7 @@ include_class 'org.concord.otrunkcapa.rubric.RubricGradeUtil'
 
 
 def getLastAssessment(user)
-  getLastContent(user, OTAssessment)
+  return getLastContent(user, OTAssessment)
 end
 
 ## Get last item in user script object contents that is a sub-type of contentType 
@@ -17,7 +17,7 @@ def getLastContent(user, contentType)
   for content in contentsMap[user] 
     last = content if content.kind_of?(contentType) 
   end
-  last
+  return last
 end
 
 ## Get label for rubric indicator
@@ -32,7 +32,7 @@ def getIndicatorPoints(indicator, assessment, rubric)
 end
 
 def questions
-  @questions  
+  return @questions  
 end
 
 def _getQuestions
@@ -41,7 +41,7 @@ def _getQuestions
   for v in variables
     questions << v.getReference if v.getReference.is_a? OTQuestion
   end
-  questions
+  return questions
 end
 
 # @param question an OTQuestion
@@ -52,12 +52,4 @@ def promptText(question)
   else
     return question.to_s
   end
-end
-
-def getAnswer(question)
-  
-end
-
-def getCorrectAnswer(question)
-  
 end

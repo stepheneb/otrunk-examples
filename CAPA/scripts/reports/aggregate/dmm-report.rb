@@ -97,8 +97,9 @@ def getCsvHeader
   labels = ['Voltage', 'Current', 'Resistance']
   t = ''
   # First line
-  t << @sep * 2 + 'Voltage' + @sep * indicators.size * 3+ 'Current'
-  t << @sep * indicators.size * 3+ 'Resistance' + @newline
+  skip = (indicators.size + 1) * 3
+  t << @sep * 2 + 'Voltage' + @sep * skip + 'Current'
+  t << @sep * skip + 'Resistance' + @newline
   
   # Second line
   t << @sep * 2 

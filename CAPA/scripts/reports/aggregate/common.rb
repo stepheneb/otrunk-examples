@@ -154,11 +154,11 @@ def truncate (string, length)
 end
 
 def error(message)
-  System.err.println('capa-report.rb:' + message)
+  System.err.println(message)
 end
 
 def log(message)
-  System.out.println('capa-report.rb:' + message)
+  System.out.println(message)
 end
 
 ### END Misc. Utilities ###
