@@ -6,7 +6,6 @@ include_class 'org.concord.otrunk.ui.question.OTQuestion'
 include_class 'org.concord.otrunkcapa.rubric.OTAssessment'
 include_class 'org.concord.otrunkcapa.rubric.RubricGradeUtil'
 
-
 def getLastAssessment(user)
   return getLastContent(user, OTAssessment)
 end
@@ -23,7 +22,7 @@ end
 ## Get label for rubric indicator
 def getIndicatorLabel(indicator, assessment, rubric)
   indicatorGrade = RubricGradeUtil.getIndicatorGrade(assessment, indicator, rubric)
-  return indicatorGrade ? indicatorGrade.getOTIndicatorGrade().getLabel : 'NO RECORD'
+  return indicatorGrade ? indicatorGrade.getOTIndicatorGrade().getLabel : '-'
 end
 
 def getIndicatorPoints(indicator, assessment, rubric)
