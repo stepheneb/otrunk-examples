@@ -47,8 +47,8 @@ def getData(assessment)
   inv = assessment.getInventory
   ct = inv.get('c_truthValues') 
   st = inv.get('s_truthValues') 
-  @c_truthValues = ct ? ct : '-' 
-  @s_truthValues = st ? st : '-'
+  @c_truthValues = (ct ? "'" + ct : '-') 
+  @s_truthValues = (st ? "'" + st : '-')
   @c_fault1 = getGateLabel(inv.get('c_fault1'))
   @s_fault1 = getGateLabel(inv.get('s_fault1'))
   @c_fault2 = getGateLabel(inv.get('c_fault2'))
@@ -98,7 +98,7 @@ def getCsvHeader
   t << 'First Name' + @sep + 'Last Name' + @sep
   t << 'Submitted Truth Values' << @sep << 'Correct Truth Values' << @sep
   3.times { |i|
-    t << 'Submitted Fault #{i}' << @sep << 'Correct Fault #{i}' << @sep
+    t << "Submitted Fault #{i+1}" << @sep << "Correct Fault #{i+1}" << @sep
   }
   
   for indicator in indicators
