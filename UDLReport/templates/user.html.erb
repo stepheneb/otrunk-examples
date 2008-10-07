@@ -10,9 +10,6 @@
   <% user = $model %>
   <h2>User: <%= user.name %></h2>
 
-  <h3>Options</h3>
-  <%= embedObjectFromUserOverlay user, $udl_options, $udl_options_view %><br/>
-
   <% userVisitedSections = visitedSections(user) %>  
 
   <h3>Sections</h3>
@@ -21,17 +18,17 @@
       <th>Related PreTest<br/> Score </th><th>Recommended<br/> Activities</th><tr>  
   <% unitSections().each do |section| %>
     <tr>
-      <td><%= section.name %></td>
+      <td><%= linkToObject section.name, section, $section_view %></td>
       <td style="text-align: center">
         <% userSection = userObject(section, user) %>
         <% if userVisitedSections.include? userSection %>
-          X<!-- img src="../UDL/images/tick.png"/ -->
+            <img src="images/green-star.png"/>
         <% end %>
       </td> 
       <td style="text-align: center">
         <% if not section.isPretest and not section.isPosttest %>
         <% if $dashboard %>
-          <%= embedObject userSection, $section_enable_view %>  
+          <%= embedObjectFromUserOverlay user, section, $enabled_icon_student_view %>
         <% else %>
           <%= if userSection.enabled then "X" else " " end %>
         <% end %>
@@ -48,6 +45,11 @@
 		    numCorrect += 1 if questionCorrect(userObject(question, user))
 		   end %>
 		<%= numCorrect %>/<%= numQuestions %>         
+      </td>
+      <td style="text-align: center">
+        <% if numQuestions > 0 and (numCorrect / numQuestions) < 0.75 %>
+        <img src="images/flag.png"/>
+        <% end %>
       </td>
     </tr>        
   <% end %>
