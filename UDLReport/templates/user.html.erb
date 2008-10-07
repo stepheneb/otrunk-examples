@@ -17,9 +17,9 @@
 
   <h3>Sections</h3>
   <table>
-  <tr><th>Section</th><th>Visited</th><th>Enabled</th><th>Related Score</th><tr>
-  
-  <% activitySections.each do |section| %>
+  <tr><th>Section</th><th>Visited</th><th>Enabled</th>
+      <th>Related PreTest<br/> Score </th><th>Recommended<br/> Activities</th><tr>  
+  <% unitSections().each do |section| %>
     <tr>
       <td><%= section.name %></td>
       <td style="text-align: center">
@@ -29,10 +29,12 @@
         <% end %>
       </td> 
       <td style="text-align: center">
+        <% if not section.isPretest and not section.isPosttest %>
         <% if $dashboard %>
           <%= embedObject userSection, $section_enable_view %>  
         <% else %>
           <%= if userSection.enabled then "X" else " " end %>
+        <% end %>
         <% end %>
       </td>
       <td style="text-align: center">

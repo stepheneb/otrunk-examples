@@ -11,25 +11,25 @@
 <hr />
 <div id="content">
   
-  <h2>Report for <%= unitTitle %></h2>
+  <h2>Enable Activities for <%= unitTitle %></h2>
 
-  <% if $dashboard %>
-  <h3>Manage</h3>
-    <%= linkToObject "Enable Activities for Class and Individual Students", activityRoot(), $enable_activities_view %><br/>
-    <%= linkToObject "Configure UDL Parameters for Class and Individual Students", activityRoot(), $udl_parameters_view %><br/>    
-  <% end #dashboard %>
-
-  <h3>Status</h3>
-
-  <% sections = unitSections() %>
-  
+  <% activities = unitActivities() %>
+     
   <table>
     <tr>
      <th></th>
-     <% sections.each do |section| %>
+     <% activities.each do |section| %>
       <th><%= linkToObject section.name, section, $section_view %></th>  
      <% end %>
     </tr>
+    <tr>
+     <td>Enabled for Class</td>
+     <% activities.each do |section| %>
+      <td style="text-align: center">
+        <%= embedObjectFromUserOverlay nil, section, $enabled_icon_class_view %>  
+      </td>
+     <% end %>
+    </tr> 
     <% line_toggle = true %>
     <% @users.each do |user| %>
     <tr BGCOLOR = <%= line_toggle ? ROWCOLOR1 : ROWCOLOR2 %>>
@@ -38,16 +38,13 @@
            if user_name == nil or user_name.empty? then user_name = "blank" end
          %>
         <td><%= linkToObject user_name, user, $user_view %></td>
-       <% userVisitedSections = visitedSections(user) %>
-       <% sections.each do |section| %>
-        <% userSection = userObject(section, user) %>
+       <% activities.each do |section| %>
         <td style="text-align: center">
-          <% if userVisitedSections.include? userSection %>
-            <img src="../UDL/images/tick.png"/>
-          <% end %>
+          <%= embedObjectFromUserOverlay user, section, $enabled_icon_student_view %>
         </td> 
        <% end %>
       </tr>
     <% end %>
   </table>
+  <%= embedObject $model, $overlay_sync_view %>
 </div>

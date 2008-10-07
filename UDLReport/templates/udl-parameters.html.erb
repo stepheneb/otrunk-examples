@@ -1,0 +1,46 @@
+<div class="menu">
+  <table>
+    <tr>
+      <td><div class="menu_item"><%= linkToUnitPage "Unit Summary" %></div></td>
+      <% if $dashboard %>
+	    <td><%= embedObject $overlay_save_button %></td>
+	  <% end %>
+    </tr>
+  </table>
+</div>
+<hr />
+<div id="content">
+  
+  <h2>Report for <%= unitTitle %></h2>
+
+  
+  <table>
+  <tr>
+  <td><td><th>Font</th><th>Language</th><th>Lock Scaffolding</th><th>Initial Scaffolding Level</th>
+  </tr>
+  <tr>
+    <td>Class Defaults<td>
+    <td style="text-align: center"><%= embedObjectFromUserOverlay nil, $text_size, $text_size_class_view %></td>
+    <td></td>
+    <td style="text-align: center"><%= embedObjectFromUserOverlay nil, $question_view_config, $lock_scaffolding_class_view %></td>
+    <td style="text-align: center"><%= embedObjectFromUserOverlay nil, $question_view_config, $scaffolding_level_class_view %></td>
+  </tr>
+  
+  <% @users.each do |user| %>
+    <% user_name = user.name
+        if user_name == nil or user_name.empty? then user_name = "blank" end
+     %>
+     <tr>
+       <td><%= linkToObject user_name, user, $user_view %><td/>
+       <td style="text-align: center"><%= embedObjectFromUserOverlay user, $text_size, $text_size_student_view %></td>
+       <td></td>
+       <td style="text-align: center"><%= embedObjectFromUserOverlay user, $question_view_config, $lock_scaffolding_student_view %></td>
+       <td style="text-align: center"><%= embedObjectFromUserOverlay user, $question_view_config, $scaffolding_level_student_view %></td>
+     </tr>   
+  <% end %>
+
+  </table>
+    
+  <%= embedObject $model, $overlay_sync_view %>
+  
+</div>

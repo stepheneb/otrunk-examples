@@ -19,13 +19,22 @@
 		<import class="org.concord.otrunk.script.ui.OTScriptVariable" />
 		<import class="org.concord.framework.otrunk.wrapper.OTBlob" />
 		<import class="org.concord.framework.otrunk.wrapper.OTBoolean" />
+		<import class="org.concord.framework.otrunk.wrapper.OTInt" />
+		<import class="org.concord.framework.otrunk.wrapper.OTObjectSet"/>
 		<import class="org.concord.otrunk.view.OTViewChild" />
 		<import class="org.concord.framework.otrunk.view.OTFrame" />
 		<import class="org.concord.otrunk.view.prototype.OTPrototypeEventController" />
 		<import class="org.concord.otrunk.view.prototype.OTPrototypeViewEntry" />
 		<import class="org.concord.otrunk.view.prototype.OTPrototypeMapEntry" />
 		<import class="org.concord.otrunk.ui.OTCheckBox" />
+		<import class="org.concord.otrunk.ui.OTChoice" />
+		<import class="org.concord.otrunk.ui.OTText" />
 		<import class="org.concord.otrunk.ui.OTOverlaySaveButton" />
+		<import class="org.concord.otrunk.ui.swing.OTUnsetButtonViewConfig" />
+		<import class="org.concord.otrunk.ui.OTChoicePrototypeController" />
+		<import class="org.concord.otrunk.ui.swing.OTChoiceViewConfig" />
+		<import class="org.concord.otrunk.ui.OTIconSwitcherViewConfig" />
+		<import class="org.concord.otrunk.ui.OTImage" />
 	</imports>
 	<objects>
 		<OTSystem local_id="system">
@@ -73,19 +82,27 @@
 			</bundles>
 			<root>
 				<OTMultiUserRoot local_id="multi_user_root"
+					groupOverlayURL="http://rails.dev.concord.org/webdav/test/udl-teacher-dashboard-0001.otml"
 					reportTemplateViewEntry="${report_unit_view}">
 					<userList>
 						<!--
 							the local_id is so this can be used as a report template in the
 							DIY example learner data:
 							http://rails.dev.concord.org/udl/external_otrunk_activities/42/ot_learner_data.xml
+							Dummy example learner data:
+							http://rails.dev.concord.org/diy/external_otrunk_activities/25/ot_learner_data
+							More users:
+							http://udl.diy.concord.org/external_otrunk_activities/46/ot_learner_data?users=1242%2C1243%2C1245%2C1246%2C1247%2C1248%2C1249%2C1250%2C1251%2C1252%2C1253%2C1254%2C1255%2C1256%2C1257
+							requires activity:
+							http://svn.concord.org/svn/projects/tags/java/common/otrunk/otrunk-examples/UDL-fresno-08-08-05/udl-clouds-34.otml"
+							local_id="external_activity_url
 						-->
 						<OTIncludeRootObject local_id="external_user_list_url"
-							href="http://rails.dev.concord.org/diy/external_otrunk_activities/25/ot_learner_data" />
+							href="http://udl.diy.concord.org/external_otrunk_activities/46/ot_learner_data?users=1242%2C1243%2C1245%2C1246%2C1247%2C1248%2C1249%2C1250%2C1251%2C1252%2C1253%2C1254%2C1255%2C1256%2C1257" />
 					</userList>
 					<reportTemplate>
 						<OTIncludeRootObject local_id="external_activity_url"
-							href="../UDL/udl-friction-34.otml" />
+							href="http://svn.concord.org/svn/projects/tags/java/common/otrunk/otrunk-examples/UDL-fresno-08-08-05/udl-clouds-34.otml" />
 					</reportTemplate>
 				</OTMultiUserRoot>
 			</root>
@@ -99,23 +116,45 @@
 						<OTScriptVariable name="section_view" reference="${report_section_view}" />
 						<OTScriptVariable name="user_view" reference="${report_user_view}" />
 						<OTScriptVariable name="section_enable_view"
-							reference="${section_enable_edit}" />
+							reference="${section_enable_view}" />
 						<OTScriptVariable name="section_csv_view"
 							reference="${report_section_csv_view}" />
 						<OTScriptVariable name="dashboard" reference="${true}" />
-						<OTScriptVariable name="udl_options"
-							reference="16C37C27-7784-4C64-B8D0-BA3752D676CE" />
-						<OTScriptVariable name="udl_options_view"
-							reference="8E15A570-16A7-4FAD-8775-778CB385BB8A" />
+						<OTScriptVariable name="text_size"
+							reference="11444C03-DBC1-4BA3-848D-244D5FAC57B5"/>
+						<OTScriptVariable name="text_size_class_view"
+							reference="${text_size_class_view}" />
+						<OTScriptVariable name="text_size_student_view"
+							reference="${text_size_student_view}" />
 						<OTScriptVariable name="enable_activities_view"
 							reference="${enable_activities_view}" />
+						<OTScriptVariable name="unset_enabled_button"
+							reference="${unset_enabled_button}" />
 						<OTScriptVariable name="udl_parameters_view"
 							reference="${udl_parameters_view}" />
-						<OTScriptVariable name="overlay_save_button">							
+						<OTScriptVariable name="overlay_save_button">
 							<reference>
 								<OTOverlaySaveButton name="Save" />
 							</reference>
 						</OTScriptVariable>
+						<OTScriptVariable name="question_view_config"
+							reference="c0e33320-e611-11dc-95ff-0800200c9a66" />
+						<OTScriptVariable name="lock_scaffolding_student_view"
+							reference="${lock_scaffolding_student_view}" />
+						<OTScriptVariable name="lock_scaffolding_class_view"
+							reference="${lock_scaffolding_class_view}" />
+						<OTScriptVariable name="scaffolding_level_student_view"
+							reference="${scaffolding_level_student_view}" />
+						<OTScriptVariable name="scaffolding_level_class_view"
+							reference="${scaffolding_level_class_view}" />
+						<OTScriptVariable name="enabled_icon_class_view"
+							reference="${enabled_icon_class_view}" />
+						<OTScriptVariable name="enabled_icon_student_view"
+							reference="${enabled_icon_student_view}" />
+						<OTScriptVariable name="text_size_overlay_group"
+							reference="11444C03-DBC1-4BA3-848D-244D5FAC57B5"/>
+						<OTScriptVariable name="overlay_sync_view"
+							reference="${overlay_sync_view}" />
 					</variables>
 				</OTXHTMLScriptViewEntry>
 				<OTXHTMLScriptViewEntry local_id="report_unit_view"
@@ -179,13 +218,14 @@
 					<variables>
 						<OTScriptVariable name="template">
 							<reference>
-								<OTBlob src="templates/udl-parameters-view.html.erb" />
+								<OTBlob src="templates/udl-parameters.html.erb" />
 							</reference>
 						</OTScriptVariable>
 					</variables>
 				</OTXHTMLScriptViewEntry>
-				<OTPrototypeViewEntry local_id="section_enable_edit"
-					objectClass="org.concord.otrunk.udl3.OTUDLSection" viewClass="org.concord.otrunk.view.prototype.OTPrototypeView">
+				<OTPrototypeViewEntry local_id="section_enable_view"
+					objectClass="org.concord.otrunk.udl3.OTUDLSection" viewClass="org.concord.otrunk.view.prototype.OTPrototypeView"
+					savePrototypeCopies="false">
 					<prototype>
 						<OTCheckBox selected="false" />
 					</prototype>
@@ -198,6 +238,162 @@
 						</OTPrototypeEventController>
 					</controller>
 				</OTPrototypeViewEntry>
+				<OTIconSwitcherViewConfig local_id="text_size_class_view"
+				    objectClass="org.concord.framework.otrunk.OTObject"
+				    viewClass="org.concord.otrunk.ui.OTIconSwitcherView"
+				    property="overlays" showUnset="false">
+				  <icons>				  
+				    <OTImage imageBytes="images/fontsizeup.png"/>
+				    <OTImage imageBytes="images/fontsizenormal.png"/>
+				    <OTImage imageBytes="images/fontsizedown.png"/>
+				  </icons>
+				  <values>
+				    <OTObjectSet name="large">
+				      <objects>
+       					<object refid="7ba31210-c44e-11dc-95ff-0800200c9a66"/>
+				      </objects>
+				    </OTObjectSet>
+				    <OTObjectSet name="medium">
+				      <objects>
+       					<object refid="6cc8e2b0-c44e-11dc-95ff-0800200c9a66"/>
+				      </objects>
+				    </OTObjectSet>
+				    <OTObjectSet name="small">
+				      <objects>
+       					<object refid="da41a2a0-c44e-11dc-95ff-0800200c9a66"/>
+				      </objects>
+				    </OTObjectSet>
+				  </values>
+				</OTIconSwitcherViewConfig>
+				<OTIconSwitcherViewConfig local_id="text_size_student_view"
+				    objectClass="org.concord.framework.otrunk.OTObject"
+				    viewClass="org.concord.otrunk.ui.OTIconSwitcherView"
+				    property="overlays" forOverlay="true">
+				  <icons>				  
+				    <OTImage imageBytes="images/fontsizeup.png"/>
+				    <OTImage imageBytes="images/fontsizenormal.png"/>
+				    <OTImage imageBytes="images/fontsizedown.png"/>
+				  </icons>
+				  <values>
+				    <OTObjectSet name="large">
+				      <objects>
+       					<object refid="7ba31210-c44e-11dc-95ff-0800200c9a66"/>
+				      </objects>
+				    </OTObjectSet>
+				    <OTObjectSet name="medium">
+				      <objects>
+       					<object refid="6cc8e2b0-c44e-11dc-95ff-0800200c9a66"/>
+				      </objects>
+				    </OTObjectSet>
+				    <OTObjectSet name="small">
+				      <objects>
+       					<object refid="da41a2a0-c44e-11dc-95ff-0800200c9a66"/>
+				      </objects>
+				    </OTObjectSet>
+				  </values>
+				</OTIconSwitcherViewConfig>
+				<OTIconSwitcherViewConfig local_id="lock_scaffolding_class_view"
+				    objectClass="org.concord.framework.otrunk.OTObject"
+				    viewClass="org.concord.otrunk.ui.OTIconSwitcherView"
+				    property="isLevelFrozen" showUnset="false">
+				  <icons>
+				    <OTImage imageBytes="images/halfencrypted.png"/>
+				    <OTImage imageBytes="images/unlock.png"/>
+				  </icons>
+				  <values>
+								<OTBoolean name="Locked" value="true" />
+								<OTBoolean name="Unlocked" value="false" />
+				  </values>
+				</OTIconSwitcherViewConfig>
+				<OTIconSwitcherViewConfig local_id="lock_scaffolding_student_view"
+				    objectClass="org.concord.framework.otrunk.OTObject"
+				    viewClass="org.concord.otrunk.ui.OTIconSwitcherView"
+				    property="isLevelFrozen" forOverlay="true">
+				  <icons>
+				    <OTImage imageBytes="images/halfencrypted.png"/>
+				    <OTImage imageBytes="images/unlock.png"/>
+				  </icons>
+				  <values>
+								<OTBoolean name="Locked" value="true" />
+								<OTBoolean name="Unlocked" value="false" />
+				  </values>
+				</OTIconSwitcherViewConfig>
+				<OTPrototypeViewEntry local_id="scaffolding_level_student_view"
+					objectClass="org.concord.framework.otrunk.OTObject" viewClass="org.concord.otrunk.view.prototype.OTPrototypeView"
+					savePrototypeCopies="false" copyDepth="0"
+					viewEntry="${combobox_view}">
+					<prototype>
+						<OTChoice>
+							<choices>
+								<OTText local_id="scaffolding_level_class_setting" name="Class Setting" />
+								<OTInt name="1 least scaffolding" value="0" />
+								<OTInt name="2" value="1" />
+								<OTInt name="3" value="2" />
+								<OTInt name="4" value="3" />
+								<OTInt name="5 most scaffolding" value="4" />
+							</choices>
+						</OTChoice>
+					</prototype>
+					<controller>
+						<OTChoicePrototypeController
+							forOverlay="true" modelProperty="defaultScaffoldLevel"
+							unsetChoice="${scaffolding_level_class_setting}" />
+					</controller>
+				</OTPrototypeViewEntry>
+				<OTPrototypeViewEntry local_id="scaffolding_level_class_view"
+					objectClass="org.concord.framework.otrunk.OTObject" viewClass="org.concord.otrunk.view.prototype.OTPrototypeView"
+					savePrototypeCopies="false" copyDepth="0"
+					viewEntry="${combobox_view}">
+					<prototype>
+						<OTChoice>
+							<choices>
+								<OTInt name="1 least scaffolding" value="0" />
+								<OTInt name="2" value="1" />
+								<OTInt name="3" value="2" />
+								<OTInt name="4" value="3" />
+								<OTInt name="5 most scaffolding" value="4" />
+							</choices>
+						</OTChoice>
+					</prototype>
+					<controller>
+						<OTChoicePrototypeController modelProperty="defaultScaffoldLevel" />
+					</controller>
+				</OTPrototypeViewEntry>
+				<OTIconSwitcherViewConfig local_id="enabled_icon_class_view"
+				    objectClass="org.concord.framework.otrunk.OTObject"
+				    viewClass="org.concord.otrunk.ui.OTIconSwitcherView"
+				    property="enabled" showUnset="false">
+				  <icons>
+				    <OTImage imageBytes="images/ok.png"/>
+				    <OTImage imageBytes="images/cancel.png"/>
+				  </icons>
+				  <values>
+					<OTBoolean name="Enabled" value="true" />
+					<OTBoolean name="Disabled" value="false" />
+				  </values>
+				</OTIconSwitcherViewConfig>
+				<OTIconSwitcherViewConfig local_id="enabled_icon_student_view"
+				    objectClass="org.concord.framework.otrunk.OTObject"
+				    viewClass="org.concord.otrunk.ui.OTIconSwitcherView"
+				    property="enabled" forOverlay="true">
+				  <icons>
+				    <OTImage imageBytes="images/ok.png"/>
+				    <OTImage imageBytes="images/cancel.png"/>
+				  </icons>
+				  <values>
+					<OTBoolean name="Enabled" value="true" />
+					<OTBoolean name="Disabled" value="false" />
+				  </values>
+				</OTIconSwitcherViewConfig>
+				<OTUnsetButtonViewConfig local_id="unset_enabled_button"
+					objectClass="org.concord.framework.otrunk.OTObject" viewClass="org.concord.otrunk.ui.swing.OTUnsetButtonView"
+					forOverlay="true" property="enabled" />
+				<OTChoiceViewConfig local_id="combobox_view" 
+				    objectClass="org.concord.otrunk.ui.OTChoice"
+				    viewClass="org.concord.otrunk.ui.swing.OTChoiceComboBoxView"/>
+				<OTViewEntry local_id="overlay_sync_view" 
+					objectClass="org.concord.framework.otrunk.OTObject"
+					viewClass="org.concord.otrunk.overlay.OTOverlaySyncView" />					    	
 				<OTBoolean local_id="true" value="true" />
 			</library>
 		</OTSystem>
