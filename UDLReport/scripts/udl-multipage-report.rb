@@ -127,40 +127,6 @@ end
 ### Users
 ####################
 
-def users
-  @userListService.getUserList().sort do |u1, u2| 
-    sep = /[\s,]+/
-    if u1.name and not u1.name.empty?
-	  n1 = u1.name.split(sep)
-	else
-	  n1 = [" "," "]
-	end
-	
-	if u2.name and not u2.name.empty?
-	  n2 = u2.name.split(sep)	  
-	else
-	  n2 = [" "," "]
-	end
-	
-	last1 = n1[n1.length-1]
-	last2 = n2[n2.length-1]
-	first1 = n1.length > 1 ? n1[0] : ''
-	first2 = n2.length > 1 ? n2[0] : ''
-	
-	if last1 < last2 
-		-1
-	elsif last1 > last2
-		1
-	elsif first1 < first2
-		-1
-	elsif first1 > first2
-		1
-	else
-		0
-	end
-  end
-end
-
 def hasUserModified(obj, user)
   @otrunk.hasUserModified(obj, user)
 end
@@ -321,6 +287,18 @@ def sectionsContainer
   return @contentHelper.sectionsContainer
 end
 
+def unitSections
+  sectionsContainer.cards.vector.select { |section|
+    not "Home".eql? section.name
+  }
+end
+
+def unitActivities
+  unitSections.select do |section|
+    not section.isPretest and not section.isPosttest
+  end
+end
+
 def activitySections
   sectionsContainer.cards.vector
 end
@@ -365,9 +343,9 @@ end
 
 def sectionQuestions(section)
   questions = []
-  
-  return questions unless section.content.is_a? org.concord.otrunk.ui.OTCardContainer
     
+  return questions unless section.content.is_a? org.concord.otrunk.ui.OTCardContainer
+  
   pageCards = section.content.cards.vector
 
   pageCards.each do | doc |
