@@ -205,15 +205,17 @@ def getCsvText
 end
 
 def getSurveyCsvText
-  sep = "|"
-  t = ""
+  sep = '|'
+  newline = "\n"
+  t = ['First Name', 'Last Name', 'Name', 'Age', 'Gender', 'Year', 
+    'Electronics Major?'].join(sep) + newline 
   for user in users
     name = user.getName.split
     t <<  (name.size > 1 ? name[0] : '') + sep + name[-1] + sep
     for question in questions 
       t << surveyAnswerText(user, question) + sep
     end 
-    t << "\n" 
+    t << newline
   end
   t 
 end
