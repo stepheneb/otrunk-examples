@@ -83,6 +83,8 @@ def popupFrame
   return @frame if @frame 
   
   @frame = otCreate(org.concord.framework.otrunk.view.OTFrame) { |frame|
+     frame.width = 500
+     frame.height = 600
    }
 end
 
@@ -256,7 +258,7 @@ def questionAnswerHtml(question)
 
   return text if correct == nil
   return "<font color=\"ff0000\">#{text}</font>" unless correct
-  return "<font color=\"00ff00\">#{text}</font>"    
+  return "<font color=\"009900\">#{text}</font>"    
 end
 
 def isChoiceQuestion(question)
