@@ -11,8 +11,6 @@ include_class 'org.concord.otrunk.ui.OTText'
 include_class 'org.concord.otrunk.ui.OTChoice'
 include_class 'org.concord.otrunk.ui.question.OTQuestion'
 
-### BEGIN View/Controller Stuff ###
-
 # Called when the script view is loaded
 def getText
   @debug = true  
@@ -23,70 +21,27 @@ def getText
   else
     actionStr = 'default_template'
   end
-  eval(actionStr)
+  
+  return eval(actionStr)
 end
 
 def init
+  otImport($commonScript)
+    
   @otrunk = $viewContext.getViewService(OTrunk.java_class)
   @users = _retrieveUsers
   @questions = _getQuestions
-  System.out.println("numQuestions=" + @questions.size.to_s)
 end
 
-def default_template
-  render $template
-end
-
-def render(templateBlob)
-  erb = ERB.new Java::JavaLang::String.new(templateBlob.src).to_s
-  erb.result(binding)   
-end 
-
-def linkToObject(link_text, obj, viewEntry=nil)
-  link = "<a href=\"#{obj.otExternalId()}\" "
-  link += "viewid=\"#{viewEntry.otExternalId()}\" "  if viewEntry
-  link += ">#{link_text}</a>"
-end
-
-### END View/Controller Stuff ###
-
-### BEGIN OTrunk/Data Utilities ###
-
-def users
-  @users
-end
-
-def rootObject
-  @otrunk.root
-end
-
-def activityRoot
-  rootObject.reportTemplate.reference
-end
-
-def userObject(obj, user)
-  @otrunk.getUserRuntimeObject(obj, user);
-end
-
-def _retrieveUsers
-  userListService = $viewContext.getViewService(OTUserListService.java_class)
-  return userListService.getUserList().sort_by { |user| #sort users by name
-    (user.name && !user.name.empty?) ? user.name.downcase.split.values_at(-1, 0) : ['']    
-  }
-end
-
-def _choiceNum(options, choice)
-  num = 0
-  options.size.times do |i|
-    if options[i].otExternalId == choice.otExternalId
-      num = i+1
-      break
-    end 
+def otImport(script)
+  if script
+      srcProp = script.otClass().getProperty('src')
+      srcValue = script.otGet(srcProp)
+      eval(Java::JavaLang::String.new(script.src).to_s, nil, srcValue.getBlobURL().toExternalForm())
+  else
+    System.err.println("Cannot import #{script}")    
   end
-  num
 end
-
-### END OTrunk/Data Utilities ###
 
 ### BEGIN Assessment Related ###
 
@@ -182,7 +137,8 @@ def surveyAnswerText(user, question)
     answer = userQuestion.input.getCurrentChoice
     return answer ? answer.getBodyText : '-'
   elsif question.is_a?(OTText)
-    return userQuestion.getText
+    answer = userQuestion.getText
+    return answer ? answer : '-'
   end
   return 'ERROR'
 end

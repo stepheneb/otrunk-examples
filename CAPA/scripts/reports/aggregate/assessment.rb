@@ -1,3 +1,5 @@
+## Routines related to CAPA assessment using Script Object
+
 require 'jruby'
 require 'erb'
 

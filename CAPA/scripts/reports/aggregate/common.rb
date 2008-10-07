@@ -76,6 +76,10 @@ def rootObject
   @otrunk.root
 end
 
+def activityRoot
+  rootObject.reportTemplate.reference
+end
+
 def userObject(obj, user)
   @otrunk.getUserRuntimeObject(obj, user);
 end
@@ -130,6 +134,17 @@ def _createContentsMap
   # any of the methods that Ruby's Enumerable module mixes in.
   users.each { |u| contentsMap[u] = userObject($scriptObject, u).getContents.getVector }
   contentsMap
+end
+
+def choiceNum(options, choice)
+  num = 0
+  options.size.times do |i|
+    if options[i].otExternalId == choice.otExternalId
+      num = i+1
+      break
+    end 
+  end
+  num
 end
 
 ### END OTrunk/Data Utilities ###
