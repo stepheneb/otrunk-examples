@@ -207,8 +207,9 @@ end
 def getSurveyCsvText
   sep = "|"
   t = ""
-  for user in users 
-    t << user.getName + sep
+  for user in users
+    name = user.getName.split
+    t <<  (name.size > 1 ? name[0] : '') + sep + name[-1] + sep
     for question in questions 
       t << surveyAnswerText(user, question) + sep
     end 
