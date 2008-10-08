@@ -29,7 +29,7 @@
           <% question_correct[question] = 0; question_answered[question] = 0 %>
         <th><%= popupLinkToObject truncate(promptText(question), 30), question, $question_popup_view %></th>  
       <% end %>
-      <th>Score: Correct/ Answered/ Possible </th>
+      <th>Score</th>
     </tr>
     <% line_toggle = true %>
     <% @users.each do |user| %>
@@ -52,7 +52,8 @@
              %>
           <td><%= questionAnswerHtml userQuestion %></td>  
         <% end %>        
-        <td><%= "#{user_correct}/#{user_answered}/#{gradable_questions}" %></td>
+        <td><img src="http://chart.apis.google.com/chart?cht=p&chd=t:<%= "#{user_correct},#{gradable_questions - user_correct}" %>&chs=40&40"/><br/>
+           <%= "#{user_correct}/#{gradable_questions}" %></td>
       </tr>
     <% end %>
       <tr>
@@ -60,6 +61,7 @@
         <% questions.each do |question| %>
           <td>
             <% if questionGradable(question) %>             
+              <img src="http://chart.apis.google.com/chart?cht=p&chd=t:<%= "#{question_correct[question]},#{question_answered[question] - question_correct[question]},#{num_users - question_answered[question]}" %>&chs=40&40"/><br/>
               <%= "#{question_correct[question]}/#{question_answered[question]}/#{num_users}" %>
             <% else %>
               N/A
@@ -67,26 +69,6 @@
           </td>
         <% end %>
         <td>Class Score?<td/>                
-      </tr>
-      
-    <% if preOrPost? %>
-      <tr BGCOLOR = <%= line_toggle ? ROWCOLOR1 : ROWCOLOR2 %>>
-        <% line_toggle = !line_toggle %>
-        <td>Activity References</td>
-        <% questions.each do |question| %>
-          <td><%= activityRefString(question) %></td>
-        <% end %>
-      </tr>
-    <% end %>
+      </tr>      
   </table>
-
-  <% if preOrPost? %>
-    <p/>
-    <h4>Activity Index</h4>
-    <table>  
-      <% unitSections.size.times do |i| %>
-        <tr><td><%= i.to_s %></td><td><%= unitSections[i].getName %></td></tr>
-      <% end %>
-    </table>
-  <% end %>
 </div>
