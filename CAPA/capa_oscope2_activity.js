@@ -168,7 +168,8 @@ function wrap_assess() {
 	glob.madw = converter.getMADWrapper()
 	glob.helper = new ScopeAssessmentUtil(glob.madw)
 	var inventory = glob.otAssessment.getInventory()
-	inventory.put("modelActivityData", converter.getOTModelActivityData())
+	var madId = converter.getOTModelActivityData().getGlobalId()
+	inventory.put("modelActivityData", madId)
 	assess(glob.otAssessment)
 }
 
