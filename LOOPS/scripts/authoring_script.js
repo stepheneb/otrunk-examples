@@ -195,6 +195,7 @@ var sectionCardContainers = [];
 var pages = [];
 
 function init() {
+	System.out.println("init")
 	cardContainer.addOTChangeListener(sectionContainerListener);
 	
 	var pageIndex = 0;

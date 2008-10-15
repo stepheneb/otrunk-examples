@@ -7,8 +7,8 @@
  *
  * @author sfentress
  */
-  
-
+importClass(Packages.java.lang.System);
+  			
 function init() {
 	return true;
 }
