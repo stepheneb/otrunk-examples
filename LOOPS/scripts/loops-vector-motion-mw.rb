@@ -12,7 +12,6 @@ import java.awt.Font
 
 $model = nil;
 $page = $objView.getPage();
-$lblTimer = $lblTimer.getComponent(0)
 $showTimer = true;
 $blnDoStop = false;
 $integerTimeToStop = -1;
