@@ -12,6 +12,7 @@ import java.awt.Font
 
 $model = nil;
 $page = $objView.getPage();
+$lblTimer = $lblTimer.getComponent(0)
 $showTimer = true;
 $blnDoStop = false;
 $integerTimeToStop = -1;
@@ -73,7 +74,7 @@ class MyActionListener
           # $stderr.puts "pause clicked"
           $blnDoStop = true
       else
-      	$integerTimeToStop = -1
+        $integerTimeToStop = -1
         # $stderr.puts "starting model"
         $blnDoStop = false
         $model.runScript("run")
