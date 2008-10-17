@@ -30,6 +30,8 @@ importClass(Packages.javax.swing.JOptionPane);
 
 var objectAboveSnapshotButton;
 
+var autoNumberPages = false
+
 var pageHandler =
 {
 	
@@ -239,7 +241,9 @@ function init() {
 			for (var j = 0; j < sectionCardContainers[i].getCards().size(); j++){
 				pages[pageIndex] = sectionCardContainers[i].getCards().get(j);
 				pages[pageIndex].addOTChangeListener(pageListener);
-			//	addPageNumber(pages[pageIndex], j+1);
+				if (autoNumberPages){
+					addPageNumber(pages[pageIndex], j+1);
+				}
 				if ((i == 0) || (i == (cardContainer.getCards().size()-1))){
 					pages[pageIndex].setShowDefinitions(false);
 				} else {
