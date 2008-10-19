@@ -3,10 +3,19 @@
 
   <imports>
     <import class="org.concord.otrunk.OTSystem"/>
+	<import class="org.concord.otrunk.view.OTViewEntry" />
+	<import class="org.concord.otrunk.view.OTViewBundle" />
     <import class="org.concord.otrunk.view.OTViewEntry"/>
     <import class="org.concord.otrunk.view.OTViewService"/>
     <import class="org.concord.otrunk.ui.OTText"/>
     <import class="org.concord.otrunk.view.document.OTCompoundDoc"/>
+	<import class="org.concord.otrunk.script.ui.OTScriptObject" />
+	<import class="org.concord.otrunk.script.ui.OTScriptVariable" />
+	<import class="org.concord.otrunk.script.ui.OTScriptVariableView" />
+	<import class="org.concord.otrunk.script.ui.OTScriptVariableComponent" />
+	<import class="org.concord.otrunk.script.js.OTJavascript" />
+	<import class="org.concord.otrunk.script.OTScriptEngineBundle" />
+	<import class="org.concord.otrunk.script.OTScriptEngineEntry" />
     <import class="org.concord.otrunk.collisions.OTGUIPanel"/>
     <import class="org.concord.data.ui.OTDataFlowControlToolBar"/>
   </imports>
@@ -14,8 +23,15 @@
   <objects>
     <OTSystem>
     
-      <services>
-        <OTViewService>
+      <bundles>
+        <OTScriptEngineBundle>
+          <engines>
+             <OTScriptEngineEntry 
+             	objectClass="org.concord.otrunk.script.js.OTJavascript"
+             	engineClass="org.concord.otrunk.script.js.OTJavascriptEngine"/>
+          </engines>
+        </OTScriptEngineBundle>
+		<OTViewBundle>
           <viewEntries>
             <OTViewEntry local_id="text-label"
               objectClass="org.concord.otrunk.ui.OTText" 
@@ -32,26 +48,42 @@
             <OTViewEntry 
               objectClass="org.concord.data.ui.OTDataFlowControlToolBar"
               viewClass="org.concord.data.ui.OTDataFlowControlToolBarView"/>               
+			<OTViewEntry
+				objectClass="org.concord.otrunk.script.ui.OTScriptObject"
+				viewClass="org.concord.otrunk.script.ui.OTScriptObjectView" />
           </viewEntries>
-        </OTViewService>
-      </services>
+        </OTViewBundle>
+      </bundles>
       
       <root>
       	<OTCompoundDoc>
       		<bodyText>
 		        <object refid="${dynamica_panel}"/>
+		        <object refid="${activity_script}"/>
 		        <br/>
 		        <object refid="${flow_buttons}"/>
+		        <br/>
+		        <object refid="${feedback_text}"/>
 		    </bodyText>
         </OTCompoundDoc>
       </root>
       
       <library>
+      	<OTText local_id="feedback_text"/>
     	<OTGUIPanel name="collisions" local_id="dynamica_panel" 
     		width="525" height="325" authoredDataURL="treasure_hunt_dynamica.xml"/>
     	<OTDataFlowControlToolBar local_id="flow_buttons">
     		<dataProducer><object refid="${dynamica_panel}"/></dataProducer>
     	</OTDataFlowControlToolBar>
+		<OTScriptObject local_id="activity_script">
+			<variables>
+				<OTScriptVariableComponent name="objView" reference="${dynamica_panel}" />
+				<OTScriptVariable name="txtFeedback" reference="${feedback_text}" />
+			</variables>
+			<script>
+				<OTJavascript src="treasure_hunt_activity.js"  />
+			</script>
+		</OTScriptObject>
 	  </library>
     </OTSystem>
   </objects>
