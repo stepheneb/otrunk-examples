@@ -1,11 +1,11 @@
 require 'erb'
 include_class 'org.concord.framework.otrunk.OTrunk'
-include_class='org.concord.biologica.state.OTBreedOffspring'
-include_class='org.concord.biologica.state.OTOrganism'
-include_class='org.concord.biologica.state.OTWorld'
-include_class='org.concord.biologica.state.OTChromosome'
-include_class='org.concord.biologica.state.OTStaticOrganism'
-include_class='org.concord.biologica.state.OTSex'
+include_class='org.concord.otrunk.biologica.OTBreedOffspring'
+include_class='org.concord.otrunk.biologica.OTOrganism'
+include_class='org.concord.otrunk.biologica.OTWorld'
+include_class='org.concord.otrunk.biologica.OTChromosome'
+include_class='org.concord.otrunk.biologica.OTStaticOrganism'
+include_class='org.concord.otrunk.biologica.OTSex'
 include_class='org.concord.otrunk.ui.OTChoiceWithFeedback'
 
 def getText
