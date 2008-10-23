@@ -6,7 +6,8 @@
 /**
  * Variables coming from the script OT context:
  * ====================================
- * objView	GUIPanel	Collisions visual component (Dynamica)
+ * objView		GUIPanel	Collisions visual component (Dynamica)
+ * txtFeedback	OTText		Feedback text object
  */
 
 importPackage(Packages.java.lang);
@@ -14,6 +15,7 @@ importClass(Packages.java.awt.Color);
 
 importClass(Packages.org.concord.collisions.event.DaemonCollListener);
 importClass(Packages.org.concord.framework.simulation.SimulationListener);
+importClass(Packages.org.concord.collisions.event.AreaListener);
 
 /*
  * Variables from OTScriptContextHelper
@@ -22,9 +24,12 @@ importClass(Packages.org.concord.framework.simulation.SimulationListener);
  * viewContext
  */
 
-var resultDisplDaemon; 	//Resultant displacement vector (in red)
 var world;				//Collisions world
+var resultDisplDaemon; 	//Resultant displacement vector (in red)
+var ball;				//Element that represents the pirate (black guy)
+var treasure;			//Element that represents the treasure 
 
+var found = false;
 var displDColor
 var usedDisplDColor = new Color(0.65,0.65,1)
 var resultDisplDColor = new Color(1,0,0)
@@ -107,14 +112,36 @@ var simulationListener = new SimulationListener()
 	}
 };
 
+var areaListener = new AreaListener()
+{
+	areaVisited: function(evt)
+	{
+		checkWin();
+	}
+};
+
 function setupActivity()
 {
 	world = objView.getWorldModel();
 	objView.addSimulationListener(simulationListener);
+
+	//Get the pirate guy
+	ball = world.getAtomByName("ball");
+	if (ball == null){
+		System.err.println("Error, pirate guy not found (atom named ball");
+	}
 	
-	//Create the resultant displ daemon (invisible for now)	
+	//Get the treasure element
+	treasure = objView.getElementByName("treasure");
+	if (treasure == null){
+		System.err.println("Error, treasure not found (passive element named treasure");
+	}
+
+	//Get the resultant displ daemon (invisible for now)	
 	resultDisplDaemon = world.getDaemonByName("resDispl");
-	System.out.println(resultDisplDaemon);
+	if (resultDisplDaemon == null){
+		System.err.println("Error, resultant displacement vector not found (displ daemon named resDispl");
+	}
 	
 	//Add listeners to all displ. daemons
 	var daemons = world.getDaemons();
@@ -126,10 +153,29 @@ function setupActivity()
 			d.addDaemonListener(daemonListener)
 		}
 	}
+	
+	//Add area listener to detect the treasure
+	ball.addAreaListener(areaListener, treasure);
+//			objView.getPanelToWorldCoordinateTuner().tuneX(JPartWorld.getPxFromCm(tx))-2,
+//			objView.getPanelToWorldCoordinateTuner().tuneY(JPartWorld.getPxFromCm(ty))-2,4,4)
+	
+}
+
+function checkWin()
+{
+	if (!found){
+		found = true;
+		treasure.setVisible(true);
+		System.out.println("good");
+		txtFeedback.setText("You found the treasure!")
+	}
 }
 
 function initial()
 {
+	found = false;
+	treasure.setVisible(false);
+	txtFeedback.setText("")
 	resetColorArrows()
 	resultDisplDaemon.setVisible(false)
 	objView.repaint()
