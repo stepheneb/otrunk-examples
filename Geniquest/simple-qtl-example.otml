@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<otrunk id="ee7a7352-b52f-4e20-95b8-f48af633be9f">
+  <imports>
+    <import class="org.concord.otrunk.OTSystem" />
+    <import class="org.concord.otrunk.view.OTViewEntry" />
+    <import class="org.concord.otrunk.view.OTViewBundle" />
+    <import class="org.concord.otrunk.biologica.qtl.OTQTLSimulation" />
+    <import class="org.concord.otrunk.biologica.qtl.OTQTL" />
+    <import class="org.concord.datagraph.state.OTDataGraph"/>
+    <import class="org.concord.datagraph.state.OTDataAxis"/>
+    <import class="org.concord.otrunk.view.document.OTCompoundDoc" />
+  </imports>
+
+  <objects>
+    <OTSystem>
+      <bundles>
+        <OTViewBundle showLeftPanel="false">
+          <viewEntries>
+            <OTViewEntry
+              objectClass="org.concord.otrunk.biologica.qtl.OTQTLSimulation"
+              viewClass="org.concord.otrunk.biologica.qtl.OTQTLSimulationView" />
+            <OTViewEntry 
+              objectClass="org.concord.datagraph.state.OTDataGraph" 
+              viewClass="org.concord.datagraph.state.OTDataGraphView"/>
+            <OTViewEntry
+              objectClass="org.concord.otrunk.view.document.OTDocument"
+              viewClass="org.concord.otrunk.view.document.OTDocumentView" />
+          </viewEntries>
+        </OTViewBundle>
+      </bundles>
+
+      <root>
+        <OTCompoundDoc name="QTL">
+          <bodyText>
+            <object refid="${sim}" /><br/>
+            <object refid="${graph}" />
+          </bodyText>
+          <documentRefs>
+            <OTQTLSimulation local_id="sim" numberOfIndividuals="1000" numberOfMarkersPerChromosome="1000">
+              <chromosomeLengths>
+                <int>100</int>
+                <int>100</int>
+                <int>100</int>
+                <int>30</int>
+              </chromosomeLengths>
+              <locations>
+                <OTQTL chromosome="1" locationInCM="24" additiveEffect="0.5" dominanceDeviation="-0.5" />
+                <OTQTL chromosome="2" locationInCM="67" additiveEffect="0.7" dominanceDeviation="0.5" />
+              </locations>
+              <dataGraph>
+                <object refid="${graph}" />
+              </dataGraph>
+            </OTQTLSimulation>
+            <OTDataGraph local_id="graph" name="LOD Scores">
+              <xDataAxis>
+                <OTDataAxis min="0" max="100" label="Position" units="cM" />
+              </xDataAxis>
+              <yDataAxis>
+                <OTDataAxis min="0" max="10" label="LOD" units="" />
+              </yDataAxis>
+            </OTDataGraph>
+          </documentRefs>
+        </OTCompoundDoc>
+
+      </root>
+
+    </OTSystem>
+  </objects>
+</otrunk>
