@@ -10,17 +10,135 @@
     <import class="org.concord.otrunk.script.jython.OTJython"/>
     <import class="org.concord.otrunk.script.OTScriptEngineBundle"/>
     <import class="org.concord.otrunk.script.OTScriptEngineEntry"/>
-    <import class="org.concord.otrunk.view.document.OTCompoundDoc"/>
+    <import class="org.concord.otrunk.script.ui.OTScriptObject" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariable" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariableComponent" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariableRealObject" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariableView" />
+    <import class="org.concord.otrunk.view.OTViewMode" />
+    <import class="org.concord.otrunk.view.document.OTCompoundDoc" />
+    <import class="org.concord.otrunk.view.document.OTCssText" />
+    <import class="org.concord.otrunk.view.document.OTDocumentViewConfig" />
+    <import class="org.concord.otrunk.view.document.edit.OTDocumentEditViewConfig" />
     <import class="org.concord.otrunk.view.OTFolderObject"/>
+    <import class="org.concord.otrunk.view.OTViewMode" />
+    <import class="org.concord.otrunk.view.OTObjectEditViewConfig" />
+    <import class="org.concord.otrunk.ui.OTText" />
+
+    <import class="org.concord.data.state.OTDataStore" />
+    <import class="org.concord.data.state.OTDataChannelDescription" />
+    <import class="org.concord.data.state.OTDataField" />
+    <import class="org.concord.data.state.OTDataTable" />
+    <import class="org.concord.datagraph.state.OTDataGraph" />
+    <import class="org.concord.datagraph.state.OTDataAxis" />
+    <import class="org.concord.datagraph.state.OTDataGraphable" />
+    <import class="org.concord.datagraph.state.OTDataCollector" />
+    <import class="org.concord.datagraph.state.OTMultiDataGraph" />
+    <import class="org.concord.datagraph.state.OTPluginView" />
+    <import class="org.concord.datagraph.state.OTDataBarGraphable" />
+    
+    <import class="org.concord.framework.otrunk.wrapper.OTBlob" />
+    <import class="org.concord.framework.otrunk.wrapper.OTBoolean" />
+    <import class="org.concord.framework.otrunk.wrapper.OTInt" />
+
+    <import class="org.concord.smartgraph.OTSmartGraphTool" />
+    <import class="org.concord.otrunk.graph.OTDataCollectorViewConfig" />
+    
+    <import class="org.concord.otrunk.graph.OTDataCollectorViewConfig" />
+    <import class="org.concord.otrunk.ui.OTModeSwitcher" />
+    <import class="org.concord.framework.otrunk.view.OTFrame" />
   </imports>
   <objects>
     <OTSystem>
       <bundles>
-        <OTViewBundle>
+        <OTViewBundle showLeftPanel="false">
+          <frame>
+            <OTFrame useScrollPane="true" width="900" height="600" />
+          </frame>
+          <modes>
+            <OTViewMode name="authoring">
+              <map>
+                <entry key="${script-button-view}">
+                  <OTViewEntry objectClass="org.concord.otrunk.script.ui.OTScriptButton"
+                     viewClass="org.concord.otrunk.script.ui.OTScriptButtonExtendedEditView"/>
+                </entry>
+                <entry key="${mode-switcher-view}">
+                  <OTViewEntry objectClass="org.concord.otrunk.ui.OTModeSwitcher" 
+                    viewClass="org.concord.otrunk.ui.swing.OTModeSwitcherView" />
+                </entry>
+                <entry key="${compound_doc_view}">
+                  <OTDocumentEditViewConfig objectClass="org.concord.otrunk.view.document.OTCompoundDoc" 
+                    viewClass="org.concord.otrunk.view.document.edit.OTDocumentEditView">
+                    <documentViewConfig>
+                      <object refid="${compound_doc_view}" />
+                    </documentViewConfig>
+                    <objectsToInsert>
+                      <OTText name="Text Box" />
+                      <OTScriptButton name="Javascript Button" script="${clickme_script_javascript}">
+                        <text>Click Me (JavaScript)</text>
+                      </OTScriptButton>
+                      <OTScriptButton name="JRuby Button" script="${clickme_script_jruby}">
+                        <text>Click Me (JavaScript)</text>
+                      </OTScriptButton>
+                      <OTScriptButton name="Jython Button" script="${clickme_script_jython}">
+                        <text>Click Me (JavaScript)</text>
+                      </OTScriptButton>
+                    </objectsToInsert>
+                  </OTDocumentEditViewConfig>
+                </entry>
+                <entry key="${text-edit}">
+                  <OTViewEntry objectClass="org.concord.otrunk.ui.OTText" viewClass="org.concord.otrunk.ui.swing.OTTextEditEditView" />
+                </entry>
+                <entry key="${data-collector-view}">
+                  <OTDataCollectorViewConfig objectClass="org.concord.datagraph.state.OTDataCollector"
+                    viewClass="org.concord.otrunk.graph.OTDataCollectorEditView">
+                  </OTDataCollectorViewConfig>
+                </entry>
+                
+              </map>
+            </OTViewMode>
+            <OTViewMode name="student">
+              <map />
+            </OTViewMode>
+          </modes>
           <views>
-            <OTViewEntry objectClass="org.concord.otrunk.script.ui.OTScriptButton" viewClass="org.concord.otrunk.script.ui.OTScriptButtonView"/>
-            <OTViewEntry objectClass="org.concord.otrunk.view.OTFolderObject" viewClass="org.concord.otrunk.view.OTFolderObjectView"/>
-            <OTViewEntry objectClass="org.concord.otrunk.script.OTScript" viewClass="org.concord.otrunk.script.ui.OTScriptEditView" local_id="script_edit_view"/>
+            <OTViewEntry objectClass="org.concord.otrunk.script.ui.OTScriptButton" 
+              viewClass="org.concord.otrunk.script.ui.OTScriptButtonView"
+              local_id="script-button-view" />
+            <OTViewEntry objectClass="org.concord.otrunk.script.OTScript" 
+              viewClass="org.concord.otrunk.script.ui.OTScriptEditView" 
+              local_id="script-edit-view" />
+            <OTViewEntry objectClass="org.concord.otrunk.ui.OTModeSwitcher" 
+              viewClass="org.concord.otrunk.ui.swing.OTModeSwitcherBypassView"
+              local_id="mode-switcher-view" />
+            <OTViewEntry objectClass="org.concord.otrunk.ui.OTText" 
+              viewClass="org.concord.otrunk.ui.swing.OTTextEditView"
+               local_id="text-edit"  />
+             <OTViewEntry 
+               objectClass="org.concord.datagraph.state.OTDataCollector"
+               viewClass="org.concord.datagraph.state.OTDataCollectorView"
+               local_id="data-collector-view" />
+            
+            <!-- <OTViewEntry objectClass="org.concord.otrunk.OTIncludeRootObject" 
+              viewClass="org.concord.otrunk.OTIncludeRootObjectView" /> -->
+            <!-- <OTViewEntry objectClass="org.concord.otrunk.view.OTFolderObject" 
+              viewClass="org.concord.otrunk.view.OTFolderObjectView"/> -->
+            <OTDocumentViewConfig 
+              objectClass="org.concord.otrunk.view.document.OTCompoundDoc" 
+              viewClass="org.concord.otrunk.view.document.OTDocumentView"
+              local_id="compound_doc_view"
+              css="
+              body { background-color:#FFFFFF; color:#333333; font-family:Tahoma,'Trebuchet MS',sans-serif; line-height:1.5em; }
+              h1 { color:#FFD32C; font-size:1.5em; margin-bottom:0px; }
+              h2 { color:#FFD32C; font-size:1.3em; margin-bottom:0px; }
+              h2 { color:#FFD32C; font-size:1.1em; margin: 2em 0em 1em 0em; }
+              .menu { color: #982f10; background-color: #fffee9;  color: #982f10; margin: 0px 1px; padding: 5px; }
+              .menu_item { background-color: #fffee9; color: #982f10; margin: 1px 0px; padding: 0px 10px; }
+                .menu_item a { color: #51a656; }
+              #navlist ul { margin: 0; padding: 0; list-style: none; width: 150px; }
+              #navlist li { display: inline; list-style-type: none;list-style-type: none; padding-right: 10px; }
+              #content { margin:5px; padding:5px; }
+              "/>
           </views>
         </OTViewBundle>
         <OTScriptEngineBundle>
@@ -35,26 +153,97 @@
         </OTScriptEngineBundle>
       </bundles>
       <root>
+        <OTModeSwitcher name="Simple Button Scripts">
+          <otObject>
+            <OTCompoundDoc name="Simple Button Scripts">
+              <bodyText>
+                <div id="content">
+                  <h3>Script Button Edit Tests:</h3>
+                  <p>
+                    Each of the buttons below runs a simple script in a different scripting language when clicked.
+                  </p>
+                  <br />
+                  <table>
+                    <tr>
+                      <td><object refid="${clickme_javascript_button}" /></td>
+                      <td><object refid="${clickme_jruby_button}" /></td>
+                      <td><object refid="${clickme_jython_button}" /></td>
+                    </tr>
+                  </table>
+                  <p>
+                    If you are in <b><i>authoring</i></b> mode you can edit the scripts for each button by CTRL-clicking on the button.
+                  </p>
+                  <br /><hr /><br />
+                  <h3>Script buttons manipulating the data in an OTText object.</h3>
+                  <p>
+                    You can edit the text in the following field:
+                  </p>
+                  <br />
+                  <table>
+                    <tr>
+                      <td width="400"><object refid="${text_input}" /></td>
+                    </tr>
+                  </table>
+                  <p>
+                    and then click one of the script buttons below to reverse the text:
+                  </p>
+                  <br />
+                  <table>
+                    <tr>
+                      <td><object refid="${reverse_text_javascript_button}" /></td>
+                      <td><object refid="${reverse_text_jruby_button}" /></td>
+                      <td><object refid="${reverse_text_jython_button}" /></td>
+                    </tr>
+                  </table>
+                  <br /><hr /><br />
+                  <h3>Script Buttons interacting with a graph:</h3>
+                  <p>The script buttons that manipulate the graph are all written in JRuby.</p>
+                  <br />
+                  <table>
+                    <tr>
+                      <th>Graph</th><th>JRuby button scripts</th>
+                    </tr>
+                    <tr>
+                      <td width="600"><object refid="${datacollector1}" /></td>
+                      <td align="top">
+                        <object refid="${change_x_axis}" /><br />
+                        <object refid="${change_y_axis}" /><br />
+                        <object refid="${change_color}" /><br />
+                        <object refid="${toggle_markers}" /><br />
+                        <object refid="${toggle_lines}" /><br />
+                        <object refid="${toggle_autoscale}" /><br />
+                        <object refid="${toggle_ruler}" /><br />
+                        <object refid="${toggle_multiple_graphs}" /><br />
+                      </td>                     
+                    </tr>
+                  </table>                  
+                </div>
+              </bodyText>
+            </OTCompoundDoc>
+          </otObject>
+        </OTModeSwitcher>            
+      </root>
+      <library>
         <OTFolderObject>
           <children>
-            <OTScriptButton name="Javascript Button" script="${script_javascript}">
-              <text>Click Me (JavaScript)</text>
-            </OTScriptButton>
-            <OTScriptButton name="JRuby Button" script="${script_jruby}">
-              <text>Click Me (JRuby)</text>
-            </OTScriptButton>
-            <OTScriptButton name="Jython Button" script="${script_jython}">
-              <text>Click Me (Jython)</text>
-            </OTScriptButton>
-            <OTJavascript name="Javascript Button Script" local_id="script_javascript">
+            <OTModeSwitcher name="Javascript Button">
+              <otObject refid="${clickme_javascript_button}" />
+            </OTModeSwitcher>
+            <OTModeSwitcher name="JRuby Button">
+              <otObject refid="${clickme_jruby_button}" />
+            </OTModeSwitcher>
+            <OTModeSwitcher name="Jython Button">
+              <otObject refid="${clickme_jython_button}" />
+            </OTModeSwitcher>
+            <OTJavascript name="Javascript Button Script" local_id="clickme_script_javascript">
               <script>
 importClass(Packages.javax.swing.JOptionPane);
 function clicked(){
-	JOptionPane.showMessageDialog(null, "clicked (Javascript)");
+  JOptionPane.showMessageDialog(null, "clicked (Javascript)");
 }
               </script>
             </OTJavascript>
-            <OTJRuby name="JRuby Button Script" local_id="script_jruby">
+            <OTJRuby name="JRuby Button Script" local_id="clickme_script_jruby">
               <script>
 include_class 'javax.swing.JOptionPane'
 def self.clicked
@@ -62,7 +251,7 @@ def self.clicked
 end
               </script>
             </OTJRuby>
-            <OTJython name="Jython Button Script" local_id="script_jython">
+            <OTJython name="Jython Button Script" local_id="clickme_script_jython">
               <script>
 from javax.swing import JOptionPane
 def clicked():
@@ -70,9 +259,261 @@ def clicked():
     return True
               </script>
             </OTJython>
+            <OTJavascript name="Javascript Button Script" local_id="reverse_text_script_javascript">
+              <script>
+function clicked() {
+  var original = textinput.getText();
+  var reversed = "";
+  for (i=original.length-1; i>=0; i--) {
+    reversed = reversed + original.charAt(i);
+  }
+  textinput.setText(reversed);
+}
+              </script>
+            </OTJavascript>
+            <OTJRuby name="JRuby Button Script" local_id="reverse_text_script_jruby">
+              <script>
+def self.clicked
+  $textinput.text = $textinput.text.reverse
+end
+              </script>
+            </OTJRuby>
+            <OTJython name="Jython Button Script" local_id="reverse_text_script_jython">
+              <script>
+def clicked():
+    reversedText = textinput.getText()[::-1]
+    textinput.setText(reversedText)
+    return True
+              </script>
+            </OTJython>
           </children>
         </OTFolderObject>
-      </root>
+        <OTScriptButton local_id="clickme_javascript_button" name="Javascript Button" script="${clickme_script_javascript}">
+          <text>Click Me (JavaScript)</text>
+        </OTScriptButton>
+        <OTScriptButton local_id="clickme_jruby_button" name="JRuby Button" script="${clickme_script_jruby}">
+          <text>Click Me (JRuby)</text>
+        </OTScriptButton>
+        <OTScriptButton local_id="clickme_jython_button" name="Jython Button" script="${clickme_script_jython}">
+          <text>Click Me (Jython)</text>
+        </OTScriptButton>
+        <OTScriptButton local_id="reverse_text_javascript_button" name="Javascript Button" script="${reverse_text_script_javascript}">
+          <text>Reverse Text (JavaScript)</text>
+          <scriptVariables>
+            <OTScriptVariable name="textinput" reference="${text_input}" />
+          </scriptVariables>
+        </OTScriptButton>
+        <OTScriptButton local_id="reverse_text_jruby_button" name="JRuby Button" script="${reverse_text_script_jruby}">
+          <text>Reverse Text (JRuby)</text>
+          <scriptVariables>
+            <OTScriptVariable name="textinput" reference="${text_input}" />
+          </scriptVariables>
+        </OTScriptButton>
+        <OTScriptButton local_id="reverse_text_jython_button" name="Jython Button" script="${reverse_text_script_jython}">
+          <text>Reverse Text (Jython)</text>
+          <scriptVariables>
+            <OTScriptVariable name="textinput" reference="${text_input}" />
+          </scriptVariables>
+        </OTScriptButton>
+        <OTText local_id="text_input">
+          <text>this text can be reversed with a script</text>
+        </OTText>
+        <OTDataCollector local_id="datacollector1" name="Data graph" title="Data graph" autoScaleEnabled="false">
+          <source>
+            <OTDataGraphable name="Data Graph" connectPoints="true" controllable="true" yColumn="1" drawMarks="true" color="16711680" xColumn="0" lineWidth="4.0">
+              <dataStore>
+                <OTDataStore local_id="datastore_01" numberChannels="2">
+                  <values>
+                    <float>0.0</float>
+                    <float>0.5</float>
+                    <float>1.0</float>
+                    <float>0.7</float>
+                    <float>2.0</float>
+                    <float>0.9</float>
+                    <float>3.0</float>
+                    <float>1.1</float>
+                    <float>4.0</float>
+                    <float>1.3</float>
+                    <float>5.0</float>
+                    <float>1.5</float>
+                    <float>6.0</float>
+                    <float>1.7</float>
+                    <float>7.0</float>
+                    <float>1.9</float>
+                    <float>8.0</float>
+                    <float>2.1</float>
+                    <float>9.0</float>
+                    <float>2.3</float>
+                  </values>
+                </OTDataStore>
+              </dataStore>
+            </OTDataGraphable>
+          </source>
+          <xDataAxis>
+            <OTDataAxis max="20.0" units="s" min="0.0" label="Time" />
+          </xDataAxis>
+          <yDataAxis>
+            <OTDataAxis max="3.25" units="" min="-0.0" label="Distance" />
+          </yDataAxis>
+        </OTDataCollector>
+        <OTSmartGraphTool local_id="smart_graph_tool" name="smart graph tool">
+          <dataCollector>
+            <object refid="${datacollector1}" />
+          </dataCollector>
+        </OTSmartGraphTool>        
+        <OTScriptButton local_id="change_x_axis" name="JRuby Button" script="${change_x_axis_script}">
+          <text>change X axis</text>
+          <scriptVariables>
+            <OTScriptVariableRealObject name="smartgraph">
+              <reference>
+                <object refid="${smart_graph_tool}" />
+              </reference>
+            </OTScriptVariableRealObject>
+            <OTScriptVariable name="datacollector1">
+              <reference>
+                <object refid="${datacollector1}" />
+              </reference>
+            </OTScriptVariable>
+          </scriptVariables>
+        </OTScriptButton>     
+        <OTJRuby name="JRuby Button Script" local_id="change_x_axis_script">
+          <script>
+def self.clicked
+  max_x = $datacollector1.xdata_axis.max
+  $datacollector1.xdata_axis.max = max_x/2.0
+end
+          </script>
+        </OTJRuby>
+        <OTScriptButton local_id="change_y_axis" name="JRuby Button" script="${change_y_axis_script}">
+          <text>change Y axis</text>
+          <scriptVariables>
+            <OTScriptVariable name="datacollector1">
+              <reference>
+                <object refid="${datacollector1}" />
+              </reference>
+            </OTScriptVariable>
+          </scriptVariables>
+        </OTScriptButton>     
+        <OTJRuby name="JRuby Button Script" local_id="change_y_axis_script">
+          <script>
+def self.clicked
+  max_y = $datacollector1.ydata_axis.max
+  $datacollector1.ydata_axis.max = max_y/2.0
+end
+          </script>
+        </OTJRuby>
+        <OTScriptButton local_id="change_color" name="JRuby Button" script="${change_color_script}">
+          <text>change color</text>
+          <scriptVariables>
+            <OTScriptVariable name="datacollector1">
+              <reference>
+                <object refid="${datacollector1}" />
+              </reference>
+            </OTScriptVariable>
+          </scriptVariables>
+        </OTScriptButton>     
+        <OTJRuby name="JRuby Button Script" local_id="change_color_script">
+          <script>
+LINE_COLORS = %w{65AE24 E08024 905BF5 568AD8 B03A7F 99A62A}
+LINE_COLORS_LENGTH = LINE_COLORS.length
+@color_index = 0
+
+def next_color
+  @color_index += 1
+  color = LINE_COLORS[@color_index % LINE_COLORS_LENGTH].hex
+end
+
+def self.clicked
+  $datacollector1.source.color = next_color
+end
+          </script>
+        </OTJRuby>
+        <OTScriptButton local_id="toggle_markers" name="JRuby Button" script="${toggle_markers_script}">
+          <text>toggle markers</text>
+          <scriptVariables>
+            <OTScriptVariable name="datacollector1">
+              <reference>
+                <object refid="${datacollector1}" />
+              </reference>
+            </OTScriptVariable>
+          </scriptVariables>
+        </OTScriptButton>     
+        <OTJRuby name="JRuby Button Script" local_id="toggle_markers_script">
+          <script>
+def self.clicked
+  $datacollector1.source.draw_marks = $datacollector1.source.draw_marks ? false: true
+end
+          </script>
+        </OTJRuby>    
+        <OTScriptButton local_id="toggle_lines" name="JRuby Button" script="${toggle_lines_script}">
+          <text>toggle lines</text>
+          <scriptVariables>
+            <OTScriptVariable name="datacollector1">
+              <reference>
+                <object refid="${datacollector1}" />
+              </reference>
+            </OTScriptVariable>
+          </scriptVariables>
+        </OTScriptButton>     
+        <OTJRuby name="JRuby Button Script" local_id="toggle_lines_script">
+          <script>
+def self.clicked
+  $datacollector1.source.connect_points = $datacollector1.source.connect_points ? false: true
+end
+          </script>
+        </OTJRuby>
+        <OTScriptButton local_id="toggle_autoscale" name="JRuby Button" script="${toggle_autoscale_script}">
+          <text>toggle autoscale</text>
+          <scriptVariables>
+            <OTScriptVariable name="datacollector1">
+              <reference>
+                <object refid="${datacollector1}" />
+              </reference>
+            </OTScriptVariable>
+          </scriptVariables>
+        </OTScriptButton>     
+        <OTJRuby name="JRuby Button Script" local_id="toggle_autoscale_script">
+          <script>
+def self.clicked
+  $datacollector1.auto_scale_enabled = $datacollector1.auto_scale_enabled ? false: true
+end
+          </script>
+        </OTJRuby>
+        <OTScriptButton local_id="toggle_ruler" name="JRuby Button" script="${toggle_ruler_script}">
+          <text>toggle ruler</text>
+          <scriptVariables>
+            <OTScriptVariable name="datacollector1">
+              <reference>
+                <object refid="${datacollector1}" />
+              </reference>
+            </OTScriptVariable>
+          </scriptVariables>
+        </OTScriptButton>     
+        <OTJRuby name="JRuby Button Script" local_id="toggle_ruler_script">
+          <script>
+def self.clicked
+  $datacollector1.ruler_enabled = $datacollector1.ruler_enabled ? false: true
+end
+          </script>
+        </OTJRuby>    
+        <OTScriptButton local_id="toggle_multiple_graphs" name="JRuby Button" script="${toggle_multiple_graphs_script}">
+          <text>toggle multiple graphs</text>
+          <scriptVariables>
+            <OTScriptVariable name="datacollector1">
+              <reference>
+                <object refid="${datacollector1}" />
+              </reference>
+            </OTScriptVariable>
+          </scriptVariables>
+        </OTScriptButton>     
+        <OTJRuby name="JRuby Button Script" local_id="toggle_multiple_graphs_script">
+          <script>
+def self.clicked
+  $datacollector1.multiple_graphable_enabled = $datacollector1.multiple_graphable_enabled ? false: true
+end
+          </script>
+        </OTJRuby>    
+      </library>
     </OTSystem>
   </objects>
 </otrunk>
