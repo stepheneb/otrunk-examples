@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<otrunk id="874b8410-3938-012a-b543-0017f2cc694e">
+	<imports>
+		<import class="org.concord.otrunk.OTSystem" />
+		<import class="org.concord.otrunk.view.OTViewEntry" />
+		<import class="org.concord.otrunk.view.OTViewMode" />
+		<import class="org.concord.otrunk.view.OTViewBundle" />
+		<import class="org.concord.otrunk.view.document.OTCompoundDoc" />
+		<import class="org.concord.otrunk.view.document.OTTextObject" />
+		<import
+			class="org.concord.otrunk.graph.OTDataCollectorViewConfig" />
+		<import class="org.concord.otrunkmw.OTMwAction" />
+		<import class="org.concord.otrunkmw.OTMwModelData" />
+		<import class="org.concord.otrunkmw.OTModelerPage" />
+		<import class="org.concord.otrunkmw.OTModelerPageViewConfig" />
+		<import class="org.concord.otrunk.ui.OTText" />
+		<import
+			class="org.concord.otrunk.view.document.OTDocumentViewConfig" />
+		<import class="org.concord.datagraph.state.OTDataGraph" />
+		<import class="org.concord.datagraph.state.OTDataCollector" />
+		<import class="org.concord.datagraph.state.OTDataAxis" />
+		<import class="org.concord.datagraph.state.OTDataGraphable" />
+		<import class="org.concord.data.state.OTDataInput" />
+		<import class="org.concord.data.state.OTDataStore" />
+		<import class="org.concord.data.state.OTDataChannelDescription" />
+		<import class="org.concord.data.state.OTLinearProducerFilter" />
+		<import class="org.concord.otrunk.ui.OTButton" />
+		<import class="org.concord.otrunk.ui.OTTextPane" />
+		<import class="org.concord.otrunk.ui.OTPlacementContainer" />
+		<import class="org.concord.otrunk.ui.OTPlacement" />
+		<import class="org.concord.otrunk.util.OTSharingBundle" />
+		<import class="org.concord.framework.otrunk.view.OTFrame" />
+		<import class="org.concord.sensor.state.OTDeviceConfig" />
+		<import class="org.concord.sensor.state.OTExperimentRequest" />
+		<import class="org.concord.sensor.state.OTInterfaceManager" />
+		<import class="org.concord.sensor.state.OTSensorDataProxy" />
+		<import class="org.concord.sensor.state.OTSensorRequest" />
+		<import class="org.concord.sensor.state.OTZeroSensor" />
+	</imports>
+	<objects>
+		<OTSystem>
+			<bundles>
+				<OTSharingBundle />
+				<OTViewBundle showLeftPanel="false">
+					<views>
+						<OTViewEntry local_id="mw-view"
+							objectClass="org.concord.otrunkmw.OTModelerPage"
+							viewClass="org.concord.otrunkmw.OTModelerPageView" />
+						<OTViewEntry
+							objectClass="org.concord.otrunk.ui.OTTextPane"
+							viewClass="org.concord.otrunk.ui.swing.OTTextPaneView" />
+						<OTViewEntry
+							objectClass="org.concord.otrunk.ui.OTPlacementContainer"
+							viewClass="org.concord.otrunk.ui.swing.OTPlacementContainerView" />
+						<OTViewEntry
+							objectClass="org.concord.otrunk.script.ui.OTScriptObject"
+							viewClass="org.concord.otrunk.script.ui.OTScriptObjectView" />
+						<OTDocumentViewConfig
+							objectClass="org.concord.otrunk.view.document.OTDocument"
+							viewClass="org.concord.otrunk.view.document.OTDocumentView">
+							<css>
+								body { font-size: medium; font-family:
+								verdana; background-color: white; } .sub
+								{ font-size: x-small; } .header {
+								font-size: large; font-weight: bold; }
+							</css>
+						</OTDocumentViewConfig>
+						<OTViewEntry
+							objectClass="org.concord.otrunk.ui.snapshot.OTSnapshotButton"
+							viewClass="org.concord.otrunk.ui.snapshot.OTSnapshotButtonView" />
+						<OTViewEntry
+							objectClass="org.concord.otrunk.ui.snapshot.OTSnapshotAlbum"
+							viewClass="org.concord.otrunk.ui.snapshot.OTSnapshotAlbumView" />
+						<OTViewEntry local_id="graph-view"
+							objectClass="org.concord.datagraph.state.OTDataCollector"
+							viewClass="org.concord.datagraph.state.OTDataCollectorView" />
+						<OTViewEntry
+							objectClass="org.concord.datagraph.state.OTDataGraph"
+							viewClass="org.concord.datagraph.state.OTDataGraphView" />
+						<OTViewEntry
+							objectClass="org.concord.otrunk.ui.OTButton"
+							viewClass="org.concord.otrunk.ui.swing.OTButtonView" />
+					</views>
+					<frame>
+						<OTFrame width="800" height="600" />
+					</frame>
+				</OTViewBundle>
+				<OTInterfaceManager>
+					<deviceConfigs>
+						<OTDeviceConfig configString="none"
+							deviceId="10" />
+					</deviceConfigs>
+				</OTInterfaceManager>
+			</bundles>
+			<root>
+				<OTCompoundDoc>
+					<bodyText>
+						<p>
+							<center>
+								<font size="6">
+									<b>
+										Connecting a temperature sensor
+										to a model
+									</b>
+								</font>
+							</center>
+						</p>
+						<p>
+							<center>
+								<object refid="${model}" />
+								<object refid="${sensor}" />
+							</center>
+						</p>
+						<p>
+							<center>
+								<table>
+									<tr>
+										<td width="100">
+											<object
+												refid="${startButton}" />
+										</td>
+										<td width="100">
+											<object
+												refid="${stopButton}" />
+										</td>
+										<td width="100">
+											<object
+												refid="${resetButton}" />
+										</td>
+									</tr>
+								</table>
+							</center>
+						</p>
+					</bodyText>
+					<documentRefs>
+						<OTDataCollector name="Temperature"
+							local_id="sensor" multipleGraphableEnabled="false"
+							title="Temperature Sensor Graph" autoScaleEnabled="true">
+							<source>
+								<OTDataGraphable name="Sensor"
+									connectPoints="true" yColumn="1" drawMarks="false"
+									color="0x0000ff" xColumn="0">
+									<dataProducer>
+										<OTLinearProducerFilter k0="0"
+											k1="1" sourceChannel="1">
+											<source>
+												<OTSensorDataProxy
+													local_id="sensorsource" name="sensordata"
+													sharable="true">
+													<request>
+														<OTExperimentRequest
+															period="0.1">
+															<sensorRequests>
+																<OTSensorRequest
+																	stepSize="0.1" type="0" unit="degC" port="0"
+																	requiredMax="40.0" displayPrecision="-1"
+																	requiredMin="0.0" />
+															</sensorRequests>
+														</OTExperimentRequest>
+													</request>
+												</OTSensorDataProxy>
+											</source>
+										</OTLinearProducerFilter>
+									</dataProducer>
+									<dataStore>
+										<OTDataStore />
+									</dataStore>
+								</OTDataGraphable>
+							</source>
+							<xDataAxis>
+								<OTDataAxis max="60" units="s" min="0"
+									label="Time" />
+							</xDataAxis>
+							<yDataAxis>
+								<OTDataAxis max="100.0" units="degC"
+									min="0.0" label="Temperature" />
+							</yDataAxis>
+						</OTDataCollector>
+						<OTModelerPage local_id="model"
+							authoredDataURL="resources/liquid.cml" width="600" height="300">
+							<dataInput>
+								<OTDataInput
+									inputVariable="temperature">
+									<target>
+										<OTMwModelData
+											property="temperature" />
+									</target>
+									<dataProducer>
+										<OTLinearProducerFilter
+											k0="-800" k1="100" sourceChannel="1">
+											<source>
+												<object
+													refid="${sensorsource}" />
+											</source>
+										</OTLinearProducerFilter>
+									</dataProducer>
+								</OTDataInput>
+							</dataInput>
+						</OTModelerPage>
+						<OTButton local_id="startButton" text="Start">
+							<action>
+								<object refid="${start_action}" />
+							</action>
+						</OTButton>
+						<OTButton local_id="stopButton" text="Stop">
+							<action>
+								<object refid="${stop_action}" />
+							</action>
+						</OTButton>
+						<OTButton local_id="resetButton" text="Reset">
+							<action>
+								<object refid="${reset_action}" />
+							</action>
+						</OTButton>
+						<OTMwAction local_id="start_action">
+							<name>Start</name>
+							<targets>
+								<object refid="${model}" />
+							</targets>
+						</OTMwAction>
+						<OTMwAction local_id="stop_action">
+							<name>Stop</name>
+							<targets>
+								<object refid="${model}" />
+							</targets>
+						</OTMwAction>
+						<OTMwAction local_id="reset_action">
+							<name>Reset</name>
+							<targets>
+								<object refid="${model}" />
+							</targets>
+						</OTMwAction>
+					</documentRefs>
+				</OTCompoundDoc>
+			</root>
+		</OTSystem>
+	</objects>
+</otrunk>
