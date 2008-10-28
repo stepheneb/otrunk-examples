@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<otrunk id="33754150-b594-11d9-9669-0800200c9a66" >
+  <imports>
+    <import class="org.concord.otrunk.OTSystem"/>
+    <import class="org.concord.otrunk.view.OTFolderObject"/>
+    <import class="org.concord.otrunk.view.document.OTCompoundDoc" />
+    <import class="org.concord.otrunk.view.OTViewEntry"/>
+    <import class="org.concord.otrunk.view.OTViewService"/>
+    <import class="org.concord.framework.otrunk.view.OTFrame"/>
+    <import class="org.concord.data.state.OTDataStore"/>
+    <import class="org.concord.data.state.OTDataChannelDescription"/>
+    <import class="org.concord.data.state.OTDataField"/>
+    <import class="org.concord.data.state.OTWaveGenerator"/>
+    <import class="org.concord.datagraph.state.OTDataGraph"/>
+    <import class="org.concord.datagraph.state.OTDataAxis"/>
+    <import class="org.concord.datagraph.state.OTDataGraphable"/>
+    <import class="org.concord.datagraph.state.OTDataCollector"/>
+    <import class="org.concord.datagraph.state.OTMultiDataGraph"/>
+    <import class="org.concord.datagraph.state.OTDataPointLabel"/>
+    <import class="org.concord.datagraph.state.OTDataPointRuler"/>
+    <import class="org.concord.graph.util.state.OTDrawingTool"/>
+    <import class="org.concord.graph.util.state.OTDrawingStamp"/>
+    <import class="org.concord.graph.util.state.OTDrawingImageIcon"/>
+    <import class="org.concord.graph.util.state.OTDrawingShape"/>
+    <import class="org.concord.graph.util.state.OTPointTextLabel"/>
+    <import class="org.concord.data.state.OTLinearProducerFilter"/>    
+    <import class="org.concord.data.state.OTIntegratingProducerFilter"/>    
+    <import class="org.concord.data.state.OTDifferentiatingProducerFilter"/>    
+    <import class="org.concord.data.state.OTHoltsMethodSmoothing"/>
+    <import class="org.concord.smartgraph.OTDataStoreFilterDescription" />
+    <import class="org.concord.smartgraph.OTDataStoreFilter" />
+    <import class="org.concord.sensor.state.OTExperimentRequest" />
+    <import class="org.concord.sensor.state.OTSensorDataProxy" />
+    <import class="org.concord.sensor.state.OTSensorRequest" />
+    <import class="org.concord.sensor.state.OTDeviceConfig" />
+    <import class="org.concord.sensor.state.OTInterfaceManager" />
+  </imports>
+  <objects>
+    <OTSystem>
+      <bundles>
+        <OTViewService>
+          <viewEntries>
+            <OTViewEntry 
+              objectClass="org.concord.datagraph.state.OTDataGraph" 
+              viewClass="org.concord.datagraph.state.OTDataGraphView"/>
+            <OTViewEntry 
+              objectClass="org.concord.data.state.OTDataField" 
+              viewClass="org.concord.data.state.OTDataFieldView"/>
+            <OTViewEntry
+              objectClass="org.concord.datagraph.state.OTDataCollector" 
+              viewClass="org.concord.datagraph.state.OTDataCollectorView"/>
+            <OTViewEntry
+              objectClass="org.concord.graph.util.state.OTDrawingTool" 
+              viewClass="org.concord.datagraph.state.OTDataDrawingToolView"/>
+            <OTViewEntry
+              objectClass="org.concord.datagraph.state.OTMultiDataGraph" 
+              viewClass="org.concord.datagraph.state.OTMultiDataGraphView"/>
+            <!-- <OTViewEntry
+              objectClass="org.concord.otrunk.view.OTFolderObject"
+              viewClass="org.concord.otrunk.view.OTFolderObjectView"/> -->
+            <OTViewEntry
+              objectClass="org.concord.otrunk.view.document.OTDocument"
+              viewClass="org.concord.otrunk.view.document.OTDocumentView" />
+          </viewEntries>
+        </OTViewService>
+         <OTInterfaceManager>
+          <deviceConfigs>
+            <OTDeviceConfig configString="none" deviceId="10" />
+          </deviceConfigs>
+        </OTInterfaceManager>
+      </bundles>
+      <root>
+        <OTCompoundDoc name="Graphs">
+          <bodyText>
+            <object refid="${distance_graph}" /><br/>
+            <object refid="${velocity_graph}" />
+          </bodyText>
+          <documentRefs>         
+            <OTDataCollector name="Distance Graph" local_id="distance_graph">
+              <source>
+                <OTDataGraphable connectPoints="true" color="0x0000ff"
+                  drawMarks="false" name="Distance" xColumn="0" yColumn="1">
+                  <dataProducer>
+                    <OTSensorDataProxy id="2a74de62-a503-11dd-8dc3-d1f212af6eac" name="dataproducer">
+                      <request>
+                        <OTExperimentRequest period="0.1">
+                          <sensorRequests>
+                            <OTSensorRequest stepSize="0.1" type="13" unit="m" port="0" requiredMax="4.0" displayPrecision="-2" requiredMin="-4.0" />
+                          </sensorRequests>
+                        </OTExperimentRequest>
+                      </request>
+                    </OTSensorDataProxy>
+                  </dataProducer>
+                  <dataStore>
+                    <OTDataStore local_id="data_store"  />
+                  </dataStore>
+                </OTDataGraphable>
+              </source>
+              <xDataAxis>
+                <OTDataAxis min="0" max="60" label="Time" units="s"/>
+              </xDataAxis>
+              <yDataAxis>
+                <OTDataAxis min="-2" max="2" label="sin(x)"/>
+              </yDataAxis>
+            </OTDataCollector>
+            <OTDataGraph name="Velocity Graph" local_id="velocity_graph">
+              <graphables>
+                <OTDataGraphable connectPoints="true" color="0xff0000"
+                  drawMarks="false" name="Velocity" xColumn="0" yColumn="2" local_id="differentiated_data">
+                  <dataStore>
+                    <OTDataStoreFilter>
+                      <description>
+                        <OTDataStoreFilterDescription operation="slope" /> <!--  slope, average, maximum, range -->
+                      </description>
+                      <inputDataStore>
+                        <object refid="${data_store}" />
+                      </inputDataStore>
+                    </OTDataStoreFilter>
+                  </dataStore>
+                </OTDataGraphable>
+              </graphables>
+              <xDataAxis>
+                <OTDataAxis min="0" max="60" label="Time" units="s"/>
+              </xDataAxis>
+              <yDataAxis>
+                <OTDataAxis min="-2" max="2" label="sin(x)"/>
+              </yDataAxis>
+            </OTDataGraph>
+          </documentRefs>
+        </OTCompoundDoc>
+      </root>
+    </OTSystem>
+  </objects>
+</otrunk>
