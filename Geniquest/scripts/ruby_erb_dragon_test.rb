@@ -11,9 +11,9 @@ include_class 'org.concord.otrunk.biologica.OTSex'
 include_class 'org.concord.otrunk.ui.OTChoiceWithFeedback'
 include_class 'org.concord.otrunk.ui.OTText'
 
-import org.concord.biologica
-import org.concord.biologica.ui
-import org.concord.biologica.engine
+import org.concord.otrunk.biologica
+import org.concord.otrunk.biologica.ui
+import org.concord.otrunk.biologica.engine
 import java.lang
 import java.beans
 include_class 'org.concord.otrunk.view.OTFolderObject'
@@ -58,7 +58,8 @@ end
 
 def self.init
   puts "Initial view"
-  $meiosisViewInternal = $meiosisView.getComponent(0)
+  $pedigreeViewInternal = $pedigreeView.getComponent(0)
+  #$meiosisViewInternal = $meiosisView.getComponent(0)
   #$textArea.setCurrentCard("meiosisStr")
   #$breedOffspringViewInternal = $breedOffspringView.getComponent(0)
   #$breedOffspringComponent = $breedOffspringView.getComponent(0)
@@ -76,23 +77,10 @@ class ClickAction
   include java.beans.PropertyChangeListener
   
   def propertyChange(evt)
-    if (evt.getPropertyName == UIProp::SEX_VIEW_MODE)
-      case $meiosisViewInternal.getSexViewMode
-      when 1: 
-        puts "Normal view"
-        #$textArea.setCurrentCard("meiosisStr") # Normal view
-        #bean.foo = 'Normal view'
-      when 2 
-        #$textArea.setCurrentCard("motherMagnifiedStr") # Viewing mother chromosomes
-        #bean.foo = 'Mother view'
-        #$meiosisViewInternal.setSexTextVisible(false)
-        puts "Mother view"
-      when 3
-        puts "Father view"
-        #$meiosisViewInternal.setSexTextVisible(true)
-        #$textArea.setCurrentCard("fatherMagnifiedStr") # Viewing father chromosomes
-        #bean.foo = 'Father view'
-      end
+    if (evt.getPropertyName == UIProp::CROSS_SUCCEEDED)
+      puts "change"
+      height = $pedigreeViewInternal.getHeight
+      puts height
     end
    end
 end
