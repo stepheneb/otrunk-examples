@@ -15,36 +15,103 @@ include_class 'org.concord.biologica.ui.UIProp'
 include_class 'org.concord.biologica.engine.EngineProp'
 #include OTrunkRubyScriptTools
 
+
 def self.clicked
   puts "Inspecting graphs"
-  $remaining_budget = 500000
-  puts "Initial budget: " + $remaining_budget.to_s
+  puts "Initial budget: " + $remainingBudget.value.to_s
   puts "$QTL_graph.inspect!!: " + $QTLGraph.inspect
   $QTLGraphables = $QTLGraph.getGraphables.getVector
+  $QTLLabels = $QTLGraph.getLabels.getVector
+  #$QTLLabels.each {|l| puts l.inspect}
+
+##Turn off all labels
+  for n in 0..17 do
+   $QTLLabels[n].setHorizontalVisible(false)
+   $QTLLabels[n].setVerticalVisible(false)
+  end
+
   puts "Graphables: " + $QTLGraphables.inspect
-  $QTLGraphables.each {|g| g.setColor(0x00FFFFFF)}
+  $QTLGraphables.each {|g| g.setLineWidth(2.0)}
+  #$QTLGraphables.each {|g| g.setColor(0x00FF0000)}
+
+  #Turn off all graphables
+  
+  $QTLGraphables.each {|g| g.setVisible(false)}
+
+  #$QTLGraphables[0].inspect
+  #$QTLGraphables[0].setVisible(false)
   puts "$drakesCheckBoxes.inspect: " + $drakesCheckBoxes.inspect
   $selectedDrakes = $drakesCheckBoxes.getCurrentChoices.getVector
   puts "$drakesCheckBoxes.getCurrentChoices: "
   puts $selectedDrakes.inspect
-  puts $selectedDrakes.size
-  $selectedDrakes.each {|d| puts d.name}
-  $textField.text = "Budget Remaining: $" + $remaining_budget.to_s
-  
-  if($selectedDrakes.size !== 2 )
-    $textField.text = "Please select only two strains of Drakes for this run."
+  puts $selectedDrakes.size > 2
+
+  #Get the names of the selected Drake strains
+  n=0
+  $selectedDrakeStrains = Array.new
+  $selectedDrakes.each do |drake|
+    $selectedDrakeStrains[n]=drake.name
+    puts $selectedDrakeStrains[n]
+    n+=1
   end
   
-  if($selectedDrakes.size == 2 && $remaining_budget != 0)
-    if $selectedDrakes.include?("Mountain") {$QTLGraphables[0].setColor(0x00FF0000)}
-    elsif $selectedDrakes.include?("Valley") {$QTLGraphables[1].setColor(0x00FF0000)}
-    elsif $selectedDrakes.include?("Swamp") {$QTLGraphables[2].setColor(0x00FF0000)}
-    else $QTLGraphables[3].setColor(0x0000FF00)
+  puts "incl mt.? " + $selectedDrakeStrains.include?("Mountain").to_s
+  
+  if($selectedDrakes.size > 2 )
+    
+  end
+  
+  #Iterate budget down a notch and turn on corresponding graphs and labels
+  
+  if ($selectedDrakes.size == 2)
+    $remainingBudget.value += -100000
+    puts $remainingBudget.value.to_s
+    $budgetText.text = "Budget Remaining: $" + $remainingBudget.value.to_s
+    if ($remainingBudget.value > 0)
+      if $selectedDrakeStrains.include?("Mountain")
+        puts "Mountain"
+        $QTLGraphables[0].setVisible(true)
+        $QTLLabels[0].setHorizontalVisible(true)
+        $QTLLabels[1].setHorizontalVisible(true)
+        $QTLLabels[2].setHorizontalVisible(true)
+        $QTLLabels[3].setVerticalVisible(true)
+        $QTLLabels[4].setVerticalVisible(true)
+        $QTLGraphables[0].setColor(0x00FF0000)
+      elsif $selectedDrakeStrains.include?("Valley")
+        puts "Valley"
+        $QTLGraphables[1].setVisible(true)
+        $QTLGraphables[1].setColor(0x00FF0000)
+        $QTLLabels[5].setHorizontalVisible(true)
+        $QTLLabels[6].setHorizontalVisible(true)
+        $QTLLabels[7].setHorizontalVisible(true)
+        $QTLLabels[8].setVerticalVisible(true)
+        $QTLLabels[9].setVerticalVisible(true)
+      elsif $selectedDrakeStrains.include?("Swamp")
+        puts "Swamp"
+        $QTLGraphables[2].setVisible(true)
+        $QTLGraphables[2].setColor(0x00FF0000)
+        $QTLLabels[10].setHorizontalVisible(true)
+        $QTLLabels[11].setHorizontalVisible(true)
+        $QTLLabels[12].setHorizontalVisible(true)
+        $QTLLabels[13].setVerticalVisible(true)
+        $QTLLabels[14].setVerticalVisible(true)
+      elsif $selectedDrakeStrains.include?("Desert" || "Ice" || "Forest") 
+        puts "Other"
+        $QTLGraphables[3].setColor(0x00FF0000)
+        $QTLGraphables[3].setVisible(true)
+        $QTLLabels[15].setHorizontalVisible(true)
+        $QTLLabels[16].setHorizontalVisible(true)
+        $QTLLabels[17].setHorizontalVisible(true)
+        $QTLLabels[18].setVerticalVisible(true)
+        $QTLLabels[19].setVerticalVisible(true)
+      end
+    else
+      $remainingBudget.value = 0 
+      $budgetText.text = "You have no money remaining! Proceed to the next page to use the results of your experimental runs to look for genetic clues to the disease."
     end
-    $remaining_budget = $remaining_budget - 100000
-  else $textField.text = "You have no money remaining!"
+  else $textField.text = "Please select two strains of Drakes for this run." 
   end
-  $textField.text = "Budget Remaining: $" + $remaining_budget.to_s
+  
   #puts $QTLGraphLabels = $QTLGraph.getLabels.getVector.inspect
   #puts "99pct Labels: "
   #$QTLGraphLabels.each {|l| puts l; l.setHorizontalVisible(true)}
