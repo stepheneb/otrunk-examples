@@ -15,6 +15,8 @@
     <import class="org.concord.otrunk.script.ui.OTScriptVariableComponent" />
     <import class="org.concord.otrunk.script.ui.OTScriptVariableRealObject" />
     <import class="org.concord.otrunk.script.ui.OTScriptVariableView" />
+    
+    <import class="org.concord.otrunk.util.OTSharingBundle" />
     <import class="org.concord.otrunk.view.OTViewMode" />
     <import class="org.concord.otrunk.view.document.OTCompoundDoc" />
     <import class="org.concord.otrunk.view.document.OTCssText" />
@@ -37,6 +39,14 @@
     <import class="org.concord.datagraph.state.OTPluginView" />
     <import class="org.concord.datagraph.state.OTDataBarGraphable" />
 
+    <import class="org.concord.data.state.OTDifferentiatingProducerFilter" />
+
+    <import class="org.concord.sensor.state.OTDeviceConfig" />
+    <import class="org.concord.sensor.state.OTExperimentRequest" />
+    <import class="org.concord.sensor.state.OTInterfaceManager" />
+    <import class="org.concord.sensor.state.OTSensorDataProxy" />
+    <import class="org.concord.sensor.state.OTSensorRequest" />
+
     <import class="org.concord.datagraph.state.OTMultiDataGraph"/>
     
     <import class="org.concord.framework.otrunk.wrapper.OTBlob" />
@@ -45,6 +55,9 @@
 
     <import class="org.concord.smartgraph.OTSmartGraphTool" />
     <import class="org.concord.otrunk.graph.OTDataCollectorViewConfig" />
+    
+    <import class="org.concord.otrunk.util.OTSharingBundle" />
+    
     
     <import class="org.concord.otrunk.graph.OTDataCollectorViewConfig" />
     <import class="org.concord.otrunk.ui.OTModeSwitcher" />
@@ -141,6 +154,7 @@
               "/>
           </views>
         </OTViewBundle>
+        <OTSharingBundle />
         <OTScriptEngineBundle>
           <engines>
             <OTScriptEngineEntry objectClass="org.concord.otrunk.script.js.OTJavascript"    
@@ -151,6 +165,11 @@
               engineClass="org.concord.otrunk.script.jython.OTJythonEngine"/>
           </engines>
         </OTScriptEngineBundle>
+        <OTInterfaceManager>
+          <deviceConfigs>
+            <OTDeviceConfig configString="none" deviceId="10" />
+          </deviceConfigs>
+        </OTInterfaceManager>
       </bundles>
       <root>
         <OTModeSwitcher name="Simple Button Scripts">
@@ -193,6 +212,24 @@
                       <td><object refid="${reverse_text_javascript_button}" /></td>
                       <td><object refid="${reverse_text_jruby_button}" /></td>
                       <td><object refid="${reverse_text_jython_button}" /></td>
+                    </tr>
+                  </table>
+                  <br /><hr /><br />
+                  <h3>Script buttons manipulating an OTText (backed by an OTInt) object that holds the money left in an budget.</h3>
+                  <br />
+                  <table>
+                    <tr>
+                      <td width="400"><object refid="${budget_total_text}" /></td>
+                    </tr>
+                  </table>
+                  <p>
+                    Click one of the script buttons below to subtract $10,000 and the other to add $10,000.
+                  </p>
+                  <br />
+                  <table>
+                    <tr>
+                      <td><object refid="${add_10000_jruby_button}" /></td>
+                      <td><object refid="${sub_10000_jruby_button}" /></td>
                     </tr>
                   </table>
                   <br /><hr /><br />
@@ -348,6 +385,41 @@ def clicked():
         <OTText local_id="text_input">
           <text>this text can be reversed with a script</text>
         </OTText>
+        <OTScriptButton local_id="add_10000_jruby_button" name="Jython Button" script="${add_10000_jruby_button_script_jruby}">
+          <text>Add $10,000 (JRuby)</text>
+          <scriptVariables>
+            <OTScriptVariable name="budget_total" reference="${budget_total_int}" />
+            <OTScriptVariable name="budget_total_text" reference="${budget_total_text}" />
+          </scriptVariables>
+        </OTScriptButton>
+        <OTScriptButton local_id="sub_10000_jruby_button" name="Jython Button" script="${sub_10000_jruby_button_script_jruby}">
+          <text>Subtract $10,000 (JRuby)</text>
+          <scriptVariables>
+            <OTScriptVariable name="budget_total" reference="${budget_total_int}" />
+            <OTScriptVariable name="budget_total_text" reference="${budget_total_text}" />
+          </scriptVariables>
+        </OTScriptButton>
+        <OTText local_id="budget_total_text">
+          <text>50000</text>
+        </OTText>
+        <OTInt local_id="budget_total_int" value="50000" />
+        <OTJRuby name="JRuby Button Script" local_id="add_10000_jruby_button_script_jruby">
+          <script>
+def self.clicked
+  $budget_total.value = $budget_total.value + 10000
+  $budget_total_text.text = $budget_total.value.to_s
+end
+          </script>
+        </OTJRuby>
+        <OTJRuby name="JRuby Button Script" local_id="sub_10000_jruby_button_script_jruby">
+          <script>
+def self.clicked
+  $budget_total.value = $budget_total.value - 10000
+  $budget_total.value = 0 if $budget_total.value &lt; 0
+  $budget_total_text.text = $budget_total.value.to_s
+end
+          </script>
+        </OTJRuby>
         <OTDataCollector local_id="datacollector1" name="position_data_graph1" title="Position data graph" autoScaleEnabled="false">
           <source>
             <OTDataGraphable name="position data 1" connectPoints="true" controllable="true" yColumn="1" drawMarks="true" color="16711680" xColumn="0" lineWidth="4.0">
@@ -547,73 +619,57 @@ end
           <graphs>
             <OTDataCollector local_id="datacollector2" name="position_data_graph" title="Position data graph" autoScaleEnabled="false">
               <source>
+                
                 <OTDataGraphable name="position data" connectPoints="true" controllable="true" yColumn="1" drawMarks="true" color="16711680" xColumn="0" lineWidth="4.0">
+                  <dataProducer>
+                    <OTSensorDataProxy local_id="position_data_sensor_proxy" name="dataproducer">
+                      <request>
+                        <OTExperimentRequest period="0.1">
+                          <sensorRequests>
+                            <OTSensorRequest stepSize="0.1" type="13" unit="m" port="0" requiredMax="4.0" displayPrecision="-2" requiredMin="-4.0" />
+                          </sensorRequests>
+                        </OTExperimentRequest>
+                      </request>
+                    </OTSensorDataProxy>
+                  </dataProducer>
                   <dataStore>
-                    <OTDataStore local_id="datastore_02" numberChannels="2">
-                      <values>
-                        <float>0.0</float>
-                        <float>0.5</float>
-                        <float>1.0</float>
-                        <float>0.7</float>
-                        <float>2.0</float>
-                        <float>0.9</float>
-                        <float>3.0</float>
-                        <float>1.1</float>
-                        <float>4.0</float>
-                        <float>1.3</float>
-                        <float>5.0</float>
-                        <float>1.5</float>
-                        <float>6.0</float>
-                        <float>1.7</float>
-                        <float>7.0</float>
-                        <float>1.9</float>
-                        <float>8.0</float>
-                        <float>2.1</float>
-                        <float>9.0</float>
-                        <float>2.3</float>
-                      </values>
+                    <OTDataStore id="position_data_datastore" dt="1.0" numberChannels="1">
+                      <channelDescriptions>
+                        <OTDataChannelDescription name="dt" precision="2" numericData="true" />
+                        <OTDataChannelDescription name="" numericData="true" />
+                      </channelDescriptions>
                     </OTDataStore>
-                  </dataStore>
+                    <values>
+                      <float>0.5</float>
+                      <float>0.7</float>
+                      <float>0.9</float>
+                      <float>1.1</float>
+                      <float>1.3</float>
+                      <float>1.5</float>
+                      <float>1.7</float>
+                      <float>1.9</float>
+                      <float>2.1</float>
+                      <float>2.3</float>
+                    </values>
+                  </dataStore>                  
                 </OTDataGraphable>
               </source>
               <xDataAxis>
-                <OTDataAxis  local_id="motion_xaxis" max="20.0" units="s" min="0.0" label="Time" />
+                <OTDataAxis  local_id="motion_xaxis" max="20.0" units="s" min="0.0" label="Time" labelFormat="Engineering"/>
               </xDataAxis>
               <yDataAxis>
-                <OTDataAxis max="3.25" units="m" min="-0.0" label="Distance" />
+                <OTDataAxis max="3.25" units="m" min="-0.0" label="Distance" labelFormat="Engineering"/>
               </yDataAxis>
             </OTDataCollector>
             <OTDataCollector local_id="datacollector3" name="velocity_data_graph" title="Velocity data graph" autoScaleEnabled="false" xDataAxis="${motion_xaxis}">
               <source>
-                <OTDataGraphable name="velocity data" connectPoints="true" controllable="true" yColumn="1" drawMarks="true" color="16711680" xColumn="0" lineWidth="4.0">
+                <OTDataGraphable name="Data Graph" connectPoints="true" controllable="true" yColumn="1" drawMarks="false" color="16711680" xColumn="0" lineWidth="2.0">
                   <dataStore>
-                    <OTDataStore local_id="datastore_03" numberChannels="2">
-                      <values>
-                        <float>0.0</float>
-                        <float>0.5</float>
-                        <float>1.0</float>
-                        <float>0.7</float>
-                        <float>2.0</float>
-                        <float>0.9</float>
-                        <float>3.0</float>
-                        <float>1.1</float>
-                        <float>4.0</float>
-                        <float>1.3</float>
-                        <float>5.0</float>
-                        <float>1.5</float>
-                        <float>6.0</float>
-                        <float>1.7</float>
-                        <float>7.0</float>
-                        <float>1.9</float>
-                        <float>8.0</float>
-                        <float>2.1</float>
-                        <float>9.0</float>
-                        <float>2.3</float>
-                      </values>
-                    </OTDataStore>
+                    <OTDataStore />
                   </dataStore>
                 </OTDataGraphable>
               </source>
+              
               <yDataAxis>
                 <OTDataAxis max="3.25" units="m/s" min="-0.0" label="Velocity" />
               </yDataAxis>
