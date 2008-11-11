@@ -18,8 +18,8 @@
 /**
  * Variables coming from the script OT context:
  * ====================================
- * objView		GUIPanel	Collisions visual component (Dynamica)
- * txtFeedback	OTText		Feedback text object
+ * objView		GUIPanel			Collisions visual component (Dynamica)
+ * feedbackArea	OTCardContainer		Feedback object
  */
 
 importPackage(Packages.java.lang);
@@ -31,6 +31,7 @@ importClass(Packages.org.concord.collisions.engine.JPartWorld);
 importClass(Packages.org.concord.collisions.event.CollisionsListener);
 importClass(Packages.org.concord.collisions.event.DaemonCollListener);
 importClass(Packages.org.concord.collisions.event.AreaListener);
+importClass(Packages.org.concord.otrunk.ui.swing.OTCardContainerView);
 
 /*
  * Variables from OTScriptContextHelper
@@ -50,6 +51,7 @@ var displDColor
 var usedDisplDColor = new Color(0.65,0.65,1)
 var resultDisplDColor = new Color(1,0,0)
 
+var MSG_INTRO = 0;
 var MSG_WIN = 1;
 var MSG_NO_START_ARROW = 20;
 var MSG_ARROWS_OUTSIDE = 21;
@@ -281,7 +283,7 @@ function initial()
 	numCollidedDisplD = 0;
 	found = false;
 	treasure.setVisible(false);
-	txtFeedback.setText("")
+	showFeedback(MSG_INTRO);
 	resetArrows()
 	resultDisplDaemon.setVisible(false)
 	objView.repaint()
@@ -363,37 +365,29 @@ function showFeedback(msgCode)
 {
 	var strMessage = "";
 
-	strMessage = getMessage(msgCode)
-
-	System.out.println(strMessage);
-	txtFeedback.setText(strMessage)	
+	OTCardContainerView.setCurrentCard(feedbackArea, getMsgCard(msgCode));
 }
 
-function getMessage(code)
+function getMsgCard(code)
 {
-	var strText = ""
-
-	if (code == MSG_WIN){
-		strText = "You found the treasure!";
+	if (code == MSG_INTRO){
+		return "intro_text";
 	}
-	if (code==MSG_NO_START_ARROW){
-		strText = strText + "Place an arrow where the pirate is" 
-//			"Place the tail of the first <FONT color='2222FF'>blue</FONT> vector arrow "+
-//			"in the <FONT color='000000'>black</FONT> cross, so Bluebeard can start walking."
+	else if (code == MSG_WIN){
+		return "win_text";
+	}
+	else if (code==MSG_NO_START_ARROW){
+		return "noStartArrow_text";
 	}
 	else if (code==MSG_ARROWS_OUTSIDE){
-		strText = strText + "Drag all the arrows into the map"
-//			"Place ALL the <FONT color='2222FF'>blue</FONT> vector arrows "+
-//			"in the map, to make a continous path for Bluebeard."
+		return "arrowsOutside_text";
 	}
 	else if (code==MSG_ARROWS_DISCONNECTED){
-		strText = strText + "Make a continuous path with all the arrows"
-//			"The <FONT color='2222FF'>blue</FONT> vector arrows "+
-//			"should make a continous path for Bluebeard."
+		return "arrowsDisconnected_text";
 	}
 	else if (code==MSG_PATH_REPEATED){
-		strText = strText + 
-			"Make a different path to the treasure."
+		return "";
 	}
-	return strText
+	return ""
 }
+

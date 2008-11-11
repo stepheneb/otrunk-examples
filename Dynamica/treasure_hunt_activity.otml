@@ -19,6 +19,8 @@
 	<import class="org.concord.otrunk.script.OTScriptEngineEntry" />
     <import class="org.concord.otrunk.collisions.OTGUIPanel"/>
     <import class="org.concord.data.ui.OTDataFlowControlToolBar"/>
+	<import class="org.concord.otrunk.ui.OTCardContainer" />
+	<import class="org.concord.otrunk.ui.OTTextPane" />
   </imports>
   
   <objects>
@@ -55,6 +57,12 @@
 			<OTViewEntry
             	objectClass="org.concord.otrunk.view.OTFolderObject"
             	viewClass="org.concord.otrunk.view.OTFolderObjectView"/>
+			<OTViewEntry
+				objectClass="org.concord.otrunk.ui.OTCardContainer"
+				viewClass="org.concord.otrunk.ui.swing.OTCardContainerView" />
+			<OTViewEntry
+				objectClass="org.concord.otrunk.ui.OTTextPane"
+				viewClass="org.concord.otrunk.ui.swing.OTTextPaneView" />
           </viewEntries>
         </OTViewBundle>
       </bundles>
@@ -76,7 +84,7 @@
 				        <br/>
 				        <object refid="${flow_buttons}"/>
 				        <br/>
-				        <object refid="${feedback_text}"/>
+				        <object refid="${feedback_area}"/>
 				    </bodyText>
 		        </OTCompoundDoc>
 	  		</children>
@@ -84,7 +92,6 @@
       </root>
       
       <library>
-      	<OTText local_id="feedback_text"/>
     	<OTGUIPanel name="collisions" local_id="dynamica_panel" 
     		width="525" height="325" authoredDataURL="treasure_hunt_dynamica.xml"/>
     	<OTDataFlowControlToolBar local_id="flow_buttons">
@@ -93,12 +100,49 @@
 		<OTScriptObject local_id="activity_script">
 			<variables>
 				<OTScriptVariableComponent name="objView" reference="${dynamica_panel}" />
-				<OTScriptVariable name="txtFeedback" reference="${feedback_text}" />
+				<OTScriptVariable name="feedbackArea" reference="${feedback_area}" />
 			</variables>
 			<script>
 				<OTJavascript src="treasure_hunt_activity.js"  />
 			</script>
 		</OTScriptObject>
+		<OTCardContainer local_id="feedback_area">
+			<cards>
+				<object refid="${intro_text}"/>
+				<object refid="${win_text}"/>
+				<object refid="${noStartArrow_text}"/>
+				<object refid="${arrowsOutside_text}"/>
+				<object refid="${arrowsDisconnected_text}"/>
+			</cards>
+		</OTCardContainer>
+		<OTTextPane local_id="intro_text">
+			<text><html><blockquote><p><font size="4" face="Verdana">
+			To find the treasure, drag the arrows to make a path for Bluebeard.
+			</font></p></blockquote></html></text>
+		</OTTextPane>
+		<OTTextPane local_id="win_text">
+			<text><html><blockquote><p><font size="4" face="Verdana">
+			Good job. You found the treasure!
+			</font></p></blockquote></html></text>
+		</OTTextPane>
+		<OTTextPane local_id="noStartArrow_text">
+			<text><html><blockquote><p><font size="4" face="Verdana">
+			Place the tail of the first <FONT color='2222FF'>blue</FONT> vector arrow 
+			in the <FONT color='000000'>black</FONT> cross, so Bluebeard can start walking.
+			</font></p></blockquote></html></text>
+		</OTTextPane>
+		<OTTextPane local_id="arrowsOutside_text">
+			<text><html><blockquote><p><font size="4" face="Verdana">
+			Place ALL the <FONT color='2222FF'>blue</FONT> vector arrows
+			in the map, to make a continuous path for Bluebeard.
+			</font></p></blockquote></html></text>
+		</OTTextPane>
+		<OTTextPane local_id="arrowsDisconnected_text">
+			<text><html><blockquote><p><font size="4" face="Verdana">
+			The <FONT color='2222FF'>blue</FONT> vector arrows 
+			should make a continuous path for Bluebeard.
+			</font></p></blockquote></html></text>
+		</OTTextPane>
 	  </library>
     </OTSystem>
   </objects>
