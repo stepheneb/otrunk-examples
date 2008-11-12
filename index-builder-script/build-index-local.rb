@@ -167,8 +167,8 @@ HERE
 
   java_web_start_warning = <<HERE
 <h4>MacOS X Java Web Start Problem</h4>
-<p>If you are using Java 1.5 on MacOS 10.4 or 10.5 you will almost certainly need to run some version of 
-our <a href="http://confluence.concord.org/display/CCTR/WebStart+OSX+Java+1.5+Fix">Fix Java MacOS Web Start Scripts</a>,
+<p>If you are using Java 1.5 on MacOS 10.4 or 10.5 you will almost certainly need to run some version of the fixes described on
+our <a href="http://confluence.concord.org/display/CCTR/How+to+fix+Mac+OS+X+WebStart+bugs">How to fix Mac OS X WebStart bugs</a>,
 once on each computer you run the Concord SAIL-OTrunk activities on. If you update Java on your Macintosh you will
 need to fix this problem again. The problem appears on Mac OS X computers when starting a Java Web Start program
 you have run before -- if a jar file needs to be updated the download process will freeze without completing.</p>
