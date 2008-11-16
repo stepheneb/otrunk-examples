@@ -8,6 +8,7 @@ function init() {
 	env.setColumns(20)
 	env.setRows(20)
 	env.setWrapNorthSouth(false)
+	env.setWrapEastWest(false)
 	for (var i = 0; i < 20; i++) {
 	        for (var j = 0; j < 20; j++) {
 	        	var envUnit = new EnvironmentUnit(env, null, i, j)

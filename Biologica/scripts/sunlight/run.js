@@ -4,10 +4,18 @@ importPackage(Packages.org.concord.biologica.engine);
 importPackage(Packages.org.concord.biologica.environment);
 importPackage(Packages.org.concord.biologica.test);
   			
+var env = envView.getEnvironment()
+var demoRun = new PopulationsTest(100)
+	
 function clicked() {
-	var env = envView.getEnvironment()
-	var demoRun = new PopulationsTest(100)
-	demoRun.runDemo(env);
+	
+	if (jButton.getText().equals("Run")){
+		demoRun.runSunlightDemo(env)
+		jButton.setText("Pause")
+	} else {
+		demoRun.pauseDemo()
+		jButton.setText("Run")
+	}
 	return true;
 }
 

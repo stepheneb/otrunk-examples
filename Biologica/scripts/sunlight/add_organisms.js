@@ -10,7 +10,9 @@ function clicked() {
 	for (var i = 0; i < 10; i++) {
     	var org = new Organism();
     	org.setSpeed(0);
+    	org.setDirection(1);
     	env.addOrganism(org);
+    	
     }
 	
 	return true;
