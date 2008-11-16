@@ -10,7 +10,7 @@ var demoRun = new PopulationsTest(100)
 function clicked() {
 	
 	if (jButton.getText().equals("Run")){
-		demoRun.runSunlightDemo(env)
+		demoRun.runDemo(env, 0)
 		jButton.setText("Pause")
 	} else {
 		demoRun.pauseDemo()
