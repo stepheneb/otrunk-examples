@@ -10,6 +10,7 @@ include_class 'org.concord.otrunk.view.document.OTCompoundDoc'
 include_class 'org.concord.otrunk.ui.OTText'
 include_class 'org.concord.otrunk.ui.OTChoice'
 include_class 'org.concord.otrunk.ui.question.OTQuestion'
+include_class 'org.concord.otrunk.capa.question.OTEmbeddedTextInput'
 
 # Called when the script view is loaded
 def getText
@@ -48,7 +49,7 @@ end
 ## Assuming the root object is OTCurriculumUnit version=2
 
 def questions
-    @questions  
+  return @questions  
 end
 
 def prompt(question)
@@ -61,6 +62,7 @@ def prompt(question)
   else
     System.err.println("Unknown prompt type")
   end
+  return nil
 end
 
 # @param question an OTQuestion with an input of OTChoice
@@ -75,11 +77,23 @@ def correctAnswerNum(question)
 end
 
 def correctAnswerText(question)
-  if question.is_a?(OTQuestion) and question.input.is_a?(OTChoice)
-    return correctAnswerNum(question).to_s
-  else
-    return 'N/A'
+  if question.is_a?(OTQuestion)
+    if question.input.is_a?(OTChoice)
+      return correctAnswerNum(question).to_s
+    elsif question.input.is_a?(OTEmbeddedTextInput)
+      return correctAnswerET(question.input)
+    end
   end
+  return 'N/A'
+end
+
+def correctAnswerET(input)
+  unless input.is_a?(OTEmbeddedTextInput)
+    error("correctAnswerTexts: Expecting an OTEmbeddedTextInput")
+    return ''
+  end
+  answers = input.getCorrectAnswers.getVector.map { |x| x.getText }
+  return answers.join(',')
 end
 
 def answerNum(user, question)
@@ -128,7 +142,7 @@ def dtAnswerText(user, dataTable)
     if i % numChannels == numChannels - 1
       text << (values.get(i) ? values.get(i) : '-')
     end  }
-  text
+  return text
 end
 
 def surveyAnswerText(user, question)
@@ -151,11 +165,11 @@ def isCorrect(user, question)
       return question.correctAnswer.otExternalId == userAnswer.otExternalId
     end
   end
-  false
+  return false
 end
 
 def getPoints(user)
-  questions.inject(0) { |sum, question| sum + (isCorrect(user, question) ? 1 : 0) }
+  return questions.inject(0) { |sum, question| sum + (isCorrect(user, question) ? 1 : 0) }
 end
 
 def _getQuestions
@@ -169,8 +183,19 @@ def _getQuestions
       end
     end
   end
-  questions
+  return questions
 end
+
+def _choiceNum(options, choice) 
+  num = 0 
+  options.size.times do |i| 
+    if options[i].otExternalId == choice.otExternalId 
+      num = i+1 
+      break 
+    end  
+  end 
+  return num 
+end 
 
 ### END Assessment Related ###
 
@@ -201,7 +226,7 @@ def getCsvText
     t << getPoints(user).to_s
     t << "\n" 
   end
-  t 
+  return t 
 end
 
 def getSurveyCsvText
@@ -217,7 +242,7 @@ def getSurveyCsvText
     end 
     t << newline
   end
-  t 
+  return t 
 end
 
 def err(msg)
