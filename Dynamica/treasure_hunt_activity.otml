@@ -17,10 +17,12 @@
 	<import class="org.concord.otrunk.script.js.OTJavascript" />
 	<import class="org.concord.otrunk.script.OTScriptEngineBundle" />
 	<import class="org.concord.otrunk.script.OTScriptEngineEntry" />
-    <import class="org.concord.otrunk.collisions.OTGUIPanel"/>
-    <import class="org.concord.data.ui.OTDataFlowControlToolBar"/>
 	<import class="org.concord.otrunk.ui.OTCardContainer" />
 	<import class="org.concord.otrunk.ui.OTTextPane" />
+	<import class="org.concord.otrunk.ui.question.OTQuestion"/>
+	<import class="org.concord.otrunk.collisions.ui.OTGUIPanelViewConfig"/>
+    <import class="org.concord.otrunk.collisions.OTGUIPanel"/>
+    <import class="org.concord.data.ui.OTDataFlowControlToolBar"/>
   </imports>
   
   <objects>
@@ -36,18 +38,15 @@
         </OTScriptEngineBundle>
 		<OTViewBundle id="f53ec800-af5b-11dd-ad8b-0800200c9a66">
           <viewEntries>
-            <OTViewEntry local_id="text-label"
-              objectClass="org.concord.otrunk.ui.OTText" 
-              viewClass="org.concord.otrunk.ui.swing.OTTextView"/>
             <OTViewEntry local_id="text-edit"
               objectClass="org.concord.otrunk.ui.OTText" 
               viewClass="org.concord.otrunk.ui.swing.OTTextEditView"/>
+            <OTViewEntry local_id="text-label"
+              objectClass="org.concord.otrunk.ui.OTText" 
+              viewClass="org.concord.otrunk.ui.swing.OTTextView"/>
             <OTViewEntry 
               objectClass="org.concord.otrunk.view.document.OTCompoundDoc"
               viewClass="org.concord.otrunk.view.document.OTDocumentView"/>               
-            <OTViewEntry 
-              objectClass="org.concord.otrunk.collisions.OTGUIPanel"
-              viewClass="org.concord.otrunk.collisions.ui.OTGUIPanelView"/>               
             <OTViewEntry 
               objectClass="org.concord.data.ui.OTDataFlowControlToolBar"
               viewClass="org.concord.data.ui.OTDataFlowControlToolBarView"/>               
@@ -63,6 +62,12 @@
 			<OTViewEntry
 				objectClass="org.concord.otrunk.ui.OTTextPane"
 				viewClass="org.concord.otrunk.ui.swing.OTTextPaneView" />
+			<OTViewEntry
+				objectClass="org.concord.otrunk.ui.question.OTQuestion"
+				viewClass="org.concord.otrunk.ui.question.OTQuestionView" />
+	        <OTViewEntry
+	        	objectClass="org.concord.otrunk.collisions.OTGUIPanel"
+	        	viewClass="org.concord.otrunk.collisions.ui.OTGUIPanelView"/>               
           </viewEntries>
         </OTViewBundle>
       </bundles>
@@ -87,13 +92,22 @@
 				        <object refid="${feedback_area}"/>
 				    </bodyText>
 		        </OTCompoundDoc>
+		      	<OTCompoundDoc name="Question">
+		      		<bodyText>
+				        <object refid="${dynamica_panel}" viewid="${guipanel_non_editable}"/>
+				        <br/>
+				        The object above shows the path you did in the previous step.
+				        <object refid="${question_object}"/>
+				    </bodyText>
+		        </OTCompoundDoc>
 	  		</children>
 	      </OTFolderObject>
       </root>
       
       <library>
     	<OTGUIPanel name="collisions" local_id="dynamica_panel" 
-    		width="525" height="325" authoredDataURL="treasure_hunt_dynamica.xml"/>
+    		width="525" height="325" authoredDataURL="treasure_hunt_dynamica.xml"
+    		saveWorkingData="true"/>
     	<OTDataFlowControlToolBar local_id="flow_buttons">
     		<dataProducer><object refid="${dynamica_panel}"/></dataProducer>
     	</OTDataFlowControlToolBar>
@@ -143,6 +157,19 @@
 			should make a continuous path for Bluebeard.
 			</font></p></blockquote></html></text>
 		</OTTextPane>
+		<OTQuestion local_id="question_object">
+			<prompt>
+				<OTCompoundDoc>
+		      		<bodyText>
+		      		Q. Do you think you can try again with a different path and still find the treasure?
+		      		</bodyText>
+		      	</OTCompoundDoc>
+		    </prompt>
+			<input><OTText/></input>
+		</OTQuestion>
+        <OTGUIPanelViewConfig local_id="guipanel_non_editable" editable="false"
+          objectClass="org.concord.otrunk.collisions.OTGUIPanel"
+          viewClass="org.concord.otrunk.collisions.ui.OTGUIPanelView"/>               
 	  </library>
     </OTSystem>
   </objects>
