@@ -96,8 +96,7 @@ def correctAnswerET(input)
   return answers.join(',')
 end
 
-def answerNum(user, question)
-  userQuestion = userObject(question, user)
+def answerNum(userQuestion)
   answer = userQuestion.getInput.getCurrentChoice
   if answer == nil
     return 0
@@ -107,23 +106,37 @@ def answerNum(user, question)
 end
 
 def answerText(user, question)
-  if question.is_a?(OTQuestion) && question.input.is_a?(OTChoice)
-    num = answerNum(user, question)
-    if num == 0
-      return '-'
-    else
-      return num.to_s
+  userQuestion = userObject(question, user)
+  if question.is_a?(OTQuestion)
+    if userQuestion.input.is_a?(OTChoice)
+      num = answerNum(userQuestion)
+      if num == 0
+        return '-'
+      else
+        return num.to_s
+      end
+    elsif userQuestion.input.is_a?(OTEmbeddedTextInput)
+      return answerTextET(userQuestion.input)
     end
   elsif question.is_a?(OTDataTable)
     return dtAnswerText(user, question)
   elsif question.is_a?(OTText)
-    return userObject(question, user).getText
+    return userQuestion.getText
   end
+end
+
+## input: OTEmbeddedTextInput
+def answerTextET(input)
+  answers = input.getTextObjects.getVector.map { |x| 
+    t = x.getText
+    (t == nil) ? '-' : t 
+  }
+  return answers.join(',')
 end
 
 def answerHtmlText(user, question)
   text = answerText(user, question)
-  if question.is_a?(OTQuestion) && question.input.is_a?(OTChoice)
+  if gradable(question)
     color = isCorrect(user, question) ? 'green' : 'red'
     return "<b><font color=\"#{color}\">#{text}</font></b>"
   elsif question.is_a?(OTDataTable)
@@ -157,12 +170,24 @@ def surveyAnswerText(user, question)
   return 'ERROR'
 end
 
+## Return true if question has a correct answer
+def gradable(question)
+  return question.is_a?(OTQuestion) and (question.input.is_a?(OTChoice) or question.input.is_a?(OTEmbeddedTextInput))
+end
+
 def isCorrect(user, question)
-  if question.is_a?(OTQuestion) and question.input.is_a?(OTChoice)
-    userQuestion = userObject(question, user)  
-    userAnswer = userQuestion.getInput.getCurrentChoice
-    if userAnswer and question.getCorrectAnswer
-      return question.correctAnswer.otExternalId == userAnswer.otExternalId
+  if question.is_a?(OTQuestion)
+    userQuestion = userObject(question, user)
+    input = userQuestion.input  
+    if input.is_a?(OTChoice)
+      userAnswer = input.getCurrentChoice
+      if userAnswer and question.getCorrectAnswer
+        return question.correctAnswer.otExternalId == userAnswer.otExternalId
+      end
+    elsif input.is_a?(OTEmbeddedTextInput)
+      answers = input.getTextObjects.getVector.map { |x| x.getText }
+      correctAnswers = input.getCorrectAnswers.getVector.map { |x| x.getText }
+      return answers == correctAnswers
     end
   end
   return false
