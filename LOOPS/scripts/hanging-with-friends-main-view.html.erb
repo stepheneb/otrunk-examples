@@ -3,9 +3,10 @@
   
   <p>Class name: <b><%= class_name %></b>, Teacher name: <b><%= teacher_name %></b></p>
 
-  <h3>Roller Blade Runs</h3>
-  <table>
-  	<tr><td>Name</td><td>Rollerblade model</td><td>Bus model</td><td>Racecar model</td></tr>
+  <h3>Model Runs</h3>
+  <p>How many times did the learner run the model.</p>
+  <table cellpadding="5" cellspacing="3" border="1">
+  	<tr><th>Name</th><th>Rollerblade model</th><th>Bus model</th><th>Racecar model</th></tr>
   <% users.each do |user|
     models = []
     models << userObject( $rollerbladeScriptObject, user)
@@ -23,7 +24,7 @@
          model_sessions = model.contents.vector
          model_sessions.select{|o| o.respond_to? "model_runs"}.collect{|o| puts "adding #{o.model_runs.size} runs to #{total}"; total += o.model_runs.size.to_i}
        %>
-      <%= total %> <%= total == 1 ? "time" : "times" %>
+      <%= total %>
       <!--
         model sessions: <%= model_sessions.size %>
         <% model_sessions.each do |ms| %>
@@ -35,4 +36,25 @@
     </tr>
   <% end %>
   </table>
+  
+  <br />
+  <h3>Table Data</h3>
+  <p>Has the learner entered any data in the table?</p>
+  <table cellpadding="5" cellspacing="3" border="1">
+    <tr><th>Name</th><th>Rollerblade model</th><th>Bus model</th><th>Racecar model</th></tr>
+  <% users.each_with_index do |user, i|
+    user_cards = $Section1.content.cards.vector.collect {|card| Card.new( userObject(card, user)) }
+    tables = user_cards.collect {|card| card.data_table }
+    %>
+    <tr>
+      <td><%= user.name ? user.name : user.id %></td>
+    <% tables.each do |table| %>
+	    <td>
+	      <%= table.data_store.any_data? ? '<span style="color: rgb(255, 0, 0);">yes</span>' : '<span style="color: rgb(0, 153, 0);">no</span>' %>
+	    </td>
+    <% end %>
+    </tr>
+  <% end %>
+  </table>
+
 </div>
