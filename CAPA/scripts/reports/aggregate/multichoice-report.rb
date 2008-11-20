@@ -222,6 +222,10 @@ def _choiceNum(options, choice)
   return num 
 end 
 
+def totalMaxPoints
+  return questions.size
+end
+
 ### END Assessment Related ###
 
 ### BEGIN Other ###
