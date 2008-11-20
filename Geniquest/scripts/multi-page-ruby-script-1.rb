@@ -1,11 +1,20 @@
 require 'erb'
 include_class 'org.concord.framework.otrunk.OTrunk'
+<<<<<<< HEAD:Geniquest/scripts/multi-page-ruby-script-1.rb
 include_class='org.concord.otrunk.biologica.OTBreedOffspring'
 include_class='org.concord.otrunk.biologica.OTOrganism'
 include_class='org.concord.otrunk.biologica.OTWorld'
 include_class='org.concord.otrunk.biologica.OTChromosome'
 include_class='org.concord.otrunk.biologica.OTStaticOrganism'
 include_class='org.concord.otrunk.biologica.OTSex'
+=======
+include_class='org.concord.otrunk.biologica.OTBreedOffspring'
+include_class='org.concord.otrunk.biologica.OTOrganism'
+include_class='org.concord.otrunk.biologica.OTWorld'
+include_class='org.concord.otrunk.biologica.OTChromosome'
+include_class='org.concord.otrunk.biologica.OTStaticOrganism'
+include_class='org.concord.otrunk.biologica.OTSex'
+>>>>>>> 2ef16db80574f4a3c07a7e9a592a7f44f9f3b831:Geniquest/scripts/multi-page-ruby-script-1.rb
 include_class='org.concord.otrunk.ui.OTChoiceWithFeedback'
 
 def getText
