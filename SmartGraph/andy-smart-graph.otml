@@ -120,14 +120,14 @@
               <dataCollector>
                 <OTDataCollector id="815a49b9-ba54-11dd-919b-2f904698bdc2" name="Data graph" title="Juan's Morning Jog">
                   <source>
-                    <OTDataGraphable name="Data Graph" connectPoints="true" controllable="true" yColumn="1" drawMarks="false" color="16711680" xColumn="0" lineWidth="2.0">
+                    <OTDataGraphable name="Data Graph" connectPoints="true" controllable="true" yColumn="1" drawMarks="false" color="16711680" xColumn="0" lineWidth="2.0" visible="true">
                       <dataStore>
                         <OTDataStore numberChannels="2">
                           <values>
                             <float>0.0</float>
-                            <float>200.0</float>
+                            <float>0.0</float>
                             <float>4.0</float>
-                            <float>900.0</float>
+                            <float>800.0</float>
                             <float>8.0</float>
                             <float>1600.0</float>
                             <float>12.0</float>
@@ -149,6 +149,10 @@
                   <yDataAxis>
                     <OTDataAxis max="4500.0" units="meters" min="-0.0" label="Distance" labelFormat="None" />
                   </yDataAxis>
+                  <labels>
+                    <OTDataPointLabel x="Infinity" y="Infinity" color="0xffffbe" fontSize="10" text="Data Point" />
+                    <OTDataPointLabel x="Infinity" y="Infinity" color="0xffffbe" fontSize="10" text="Data Point" />
+                  </labels>
                 </OTDataCollector>
               </dataCollector>
             </OTSmartGraphTool>
@@ -600,6 +604,576 @@ end</script>
                                 <object refid="80caccda-ba5a-11dd-ba76-5391c168370f" />
                               </bodyText>
                             </OTUDLCompoundDoc>
+                            <OTUDLCompoundDoc id="c9cb03d6-bb17-11dd-b5fe-4fe1b6f4430d" name="%c9cb03d6-bb17-11dd-b5fe-4fe1b6f4430d" showEditBar="true">
+                              <documentRefs>
+                                <OTUDLQuestion id="07e3c62d-bb18-11dd-b5fe-4fe1b6f4430d" name="Question" showConvertButton="false">
+                                  <prompt>
+                                    <OTCompoundDoc>
+                                      <bodyText>3. At what time does Juan resume jogging after taking a break?</bodyText>
+                                    </OTCompoundDoc>
+                                  </prompt>
+                                  <input>
+                                    <OTCompoundDoc name="Smart graph number" showEditBar="false">
+                                      <documentRefs>
+                                        <OTText id="26dcd9f5-bb18-11dd-b5fe-4fe1b6f4430d" text="" />
+                                        <OTScriptButton id="26dcd9f6-bb18-11dd-b5fe-4fe1b6f4430d" text="Check answer">
+                                          <script>
+                                            <OTJRuby src="http://continuum.concord.org/otrunk/examples/LOOPS/scripts/smart_graph_number_script_template.rb">
+                                              <script># Original template file: scripts/smart_graph_number_script_template.rb
+
+# Setting the DEBUG constant to true will generate additional 
+# debugging information in the Java console.
+# DEBUG=true
+
+eval Java::JavaLang::String.new($otrunk_ruby_script_tools.src).to_s
+eval Java::JavaLang::String.new($smart_graph_range_response.src).to_s
+
+# Edit the values in the response_key Hash below to customize the
+# Smart Graph Query responses
+
+response_key = {
+  # Optional: You can specify the prompt in the script, this will override the 
+  # value entered in the question object.
+  # :prompt =&gt; "Please answer this question: how much?",
+  
+  # Specify the response_type as :number when the
+  # learner responds to the question by entering a number.
+  :response_type =&gt; :number,
+  
+  # The value for a :range key can be any of the following:
+  #
+  #   a Ruby Range object
+  #
+  #     &lt;start_of_range&gt;..&lt;end_of_range&gt;
+  #
+  #   The values for start_of_range and end_of_range can be
+  #   Fixnums (Integers) or Floats. Specify a floating point 
+  #   by including a decimal point and at least one one digit
+  #   to the right of the decimal point.
+  #
+  #   Example: 30.0..31.5
+  #
+  #   a Ruby number (Fixnum or Float)
+  #
+  #   Examples: 26, 30.0
+  #
+  #   *** If you specify the correct_range with a number instead of a range object
+  #   *** you must also specify a highlight_range using a range object. 
+  #
+  # valid axis values are :x and :y
+   :correct_range =&gt; { :range =&gt; 15.9..16.1, :axis =&gt; :x },
+  
+  # Optional: specify the highlight_range if it is different than the correct_range
+  # :highlight_range =&gt; { :range =&gt; 15.9..16.1, :axis =&gt; :x },
+  :no_answer_entered =&gt; 
+    { :text =&gt; "Enter your estimate in the box below. Use a number, no letters.", :highlight_region =&gt; false  },
+  :correct =&gt; 
+    { :text =&gt; "Good job! Go to the next page.", :highlight_region =&gt; false },
+  :first_wrong_answer =&gt; 
+    { :text =&gt; "That's not correct. First find where Juan is not moving. Then determine when he starts moving again.", :highlight_region =&gt; false  },
+  :second_wrong_answer =&gt; 
+    { :text =&gt; "That's still not correct. A horizontal line on a distance-time graph represents an object that is not moving.", 
+  # { :text =&gt; "That's still not correct. Read the value of the highlighted part of the graph from the x-axis along the bottom.", 
+
+    :highlight_region =&gt; true },
+  :multiple_wrong_answers =&gt; 
+    { :text =&gt; "That's still not correct. ", :highlight_region =&gt; true }
+}
+
+# Create a new SmartGraphRangeResponse object with your response_key and the 
+# global variables created by the Smart Graph Number type Question input.
+@smart_graph_range_response = SmartGraphRangeResponse.new(response_key, $graph, $smart, $correct, $times_incorrect, $question, $text_field)
+
+# When the "Check Answer" button is clicked the clicked method
+# of the @smart_graph_range_response object will be called.
+def self.clicked
+  @smart_graph_range_response.clicked
+end</script>
+                                            </OTJRuby>
+                                          </script>
+                                          <scriptVariables>
+                                            <OTScriptVariableRealObject name="smart">
+                                              <reference>
+                                                <object refid="82c5e0c2-ba57-11dd-8d5b-2b9b224013a9" />
+                                              </reference>
+                                            </OTScriptVariableRealObject>
+                                            <OTScriptVariable name="smart_graph_range_response">
+                                              <reference>
+                                                <OTBlob id="26ddc45f-bb18-11dd-b5fe-4fe1b6f4430d" src="http://continuum.concord.org/otrunk/examples/LOOPS/scripts/smart_graph_range_response.rb" />
+                                              </reference>
+                                            </OTScriptVariable>
+                                            <OTScriptVariable name="otrunk_ruby_script_tools">
+                                              <reference>
+                                                <OTBlob id="26ddc460-bb18-11dd-b5fe-4fe1b6f4430d" src="http://continuum.concord.org/otrunk/examples/LOOPS/scripts/otrunk_ruby_script_tools.rb" />
+                                              </reference>
+                                            </OTScriptVariable>
+                                            <OTScriptVariable name="graph">
+                                              <reference>
+                                                <object refid="815a49b9-ba54-11dd-919b-2f904698bdc2" />
+                                              </reference>
+                                            </OTScriptVariable>
+                                            <OTScriptVariable name="times_incorrect">
+                                              <reference>
+                                                <OTInt value="5" />
+                                              </reference>
+                                            </OTScriptVariable>
+                                            <OTScriptVariable name="correct">
+                                              <reference>
+                                                <OTBoolean value="false" />
+                                              </reference>
+                                            </OTScriptVariable>
+                                            <OTScriptVariable name="question">
+                                              <reference>
+                                                <object refid="07e3c62d-bb18-11dd-b5fe-4fe1b6f4430d" />
+                                              </reference>
+                                            </OTScriptVariable>
+                                            <OTScriptVariable name="text_field">
+                                              <reference>
+                                                <object refid="26dcd9f5-bb18-11dd-b5fe-4fe1b6f4430d" />
+                                              </reference>
+                                            </OTScriptVariable>
+                                          </scriptVariables>
+                                        </OTScriptButton>
+                                        <OTScriptButton id="26dcd9f7-bb18-11dd-b5fe-4fe1b6f4430d" text="Setup">
+                                          <script>
+                                            <OTJavascript src="http://continuum.concord.org/otrunk/examples/LOOPS/scripts/set-up-smartgraph-button-script.js" />
+                                          </script>
+                                          <scriptVariables>
+                                            <OTScriptVariable name="text_field">
+                                              <reference>
+                                                <object refid="26dcd9f5-bb18-11dd-b5fe-4fe1b6f4430d" />
+                                              </reference>
+                                            </OTScriptVariable>
+                                            <OTScriptVariable name="script_button">
+                                              <reference>
+                                                <object refid="26dcd9f6-bb18-11dd-b5fe-4fe1b6f4430d" />
+                                              </reference>
+                                            </OTScriptVariable>
+                                            <OTScriptVariableComponent name="script_button_component">
+                                              <reference>
+                                                <object refid="26dcd9f6-bb18-11dd-b5fe-4fe1b6f4430d" />
+                                              </reference>
+                                            </OTScriptVariableComponent>
+                                            <OTScriptVariable name="smart_graph_range_response">
+                                              <reference>
+                                                <object refid="26ddc45f-bb18-11dd-b5fe-4fe1b6f4430d" />
+                                              </reference>
+                                            </OTScriptVariable>
+                                            <OTScriptVariable name="otrunk_ruby_script_tools">
+                                              <reference>
+                                                <object refid="26ddc460-bb18-11dd-b5fe-4fe1b6f4430d" />
+                                              </reference>
+                                            </OTScriptVariable>
+                                          </scriptVariables>
+                                        </OTScriptButton>
+                                      </documentRefs>
+                                      <bodyText>
+                                        <object refid="26dcd9f5-bb18-11dd-b5fe-4fe1b6f4430d" />
+                                        <br />
+                                        <table>
+                                          <tr>
+                                            <td width="100px">
+                                              <object refid="26dcd9f6-bb18-11dd-b5fe-4fe1b6f4430d" />
+                                            </td>
+                                            <td width="100px">
+                                              <object refid="26dcd9f7-bb18-11dd-b5fe-4fe1b6f4430d" viewid="4f731e40-c257-11dc-95ff-0800200c9a66!/script-button-for-authors" />
+                                            </td>
+                                          </tr>
+                                        </table>
+                                      </bodyText>
+                                    </OTCompoundDoc>
+                                  </input>
+                                  <context>
+                                    <object refid="815a49b9-ba54-11dd-919b-2f904698bdc2" />
+                                  </context>
+                                </OTUDLQuestion>
+                              </documentRefs>
+                              <bodyText>
+                                <object refid="07e3c62d-bb18-11dd-b5fe-4fe1b6f4430d" />
+                                <br />
+                              </bodyText>
+                            </OTUDLCompoundDoc>
+                            <OTUDLCompoundDoc id="fc702fbf-bb19-11dd-985e-21bbafda3df9" name="%fc702fbf-bb19-11dd-985e-21bbafda3df9" showEditBar="true">
+                              <documentRefs>
+                                <OTUDLQuestion id="24971e06-bb1a-11dd-985e-21bbafda3df9" name="Question" showConvertButton="false">
+                                  <prompt>
+                                    <OTCompoundDoc>
+                                      <bodyText>4. What distance does Juan run in the first 6 minutes of his jog?</bodyText>
+                                    </OTCompoundDoc>
+                                  </prompt>
+                                  <input>
+                                    <OTCompoundDoc name="Smart graph number" showEditBar="false">
+                                      <documentRefs>
+                                        <OTText id="37c2f44e-bb1a-11dd-985e-21bbafda3df9" text="" />
+                                        <OTScriptButton id="37c2f44f-bb1a-11dd-985e-21bbafda3df9" text="Check answer">
+                                          <script>
+                                            <OTJRuby src="http://continuum.concord.org/otrunk/examples/LOOPS/scripts/smart_graph_number_script_template.rb">
+                                              <script># Original template file: scripts/smart_graph_number_script_template.rb
+
+# Setting the DEBUG constant to true will generate additional 
+# debugging information in the Java console.
+# DEBUG=true
+
+eval Java::JavaLang::String.new($otrunk_ruby_script_tools.src).to_s
+eval Java::JavaLang::String.new($smart_graph_range_response.src).to_s
+
+# Edit the values in the response_key Hash below to customize the
+# Smart Graph Query responses
+
+response_key = {
+  # Optional: You can specify the prompt in the script, this will override the 
+  # value entered in the question object.
+  # :prompt =&gt; "Please answer this question: how much?",
+  
+  # Specify the response_type as :number when the
+  # learner responds to the question by entering a number.
+  :response_type =&gt; :number,
+  
+  # The value for a :range key can be any of the following:
+  #
+  #   a Ruby Range object
+  #
+  #     &lt;start_of_range&gt;..&lt;end_of_range&gt;
+  #
+  #   The values for start_of_range and end_of_range can be
+  #   Fixnums (Integers) or Floats. Specify a floating point 
+  #   by including a decimal point and at least one one digit
+  #   to the right of the decimal point.
+  #
+  #   Example: 30.0..31.5
+  #
+  #   a Ruby number (Fixnum or Float)
+  #
+  #   Examples: 26, 30.0
+  #
+  #   *** If you specify the correct_range with a number instead of a range object
+  #   *** you must also specify a highlight_range using a range object. 
+  #
+  # valid axis values are :x and :y
+  #
+  :correct_range =&gt; { :range =&gt; 1150.0..1250.0, :axis =&gt; :y },
+  
+  # Optional: specify the highlight_range if it is different than the correct_range
+  # :highlight_range =&gt; { :range =&gt; 5..30, :axis =&gt; :x },
+  :no_answer_entered =&gt; 
+    { :text =&gt; "Enter your estimate in the box below. Use a number, no letters.", :highlight_region =&gt; false  },
+  :correct =&gt; 
+    { :text =&gt; "Good job! Go to the next page.", :highlight_region =&gt; false },
+  :first_wrong_answer =&gt; 
+    { :text =&gt; "That's not correct. Carefully read up from 6 minutes and then over to the corresponding distance.", :highlight_region =&gt; false  },
+  :second_wrong_answer =&gt; 
+    { :text =&gt; "That's still not correct. Read the value of the highlighted part of the graph from the y-axis on the left.", 
+  # { :text =&gt; "That's still not correct. Read the value of the highlighted part of the graph from the x-axis along the bottom.", 
+
+    :highlight_region =&gt; true },
+  :multiple_wrong_answers =&gt; 
+    { :text =&gt; "That's still not correct. ", :highlight_region =&gt; true }
+}
+
+# Create a new SmartGraphRangeResponse object with your response_key and the 
+# global variables created by the Smart Graph Number type Question input.
+@smart_graph_range_response = SmartGraphRangeResponse.new(response_key, $graph, $smart, $correct, $times_incorrect, $question, $text_field)
+
+# When the "Check Answer" button is clicked the clicked method
+# of the @smart_graph_range_response object will be called.
+def self.clicked
+  @smart_graph_range_response.clicked
+end</script>
+                                            </OTJRuby>
+                                          </script>
+                                          <scriptVariables>
+                                            <OTScriptVariableRealObject name="smart">
+                                              <reference>
+                                                <object refid="82c5e0c2-ba57-11dd-8d5b-2b9b224013a9" />
+                                              </reference>
+                                            </OTScriptVariableRealObject>
+                                            <OTScriptVariable name="smart_graph_range_response">
+                                              <reference>
+                                                <OTBlob id="37c3b7a8-bb1a-11dd-985e-21bbafda3df9" src="http://continuum.concord.org/otrunk/examples/LOOPS/scripts/smart_graph_range_response.rb" />
+                                              </reference>
+                                            </OTScriptVariable>
+                                            <OTScriptVariable name="otrunk_ruby_script_tools">
+                                              <reference>
+                                                <OTBlob id="37c3b7a9-bb1a-11dd-985e-21bbafda3df9" src="http://continuum.concord.org/otrunk/examples/LOOPS/scripts/otrunk_ruby_script_tools.rb" />
+                                              </reference>
+                                            </OTScriptVariable>
+                                            <OTScriptVariable name="graph">
+                                              <reference>
+                                                <object refid="815a49b9-ba54-11dd-919b-2f904698bdc2" />
+                                              </reference>
+                                            </OTScriptVariable>
+                                            <OTScriptVariable name="times_incorrect">
+                                              <reference>
+                                                <OTInt value="3" />
+                                              </reference>
+                                            </OTScriptVariable>
+                                            <OTScriptVariable name="correct">
+                                              <reference>
+                                                <OTBoolean value="false" />
+                                              </reference>
+                                            </OTScriptVariable>
+                                            <OTScriptVariable name="question">
+                                              <reference>
+                                                <object refid="24971e06-bb1a-11dd-985e-21bbafda3df9" />
+                                              </reference>
+                                            </OTScriptVariable>
+                                            <OTScriptVariable name="text_field">
+                                              <reference>
+                                                <object refid="37c2f44e-bb1a-11dd-985e-21bbafda3df9" />
+                                              </reference>
+                                            </OTScriptVariable>
+                                          </scriptVariables>
+                                        </OTScriptButton>
+                                        <OTScriptButton id="37c2f450-bb1a-11dd-985e-21bbafda3df9" text="Setup">
+                                          <script>
+                                            <OTJavascript src="http://continuum.concord.org/otrunk/examples/LOOPS/scripts/set-up-smartgraph-button-script.js" />
+                                          </script>
+                                          <scriptVariables>
+                                            <OTScriptVariable name="text_field">
+                                              <reference>
+                                                <object refid="37c2f44e-bb1a-11dd-985e-21bbafda3df9" />
+                                              </reference>
+                                            </OTScriptVariable>
+                                            <OTScriptVariable name="script_button">
+                                              <reference>
+                                                <object refid="37c2f44f-bb1a-11dd-985e-21bbafda3df9" />
+                                              </reference>
+                                            </OTScriptVariable>
+                                            <OTScriptVariableComponent name="script_button_component">
+                                              <reference>
+                                                <object refid="37c2f44f-bb1a-11dd-985e-21bbafda3df9" />
+                                              </reference>
+                                            </OTScriptVariableComponent>
+                                            <OTScriptVariable name="smart_graph_range_response">
+                                              <reference>
+                                                <object refid="37c3b7a8-bb1a-11dd-985e-21bbafda3df9" />
+                                              </reference>
+                                            </OTScriptVariable>
+                                            <OTScriptVariable name="otrunk_ruby_script_tools">
+                                              <reference>
+                                                <object refid="37c3b7a9-bb1a-11dd-985e-21bbafda3df9" />
+                                              </reference>
+                                            </OTScriptVariable>
+                                          </scriptVariables>
+                                        </OTScriptButton>
+                                      </documentRefs>
+                                      <bodyText>
+                                        <object refid="37c2f44e-bb1a-11dd-985e-21bbafda3df9" />
+                                        <br />
+                                        <table>
+                                          <tr>
+                                            <td width="100px">
+                                              <object refid="37c2f44f-bb1a-11dd-985e-21bbafda3df9" />
+                                            </td>
+                                            <td width="100px">
+                                              <object refid="37c2f450-bb1a-11dd-985e-21bbafda3df9" viewid="4f731e40-c257-11dc-95ff-0800200c9a66!/script-button-for-authors" />
+                                            </td>
+                                          </tr>
+                                        </table>
+                                      </bodyText>
+                                    </OTCompoundDoc>
+                                  </input>
+                                  <context>
+                                    <object refid="815a49b9-ba54-11dd-919b-2f904698bdc2" />
+                                  </context>
+                                </OTUDLQuestion>
+                              </documentRefs>
+                              <bodyText>
+                                <object refid="24971e06-bb1a-11dd-985e-21bbafda3df9" />
+                                <br />
+                              </bodyText>
+                            </OTUDLCompoundDoc>
+                            <OTUDLCompoundDoc id="ead16cec-bb1a-11dd-985e-21bbafda3df9" name="%ead16cec-bb1a-11dd-985e-21bbafda3df9" showEditBar="true">
+                              <documentRefs>
+                                <OTUDLQuestion id="0aabe001-bb1b-11dd-985e-21bbafda3df9" name="Question" showConvertButton="false">
+                                  <prompt>
+                                    <OTCompoundDoc>
+                                      <bodyText>5. What total distance does Juan run on his morning jog?</bodyText>
+                                    </OTCompoundDoc>
+                                  </prompt>
+                                  <input>
+                                    <OTCompoundDoc name="Smart graph number" showEditBar="false">
+                                      <documentRefs>
+                                        <OTText id="1a8a38f9-bb1b-11dd-985e-21bbafda3df9" />
+                                        <OTScriptButton id="1a8a38fa-bb1b-11dd-985e-21bbafda3df9" text="Check answer">
+                                          <script>
+                                            <OTJRuby src="http://continuum.concord.org/otrunk/examples/LOOPS/scripts/smart_graph_number_script_template.rb">
+                                              <script># Original template file: scripts/smart_graph_number_script_template.rb
+
+# Setting the DEBUG constant to true will generate additional 
+# debugging information in the Java console.
+# DEBUG=true
+
+eval Java::JavaLang::String.new($otrunk_ruby_script_tools.src).to_s
+eval Java::JavaLang::String.new($smart_graph_range_response.src).to_s
+
+# Edit the values in the response_key Hash below to customize the
+# Smart Graph Query responses
+
+response_key = {
+  # Optional: You can specify the prompt in the script, this will override the 
+  # value entered in the question object.
+  # :prompt =&gt; "Please answer this question: how much?",
+  
+  # Specify the response_type as :number when the
+  # learner responds to the question by entering a number.
+  :response_type =&gt; :number,
+  
+  # The value for a :range key can be any of the following:
+  #
+  #   a Ruby Range object
+  #
+  #     &lt;start_of_range&gt;..&lt;end_of_range&gt;
+  #
+  #   The values for start_of_range and end_of_range can be
+  #   Fixnums (Integers) or Floats. Specify a floating point 
+  #   by including a decimal point and at least one one digit
+  #   to the right of the decimal point.
+  #
+  #   Example: 30.0..31.5
+  #
+  #   a Ruby number (Fixnum or Float)
+  #
+  #   Examples: 26, 30.0
+  #
+  #   *** If you specify the correct_range with a number instead of a range object
+  #   *** you must also specify a highlight_range using a range object. 
+  #
+  # valid axis values are :x and :y
+  #
+  :correct_range =&gt; { :range =&gt; 4300.0..4500.0, :axis =&gt; :y },
+  
+  # Optional: specify the highlight_range if it is different than the correct_range
+  # :highlight_range =&gt; { :range =&gt; 5..30, :axis =&gt; :x },
+  :no_answer_entered =&gt; 
+    { :text =&gt; "Enter your estimate in the box below. Use a number, no letters.", :highlight_region =&gt; false  },
+  :correct =&gt; 
+    { :text =&gt; "Good job! Go to the next page.", :highlight_region =&gt; false },
+  :first_wrong_answer =&gt; 
+    { :text =&gt; "That's not correct. Juan ran for a total of 20 minutes.  Find his distance at time = 20 minutes.", :highlight_region =&gt; false  },
+  :second_wrong_answer =&gt; 
+    { :text =&gt; "That's still not correct. Read the value of the highlighted part of the graph from the y-axis on the left.", 
+  # { :text =&gt; "That's still not correct. Read the value of the highlighted part of the graph from the x-axis along the bottom.", 
+
+    :highlight_region =&gt; true },
+  :multiple_wrong_answers =&gt; 
+    { :text =&gt; "That's still not correct. ", :highlight_region =&gt; true }
+}
+
+# Create a new SmartGraphRangeResponse object with your response_key and the 
+# global variables created by the Smart Graph Number type Question input.
+@smart_graph_range_response = SmartGraphRangeResponse.new(response_key, $graph, $smart, $correct, $times_incorrect, $question, $text_field)
+
+# When the "Check Answer" button is clicked the clicked method
+# of the @smart_graph_range_response object will be called.
+def self.clicked
+  @smart_graph_range_response.clicked
+end</script>
+                                            </OTJRuby>
+                                          </script>
+                                          <scriptVariables>
+                                            <OTScriptVariableRealObject name="smart">
+                                              <reference>
+                                                <object refid="82c5e0c2-ba57-11dd-8d5b-2b9b224013a9" />
+                                              </reference>
+                                            </OTScriptVariableRealObject>
+                                            <OTScriptVariable name="smart_graph_range_response">
+                                              <reference>
+                                                <OTBlob id="1a8caa03-bb1b-11dd-985e-21bbafda3df9" src="http://continuum.concord.org/otrunk/examples/LOOPS/scripts/smart_graph_range_response.rb" />
+                                              </reference>
+                                            </OTScriptVariable>
+                                            <OTScriptVariable name="otrunk_ruby_script_tools">
+                                              <reference>
+                                                <OTBlob id="1a8caa04-bb1b-11dd-985e-21bbafda3df9" src="http://continuum.concord.org/otrunk/examples/LOOPS/scripts/otrunk_ruby_script_tools.rb" />
+                                              </reference>
+                                            </OTScriptVariable>
+                                            <OTScriptVariable name="graph">
+                                              <reference>
+                                                <object refid="815a49b9-ba54-11dd-919b-2f904698bdc2" />
+                                              </reference>
+                                            </OTScriptVariable>
+                                            <OTScriptVariable name="times_incorrect">
+                                              <reference>
+                                                <OTInt />
+                                              </reference>
+                                            </OTScriptVariable>
+                                            <OTScriptVariable name="correct">
+                                              <reference>
+                                                <OTBoolean />
+                                              </reference>
+                                            </OTScriptVariable>
+                                            <OTScriptVariable name="question">
+                                              <reference>
+                                                <object refid="0aabe001-bb1b-11dd-985e-21bbafda3df9" />
+                                              </reference>
+                                            </OTScriptVariable>
+                                            <OTScriptVariable name="text_field">
+                                              <reference>
+                                                <object refid="1a8a38f9-bb1b-11dd-985e-21bbafda3df9" />
+                                              </reference>
+                                            </OTScriptVariable>
+                                          </scriptVariables>
+                                        </OTScriptButton>
+                                        <OTScriptButton id="1a8a38fb-bb1b-11dd-985e-21bbafda3df9" text="Setup">
+                                          <script>
+                                            <OTJavascript src="http://continuum.concord.org/otrunk/examples/LOOPS/scripts/set-up-smartgraph-button-script.js" />
+                                          </script>
+                                          <scriptVariables>
+                                            <OTScriptVariable name="text_field">
+                                              <reference>
+                                                <object refid="1a8a38f9-bb1b-11dd-985e-21bbafda3df9" />
+                                              </reference>
+                                            </OTScriptVariable>
+                                            <OTScriptVariable name="script_button">
+                                              <reference>
+                                                <object refid="1a8a38fa-bb1b-11dd-985e-21bbafda3df9" />
+                                              </reference>
+                                            </OTScriptVariable>
+                                            <OTScriptVariableComponent name="script_button_component">
+                                              <reference>
+                                                <object refid="1a8a38fa-bb1b-11dd-985e-21bbafda3df9" />
+                                              </reference>
+                                            </OTScriptVariableComponent>
+                                            <OTScriptVariable name="smart_graph_range_response">
+                                              <reference>
+                                                <object refid="1a8caa03-bb1b-11dd-985e-21bbafda3df9" />
+                                              </reference>
+                                            </OTScriptVariable>
+                                            <OTScriptVariable name="otrunk_ruby_script_tools">
+                                              <reference>
+                                                <object refid="1a8caa04-bb1b-11dd-985e-21bbafda3df9" />
+                                              </reference>
+                                            </OTScriptVariable>
+                                          </scriptVariables>
+                                        </OTScriptButton>
+                                      </documentRefs>
+                                      <bodyText>
+                                        <object refid="1a8a38f9-bb1b-11dd-985e-21bbafda3df9" />
+                                        <br />
+                                        <table>
+                                          <tr>
+                                            <td width="100px">
+                                              <object refid="1a8a38fa-bb1b-11dd-985e-21bbafda3df9" />
+                                            </td>
+                                            <td width="100px">
+                                              <object refid="1a8a38fb-bb1b-11dd-985e-21bbafda3df9" viewid="4f731e40-c257-11dc-95ff-0800200c9a66!/script-button-for-authors" />
+                                            </td>
+                                          </tr>
+                                        </table>
+                                      </bodyText>
+                                    </OTCompoundDoc>
+                                  </input>
+                                  <context>
+                                    <object refid="815a49b9-ba54-11dd-919b-2f904698bdc2" />
+                                  </context>
+                                </OTUDLQuestion>
+                              </documentRefs>
+                              <bodyText>
+                                <object refid="0aabe001-bb1b-11dd-985e-21bbafda3df9" />
+                                <br />
+                                <br />
+                              </bodyText>
+                            </OTUDLCompoundDoc>
                             <OTUDLCompoundDoc id="063f929e-ba5c-11dd-8eaf-176da169abd9" name="%063f929e-ba5c-11dd-8eaf-176da169abd9" showEditBar="true">
                               <documentRefs>
                                 <OTUDLQuestion id="2b955f85-ba5c-11dd-8eaf-176da169abd9" name="Question" showConvertButton="false">
@@ -644,7 +1218,7 @@ end</script>
                                             </OTScriptVariable>
                                             <OTScriptVariable name="correct">
                                               <reference>
-                                                <OTBoolean />
+                                                <OTBoolean value="true" />
                                               </reference>
                                             </OTScriptVariable>
                                             <OTScriptVariable name="question">
@@ -713,6 +1287,9 @@ end</script>
                             <object refid="90f35c51-ba54-11dd-919b-2f904698bdc2" />
                             <object refid="971d45a2-ba54-11dd-919b-2f904698bdc2" />
                             <object refid="063f929e-ba5c-11dd-8eaf-176da169abd9" />
+                            <object refid="c9cb03d6-bb17-11dd-b5fe-4fe1b6f4430d" />
+                            <object refid="fc702fbf-bb19-11dd-985e-21bbafda3df9" />
+                            <object refid="ead16cec-bb1a-11dd-985e-21bbafda3df9" />
                           </viewedCards>
                         </OTCardContainer>
                         <object refid="29dc5ef0-c453-11dc-95ff-0800200c9a66" />
@@ -803,4 +1380,3 @@ end</script>
     </OTSystem>
   </objects>
 </otrunk>
-
