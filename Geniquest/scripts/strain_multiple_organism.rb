@@ -44,6 +44,7 @@ end
 
 def self.init
   puts "self.init called!"
+  puts "$breedOffspringView: #{$breedOffspringView}"
   $breedOffspringViewInternal = $breedOffspringView
   $breedOffspringViewChild = $breedOffspringViewInternal.getComponent(4)
   $multiOrgViewInternal = $multiOrgView.getComponent(0).getComponent(0)
