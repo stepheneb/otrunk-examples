@@ -145,6 +145,6 @@ function init() {
 
 
 function save() {
-	cardContainer.removeOTChangeListener(sectionContainerListener);
+	cardContainer.removeOTChangeListener(pageContainerListener);
 	return true;
 }
