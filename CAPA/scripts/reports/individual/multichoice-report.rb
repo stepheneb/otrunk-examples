@@ -48,7 +48,7 @@ def presentQuestion(question)
   input = question.getInput()
   if input
     if input.is_a?(OTChoice)
-      choices = input.getChoices()#.getVector()
+      choices = input.getChoices().getVector()
       for choice in choices do
         text += toPlainText(choice.getBodyText()) + '<br/>'      end 
     end
