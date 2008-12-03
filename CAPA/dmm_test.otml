@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <otrunk id="2767fe20-6c7d-11dc-8314-0800200c9a66">
-  <imports> 
+  <imports>
     <import class="org.concord.data.state.OTDataStore" />
     <import class="org.concord.data.state.OTDataChannelDescription" />
     <import class="org.concord.data.state.OTDataField" />
@@ -121,6 +121,9 @@
               </cssBlocks>
             </OTDocumentViewConfig>
           </viewEntries>
+          <modes>
+            <OTViewMode name="report_mode"/>
+          </modes>
         </OTViewBundle>
         <OTScriptEngineBundle>
           <engines>
@@ -147,7 +150,7 @@
         </OTOverlay>
       </overlays>
       <root>
-        <OTCurriculumUnit version="2" name="CAPA Multiple Choice Test">
+        <OTCurriculumUnit version="2" name="CAPA Multiple Choice Test" local_id="unit">
           <activity>
             <OTUDLSection local_id="section_1">
 	            <header>
@@ -700,7 +703,7 @@
       <library>
         <OTViewChild local_id="script_report_object" useScrollPane="true">
           <object>
-            <object refid="${section_1}"/>
+            <object refid="${unit}"/>
           </object>
           <viewid>
             <object refid="${report_view}"/>
@@ -712,6 +715,12 @@
             <OTJRuby local_id="erb_controller" src="scripts/reports/individual/multichoice-report.rb" />
           </script>
           <variables>
+            <OTScriptVariable name="unit">
+              <reference>
+                <object refid="${unit}">
+                </object>
+              </reference>
+            </OTScriptVariable>
             <OTScriptVariable name="template">
               <reference>
                 <OTBlob src="scripts/reports/individual/multichoice-summary.html.erb" />

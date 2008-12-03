@@ -23,7 +23,7 @@ def init
   otImport($mcCommonScript)
   otImport($rptCommonScript)  
   otImport($questionScript)
-  @questions = _getQuestions()
+  Qstn.loadQuestions()
 end
 
 def otImport(script)
@@ -54,8 +54,8 @@ def presentQuestion(question)
     end
   end
   text += '<br/>'
-  text += "Correct Answer: #{correctAnswerText(question)}<br/>"
-  text += "Student Answer: #{answerHtmlText(nil, question)}"      
+  text += "Correct Answer: #{Qstn.correctAnswerText(question)}<br/>"
+  text += "Student Answer: #{Qstn.answerHtmlText(nil, question)}"      
   return text
 end
 

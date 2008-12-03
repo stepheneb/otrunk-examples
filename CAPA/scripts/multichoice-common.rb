@@ -1,5 +1,5 @@
 def getActivityRoot
-  return getRootObject()
+  return $unit
 end
 
 
