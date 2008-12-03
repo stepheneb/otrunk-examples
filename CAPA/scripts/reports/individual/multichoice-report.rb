@@ -1,11 +1,15 @@
+## Individual report for multiple choice tests
+
 require 'jruby'
 require 'erb'
 
 include_class 'java.lang.System'
+
+include_class 'org.concord.otrunk.capa.question.OTEmbeddedTextInput'
 include_class 'org.concord.otrunk.ui.OTChoice'
 include_class 'org.concord.otrunk.view.document.OTCompoundDoc'
 
-# Called when the script view is loaded
+## Called when the script view is loaded
 def getText
   @debug = true  
   init 
@@ -13,17 +17,20 @@ def getText
   if $action
     actionStr = $action.string
   else
-    actionStr = 'default_template'
+    actionStr = '@controller.defaultTemplate'
   end
   eval(actionStr)
 end
 
 def init
-  otImport($utilScript)
-  otImport($mcCommonScript)
-  otImport($rptCommonScript)  
+  otImport($utilScript)  
+  otImport($otrunkScript)
   otImport($questionScript)
-  Qstn.loadQuestions()
+  otImport($controllerScript)
+
+  @otrunkHelper = OTrunkHelper.new(OTrunkHelper::INDIVIDUAL_REPORT)
+  @questions = Questions.new(@otrunkHelper)
+  @controller = Controller.new(binding)
 end
 
 def otImport(script)
@@ -40,7 +47,7 @@ def presentQuestion(question)
   text = ''
   prompt = question.getPrompt()
   if prompt and prompt.is_a?(OTCompoundDoc)
-    text += toPlainText(question.getPrompt().getBodyText()) 
+    text += Util.toPlainText(question.getPrompt().getBodyText()) 
   else
     text += 'Question prompt not available'
   end
@@ -48,14 +55,16 @@ def presentQuestion(question)
   input = question.getInput()
   if input
     if input.is_a?(OTChoice)
-      choices = input.getChoices().getVector()
-      for choice in choices do
-        text += toPlainText(choice.getBodyText()) + '<br/>'      end 
+      choices = input.getChoices.getVector
+      for choice in choices 
+        text += Util.toPlainText(choice.getBodyText()) + '<br/>'      end 
+    elsif input.is_a?(OTEmbeddedTextInput)
+      text += input.getBodyText
     end
   end
   text += '<br/>'
-  text += "Correct Answer: #{Qstn.correctAnswerText(question)}<br/>"
-  text += "Student Answer: #{Qstn.answerHtmlText(nil, question)}"      
+  text += "Correct Answer: #{@questions.correctAnswerText(question)}<br/>"
+  text += "Student Answer: #{@questions.answerHtmlText(nil, question)}"      
   return text
 end
 

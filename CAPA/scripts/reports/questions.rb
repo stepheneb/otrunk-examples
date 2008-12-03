@@ -1,12 +1,31 @@
+include_class 'org.concord.otrunk.capa.question.OTEmbeddedTextInput'
 include_class 'org.concord.otrunk.ui.question.OTQuestion'
 
-module Qstn
-  
-  def Qstn.questions
-    return @questions  
+class Questions
+      
+  def initialize(otrunkHelper)
+    @otrunkHelper = otrunkHelper  
   end
   
-  def Qstn.prompt(question)
+  def questions
+    unless @questions
+      questions = []
+      cards = @otrunkHelper.activityRoot.getActivity.getContent.getCards.getVector
+      
+      for doc in cards
+        refs = doc.getDocumentRefs
+        for ref in refs
+          if ref.is_a?(OTQuestion) or ref.is_a?(OTDataTable) or ref.is_a?(OTText)
+            questions << ref
+          end
+        end
+      end
+      @questions = questions
+    end
+    return @questions
+  end
+  
+  def prompt(question)
     p = question.getPrompt
     if p.is_a? OTText
       return p.getText
@@ -15,22 +34,22 @@ module Qstn
       return bodyText.is_a?(OTXMLString) ?  bodyText.getContent : bodyText
     else
       System.err.println("Unknown prompt type")
+      return nil
     end
-    return nil
   end
   
-  # @param question an OTQuestion with an input of OTChoice
-  def Qstn.correctAnswerNum(question)
+  ## question: an OTQuestion with an input of OTChoice
+  def correctAnswerNum(question)
     answer = question.getCorrectAnswer
     choices = question.getInput.getChoices.getVector
-    num = _choiceNum(choices, answer)
+    num = getChoiceNum(choices, answer)
     if num == 0
       err("correctAnswerNum: Correct answer not found")
     end
     return num
   end
   
-  def Qstn.correctAnswerText(question)
+  def correctAnswerText(question)
     if question.is_a?(OTQuestion)
       if question.input.is_a?(OTChoice)
         return choiceLabel(correctAnswerNum(question))
@@ -41,7 +60,7 @@ module Qstn
     return 'N/A'
   end
   
-  def Qstn.correctAnswerET(input)
+  def correctAnswerET(input)
     unless input.is_a?(OTEmbeddedTextInput)
       error("correctAnswerTexts: Expecting an OTEmbeddedTextInput")
       return ''
@@ -50,16 +69,16 @@ module Qstn
     return answers.join(',')
   end
   
-  def Qstn.answerNum(userQuestion)
+  def answerNum(userQuestion)
     answer = userQuestion.getInput.getCurrentChoice
     if answer == nil
       return 0
     else
-      return _choiceNum(userQuestion.getInput.getChoices.getVector, answer)
+      return getChoiceNum(userQuestion.getInput.getChoices.getVector, answer)
     end
   end
   
-  def Qstn.answerText(user, question)
+  def answerText(user, question)
     userQuestion = user ? userObject(question, user) : question
     if question.is_a?(OTQuestion)
       if userQuestion.input.is_a?(OTChoice)
@@ -75,7 +94,7 @@ module Qstn
   end
   
   ## input: OTEmbeddedTextInput
-  def Qstn.answerTextET(input)
+  def answerTextET(input)
     answers = input.getTextObjects.getVector.map { |x| 
       t = x.getText
       (t == nil) ? '-' : t 
@@ -83,9 +102,9 @@ module Qstn
     return answers.join(',')
   end
   
-  def Qstn.answerHtmlText(user, question)
+  def answerHtmlText(user, question)
     text = answerText(user, question)
-    if gradable(question)
+    if isGradable(question)
       color = isCorrect(user, question) ? 'green' : 'red'
       return "<b><font color=\"#{color}\">#{text}</font></b>"
     else
@@ -93,7 +112,7 @@ module Qstn
     end
   end
   
-  def Qstn.dtAnswerText(user, dataTable)
+  def dtAnswerText(user, dataTable)
     text = ''
     dt = userObject(dataTable, user)
     values = dt.getDataStore.getValues
@@ -106,7 +125,7 @@ module Qstn
     return text
   end
   
-  def Qstn.surveyAnswerText(user, question)
+  def surveyAnswerText(user, question)
     userQuestion = userObject(question, user)
     if question.is_a?(OTQuestion) && question.input.is_a?(OTChoice)
       answer = userQuestion.input.getCurrentChoice
@@ -119,11 +138,11 @@ module Qstn
   end
   
   ## Return true if question has a correct answer
-  def Qstn.gradable(question)
+  def isGradable(question)
     return question.is_a?(OTQuestion) and (question.input.is_a?(OTChoice) or question.input.is_a?(OTEmbeddedTextInput))
   end
   
-  def Qstn.isCorrect(user, question)
+  def isCorrect(user, question)
     if question.is_a?(OTQuestion)
       userQuestion = user ? userObject(question, user) : question
       input = userQuestion.input  
@@ -141,11 +160,7 @@ module Qstn
     return false
   end
   
-  def Qstn.getPoints(user)
-    return Qstn.questions.inject(0) { |sum, question| sum + (isCorrect(user, question) ? 1 : 0) }
-  end
-  
-  def Qstn._choiceNum(options, choice)
+  def getChoiceNum(options, choice)
     num = 0
     options.size.times do |i| 
       if options[i].otExternalId == choice.otExternalId 
@@ -156,27 +171,17 @@ module Qstn
     return num 
   end
   
-  def Qstn.choiceLabel(choiceNum)
+  def choiceLabel(choiceNum)
     labels = ['a', 'b', 'c', 'd', 'e', 'f']
     return choiceNum > 0 ? labels[choiceNum-1] : '-'
   end 
   
-  def Qstn.totalMaxPoints
-    return Qstn.questions.size
+  def getPoints(user)
+    return questions.inject(0) { |sum, question| sum + (isCorrect(user, question) ? 1 : 0) }
   end
   
-  def Qstn.loadQuestions
-    questions = []
-    cards = getActivityRoot.getActivity.getContent.getCards.getVector
-    for doc in cards
-      refs = doc.getDocumentRefs
-      for ref in refs
-        if ref.is_a?(OTQuestion) or ref.is_a?(OTDataTable) or ref.is_a?(OTText)
-          questions << ref
-        end
-      end
-    end
-    @questions = questions
+  def totalMaxPoints
+    return questions.size
   end
-
+  
 end
