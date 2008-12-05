@@ -85,7 +85,7 @@ def getCsvText
   for user in @otrunkHelper.users
     assessment = getLastAssessment(user)
     if assessment == nil 
-      error("Assessment not present for user [#{user.getName}]")
+      Util.error("Assessment not present for user [#{user.getName}]")
       next
     end
     parseLog(user)
