@@ -1,7 +1,7 @@
 <div class="menu">
   <table>
     <tr>
-	  <td><div class="menu_item"><%= linkToObject "CSV", rootObject.reportTemplate, $csv_view %></div></td>
+	  <td><div class="menu_item"><%= @controller.linkToObject "CSV", @otrunkHelper.rootObject.reportTemplate, $csv_view %></div></td>
     </tr>
   </table>
 </div>
@@ -10,28 +10,41 @@
 
 <div id="content">
   <h3><%= $title.getText %></h3>
+  <p>
+    Class: <font color="#3030f0"> <%= @otrunkHelper.className %> </font><br/>
+    Teacher: <font color="#3030f0"> <%= @otrunkHelper.teacherName %> </font>
+  </p> 
+  
   <table class="a" cellpadding="5px">
     <tr class="a">
       <td class="a">Question #</td>
-        <% questions.size.times do |i| %>
-      <td class="a"><%= i + 1 %></td>  
+      <% for question in @questions.questions %>
+        <td class="a"><%= Util.truncate(Util.toPlainText(question.getPrompt.getBodyText), 24) %></td>  
       <% end %>
-      <td class="a" rowspan="2">Points<br/>(out of <%= totalMaxPoints %>)</td>
+      <td class="a" rowspan="2">Points<br/>(out of <%= @questions.totalMaxPoints %>)</td>
     </tr>
     <tr class="a">
      <td class="a">Correct Answer</td>
-     <% for question in questions %>
-     	<td class="a"><%= correctAnswerText(question) %></td> 
+     <% for question in @questions.questions %>
+     	<td class="a"><%= @questions.correctAnswerText(question) %></td> 
      <% end %>
     </tr>
-    <% for user in users %>
+    <% for user in @otrunkHelper.users %>
       <tr class="a">
   		<td class="a"><%= user.getName %></td>
-  		<% for question in questions %>
-  		<td class="a"><%= answerHtmlText(user, question) %></td>
+  		<% for question in @questions.questions %>
+  		<td class="a"><%= @questions.answerHtmlText(user, question) %></td>
   		<% end %>
-  		<td class="a"><b><font color="blue"><%= getPoints(user) %></font></b></td>
+  		<td class="a"><b><font color="blue"><%= @questions.getPoints(user) %></font></b></td>
       </tr>
     <% end %>
   </table>
+  
+  <h3>Questions</h3>
+  <% for question in @questions.questions do %>
+    <div class="report_question">
+      <%= presentQuestion(question) %>
+    </div>
+  <% end %>
+  
 </div>

@@ -1,7 +1,7 @@
 <div class="menu">
   <table>
     <tr>
-	  <td><div class="menu_item"><%= linkToObject "CSV", rootObject.reportTemplate, $csv_view %></div></td>
+	  <td><div class="menu_item"><%= @controller.linkToObject "CSV", @otrunkHelper.rootObject.reportTemplate, $csv_view %></div></td>
     </tr>
   </table>
 </div>
@@ -30,8 +30,8 @@
 <h3><%= $title.getText %></h3>
 
 <p>
-Class: <font color="#3030f0"> <%= className %> </font><br/>
-Teacher: <font color="#3030f0"> <%= teacherName %> </font>
+Class: <font color="#3030f0"> <%= @otrunkHelper.className %> </font><br/>
+Teacher: <font color="#3030f0"> <%= @otrunkHelper.teacherName %> </font>
 </p> 
 
 <table class="a">
@@ -40,16 +40,22 @@ Teacher: <font color="#3030f0"> <%= teacherName %> </font>
     <td class="a" colspan="3">Voltage</td>
     <td class="a" colspan="3">Current</td>
     <td class="a" colspan="3">Resistance</td>
-	<td class="a" rowspan="2">Final Grade (out of 100)</td>
+	<td class="a" rowspan="2">Final Grade<br/>(out of 100)</td>
 	<td class="a" rowspan="2">Total Time (s)</td>
 	<td class="a" rowspan="2">Blown Meters</td>
   </tr>
   <tr class="a">
-    <td class="a">Leads</td><td class="a">Circuit</td><td class="a">Score</td>
-    <td class="a">Leads</td><td class="a">Circuit</td><td class="a">Score</td>
-    <td class="a">Leads</td><td class="a">Circuit</td><td class="a">Score</td>
+    <td class="a">Leads</td>
+    <td class="a">Circuit</td>
+    <td class="a">Score<br/>(out of <%= @assessment.getMaxPoints(rubrics[0]) %>)</td>
+    <td class="a">Leads</td>
+    <td class="a">Circuit</td>
+    <td class="a">Score<br/>(out of <%= @assessment.getMaxPoints(rubrics[1]) %>)</td>
+    <td class="a">Leads</td>
+    <td class="a">Circuit</td>
+    <td class="a">Score<br/>(out of <%= @assessment.getMaxPoints(rubrics[2]) %>)</td>
   </tr>
-  <% for user in users %>
+  <% for user in @otrunkHelper.users %>
     <% multimeterAssessment = getLastMultimeterAssessment(user) %>
     <% if multimeterAssessment == nil %>
       <% $stderr.puts("Assessment not present for user [#{user.getName}]") %> 
@@ -77,8 +83,8 @@ Teacher: <font color="#3030f0"> <%= teacherName %> </font>
 		<% scores[i][:circuit] << (circuitInd > 0 ? 1 : 0) %>
 		<% scores[i][:points] << points %>
 			
-		<td class="a"><%= getIndicatorLabel(indicatorMap['leadPlacement'], assessment, rubric) %></td>
-		<td class="a"><%= getIndicatorLabel(indicatorMap['circuitSetting'], assessment, rubric) %></td>
+		<td class="a"><%= @assessment.getIndicatorLabel(indicatorMap['leadPlacement'], assessment, rubric) %></td>
+		<td class="a"><%= @assessment.getIndicatorLabel(indicatorMap['circuitSetting'], assessment, rubric) %></td>
 		<td class="a"><%= points %></td>
       <% end %>
       
@@ -96,21 +102,21 @@ Teacher: <font color="#3030f0"> <%= teacherName %> </font>
   <tr class="a">
 	<td class="a"><font color="<%= magenta %>">Average</font></td>
 	<!-- Voltage -->
-	<td class="a"><font color="<%= magenta %>"><%= '%.0f' % (avg(scores[0][:lead]) * 100) %>%</font></td>
-	<td class="a"><font color="<%= magenta %>"><%= '%.0f' % (avg(scores[0][:circuit]) * 100) %>%</font></td>
-	<td class="a"><font color="<%= magenta %>"><%= '%.0f' % avg(scores[0][:points]) %></font></td>
+	<td class="a"><font color="<%= magenta %>"><%= '%.0f' % (Util.avg(scores[0][:lead]) * 100) %>%</font></td>
+	<td class="a"><font color="<%= magenta %>"><%= '%.0f' % (Util.avg(scores[0][:circuit]) * 100) %>%</font></td>
+	<td class="a"><font color="<%= magenta %>"><%= '%.0f' % Util.avg(scores[0][:points]) %></font></td>
 	<!-- Current -->	  
-	<td class="a"><font color="<%= magenta %>"><%= '%.0f' % (avg(scores[1][:lead]) * 100) %>%</font></td>
-	<td class="a"><font color="<%= magenta %>"><%= '%.0f' % (avg(scores[1][:circuit]) * 100) %>%</font></td>
-	<td class="a"><font color="<%= magenta %>"><%= '%.0f' % avg(scores[1][:points]) %></font></td>
+	<td class="a"><font color="<%= magenta %>"><%= '%.0f' % (Util.avg(scores[1][:lead]) * 100) %>%</font></td>
+	<td class="a"><font color="<%= magenta %>"><%= '%.0f' % (Util.avg(scores[1][:circuit]) * 100) %>%</font></td>
+	<td class="a"><font color="<%= magenta %>"><%= '%.0f' % Util.avg(scores[1][:points]) %></font></td>
 	<!-- Resistance -->	  
-	<td class="a"><font color="<%= magenta %>"><%= '%.0f' % (avg(scores[2][:lead]) * 100) %>%</font></td>
-	<td class="a"><font color="                                 <%= magenta %>"><%= '%.0f' % (avg(scores[2][:circuit]) * 100) %>%</font></td>
-	<td class="a"><font color="<%= magenta %>"><%= '%.0f' % avg(scores[2][:points]) %></font></td>	  
+	<td class="a"><font color="<%= magenta %>"><%= '%.0f' % (Util.avg(scores[2][:lead]) * 100) %>%</font></td>
+	<td class="a"><font color="                                 <%= magenta %>"><%= '%.0f' % (Util.avg(scores[2][:circuit]) * 100) %>%</font></td>
+	<td class="a"><font color="<%= magenta %>"><%= '%.0f' % Util.avg(scores[2][:points]) %></font></td>	  
 	  
-	<td class="a"><font color="<%= magenta %>"><%= '%.0f' % avg(totalPointsList) %></font></td>
-	<td class="a"><font color="<%= magenta %>"><%= '%.0f' % avg(timeList) %></font></td>	  	  
-	<td class="a"><font color="<%= magenta %>"><%= '%.0f' % avg(blowupsList) %></font></td>	  
+	<td class="a"><font color="<%= magenta %>"><%= '%.0f' % Util.avg(totalPointsList) %></font></td>
+	<td class="a"><font color="<%= magenta %>"><%= '%.0f' % Util.avg(timeList) %></font></td>	  	  
+	<td class="a"><font color="<%= magenta %>"><%= '%.0f' % Util.avg(blowupsList) %></font></td>	  
   </tr>
 </table> 
 

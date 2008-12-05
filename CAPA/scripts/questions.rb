@@ -4,24 +4,11 @@ include_class 'org.concord.otrunk.ui.question.OTQuestion'
 class Questions
       
   def initialize(otrunkHelper)
-    @otrunkHelper = otrunkHelper  
+    @otrunkHelper = otrunkHelper
+    @questions = @otrunkHelper.getQuestions  
   end
   
   def questions
-    unless @questions
-      questions = []
-      cards = @otrunkHelper.activityRoot.getActivity.getContent.getCards.getVector
-      
-      for doc in cards
-        refs = doc.getDocumentRefs
-        for ref in refs
-          if ref.is_a?(OTQuestion) or ref.is_a?(OTDataTable) or ref.is_a?(OTText)
-            questions << ref
-          end
-        end
-      end
-      @questions = questions
-    end
     return @questions
   end
   
@@ -79,7 +66,7 @@ class Questions
   end
   
   def answerText(user, question)
-    userQuestion = user ? userObject(question, user) : question
+    userQuestion = user ? @otrunkHelper.userObject(question, user) : question
     if question.is_a?(OTQuestion)
       if userQuestion.input.is_a?(OTChoice)
         return choiceLabel(answerNum(userQuestion))
@@ -114,7 +101,7 @@ class Questions
   
   def dtAnswerText(user, dataTable)
     text = ''
-    dt = userObject(dataTable, user)
+    dt = @otrunkHelper.userObject(dataTable, user)
     values = dt.getDataStore.getValues
     numChannels = dt.getDataStore.getNumberChannels
     values.size.times { |i|
@@ -126,7 +113,7 @@ class Questions
   end
   
   def surveyAnswerText(user, question)
-    userQuestion = userObject(question, user)
+    userQuestion = @otrunkHelper.userObject(question, user)
     if question.is_a?(OTQuestion) && question.input.is_a?(OTChoice)
       answer = userQuestion.input.getCurrentChoice
       return answer ? answer.getBodyText : '-'
@@ -144,7 +131,7 @@ class Questions
   
   def isCorrect(user, question)
     if question.is_a?(OTQuestion)
-      userQuestion = user ? userObject(question, user) : question
+      userQuestion = user ? @otrunkHelper.userObject(question, user) : question
       input = userQuestion.input  
       if input.is_a?(OTChoice)
         userAnswer = input.getCurrentChoice
@@ -177,11 +164,11 @@ class Questions
   end 
   
   def getPoints(user)
-    return questions.inject(0) { |sum, question| sum + (isCorrect(user, question) ? 1 : 0) }
+    return @questions.inject(0) { |sum, question| sum + (isCorrect(user, question) ? 1 : 0) }
   end
   
   def totalMaxPoints
-    return questions.size
+    return @questions.size
   end
   
 end

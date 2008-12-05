@@ -1,3 +1,5 @@
+## Aggregate report for "Measuring Resistance"
+
 require 'jruby'
 require 'erb'
 
@@ -6,7 +8,7 @@ include_class 'org.concord.otrunk.ui.question.OTQuestion'
 include_class 'org.concord.otrunkcapa.rubric.OTAssessment'
 include_class 'org.concord.otrunkcapa.rubric.RubricGradeUtil'
 
-# Called when the script view is loaded
+## Called when the script view is loaded
 def getText
   @debug = true  
   init 
@@ -14,20 +16,27 @@ def getText
   if $action
     actionStr = $action.string
   else
-    actionStr = 'default_template'
+    actionStr = '@controller.defaultTemplate'
   end
   
   return eval(actionStr)
 end
 
 def init
-  otImport($commonScript)
-  otImport($assessmentScript)
+  otImport($utilScript)  
+  otImport($otrunkScript)
+  otImport($questionScript)
+  otImport($assessmentScript)  
+  otImport($controllerScript)
+
+  @otrunkHelper = OTrunkHelper.new(OTrunkHelper::PF_GROUP_REPORT)
+  @questions = Questions.new(@otrunkHelper)
+  @assessment = Assessment.new(@otrunkHelper)
+  @controller = Controller.new(binding) #erb templates will be evaluated in current binding
   
-  @otrunk = $viewContext.getViewService(OTrunk.java_class)
-  @users = _retrieveUsers
-  @contentsMap = _createContentsMap
-  @questions = _getQuestions
+  @sep = '|' #field separator in csv text 
+  @newline = "\n"
+  
   @sep = '|' #field separator in csv text 
   @newline = "\n"
 end
@@ -46,7 +55,7 @@ def parseLog(user)
   @correctAnswer = '-'
   @submittedAnswer = '-'
   
-  log = getLastContent(user, OTText).getText
+  log = @otrunkHelper.getLastContent(user, OTText).getText
   n = 0
   
   for line in log
@@ -74,8 +83,8 @@ def getCsvText
     @indicatorMap[indicator.getName] = indicator
   end 
     
-  for user in users
-    assessment = getLastAssessment(user)
+  for user in @otrunkHelper.users
+    assessment = @assessment.getLastAssessment(user)
     if assessment == nil 
       error("Assessment not present for user [#{user.getName}]")
       next
@@ -119,9 +128,9 @@ def getCsvUserLine(user, assessment, rubric)
   
   for indicator in indicators
     name = indicator.getName
-    t << getIndicatorLabel(@indicatorMap[name], assessment, rubric) + @sep
+    t << @assessment.getIndicatorLabel(@indicatorMap[name], assessment, rubric) + @sep
     t << indicatorValues.get(name).to_s + @sep
-    t << getIndicatorPoints(@indicatorMap[name], assessment, rubric).to_s + @sep
+    t << @assessment.getIndicatorPoints(@indicatorMap[name], assessment, rubric).to_s + @sep
   end
   t << RubricGradeUtil.getTotalGrade(assessment, rubric).getPoints.to_s + @newline
   return t        

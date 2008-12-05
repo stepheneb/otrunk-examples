@@ -28,7 +28,7 @@ def init
   otImport($questionScript)
   otImport($controllerScript)
 
-  @otrunkHelper = OTrunkHelper.new(OTrunkHelper::INDIVIDUAL_REPORT)
+  @otrunkHelper = OTrunkHelper.new(OTrunkHelper::MC_SINGLE_REPORT)
   @questions = Questions.new(@otrunkHelper)
   @controller = Controller.new(binding)
 end
@@ -59,7 +59,7 @@ def presentQuestion(question)
       for choice in choices 
         text += Util.toPlainText(choice.getBodyText()) + '<br/>'      end 
     elsif input.is_a?(OTEmbeddedTextInput)
-      text += input.getBodyText
+      text += input.getBodyText.gsub(/<object .*\/>/, '_')
     end
   end
   text += '<br/>'

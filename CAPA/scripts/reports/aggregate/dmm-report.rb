@@ -16,19 +16,23 @@ def getText
   if $action
     actionStr = $action.string
   else
-    actionStr = 'default_template'
+    actionStr = '@controller.defaultTemplate'
   end
   eval(actionStr)
 end
 
 def init
-  otImport($commonScript)
-  otImport($assessmentScript)
+  otImport($utilScript)  
+  otImport($otrunkScript)
+  otImport($questionScript)
+  otImport($assessmentScript)  
+  otImport($controllerScript)
+
+  @otrunkHelper = OTrunkHelper.new(OTrunkHelper::PF_GROUP_REPORT)
+  @questions = Questions.new(@otrunkHelper)
+  @assessment = Assessment.new(@otrunkHelper)
+  @controller = Controller.new(binding) #erb templates will be evaluated in current binding
   
-  @otrunk = $viewContext.getViewService(OTrunk.java_class)
-  @users = _retrieveUsers
-  @contentsMap = _createContentsMap
-  @questions = _getQuestions
   @sep = '|' #field separator in csv text 
   @newline = "\n"
 end
@@ -44,20 +48,18 @@ def otImport(script)
 end
 
 def getLastMultimeterAssessment(user)
-  getLastContent(user, OTMultimeterAssessment)
+  @otrunkHelper.getLastContent(user, OTMultimeterAssessment)
 end
 
 def getCorrectAnswerText(userAssessment)
-    cv = userAssessment.getCorrectValue
-    return "%.3f %s" % [cv.getValue, cv.getUnit]
+  cv = userAssessment.getCorrectValue
+  return "%.3f %s" % [cv.getValue, cv.getUnit]
 end 
 
 def getAnswerText(userAssessment)
-    cv = userAssessment.getAnswerValue
-    return "%.3f %s" % [cv.getValue, cv.getUnit]
-end 
-
-### BEGIN CSV Related ###
+  cv = userAssessment.getAnswerValue
+  return "%.3f %s" % [cv.getValue, cv.getUnit]
+end
 
 def getCsvText
   t = ''
@@ -69,16 +71,16 @@ def getCsvText
     @indicatorMap[indicator.getName] = indicator
   end 
     
-  for user in users
+  for user in @otrunkHelper.users
     multimeterAssessment = getLastMultimeterAssessment(user)
     if multimeterAssessment == nil 
-      error("Assessment not present for user [#{user.getName}]")
+      Util.error("Assessment not present for user [#{user.getName}]")
       next
     end
     assessments = multimeterAssessment.getAnswers.getVector
     if assessments == nil or assessments.length != 3
-      error("Sub-Assessments not present for user [#{user.getName}]")
-      error("dmmCsvGetText: #{assessments.length} sub-assessments present")
+      Util.error("getCsvText: Sub-Assessments not present for user [#{user.getName}]")
+      Util.error("getCsvText: #{assessments.length} sub-assessments present")
       next
     end
     name = user.getName.split
@@ -135,15 +137,12 @@ def csvRubricLineSegment(user, rubric, assessment)
   
   for indicator in indicators
     name = indicator.getName
-    log("NAME " + name + " IND " + @indicatorMap[name].inspect)
-    t << getIndicatorLabel(@indicatorMap[name], assessment, rubric) + @sep
+    t << @assessment.getIndicatorLabel(@indicatorMap[name], assessment, rubric) + @sep
     t << indicatorValues.get(name).to_s + @sep
-    t << getIndicatorPoints(@indicatorMap[name], assessment, rubric).to_s + @sep
+    t << @assessment.getIndicatorPoints(@indicatorMap[name], assessment, rubric).to_s + @sep
   end
   t << RubricGradeUtil.getTotalGrade(assessment, rubric).getPoints.to_s + @sep
   return t        
 end
-
-### END CSV Related ###
 
  

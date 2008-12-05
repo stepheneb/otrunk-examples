@@ -1,7 +1,7 @@
 <div class="menu">
   <table>
     <tr>
-	  <td><div class="menu_item"><%= linkToObject "CSV", rootObject.reportTemplate, $csv_view %></div></td>
+	  <td><div class="menu_item"><%= @controller.linkToObject "CSV", @otrunkHelper.rootObject.reportTemplate, $csv_view %></div></td>
     </tr>
   </table>
 </div>
@@ -9,8 +9,8 @@
 <h2><%= $title.getText %></h2>
 
 <p>
-Class: <font color="#3030f0"> <%= className %> </font><br/>
-Teacher: <font color="#3030f0"> <%= teacherName %> </font>
+Class: <font color="#3030f0"> <%= @otrunkHelper.className %> </font><br/>
+Teacher: <font color="#3030f0"> <%= @otrunkHelper.teacherName %> </font>
 </p> 
 
 <% indicators = $rubric.getIndicators %>
@@ -27,9 +27,9 @@ Teacher: <font color="#3030f0"> <%= teacherName %> </font>
     <% end %>
     <td class="a">Final Grade</td>
   </tr>
-  <% for user in users %>
+  <% for user in @otrunkHelper.users %>
     <% name = user.getName %>
-    <% assessment = getLastAssessment(user) %>
+    <% assessment = @assessment.getLastAssessment(user) %>
     <% if assessment %>
       <% numRows += 1 %>
       <tr class="a">
@@ -39,7 +39,7 @@ Teacher: <font color="#3030f0"> <%= teacherName %> </font>
           <% indicator = indicators.get(i) %>
           <% indicatorGrade = RubricGradeUtil.getIndicatorGrade(assessment, indicator, $rubric) %>
 	      <% if indicatorGrade == nil %>
-	        <td class="a"><font title="hoho">N/A</font></td>
+	        <td class="a">N/A</td>
           <% else %>
             <% points = indicatorGrade.getPoints() %> 					
 			<td class="a"><%= points %></td>
@@ -51,7 +51,7 @@ Teacher: <font color="#3030f0"> <%= teacherName %> </font>
         <% sums[sums.length-1] += points %>
       </tr>
     <% else %>
-      <% log("No assessment data for student [#{name}]") %>
+      <% Util.log("No assessment data for student [#{name}]") %>
     <% end %>
   <% end %>
   

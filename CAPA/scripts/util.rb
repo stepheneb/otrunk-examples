@@ -19,11 +19,11 @@ module Util
   end
   
   def Util.error(message)
-    System.err.println(message)
+    System.err.println("#{self.class.name}: " + message)
   end
   
   def Util.log(message)
-    System.out.println(message)
+    System.out.println("#{self.class.name}: " + message)
   end
   
 end
