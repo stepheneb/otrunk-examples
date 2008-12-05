@@ -83,7 +83,7 @@ def getCsvText
   Util.log("#{$rubric.getIndicators.getVector.size} indicators")
     
   for user in @otrunkHelper.users
-    assessment = getLastAssessment(user)
+    assessment = @assessment.getLastAssessment(user)
     if assessment == nil 
       Util.error("Assessment not present for user [#{user.getName}]")
       next
