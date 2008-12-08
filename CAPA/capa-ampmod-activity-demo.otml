@@ -6,29 +6,37 @@
 		<import class="org.concord.otrunk.view.document.OTCompoundDoc" />
 		<import class="org.concord.otrunk.view.OTFrameDisplayAction"/>
 		<import class="org.concord.framework.otrunk.view.OTFrame" />
-
 		<import class="org.concord.otrunk.ui.OTButton" />
+		<import class="org.concord.otrunk.ui.OTCardContainer" />
+    	<import class="org.concord.otrunk.capa.util.OTCAPAChecker" />    	
 	</imports>
 	<idMap>  
-		<idMapping local_id="main_activity" id="839c7830-cac5-11dc-95ff-0800200c9a66"/>
-		<idMapping local_id="rubric_object" id="79ad9480-c9fd-11dc-95ff-0800200c9a66"/>
-		<idMapping local_id="script_bundle" id="b0807950-cac5-11dc-95ff-0800200c9a66"/>
-		<idMapping local_id="view_bundle" 	id="b8cc3130-cac5-11dc-95ff-0800200c9a66"/>
-		<idMapping local_id="reportButton"	id="cf1b8e90-cac5-11dc-95ff-0800200c9a66"/>
+		<idMapping local_id="main_activity" id="18e4507f-8014-4a4e-be1d-3eb3ae51c946"/>
+		<idMapping local_id="rubric_object" id="cb340eaf-1b54-4066-973d-f8b64cf39fdb"/>
+		<idMapping local_id="script_bundle" id="045111bf-f6f2-43fd-99e7-28139214df48"/>
+		<idMapping local_id="view_bundle" 	id="ebe1638a-a782-4935-96bb-0802d7ec1eb3"/>
+		<idMapping local_id="reportButton"	id="340cc46f-164d-4170-8f0f-7053202ba537"/>
 	</idMap>  
 	<objects>
 		<OTSystem>
 			<includes>
-				<OTInclude href="capa_resistance_activity.otml"/> 
+				<OTInclude href="capa-ampmod-activity.otml"/> 
 			</includes>
 			<bundles>
 				<object refid="${script_bundle}"/>
 				<object refid="${view_bundle}"/>
 			</bundles>
 			<root>
-				<OTCompoundDoc name="Measuring Resistance 2.0 DEMO">
+				<OTCAPAChecker local_id="checker" name="Checker" 
+					nextToShow="3b2f16c6-99da-4d47-b381-b795164452c8" mozSwing="01bf1367-3536-4836-98cc-cc0f7f89cbde"
+					windowsOnly="true"
+					checkFlashPlugin="true" flashPluginRequiredVersion="8"
+					checkLabviewRuntime="true" labviewRuntimeRequiredVersion="8.5"/>      		
+			</root>
+			<library>
+				<OTCompoundDoc id="3b2f16c6-99da-4d47-b381-b795164452c8" local_id="demo_facade" name="Using Oscilloscope DEMO">
 					<bodyText>
-						<object refid="${main_activity}"/>
+						<object refid="${main_area}"/>
 						<br/>
 						<table>
 						<tr>
@@ -42,8 +50,12 @@
 						</table>
 					</bodyText>
 				</OTCompoundDoc>
-			</root>
-			<library>
+				<OTCardContainer local_id="main_area">
+				<!--card container is used only to preserve the "show rubric" button in the next page-->
+					<cards>
+						<object refid="${main_activity}"/>
+					</cards>
+				</OTCardContainer>
 				<OTButton local_id="rubricButton" text="Show/Edit Rubric">
 					<action>
 						<object refid="${show_rubric_action}"/>

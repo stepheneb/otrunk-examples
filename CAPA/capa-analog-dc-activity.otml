@@ -1,39 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<otrunk id="7dca7f8e-7296-4a85-a1bd-37997f03ab71">
+<!-- Activity "Troubleshooting Analog DC Circuits"  -->
+
+<otrunk id="3123e5ca-0b12-4535-878c-c858a30d2577">
 	<imports>
 		<import class="org.concord.framework.otrunk.view.OTFrame" />
+    <import class="org.concord.otrunk.OTInclude" />		
 		<import class="org.concord.otrunk.OTSystem" />
-		<import class="org.concord.otrunk.OTInclude" />
-		<import class="org.concord.otrunk.view.OTViewBundle" />
-		<import class="org.concord.otrunk.view.OTViewEntry" />
-		<import class="org.concord.otrunk.view.OTViewChild" />
-		<import class="org.concord.otrunk.view.document.OTCompoundDoc" />
-		<import class="org.concord.otrunk.view.OTFrameDisplayAction" />
-		<import class="org.concord.otrunk.view.OTViewMode" />
+    <import class="org.concord.otrunk.browser.mozswing.OTMozSwing" />
+    <import class="org.concord.otrunk.capa.util.OTCAPAChecker" />       
+    <import class="org.concord.otrunk.labview.OTLabviewMonitor" />        		
+    <import class="org.concord.otrunk.script.OTScriptEngineBundle" />
+    <import class="org.concord.otrunk.script.OTScriptEngineEntry" />
+    <import class="org.concord.otrunk.script.js.OTJavascript" />    
+    <import class="org.concord.otrunk.script.ui.OTScriptObject" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariable" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariableComponent" />
+    <import class="org.concord.otrunk.script.ui.OTXHTMLScript"/>
 		<import class="org.concord.otrunk.ui.OTButton" />
-		<import class="org.concord.otrunk.ui.OTText" />
+    <import class="org.concord.otrunk.ui.OTCardContainer" />		
 		<import class="org.concord.otrunk.ui.OTChoice" />
 		<import class="org.concord.otrunk.ui.OTPlacement" />
 		<import class="org.concord.otrunk.ui.OTPlacementContainer" />
-		<import class="org.concord.otrunk.ui.OTCardContainer" />
+    <import class="org.concord.otrunk.ui.OTText" />
 		<import class="org.concord.otrunk.ui.OTTextPane" />
-		<import class="org.concord.otrunk.script.OTScriptEngineBundle" />
-		<import class="org.concord.otrunk.script.OTScriptEngineEntry" />
-		<import class="org.concord.otrunk.script.ui.OTXHTMLScript"/>
-		<import class="org.concord.otrunk.script.ui.OTScriptObject" />
-		<import class="org.concord.otrunk.script.ui.OTScriptVariable" />
-		<import	class="org.concord.otrunk.script.ui.OTScriptVariableComponent" />
-		<import class="org.concord.otrunk.script.js.OTJavascript" />
-		<import class="org.concord.otrunk.browser.mozswing.OTMozSwing" />
-		<import class="org.concord.otrunk.labview.OTLabviewMonitor" />
-    	<import class="org.concord.otrunk.capa.util.OTCAPAChecker" />
+		<import class="org.concord.otrunk.ui.question.OTQuestion" />
+    <import class="org.concord.otrunk.view.OTFrameDisplayAction" />   		
+    <import class="org.concord.otrunk.view.OTViewBundle" />
+    <import class="org.concord.otrunk.view.OTViewChild" />    
+    <import class="org.concord.otrunk.view.OTViewEntry" />
+    <import class="org.concord.otrunk.view.OTViewMode" />
+    <import class="org.concord.otrunk.view.document.OTCompoundDoc" />    
+		<import class="org.concord.otrunkcapa.OTUnit" />
+    <import class="org.concord.otrunkcapa.rubric.OTAssessment" />		
 		<import	class="org.concord.otrunkcapa.rubric.OTAssessmentViewConfig" />
-		<import class="org.concord.otrunkcapa.rubric.OTAssessment" />
-	</imports>
+  </imports>
 	<objects>
 		<OTSystem local_id="system">
 			<bundles>
-				<OTViewBundle showLeftPanel="false"	id="446ec4aa-6048-496f-a888-b602b18ee1fa">
+				<OTViewBundle showLeftPanel="false"	id="0a84b89d-9eeb-4314-9942-9c7960ec18ed">
 					<views>
 						<OTViewEntry
 							objectClass="org.concord.otrunk.view.document.OTDocument"
@@ -56,12 +60,15 @@
 						<OTViewEntry
 							objectClass="org.concord.otrunk.ui.OTCardContainer"
 							viewClass="org.concord.otrunk.ui.swing.OTCardContainerView" />
-						<OTViewEntry
-							objectClass="org.concord.otrunk.script.ui.OTXHTMLScript"
-							viewClass="org.concord.otrunk.script.ui.OTXHTMLScriptView"/>
 						<OTViewEntry 
 							objectClass="org.concord.otrunk.script.ui.OTScriptObject"
 							viewClass="org.concord.otrunk.script.ui.OTScriptObjectView"/>
+						<OTViewEntry
+							objectClass="org.concord.otrunk.script.ui.OTXHTMLScript"
+							viewClass="org.concord.otrunk.script.ui.OTXHTMLScriptView"/>
+                        <OTViewEntry local_id="moz-swing-view" 
+                        	objectClass="org.concord.otrunk.browser.mozswing.OTMozSwing" 
+                        	viewClass="org.concord.otrunk.browser.mozswing.OTMozSwingView" />
 						<OTViewEntry 
 							objectClass="org.concord.otrunk.capa.util.OTCAPAChecker" 
 							viewClass="org.concord.otrunk.capa.util.OTCAPACheckerView" /> 
@@ -77,16 +84,13 @@
 						<OTViewEntry
 							objectClass="org.concord.otrunkcapa.rubric.OTRubricIndicatorRange"
 							viewClass="org.concord.otrunkcapa.rubric.view.OTRubricIndicatorRangeView" />
-                        <OTViewEntry local_id="moz-swing-view" 
-                        	objectClass="org.concord.otrunk.browser.mozswing.OTMozSwing" 
-                        	viewClass="org.concord.otrunk.browser.mozswing.OTMozSwingView" />
-						<OTAssessmentViewConfig id="f19b8540-5de8-11dd-ad8b-0800200c9a66" 
+						<OTAssessmentViewConfig
 							objectClass="org.concord.otrunkcapa.rubric.OTAssessment"
 							viewClass="org.concord.otrunkcapa.rubric.OTAssessmentView"
 							showFromScript="true"
 							showQualitative="false">
 							<rubric>
-								<object	refid="02d179b3-db94-4014-ad2c-f689512ea3c5" />
+								<object	refid="ac0dee1d-a026-4a82-8c10-df5409c853d9" />
 							</rubric>
 							<script>
 								<object refid="${report_script}"/>
@@ -111,7 +115,7 @@
 						<OTFrame width="800" height="600" />
 					</frame>
 				</OTViewBundle>
-				<OTScriptEngineBundle id="7a8809b8-5f9a-403e-8d77-4265bd333dbe">
+				<OTScriptEngineBundle id="a88b983e-2885-4f70-9df9-53d3cbd25daa">
 					<engines>
 						<OTScriptEngineEntry
 							objectClass="org.concord.otrunk.script.js.OTJavascript"
@@ -120,59 +124,47 @@
 				</OTScriptEngineBundle>
 			</bundles>
 			<includes>
-				<OTInclude href="capa_digital_fault_rubric.otml" />
+				<OTInclude href="capa-analog-dc-rubric.otml" />
 			</includes>
 			<root>
       			<OTCAPAChecker local_id="checker" name="Checker" 
-      				nextToShow="f89a4b34-4ac5-4b73-ab37-6965e610da01" mozSwing="cdd3a04e-d9b6-4337-833b-8dabac526e6c"
+      				nextToShow="0661cc3a-8dd2-4aa1-adf7-f92b4a4ac825" mozSwing="f87bba84-5dd8-47cd-b2b5-1a4d593e3cff"
       				windowsOnly="true"
       				checkFlashPlugin="true" flashPluginMinVersion="8"
       				checkLabviewRuntime="true" labviewRuntimeMinVersion="8.5" labviewRuntimeMaxVersion="8.6"/>      		
 			</root>
 			<library>
-	 			<OTCompoundDoc id="f89a4b34-4ac5-4b73-ab37-6965e610da01" local_id="title_page" name="Title Page">
-	 				<bodyText>
-	 					<object refid="${intro_holder}"/>
-	 				</bodyText>	
-	 			</OTCompoundDoc>
-				<OTCardContainer local_id="intro_holder">
-				<!--card container is used only to preserve the "show rubric" button in the next page in demo mode-->
-					<cards>
-						<OTCompoundDoc local_id="intro_page">
-							<bodyText>
-								<font size="4" face="Verdana">
-									<div style="padding-top: 5mm; padding-bottom: 0mm; padding-left: 30mm; padding-right: 30mm;">
-										<p align="center">
-											<img src="images/capa.gif" />
-										</p>
-										<h3>Digital Troubleshooting</h3>
-										<p>
-This assessment presents you with a digital circuit. You can view the circuit's schematic or a breadboard version. 
-Both show three gate chips: U1, U2, and U3. The breadboard shows these three chips correctly wired. 
-The schematic gives the pin numbers for each of the chips. 
-At any point you can view the specifications for each of the three chips.
-										</p>
-										<p>
-Your first task will be to create a truth table for the no-fault circuit. After you have done this you will be 
-presented with a circuit that may or may not have a faulty gate. Your task will be to verify whether the circuit 
+				<OTCompoundDoc id="0661cc3a-8dd2-4aa1-adf7-f92b4a4ac825" local_id="intro_page">
+					<bodyText>
+						<div
+							style="padding-top: 15mm; padding-bottom: 15mm; padding-left: 30mm; padding-right: 30mm;">
+							<p align="center">
+								<img src="images/capa.gif" />
+							</p>
+							<h3>Troubleshooting Analog DC Circuits</h3>
+							<p></p>
+							<p>
+This assessment presents you with an analog circuit with DC. You can view the circuit's schematic or a breadboard version. 
+							</p>
+							<p>
+Your task will be to verify whether the circuit 
 works properly, or if it doesn't, to identify the fault.  You will analyze this circuit three times, each time 
-the circuit condition will be different. Remember: the breadboard is wired correctly.
-										</p>
-										<p>
+the circuit condition will be different. Note: the breadboard is wired correctly.
+							</p>
+							<p>
 Your score on this activity will be based on correctly diagnosing the circuit with credit for doing the job efficiently, 
 so try to make as few measurements as possible, but be confident that you're right.
-										</p>							
-										<p />
-										<p align="center"><a href="${flash_page}">Continue</a></p>
-									</div>
-								</font>
-							</bodyText>
-						</OTCompoundDoc>
-					</cards>
-				</OTCardContainer>
+							</p>						
+							<p />
+							<p align="center">
+								<a href="${flash_page}">Continue</a>
+							</p>
+						</div>
+					</bodyText>
+				</OTCompoundDoc>
 				<OTCompoundDoc local_id="flash_page" name="Flash Demo">
 					<bodyText>
-						<h2 align="center">Digital Troubleshooting</h2>
+						<h2 align="center">Troubleshooting Analog DC Circuits</h2>
 						<center>
 						The movie below will help you complete this assessment. After it loads, click on the movie to <b>Play</b>. 
 						When done, click the <b>"Continue"</b> link below.
@@ -183,19 +175,16 @@ so try to make as few measurements as possible, but be confident that you're rig
 						</p>
 					</bodyText>
 				</OTCompoundDoc>
+				<OTViewEntry local_id="script_report_view"
+					objectClass="org.concord.otrunk.script.ui.OTScriptObject"
+					viewClass="org.concord.otrunk.script.ui.OTScriptObjectContentsReportView" />
 				<OTCompoundDoc name="Main Activity"	local_id="main_activity">
 					<bodyText>
 						<object refid="${main_cards}"/>
 					</bodyText>
 				</OTCompoundDoc>
-				<OTMozSwing local_id="browser" name="Web browser" url="http://capa.concord.org/videos/digtrouble/digtrouble.swf" 
-					showToolbar="false" showStatusBar="false" 
-					preferredWidth="800" preferredHeight="420" />
-				<OTViewEntry local_id="script_report_view"
-					objectClass="org.concord.otrunk.script.ui.OTScriptObject"
-					viewClass="org.concord.otrunk.script.ui.OTScriptObjectContentsReportView" />
 				<OTLabviewMonitor local_id="launch_labview_button" label="Show Circuit">
-					<viPath>wrap_digital_fault.vi</viPath>
+					<viPath>wrap_analog_fault.vi</viPath>
 				</OTLabviewMonitor>
 				<OTCardContainer local_id="main_cards">
 					<cards>
@@ -207,25 +196,26 @@ so try to make as few measurements as possible, but be confident that you're rig
 					<bodyText>
 						<table>
 							<tr>
-	                        	<!-- <td align="center" colspan="2"><table><tr><td><object refid="${browser}"/></td></tr></table></td>-->
-							</tr>
-							<tr>
 								<td rowspan="2"><object refid="${inst_text}"/></td>
 								<td><object refid="${launch_labview_button}"/></td>
 							</tr>
 						</table>
+                        <object refid="${report_button}"/>							
 						<object refid="${activity_script}"/>
 					</bodyText>
 				</OTCompoundDoc>
 				<OTCompoundDoc local_id="main_card_2">
 					<bodyText>
-						<table width="100%">
+						<p>
+							<font color="#2020f0" size="+1">
+								The assessment is over. You can see the report by clicking on the Show Report button. 
+								Please close all the windows when you are finished.
+							</font>
+						</p>
+						<p/>
+						<table>
 							<tr>
-								<td><font size="4" face="Verdana">
-                    				This assessment is over.<br />
-                    				You can close the window now.</font>
-							    </td>
-								<td width="20%"><object refid="${report_button}"/></td>
+								<td><object refid="${report_button}"/></td>
 							</tr>
 						</table>
 					</bodyText>
@@ -240,7 +230,17 @@ so try to make as few measurements as possible, but be confident that you're rig
 									<br />
 									<ol>
 										<li>
-											Click on <font color="#009000">Show Circuit</font> button to open the circuit window
+											Click on a wire from a resistor or the transistor to measure voltage or current.
+											Click on the body of a resistor to measure the resistance. Be careful to set 
+											the multimeter to the correct mode. 
+										</li>
+										<li>
+											Note: you're allowed only one resistance measurement for each problem.
+											Once you measure the resistance of a resistor, you cannot measure resistance
+											of any other resistors.
+										</li>
+										<li>
+											Click on the <font color="#009000">Show Circuit</font> button to open the circuit window
 											and begin the assessment.
 										</li>
 									</ol>
@@ -249,7 +249,7 @@ so try to make as few measurements as possible, but be confident that you're rig
 						</html>
 					</text>
 				</OTTextPane>
-				<OTButton local_id="report_button" name="Report Button"	text="Show Report" id="396a2425-794d-48a9-8275-1516205ed32c">
+				<OTButton local_id="report_button" name="Report Button"	text="Show Report" id="676d6697-27b9-4282-82ee-4de25c80eab4">
 					<action>
 						<object refid="${show_report_action}" />
 					</action>
@@ -270,10 +270,9 @@ so try to make as few measurements as possible, but be confident that you're rig
 						<object refid="${script_report_view}" />
 					</viewid>
 				</OTViewChild>
-				<OTAssessment local_id="assessment" title="Digital Troubleshooting"/>
 				<OTScriptObject local_id="activity_script">
 					<variables>
-						<OTScriptVariable name="ot_assessment">
+						<OTScriptVariable name="otAssessment">
 							<reference>
 								<object refid="${assessment}"/>
 							</reference>
@@ -288,14 +287,19 @@ so try to make as few measurements as possible, but be confident that you're rig
 								<object	refid="${launch_labview_button}" />
 							</reference>
 						</OTScriptVariable>
+						<OTScriptVariableComponent name="otc_reportButton">
+							<reference>
+								<object refid="${report_button}" />
+							</reference>
+						</OTScriptVariableComponent>
 					</variables>
 					<script>
 						<OTJavascript>
 							<scripts>
 								<OTJavascript
-									src="scripts/activity/capa-digital-activity.js" />
+									src="scripts/activity/capa-analog-dc-activity.js" />
 								<OTJavascript
-									src="scripts/activity/capa-digital-assess.js" />
+									src="scripts/activity/capa-analog-dc-assess.js" />
 							</scripts>
 						</OTJavascript>
 					</script>
@@ -309,18 +313,55 @@ so try to make as few measurements as possible, but be confident that you're rig
 						</OTScriptVariable>
 						<OTScriptVariable name="ot_rubric">
 							<reference>
-								<object refid="02d179b3-db94-4014-ad2c-f689512ea3c5"/>
+								<object refid="ac0dee1d-a026-4a82-8c10-df5409c853d9"/>
 							</reference>
 						</OTScriptVariable>
 					</variables>
 					<script>
-						<OTJavascript src="scripts/reports/individual/capa-digital-report.js"/>
+						<OTJavascript src="scripts/reports/individual/capa-analog-dc-report.js"/>
 					</script>
 				</OTXHTMLScript>
-				<OTMozSwing id="cdd3a04e-d9b6-4337-833b-8dabac526e6c" name="Direct to flash install site" 
+				<OTMozSwing local_id="browser" name="Web browser" url="http://capa.concord.org/videos/analog/analogcircuit.swf" 
+					showToolbar="false" showStatusBar="false" 
+					preferredWidth="800" preferredHeight="420" />
+				<OTMozSwing id="f87bba84-5dd8-47cd-b2b5-1a4d593e3cff" name="Direct to flash install site" 
 					url="http://www.adobe.com/shockwave/download/download.cgi?P1_Prod_Version=ShockwaveFlash" 
 					showToolbar="false" showStatusBar="false" 
 					preferredWidth="800" preferredHeight="300" />
+				<OTAssessment local_id="assessment" title="Troubleshooting Analog DC Circuits">
+					<questions>
+						<object refid="${question_1}"/>
+						<object refid="${question_2}"/>
+						<object refid="${question_3}"/>						
+					</questions>
+				</OTAssessment>
+			 	<OTQuestion local_id="question_1">
+			 		<prompt>
+			 			<OTText>
+			 				<text>
+			 					1) Identify the fault.
+			 				</text>
+			 			</OTText>
+			 		</prompt>
+			 	</OTQuestion>
+			 	<OTQuestion local_id="question_2">
+			 		<prompt>
+			 			<OTText>
+			 				<text>
+			 					2) Identify the fault.
+			 				</text>
+			 			</OTText>
+			 		</prompt>
+			 	</OTQuestion>
+			 	<OTQuestion local_id="question_3">
+			 		<prompt>
+			 			<OTText>
+			 				<text>
+			 					3) Identify the fault.
+			 				</text>
+			 			</OTText>
+			 		</prompt>
+			 	</OTQuestion>
 			</library>
 		</OTSystem>
 	</objects>
