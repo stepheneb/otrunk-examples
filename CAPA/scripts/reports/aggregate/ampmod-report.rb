@@ -49,23 +49,27 @@ def otImport(script)
 end
 
 def parseLog(user)
-  @correctAmp = '-'
-  @correctFrq = '-'
-  @submittedAmp = '-'
-  @submittedFrq = '-'
+  @correctCarrierFrq = '-'
+  @correctModFrq = '-'
+  @correctModIndex = '-'
+  @submittedCarrierFrq = '-'
+  @submittedModFrq = '-'
+  @submittedModIndex = '-'
   
   log = @otrunkHelper.getLastContent(user, OTText).getText
   n = 0
   
   for line in log
     case line
-      when /Correct amplitude = (\S+\s+\S+)/; @correctAmp = Regexp.last_match(1); n += 1       
-      when /Correct frequency = (\S+\s+\S+)/; @correctFrq = Regexp.last_match(1); n += 1       
-      when /submitted: amplitude = (\S+\s+\S+)/; @submittedAmp = Regexp.last_match(1); n += 1       
-      when /submitted: frequency = (\S+\s+\S+)/; @submittedFrq = Regexp.last_match(1); n += 1               
+      when /Correct carrier frequency = (\S+\s+\S+)/; @correctCarrierFrq = Regexp.last_match(1); n += 1       
+      when /Correct modulator frequency = (\S+\s+\S+)/; @correctModFrq = Regexp.last_match(1); n += 1       
+      when /Correct modulation index = (\S+)/; @correctModIndex = Regexp.last_match(1); n += 1
+      when /submitted: carrier frequency = (\S+\s+\S+)/; @submittedCarrierFrq = Regexp.last_match(1); n += 1       
+      when /submitted: modulator frequency = (\S+\s+\S+)/; @submittedModFrq = Regexp.last_match(1); n += 1              
+      when /submitted: modulation index = (\S+)/; @submittedModIndex = Regexp.last_match(1); n += 1        
     end
     
-    break if n > 3
+    break if n > 5
   end
 end
   
@@ -106,8 +110,9 @@ def getCsvHeader
   
   # Second line
   t << 'First Name' + @sep + 'Last Name' + @sep
-  t << 'Submitted Amplitude' << @sep << 'Correct Amplitude' << @sep
-  t << 'Submitted Frequency' << @sep << 'Correct Frequency' << @sep
+  t << 'Submitted Carrier Frequency' << @sep << 'Correct Carrier Frequency' << @sep
+  t << 'Submitted Modulator Frequency' << @sep << 'Correct Modulator Frequency' << @sep
+  t << 'Submitted Modulation Index' << @sep << 'Correct Modulation Index' << @sep  
   for indicator in indicators
     t << 'String' + @sep + 'Indicator' + @sep + "Points (#{RubricGradeUtil.getMaximumPoints(indicator)})" + @sep
   end
@@ -120,8 +125,9 @@ def getCsvUserLine(user, assessment, rubric)
   
   name = user.getName.split
   t <<  (name.size > 1 ? name[0] : '') + @sep + name[-1] + @sep
-  t << @submittedAmp << @sep << @correctAmp << @sep
-  t << @submittedFrq << @sep << @correctFrq << @sep
+  t << @submittedCarrierFrq << @sep << @correctCarrierFrq << @sep
+  t << @submittedModFrq << @sep << @correctModFrq << @sep
+  t << @submittedModIndex << @sep << @correctModIndex << @sep  
     
   indicators = rubric.getIndicators.getVector
   indicatorValues = assessment.getIndicatorValues  
