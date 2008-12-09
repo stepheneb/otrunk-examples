@@ -1,7 +1,11 @@
 module Util
   
   def Util.toPlainText(xhtmlText)
-    return xhtmlText.gsub(/<.*?>/, '').strip().squeeze()
+    return Util.trim(xhtmlText.gsub(/<.*?>/, ''))
+  end
+  
+  def Util.trim(s)
+    return s.strip.gsub(/\s/, ' ').gsub(/ {2,}/, ' ')
   end
   
   def Util.truncate(string, length)

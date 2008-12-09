@@ -97,10 +97,10 @@ def surveyAnswerText(user, question)
   userQuestion = @otrunkHelper.userObject(question, user)
   if question.is_a?(OTQuestion) && question.input.is_a?(OTChoice)
     answer = userQuestion.input.getCurrentChoice
-    return answer ? answer.getBodyText : '-'
+    return answer ? Util.trim(answer.getBodyText) : '-'
   elsif question.is_a?(OTText)
     answer = userQuestion.getText
-    return answer ? answer : '-'
+    return answer ? Util.trim(answer) : '-'
   end
   return 'ERROR'
 end
