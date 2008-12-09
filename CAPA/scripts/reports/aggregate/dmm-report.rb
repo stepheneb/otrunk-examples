@@ -97,6 +97,7 @@ end
 def getCsvHeader
   indicators = $rubric.getVoltageRubric.getIndicators.getVector
   labels = ['Voltage', 'Current', 'Resistance']
+  rubrics = [$rubric.getVoltageRubric, $rubric.getCurrentRubric, $rubric.getResistanceRubric]
   t = ''
   # First line
   skip = (indicators.size + 1) * 3
@@ -119,11 +120,11 @@ def getCsvHeader
   3.times { |i|
     t << "Submitted #{labels[i]}" + @sep + "Correct #{labels[i]}" + @sep
     for indicator in indicators
-      t << "String" + @sep + "Indicator" + @sep + "Points" + @sep
+      t << "String" + @sep + "Indicator" + @sep + "Points (#{RubricGradeUtil.getMaximumPoints(indicator)})" + @sep
     end 
-    t << "Total #{labels[i]}Points" + @sep
+    t << "Total #{labels[i]}Points (#{RubricGradeUtil.getTotalMaximumPoints(rubrics[i])})" + @sep
   }
-  t << "Final Grade"
+  t << "Final Grade (100)"
   t << @newline
 end
 

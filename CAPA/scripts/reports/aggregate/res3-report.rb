@@ -110,9 +110,9 @@ def getCsvHeader
   t << 'Submitted Answer' << @sep << 'Correct Answer' << @sep
   
   for indicator in indicators
-    t << 'String' + @sep + 'Indicator' + @sep + 'Points' + @sep
+    t << 'String' + @sep + 'Indicator' + @sep + "Points (#{RubricGradeUtil.getMaximumPoints(indicator)})" + @sep
   end
-  t << 'Final Grade' + @newline
+  t << "Final Grade (#{RubricGradeUtil.getTotalMaximumPoints($rubric)})" + @newline
   return t
 end
 

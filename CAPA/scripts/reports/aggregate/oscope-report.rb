@@ -108,9 +108,9 @@ def getCsvHeader
   t << 'Submitted Amplitude' << @sep << 'Correct Amplitude' << @sep
   t << 'Submitted Frequency' << @sep << 'Correct Frequency' << @sep
   for indicator in indicators
-    t << 'String' + @sep + 'Indicator' + @sep + 'Points' + @sep
+    t << 'String' + @sep + 'Indicator' + @sep + "Points (#{RubricGradeUtil.getMaximumPoints(indicator)})" + @sep
   end
-  t << 'Final Grade' + @newline
+  t << "Final Grade (#{RubricGradeUtil.getTotalMaximumPoints($rubric)})" + @newline
   return t
 end
 

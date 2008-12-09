@@ -57,7 +57,7 @@ def getCsvText
   @questions.questions.size.times do |i| 
     t << (i + 1).to_s + sep 
   end
-  t << "Points"
+  t << "Points (out of #{@questions.questions.size})"
   t << "\n"
    
   t << "Correct Answer" + sep
