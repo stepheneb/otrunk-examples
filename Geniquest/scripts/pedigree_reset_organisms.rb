@@ -13,20 +13,23 @@ include_class 'org.concord.otrunk.view.OTFolderObject'
 include_class 'org.concord.biologica.ui.UIProp'
 include_class 'org.concord.biologica.engine.EngineProp'
 
-  $pedigreeViewInternal = $pedigreeView.getComponent(0)
-  $pedigreeViewInternal.inspect
-  $pedigreeOrganisms = $pedigreeViewInternal.getOrganisms
+  @pedigreeViewInternal = $pedigreeView.getComponent(0)
+  @pedigreeViewInternal.inspect
+  @pedigreeOrganisms = $pedigreeViewInternal.getOrganisms
   puts $pedigreeOrganisms.inspect
   #$family = $pedigreeViewInternal.getFamilyForParents($mother, $father)
   #puts $family.inspect
   #$pedigreeViewInternal.removeFamily($family)
-  $pedigreeOrganisms.each {|o| $pedigreeViewInternal.removeOrganism(o.getOrganism)}
-  $pedigreeViewInternal.setCrossOverTurnOn(true)
-  puts $pedigreeViewInternal.inspect
-  puts $pedigreeViewInternal.getNumberOfOrganisms
-  puts $pedigreeViewInternal.isCrossOverTurnOn().to_s
+  @pedigreeViewInternal.setCrossOverTurnOn(true)
+  puts @pedigreeViewInternal.inspect
+  puts @pedigreeViewInternal.getNumberOfOrganisms
+  puts @pedigreeViewInternal.isCrossOverTurnOn().to_s
 
-
+def self.clicked
+  @pedigreeOrganisms.each {|o| $pedigreeViewInternal.removeOrganism(o.getOrganism)}
+  @pedigreeViewInternal.addOrganisms($startingMale,20,0)
+  @pedigreeViewInternal.addOrganisms($startingFemale,40,0)
+end
 def self.init
   puts "self.init called!"
   true
