@@ -26,7 +26,7 @@ def self.clicked
   $QTLLabels.each {|l| puts l.inspect}
 
 ##Turn off all labels
-  for n in 0..17 do
+  for n in 0..74 do
    $QTLLabels[n].setHorizontalVisible(false)
    $QTLLabels[n].setVerticalVisible(false)
   end
@@ -65,11 +65,11 @@ def self.clicked
   #Iterate budget down a notch and turn on corresponding graphs and labels
   
   if ($selectedDrakes.size == 2)
-    $remainingBudget.value += -100000
+    #$remainingBudget.value += -100000
     puts $remainingBudget.value.to_s
     $budgetText.text = "Budget Remaining: $" + $remainingBudget.value.to_s
     if ($remainingBudget.value > 0)
-      if $selectedDrakeStrains.include?("Mountain" && "Valley") 
+      if $selectedDrakeStrains.include?("Mountain") && $selectedDrakeStrains.include?("Valley") 
         puts "Mountain and Valley"
         $QTLGraphables[0].setVisible(true)
         $QTLLabels[0].setHorizontalVisible(true)
@@ -78,7 +78,7 @@ def self.clicked
         $QTLLabels[3].setVerticalVisible(true)
         $QTLLabels[4].setVerticalVisible(true)
         $QTLGraphables[0].setColor(0x00FF0000)
-      elsif $selectedDrakeStrains.include?("Mountain" && "Swamp")
+      elsif $selectedDrakeStrains.include?("Mountain") && $selectedDrakeStrains.include?("Swamp")
         puts "Mountain and Swamp"
         $QTLGraphables[1].setVisible(true)
         $QTLGraphables[1].setColor(0x00FF0000)
@@ -87,7 +87,7 @@ def self.clicked
         $QTLLabels[7].setHorizontalVisible(true)
         $QTLLabels[8].setVerticalVisible(true)
         $QTLLabels[9].setVerticalVisible(true)
-      elsif $selectedDrakeStrains.include?("Mountain" && "Desert")
+      elsif $selectedDrakeStrains.include?("Mountain") && $selectedDrakeStrains.include?("Desert")
         puts "Swamp"
         $QTLGraphables[2].setVisible(true)
         $QTLGraphables[2].setColor(0x00FF0000)
@@ -96,7 +96,7 @@ def self.clicked
         $QTLLabels[12].setHorizontalVisible(true)
         $QTLLabels[13].setVerticalVisible(true)
         $QTLLabels[14].setVerticalVisible(true)
-      elsif $selectedDrakeStrains.include?("Mountain" && "Ice")
+      elsif $selectedDrakeStrains.include?("Mountain") && $selectedDrakeStrains.include?("Ice")
         puts "Swamp"
         $QTLGraphables[4].setVisible(true)
         $QTLGraphables[4].setColor(0x00FF0000)
@@ -105,7 +105,7 @@ def self.clicked
         $QTLLabels[22].setHorizontalVisible(true)
         $QTLLabels[23].setVerticalVisible(true)
         $QTLLabels[24].setVerticalVisible(true)
-      elsif $selectedDrakeStrains.include?("Mountain" && "Forest")
+      elsif $selectedDrakeStrains.include?("Mountain") && $selectedDrakeStrains.include?("Forest")
         puts "Swamp"
         $QTLGraphables[5].setVisible(true)
         $QTLGraphables[5].setColor(0x00FF0000)
@@ -114,7 +114,7 @@ def self.clicked
         $QTLLabels[27].setHorizontalVisible(true)
         $QTLLabels[28].setVerticalVisible(true)
         $QTLLabels[29].setVerticalVisible(true)
-      elsif $selectedDrakeStrains.include?("Valley" && "Swamp")
+      elsif $selectedDrakeStrains.include?("Valley") && $selectedDrakeStrains.include?("Swamp")
         puts "Swamp"
         $QTLGraphables[6].setVisible(true)
         $QTLGraphables[6].setColor(0x00FF0000)
@@ -123,7 +123,7 @@ def self.clicked
         $QTLLabels[32].setHorizontalVisible(true)
         $QTLLabels[33].setVerticalVisible(true)
         $QTLLabels[34].setVerticalVisible(true)
-      elsif $selectedDrakeStrains.include?("Valley" && "Desert")
+      elsif $selectedDrakeStrains.include?("Valley") && $selectedDrakeStrains.include?("Desert")
         puts "Swamp"
         $QTLGraphables[7].setVisible(true)
         $QTLGraphables[7].setColor(0x00FF0000)
@@ -132,7 +132,7 @@ def self.clicked
         $QTLLabels[37].setHorizontalVisible(true)
         $QTLLabels[38].setVerticalVisible(true)
         $QTLLabels[39].setVerticalVisible(true)
-      elsif $selectedDrakeStrains.include?("Valley" && "Ice")
+      elsif $selectedDrakeStrains.include?("Valley") && $selectedDrakeStrains.include?("Ice")
         puts "Swamp"
         $QTLGraphables[8].setVisible(true)
         $QTLGraphables[8].setColor(0x00FF0000)
@@ -141,7 +141,7 @@ def self.clicked
         $QTLLabels[42].setHorizontalVisible(true)
         $QTLLabels[43].setVerticalVisible(true)
         $QTLLabels[44].setVerticalVisible(true)
-      elsif $selectedDrakeStrains.include?("Valley" && "Forest")
+      elsif $selectedDrakeStrains.include?("Valley") && $selectedDrakeStrains.include?("Forest")
         puts "Swamp"
         $QTLGraphables[9].setVisible(true)
         $QTLGraphables[9].setColor(0x00FF0000)
@@ -150,25 +150,34 @@ def self.clicked
         $QTLLabels[47].setHorizontalVisible(true)
         $QTLLabels[48].setVerticalVisible(true)
         $QTLLabels[49].setVerticalVisible(true)
-      elsif $selectedDrakeStrains.include?("Swamp" && "Desert")
+      elsif $selectedDrakeStrains.include?("Swamp") && $selectedDrakeStrains.include?("Desert")
         puts "Swamp"
-        $QTLGraphables[10].setVisible(true)
-        $QTLGraphables[10].setColor(0x00FF0000)
-        $QTLLabels[50].setHorizontalVisible(true)
-        $QTLLabels[51].setHorizontalVisible(true)
-        $QTLLabels[52].setHorizontalVisible(true)
-        $QTLLabels[53].setVerticalVisible(true)
-        $QTLLabels[54].setVerticalVisible(true)
-      elsif $selectedDrakeStrains.include?("Swamp" && "Ice")
+        $QTLGraphables[8].setVisible(true)
+        $QTLGraphables[8].setColor(0x00FF0000)
+        $QTLLabels[40].setHorizontalVisible(true)
+        $QTLLabels[41].setHorizontalVisible(true)
+        $QTLLabels[42].setHorizontalVisible(true)
+        $QTLLabels[43].setVerticalVisible(true)
+        $QTLLabels[44].setVerticalVisible(true)
+      elsif $selectedDrakeStrains.include?("Swamp") && $selectedDrakeStrains.include?("Ice")
         puts "Swamp"
-        $QTLGraphables[11].setVisible(true)
-        $QTLGraphables[11].setColor(0x00FF0000)
-        $QTLLabels[55].setHorizontalVisible(true)
-        $QTLLabels[56].setHorizontalVisible(true)
-        $QTLLabels[57].setHorizontalVisible(true)
-        $QTLLabels[58].setVerticalVisible(true)
-        $QTLLabels[59].setVerticalVisible(true)
-      elsif $selectedDrakeStrains.include?("Swamp" && "Forest")
+        $QTLGraphables[5].setVisible(true)
+        $QTLGraphables[5].setColor(0x00FF0000)
+        $QTLLabels[25].setHorizontalVisible(true)
+        $QTLLabels[26].setHorizontalVisible(true)
+        $QTLLabels[27].setHorizontalVisible(true)
+        $QTLLabels[28].setVerticalVisible(true)
+        $QTLLabels[29].setVerticalVisible(true)
+      elsif $selectedDrakeStrains.include?("Swamp") && $selectedDrakeStrains.include?("Forest")
+        puts "Swamp"
+        $QTLGraphables[3].setVisible(true)
+        $QTLGraphables[3].setColor(0x00FF0000)
+        $QTLLabels[10].setHorizontalVisible(true)
+        $QTLLabels[11].setHorizontalVisible(true)
+        $QTLLabels[12].setHorizontalVisible(true)
+        $QTLLabels[13].setVerticalVisible(true)
+        $QTLLabels[14].setVerticalVisible(true)
+      elsif $selectedDrakeStrains.include?("Desert") && $selectedDrakeStrains.include?("Ice")
         puts "Swamp"
         $QTLGraphables[12].setVisible(true)
         $QTLGraphables[12].setColor(0x00FF0000)
@@ -177,16 +186,7 @@ def self.clicked
         $QTLLabels[62].setHorizontalVisible(true)
         $QTLLabels[63].setVerticalVisible(true)
         $QTLLabels[64].setVerticalVisible(true)
-      elsif $selectedDrakeStrains.include?("Desert" && "Ice")
-        puts "Swamp"
-        $QTLGraphables[3].setVisible(true)
-        $QTLGraphables[3].setColor(0x00FF0000)
-        $QTLLabels[16].setHorizontalVisible(true)
-        $QTLLabels[17].setHorizontalVisible(true)
-        $QTLLabels[18].setHorizontalVisible(true)
-        $QTLLabels[19].setVerticalVisible(true)
-        $QTLLabels[20].setVerticalVisible(true)
-      elsif $selectedDrakeStrains.include?("Desert" && "Forest")
+      elsif $selectedDrakeStrains.include?("Desert") && $selectedDrakeStrains.include?("Forest")
         puts "Swamp"
         $QTLGraphables[13].setVisible(true)
         $QTLGraphables[13].setColor(0x00FF0000)
@@ -195,7 +195,7 @@ def self.clicked
         $QTLLabels[67].setHorizontalVisible(true)
         $QTLLabels[68].setVerticalVisible(true)
         $QTLLabels[69].setVerticalVisible(true)
-      elsif $selectedDrakeStrains.include?("Ice" && "Forest")
+      elsif $selectedDrakeStrains.include?("Ice") && $selectedDrakeStrains.include?("Forest")
         puts "Swamp"
         $QTLGraphables[14].setVisible(true)
         $QTLGraphables[14].setColor(0x00FF0000)

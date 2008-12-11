@@ -22,7 +22,7 @@ def self.clicked
   puts "99pct Labels: "
   $QTLGraphLabels.each {|l| puts l;}
   $QTLGraphConfLeft = $QTLGraphLabels[0]
-  $QTLGraphConfLeft = $QTLGraphLabels[1]
+  $QTLGraphConfRight = $QTLGraphLabels[1]
   puts "Turning on confidence intervals." 
   
   def show_conf_int
@@ -30,7 +30,7 @@ def self.clicked
     self.setLabelVisible(true)
   end
   $QTLGraphConfLeft.show_conf_int
-  $QTLGraphConfRigt.show_conf_int
+  $QTLGraphConfRight.show_conf_int
   
   #puts "Y 99pct threshold: " + $QTLGraphThresh99.yData.to_s
 
