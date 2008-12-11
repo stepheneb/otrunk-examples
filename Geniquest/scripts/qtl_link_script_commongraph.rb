@@ -22,8 +22,8 @@ def self.clicked
   puts "$QTL_graph.inspect!!: " + $QTLGraph.inspect
   $QTLGraphables = $QTLGraph.getGraphables.getVector
   $QTLLabels = $QTLGraph.getLabels.getVector
-  $QTLGraphables.each {|g| puts g.inspect}
-  $QTLLabels.each {|l| puts l.inspect}
+  #$QTLGraphables.each {|g| puts g.inspect}
+  #$QTLLabels.each {|l| puts l.inspect}
 
 ##Turn off all labels
   for n in 0..74 do
@@ -65,10 +65,10 @@ def self.clicked
   #Iterate budget down a notch and turn on corresponding graphs and labels
   
   if ($selectedDrakes.size == 2)
-    #$remainingBudget.value += -100000
     puts $remainingBudget.value.to_s
-    $budgetText.text = "Budget Remaining: $" + $remainingBudget.value.to_s
     if ($remainingBudget.value > 0)
+      $remainingBudget.value += -100000
+      $budgetText.text = "Budget Remaining: $" + $remainingBudget.value.to_s
       if $selectedDrakeStrains.include?("Mountain") && $selectedDrakeStrains.include?("Valley") 
         puts "Mountain and Valley"
         $QTLGraphables[0].setVisible(true)
