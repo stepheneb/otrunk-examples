@@ -1,0 +1,940 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<otrunk id="2767fe20-6c7d-11dc-8314-0800200c9a66">
+  <imports>
+    <import class="org.concord.data.state.OTDataChannelDescription" />
+    <import class="org.concord.data.state.OTDataField" />
+    <import class="org.concord.data.state.OTDataStore" />
+    <import class="org.concord.data.state.OTDataTable" />
+    <import class="org.concord.datagraph.state.OTDataAxis" />
+    <import class="org.concord.datagraph.state.OTDataBarGraphable" />    
+    <import class="org.concord.datagraph.state.OTDataCollector" />
+    <import class="org.concord.datagraph.state.OTDataGraph" />
+    <import class="org.concord.datagraph.state.OTDataGraphable" />
+    <import class="org.concord.datagraph.state.OTDataPointLabel" />
+    <import class="org.concord.datagraph.state.OTMultiDataGraph" />
+    <import class="org.concord.datagraph.state.OTPluginView" />
+    <import class="org.concord.framework.otrunk.view.OTFrame" />
+    <import class="org.concord.framework.otrunk.wrapper.OTBlob" />
+    <import class="org.concord.framework.otrunk.wrapper.OTBoolean" />    
+    <import class="org.concord.framework.otrunk.wrapper.OTInt" />
+    <import class="org.concord.graph.util.state.OTDrawingImageIcon" />    
+    <import class="org.concord.graph.util.state.OTDrawingShape" />
+    <import class="org.concord.graph.util.state.OTDrawingStamp" />
+    <import class="org.concord.graph.util.state.OTDrawingTool" />
+    <import class="org.concord.graph.util.state.OTDrawingTool2" />
+    <import class="org.concord.graph.util.state.OTPointTextLabel" />
+    <import class="org.concord.otrunk.OTInclude" />
+    <import class="org.concord.otrunk.OTSystem" />
+    <import class="org.concord.otrunk.browser.mozswing.OTMozSwing" />
+    <import class="org.concord.otrunk.graph.OTDataCollectorViewConfig" />
+    <import class="org.concord.otrunk.overlay.OTOverlay" />
+    <import class="org.concord.otrunk.script.OTScriptEngineBundle" />
+    <import class="org.concord.otrunk.script.OTScriptEngineEntry" />
+    <import class="org.concord.otrunk.script.jruby.OTJRuby" />
+    <import class="org.concord.otrunk.script.js.OTJavascript" />    
+    <import class="org.concord.otrunk.script.ui.OTScriptButton" />    
+    <import class="org.concord.otrunk.script.ui.OTScriptObject" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariable" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariableComponent" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariableRealObject" />    
+    <import class="org.concord.otrunk.script.ui.OTScriptVariableView" />
+    <import class="org.concord.otrunk.script.ui.OTXHTMLScriptViewEntry" />
+    <import class="org.concord.otrunk.udl.OTAuthorNote" />
+    <import class="org.concord.otrunk.udl.OTUDLLabPage" />
+    <import class="org.concord.otrunk.udl.OTUDLMenuRule" />
+    <import class="org.concord.otrunk.udl.OTUDLNavBar" />
+    <import class="org.concord.otrunk.udl.OTZoom" />
+    <import class="org.concord.otrunk.udl.OTZoomTransform" />
+    <import class="org.concord.otrunk.udl.coach.OTUDLCoach" />
+    <import class="org.concord.otrunk.udl.coach.OTUDLCoachGroup" />
+    <import class="org.concord.otrunk.udl.coach.OTUDLCoachStatement" />
+    <import class="org.concord.otrunk.udl.document.OTDefinition" />
+    <import class="org.concord.otrunk.udl.document.OTDefinitionList" />
+    <import class="org.concord.otrunk.udl.document.OTDefinitionManager" />
+    <import class="org.concord.otrunk.udl.document.OTGlossary" />
+    <import class="org.concord.otrunk.udl.document.OTUDLCompoundDoc" />
+    <import class="org.concord.otrunk.udl.document.OTUDLDocumentViewConfig" />
+    <import class="org.concord.otrunk.udl.question.OTUDLLeveledQuestions" />
+    <import class="org.concord.otrunk.udl.question.OTUDLQuestion" />
+    <import class="org.concord.otrunk.udl.question.OTUDLQuestionViewConfig" />
+    <import class="org.concord.otrunk.udl3.OTUDLContainer" />
+    <import class="org.concord.otrunk.udl3.OTUDLMenu" />
+    <import class="org.concord.otrunk.udl3.OTUDLSection" />
+    <import class="org.concord.otrunk.ui.OTButton" />
+    <import class="org.concord.otrunk.ui.OTCardContainer" />
+    <import class="org.concord.otrunk.ui.OTChoice" />
+    <import class="org.concord.otrunk.ui.OTChoiceMultiple" />
+    <import class="org.concord.otrunk.ui.OTCurriculumUnit" />
+    <import class="org.concord.otrunk.ui.OTImage" />
+    <import class="org.concord.otrunk.ui.OTImageMap" />
+    <import class="org.concord.otrunk.ui.OTLayerContainer" />
+    <import class="org.concord.otrunk.ui.OTModeSwitcher" />
+    <import class="org.concord.otrunk.ui.OTPlacement" />
+    <import class="org.concord.otrunk.ui.OTPlacementContainer" />
+    <import class="org.concord.otrunk.ui.OTSoundPlayer" />
+    <import class="org.concord.otrunk.ui.OTText" />
+    <import class="org.concord.otrunk.ui.snapshot.OTSnapshot" />
+    <import class="org.concord.otrunk.ui.snapshot.OTSnapshotAlbum" />
+    <import class="org.concord.otrunk.ui.snapshot.OTSnapshotButton" />
+    <import class="org.concord.otrunk.ui.snapshot.OTSnapshotChooser" />
+    <import class="org.concord.otrunk.ui.swing.OTChoiceViewConfig" />
+    <import class="org.concord.otrunk.util.OTReference" />
+    <import class="org.concord.otrunk.util.OTSharingBundle" />
+    <import class="org.concord.otrunk.view.OTObjectEditViewConfig" />
+    <import class="org.concord.otrunk.view.OTViewBundle" />
+    <import class="org.concord.otrunk.view.OTViewChild" />
+    <import class="org.concord.otrunk.view.OTViewEntry" />
+    <import class="org.concord.otrunk.view.OTViewMode" />
+    <import class="org.concord.otrunk.view.document.OTCompoundDoc" />
+    <import class="org.concord.otrunk.view.document.OTCssText" />
+    <import class="org.concord.otrunk.view.document.OTDocumentViewConfig" />
+    <import class="org.concord.otrunk.view.prototype.OTPrototypeMapEntry" />    
+    <import class="org.concord.otrunk.view.prototype.OTPrototypeViewEntry" />
+    <import class="org.concord.otrunkmw.OTModelerPage" />
+    <import class="org.concord.otrunkmw.OTMwChannelData" />
+    <import class="org.concord.otrunkmw.OTMwDataProducer" />
+    <import class="org.concord.otrunknl4.OTNLogoModel" />
+    <import class="org.concord.sensor.state.OTDeviceConfig" />
+    <import class="org.concord.sensor.state.OTExperimentRequest" />
+    <import class="org.concord.sensor.state.OTInterfaceManager" />
+    <import class="org.concord.sensor.state.OTSensorDataProxy" />
+    <import class="org.concord.sensor.state.OTSensorRequest" />
+    <import class="org.concord.sensor.state.OTZeroSensor" />
+    <import class="org.concord.smartgraph.OTSmartGraphTool" />
+  </imports>
+  <objects>
+    <OTSystem local_id="system">
+      <includes>
+        <OTInclude href="http://continuum.concord.org/otrunk/examples/LOOPS/global-imports/loops-view-bundle.otml" />
+      </includes>
+      <bundles>
+        <object refid="8d880970-c22a-11dc-95ff-0800200c9a66" />
+        <OTViewBundle>
+          <viewEntries>
+            <OTDocumentViewConfig
+                objectClass="org.concord.otrunk.view.document.OTDocument"
+                viewClass="org.concord.otrunk.view.document.OTDocumentView">
+              <cssBlocks>
+                <OTCssText src="stylesheets/multichoice.css"/>
+              </cssBlocks>
+            </OTDocumentViewConfig>
+          </viewEntries>
+          <modes>
+            <OTViewMode name="report_mode"/>
+          </modes>
+        </OTViewBundle>
+        <OTScriptEngineBundle>
+          <engines>
+            <OTScriptEngineEntry objectClass="org.concord.otrunk.script.jruby.OTJRuby" engineClass="org.concord.otrunk.script.jruby.OTJRubyEngine" />
+            <OTScriptEngineEntry objectClass="org.concord.otrunk.script.js.OTJavascript" engineClass="org.concord.otrunk.script.js.OTJavascriptEngine" />
+          </engines>
+        </OTScriptEngineBundle>
+        <OTSharingBundle />
+        <OTInterfaceManager>
+          <deviceConfigs>
+            <OTDeviceConfig configString="none" deviceId="10" />
+          </deviceConfigs>
+        </OTInterfaceManager>
+      </bundles>
+      <root>
+        <OTCurriculumUnit version="2" name="LOOPS Activity" local_id="unit">
+          <activity>
+            <OTUDLSection local_id="section_1">
+              <header>
+                <OTCompoundDoc id="2767fe20-6c7d-11dc-8314-0800200c9a66!/section_1/header" showEditBar="false">
+                  <bodyText>
+                    <div class="title">Analog DC Troubleshooting Test</div>
+                  </bodyText>
+                </OTCompoundDoc>
+              </header>
+              <content>
+                <OTCardContainer local_id="activity-card-container" contentsMayScroll="true" loadViewOnlyOnDemand="true">
+                  <cards>
+                    <OTCompoundDoc local_id="page-1" name="1">
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <div class="subtitle">Question 1</div>
+                              <img src="images/analog.jpg" />
+                              <br />
+                              <br />
+                              <object refid="d35f7be5-cb5d-11dd-973f-1548b537a2cf" />
+                              <br />
+                              <br />
+                              <br />
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                        <OTUDLQuestion id="d35f7be5-cb5d-11dd-973f-1548b537a2cf" name="Question" showConvertButton="false">
+                          <prompt>
+                            <OTCompoundDoc>
+                              <bodyText>1. The collector for the transistor is connected to point</bodyText>
+                            </OTCompoundDoc>
+                          </prompt>
+                          <input>
+                            <OTChoice name="Multiple choice" alignContent="0">
+                              <choices>
+                                <OTCompoundDoc name="a. W">
+                                  <bodyText>a. W</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc id="fb00cd69-cb87-11dd-973f-1548b537a2cf" name="b. X">
+                                  <bodyText>b. X</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="c. Y">
+                                  <bodyText>c. Y</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="d. Z">
+                                  <bodyText>d. Z</bodyText>
+                                </OTCompoundDoc>
+                              </choices>
+                            </OTChoice>
+                          </input>
+                          <correctAnswer>
+                            <object refid="fb00cd69-cb87-11dd-973f-1548b537a2cf" />
+                          </correctAnswer>
+                        </OTUDLQuestion>
+                      </documentRefs>
+                    </OTCompoundDoc>
+                    <OTCompoundDoc id="95e89084-cb88-11dd-973f-1548b537a2cf" name="%95e89084-cb88-11dd-973f-1548b537a2cf" showEditBar="true">
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <div class="subtitle">Question 2</div>
+                              <img src="images/analog.jpg" />
+                              <br />
+                              <br />
+                              <object refid="0b8a8c4d-cb89-11dd-973f-1548b537a2cf" />
+                              <br />
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                        <OTUDLQuestion id="0b8a8c4d-cb89-11dd-973f-1548b537a2cf" name="Question" showConvertButton="false">
+                          <prompt>
+                            <OTCompoundDoc>
+                              <bodyText>2. The base of the transistor is connected to point</bodyText>
+                            </OTCompoundDoc>
+                          </prompt>
+                          <input>
+                            <OTChoice name="Multiple choice" alignContent="0">
+                              <choices>
+                                <OTCompoundDoc name="a. W">
+                                  <bodyText>a. W</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="b. X">
+                                  <bodyText>b. X</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc id="2edebbe5-cb89-11dd-973f-1548b537a2cf" name="c. Y">
+                                  <bodyText>c. Y</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="d. Z">
+                                  <bodyText>d. Z</bodyText>
+                                </OTCompoundDoc>
+                              </choices>
+                            </OTChoice>
+                          </input>
+                          <correctAnswer>
+                            <object refid="2edebbe5-cb89-11dd-973f-1548b537a2cf" />
+                          </correctAnswer>
+                        </OTUDLQuestion>
+                      </documentRefs>
+                    </OTCompoundDoc>
+                    <OTCompoundDoc id="3722d2ab-cb89-11dd-973f-1548b537a2cf" name="%3722d2ab-cb89-11dd-973f-1548b537a2cf" showEditBar="true">
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <div class="subtitle">Question 3</div>
+                              <img src="images/analog.jpg" />
+                              <br />
+                              <br />
+                              <object refid="590523b4-cb89-11dd-973f-1548b537a2cf" />
+                              <br />
+                              <br />
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                        <OTUDLQuestion id="590523b4-cb89-11dd-973f-1548b537a2cf" name="Question" showConvertButton="false">
+                          <prompt>
+                            <OTCompoundDoc>
+                              <bodyText>3. The emitter of the transistor is connected to point</bodyText>
+                            </OTCompoundDoc>
+                          </prompt>
+                          <input>
+                            <OTChoice name="Multiple choice" alignContent="0">
+                              <choices>
+                                <OTCompoundDoc name="a. W">
+                                  <bodyText>a. W</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="b. X">
+                                  <bodyText>b. X</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="c. Y">
+                                  <bodyText>c. Y</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc id="6b9f1a49-cb89-11dd-973f-1548b537a2cf" name="d. Z">
+                                  <bodyText>d. Z</bodyText>
+                                </OTCompoundDoc>
+                              </choices>
+                            </OTChoice>
+                          </input>
+                          <correctAnswer>
+                            <object refid="6b9f1a49-cb89-11dd-973f-1548b537a2cf" />
+                          </correctAnswer>
+                        </OTUDLQuestion>
+                      </documentRefs>
+                    </OTCompoundDoc>
+                    <OTCompoundDoc id="966ae9ce-cb89-11dd-973f-1548b537a2cf" name="%966ae9ce-cb89-11dd-973f-1548b537a2cf" showEditBar="true">
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <div class="subtitle">Question 4</div>
+                              <img src="images/analog.jpg" />
+                              <br />
+                              <br />
+                              <object refid="c753b4ef-cb8a-11dd-973f-1548b537a2cf" />
+                              <br />
+                              <br />
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                        <OTUDLQuestion id="c753b4ef-cb8a-11dd-973f-1548b537a2cf" name="Question" showConvertButton="false">
+                          <prompt>
+                            <OTCompoundDoc>
+                              <bodyText>4. When troubleshooting analog circuits similar to the figure above, what would normally be the first step?</bodyText>
+                            </OTCompoundDoc>
+                          </prompt>
+                          <input>
+                            <OTChoice name="Multiple choice" alignContent="0">
+                              <choices>
+                                <OTCompoundDoc name="a. Measure the voltage on the emitter.">
+                                  <bodyText>a. Measure the voltage on the emitter.</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="b. Measure the voltage on the collector." id="3c8f77ae-3ec0-4f83-ba46-b8dc38e00493">
+                                  <bodyText>b. Measure the voltage on the collector.</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="c. Measure the voltage on the base.">
+                                  <bodyText>c. Measure the voltage on the base.</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="d. Measure the voltage across R&lt;sub&gt;1&lt;/sub&gt;.">
+                                  <bodyText>
+                                    d. Measure the voltage across R
+                                    <sub>1</sub>
+                                    .
+                                  </bodyText>
+                                </OTCompoundDoc>
+                              </choices>
+                            </OTChoice>
+                          </input>
+                          <correctAnswer>
+                            <object refid="3c8f77ae-3ec0-4f83-ba46-b8dc38e00493"/>
+                          </correctAnswer>
+                        </OTUDLQuestion>
+                      </documentRefs>
+                    </OTCompoundDoc>
+                    <OTCompoundDoc id="6ea03ab5-cb8b-11dd-973f-1548b537a2cf" name="%6ea03ab5-cb8b-11dd-973f-1548b537a2cf" showEditBar="true">
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <div class="subtitle">Question 5</div>
+                              <img src="images/analog.jpg" />
+                              <br />
+                              <br />
+                              <object refid="8d17c272-cb8b-11dd-973f-1548b537a2cf" />
+                              <br />
+                              <br />
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                        <OTUDLQuestion id="8d17c272-cb8b-11dd-973f-1548b537a2cf" name="Question" showConvertButton="false">
+                          <prompt>
+                            <OTCompoundDoc>
+                              <bodyText>5. The voltage on the base should be</bodyText>
+                            </OTCompoundDoc>
+                          </prompt>
+                          <input>
+                            <OTChoice name="Multiple choice" alignContent="0">
+                              <choices>
+                                <OTCompoundDoc name="a. 9 V">
+                                  <bodyText>a. 9 V</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="b. 12 V">
+                                  <bodyText>b. 12 V</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="c. 18 V">
+                                  <bodyText>c. 18 V</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc id="a0c8ce57-cb8b-11dd-973f-1548b537a2cf" name="d. 6V">
+                                  <bodyText>d. 6V</bodyText>
+                                </OTCompoundDoc>
+                              </choices>
+                            </OTChoice>
+                          </input>
+                          <correctAnswer>
+                            <object refid="a0c8ce57-cb8b-11dd-973f-1548b537a2cf" />
+                          </correctAnswer>
+                        </OTUDLQuestion>
+                      </documentRefs>
+                    </OTCompoundDoc>
+                    <OTCompoundDoc id="be5aff28-cb8b-11dd-973f-1548b537a2cf" name="%be5aff28-cb8b-11dd-973f-1548b537a2cf" showEditBar="true">
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <div class="subtitle">Question 6</div>
+                              <img src="images/analog.jpg" />
+                              <br />
+                              <br />
+                              <object refid="d182b6bd-cb8b-11dd-973f-1548b537a2cf" />
+                              <br />
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                        <OTUDLQuestion id="d182b6bd-cb8b-11dd-973f-1548b537a2cf" name="Question" showConvertButton="false">
+                          <prompt>
+                            <OTCompoundDoc>
+                              <bodyText>6. The voltage on the collector should be</bodyText>
+                            </OTCompoundDoc>
+                          </prompt>
+                          <input>
+                            <OTChoice name="Multiple choice" alignContent="0">
+                              <choices>
+                                <OTCompoundDoc name="a. 9 V">
+                                  <bodyText>a. 9 V</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc id="f5c65078-cb8b-11dd-973f-1548b537a2cf" name="b. 12 V">
+                                  <bodyText>b. 12 V</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="c. 18 V">
+                                  <bodyText>c. 18 V</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="d. 6 V">
+                                  <bodyText>d. 6 V</bodyText>
+                                </OTCompoundDoc>
+                              </choices>
+                            </OTChoice>
+                          </input>
+                          <correctAnswer>
+                            <object refid="f5c65078-cb8b-11dd-973f-1548b537a2cf" />
+                          </correctAnswer>
+                        </OTUDLQuestion>
+                      </documentRefs>
+                    </OTCompoundDoc>
+                    <OTCompoundDoc id="1099af63-cb8c-11dd-973f-1548b537a2cf" name="%1099af63-cb8c-11dd-973f-1548b537a2cf" showEditBar="true">
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <div class="subtitle">Question 7</div>
+                              <img src="images/analog.jpg" />
+                              <br />
+                              <br />
+                              <object refid="1b917478-cb8c-11dd-973f-1548b537a2cf" />
+                              <br />
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                        <OTUDLQuestion id="1b917478-cb8c-11dd-973f-1548b537a2cf" name="Question" showConvertButton="false">
+                          <prompt>
+                            <OTCompoundDoc>
+                              <bodyText>7. The voltage on the emitter should be</bodyText>
+                            </OTCompoundDoc>
+                          </prompt>
+                          <input>
+                            <OTChoice name="Multiple choice" alignContent="0">
+                              <choices>
+                                <OTCompoundDoc name="a. 9 V">
+                                  <bodyText>a. 9 V</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="b. 12 V">
+                                  <bodyText>b. 12 V</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="c. 18 V">
+                                  <bodyText>c. 18 V</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc id="2af8c7bd-cb8c-11dd-973f-1548b537a2cf" name="d. 6 V">
+                                  <bodyText>d. 6 V</bodyText>
+                                </OTCompoundDoc>
+                              </choices>
+                            </OTChoice>
+                          </input>
+                          <correctAnswer>
+                            <object refid="2af8c7bd-cb8c-11dd-973f-1548b537a2cf" />
+                          </correctAnswer>
+                        </OTUDLQuestion>
+                      </documentRefs>
+                    </OTCompoundDoc>
+                    <OTCompoundDoc id="30f622d2-cb8c-11dd-973f-1548b537a2cf" name="%30f622d2-cb8c-11dd-973f-1548b537a2cf" showEditBar="true">
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <div class="subtitle">Question 8</div>
+                              <img src="images/analog.jpg" />
+                              <br />
+                              <br />
+                              <object refid="44313b57-cb8c-11dd-973f-1548b537a2cf" />
+                              <br />
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                        <OTUDLQuestion id="44313b57-cb8c-11dd-973f-1548b537a2cf" name="Question" showConvertButton="false">
+                          <prompt>
+                            <OTCompoundDoc>
+                              <bodyText>8. For a silicon transistor, the difference between the voltage on the base and the voltage on the emitter should be</bodyText>
+                            </OTCompoundDoc>
+                          </prompt>
+                          <input>
+                            <OTChoice name="Multiple choice" alignContent="0">
+                              <choices>
+                                <OTCompoundDoc name="a. 5 V">
+                                  <bodyText>a. 5 V</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="b. 4 V">
+                                  <bodyText>b. 4 V</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="c. 9 V">
+                                  <bodyText>c. 9 V</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc id="59c7f72c-cb8c-11dd-973f-1548b537a2cf" name="d. 7 V">
+                                  <bodyText>d. 7 V</bodyText>
+                                </OTCompoundDoc>
+                              </choices>
+                            </OTChoice>
+                          </input>
+                          <correctAnswer>
+                            <object refid="59c7f72c-cb8c-11dd-973f-1548b537a2cf" />
+                          </correctAnswer>
+                        </OTUDLQuestion>
+                      </documentRefs>
+                    </OTCompoundDoc>
+                    <OTCompoundDoc id="5d5340d1-cb8c-11dd-973f-1548b537a2cf" name="%5d5340d1-cb8c-11dd-973f-1548b537a2cf" showEditBar="true">
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <div class="subtitle">Question 9</div>
+                              <img src="images/analog.jpg" />
+                              <br />
+                              <br />
+                              <object refid="62ede276-cb8c-11dd-973f-1548b537a2cf" />
+                              <br />
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                        <OTUDLQuestion id="62ede276-cb8c-11dd-973f-1548b537a2cf" name="Question" showConvertButton="false">
+                          <prompt>
+                            <OTCompoundDoc>
+                              <bodyText>9. The DC voltage across the load resistor should be</bodyText>
+                            </OTCompoundDoc>
+                          </prompt>
+                          <input>
+                            <OTChoice name="Multiple choice" alignContent="0">
+                              <choices>
+                                <OTCompoundDoc id="6b4c8628-cb8c-11dd-973f-1548b537a2cf" name="a. 0">
+                                  <bodyText>a. 0</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="b. 5">
+                                  <bodyText>b. 5</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="c. 10">
+                                  <bodyText>c. 10</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="d. 15">
+                                  <bodyText>d. 15</bodyText>
+                                </OTCompoundDoc>
+                              </choices>
+                            </OTChoice>
+                          </input>
+                          <correctAnswer>
+                            <object refid="6b4c8628-cb8c-11dd-973f-1548b537a2cf" />
+                          </correctAnswer>
+                        </OTUDLQuestion>
+                      </documentRefs>
+                    </OTCompoundDoc>
+                    <OTCompoundDoc id="76631de0-cb8c-11dd-973f-1548b537a2cf" name="%76631de0-cb8c-11dd-973f-1548b537a2cf" showEditBar="true">
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <div class="subtitle">Question 10</div>
+                              <img src="images/analog.jpg" />
+                              <br />
+                              <br />
+                              <object refid="9ec148c5-cb8c-11dd-973f-1548b537a2cf" />
+                              <br />
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                        <OTUDLQuestion id="9ec148c5-cb8c-11dd-973f-1548b537a2cf" name="Question" showConvertButton="false">
+                          <prompt>
+                            <OTCompoundDoc>
+                              <bodyText>10. How should the current through the collector compare to the current through the emitter?</bodyText>
+                            </OTCompoundDoc>
+                          </prompt>
+                          <input>
+                            <OTChoice name="Multiple choice" alignContent="0">
+                              <choices>
+                                <OTCompoundDoc name="a. The collector current is much smaller than the emitter current.">
+                                  <bodyText>a. The collector current is much smaller than the emitter current.</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc id="af25e8c8-cb8c-11dd-973f-1548b537a2cf" name="b. The collector current is about the same as the emitter current.">
+                                  <bodyText>b. The collector current is about the same as the emitter current.</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="c. The collector current is much larger than the emitter current.">
+                                  <bodyText>c. The collector current is much larger than the emitter current.</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="d. The collector current is opposite the emitter current.">
+                                  <bodyText>d. The collector current is opposite the emitter current.</bodyText>
+                                </OTCompoundDoc>
+                              </choices>
+                            </OTChoice>
+                          </input>
+                          <correctAnswer>
+                            <object refid="af25e8c8-cb8c-11dd-973f-1548b537a2cf" />
+                          </correctAnswer>
+                        </OTUDLQuestion>
+                      </documentRefs>
+                    </OTCompoundDoc>
+                    <OTCompoundDoc id="b41640af-cb8c-11dd-973f-1548b537a2cf" name="%b41640af-cb8c-11dd-973f-1548b537a2cf" showEditBar="true">
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <div class="subtitle">Question 11</div>
+                              <img src="images/analog.jpg" />
+                              <br />
+                              <br />
+                              <object refid="bbfef104-cb8c-11dd-973f-1548b537a2cf" />
+                              <br />
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                        <OTUDLQuestion id="bbfef104-cb8c-11dd-973f-1548b537a2cf" name="Question" showConvertButton="false">
+                          <prompt>
+                            <OTCompoundDoc>
+                              <bodyText>11. If the voltage on the collector is 18V, which of the following is the probable cause?</bodyText>
+                            </OTCompoundDoc>
+                          </prompt>
+                          <input>
+                            <OTChoice name="Multiple choice" alignContent="0">
+                              <choices>
+                                <OTCompoundDoc id="e245ada6-cb8c-11dd-973f-1548b537a2cf" name="a. R&lt;sub&gt;1&lt;/sub&gt; is open.">
+                                  <bodyText>
+                                    a. R
+                                    <sub>1</sub>
+                                    is open.
+                                  </bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="b. The transistor is saturated.">
+                                  <bodyText>b. The transistor is saturated.</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="c. The resistance of R&lt;sub&gt;2&lt;/sub&gt; is too large">
+                                  <bodyText>
+                                    c. The resistance of R
+                                    <sub>2</sub>
+                                    is too large
+                                  </bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="d. R&lt;sub&gt;3&lt;/sub&gt; is open.">
+                                  <bodyText>
+                                    d. R
+                                    <sub>3</sub>
+                                    is open.
+                                  </bodyText>
+                                </OTCompoundDoc>
+                              </choices>
+                            </OTChoice>
+                          </input>
+                          <correctAnswer>
+                            <object refid="e245ada6-cb8c-11dd-973f-1548b537a2cf" />
+                          </correctAnswer>
+                        </OTUDLQuestion>
+                      </documentRefs>
+                    </OTCompoundDoc>
+                    <OTCompoundDoc id="efd16416-cb8c-11dd-973f-1548b537a2cf" name="%efd16416-cb8c-11dd-973f-1548b537a2cf" showEditBar="true">
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <div class="subtitle">Question 12</div>
+                              <img src="images/analog.jpg" />
+                              <br />
+                              <br />
+                              <object refid="fe45579b-cb8c-11dd-973f-1548b537a2cf" />
+                              <br />
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                        <OTUDLQuestion id="fe45579b-cb8c-11dd-973f-1548b537a2cf" name="Question" showConvertButton="false">
+                          <prompt>
+                            <OTCompoundDoc>
+                              <bodyText>12. If the voltage on the base is too high, which of the following is the probable cause?</bodyText>
+                            </OTCompoundDoc>
+                          </prompt>
+                          <input>
+                            <OTChoice name="Multiple choice" alignContent="0">
+                              <choices>
+                                <OTCompoundDoc name="a. The resistance of R&lt;sub&gt;3&lt;/sub&gt; is too large.">
+                                  <bodyText>
+                                    a. The resistance of R
+                                    <sub>3</sub>
+                                    is too large.
+                                  </bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="b. R&lt;sub&gt;4&lt;/sub&gt; is open.">
+                                  <bodyText>
+                                    b. R
+                                    <sub>4</sub>
+                                    is open.
+                                  </bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="c. The resistance of R&lt;sub&gt;5&lt;/sub&gt; is zero.">
+                                  <bodyText>
+                                    c. The resistance of R
+                                    <sub>5</sub>
+                                    is zero.
+                                  </bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc id="4509fd89-cb8e-11dd-973f-1548b537a2cf" name="d. R&lt;sub&gt;2&lt;/sub&gt; is open">
+                                  <bodyText>
+                                    d. R
+                                    <sub>2</sub>
+                                    is open
+                                  </bodyText>
+                                </OTCompoundDoc>
+                              </choices>
+                            </OTChoice>
+                          </input>
+                          <correctAnswer>
+                            <object refid="4509fd89-cb8e-11dd-973f-1548b537a2cf" />
+                          </correctAnswer>
+                        </OTUDLQuestion>
+                      </documentRefs>
+                    </OTCompoundDoc>
+                    <OTCompoundDoc id="333e4948-cb8d-11dd-973f-1548b537a2cf" name="%333e4948-cb8d-11dd-973f-1548b537a2cf" showEditBar="true">
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <div class="subtitle">Question 13</div>
+                              <img src="images/analog.jpg" />
+                              <br />
+                              <br />
+                              <object refid="384eac4d-cb8d-11dd-973f-1548b537a2cf" />
+                              <br />
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                        <OTUDLQuestion id="384eac4d-cb8d-11dd-973f-1548b537a2cf" name="Question" showConvertButton="false">
+                          <prompt>
+                            <OTCompoundDoc>
+                              <bodyText>13.  If the transistor is cutoff, which of the following conditions will occur?</bodyText>
+                            </OTCompoundDoc>
+                          </prompt>
+                          <input>
+                            <OTChoice name="Multiple choice" alignContent="0">
+                              <choices>
+                                <OTCompoundDoc name="a. The voltage across R&lt;sub&gt;4&lt;/sub&gt; will be too high.">
+                                  <bodyText>
+                                    a. The voltage across R
+                                    <sub>4</sub>
+                                    will be too high.
+                                  </bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="b. The voltage across R&lt;sub&gt;2&lt;/sub&gt; will be too high.">
+                                  <bodyText>
+                                    b. The voltage across R
+                                    <sub>2</sub>
+                                    will be too high.
+                                  </bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc id="5ca09dd1-cb8d-11dd-973f-1548b537a2cf" name="c. The voltage across R&lt;sub&gt;3&lt;/sub&gt; will be too low.">
+                                  <bodyText>
+                                    c. The voltage across R
+                                    <sub>3</sub>
+                                    will be too low.
+                                  </bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="d. The voltage across R&lt;sub&gt;1&lt;/sub&gt; will be too low.">
+                                  <bodyText>
+                                    d. The voltage across R
+                                    <sub>1</sub>
+                                    will be too low.
+                                  </bodyText>
+                                </OTCompoundDoc>
+                              </choices>
+                            </OTChoice>
+                          </input>
+                          <correctAnswer>
+                            <object refid="5ca09dd1-cb8d-11dd-973f-1548b537a2cf" />
+                          </correctAnswer>
+                        </OTUDLQuestion>
+                      </documentRefs>
+                    </OTCompoundDoc>
+                    <OTCompoundDoc id="824c5233-cb8d-11dd-973f-1548b537a2cf" name="%824c5233-cb8d-11dd-973f-1548b537a2cf" showEditBar="true">
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <div class="subtitle">Good job!</div>
+                              You have completed the Analog DC Troubleshooting Test. To close this 
+          test, and save your answers, click on the 'X' button at the top of 
+          this window.
+                              <br />
+                              <br />
+                              Thank you!
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                    </OTCompoundDoc>
+                  </cards>
+                </OTCardContainer>
+              </content>
+              <footer>
+                <object refid="${nav-bar}" />
+              </footer>
+              <north>
+                <object refid="2767fe20-6c7d-11dc-8314-0800200c9a66!/section_1/header" />
+              </north>
+              <center>
+                <object refid="${activity-card-container}" />
+              </center>
+              <south>
+                <object refid="${nav-bar}" />
+              </south>
+            </OTUDLSection>
+          </activity>
+          <script>
+            <object refid="${authoring-script}" />
+          </script>
+        </OTCurriculumUnit>
+      </root>
+      <library>
+        <OTViewChild local_id="script_report_object" useScrollPane="true">
+          <object>
+            <object refid="${unit}"/>
+          </object>
+          <viewid>
+            <object refid="${report_view}"/>
+          </viewid>
+        </OTViewChild>
+        <OTXHTMLScriptViewEntry local_id="report_view"
+          objectClass="org.concord.framework.otrunk.OTObject" viewClass="org.concord.otrunk.script.ui.OTXHTMLScriptView">
+          <script>
+            <OTJRuby local_id="erb_controller" src="scripts/reports/individual/multichoice-report.rb" />
+          </script>
+          <variables>
+            <OTScriptVariable name="unit">
+              <reference>
+                <object refid="${unit}">
+                </object>
+              </reference>
+            </OTScriptVariable>
+            <OTScriptVariable name="template">
+              <reference>
+                <OTBlob src="scripts/reports/individual/multichoice-summary.html.erb" />
+              </reference>
+            </OTScriptVariable>
+            <OTScriptVariable name="utilScript">
+              <reference>
+                <OTBlob src="scripts/util.rb" />
+              </reference>
+            </OTScriptVariable>
+            <OTScriptVariable name="controllerScript">
+              <reference>
+                <OTBlob src="scripts/controller.rb" />
+              </reference>
+            </OTScriptVariable>
+            <OTScriptVariable name="otrunkScript">
+              <reference>
+                <OTBlob src="scripts/otrunk-helper.rb" />
+              </reference>
+            </OTScriptVariable>
+            <OTScriptVariable name="questionScript">
+              <reference>
+                <OTBlob src="scripts/questions.rb" />
+              </reference>
+            </OTScriptVariable>
+          </variables>
+        </OTXHTMLScriptViewEntry>
+        <object refid="b6350a20-e3b4-11dc-95ff-0800200c9a66" />
+        <OTUDLMenu local_id="section-1-menu">
+          <cardContainer>
+            <object refid="${activity-card-container}" />
+          </cardContainer>
+          <menuRule>
+            <object refid="${page-rule}" />
+          </menuRule>
+        </OTUDLMenu>
+        <OTSnapshotAlbum local_id="album" />
+        <OTUDLMenuRule local_id="page-rule" jumpToViewedCard="true" stepAhead="true" />
+        <OTJavascript local_id="change_page.js" src="http://continuum.concord.org/otrunk/examples/LOOPS/scripts/change_page.js" />
+        <OTJavascript local_id="show_message.js" src="http://continuum.concord.org/otrunk/examples/LOOPS/scripts/show_message.js" />
+        <OTJavascript local_id="loops_authoring_script.js" src="http://continuum.concord.org/otrunk/examples/LOOPS/scripts/loops_authoring_script.js" />
+        <OTScriptObject local_id="authoring-script">
+          <variables>
+            <OTScriptVariable name="cardContainer">
+              <reference>
+                <object refid="${activity-card-container}" />
+              </reference>
+            </OTScriptVariable>
+            <OTScriptVariable name="system">
+              <reference>
+                <object refid="${system}" />
+              </reference>
+            </OTScriptVariable>
+            <OTScriptVariable name="menuPageRule">
+              <reference>
+                <object refid="${page-rule}" />
+              </reference>
+            </OTScriptVariable>
+          </variables>
+          <script>
+            <object refid="${loops_authoring_script.js}" />
+          </script>
+          <scriptState />
+        </OTScriptObject>
+        <OTUDLNavBar local_id="nav-bar">
+          <menuView>
+            <object refid="29dc5ef0-c453-11dc-95ff-0800200c9a66" />
+          </menuView>
+          <cssColor>
+            <object refid="31193bb0-c44f-11dc-95ff-0800200c9a66" />
+          </cssColor>
+        </OTUDLNavBar>
+      </library>
+    </OTSystem>
+  </objects>
+</otrunk>
+
