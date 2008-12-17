@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Aggregate report for multiple choice test "Troubleshooting the Digital Circuit" -->
+<otrunk id="4d526bc3-f5c9-46d4-b573-881bd4415d52">
+	<imports>
+    <import class="org.concord.framework.otrunk.wrapper.OTBlob" />    
+    <import class="org.concord.framework.otrunk.view.OTFrame" />
+		<import class="org.concord.otrunk.OTInclude" />
+		<import class="org.concord.otrunk.OTIncludeRootObject" />
+    <import class="org.concord.otrunk.OTSystem" />
+    <import class="org.concord.otrunk.script.OTScriptEngineBundle" />
+    <import class="org.concord.otrunk.script.OTScriptEngineEntry" />
+    <import class="org.concord.otrunk.script.jruby.OTJRuby" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariable" />
+    <import class="org.concord.otrunk.script.ui.OTXHTMLScriptViewEntry" />
+    <import class="org.concord.otrunk.ui.OTText"/>
+    <import class="org.concord.otrunk.view.OTMultiUserRoot" />
+		<import class="org.concord.otrunk.view.OTViewBundle" />
+    <import class="org.concord.otrunk.view.OTViewEntry" />		
+		<import class="org.concord.otrunk.view.OTViewMode" />
+    <import class="org.concord.otrunk.view.document.OTCssText" />
+		<import class="org.concord.otrunk.view.document.OTDocumentViewConfig" />
+	</imports>
+	<objects>
+		<OTSystem local_id="system">
+			<bundles>
+				<OTViewBundle showLeftPanel="false">
+					<frame>
+						<OTFrame width="850" height="600" />
+					</frame>
+					<viewEntries>
+						<OTViewEntry objectClass="org.concord.otrunk.view.OTMultiUserRoot"
+							viewClass="org.concord.otrunk.view.OTMultiUserRootView" />
+						<OTDocumentViewConfig
+							  objectClass="org.concord.otrunk.view.document.OTDocument"
+							  viewClass="org.concord.otrunk.view.document.OTDocumentView">
+              <cssBlocks>
+                <OTCssText src="stylesheets/report.css"/>
+              </cssBlocks>
+					  </OTDocumentViewConfig>
+					</viewEntries>
+				</OTViewBundle>
+				<OTScriptEngineBundle>
+					<engines>
+						<OTScriptEngineEntry objectClass="org.concord.otrunk.script.jruby.OTJRuby"
+							engineClass="org.concord.otrunk.script.jruby.OTJRubyEngine" />
+					</engines>
+				</OTScriptEngineBundle>
+			</bundles>
+			<root>
+				<OTMultiUserRoot local_id="multi_user_root"
+					reportTemplateViewEntry="${report_unit_view}">
+					<userList>
+						<!--
+							the local_id is so this can be used as a report template in the
+							DIY
+						-->
+						<OTIncludeRootObject local_id="external_user_list_url"
+							href="http://capa.diy.concord.org/external_otrunk_activities/30/ot_learner_data.xml" />
+						<!-- <OTIncludeRootObject local_id="external_user_list_url"
+							href="sh_analog_rpt.xml" />-->
+					</userList>
+					<reportTemplate>
+						<OTIncludeRootObject local_id="external_activity_url"
+							href="capa-mc-test-analog.otml" />
+					</reportTemplate>
+				</OTMultiUserRoot>
+			</root>
+			<library>
+				<OTXHTMLScriptViewEntry local_id="report_unit_view"
+					objectClass="org.concord.framework.otrunk.OTObject" viewClass="org.concord.otrunk.script.ui.OTXHTMLScriptView">
+					<script>
+						<OTJRuby local_id="erb_controller" src="scripts/reports/aggregate/multichoice-report.rb" />
+					</script>
+					<variables>
+						<OTScriptVariable name="template">
+							<reference>
+								<OTBlob src="scripts/reports/aggregate/multichoice-summary.html.erb" />
+							</reference>
+						</OTScriptVariable>
+						<OTScriptVariable name="title">
+							<reference>
+								<OTText text="Multiple Choice Test: Troubleshooting Analog DC Circuits"/>
+							</reference>
+						</OTScriptVariable>
+						<OTScriptVariable name="csv_view">
+							<reference>
+								<object refid="${report_unit_csv_view}"/>
+							</reference>
+						</OTScriptVariable>
+            <OTScriptVariable name="utilScript">
+              <reference>
+                <OTBlob src="scripts/util.rb" />
+              </reference>
+            </OTScriptVariable>
+            <OTScriptVariable name="controllerScript">
+              <reference>
+                <OTBlob src="scripts/controller.rb" />
+              </reference>
+            </OTScriptVariable>
+            <OTScriptVariable name="otrunkScript">
+              <reference>
+                <OTBlob src="scripts/otrunk-helper.rb" />
+              </reference>
+            </OTScriptVariable>
+            <OTScriptVariable name="questionScript">
+              <reference>
+                <OTBlob src="scripts/questions.rb" />
+              </reference>
+            </OTScriptVariable>
+					</variables>
+				</OTXHTMLScriptViewEntry>
+				<OTXHTMLScriptViewEntry local_id="report_unit_csv_view"
+					objectClass="org.concord.framework.otrunk.OTObject" viewClass="org.concord.otrunk.script.ui.OTXHTMLScriptView">
+					<script>
+						<object refid="${erb_controller}"/>
+					</script>
+					<variables>
+						<OTScriptVariable name="template">
+							<reference>
+								<OTBlob src="scripts/reports/aggregate/multichoice-csv.html.erb" />
+							</reference>
+						</OTScriptVariable>
+						<OTScriptVariable name="unit_view">
+							<reference>
+								<object refid="${report_unit_view}"/>
+							</reference>
+						</OTScriptVariable>
+            <OTScriptVariable name="utilScript">
+              <reference>
+                <OTBlob src="scripts/util.rb" />
+              </reference>
+            </OTScriptVariable>
+            <OTScriptVariable name="controllerScript">
+              <reference>
+                <OTBlob src="scripts/controller.rb" />
+              </reference>
+            </OTScriptVariable>
+            <OTScriptVariable name="otrunkScript">
+              <reference>
+                <OTBlob src="scripts/otrunk-helper.rb" />
+              </reference>
+            </OTScriptVariable>
+            <OTScriptVariable name="questionScript">
+              <reference>
+                <OTBlob src="scripts/questions.rb" />
+              </reference>
+            </OTScriptVariable>
+					</variables>
+				</OTXHTMLScriptViewEntry>
+			</library>
+		</OTSystem>
+	</objects>
+</otrunk>
