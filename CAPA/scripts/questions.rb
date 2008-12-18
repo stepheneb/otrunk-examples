@@ -1,3 +1,4 @@
+include_class 'java.lang.System'
 include_class 'org.concord.otrunk.capa.question.OTEmbeddedTextInput'
 include_class 'org.concord.otrunk.ui.question.OTQuestion'
 
@@ -31,7 +32,7 @@ class Questions
     choices = question.getInput.getChoices.getVector
     num = getChoiceNum(choices, answer)
     if num == 0
-      err("correctAnswerNum: Correct answer not found")
+      Util.error("correctAnswerNum: Correct answer not found")
     end
     return num
   end
