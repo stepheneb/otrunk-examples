@@ -2,11 +2,11 @@
 <!-- Aggregate report for performance assessment "Measuring Resistance" -->
 
 <otrunk id="b14b4116-78a1-49da-988b-6dd8131b399f">
-	<imports>
+  <imports>
     <import class="org.concord.framework.otrunk.view.OTFrame" />
     <import class="org.concord.framework.otrunk.wrapper.OTBlob" />
-		<import class="org.concord.otrunk.OTInclude" />
-		<import class="org.concord.otrunk.OTIncludeRootObject" />
+    <import class="org.concord.otrunk.OTInclude" />
+    <import class="org.concord.otrunk.OTIncludeRootObject" />
     <import class="org.concord.otrunk.OTSystem" />
     <import class="org.concord.otrunk.script.jruby.OTJRuby" />
     <import class="org.concord.otrunk.script.OTScriptEngineBundle" />
@@ -15,95 +15,100 @@
     <import class="org.concord.otrunk.script.ui.OTXHTMLScriptViewEntry" />
     <import class="org.concord.otrunk.ui.OTText"/>
     <import class="org.concord.otrunk.view.OTMultiUserRoot" />
-		<import class="org.concord.otrunk.view.OTViewBundle" />
-    <import class="org.concord.otrunk.view.OTViewEntry" />		
-		<import class="org.concord.otrunk.view.OTViewMode" />
-    <import class="org.concord.otrunk.view.document.OTCssText" />       
-		<import class="org.concord.otrunk.view.document.OTDocumentViewConfig" />
-	</imports>
+    <import class="org.concord.otrunk.view.OTViewBundle" />
+    <import class="org.concord.otrunk.view.OTViewEntry" />
+    <import class="org.concord.otrunk.view.OTViewMode" />
+    <import class="org.concord.otrunk.view.document.OTCssText" />
+    <import class="org.concord.otrunk.view.document.OTDocumentViewConfig" />
+  </imports>
   <idMap>
     <idMapping local_id="rubric_xx" id="47cab8b0-d9b8-11dc-95ff-0800200c9a66"/>
-  	<idMapping local_id="script_object" id="352158e0-d9b8-11dc-95ff-0800200c9a66!/activity_script"/>
+    <idMapping local_id="script_object" id="352158e0-d9b8-11dc-95ff-0800200c9a66!/activity_script"/>
   </idMap>
-	<objects>
-		<OTSystem local_id="system">
-			<includes>
-  		  <OTInclude href="capa-resistance3-activity.otml" />
-			</includes>
-			<bundles>
-				<OTViewBundle showLeftPanel="false">
-					<frame>
-						<OTFrame width="850" height="600" />
-					</frame>
-					<viewEntries>
-						<OTViewEntry objectClass="org.concord.otrunk.view.OTMultiUserRoot"
-							viewClass="org.concord.otrunk.view.OTMultiUserRootView" />
-						<OTDocumentViewConfig
-							  objectClass="org.concord.otrunk.view.document.OTDocument"
-							  viewClass="org.concord.otrunk.view.document.OTDocumentView">
+  <objects>
+    <OTSystem local_id="system">
+      <includes>
+        <OTInclude href="capa-resistance3-activity.otml" />
+      </includes>
+      <bundles>
+        <OTViewBundle showLeftPanel="false">
+          <frame>
+            <OTFrame width="850" height="600" />
+          </frame>
+          <viewEntries>
+            <OTViewEntry objectClass="org.concord.otrunk.view.OTMultiUserRoot"
+              viewClass="org.concord.otrunk.view.OTMultiUserRootView" />
+            <OTDocumentViewConfig
+                objectClass="org.concord.otrunk.view.document.OTDocument"
+                viewClass="org.concord.otrunk.view.document.OTDocumentView">
               <cssBlocks>
                 <OTCssText src="stylesheets/report.css"/>
               </cssBlocks>
              </OTDocumentViewConfig>
-					</viewEntries>
-				</OTViewBundle>
-				<OTScriptEngineBundle>
-					<engines>
-						<OTScriptEngineEntry objectClass="org.concord.otrunk.script.jruby.OTJRuby"
-							engineClass="org.concord.otrunk.script.jruby.OTJRubyEngine" />
-					</engines>
-				</OTScriptEngineBundle>
-			</bundles>
+          </viewEntries>
+        </OTViewBundle>
+        <OTScriptEngineBundle>
+          <engines>
+            <OTScriptEngineEntry objectClass="org.concord.otrunk.script.jruby.OTJRuby"
+              engineClass="org.concord.otrunk.script.jruby.OTJRubyEngine" />
+          </engines>
+        </OTScriptEngineBundle>
+      </bundles>
       <root>
-				<OTMultiUserRoot local_id="multi_user_root"
-					reportTemplateViewEntry="${report_unit_view}">
-					<userList>
-						<!--
-							the local_id is so this can be used as a report template in the
-							DIY
-						-->
-						<OTIncludeRootObject local_id="external_user_list_url"
-							href="http://capa.diy.concord.org/external_otrunk_activities/21/ot_learner_data.xml" />
-						<!-- <OTIncludeRootObject local_id="external_user_list_url" href="sh_res.xml" />-->
-					</userList>
-					<reportTemplate>
-						<OTIncludeRootObject local_id="external_activity_url"
-							href="capa-resistance3-activity.otml" />
-					</reportTemplate>
-				</OTMultiUserRoot>
-			</root>
-			<library>
-				<OTXHTMLScriptViewEntry local_id="report_unit_view"
-					objectClass="org.concord.framework.otrunk.OTObject" viewClass="org.concord.otrunk.script.ui.OTXHTMLScriptView">
-					<script>
-						<OTJRuby local_id="erb_controller" src="scripts/reports/aggregate/res3-report.rb" />
-					</script>
-					<variables>
-						<OTScriptVariable name="template">
-							<reference>
-								<OTBlob src="scripts/reports/aggregate/summary.html.erb" />
-							</reference>
-						</OTScriptVariable>
-						<OTScriptVariable name="rubric">
-							<reference>
-								<object refid="${rubric_xx}"/>
-							</reference>
-						</OTScriptVariable>
-						<OTScriptVariable name="scriptObject">
-							<reference>
-								<object refid="${script_object}"/>
-							</reference>
-						</OTScriptVariable>
-						<OTScriptVariable name="title">
-							<reference>
-								<OTText text="Measuring Resistance"/>
-							</reference>
-						</OTScriptVariable>
-						<OTScriptVariable name="csv_view">
-							<reference>
-								<object refid="${report_unit_csv_view}"/>
-							</reference>
-						</OTScriptVariable>
+        <OTMultiUserRoot local_id="multi_user_root"
+          reportTemplateViewEntry="${report_unit_view}">
+          <userList>
+            <!--
+              the local_id is so this can be used as a report template in the
+              DIY
+            -->
+            <OTIncludeRootObject local_id="external_user_list_url"
+              href="http://capa.diy.concord.org/external_otrunk_activities/21/ot_learner_data.xml" />
+            <!-- <OTIncludeRootObject local_id="external_user_list_url" href="sh_res.xml" />-->
+          </userList>
+          <reportTemplate>
+            <OTIncludeRootObject local_id="external_activity_url"
+              href="capa-resistance3-activity.otml" />
+          </reportTemplate>
+        </OTMultiUserRoot>
+      </root>
+      <library>
+        <OTXHTMLScriptViewEntry local_id="report_unit_view"
+          objectClass="org.concord.framework.otrunk.OTObject" viewClass="org.concord.otrunk.script.ui.OTXHTMLScriptView">
+          <script>
+            <OTJRuby local_id="erb_controller" src="scripts/reports/aggregate/res3-report.rb" />
+          </script>
+          <variables>
+            <OTScriptVariable name="template">
+              <reference>
+                <OTBlob src="scripts/reports/aggregate/summary.html.erb" />
+              </reference>
+            </OTScriptVariable>
+            <OTScriptVariable name="rubric">
+              <reference>
+                <object refid="${rubric_xx}"/>
+              </reference>
+            </OTScriptVariable>
+            <OTScriptVariable name="scriptObject">
+              <reference>
+                <object refid="${script_object}"/>
+              </reference>
+            </OTScriptVariable>
+            <OTScriptVariable name="title">
+              <reference>
+                <OTText text="Measuring Resistance"/>
+              </reference>
+            </OTScriptVariable>
+            <OTScriptVariable name="csv_view">
+              <reference>
+                <object refid="${report_unit_csv_view}"/>
+              </reference>
+            </OTScriptVariable>
+            <OTScriptVariable name="rubric_view">
+              <reference>
+                <object refid="${rubric_view}"/>
+              </reference>
+            </OTScriptVariable>
             <OTScriptVariable name="utilScript">
               <reference>
                 <OTBlob src="scripts/util.rb" />
@@ -129,34 +134,39 @@
                 <OTBlob src="scripts/assessment.rb" />
               </reference>
             </OTScriptVariable>
-					</variables>
-				</OTXHTMLScriptViewEntry>
-				<OTXHTMLScriptViewEntry local_id="report_unit_csv_view"
-					objectClass="org.concord.framework.otrunk.OTObject" viewClass="org.concord.otrunk.script.ui.OTXHTMLScriptView">
-					<script>
-						<object refid="${erb_controller}"/>
-					</script>
-					<variables>
-						<OTScriptVariable name="template">
-							<reference>
-								<OTBlob src="scripts/reports/aggregate/csv.html.erb" />
-							</reference>
-						</OTScriptVariable>
-						<OTScriptVariable name="rubric">
-							<reference>
-								<object refid="${rubric_xx}"/>
-							</reference>
-						</OTScriptVariable>
-						<OTScriptVariable name="scriptObject">
-							<reference>
-								<object refid="${script_object}"/>
-							</reference>
-						</OTScriptVariable>
-						<OTScriptVariable name="unit_view">
-							<reference>
-								<object refid="${report_unit_view}"/>
-							</reference>
-						</OTScriptVariable>
+          </variables>
+        </OTXHTMLScriptViewEntry>
+        <OTXHTMLScriptViewEntry local_id="report_unit_csv_view"
+          objectClass="org.concord.framework.otrunk.OTObject" viewClass="org.concord.otrunk.script.ui.OTXHTMLScriptView">
+          <script>
+            <object refid="${erb_controller}"/>
+          </script>
+          <variables>
+            <OTScriptVariable name="template">
+              <reference>
+                <OTBlob src="scripts/reports/aggregate/csv.html.erb" />
+              </reference>
+            </OTScriptVariable>
+            <OTScriptVariable name="rubric">
+              <reference>
+                <object refid="${rubric_xx}"/>
+              </reference>
+            </OTScriptVariable>
+            <OTScriptVariable name="scriptObject">
+              <reference>
+                <object refid="${script_object}"/>
+              </reference>
+            </OTScriptVariable>
+            <OTScriptVariable name="unit_view">
+              <reference>
+                <object refid="${report_unit_view}"/>
+              </reference>
+            </OTScriptVariable>
+            <OTScriptVariable name="rubric_view">
+              <reference>
+                <object refid="${rubric_view}"/>
+              </reference>
+            </OTScriptVariable>
             <OTScriptVariable name="utilScript">
               <reference>
                 <OTBlob src="scripts/util.rb" />
@@ -182,9 +192,71 @@
                 <OTBlob src="scripts/assessment.rb" />
               </reference>
             </OTScriptVariable>
-					</variables>
-				</OTXHTMLScriptViewEntry>
-			</library>
-		</OTSystem>
-	</objects>
+          </variables>
+        </OTXHTMLScriptViewEntry>
+        <OTXHTMLScriptViewEntry local_id="rubric_view" objectClass="org.concord.framework.otrunk.OTObject" viewClass="org.concord.otrunk.script.ui.OTXHTMLScriptView">
+          <script>
+            <object refid="${erb_controller}" />
+          </script>
+          <variables>
+            <OTScriptVariable name="template">
+              <reference>
+                <OTBlob src="scripts/reports/aggregate/rubric.html.erb" />
+              </reference>
+            </OTScriptVariable>
+            <OTScriptVariable name="rubric">
+              <reference>
+                <object refid="${rubric_xx}"/>
+              </reference>
+            </OTScriptVariable>
+            <OTScriptVariable name="scriptObject">
+              <reference>
+                <object refid="${script_object}"/>
+              </reference>
+            </OTScriptVariable>
+            <OTScriptVariable name="title">
+              <reference>
+                <OTText text="Troubleshooting Analog DC Circuits"/>
+              </reference>
+            </OTScriptVariable>
+            <OTScriptVariable name="unit_view">
+              <reference>
+                <object refid="${report_unit_view}" />
+              </reference>
+            </OTScriptVariable>
+            <OTScriptVariable name="csv_view">
+              <reference>
+                <object refid="${report_unit_csv_view}" />
+              </reference>
+            </OTScriptVariable>
+            <OTScriptVariable name="utilScript">
+              <reference>
+                <OTBlob src="scripts/util.rb" />
+              </reference>
+            </OTScriptVariable>
+            <OTScriptVariable name="controllerScript">
+              <reference>
+                <OTBlob src="scripts/controller.rb" />
+              </reference>
+            </OTScriptVariable>
+            <OTScriptVariable name="otrunkScript">
+              <reference>
+                <OTBlob src="scripts/otrunk-helper.rb" />
+              </reference>
+            </OTScriptVariable>
+            <OTScriptVariable name="questionScript">
+              <reference>
+                <OTBlob src="scripts/questions.rb" />
+              </reference>
+            </OTScriptVariable>
+            <OTScriptVariable name="assessmentScript">
+              <reference>
+                <OTBlob src="scripts/assessment.rb" />
+              </reference>
+            </OTScriptVariable>
+          </variables>
+        </OTXHTMLScriptViewEntry>
+      </library>
+    </OTSystem>
+  </objects>
 </otrunk>

@@ -1,7 +1,16 @@
 <div class="menu">
   <table>
     <tr>
-	  <td><div class="menu_item"><%= @controller.linkToObject "CSV", @otrunkHelper.rootObject.reportTemplate, $csv_view %></div></td>
+      <td>
+        <div class="menu_item">
+          <%= @controller.linkToObject("CSV", @otrunkHelper.rootObject.reportTemplate, $csv_view) %>
+        </div>
+      </td>
+      <td>
+        <div class="menu_item">
+          <%= @controller.linkToObject("Rubric", @otrunkHelper.rootObject.reportTemplate, $rubric_view) %>
+        </div>
+      </td>
     </tr>
   </table>
 </div>
@@ -11,22 +20,26 @@
 <p>
 Class: <font color="#3030f0"> <%= @otrunkHelper.className %> </font><br/>
 Teacher: <font color="#3030f0"> <%= @otrunkHelper.teacherName %> </font>
-</p> 
+</p>
+<br/> 
 
 <% indicators = $rubric.getIndicators %>
 <% sums = [0] * (indicators.size + 1) %>
 <% numRows = 0 %>
+<% maxTotalPoints = RubricGradeUtil.getTotalMaximumPoints($rubric) %>
 
 <h3>Grades</h3>
 
 <table class="a" border="1">
+  <!-- TABLE HEADER -->
   <tr class="a">
-    <td class="a"></td>
+    <th class="a"></th>
     <% for indicator in indicators.getVector %>
-      <%= '<td class="a">' + indicator.getLabel + " (#{RubricGradeUtil.getMaximumPoints(indicator)})</td>" %>
+      <th class="a" width="60px"><%= indicator.getLabel + " (#{RubricGradeUtil.getMaximumPoints(indicator)})" %></th>
     <% end %>
-    <td class="a">Final Grade (<%= RubricGradeUtil.getTotalMaximumPoints($rubric) %>)</td>
+    <th class="a" width="60px">Final Grade (<%= RubricGradeUtil.getTotalMaximumPoints($rubric) %>)</th>
   </tr>
+  <!-- TABLE BODY -->
   <% for user in @otrunkHelper.users %>
     <% name = user.getName %>
     <% assessment = @assessment.getLastAssessment(user) %>
@@ -46,8 +59,14 @@ Teacher: <font color="#3030f0"> <%= @otrunkHelper.teacherName %> </font>
 			<% sums[i] += points %>
 	      <% end %>
         <% end %>
-        <% points = RubricGradeUtil.getTotalGrade(assessment, $rubric).getPoints() %> 
-        <td class="a"><font color="3030f0"><%= points %></font></td>
+        <% points = RubricGradeUtil.getTotalGrade(assessment, $rubric).getPoints() %>
+        <% if maxTotalPoints == 100 %>
+          <% psString = '' %>
+        <% else %>
+          <% percentage = points.to_f / maxTotalPoints * 100 %>
+          <% pcString = '(%.0f%%)' % percentage %>
+        <% end %>
+        <td class="a"><font color="3030f0"><%= "#{points} #{pcString}" %></font></td>
         <% sums[sums.length-1] += points %>
       </tr>
     <% else %>
@@ -56,14 +75,10 @@ Teacher: <font color="#3030f0"> <%= @otrunkHelper.teacherName %> </font>
   <% end %>
   
   <td class="a"><font color="#a030a0">Average</font></td>
-  <% (indicators.size + 1).times do |i| %>
+  <% indicators.size.times do |i| %>
     <td class="a"><font color="#a030a0"><%= '%.2f' % (sums[i].to_f / numRows) %></font></td>
   <% end %>
+  <% averageTotal = sums[indicators.size].to_f / numRows %>
+  <% pcString = maxTotalPoints == 100 ? '' : '(%.0f%%)' % (averageTotal / maxTotalPoints * 100) %>
+  <td class="a"><font color="#a030a0"><%= '%.2f %s' % [averageTotal, pcString] %></font></td>
 </table>
-
-
-
-
-
-
-

@@ -1,7 +1,7 @@
 <div class="menu">
   <table>
     <tr>
-	  <td><div class="menu_item"><%= @controller.linkToObject "CSV", @otrunkHelper.rootObject.reportTemplate, $csv_view %></div></td>
+    <td><div class="menu_item"><%= @controller.linkToObject "CSV", @otrunkHelper.rootObject.reportTemplate, $csv_view %></div></td>
     </tr>
   </table>
 </div>
@@ -15,31 +15,33 @@
     Teacher: <font color="#3030f0"> <%= @otrunkHelper.teacherName %> </font>
   </p> 
   
-  <table class="a" cellpadding="5px">
+  <table class="a" width="<%= 160 + 60 * @questions.questions.size %>px">
     <tr class="a">
-      <td class="a">Question #</td>
+      <th class="a" width="100px">Question #</td>
       <% for question in @questions.questions %>
-        <td class="a"><%= Util.truncate(Util.toPlainText(question.getPrompt.getBodyText), 24) %></td>  
+        <th class="a"><%= Util.truncate(Util.toPlainText(question.getPrompt.getBodyText), 24) %></td>  
       <% end %>
-      <td class="a" rowspan="2">Points<br/>(out of <%= @questions.totalMaxPoints %>)</td>
+      <th class="a" width="60px">Points<br/>(out of <%= @questions.totalMaxPoints %>)</td>
     </tr>
     <tr class="a">
-     <td class="a">Correct Answer</td>
+     <th class="a">Correct Answer</th>
      <% for question in @questions.questions %>
-     	<td class="a"><%= @questions.correctAnswerText(question) %></td> 
+       <th class="a"><%= @questions.correctAnswerText(question) %></th> 
      <% end %>
+     <th class="a"></th>
     </tr>
     <% for user in @otrunkHelper.users %>
       <tr class="a">
-  		<td class="a"><%= user.getName %></td>
-  		<% for question in @questions.questions %>
-  		<td class="a"><%= @questions.answerHtmlText(user, question) %></td>
-  		<% end %>
-  		<td class="a"><b><font color="blue"><%= @questions.getPoints(user) %></font></b></td>
+      <td class="a"><%= user.getName %></td>
+      <% for question in @questions.questions %>
+      <td class="a"><center><%= @questions.answerHtmlText(user, question) %></center></td>
+      <% end %>
+      <% pts = @questions.getPoints(user) %>
+      <td class="a"><font color="blue"><%= '%d (%.0f%%)' % [pts, pts.to_f / @questions.totalMaxPoints * 100] %></font></td>
       </tr>
     <% end %>
   </table>
-  
+  <br/>
   <h3>Questions</h3>
   <% for question in @questions.questions do %>
     <div class="report_question">
