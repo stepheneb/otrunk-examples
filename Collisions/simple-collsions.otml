@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<otrunk id="33754150-b594-11d9-9669-0800200c9a66" >
+  <imports>
+    <import class="org.concord.otrunk.OTSystem"/>
+    <import class="org.concord.otrunk.view.OTFolderObject"/>
+    <import class="org.concord.otrunk.view.OTViewBundle"/>
+    <import class="org.concord.otrunk.view.OTViewEntry"/>
+    <import class="org.concord.otrunk.view.OTViewService"/>
+    <import class="org.concord.otrunk.collisions.OTGUIPanel"/>
+    <import class="org.concord.otrunk.collisions.data.OTCollisionsDataProducer"/>
+    <import class="org.concord.otrunk.view.document.OTCompoundDoc"/>
+    <import class="org.concord.otrunk.view.OTObjectEditViewConfig"/>
+    <import class="org.concord.otrunk.view.document.OTCssText" />
+    <import class="org.concord.otrunk.view.document.OTDocumentViewConfig" />
+    <import class="org.concord.otrunk.view.document.edit.OTDocumentEditViewConfig" />
+    
+    <import class="org.concord.data.state.OTDataStore" />
+    <import class="org.concord.data.state.OTDataChannelDescription" />
+    <import class="org.concord.data.state.OTDataField" />
+    <import class="org.concord.data.state.OTDataTable" />
+    <import class="org.concord.datagraph.state.OTDataGraph" />
+    <import class="org.concord.datagraph.state.OTDataAxis" />
+    <import class="org.concord.datagraph.state.OTDataGraphable" />
+    <import class="org.concord.datagraph.state.OTDataCollector" />
+    <import class="org.concord.datagraph.state.OTMultiDataGraph" />
+    <import class="org.concord.datagraph.state.OTPluginView" />
+    <import class="org.concord.datagraph.state.OTDataBarGraphable" />
+
+    
+    <import class="org.concord.framework.otrunk.view.OTFrame" />
+
+  </imports>
+  <objects>
+    <OTSystem>
+      <bundles>
+        <OTViewBundle showLeftPanel="false">
+               <frame>
+                <OTFrame useScrollPane="true" width="900" height="600" />
+              </frame>
+              <viewEntries>
+                <OTViewEntry
+                  objectClass="org.concord.otrunk.collisions.OTGUIPanel" 
+                  viewClass="org.concord.otrunk.collisions.ui.OTGUIPanelView"/>
+                <OTViewEntry
+                  objectClass="org.concord.datagraph.state.OTDataCollector" 
+                  viewClass="org.concord.datagraph.state.OTDataCollectorView"/>
+                <OTDocumentViewConfig 
+                  objectClass="org.concord.otrunk.view.document.OTDocument" 
+                  viewClass="org.concord.otrunk.view.document.OTDocumentView"
+                  local_id="compound_doc_view"
+                  css="
+                  body { background-color:#FFFFFF; color:#333333; font-family:Tahoma,'Trebuchet MS',sans-serif; line-height:1.5em; }
+                  h1 { color:#FFD32C; font-size:1.5em; margin-bottom:0px; }
+                  h2 { color:#FFD32C; font-size:1.3em; margin-bottom:0px; }
+                  h2 { color:#FFD32C; font-size:1.1em; margin: 2em 0em 1em 0em; }
+                  .menu { color: #982f10; background-color: #fffee9;  color: #982f10; margin: 0px 1px; padding: 5px; }
+                  .menu_item { background-color: #fffee9; color: #982f10; margin: 1px 0px; padding: 0px 10px; }
+                    .menu_item a { color: #51a656; }
+                  #navlist ul { margin: 0; padding: 0; list-style: none; width: 150px; }
+                  #navlist li { display: inline; list-style-type: none;list-style-type: none; padding-right: 10px; }
+                  #content { margin:5px; padding:5px; }
+                  "/>
+              </viewEntries>
+        </OTViewBundle>
+      </bundles>
+      <root>
+        <OTCompoundDoc name="Simple Collision and Graph Test">
+          <bodyText>
+            <div id="content">
+              <h3>Simple Collision and Graph Test</h3>
+              <table>
+                <tr>
+                  <td width="600"><object refid="${collision1}" /></td>
+                  <td align="top"></td>                     
+                </tr>
+                <tr>
+                  <td width="600"><object refid="${datacollector1}" /></td>
+                  <td align="top"></td>                     
+                </tr>
+              </table>
+            </div>
+          </bodyText>
+        </OTCompoundDoc>
+      </root>
+      <library>
+        <OTGUIPanel local_id="collision1" name="Collisions (JPartWorld)" />
+        <OTDataCollector local_id="datacollector1" name="position_data_graph1" title="Position data graph" autoScaleEnabled="false">
+          <source>
+            <OTDataGraphable name="Simple Collision" connectPoints="true" yColumn="1" drawMarks="false" color="255" xColumn="0" lineWidth="2.0" locked="true">
+              <dataProducer>
+                <object refid="${collision1}" />
+              </dataProducer>
+            </OTDataGraphable>
+          </source>
+          <xDataAxis>
+            <OTDataAxis max="20.0" units="s" min="0.0" label="Time" />
+          </xDataAxis>
+          <yDataAxis>
+            <OTDataAxis max="3.25" units="" min="-0.0" label="Distance" />
+          </yDataAxis>
+        </OTDataCollector>
+      </library>
+    </OTSystem>
+  </objects>
+</otrunk>
