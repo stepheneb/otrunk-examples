@@ -1,0 +1,1525 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<otrunk id="2767fe20-6c7d-11dc-8314-0800200c9a66">
+  <imports>
+    <import class="org.concord.data.state.OTDataStore" />
+    <import class="org.concord.data.state.OTDataChannelDescription" />
+    <import class="org.concord.data.state.OTDataField" />
+    <import class="org.concord.data.state.OTDataTable" />
+    <import class="org.concord.datagraph.state.OTDataGraph" />
+    <import class="org.concord.datagraph.state.OTDataAxis" />
+    <import class="org.concord.datagraph.state.OTDataGraphable" />
+    <import class="org.concord.datagraph.state.OTDataCollector" />
+    <import class="org.concord.datagraph.state.OTMultiDataGraph" />
+    <import class="org.concord.datagraph.state.OTPluginView" />
+    <import class="org.concord.datagraph.state.OTDataBarGraphable" />
+    <import class="org.concord.framework.otrunk.view.OTFrame" />
+    <import class="org.concord.framework.otrunk.wrapper.OTBlob" />
+    <import class="org.concord.graph.util.state.OTDrawingTool" />
+    <import class="org.concord.graph.util.state.OTDrawingStamp" />
+    <import class="org.concord.graph.util.state.OTDrawingImageIcon" />
+    <import class="org.concord.graph.util.state.OTDrawingShape" />
+    <import class="org.concord.graph.util.state.OTDrawingTool2" />
+    <import class="org.concord.graph.util.state.OTPointTextLabel" />
+    <import class="org.concord.otrunk.OTInclude" />
+    <import class="org.concord.otrunk.OTSystem" />
+    <import class="org.concord.otrunk.browser.mozswing.OTMozSwing" />
+    <import class="org.concord.otrunk.overlay.OTOverlay" />
+    <import class="org.concord.otrunk.script.ui.OTScriptObject" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariable" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariableComponent" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariableView" />
+    <import class="org.concord.otrunk.script.js.OTJavascript" />
+    <import class="org.concord.otrunk.script.OTScriptEngineBundle" />
+    <import class="org.concord.otrunk.script.OTScriptEngineEntry" />
+    <import class="org.concord.otrunk.udl.OTAuthorNote" />
+    <import class="org.concord.otrunk.udl.OTUDLLabPage" />
+    <import class="org.concord.otrunk.udl.coach.OTUDLCoach" />
+    <import class="org.concord.otrunk.udl.coach.OTUDLCoachGroup" />
+    <import class="org.concord.otrunk.udl.coach.OTUDLCoachStatement" />
+    <import class="org.concord.otrunk.udl.OTUDLMenuRule" />
+    <import class="org.concord.otrunk.udl.document.OTDefinition" />
+    <import class="org.concord.otrunk.udl.document.OTDefinitionList" />
+    <import class="org.concord.otrunk.udl.document.OTDefinitionManager" />
+    <import class="org.concord.otrunk.udl.document.OTGlossary" />
+    <import class="org.concord.otrunk.udl.document.OTUDLCompoundDoc" />
+    <import class="org.concord.otrunk.udl.document.OTUDLDocumentViewConfig" />
+    <import class="org.concord.otrunk.graph.OTDataCollectorViewConfig" />
+    <import class="org.concord.otrunk.udl.question.OTUDLQuestion" />
+    <import class="org.concord.otrunk.udl.question.OTUDLLeveledQuestions" />
+    <import class="org.concord.otrunk.udl.question.OTUDLQuestionViewConfig" />
+    <import class="org.concord.otrunk.udl3.OTUDLMenu" />
+    <import class="org.concord.otrunk.udl3.OTUDLContainer" />
+    <import class="org.concord.otrunk.udl3.OTUDLSection" />
+    <import class="org.concord.otrunk.ui.OTButton" />
+    <import class="org.concord.otrunk.ui.OTCardContainer" />
+    <import class="org.concord.otrunk.ui.OTChoice" />
+    <import class="org.concord.otrunk.ui.OTChoiceMultiple" />
+    <import class="org.concord.otrunk.ui.OTCurriculumUnit" />
+    <import class="org.concord.otrunk.ui.OTImage" />
+    <import class="org.concord.otrunk.ui.OTImageMap" />
+    <import class="org.concord.otrunk.ui.OTLayerContainer" />
+    <import class="org.concord.otrunk.ui.OTModeSwitcher" />
+    <import class="org.concord.otrunk.ui.OTText" />
+    <import class="org.concord.otrunk.ui.OTPlacement" />
+    <import class="org.concord.otrunk.ui.OTPlacementContainer" />
+    <import class="org.concord.otrunk.ui.snapshot.OTSnapshot" />
+    <import class="org.concord.otrunk.ui.snapshot.OTSnapshotButton" />
+    <import class="org.concord.otrunk.ui.snapshot.OTSnapshotAlbum" />
+    <import class="org.concord.otrunk.ui.snapshot.OTSnapshotChooser" />
+    <import class="org.concord.otrunk.ui.swing.OTChoiceViewConfig" />
+    <import class="org.concord.otrunk.util.OTSharingBundle" />
+    <import class="org.concord.otrunk.view.OTObjectEditViewConfig" />
+    <import class="org.concord.otrunk.view.OTViewChild" />
+    <import class="org.concord.otrunk.view.OTViewEntry" />
+    <import class="org.concord.otrunk.view.OTViewBundle" />
+    <import class="org.concord.otrunk.view.OTViewMode" />
+    <import class="org.concord.otrunk.view.document.OTCompoundDoc" />
+    <import class="org.concord.otrunk.view.document.OTCssText" />
+    <import class="org.concord.otrunk.view.prototype.OTPrototypeViewEntry" />
+    <import class="org.concord.otrunk.view.prototype.OTPrototypeEventController" />
+    <import class="org.concord.otrunk.view.prototype.OTPrototypeMapEntry" />
+    <import class="org.concord.otrunknl4.OTNLogoModel" />
+    <import class="org.concord.sensor.state.OTDeviceConfig" />
+    <import class="org.concord.sensor.state.OTExperimentRequest" />
+    <import class="org.concord.sensor.state.OTInterfaceManager" />
+    <import class="org.concord.sensor.state.OTSensorDataProxy" />
+    <import class="org.concord.sensor.state.OTSensorRequest" />
+    <import class="org.concord.sensor.state.OTZeroSensor" />
+    <import class="org.concord.otrunk.udl.OTUDLNavBar" />
+    <import class="org.concord.datagraph.state.OTDataPointLabel" />
+    <import class="org.concord.otrunk.udl.OTZoom" />
+    <import class="org.concord.otrunk.udl.OTZoomTransform" />
+    <import class="org.concord.otrunkmw.OTModelerPage" />
+    <import class="org.concord.otrunkmw.OTMwDataProducer" />
+    <import class="org.concord.otrunkmw.OTMwChannelData" />
+    <import class="org.concord.otrunk.ui.OTSoundPlayer" />
+    <import class="org.concord.otrunk.util.OTReference" />
+    <import class="org.concord.smartgraph.OTSmartGraphTool" />
+    <import class="org.concord.otrunk.script.ui.OTScriptButton" />
+    <import class="org.concord.otrunk.script.jruby.OTJRuby" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariableRealObject" />
+    <import class="org.concord.framework.otrunk.wrapper.OTInt" />
+    <import class="org.concord.framework.otrunk.wrapper.OTBoolean" />
+  </imports>
+  <objects>
+    <OTSystem local_id="system">
+      <includes>
+        <OTInclude href="global-imports/loops-view-bundle.otml" />
+      </includes>
+      <bundles>
+        <object refid="8d880970-c22a-11dc-95ff-0800200c9a66" />
+        <OTScriptEngineBundle>
+          <engines>
+            <OTScriptEngineEntry objectClass="org.concord.otrunk.script.jruby.OTJRuby" engineClass="org.concord.otrunk.script.jruby.OTJRubyEngine" />
+            <OTScriptEngineEntry objectClass="org.concord.otrunk.script.js.OTJavascript" engineClass="org.concord.otrunk.script.js.OTJavascriptEngine" />
+          </engines>
+        </OTScriptEngineBundle>
+        <OTSharingBundle>
+          <sharedObjects>
+            <OTSmartGraphTool id="9dc39090-e324-11dd-9ce1-d365547a4236" name="Data graph_smart">
+              <dataCollector>
+                <object refid="095e7a8d-e323-11dd-affb-93f2c178f5ee" />
+              </dataCollector>
+            </OTSmartGraphTool>
+          </sharedObjects>
+        </OTSharingBundle>
+        <OTInterfaceManager>
+          <deviceConfigs>
+            <OTDeviceConfig configString="none" deviceId="10" />
+          </deviceConfigs>
+        </OTInterfaceManager>
+      </bundles>
+      <overlays>
+        <object refid="6cc8e2b0-c44e-11dc-95ff-0800200c9a66" />
+        <object refid="b5d8b4a0-db35-11dc-95ff-0800200c9a66" />
+        <OTOverlay>
+          <deltaObjectMap>
+            <entry key="${authoring_script.js}">
+              <OTJavascript src="scripts/student_script.js" />
+            </entry>
+          </deltaObjectMap>
+        </OTOverlay>
+      </overlays>
+      <root>
+        <OTCurriculumUnit version="2" name="LOOPS Activity">
+          <activity>
+            <OTUDLSection local_id="section_1">
+              <header>
+                <OTCompoundDoc id="2767fe20-6c7d-11dc-8314-0800200c9a66!/section_1/header" showEditBar="false">
+                  <bodyText>
+                    <div class="title">ASM Test</div>
+                  </bodyText>
+                </OTCompoundDoc>
+              </header>
+              <content>
+                <OTCardContainer local_id="activity-card-container" contentsMayScroll="true" loadViewOnlyOnDemand="true">
+                  <cards>
+                    <OTCompoundDoc local_id="page-1" name="1">
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              How long does it take before this page is scrollable?
+                              <br />
+                              <br />
+                              <object refid="02940b7b-e323-11dd-affb-93f2c178f5ee" />
+                              <br />
+                              <br />
+                              <br />
+                              <object refid="059b30fc-e323-11dd-affb-93f2c178f5ee" />
+                              <br />
+                              <br />
+                              <object refid="095e7a8d-e323-11dd-affb-93f2c178f5ee" />
+                              <br />
+                              <br />
+                              <div style="border-color: black; margin-top: 5px; padding-left: 2px; border-top-width: 1px; padding-right: 2px; margin-left: 5px; border-style: solid; margin-bottom: 5px; padding-top: 2px; border-left-width: 1px; padding-bottom: 2px; border-bottom-width: 1px; border-right-width: 1px; margin-right: 5px">
+                                <object refid="166808a3-e323-11dd-affb-93f2c178f5ee" />
+                                <br />
+                                <br />
+                                <object viewid="29dc5ef0-c453-11dc-95ff-0800200c9a66" refid="166808a4-e323-11dd-affb-93f2c178f5ee" />
+                                <br />
+                                <br />
+                              </div>
+                              <br />
+                              <object refid="9db617ff-e323-11dd-bc3f-71bb7aaaa0c7" />
+                              <br />
+                              <br />
+                              <object refid="b4a9a4cb-e323-11dd-bc3f-71bb7aaaa0c7" />
+                              <br />
+                              <br />
+                              <object refid="0d1c50a3-e324-11dd-82be-ed3b02505e76" />
+                              <br />
+                              <br />
+                              <object refid="9dc39090-e324-11dd-9ce1-d365547a4236" />
+                              <br />
+                              <br />
+                              <object refid="a6e07b21-e324-11dd-9ce1-d365547a4236" />
+                              <br />
+                              <br />
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                        <OTText id="02940b7b-e323-11dd-affb-93f2c178f5ee" name="Text field" />
+                        <OTDrawingTool2 id="059b30fc-e323-11dd-affb-93f2c178f5ee" name="Draw tool">
+                          <graphables>
+                            <OTDrawingShape type="circle" fillType="clear" x="183.0" y="-96.0" width="153.0" height="-146.0" color="0x000000" strokeWidth="2.0" />
+                            <OTDrawingShape type="circle" fillType="clear" x="Infinity" y="Infinity" width="0.0" height="0.0" color="0x000000" strokeWidth="2.0" />
+                            <OTDrawingShape type="circle" fillType="clear" x="216.0" y="-140.0" width="26.0" height="-26.0" color="0x000000" strokeWidth="2.0" />
+                            <OTDrawingShape type="circle" fillType="clear" x="Infinity" y="Infinity" width="0.0" height="0.0" color="0x000000" strokeWidth="2.0" />
+                            <OTDrawingShape type="circle" fillType="clear" x="262.0" y="-143.0" width="29.0" height="-26.0" color="0x000000" strokeWidth="2.0" />
+                            <OTDrawingShape type="circle" fillType="clear" x="Infinity" y="Infinity" width="0.0" height="0.0" color="0x000000" strokeWidth="2.0" />
+                            <OTDataGraphable color="0" connectPoints="true" drawMarks="false" xColumn="0" yColumn="1" name="" lineWidth="2.0" visible="true" drawing="true">
+                              <dataStore>
+                                <OTDataStore numberChannels="2">
+                                  <values>
+                                    <float>NaN</float>
+                                    <float>NaN</float>
+                                    <float>212.0</float>
+                                    <float>-184.0</float>
+                                    <float>212.0</float>
+                                    <float>-185.0</float>
+                                    <float>212.0</float>
+                                    <float>-185.0</float>
+                                    <float>213.0</float>
+                                    <float>-187.0</float>
+                                    <float>213.0</float>
+                                    <float>-187.0</float>
+                                    <float>213.0</float>
+                                    <float>-188.0</float>
+                                    <float>213.0</float>
+                                    <float>-188.0</float>
+                                    <float>214.0</float>
+                                    <float>-188.0</float>
+                                    <float>214.0</float>
+                                    <float>-188.0</float>
+                                    <float>214.0</float>
+                                    <float>-190.0</float>
+                                    <float>214.0</float>
+                                    <float>-190.0</float>
+                                    <float>215.0</float>
+                                    <float>-191.0</float>
+                                    <float>215.0</float>
+                                    <float>-191.0</float>
+                                    <float>215.0</float>
+                                    <float>-193.0</float>
+                                    <float>215.0</float>
+                                    <float>-193.0</float>
+                                    <float>216.0</float>
+                                    <float>-194.0</float>
+                                    <float>216.0</float>
+                                    <float>-194.0</float>
+                                    <float>218.0</float>
+                                    <float>-196.0</float>
+                                    <float>218.0</float>
+                                    <float>-196.0</float>
+                                    <float>219.0</float>
+                                    <float>-197.0</float>
+                                    <float>219.0</float>
+                                    <float>-197.0</float>
+                                    <float>220.0</float>
+                                    <float>-198.0</float>
+                                    <float>220.0</float>
+                                    <float>-198.0</float>
+                                    <float>221.0</float>
+                                    <float>-199.0</float>
+                                    <float>221.0</float>
+                                    <float>-199.0</float>
+                                    <float>222.0</float>
+                                    <float>-200.0</float>
+                                    <float>222.0</float>
+                                    <float>-200.0</float>
+                                    <float>223.0</float>
+                                    <float>-201.0</float>
+                                    <float>223.0</float>
+                                    <float>-201.0</float>
+                                    <float>224.0</float>
+                                    <float>-202.0</float>
+                                    <float>224.0</float>
+                                    <float>-202.0</float>
+                                    <float>225.0</float>
+                                    <float>-203.0</float>
+                                    <float>225.0</float>
+                                    <float>-203.0</float>
+                                    <float>227.0</float>
+                                    <float>-203.0</float>
+                                    <float>227.0</float>
+                                    <float>-203.0</float>
+                                    <float>227.0</float>
+                                    <float>-204.0</float>
+                                    <float>227.0</float>
+                                    <float>-204.0</float>
+                                    <float>228.0</float>
+                                    <float>-205.0</float>
+                                    <float>228.0</float>
+                                    <float>-205.0</float>
+                                    <float>229.0</float>
+                                    <float>-205.0</float>
+                                    <float>229.0</float>
+                                    <float>-205.0</float>
+                                    <float>230.0</float>
+                                    <float>-205.0</float>
+                                    <float>230.0</float>
+                                    <float>-205.0</float>
+                                    <float>231.0</float>
+                                    <float>-207.0</float>
+                                    <float>231.0</float>
+                                    <float>-207.0</float>
+                                    <float>232.0</float>
+                                    <float>-208.0</float>
+                                    <float>232.0</float>
+                                    <float>-208.0</float>
+                                    <float>234.0</float>
+                                    <float>-208.0</float>
+                                    <float>234.0</float>
+                                    <float>-208.0</float>
+                                    <float>234.0</float>
+                                    <float>-209.0</float>
+                                    <float>234.0</float>
+                                    <float>-209.0</float>
+                                    <float>237.0</float>
+                                    <float>-209.0</float>
+                                    <float>237.0</float>
+                                    <float>-209.0</float>
+                                    <float>237.0</float>
+                                    <float>-211.0</float>
+                                    <float>237.0</float>
+                                    <float>-211.0</float>
+                                    <float>243.0</float>
+                                    <float>-212.0</float>
+                                    <float>243.0</float>
+                                    <float>-212.0</float>
+                                    <float>248.0</float>
+                                    <float>-214.0</float>
+                                    <float>248.0</float>
+                                    <float>-214.0</float>
+                                    <float>251.0</float>
+                                    <float>-214.0</float>
+                                    <float>251.0</float>
+                                    <float>-214.0</float>
+                                    <float>253.0</float>
+                                    <float>-214.0</float>
+                                    <float>253.0</float>
+                                    <float>-214.0</float>
+                                    <float>254.0</float>
+                                    <float>-215.0</float>
+                                    <float>254.0</float>
+                                    <float>-215.0</float>
+                                    <float>255.0</float>
+                                    <float>-215.0</float>
+                                    <float>255.0</float>
+                                    <float>-215.0</float>
+                                    <float>257.0</float>
+                                    <float>-215.0</float>
+                                    <float>257.0</float>
+                                    <float>-215.0</float>
+                                    <float>258.0</float>
+                                    <float>-215.0</float>
+                                    <float>258.0</float>
+                                    <float>-215.0</float>
+                                    <float>259.0</float>
+                                    <float>-215.0</float>
+                                    <float>259.0</float>
+                                    <float>-215.0</float>
+                                    <float>260.0</float>
+                                    <float>-215.0</float>
+                                    <float>260.0</float>
+                                    <float>-215.0</float>
+                                    <float>261.0</float>
+                                    <float>-215.0</float>
+                                    <float>261.0</float>
+                                    <float>-215.0</float>
+                                    <float>262.0</float>
+                                    <float>-215.0</float>
+                                    <float>262.0</float>
+                                    <float>-215.0</float>
+                                    <float>263.0</float>
+                                    <float>-215.0</float>
+                                    <float>263.0</float>
+                                    <float>-215.0</float>
+                                    <float>264.0</float>
+                                    <float>-215.0</float>
+                                    <float>264.0</float>
+                                    <float>-215.0</float>
+                                    <float>265.0</float>
+                                    <float>-215.0</float>
+                                    <float>265.0</float>
+                                    <float>-215.0</float>
+                                    <float>266.0</float>
+                                    <float>-215.0</float>
+                                    <float>266.0</float>
+                                    <float>-215.0</float>
+                                    <float>267.0</float>
+                                    <float>-215.0</float>
+                                    <float>267.0</float>
+                                    <float>-215.0</float>
+                                    <float>268.0</float>
+                                    <float>-215.0</float>
+                                    <float>268.0</float>
+                                    <float>-215.0</float>
+                                    <float>NaN</float>
+                                    <float>NaN</float>
+                                    <float>251.0</float>
+                                    <float>-172.0</float>
+                                    <float>252.0</float>
+                                    <float>-172.0</float>
+                                    <float>252.0</float>
+                                    <float>-172.0</float>
+                                    <float>253.0</float>
+                                    <float>-172.0</float>
+                                    <float>253.0</float>
+                                    <float>-172.0</float>
+                                    <float>254.0</float>
+                                    <float>-172.0</float>
+                                    <float>254.0</float>
+                                    <float>-172.0</float>
+                                    <float>254.0</float>
+                                    <float>-173.0</float>
+                                    <float>254.0</float>
+                                    <float>-173.0</float>
+                                    <float>255.0</float>
+                                    <float>-174.0</float>
+                                    <float>255.0</float>
+                                    <float>-174.0</float>
+                                    <float>256.0</float>
+                                    <float>-176.0</float>
+                                    <float>256.0</float>
+                                    <float>-176.0</float>
+                                    <float>257.0</float>
+                                    <float>-177.0</float>
+                                    <float>257.0</float>
+                                    <float>-177.0</float>
+                                    <float>258.0</float>
+                                    <float>-178.0</float>
+                                    <float>258.0</float>
+                                    <float>-178.0</float>
+                                    <float>258.0</float>
+                                    <float>-179.0</float>
+                                    <float>258.0</float>
+                                    <float>-179.0</float>
+                                    <float>260.0</float>
+                                    <float>-181.0</float>
+                                    <float>260.0</float>
+                                    <float>-181.0</float>
+                                    <float>260.0</float>
+                                    <float>-184.0</float>
+                                    <float>260.0</float>
+                                    <float>-184.0</float>
+                                    <float>261.0</float>
+                                    <float>-186.0</float>
+                                    <float>261.0</float>
+                                    <float>-186.0</float>
+                                    <float>262.0</float>
+                                    <float>-187.0</float>
+                                    <float>262.0</float>
+                                    <float>-187.0</float>
+                                    <float>262.0</float>
+                                    <float>-188.0</float>
+                                    <float>262.0</float>
+                                    <float>-188.0</float>
+                                    <float>262.0</float>
+                                    <float>-189.0</float>
+                                    <float>262.0</float>
+                                    <float>-189.0</float>
+                                    <float>262.0</float>
+                                    <float>-190.0</float>
+                                    <float>262.0</float>
+                                    <float>-190.0</float>
+                                    <float>263.0</float>
+                                    <float>-190.0</float>
+                                    <float>263.0</float>
+                                    <float>-190.0</float>
+                                    <float>263.0</float>
+                                    <float>-191.0</float>
+                                    <float>263.0</float>
+                                    <float>-191.0</float>
+                                    <float>262.0</float>
+                                    <float>-191.0</float>
+                                    <float>262.0</float>
+                                    <float>-191.0</float>
+                                    <float>261.0</float>
+                                    <float>-191.0</float>
+                                    <float>261.0</float>
+                                    <float>-191.0</float>
+                                    <float>260.0</float>
+                                    <float>-191.0</float>
+                                    <float>260.0</float>
+                                    <float>-191.0</float>
+                                    <float>259.0</float>
+                                    <float>-191.0</float>
+                                    <float>259.0</float>
+                                    <float>-191.0</float>
+                                    <float>NaN</float>
+                                    <float>NaN</float>
+                                    <float>272.0</float>
+                                    <float>-110.0</float>
+                                    <float>272.0</float>
+                                    <float>-111.0</float>
+                                    <float>272.0</float>
+                                    <float>-111.0</float>
+                                    <float>272.0</float>
+                                    <float>-110.0</float>
+                                    <float>272.0</float>
+                                    <float>-110.0</float>
+                                    <float>273.0</float>
+                                    <float>-106.0</float>
+                                    <float>273.0</float>
+                                    <float>-106.0</float>
+                                    <float>273.0</float>
+                                    <float>-94.0</float>
+                                    <float>273.0</float>
+                                    <float>-94.0</float>
+                                    <float>270.0</float>
+                                    <float>-79.0</float>
+                                    <float>270.0</float>
+                                    <float>-79.0</float>
+                                    <float>266.0</float>
+                                    <float>-67.0</float>
+                                    <float>266.0</float>
+                                    <float>-67.0</float>
+                                    <float>262.0</float>
+                                    <float>-61.0</float>
+                                    <float>262.0</float>
+                                    <float>-61.0</float>
+                                    <float>261.0</float>
+                                    <float>-60.0</float>
+                                    <float>261.0</float>
+                                    <float>-60.0</float>
+                                    <float>260.0</float>
+                                    <float>-59.0</float>
+                                    <float>260.0</float>
+                                    <float>-59.0</float>
+                                    <float>259.0</float>
+                                    <float>-59.0</float>
+                                    <float>259.0</float>
+                                    <float>-59.0</float>
+                                    <float>258.0</float>
+                                    <float>-59.0</float>
+                                    <float>258.0</float>
+                                    <float>-59.0</float>
+                                    <float>258.0</float>
+                                    <float>-58.0</float>
+                                    <float>258.0</float>
+                                    <float>-58.0</float>
+                                    <float>257.0</float>
+                                    <float>-58.0</float>
+                                    <float>257.0</float>
+                                    <float>-58.0</float>
+                                    <float>NaN</float>
+                                    <float>NaN</float>
+                                    <float>257.0</float>
+                                    <float>-100.0</float>
+                                    <float>255.0</float>
+                                    <float>-96.0</float>
+                                    <float>255.0</float>
+                                    <float>-96.0</float>
+                                    <float>251.0</float>
+                                    <float>-88.0</float>
+                                    <float>251.0</float>
+                                    <float>-88.0</float>
+                                    <float>243.0</float>
+                                    <float>-76.0</float>
+                                    <float>243.0</float>
+                                    <float>-76.0</float>
+                                    <float>235.0</float>
+                                    <float>-65.0</float>
+                                    <float>235.0</float>
+                                    <float>-65.0</float>
+                                    <float>230.0</float>
+                                    <float>-60.0</float>
+                                    <float>230.0</float>
+                                    <float>-60.0</float>
+                                    <float>225.0</float>
+                                    <float>-55.0</float>
+                                    <float>225.0</float>
+                                    <float>-55.0</float>
+                                    <float>221.0</float>
+                                    <float>-53.0</float>
+                                    <float>221.0</float>
+                                    <float>-53.0</float>
+                                    <float>220.0</float>
+                                    <float>-53.0</float>
+                                    <float>220.0</float>
+                                    <float>-53.0</float>
+                                    <float>219.0</float>
+                                    <float>-53.0</float>
+                                    <float>219.0</float>
+                                    <float>-53.0</float>
+                                    <float>219.0</float>
+                                    <float>-52.0</float>
+                                    <float>219.0</float>
+                                    <float>-52.0</float>
+                                    <float>NaN</float>
+                                    <float>NaN</float>
+                                    <float>245.0</float>
+                                    <float>-119.0</float>
+                                    <float>244.0</float>
+                                    <float>-117.0</float>
+                                    <float>244.0</float>
+                                    <float>-117.0</float>
+                                    <float>242.0</float>
+                                    <float>-115.0</float>
+                                    <float>242.0</float>
+                                    <float>-115.0</float>
+                                    <float>239.0</float>
+                                    <float>-110.0</float>
+                                    <float>239.0</float>
+                                    <float>-110.0</float>
+                                    <float>231.0</float>
+                                    <float>-103.0</float>
+                                    <float>231.0</float>
+                                    <float>-103.0</float>
+                                    <float>222.0</float>
+                                    <float>-94.0</float>
+                                    <float>222.0</float>
+                                    <float>-94.0</float>
+                                    <float>214.0</float>
+                                    <float>-89.0</float>
+                                    <float>214.0</float>
+                                    <float>-89.0</float>
+                                    <float>208.0</float>
+                                    <float>-85.0</float>
+                                    <float>208.0</float>
+                                    <float>-85.0</float>
+                                    <float>203.0</float>
+                                    <float>-81.0</float>
+                                    <float>203.0</float>
+                                    <float>-81.0</float>
+                                    <float>197.0</float>
+                                    <float>-79.0</float>
+                                    <float>197.0</float>
+                                    <float>-79.0</float>
+                                    <float>194.0</float>
+                                    <float>-78.0</float>
+                                    <float>194.0</float>
+                                    <float>-78.0</float>
+                                    <float>190.0</float>
+                                    <float>-76.0</float>
+                                    <float>190.0</float>
+                                    <float>-76.0</float>
+                                    <float>188.0</float>
+                                    <float>-75.0</float>
+                                    <float>188.0</float>
+                                    <float>-75.0</float>
+                                    <float>NaN</float>
+                                    <float>NaN</float>
+                                    <float>216.0</float>
+                                    <float>-114.0</float>
+                                    <float>214.0</float>
+                                    <float>-112.0</float>
+                                    <float>214.0</float>
+                                    <float>-112.0</float>
+                                    <float>212.0</float>
+                                    <float>-110.0</float>
+                                    <float>212.0</float>
+                                    <float>-110.0</float>
+                                    <float>207.0</float>
+                                    <float>-105.0</float>
+                                    <float>207.0</float>
+                                    <float>-105.0</float>
+                                    <float>198.0</float>
+                                    <float>-96.0</float>
+                                    <float>198.0</float>
+                                    <float>-96.0</float>
+                                    <float>185.0</float>
+                                    <float>-86.0</float>
+                                    <float>185.0</float>
+                                    <float>-86.0</float>
+                                    <float>180.0</float>
+                                    <float>-84.0</float>
+                                    <float>180.0</float>
+                                    <float>-84.0</float>
+                                    <float>176.0</float>
+                                    <float>-82.0</float>
+                                    <float>176.0</float>
+                                    <float>-82.0</float>
+                                    <float>173.0</float>
+                                    <float>-81.0</float>
+                                    <float>173.0</float>
+                                    <float>-81.0</float>
+                                    <float>NaN</float>
+                                    <float>NaN</float>
+                                    <float>205.0</float>
+                                    <float>-126.0</float>
+                                    <float>204.0</float>
+                                    <float>-125.0</float>
+                                    <float>204.0</float>
+                                    <float>-125.0</float>
+                                    <float>202.0</float>
+                                    <float>-121.0</float>
+                                    <float>202.0</float>
+                                    <float>-121.0</float>
+                                    <float>196.0</float>
+                                    <float>-111.0</float>
+                                    <float>196.0</float>
+                                    <float>-111.0</float>
+                                    <float>188.0</float>
+                                    <float>-103.0</float>
+                                    <float>188.0</float>
+                                    <float>-103.0</float>
+                                    <float>183.0</float>
+                                    <float>-99.0</float>
+                                    <float>183.0</float>
+                                    <float>-99.0</float>
+                                    <float>180.0</float>
+                                    <float>-97.0</float>
+                                    <float>180.0</float>
+                                    <float>-97.0</float>
+                                    <float>178.0</float>
+                                    <float>-97.0</float>
+                                    <float>178.0</float>
+                                    <float>-97.0</float>
+                                    <float>174.0</float>
+                                    <float>-96.0</float>
+                                    <float>174.0</float>
+                                    <float>-96.0</float>
+                                    <float>170.0</float>
+                                    <float>-92.0</float>
+                                    <float>170.0</float>
+                                    <float>-92.0</float>
+                                    <float>163.0</float>
+                                    <float>-90.0</float>
+                                    <float>163.0</float>
+                                    <float>-90.0</float>
+                                    <float>NaN</float>
+                                    <float>NaN</float>
+                                    <float>289.0</float>
+                                    <float>-106.0</float>
+                                    <float>290.0</float>
+                                    <float>-104.0</float>
+                                    <float>290.0</float>
+                                    <float>-104.0</float>
+                                    <float>292.0</float>
+                                    <float>-96.0</float>
+                                    <float>292.0</float>
+                                    <float>-96.0</float>
+                                    <float>294.0</float>
+                                    <float>-85.0</float>
+                                    <float>294.0</float>
+                                    <float>-85.0</float>
+                                    <float>295.0</float>
+                                    <float>-73.0</float>
+                                    <float>295.0</float>
+                                    <float>-73.0</float>
+                                    <float>295.0</float>
+                                    <float>-64.0</float>
+                                    <float>295.0</float>
+                                    <float>-64.0</float>
+                                    <float>295.0</float>
+                                    <float>-60.0</float>
+                                    <float>295.0</float>
+                                    <float>-60.0</float>
+                                    <float>295.0</float>
+                                    <float>-58.0</float>
+                                    <float>295.0</float>
+                                    <float>-58.0</float>
+                                  </values>
+                                </OTDataStore>
+                              </dataStore>
+                            </OTDataGraphable>
+                            <OTDataGraphable color="0" connectPoints="true" drawMarks="false" xColumn="0" yColumn="1" name="" lineWidth="2.0" visible="true" drawing="true">
+                              <dataStore>
+                                <OTDataStore />
+                              </dataStore>
+                            </OTDataGraphable>
+                            <OTDataGraphable color="0" connectPoints="true" drawMarks="false" xColumn="0" yColumn="1" name="" lineWidth="2.0" visible="true" drawing="true">
+                              <dataStore>
+                                <OTDataStore />
+                              </dataStore>
+                            </OTDataGraphable>
+                            <OTDataGraphable color="0" connectPoints="true" drawMarks="false" xColumn="0" yColumn="1" name="" lineWidth="2.0" visible="true" drawing="true">
+                              <dataStore>
+                                <OTDataStore />
+                              </dataStore>
+                            </OTDataGraphable>
+                            <OTDataGraphable color="0" connectPoints="true" drawMarks="false" xColumn="0" yColumn="1" name="" lineWidth="2.0" visible="true" drawing="true">
+                              <dataStore>
+                                <OTDataStore numberChannels="2">
+                                  <values>
+                                    <float>NaN</float>
+                                    <float>NaN</float>
+                                    <float>280.0</float>
+                                    <float>-161.0</float>
+                                    <float>279.0</float>
+                                    <float>-161.0</float>
+                                    <float>279.0</float>
+                                    <float>-161.0</float>
+                                    <float>278.0</float>
+                                    <float>-162.0</float>
+                                    <float>278.0</float>
+                                    <float>-162.0</float>
+                                    <float>278.0</float>
+                                    <float>-163.0</float>
+                                    <float>278.0</float>
+                                    <float>-163.0</float>
+                                    <float>278.0</float>
+                                    <float>-164.0</float>
+                                    <float>278.0</float>
+                                    <float>-164.0</float>
+                                    <float>280.0</float>
+                                    <float>-164.0</float>
+                                    <float>280.0</float>
+                                    <float>-164.0</float>
+                                    <float>281.0</float>
+                                    <float>-164.0</float>
+                                    <float>281.0</float>
+                                    <float>-164.0</float>
+                                    <float>282.0</float>
+                                    <float>-164.0</float>
+                                    <float>282.0</float>
+                                    <float>-164.0</float>
+                                    <float>282.0</float>
+                                    <float>-163.0</float>
+                                    <float>282.0</float>
+                                    <float>-163.0</float>
+                                    <float>281.0</float>
+                                    <float>-163.0</float>
+                                    <float>281.0</float>
+                                    <float>-163.0</float>
+                                    <float>280.0</float>
+                                    <float>-163.0</float>
+                                    <float>280.0</float>
+                                    <float>-163.0</float>
+                                    <float>NaN</float>
+                                    <float>NaN</float>
+                                    <float>231.0</float>
+                                    <float>-159.0</float>
+                                    <float>230.0</float>
+                                    <float>-159.0</float>
+                                    <float>230.0</float>
+                                    <float>-159.0</float>
+                                    <float>230.0</float>
+                                    <float>-160.0</float>
+                                    <float>230.0</float>
+                                    <float>-160.0</float>
+                                    <float>230.0</float>
+                                    <float>-161.0</float>
+                                    <float>230.0</float>
+                                    <float>-161.0</float>
+                                    <float>231.0</float>
+                                    <float>-161.0</float>
+                                    <float>231.0</float>
+                                    <float>-161.0</float>
+                                    <float>231.0</float>
+                                    <float>-160.0</float>
+                                    <float>231.0</float>
+                                    <float>-160.0</float>
+                                  </values>
+                                </OTDataStore>
+                              </dataStore>
+                            </OTDataGraphable>
+                            <OTDrawingShape type="" fillType="clear" x="Infinity" y="Infinity" width="0.0" height="0.0" color="0x000000" strokeWidth="2.0" />
+                          </graphables>
+                        </OTDrawingTool2>
+                        <OTDataCollector id="095e7a8d-e323-11dd-affb-93f2c178f5ee" name="Data graph" title="Data graph">
+                          <source>
+                            <OTDataGraphable name="Data Graph" connectPoints="true" controllable="true" yColumn="1" drawMarks="false" color="16711680" xColumn="0" lineWidth="2.0" visible="true">
+                              <dataStore>
+                                <OTDataStore numberChannels="2">
+                                  <values>
+                                    <float>2.848392</float>
+                                    <float>8.914286</float>
+                                    <float>2.9402757</float>
+                                    <float>9.028571</float>
+                                    <float>3.4915774</float>
+                                    <float>10.285714</float>
+                                    <float>4.777948</float>
+                                    <float>12.457143</float>
+                                    <float>6.7993875</float>
+                                    <float>14.857142</float>
+                                    <float>9.647779</float>
+                                    <float>17.485714</float>
+                                    <float>12.771822</float>
+                                    <float>19.428572</float>
+                                    <float>15.712098</float>
+                                    <float>21.257143</float>
+                                    <float>18.376722</float>
+                                    <float>21.714285</float>
+                                    <float>20.214396</float>
+                                    <float>21.714285</float>
+                                    <float>21.776417</float>
+                                    <float>20.685715</float>
+                                    <float>23.15467</float>
+                                    <float>19.314285</float>
+                                    <float>24.441042</float>
+                                    <float>17.257143</float>
+                                    <float>26.094946</float>
+                                    <float>14.742857</float>
+                                    <float>28.116386</float>
+                                    <float>12.0</float>
+                                    <float>29.954058</float>
+                                    <float>9.828571</float>
+                                    <float>32.067383</float>
+                                    <float>8.571428</float>
+                                    <float>34.272587</float>
+                                    <float>8.342857</float>
+                                    <float>37.029095</float>
+                                    <float>8.571428</float>
+                                    <float>39.96937</float>
+                                    <float>9.828571</float>
+                                    <float>43.1853</float>
+                                    <float>11.428572</float>
+                                    <float>46.30934</float>
+                                    <float>13.257143</float>
+                                    <float>48.973965</float>
+                                    <float>15.542857</float>
+                                    <float>50.995407</float>
+                                    <float>18.171429</float>
+                                    <float>52.281776</float>
+                                    <float>20.685715</float>
+                                    <float>53.476265</float>
+                                    <float>22.514286</float>
+                                    <float>54.11945</float>
+                                    <float>23.885714</float>
+                                    <float>54.3951</float>
+                                    <float>24.342857</float>
+                                    <float>54.67075</float>
+                                    <float>24.571428</float>
+                                    <float>54.9464</float>
+                                    <float>24.571428</float>
+                                    <float>55.86524</float>
+                                    <float>24.571428</float>
+                                    <float>57.059723</float>
+                                    <float>24.22857</float>
+                                    <float>58.346096</float>
+                                    <float>23.77143</float>
+                                  </values>
+                                </OTDataStore>
+                              </dataStore>
+                            </OTDataGraphable>
+                          </source>
+                          <xDataAxis>
+                            <OTDataAxis max="60.0" units="s" min="0.0" label="Time" />
+                          </xDataAxis>
+                          <yDataAxis>
+                            <OTDataAxis max="40.0" units="" min="-0.0" label="" />
+                          </yDataAxis>
+                        </OTDataCollector>
+                        <OTCardContainer id="166808a3-e323-11dd-affb-93f2c178f5ee" contentsMayScroll="false" loadViewOnlyOnDemand="true" closeViewOnExit="true">
+                          <cards>
+                            <OTUDLCompoundDoc id="166808a5-e323-11dd-affb-93f2c178f5ee">
+                              <bodyText>
+                                <object refid="1b882317-e323-11dd-affb-93f2c178f5ee" />
+                                <br />
+                              </bodyText>
+                              <documentRefs>
+                                <OTDataCollector id="1b882317-e323-11dd-affb-93f2c178f5ee" name="Data graph" title="Data graph">
+                                  <source>
+                                    <OTDataGraphable name="Data Graph" connectPoints="true" controllable="true" yColumn="1" drawMarks="false" color="16711680" xColumn="0" lineWidth="2.0" visible="true">
+                                      <dataStore>
+                                        <OTDataStore />
+                                      </dataStore>
+                                    </OTDataGraphable>
+                                  </source>
+                                  <xDataAxis>
+                                    <OTDataAxis max="60.0" units="s" min="0.0" label="Time" />
+                                  </xDataAxis>
+                                  <yDataAxis>
+                                    <OTDataAxis max="40.0" units="" min="-0.0" label="" />
+                                  </yDataAxis>
+                                </OTDataCollector>
+                              </documentRefs>
+                            </OTUDLCompoundDoc>
+                            <OTUDLCompoundDoc id="1e4b13ac-e323-11dd-affb-93f2c178f5ee" name="%1e4b13ac-e323-11dd-affb-93f2c178f5ee" showEditBar="true">
+                              <documentRefs>
+                                <OTDataCollector id="21f99cbd-e323-11dd-affb-93f2c178f5ee" name="Data graph" title="Data graph">
+                                  <source>
+                                    <OTDataGraphable name="Data Graph" connectPoints="true" controllable="true" yColumn="1" drawMarks="false" color="16711680" xColumn="0" lineWidth="2.0" visible="true">
+                                      <dataStore>
+                                        <OTDataStore />
+                                      </dataStore>
+                                    </OTDataGraphable>
+                                  </source>
+                                  <xDataAxis>
+                                    <OTDataAxis max="60.0" units="s" min="0.0" label="Time" />
+                                  </xDataAxis>
+                                  <yDataAxis>
+                                    <OTDataAxis max="40.0" units="" min="-0.0" label="" />
+                                  </yDataAxis>
+                                </OTDataCollector>
+                              </documentRefs>
+                              <bodyText>
+                                <object refid="21f99cbd-e323-11dd-affb-93f2c178f5ee" />
+                                <br />
+                              </bodyText>
+                            </OTUDLCompoundDoc>
+                            <OTUDLCompoundDoc id="240a0632-e323-11dd-affb-93f2c178f5ee" name="%240a0632-e323-11dd-affb-93f2c178f5ee" showEditBar="true">
+                              <documentRefs>
+                                <OTDataCollector id="27ca90a3-e323-11dd-affb-93f2c178f5ee" name="Data graph" title="Data graph">
+                                  <source>
+                                    <OTDataGraphable name="Data Graph" connectPoints="true" controllable="true" yColumn="1" drawMarks="false" color="16711680" xColumn="0" lineWidth="2.0" visible="true">
+                                      <dataStore>
+                                        <OTDataStore />
+                                      </dataStore>
+                                    </OTDataGraphable>
+                                  </source>
+                                  <xDataAxis>
+                                    <OTDataAxis max="60.0" units="s" min="0.0" label="Time" />
+                                  </xDataAxis>
+                                  <yDataAxis>
+                                    <OTDataAxis max="40.0" units="" min="-0.0" label="" />
+                                  </yDataAxis>
+                                </OTDataCollector>
+                              </documentRefs>
+                              <bodyText>
+                                <object refid="27ca90a3-e323-11dd-affb-93f2c178f5ee" />
+                                <br />
+                              </bodyText>
+                            </OTUDLCompoundDoc>
+                            <OTUDLCompoundDoc id="29d15d28-e323-11dd-affb-93f2c178f5ee" name="%29d15d28-e323-11dd-affb-93f2c178f5ee" showEditBar="true">
+                              <documentRefs>
+                                <OTDataCollector id="2cfbc219-e323-11dd-affb-93f2c178f5ee" name="Data graph" title="Data graph">
+                                  <source>
+                                    <OTDataGraphable name="Data Graph" connectPoints="true" controllable="true" yColumn="1" drawMarks="false" color="16711680" xColumn="0" lineWidth="2.0" visible="true">
+                                      <dataStore>
+                                        <OTDataStore numberChannels="2">
+                                          <values>
+                                            <float>8.599348</float>
+                                            <float>18.742857</float>
+                                            <float>8.794788</float>
+                                            <float>18.857143</float>
+                                            <float>9.771987</float>
+                                            <float>19.542856</float>
+                                            <float>12.117264</float>
+                                            <float>20.685715</float>
+                                            <float>15.04886</float>
+                                            <float>21.828571</float>
+                                            <float>18.762215</float>
+                                            <float>23.085714</float>
+                                            <float>23.452768</float>
+                                            <float>24.22857</float>
+                                            <float>28.436481</float>
+                                            <float>25.142857</float>
+                                            <float>33.029316</float>
+                                            <float>26.4</float>
+                                            <float>37.52443</float>
+                                            <float>27.77143</float>
+                                            <float>41.140064</float>
+                                            <float>28.8</float>
+                                            <float>44.16938</float>
+                                            <float>29.714285</float>
+                                            <float>46.02606</float>
+                                            <float>30.171429</float>
+                                            <float>46.7101</float>
+                                            <float>30.4</float>
+                                          </values>
+                                        </OTDataStore>
+                                      </dataStore>
+                                    </OTDataGraphable>
+                                  </source>
+                                  <xDataAxis>
+                                    <OTDataAxis max="60.0" units="s" min="0.0" label="Time" />
+                                  </xDataAxis>
+                                  <yDataAxis>
+                                    <OTDataAxis max="40.0" units="" min="-0.0" label="" />
+                                  </yDataAxis>
+                                </OTDataCollector>
+                              </documentRefs>
+                              <bodyText>
+                                <object refid="2cfbc219-e323-11dd-affb-93f2c178f5ee" />
+                                <br />
+                              </bodyText>
+                            </OTUDLCompoundDoc>
+                          </cards>
+                          <currentCard>
+                            <object refid="29d15d28-e323-11dd-affb-93f2c178f5ee" />
+                          </currentCard>
+                          <viewedCards>
+                            <object refid="166808a5-e323-11dd-affb-93f2c178f5ee" />
+                            <object refid="1e4b13ac-e323-11dd-affb-93f2c178f5ee" />
+                            <object refid="240a0632-e323-11dd-affb-93f2c178f5ee" />
+                            <object refid="29d15d28-e323-11dd-affb-93f2c178f5ee" />
+                          </viewedCards>
+                        </OTCardContainer>
+                        <object refid="29dc5ef0-c453-11dc-95ff-0800200c9a66" />
+                        <OTUDLMenu id="166808a4-e323-11dd-affb-93f2c178f5ee" showBorder="false">
+                          <cardContainer>
+                            <object refid="166808a3-e323-11dd-affb-93f2c178f5ee" />
+                          </cardContainer>
+                          <menuRule>
+                            <OTUDLMenuRule jumpToViewedCard="true" stepAhead="true" />
+                          </menuRule>
+                        </OTUDLMenu>
+                        <OTUDLLeveledQuestions id="9db617ff-e323-11dd-bc3f-71bb7aaaa0c7" name="Leveled questions">
+                          <questions>
+                            <OTUDLQuestion name="L5" showConvertButton="false" showScaffolding="true">
+                              <prompt>
+                                <OTCompoundDoc>
+                                  <bodyText>Insert question here</bodyText>
+                                </OTCompoundDoc>
+                              </prompt>
+                              <input>
+                                <OTText />
+                              </input>
+                            </OTUDLQuestion>
+                            <OTUDLQuestion name="L4" showConvertButton="false" showScaffolding="true">
+                              <prompt>
+                                <OTCompoundDoc>
+                                  <bodyText>Insert question here</bodyText>
+                                </OTCompoundDoc>
+                              </prompt>
+                              <input>
+                                <OTChoice name="Multiple choice" alignContent="0">
+                                  <choices>
+                                    <OTCompoundDoc name="a">
+                                      <bodyText>a</bodyText>
+                                    </OTCompoundDoc>
+                                    <OTCompoundDoc name="b">
+                                      <bodyText>b</bodyText>
+                                    </OTCompoundDoc>
+                                  </choices>
+                                </OTChoice>
+                              </input>
+                            </OTUDLQuestion>
+                            <OTUDLQuestion name="L3" showConvertButton="false" showScaffolding="true">
+                              <prompt>
+                                <OTCompoundDoc>
+                                  <bodyText>Insert question here</bodyText>
+                                </OTCompoundDoc>
+                              </prompt>
+                              <input>
+                                <OTText />
+                              </input>
+                            </OTUDLQuestion>
+                            <OTUDLQuestion name="L2" showConvertButton="false" showScaffolding="true">
+                              <prompt>
+                                <OTCompoundDoc>
+                                  <bodyText>Insert question here</bodyText>
+                                </OTCompoundDoc>
+                              </prompt>
+                              <input>
+                                <OTText />
+                              </input>
+                            </OTUDLQuestion>
+                            <OTUDLQuestion name="L1" showConvertButton="false" showScaffolding="true">
+                              <prompt>
+                                <OTCompoundDoc>
+                                  <bodyText>Insert question here</bodyText>
+                                </OTCompoundDoc>
+                              </prompt>
+                              <input>
+                                <OTText />
+                              </input>
+                            </OTUDLQuestion>
+                          </questions>
+                        </OTUDLLeveledQuestions>
+                        <OTDrawingTool2 id="b4a9a4cb-e323-11dd-bc3f-71bb7aaaa0c7" name="Draw tool">
+                          <graphables>
+                            <OTDataGraphable color="0" connectPoints="true" drawMarks="false" xColumn="0" yColumn="1" name="" lineWidth="2.0" visible="true" drawing="true">
+                              <dataStore>
+                                <OTDataStore />
+                              </dataStore>
+                            </OTDataGraphable>
+                          </graphables>
+                        </OTDrawingTool2>
+                        <OTDataCollector id="0d1c50a3-e324-11dd-82be-ed3b02505e76" name="Data graph" title="Data graph" multipleGraphableEnabled="true">
+                          <source>
+                            <OTDataGraphable name="Data Graph" connectPoints="true" controllable="true" yColumn="1" drawMarks="false" color="16711680" xColumn="0" lineWidth="2.0" visible="true">
+                              <dataStore>
+                                <OTDataStore numberChannels="2">
+                                  <values>
+                                    <float>1.5234375</float>
+                                    <float>6.6285715</float>
+                                    <float>1.640625</float>
+                                    <float>6.857143</float>
+                                    <float>1.7578125</float>
+                                    <float>6.9714284</float>
+                                    <float>1.875</float>
+                                    <float>7.2</float>
+                                    <float>2.2265625</float>
+                                    <float>7.542857</float>
+                                    <float>2.34375</float>
+                                    <float>7.6571426</float>
+                                    <float>2.4609375</float>
+                                    <float>7.6571426</float>
+                                    <float>2.578125</float>
+                                    <float>7.6571426</float>
+                                    <float>2.8125</float>
+                                    <float>8.0</float>
+                                    <float>3.046875</float>
+                                    <float>8.114285</float>
+                                    <float>3.1640625</float>
+                                    <float>8.342857</float>
+                                    <float>3.28125</float>
+                                    <float>8.342857</float>
+                                    <float>3.3984375</float>
+                                    <float>8.457143</float>
+                                    <float>3.6328125</float>
+                                    <float>8.8</float>
+                                    <float>4.21875</float>
+                                    <float>9.257143</float>
+                                    <float>4.5703125</float>
+                                    <float>9.714286</float>
+                                    <float>4.8046875</float>
+                                    <float>10.057143</float>
+                                    <float>4.921875</float>
+                                    <float>10.171429</float>
+                                    <float>5.15625</float>
+                                    <float>10.514286</float>
+                                    <float>5.5078125</float>
+                                    <float>10.742857</float>
+                                    <float>5.7421875</float>
+                                    <float>10.971429</float>
+                                    <float>6.09375</float>
+                                    <float>11.314285</float>
+                                    <float>6.328125</float>
+                                    <float>11.542857</float>
+                                    <float>6.5625</float>
+                                    <float>11.885715</float>
+                                    <float>6.796875</float>
+                                    <float>12.228572</float>
+                                    <float>6.9140625</float>
+                                    <float>12.457143</float>
+                                    <float>7.1484375</float>
+                                    <float>12.571428</float>
+                                    <float>7.265625</float>
+                                    <float>12.8</float>
+                                    <float>7.6171875</float>
+                                    <float>13.142858</float>
+                                    <float>7.734375</float>
+                                    <float>13.257143</float>
+                                    <float>7.96875</float>
+                                    <float>13.714286</float>
+                                    <float>8.5546875</float>
+                                    <float>14.285714</float>
+                                    <float>8.90625</float>
+                                    <float>14.742857</float>
+                                    <float>9.4921875</float>
+                                    <float>15.085714</float>
+                                    <float>10.078125</float>
+                                    <float>15.542857</float>
+                                    <float>10.6640625</float>
+                                    <float>16.0</float>
+                                    <float>11.25</float>
+                                    <float>16.685715</float>
+                                    <float>12.0703125</float>
+                                    <float>17.37143</float>
+                                    <float>14.6484375</float>
+                                    <float>19.2</float>
+                                    <float>16.054688</float>
+                                    <float>20.22857</float>
+                                    <float>17.34375</float>
+                                    <float>21.142857</float>
+                                    <float>18.632812</float>
+                                    <float>22.057142</float>
+                                    <float>20.273438</float>
+                                    <float>23.085714</float>
+                                    <float>22.148438</float>
+                                    <float>24.114286</float>
+                                    <float>24.375</float>
+                                    <float>25.257143</float>
+                                    <float>27.304688</float>
+                                    <float>26.62857</float>
+                                    <float>30.117188</float>
+                                    <float>28.0</float>
+                                    <float>32.929688</float>
+                                    <float>29.257143</float>
+                                    <float>36.679688</float>
+                                    <float>30.514286</float>
+                                    <float>40.546875</float>
+                                    <float>31.542856</float>
+                                    <float>44.414062</float>
+                                    <float>32.57143</float>
+                                    <float>47.578125</float>
+                                    <float>33.37143</float>
+                                    <float>49.804688</float>
+                                    <float>34.4</float>
+                                    <float>51.914062</float>
+                                    <float>35.085712</float>
+                                    <float>55.546875</float>
+                                    <float>36.228573</float>
+                                    <float>56.484375</float>
+                                    <float>36.228573</float>
+                                    <float>56.601562</float>
+                                    <float>36.228573</float>
+                                    <float>56.71875</float>
+                                    <float>36.114285</float>
+                                  </values>
+                                </OTDataStore>
+                              </dataStore>
+                            </OTDataGraphable>
+                          </source>
+                          <xDataAxis>
+                            <OTDataAxis max="60.0" units="s" min="0.0" label="Time" />
+                          </xDataAxis>
+                          <yDataAxis>
+                            <OTDataAxis max="40.0" units="" min="-0.0" label="" />
+                          </yDataAxis>
+                          <graphables>
+                            <OTDataGraphable drawMarks="false" color="255" connectPoints="true" xColumn="0" yColumn="1" name="a" lineWidth="2.0" visible="true">
+                              <dataStore>
+                                <OTDataStore />
+                              </dataStore>
+                            </OTDataGraphable>
+                            <OTDataGraphable drawMarks="false" color="65535" connectPoints="true" xColumn="0" yColumn="1" name="b" lineWidth="2.0" visible="true">
+                              <dataStore>
+                                <OTDataStore />
+                              </dataStore>
+                            </OTDataGraphable>
+                            <OTDataGraphable drawMarks="false" color="8421504" connectPoints="true" xColumn="0" yColumn="1" name="c" lineWidth="2.0" visible="true">
+                              <dataStore>
+                                <OTDataStore />
+                              </dataStore>
+                            </OTDataGraphable>
+                          </graphables>
+                        </OTDataCollector>
+                        <object refid="9dc39090-e324-11dd-9ce1-d365547a4236" />
+                        <OTUDLQuestion id="a6e07b21-e324-11dd-9ce1-d365547a4236" name="Question" showConvertButton="false">
+                          <prompt>
+                            <OTCompoundDoc>
+                              <bodyText>Insert question here</bodyText>
+                            </OTCompoundDoc>
+                          </prompt>
+                          <input>
+                            <OTCompoundDoc name="Smart graph number" showEditBar="false">
+                              <documentRefs>
+                                <OTText id="a9ffe399-e324-11dd-9ce1-d365547a4236" />
+                                <OTScriptButton id="a9ffe39a-e324-11dd-9ce1-d365547a4236" text="Check answer">
+                                  <script>
+                                    <OTJRuby src="scripts/smart_graph_number_script_template.rb">
+                                      <script># Original template file: scripts/smart_graph_number_script_template.rb
+
+# Setting the DEBUG constant to true will generate additional 
+# debugging information in the Java console.
+# DEBUG=true
+
+eval Java::JavaLang::String.new($otrunk_ruby_script_tools.src).to_s
+eval Java::JavaLang::String.new($smart_graph_range_response.src).to_s
+
+# Edit the values in the response_key Hash below to customize the
+# Smart Graph Query responses
+
+response_key = {
+  # Optional: You can specify the prompt in the script, this will override the 
+  # value entered in the question object.
+  # :prompt =&gt; "Please answer this question: how much?",
+  
+  # Specify the response_type as :number when the
+  # learner responds to the question by entering a number.
+  :response_type =&gt; :number,
+  
+  # The value for a :range key can be any of the following:
+  #
+  #   a Ruby Range object
+  #
+  #     &lt;start_of_range&gt;..&lt;end_of_range&gt;
+  #
+  #   The values for start_of_range and end_of_range can be
+  #   Fixnums (Integers) or Floats. Specify a floating point 
+  #   by including a decimal point and at least one one digit
+  #   to the right of the decimal point.
+  #
+  #   Example: 30.0..31.5
+  #
+  #   a Ruby number (Fixnum or Float)
+  #
+  #   Examples: 26, 30.0
+  #
+  #   *** If you specify the correct_range with a number instead of a range object
+  #   *** you must also specify a highlight_range using a range object. 
+  #
+  # valid axis values are :x and :y
+  #
+  :correct_range =&gt; { :range =&gt; 0.0..5.0, :axis =&gt; :x },
+  
+  # Optional: specify the highlight_range if it is different than the correct_range
+  # :highlight_range =&gt; { :range =&gt; 5..30, :axis =&gt; :x },
+  :no_answer_entered =&gt; 
+    { :text =&gt; "Enter your estimate in the box below. Use a number, no letters.", :highlight_region =&gt; false  },
+  :correct =&gt; 
+    { :text =&gt; "Good job! Go to the next page.", :highlight_region =&gt; false },
+  :first_wrong_answer =&gt; 
+    { :text =&gt; "That's not correct. ", :highlight_region =&gt; false  },
+  :second_wrong_answer =&gt; 
+    { :text =&gt; "That's still not correct. Read the value of the highlighted part of the graph from the y-axis on the left.", 
+  # { :text =&gt; "That's still not correct. Read the value of the highlighted part of the graph from the x-axis along the bottom.", 
+
+    :highlight_region =&gt; true },
+  :multiple_wrong_answers =&gt; 
+    { :text =&gt; "That's still not correct. ", :highlight_region =&gt; true }
+}
+
+# Create a new SmartGraphRangeResponse object with your response_key and the 
+# global variables created by the Smart Graph Number type Question input.
+@smart_graph_range_response = SmartGraphRangeResponse.new(response_key, $graph, $smart, $correct, $times_incorrect, $question, $text_field)
+
+# When the "Check Answer" button is clicked the clicked method
+# of the @smart_graph_range_response object will be called.
+def self.clicked
+  @smart_graph_range_response.clicked
+end</script>
+                                    </OTJRuby>
+                                  </script>
+                                </OTScriptButton>
+                                <OTScriptButton id="a9ffe39b-e324-11dd-9ce1-d365547a4236" text="Setup">
+                                  <script>
+                                    <OTJavascript src="scripts/set-up-smartgraph-button-script.js" />
+                                  </script>
+                                  <scriptVariables>
+                                    <OTScriptVariable name="text_field">
+                                      <reference>
+                                        <object refid="a9ffe399-e324-11dd-9ce1-d365547a4236" />
+                                      </reference>
+                                    </OTScriptVariable>
+                                    <OTScriptVariable name="script_button">
+                                      <reference>
+                                        <object refid="a9ffe39a-e324-11dd-9ce1-d365547a4236" />
+                                      </reference>
+                                    </OTScriptVariable>
+                                    <OTScriptVariableComponent name="script_button_component">
+                                      <reference>
+                                        <object refid="a9ffe39a-e324-11dd-9ce1-d365547a4236" />
+                                      </reference>
+                                    </OTScriptVariableComponent>
+                                    <OTScriptVariable name="smart_graph_range_response">
+                                      <reference>
+                                        <OTBlob src="scripts/smart_graph_range_response.rb" />
+                                      </reference>
+                                    </OTScriptVariable>
+                                    <OTScriptVariable name="otrunk_ruby_script_tools">
+                                      <reference>
+                                        <OTBlob src="scripts/otrunk_ruby_script_tools.rb" />
+                                      </reference>
+                                    </OTScriptVariable>
+                                  </scriptVariables>
+                                </OTScriptButton>
+                              </documentRefs>
+                              <bodyText>
+                                <object refid="a9ffe399-e324-11dd-9ce1-d365547a4236" />
+                                <br />
+                                <table>
+                                  <tr>
+                                    <td width="100px">
+                                      <object refid="a9ffe39a-e324-11dd-9ce1-d365547a4236" />
+                                    </td>
+                                    <td width="100px">
+                                      <object refid="a9ffe39b-e324-11dd-9ce1-d365547a4236" viewid="4f731e40-c257-11dc-95ff-0800200c9a66!/script-button-for-authors" />
+                                    </td>
+                                  </tr>
+                                </table>
+                              </bodyText>
+                            </OTCompoundDoc>
+                          </input>
+                        </OTUDLQuestion>
+                      </documentRefs>
+                    </OTCompoundDoc>
+                  </cards>
+                  <currentCard>
+                    <object refid="${page-1}" />
+                  </currentCard>
+                  <viewedCards>
+                    <object refid="${page-1}" />
+                  </viewedCards>
+                </OTCardContainer>
+              </content>
+              <footer>
+                <object refid="${nav-bar}" />
+              </footer>
+              <north>
+                <object refid="2767fe20-6c7d-11dc-8314-0800200c9a66!/section_1/header" />
+              </north>
+              <center>
+                <object refid="${activity-card-container}" />
+              </center>
+              <south>
+                <object refid="${nav-bar}" />
+              </south>
+            </OTUDLSection>
+          </activity>
+          <script>
+            <object refid="${authoring-script}" />
+          </script>
+        </OTCurriculumUnit>
+      </root>
+      <library>
+        <object refid="b6350a20-e3b4-11dc-95ff-0800200c9a66" />
+        <OTUDLMenu local_id="section-1-menu">
+          <cardContainer>
+            <object refid="${activity-card-container}" />
+          </cardContainer>
+          <menuRule>
+            <object refid="${page-rule}" />
+          </menuRule>
+        </OTUDLMenu>
+        <OTSnapshotAlbum local_id="album" />
+        <OTUDLMenuRule local_id="page-rule" jumpToViewedCard="true" stepAhead="true" />
+        <OTJavascript local_id="change_page.js" src="scripts/change_page.js" />
+        <OTJavascript local_id="show_message.js" src="scripts/show_message.js" />
+        <OTJavascript local_id="loops_authoring_script.js" src="scripts/loops_authoring_script.js" />
+        <OTScriptObject local_id="authoring-script">
+          <variables>
+            <OTScriptVariable name="cardContainer">
+              <reference>
+                <object refid="${activity-card-container}" />
+              </reference>
+            </OTScriptVariable>
+            <OTScriptVariable name="system">
+              <reference>
+                <object refid="${system}" />
+              </reference>
+            </OTScriptVariable>
+            <OTScriptVariable name="menuPageRule">
+              <reference>
+                <object refid="${page-rule}" />
+              </reference>
+            </OTScriptVariable>
+          </variables>
+          <script>
+            <object refid="${loops_authoring_script.js}" />
+          </script>
+          <scriptState />
+        </OTScriptObject>
+        <OTUDLNavBar local_id="nav-bar">
+          <menuView>
+            <object refid="29dc5ef0-c453-11dc-95ff-0800200c9a66" />
+          </menuView>
+          <cssColor>
+            <object refid="31193bb0-c44f-11dc-95ff-0800200c9a66" />
+          </cssColor>
+        </OTUDLNavBar>
+      </library>
+    </OTSystem>
+  </objects>
+</otrunk>
+
