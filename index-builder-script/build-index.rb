@@ -50,7 +50,15 @@ end
 
 otrunk_example_dirs = Dir.glob('*/*.otml').collect {|p| File.dirname(p)}.uniq
 
-index_page_body = "<table id='index' class='sortable'><thead><tr><th class='sortfirstasc'>Category</th><th class='date'>Date of last change</th><th>Number of examples</th></thead><tbody>"
+index_page_body = <<HEREDOC
+<table id='index' class='sortable'>
+  <thead>
+    <tr><th class='sortfirstasc'>Category</th>
+    <th class='date'>Date of last change</th>
+    <th>Number of examples</th>
+  </thead>
+  <tbody>
+HEREDOC
 
 # == gmt_time_from_svn_time ==
 #
@@ -77,11 +85,9 @@ otrunk_example_dirs.each do |path|
 end
 
 index_page_body += "</tbody></table>"
-index_page_body += "<hr/><br/><br/><a href=\"http://continuum.concord.org/cgi-script/build-index.rb
-\">Update Index</a>"
+index_page_body += "<hr/><br/><br/><a href='http://continuum.concord.org/cgi-script/build-index.rb'>Update Index</a>"
 
 writeHtmlPage("OTrunk Examples", index_page_body, "example-index.html")
-
 
 otrunk_example_dirs.each do |path|
   if File.exists?("#{path}/jnlp_url.tmpl")
@@ -93,9 +99,23 @@ otrunk_example_dirs.each do |path|
   # Append: jnlp properties: otrunk.view.author=true and otrunk.view.mode=authoring
   jnlp_url_tmpl_author = jnlp_url_tmpl + "&jnlp_properties=otrunk.view.author%253Dtrue%2526otrunk.view.mode%253Dauthoring"
 
-  otml_launchers = "<h4>Run Examples</h4> <table cellspacing=2 id='otml_launchers' class='sortable''><thead><tr><th><b>example</b></th><th class='nosort'><b>jnlp</b></th><th class='nosort'><b>jnlp</b></th><th><b>otml file</b></th><th class='number sortfirstdesc'><b>most recent revision</b></th></tr></thead><tbody>"
+  otml_launchers = <<HEREDOC
+<h4>Run Examples</h4> 
+  <table cellspacing=2 id='otml_launchers' class='sortable''>
+    <thead>
+      <tr>
+        <th><b>example</b></th>
+        <th class='nosort'><b>jnlp</b></th>
+        <th class='nosort'><b>jnlp</b></th>
+        <th class='date'>Date of last change</th>
+        <th><b>otml file</b></th>
+        <th class='number sortfirstdesc'><b>most recent revision</b></th>
+        </tr>
+      </thead>
+    <tbody>
+HEREDOC
 
-  description_of_jnlps = <<HERE
+  description_of_jnlps = <<HEREDOC
 <h4>Description of the difference between running an activity in learner mode and author mode</h4>
 <p>Running an OTrunk example in learner mode uses the default view mode which assumes a learner. In addition if you use the File menu to save the otml only the differences between the activity otml and the changes will be saved. The otml saved is the learner difference otml and is often much smaller than activty otml.</p>
 <p>Running an OTrunk example in author mode sets the following jnlp properties:</p>
@@ -105,7 +125,7 @@ otrunk_example_dirs.each do |path|
 </ul>
 <p>Setting otrunk.view.author to true causes the entire OTrunk state to be saved as otml when a File save is performed. Setting otrunk.view.mode to authoring is used in the view system to enable authoring affordances in the views. Many examples do not have special authoring views. The Basic Example: document-edit.otml does have both authoring and student view modes.</p>
 <hr/>
-HERE
+HEREDOC
 
   java_web_start_warning = <<HERE
 <h4>MacOS X Java Web Start Problem</h4>
@@ -121,6 +141,11 @@ HERE
   Dir.glob("#{path}/*").sort.each do |subpath|
     filename = File.basename(subpath)
     if subpath =~ /.*otml$/
+      if svn_props = YAML::load(`svn info #{subpath}`)
+        gmt_time = gmt_time_from_svn_time(svn_props["Last Changed Date"])
+      else
+        gmt_time = (File.stat(subpath).mtime).gmtime
+      end
       # look up the file in the .svn/entries file to gets its svn commit number 
       svn_status = `svn status -v #{subpath}`
       re = / *(\d*) *(\d*)/
@@ -132,7 +157,14 @@ HERE
       trac_otml_url = "http://trac.cosmos.concord.org/projects/browser/trunk/common/java/otrunk/otrunk-examples/#{subpath}"
       jnlp_url = jnlp_url_tmpl.sub(/%otml_url%/, otml_url)
       jnlp_author_url = jnlp_url_tmpl_author.sub(/%otml_url%/, otml_url)
-      otml_launchers += "<tr><td width=280>#{example_name}</td><td width=100><a href=""#{jnlp_url}"">learner</a></td><td width=120><a href=#{jnlp_author_url}>author</a></td><td width=280><a href=#{filename}>#{filename}</a></td><td width=180><a href=#{trac_otml_url}>#{svn_rev2}</a></td></tr>\n"
+      otml_launchers += <<HEREDOC
+<tr>
+  <td width=220>#{example_name}</td>
+  <td width=60><a href=""#{jnlp_url}"">learner</a></td>
+  <td width=60><a href=#{jnlp_author_url}>author</a></td>
+  <td width=180 class='timestyle'>#{gmt_time}</td>
+  <td width=260><a href=#{otml_display_url}>#{filename}</a></td>
+HEREDOC
     end
     
     all_files += "<tr><td><a href=""#{filename}"">#{filename}</a></td></tr>\n"

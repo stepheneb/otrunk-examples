@@ -93,7 +93,15 @@ end
 
 otrunk_example_dirs = Dir.glob("#{LOCAL_ROOT}/*/*.otml").collect {|p| File.dirname(p)}.uniq
 
-index_page_body = "<table id='index' class='sortable'><thead><tr><th class='sortfirstasc'>Category</th><th class='date'>Date of last change</th><th>Number of examples</th></thead><tbody>"
+index_page_body = <<HEREDOC
+<table id='index' class='sortable'>
+  <thead>
+    <tr><th class='sortfirstasc'>Category</th>
+    <th class='date'>Date of last change</th>
+    <th>Number of examples</th>
+  </thead>
+  <tbody>
+HEREDOC
 
 # == gmt_time_from_svn_time ==
 #
@@ -151,7 +159,21 @@ otrunk_example_dirs.each do |path|
   # Append: jnlp properties: otrunk.view.author=true and otrunk.view.mode=authoring
   jnlp_url_tmpl_author = jnlp_url_tmpl + "&jnlp_properties=otrunk.view.author%253Dtrue%2526otrunk.view.mode%253Dauthoring"
 
-  otml_launchers = "<h4>Run Examples</h4> <table cellspacing=2 id='otml_launchers' class='sortable''><thead><tr><th><b>example</b></th><th class='nosort'><b>jnlp</b></th><th class='nosort'><b>jnlp</b></th><th><b>otml file</b></th><th class='number sortfirstdesc'><b>most recent revision</b></th></tr></thead><tbody>"
+  otml_launchers = <<HEREDOC
+<h4>Run Examples</h4> 
+  <table cellspacing=2 id='otml_launchers' class='sortable''>
+    <thead>
+      <tr>
+        <th><b>example</b></th>
+        <th class='nosort'><b>jnlp</b></th>
+        <th class='nosort'><b>jnlp</b></th>
+        <th class='date'>Date of last change</th>
+        <th><b>otml file</b></th>
+        <th class='number sortfirstdesc'><b>most recent revision</b></th>
+        </tr>
+      </thead>
+    <tbody>
+HEREDOC
 
   description_of_jnlps = <<HERE
 <h4>Description of the difference between running an activity in learner mode and author mode</h4>
@@ -179,6 +201,11 @@ HERE
   Dir.glob("#{path}/*").sort.each do |subpath|
     filename = File.basename(subpath)
     if subpath =~ /.*otml$/
+      if svn_props = YAML::load(`svn info #{subpath}`)
+        gmt_time = gmt_time_from_svn_time(svn_props["Last Changed Date"])
+      else
+        gmt_time = (File.stat(subpath).mtime).gmtime
+      end
       svn_status = `svn status -v #{subpath}`
       re = / *(\d*) *(\d*)/
       match = re.match(svn_status)
@@ -195,7 +222,14 @@ HERE
       else
         otml_display_url = "#{filename}"
       end
-      otml_launchers += "<tr><td width=280>#{example_name}</td><td width=100><a href=""#{jnlp_url}"">learner</a></td><td width=120><a href=#{jnlp_author_url}>author</a></td><td width=280><a href=#{otml_display_url}>#{filename}</a></td>\n"
+      otml_launchers += <<HEREDOC
+<tr>
+  <td width=220>#{example_name}</td>
+  <td width=60><a href=""#{jnlp_url}"">learner</a></td>
+  <td width=60><a href=#{jnlp_author_url}>author</a></td>
+  <td width=180 class='timestyle'>#{gmt_time}</td>
+  <td width=260><a href=#{otml_display_url}>#{filename}</a></td>
+HEREDOC
       if svn_rev2.empty? 
         otml_launchers += "<td width=180>not in svn</td></tr>"
       else
@@ -215,6 +249,8 @@ HERE
   index_page_body += "<hr/><p>The jnlp urls for #{File.basename(path)} were constructed using the following template:<p/>\n"
   index_page_body += "<p><code>#{jnlp_url_tmpl}</code></p>\n"
   index_page_body += "<p>You can change this string by putting it in a file named: <b>jnlp_url.tmpl</b> in the directory #{File.dirname(path)}</p>"
+  
+  index_page_body += "<hr/><p>Update the local otrunk-examples indexs by running this code in a shell:</p><p><code> ruby #{File.expand_path(__FILE__)}</code></p>"
   
   writeHtmlPage("#{File.basename(path)} Examples", index_page_body, "#{path}/ot-index.html");
 end
