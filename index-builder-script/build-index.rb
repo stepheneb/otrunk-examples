@@ -153,7 +153,7 @@ HERE
       svn_rev1 = match[1]
       svn_rev2 = match[2]
       example_name = filename[/(.*)\.otml/, 1]
-      otml_display_url = "http://continuum.concord.org/otrunk/examples/#{subpath}"
+      otml_url = "http://continuum.concord.org/otrunk/examples/#{subpath}"
       trac_otml_url = "http://trac.cosmos.concord.org/projects/browser/trunk/common/java/otrunk/otrunk-examples/#{subpath}"
       jnlp_url = jnlp_url_tmpl.sub(/%otml_url%/, otml_url)
       jnlp_author_url = jnlp_url_tmpl_author.sub(/%otml_url%/, otml_url)
@@ -163,7 +163,7 @@ HERE
   <td width=60><a href=""#{jnlp_url}"">learner</a></td>
   <td width=60><a href=#{jnlp_author_url}>author</a></td>
   <td width=180 class='timestyle'>#{gmt_time}</td>
-  <td width=260><a href=#{otml_display_url}>#{filename}</a></td>
+  <td width=260><a href=#{otml_url}>#{filename}</a></td>
 HEREDOC
     end
     
