@@ -166,7 +166,7 @@ HERE
   <td width=260><a href=#{otml_url}>#{filename}</a></td>
 HEREDOC
     end
-    if svn_rev2.empty? 
+    if svn_rev2 && svn_rev2.empty?
       otml_launchers += "<td width=180>not in svn</td></tr>"
     else
       otml_launchers += "<td width=180><a href=#{trac_otml_url}>#{svn_rev2}</a></td></tr>"
