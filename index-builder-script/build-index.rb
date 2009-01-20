@@ -160,10 +160,10 @@ HERE
       otml_launchers += <<HEREDOC
 <tr>
   <td width=220>#{example_name}</td>
-  <td width=60><a href=""#{jnlp_url}"">learner</a></td>
-  <td width=60><a href=#{jnlp_author_url}>author</a></td>
+  <td width=60><a href="#{jnlp_url}">learner</a></td>
+  <td width=60><a href="#{jnlp_author_url}">author</a></td>
   <td width=180 class='timestyle'>#{gmt_time}</td>
-  <td width=260><a href=#{otml_url}>#{filename}</a></td>
+  <td width=260><a href="#{otml_display_url}">#{filename}</a></td>
 HEREDOC
       if svn_rev2 && svn_rev2.empty?
         otml_launchers += "<td width=180>not in svn</td></tr>"
