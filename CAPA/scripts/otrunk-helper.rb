@@ -9,27 +9,27 @@ include_class 'org.concord.otrunk.ui.OTText'
 include_class 'org.concord.otrunk.script.ui.OTScriptVariable'
 
 class OTrunkHelper
-  
+
   MC_SINGLE_REPORT = 1 #Individual report for multi-choice test
   MC_GROUP_REPORT = 2  #Group report for multi-choice test 
   PF_SINGLE_REPORT = 3 #Individual report for performance assessment
   PF_GROUP_REPORT = 4  #Group report for performance assessment
-    
+
   def initialize(task)
     @users = nil
     @scriptObjectContentsMap = nil
     @questions = nil
-    
+
     @task = task 
     _sanityCheck
-    
+
     @otrunk = $viewContext.getViewService(OTrunk.java_class)
   end
   
   def rootObject
     @otrunk.getRoot
   end
-  
+
   def activityRoot
     return case @task
       when MC_SINGLE_REPORT 
@@ -40,11 +40,11 @@ class OTrunkHelper
         nil
       end
   end
-  
+
   def userObject(obj, user)
     @otrunk.getUserRuntimeObject(obj, user)
   end
-  
+
   def users
     unless @users
       userListService = $viewContext.getViewService(OTUserListService.java_class)
@@ -54,22 +54,26 @@ class OTrunkHelper
     end
     return @users
   end
-  
+
   def hasUserModified(obj, user)
     @otrunk.hasUserModified(obj, user)
   end
-  
+
   def teacherName
     name = System.getProperty('report.teacher.name')
     return (name == nil) ? 'Unknown' : name
   end
-  
+
   def className
     name = System.getProperty('report.class.name')
     return (name == nil) ? 'Unknown' : name
   end
-  
-  
+
+  def activityName
+    name = System.getProperty('report.activity.name')
+    return (name == nil) ? 'Unknown' : name
+  end
+
   ## @scriptObjectContentsMap is a hash where a key is an OTUser object
   ## and a value is a Vector of objects (possibly of OTAssessment type) for the user 
   def scriptObjectContentsMap
@@ -80,7 +84,7 @@ class OTrunkHelper
     end
     return @scriptObjectContentsMap
   end
-  
+
   ## Get last item in user script object contents that is a sub-type of contentType 
   def getLastContent(user, contentType)
     last = nil
@@ -95,7 +99,7 @@ class OTrunkHelper
     yield otObj
     otObj
   end
-  
+
   def getQuestions
     unless @questions
       @questions = case @task
@@ -112,7 +116,7 @@ class OTrunkHelper
   end
 
  private
- 
+
   def _sanityCheck
     _varCheck($otObjectService, '$otObjectService')
     _varCheck($viewContext, '$viewContext')
@@ -127,7 +131,7 @@ class OTrunkHelper
       Util.error("Invalid @task value #{@task}")
     end
   end
-  
+
   def _varCheck(v, name)
     if defined?(v)
       Util.error("#{name} is nil") unless v
@@ -135,11 +139,11 @@ class OTrunkHelper
       Util.error("#{name} not defined")
     end
   end
- 
+
   def _getQuestionsThruDocRefs
     questions = []
     cards = activityRoot.getActivity.getContent.getCards.getVector
-  
+
     for doc in cards
       refs = doc.getDocumentRefs
       for ref in refs
@@ -150,7 +154,7 @@ class OTrunkHelper
     end
     return questions
   end
-  
+
   def _getQuestionsThruScriptObject
     questions = []
     variables = $scriptObject.getVariables.getVector
@@ -159,5 +163,5 @@ class OTrunkHelper
     end
     return questions
   end
-  
+
 end
