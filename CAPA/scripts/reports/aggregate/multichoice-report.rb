@@ -80,12 +80,15 @@ end
 def getSurveyCsvText
   sep = '|'
   newline = "\n"
-  t = ['First Name', 'Last Name', 'Name', 'Age', 'Gender', 'Year', 
-    'Electronics Major?'].join(sep) + newline 
-  for user in @otrunkHelper.users
+  t = ['Class', 'Teacher', 'First Name', 'Last Name', 'Activity Name', 'Name', 'Age', 'Gender', 'Year', 
+       'Electronics Major?'].join(sep) + newline 
+  @otrunkHelper.users.each do |user|
+    t << @otrunkHelper.className << sep
+    t << @otrunkHelper.teacherName << sep
     name = user.getName.split
-    t <<  (name.size > 1 ? name[0] : '') + sep + name[-1] + sep
-    for question in @questions.questions 
+    t << (name.size > 1 ? name[0] : '') + sep + name[-1] + sep
+    t << @otrunkHelper.activityName << sep
+    @questions.questions.each do |question|
       t << surveyAnswerText(user, question) + sep
     end 
     t << newline
