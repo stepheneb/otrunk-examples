@@ -56,7 +56,7 @@ def getCsvText
   @questions.questions.size.times do |i| 
     t << "Correct #{i+1}" + sep + (i + 1).to_s + sep
   end
-  t << "Points (out of #{@questions.questions.size})"
+  t << "Max Points" << sep << "Points"
   t << "\n"
 
   for user in @otrunkHelper.users
@@ -70,6 +70,7 @@ def getCsvText
       t << @questions.correctAnswerText(question).to_s + sep
       t << @questions.answerText(user, question) + sep
     end 
+    t << @questions.questions.size.to_s + sep
     t << @questions.getPoints(user).to_s
     t << "\n" 
   end
