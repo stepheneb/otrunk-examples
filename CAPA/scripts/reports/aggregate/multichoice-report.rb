@@ -18,13 +18,13 @@ include_class 'org.concord.otrunk.capa.question.OTEmbeddedTextInput'
 def getText
   @debug = true  
   init 
-  
+
   if $action
     actionStr = $action.string
   else
     actionStr = '@controller.defaultTemplate'
   end
-  
+
   return eval(actionStr)
 end
 
@@ -51,24 +51,23 @@ end
 
 def getCsvText
   sep = "|"
-  t = ""
+  t = ['Teacher', 'Class', 'First Name', 'Last Name', 'Activity Name'].join(sep) + sep
   
-  t << "Question Number" + sep 
   @questions.questions.size.times do |i| 
-    t << (i + 1).to_s + sep 
+    t << "Correct #{i+1}" + sep + (i + 1).to_s + sep
   end
   t << "Points (out of #{@questions.questions.size})"
   t << "\n"
-   
-  t << "Correct Answer" + sep
-  for question in @questions.questions 
-      t << @questions.correctAnswerText(question).to_s + sep 
-  end 
-  t << "\n"
-  
-  for user in @otrunkHelper.users 
-    t << user.getName + sep
-    for question in @questions.questions 
+
+  for user in @otrunkHelper.users
+    t << @otrunkHelper.teacherName << sep
+    t << @otrunkHelper.className << sep
+    name = user.getName.split
+    t << (name.size > 1 ? name[0] : '') + sep + name[-1] + sep
+    t << @otrunkHelper.activityName << sep
+
+    for question in @questions.questions
+      t << @questions.correctAnswerText(question).to_s + sep
       t << @questions.answerText(user, question) + sep
     end 
     t << @questions.getPoints(user).to_s
@@ -80,11 +79,11 @@ end
 def getSurveyCsvText
   sep = '|'
   newline = "\n"
-  t = ['Class', 'Teacher', 'First Name', 'Last Name', 'Activity Name', 'Name', 'Age', 'Gender', 'Year', 
+  t = ['Teacher', 'Class', 'First Name', 'Last Name', 'Activity Name', 'Name', 'Age', 'Gender', 'Year', 
        'Electronics Major?'].join(sep) + newline 
   @otrunkHelper.users.each do |user|
-    t << @otrunkHelper.className << sep
     t << @otrunkHelper.teacherName << sep
+    t << @otrunkHelper.className << sep
     name = user.getName.split
     t << (name.size > 1 ? name[0] : '') + sep + name[-1] + sep
     t << @otrunkHelper.activityName << sep
