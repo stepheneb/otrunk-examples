@@ -116,10 +116,12 @@ def getCsvHeader
 end
 
 def getCsvUserLine(user, assessment, rubric)
-  t = ''
-
+  t = @otrunkHelper.teacherName << @sep
+  t << @otrunkHelper.className << @sep
   name = user.getName.split
-  t <<  (name.size > 1 ? name[0] : '') + @sep + name[-1] + @sep
+  t << (name.size > 1 ? name[0] : '') + @sep + name[-1] + @sep
+  t << @otrunkHelper.activityName << @sep
+
   t << @correctCarrierFrq + @sep + @submittedCarrierFrq + @sep
   t << @correctModFrq + @sep + @submittedModFrq + @sep
   t << @correctModIndex + @sep + @submittedModIndex + @sep
