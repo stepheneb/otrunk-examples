@@ -12,7 +12,7 @@ include_class 'org.concord.otrunkcapa.rubric.RubricGradeUtil'
 def getText
   @debug = true  
   init 
-  
+
   if $action
     actionStr = $action.string
   else
@@ -53,12 +53,12 @@ end
 
 def getCorrectAnswerText(userAssessment)
   cv = userAssessment.getCorrectValue
-  return "%.3f %s" % [cv.getValue, cv.getUnit]
+  "%.3f %s" % [cv.getValue, cv.getUnit]
 end 
 
 def getAnswerText(userAssessment)
   cv = userAssessment.getAnswerValue
-  return "%.3f %s" % [cv.getValue, cv.getUnit]
+  "%.3f %s" % [cv.getValue, cv.getUnit]
 end
 
 def getCsvText
@@ -83,67 +83,53 @@ def getCsvText
       Util.error("getCsvText: #{assessments.length} sub-assessments present")
       next
     end
+    
+    t << @otrunkHelper.teacherName << @sep
+    t << @otrunkHelper.className << @sep
     name = user.getName.split
-    t <<  (name.size > 1 ? name[0] : '') + @sep + name[-1] + @sep
+    t << (name.size > 1 ? name[0] : '') + @sep + name[-1] + @sep
+    t << @otrunkHelper.activityName << @sep
+
     t << csvRubricLineSegment(user, $rubric.getVoltageRubric, assessments[0])
     t << csvRubricLineSegment(user, $rubric.getCurrentRubric, assessments[1])
     t << csvRubricLineSegment(user, $rubric.getResistanceRubric, assessments[2])
-    t << OTMultimeterAsessmentGradeUtil.getTotalGrade(multimeterAssessment, $rubric).getPoints.to_s    
+    t << 100.to_s + @sep
+    t << OTMultimeterAsessmentGradeUtil.getTotalGrade(multimeterAssessment, $rubric).getPoints.to_s
     t << @newline
   end
-  return t
+  t
 end 
-  
+
 def getCsvHeader
   indicators = $rubric.getVoltageRubric.getIndicators.getVector
   labels = ['Voltage', 'Current', 'Resistance']
   rubrics = [$rubric.getVoltageRubric, $rubric.getCurrentRubric, $rubric.getResistanceRubric]
-  t = ''
-  # First line
-  skip = (indicators.size + 1) * 3
-  t << @sep * 2 + 'Voltage' + @sep * skip + 'Current'
-  t << @sep * skip + 'Resistance' + @newline
-  
-  # Second line
-  t << @sep * 2 
+
+  t = ['Teacher', 'Class', 'First Name', 'Last Name', 'Activity Name'].join(@sep) + @sep
   3.times { |i|
-    t << @sep * 2
+    t <<  "Correct #{labels[i]}" + @sep + "Submitted #{labels[i]}" + @sep
     for indicator in indicators
-      t << indicator.getName + @sep * 3  
+      t << "Max Points"+ @sep + "Points" + @sep
     end 
-    t << @sep
+    t << "Total Max Points" + @sep + "Total #{labels[i]} Points" + @sep
   }
-  t << @newline
-  
-  # Third line
-  t << 'First Name' + @sep + 'Last Name' + @sep
-  3.times { |i|
-    t << "Submitted #{labels[i]}" + @sep + "Correct #{labels[i]}" + @sep
-    for indicator in indicators
-      t << "String" + @sep + "Indicator" + @sep + "Points (#{RubricGradeUtil.getMaximumPoints(indicator)})" + @sep
-    end 
-    t << "Total #{labels[i]}Points (#{RubricGradeUtil.getTotalMaximumPoints(rubrics[i])})" + @sep
-  }
-  t << "Final Grade (100)"
+  t << "Max Final Grade" + @sep + "Final Grade"
   t << @newline
 end
 
 def csvRubricLineSegment(user, rubric, assessment)
   t = ''
-  t << getAnswerText(assessment) << @sep
   t << getCorrectAnswerText(assessment) << @sep
+  t << getAnswerText(assessment) << @sep
     
   indicators = rubric.getIndicators.getVector
   indicatorValues = assessment.getIndicatorValues  
   
   for indicator in indicators
     name = indicator.getName
-    t << @assessment.getIndicatorLabel(@indicatorMap[name], assessment, rubric) + @sep
-    t << indicatorValues.get(name).to_s + @sep
+    t << RubricGradeUtil.getMaximumPoints(indicator).to_s + @sep
     t << @assessment.getIndicatorPoints(@indicatorMap[name], assessment, rubric).to_s + @sep
   end
+  t << RubricGradeUtil.getTotalMaximumPoints(rubric).to_s + @sep
   t << RubricGradeUtil.getTotalGrade(assessment, rubric).getPoints.to_s + @sep
-  return t        
 end
-
- 
