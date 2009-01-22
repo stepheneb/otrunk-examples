@@ -97,7 +97,6 @@ def getCsvHeader
   indicators = $rubric.getIndicators.getVector
 
   t = ['Teacher', 'Class', 'First Name', 'Last Name', 'Activity Name'].join(@sep) + @sep
-  t << 'Correct Answer' + @sep + 'Submitted Answer' +  @sep
 
   t << 'Correct Amplitude' + @sep + 'Submitted Amplitude' + @sep
   t << 'Correct Frequency' + @sep + 'Submitted Frequency' + @sep
