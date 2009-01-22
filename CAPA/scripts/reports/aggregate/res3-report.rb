@@ -98,7 +98,7 @@ end
 def getCsvHeader
   indicators = $rubric.getIndicators.getVector
   t = ['Teacher', 'Class', 'First Name', 'Last Name', 'Activity Name'].join(@sep) + @sep
-  t << 'Submitted Answer' << @sep << 'Correct Answer' << @sep
+  t << 'Correct Answer' + @sep + 'Submitted Answer' +  @sep 
 
   for indicator in indicators
     t << "Max Points #{indicator.getName}"+ @sep 
@@ -115,7 +115,7 @@ def getCsvUserLine(user, assessment, rubric)
   t << (name.size > 1 ? name[0] : '') + @sep + name[-1] + @sep
   t << @otrunkHelper.activityName << @sep
 
-  t << @submittedAnswer + @sep + @correctAnswer + @sep
+  t << @correctAnswer + @sep + @submittedAnswer + @sep
 
   indicators = rubric.getIndicators.getVector
   indicatorValues = assessment.getIndicatorValues  
