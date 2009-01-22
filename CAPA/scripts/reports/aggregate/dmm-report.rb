@@ -32,7 +32,7 @@ def init
   @questions = Questions.new(@otrunkHelper)
   @assessment = Assessment.new(@otrunkHelper)
   @controller = Controller.new(binding) #erb templates will be evaluated in current binding
-  
+
   @sep = '|' #field separator in csv text 
   @newline = "\n"
 end
@@ -109,7 +109,8 @@ def getCsvHeader
   3.times { |i|
     t <<  "Correct #{labels[i]}" + @sep + "Submitted #{labels[i]}" + @sep
     for indicator in indicators
-      t << "Max Points"+ @sep + "Points" + @sep
+      t << "Max Points #{indicator.getName}"+ @sep 
+      t << "Points" + @sep
     end 
     t << "Total Max Points" + @sep + "Total #{labels[i]} Points" + @sep
   }
