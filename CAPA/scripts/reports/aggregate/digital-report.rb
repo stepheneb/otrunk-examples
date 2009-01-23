@@ -94,9 +94,9 @@ end
 def getCsvHeader
   t = ['Teacher', 'Class', 'First Name', 'Last Name', 'Activity Name'].join(@sep) + @sep
   
-  t << 'Submitted Truth Values' << @sep << 'Correct Truth Values' << @sep
+  t << 'Correct Truth Values' + @sep + 'Submitted Truth Values' + @sep
   3.times { |i|
-    t << "Submitted Fault #{i+1}" << @sep << "Correct Fault #{i+1}" << @sep
+    t << "Correct Fault #{i+1}" + @sep + "Submitted Fault #{i+1}" + @sep
   }
 
   for indicator in $rubric.getIndicators
@@ -114,10 +114,10 @@ def getCsvUserLine(user, assessment, rubric)
   t << (name.size > 1 ? name[0] : '') + @sep + name[-1] + @sep
   t << @otrunkHelper.activityName << @sep
 
-  t << @s_truthValues + @sep + @c_truthValues + @sep
-  t << @s_fault1 + @sep + @c_fault1 + @sep 
-  t << @s_fault2 + @sep + @c_fault2 + @sep
-  t << @s_fault3 + @sep + @c_fault3 + @sep
+  t << @c_truthValues + @sep + @s_truthValues + @sep
+  t << @c_fault1 + @sep + @s_fault1 + @sep
+  t << @c_fault2 + @sep + @s_fault2 + @sep
+  t << @c_fault3 + @sep + @s_fault3 + @sep
 
   indicatorValues = assessment.getIndicatorValues
 
