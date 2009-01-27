@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<otrunk id="13d3fb4f-123a-425f-9d60-d84e145c0678">
+  <imports>
+    <import class="org.concord.otrunk.OTSystem" />
+    <import class="org.concord.otrunk.biologica.OTOrganismPlacement" />
+    <import class="org.concord.otrunk.biologica.OTEnvironment" />
+    <import class="org.concord.otrunk.biologica.OTOrganism" />
+    <import class="org.concord.otrunk.biologica.OTWorld" />
+    <import class="org.concord.otrunk.view.OTViewEntry" />
+    <import class="org.concord.otrunk.view.OTViewBundle" />
+    <import class="org.concord.otrunk.view.document.OTCompoundDoc" />
+    <import class="org.concord.otrunk.script.ui.OTScriptObject" />
+    <import class="org.concord.otrunk.script.js.OTJavascript" />
+    <import class="org.concord.otrunk.script.OTScriptEngineBundle" />
+    <import class="org.concord.otrunk.script.OTScriptEngineEntry" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariable" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariableComponent" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariableView" />
+    <import class="org.concord.otrunk.script.ui.OTScriptButton" />
+    <import class="org.concord.framework.otrunk.view.OTFrame" />
+  </imports>
+
+  <objects>
+    <OTSystem>
+
+      <bundles>
+        <OTViewBundle showLeftPanel="false">
+          <viewEntries>
+            <OTViewEntry
+              objectClass="org.concord.otrunk.biologica.OTEnvironment"
+              viewClass="org.concord.otrunk.biologica.ui.OTEnvironmentView" />
+            <OTViewEntry
+              objectClass="org.concord.otrunk.script.ui.OTScriptObject"
+              viewClass="org.concord.otrunk.script.ui.OTScriptObjectView" />
+            <OTViewEntry
+              objectClass="org.concord.otrunk.view.document.OTDocument"
+              viewClass="org.concord.otrunk.view.document.OTDocumentView" />
+            <OTViewEntry 
+          	objectClass="org.concord.otrunk.script.ui.OTScriptButton" 
+          	viewClass="org.concord.otrunk.script.ui.OTScriptButtonView"/>
+          </viewEntries>
+          <frame>
+            <OTFrame useScrollPane="false" width="640" height="590" />
+          </frame>
+        </OTViewBundle>
+        <OTScriptEngineBundle>
+          <engines>
+            <OTScriptEngineEntry
+              objectClass="org.concord.otrunk.script.js.OTJavascript"
+              engineClass="org.concord.otrunk.script.js.OTJavascriptEngine" />
+          </engines>
+        </OTScriptEngineBundle>
+      </bundles>
+
+      <root>
+        <OTCompoundDoc name="Population">
+          <bodyText>
+          
+            <table >
+              <tr height="690">
+	              <td>
+	              	<object refid="${population_view}" />
+	              </td>
+	              <td>
+	              	<object refid="${add-organisms-button}"/><br/>
+	              	<object refid="${run-button}"/><br/><br/>
+	              	<object refid="${water-button}"/>
+	              </td>
+              </tr>
+            </table>
+          
+          		<object refid="${setup-script}"/>
+            </bodyText>
+          <documentRefs>
+            <OTEnvironment local_id="population_view" world="${peasimple_world}" 
+            	width="690" height="600" environmentWidth="10" environmentHeight="10"
+            	showRunButton="false">
+            </OTEnvironment>
+
+            <!-- World definition -->
+            <OTWorld
+              speciesPath="org/concord/biologica/worlds/peasimple.xml"
+              local_id="peasimple_world" />
+              <OTScriptObject local_id="setup-script">
+              		<script>
+              			<OTJavascript src="scripts/manual-water/setup.js"/>
+              		</script>
+              		<variables>
+              			<OTScriptVariableView name="envView" reference="${population_view}"/>
+              		</variables>
+              </OTScriptObject>
+              <OTScriptButton local_id="add-organisms-button" text="Add plants">
+              		<script>
+              			<OTJavascript src="scripts/manual-water/add_organisms.js"/>
+              		</script>
+              		<scriptVariables>
+              			<OTScriptVariableView name="envView" reference="${population_view}"/>
+              		</scriptVariables>
+              </OTScriptButton>
+              <OTScriptButton local_id="run-button" text="Run">
+              		<script>
+              			<OTJavascript src="scripts/manual-water/run.js"/>
+              		</script>
+              		<scriptVariables>
+              			<OTScriptVariableView name="envView" reference="${population_view}"/>
+              		</scriptVariables>
+              </OTScriptButton>
+              <OTScriptButton local_id="water-button" text="Water plants">
+              		<script>
+              			<OTJavascript src="scripts/manual-water/water.js"/>
+              		</script>
+              		<scriptVariables>
+              			<OTScriptVariableView name="envView" reference="${population_view}"/>
+              		</scriptVariables>
+              </OTScriptButton>
+          </documentRefs>
+        </OTCompoundDoc>
+
+      </root>
+
+    </OTSystem>
+  </objects>
+</otrunk>
