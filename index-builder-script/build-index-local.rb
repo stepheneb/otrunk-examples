@@ -220,7 +220,7 @@ HERE
       if USE_TEXTMATE_URLS
         otml_display_url = "txmt://open?url=file://#{File.expand_path(subpath)}"
       else
-        otml_display_url = "#{filename}"
+        otml_display_url = "#{otml_url}"
       end
       otml_launchers += <<HEREDOC
 <tr>
