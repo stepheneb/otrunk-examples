@@ -1,0 +1,67 @@
+<div class="menu">
+  <table>
+    <tr>
+      <td><div class="menu_item"><%= linkToUnitPage "Unit Summary" %></div></td>
+      <td><div class="menu_item"><%= linkToObject "CSV", activityRoot(), $glossary_csv_view %></div></td>
+    </tr>
+  </table>
+</div>
+<hr />
+<div id="content">
+  
+  <h2>Glossary items for <%= unitTitle %></h2>
+
+  <h3>Student definitions</h3>
+
+  <% glossWords = glossaryWords() %>
+  
+  <table>
+    <tr>
+     <th></th>
+     <% glossWords.each do |glossWord| %>
+      <th><%= glossWord.word %></th>  
+     <% end %>
+    </tr>
+    <% line_toggle = true %>
+    <% @users.each do |user| %>
+    <tr BGCOLOR = <%= line_toggle ? ROWCOLOR1 : ROWCOLOR2 %>>
+      <% line_toggle = !line_toggle %>
+        <% user_name = user.name
+           if user_name == nil or user_name.empty? then user_name = "blank" end
+         %>
+        <td><%= linkToObject user_name, user, $user_view %></td>
+        <% userGlossWords = userGlossaryWords(user) %>
+	    <% userGlossWords.each do |userGlossWord| %>
+	       <td><%= userGlossWord.studentDefinition %></td>  
+	   	<% end %>
+      </tr>
+    <% end %>
+  </table>
+  
+  <h3>Times viewed</h3>
+
+  <% glossWords = glossaryWords() %>
+  
+  <table>
+    <tr>
+     <th></th>
+     <% glossWords.each do |glossWord| %>
+      <th><%= glossWord.word %></th>  
+     <% end %>
+    </tr>
+    <% line_toggle = true %>
+    <% @users.each do |user| %>
+    <tr BGCOLOR = <%= line_toggle ? ROWCOLOR1 : ROWCOLOR2 %>>
+      <% line_toggle = !line_toggle %>
+        <% user_name = user.name
+           if user_name == nil or user_name.empty? then user_name = "blank" end
+         %>
+        <td><%= linkToObject user_name, user, $user_view %></td>
+        <% userGlossWords = userGlossaryWords(user) %>
+	    <% userGlossWords.each do |userGlossWord| %>
+	       <td><%= userGlossWord.shownCount %></td>  
+	   	<% end %>
+      </tr>
+    <% end %>
+  </table>
+</div>

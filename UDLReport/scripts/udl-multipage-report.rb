@@ -395,3 +395,19 @@ def preOrPost?
   title = sectionTitle.downcase
   title == "pre-test" or title == "post-test"
 end
+
+###################
+### glossary view
+###################
+def glossaryWords
+	if @contentHelper.version == 3
+		return @contentHelper.getGlossaryWords
+	end
+end
+
+def userGlossaryWords(user)
+	if @contentHelper.version == 3
+		return @contentHelper.getGlossaryWords($viewContext, user)
+##		return @contentHelper.getGlossaryWords
+	end
+end

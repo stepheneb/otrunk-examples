@@ -1,0 +1,65 @@
+<div class="menu">
+  <table>
+    <tr>
+      <td><div class="menu_item"><%= linkToUnitPage "Unit Summary" %></div></td>
+      <td><div class="menu_item"><%= linkToObject "Back to glossary", activityRoot(), $glossary_view %></div></td>
+    </tr>
+  </table>
+</div>
+<hr />
+
+<% glossWords = glossaryWords() %>
+
+<% sep = '|' %> <!--field separator-->
+
+<% text1 = '' %>
+<% text2 = '' %>
+
+<!-- Build first table: shown count --> 
+<!-- Header 1 -->
+<% text1 += sep %>
+<% glossWords.each do |glossWord| %>
+	<% text1 += glossWord.word + sep %> 
+<% end %>
+<% text1 += "\n" %>
+
+<% @users.each do |user| %>
+  <% text1 += user.name + sep %>
+  <% userGlossWords = userGlossaryWords(user) %>
+  <% userGlossWords.each do |userGlossWord| %>
+	<% text1 += userGlossWord.shownCount.to_s + sep %> 
+  <% end %>
+  <% text1 += "\n" %>        
+<% end %>
+
+<!-- Build second table: definitions --> 
+<!-- Header 1 -->
+<% text2 += sep %>
+<% glossWords.each do |glossWord| %>
+	<% text2 += glossWord.word + sep %> 
+<% end %>
+<% text2 += "\n" %>
+
+<% @users.each do |user| %>
+  <% text2 += user.name + sep %>
+  <% userGlossWords = userGlossaryWords(user) %>
+  <% userGlossWords.each do |userGlossWord| %>
+  	<% studentDefinition = userGlossWord.studentDefinition 
+  		if studentDefinition == nil or studentDefinition.empty? then studentDefinition = '' end
+  	%>
+	<% text2 += studentDefinition + sep %> 
+  <% end %>
+  <% text2 += "\n" %>        
+<% end %>
+
+<h2>Glossary words</h2>
+<p/>
+<h3>Times clicked</h3>
+<pre>
+<%=text1%>
+</pre>
+<p/>
+<h3>Student definitions</h3>
+<pre>
+<%=text2%>
+</pre>
