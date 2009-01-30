@@ -13,6 +13,8 @@ function clicked() {
     	org.setDirection(1);
         var sunlightneeded = new Integer(100)
         org.setProperty("sunlight-needed", sunlightneeded)
+        var mutationchance = new Float(0.1)
+         org.setProperty("mutation-chance", mutationchance)
         org.setOrganismImageForEnvironment("../species/Pisum Sativum/Fern_thin.gif");
     	env.addOrganism(org);
     	
