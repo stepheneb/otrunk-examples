@@ -14,11 +14,15 @@ function clicked() {
         var sunlightneeded = new Integer(100)
         org.setProperty("sunlight-needed", sunlightneeded)
         var mutationchance
-        if (mutationSlider != null){
-            System.out.println("Setting mut to "+mutationSlider.getValue() / 100)
-            mutationchance = new Float(mutationSlider.getValue() / 100)
+        if (mutationCheck != null){
+            if (mutationCheck.getSelected()) {
+                System.out.println("yes!")
+                mutationchance = new Float(0.1)
+            } else {
+                System.out.println("no!")
+                mutationchance = new Float(0)
+            }
         } else {
-            System.out.println("Mut is 0.1")
             mutationchance = new Float(0.1)
         }
         org.setProperty("mutation-chance", mutationchance)  

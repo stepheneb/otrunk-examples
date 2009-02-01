@@ -6,6 +6,7 @@
     <import class="org.concord.otrunk.biologica.OTEnvironment" />
     <import class="org.concord.otrunk.biologica.OTOrganism" />
     <import class="org.concord.otrunk.biologica.OTWorld" />
+    <import class="org.concord.otrunk.ui.OTCheckBox"/>
     <import class="org.concord.otrunk.view.OTViewEntry" />
     <import class="org.concord.otrunk.view.OTViewBundle" />
     <import class="org.concord.otrunk.view.document.OTCompoundDoc" />
@@ -36,8 +37,11 @@
               objectClass="org.concord.otrunk.view.document.OTDocument"
               viewClass="org.concord.otrunk.view.document.OTDocumentView" />
             <OTViewEntry 
-          	objectClass="org.concord.otrunk.script.ui.OTScriptButton" 
-          	viewClass="org.concord.otrunk.script.ui.OTScriptButtonView"/>
+          		objectClass="org.concord.otrunk.script.ui.OTScriptButton" 
+          		viewClass="org.concord.otrunk.script.ui.OTScriptButtonView"/>
+          	<OTViewEntry 
+          		objectClass="org.concord.otrunk.ui.OTCheckBox" 
+          		viewClass="org.concord.otrunk.ui.swing.OTCheckBoxView"/>
           </viewEntries>
           <frame>
             <OTFrame useScrollPane="false" width="640" height="590" />
@@ -63,7 +67,17 @@
 	              </td>
 	              <td>
 	              	<object refid="${add-organisms-button}"/><br/>
-	              	<object refid="${run-button}"/>
+	              	<object refid="${run-button}"/><br/><br/>
+	              	<table>
+	              		<tr>
+	              			<td>
+	              				<object refid="${mutation-check}"/>
+	              			</td>
+	              			<td>
+	              				Offspring may have variations?
+	              			</td>
+	              		</tr>
+	              	</table>
 	              </td>
               </tr>
             </table>
@@ -86,19 +100,21 @@
               		</script>
               		<variables>
               			<OTScriptVariableView name="envView" reference="${population_view}"/>
+              			<OTScriptVariable name="mutationCheck" reference="${mutation-check}"/>
               		</variables>
               </OTScriptObject>
               <OTScriptButton local_id="add-organisms-button" text="Add plants">
               		<script>
-              			<OTJavascript src="scripts/sunlight-with-mutation//add_organisms.js"/>
+              			<OTJavascript src="scripts/sunlight-with-mutation/add_organisms.js"/>
               		</script>
               		<scriptVariables>
               			<OTScriptVariableView name="envView" reference="${population_view}"/>
+              			<OTScriptVariable name="mutationCheck" reference="${mutation-check}"/>
               		</scriptVariables>
               </OTScriptButton>
               <OTScriptButton local_id="run-button" text="Run">
               		<script>
-              			<OTJavascript src="scripts/sunlight-with-mutation//run.js"/>
+              			<OTJavascript src="scripts/sunlight-with-mutation/run.js"/>
               		</script>
               		<scriptVariables>
               			<OTScriptVariableView name="envView" reference="${population_view}"/>
@@ -106,12 +122,13 @@
               </OTScriptButton>
               <OTScriptButton local_id="show-props-button" text="Show property">
               		<script>
-              			<OTJavascript src="scripts/sunlight-with-mutation//show_property.js"/>
+              			<OTJavascript src="scripts/sunlight-with-mutation/show_property.js"/>
               		</script>
               		<scriptVariables>
               			<OTScriptVariableView name="envView" reference="${population_view}"/>
               		</scriptVariables>
               </OTScriptButton>
+              <OTCheckBox local_id="mutation-check" text="" selected="false"/>
           </documentRefs>
         </OTCompoundDoc>
 

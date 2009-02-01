@@ -1,10 +1,14 @@
 importPackage(Packages.java.lang);
 importPackage(Packages.java.awt);
 importPackage(Packages.org.concord.biologica.environment);
+importPackage(Packages.org.concord.framework.otrunk);
+
+var env
+var world
   			
 function init() {
-	var env = envView.getEnvironment()
-	var world = env.getWorld()
+	env = envView.getEnvironment()
+	world = env.getWorld()
 	env.setColumns(20)
 	env.setRows(20)
 	env.setWrapNorthSouth(false)
@@ -23,8 +27,36 @@ function init() {
 	        	envUnit.setTerrain(terrain)
             }
         }
+        
+    if (mutationCheck != null)
+        mutationCheck.addOTChangeListener(mutationCheckChangeListener)
+
 	return true;
 }
+
+
+var mutationCheckChangeHandler =
+{
+    stateChanged: function(evt)
+    {
+        var allOrgs = env.getAllAgents()
+        for (var i = 0; i < allOrgs.size(); i++) {
+	        var org = allOrgs.get(i)
+            if (!org.isDeleted()){
+                if (mutationCheck.getSelected()) {
+                    System.out.println("true!")
+                    org.setProperty("mutation-chance", new Float(0.1)) 
+                } else {
+                    System.out.println("false!")
+                    org.setProperty("mutation-chance", new Float(0)) 
+                }
+            }
+        }
+    }
+
+}
+var mutationCheckChangeListener = new OTChangeListener(mutationCheckChangeHandler)
+
 
 function save() {
 	return true;

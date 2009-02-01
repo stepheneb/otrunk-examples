@@ -28,8 +28,8 @@ function init() {
             }
         }
     sunSlider.addOTChangeListener(sunSliderChangeListener)
-    if (mutationSlider != null)
-        mutationSlider.addOTChangeListener(mutationSliderChangeListener)
+    if (mutationCheck != null)
+        mutationCheck.addOTChangeListener(mutationCheckChangeListener)
 	return true;
 }
 
@@ -55,22 +55,27 @@ var sunSliderChangeHandler =
 }
 var sunSliderChangeListener = new OTChangeListener(sunSliderChangeHandler)
 
-var mutationSliderChangeHandler =
+var mutationCheckChangeHandler =
 {
     stateChanged: function(evt)
     {
-        var mutationChance = new Float(evt.getValue()/100)
         var allOrgs = env.getAllAgents()
         for (var i = 0; i < allOrgs.size(); i++) {
 	        var org = allOrgs.get(i)
             if (!org.isDeleted()){
-                org.setProperty("mutation-chance", mutationChance) 
+                if (mutationCheck.getSelected()) {
+                    System.out.println("true!")
+                    org.setProperty("mutation-chance", new Float(0.1)) 
+                } else {
+                    System.out.println("false!")
+                    org.setProperty("mutation-chance", new Float(0)) 
+                }
             }
         }
     }
 
 }
-var mutationSliderChangeListener = new OTChangeListener(mutationSliderChangeHandler)
+var mutationCheckChangeListener = new OTChangeListener(mutationCheckChangeHandler)
 
 function save() {
 	return true;
