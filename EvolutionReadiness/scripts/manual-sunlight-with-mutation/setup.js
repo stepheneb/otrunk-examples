@@ -37,15 +37,14 @@ var sunSliderChangeHandler =
 {
     stateChanged: function(evt)
     {
+        var percentSunlight = (evt.getValue() / 100)
+        var percentSunlightFloat = new Float(percentSunlight)
         for (var i = 0; i < 20; i++) {
 	        for (var j = 0; j < 20; j++) {
 	        	var envUnit = env.getEnvironmentUnit(i, j)
-	        	envUnit.getProperties().setPropertyValue("sunlight", new Float((evt.getValue() / 100)))
+	        	envUnit.getProperties().setPropertyValue("sunlight", percentSunlightFloat)
 	        	
-	        	var percentSunlight = envUnit.getProperties().getPropertyValue("sunlight")
-                System.out.println("pc = "+percentSunlight)
-	        	var rg =  (1*percentSunlight.floatValue())
-	        	var color = new Color(0.7+(rg*0.2), 0.4+(rg*0.2), 0.3)
+	        	var color = new Color(0.7+(percentSunlight*0.2), 0.4+(percentSunlight*0.2), 0.3)
 	      // 		var color = new Color(0.8, 0.5, 0.3)
                 var terrain = new Terrain(world, "terrain", color)
 	        	envUnit.setTerrain(terrain)
@@ -60,11 +59,12 @@ var mutationSliderChangeHandler =
 {
     stateChanged: function(evt)
     {
+        var mutationChance = new Float(evt.getValue()/100)
         var allOrgs = env.getAllAgents()
         for (var i = 0; i < allOrgs.size(); i++) {
 	        var org = allOrgs.get(i)
             if (!org.isDeleted()){
-                org.setProperty("mutation-chance", new Float(evt.getValue()/100)) 
+                org.setProperty("mutation-chance", mutationChance) 
             }
         }
     }
