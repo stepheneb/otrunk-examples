@@ -22,7 +22,7 @@ function clicked() {
             mutationchance = new Float(0.1)
         }
         org.setProperty("mutation-chance", mutationchance)  
-        org.setOrganismImageForEnvironment("../species/PisumSativum/Fern_thin.gif");
+        org.setOrganismImageForEnvironment("Fern_thin.gif");
     	env.addOrganism(org);
     	
     }
