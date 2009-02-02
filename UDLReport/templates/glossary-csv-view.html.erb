@@ -8,49 +8,62 @@
 </div>
 <hr />
 
-<% glossWords = glossaryWords() %>
+<%
+glossWords = glossaryWords()
 
-<% sep = '|' %> <!--field separator-->
+sep = '|'
 
-<% text1 = '' %>
-<% text2 = '' %>
+text1 = ''
+text2 = ''
+text3 = ''
 
-<!-- Build first table: shown count --> 
-<!-- Header 1 -->
-<% text1 += sep %>
-<% glossWords.each do |glossWord| %>
-	<% text1 += glossWord.word + sep %> 
-<% end %>
-<% text1 += "\n" %>
+text1 += sep
+glossWords.each do |glossWord|
+	text1 += glossWord.word + sep 
+end
+text1 += "TOTAL\n"
 
-<% @users.each do |user| %>
-  <% text1 += user.name + sep %>
-  <% userGlossWords = userGlossaryWords(user) %>
-  <% userGlossWords.each do |userGlossWord| %>
-	<% text1 += userGlossWord.shownCount.to_s + sep %> 
-  <% end %>
-  <% text1 += "\n" %>        
-<% end %>
+word_totals = []
+@users.each do |user|
+  user_total = 0
+  text1 += user.name + sep
+  userGlossWords = userGlossaryWords(user)
+  userGlossWords.each_with_index do |userGlossWord, index|
+	text1 += userGlossWord.shownCount.to_s + sep 
+	user_total += userGlossWord.shownCount
+	word_totals[index] ||= 0 
+	word_totals[index] += userGlossWord.shownCount
+  end
+  text1 += user_total.to_s + "\n"        
+end
+text1 += "TOTAL" + sep
 
-<!-- Build second table: definitions --> 
-<!-- Header 1 -->
-<% text2 += sep %>
-<% glossWords.each do |glossWord| %>
-	<% text2 += glossWord.word + sep %> 
-<% end %>
-<% text2 += "\n" %>
+text1 += word_totals.join(sep)
 
-<% @users.each do |user| %>
-  <% text2 += user.name + sep %>
-  <% userGlossWords = userGlossaryWords(user) %>
-  <% userGlossWords.each do |userGlossWord| %>
-  	<% studentDefinition = userGlossWord.studentDefinition 
+
+text2 += sep + "Total glossary views" + sep + "Total time on glossary (s)" + "\n"
+@users.each do |user|
+	text2 += user.name + sep
+	text2 += glossaryCount(user).to_s + sep + ((Float(glossaryTime(user))/Float(100)).round/Float(10)).to_s + "\n"
+end
+
+text3 += sep
+glossWords.each do |glossWord|
+	text3 += glossWord.word + sep 
+end
+text3 += "\n"
+
+@users.each do |user|
+  text3 += user.name + sep
+  userGlossWords = userGlossaryWords(user)
+  userGlossWords.each do |userGlossWord|
+  	studentDefinition = userGlossWord.studentDefinition 
   		if studentDefinition == nil or studentDefinition.empty? then studentDefinition = '' end
-  	%>
-	<% text2 += studentDefinition + sep %> 
-  <% end %>
-  <% text2 += "\n" %>        
-<% end %>
+	text3 += studentDefinition + sep 
+  end
+  text3 += "\n"        
+end
+%>
 
 <h2>Glossary words</h2>
 <p/>
@@ -59,7 +72,12 @@
 <%=text1%>
 </pre>
 <p/>
-<h3>Student definitions</h3>
+<h3>Main glossary</h3>
 <pre>
 <%=text2%>
+</pre>
+<p/>
+<h3>Student definitions</h3>
+<pre>
+<%=text3%>
 </pre>

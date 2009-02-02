@@ -408,6 +408,17 @@ end
 def userGlossaryWords(user)
 	if @contentHelper.version == 3
 		return @contentHelper.getGlossaryWords($viewContext, user)
-##		return @contentHelper.getGlossaryWords
 	end
+end
+
+def glossaryCount(user)
+	glossary = @contentHelper.glossary()
+	userGlossary = userObject(glossary, user)
+	userGlossary.clickCount
+end
+
+def glossaryTime(user)
+	glossary = @contentHelper.glossary()
+	userGlossary = userObject(glossary, user)
+	userGlossary.totalTimeOpenMs
 end
