@@ -2,12 +2,15 @@ require 'jruby'
 require 'erb'
 
 include_class 'java.lang.System'
-include_class 'org.concord.framework.otrunk.view.OTUserListService'
-include_class 'org.concord.framework.otrunk.OTrunk'
-include_class 'org.concord.framework.otrunk.wrapper.OTString'
-include_class 'org.concord.otrunk.ui.OTText'
-include_class 'org.concord.otrunk.script.ui.OTScriptVariable'
 
+include_class 'org.concord.framework.otrunk.OTrunk'
+include_class 'org.concord.framework.otrunk.view.OTUserListService'
+include_class 'org.concord.framework.otrunk.wrapper.OTObjectSet'
+include_class 'org.concord.framework.otrunk.wrapper.OTString'
+include_class 'org.concord.otrunk.script.ui.OTScriptVariable'
+include_class 'org.concord.otrunk.ui.OTText'
+
+## OTrunk related routines
 class OTrunkHelper
 
   MC_SINGLE_REPORT = 1 #Individual report for multi-choice test
@@ -26,10 +29,12 @@ class OTrunkHelper
     @otrunk = $viewContext.getViewService(OTrunk.java_class)
   end
   
+  ## Return root of the main OTML
   def rootObject
     @otrunk.getRoot
   end
 
+  ## For reports, return the root of the OTML that it is reporting for
   def activityRoot
     return case @task
       when MC_SINGLE_REPORT 
@@ -41,10 +46,12 @@ class OTrunkHelper
       end
   end
 
+  ## Return runtime user object
   def userObject(obj, user)
     @otrunk.getUserRuntimeObject(obj, user)
   end
 
+  ## Return list of OTUsers
   def users
     unless @users
       userListService = $viewContext.getViewService(OTUserListService.java_class)
@@ -52,7 +59,7 @@ class OTrunkHelper
         (user.name && !user.name.empty?) ? user.name.downcase.split.values_at(-1, 0) : ['']    
       }
     end
-    return @users
+    @users
   end
 
   def hasUserModified(obj, user)
@@ -61,17 +68,17 @@ class OTrunkHelper
 
   def teacherName
     name = System.getProperty('report.teacher.name')
-    return (name == nil) ? 'Unknown' : name
+    (name == nil) ? 'Unknown' : name
   end
 
   def className
     name = System.getProperty('report.class.name')
-    return (name == nil) ? 'Unknown' : name
+    (name == nil) ? 'Unknown' : name
   end
 
   def activityName
     name = System.getProperty('report.activity.name')
-    return (name == nil) ? 'Unknown' : name
+    (name == nil) ? 'Unknown' : name
   end
 
   ## @scriptObjectContentsMap is a hash where a key is an OTUser object
@@ -79,10 +86,10 @@ class OTrunkHelper
   def scriptObjectContentsMap
     unless @scriptObjectContentsMap
       contentsMap = {} #{ userObject => contentsList } 
-      users.each { |u| contentsMap[u] = userObject($scriptObject, u).getContents.getVector }
+      users.each { |u| contentsMap[u] = userObject($scriptObject, u).getContents }
       @scriptObjectContentsMap = contentsMap
     end
-    return @scriptObjectContentsMap
+    @scriptObjectContentsMap
   end
 
   ## Get last item in user script object contents that is a sub-type of contentType 
@@ -91,7 +98,7 @@ class OTrunkHelper
     for content in scriptObjectContentsMap[user] 
       last = content if content.kind_of?(contentType) 
     end
-    return last
+    last
   end
 
   def otCreate(rconstant, &block)
@@ -112,7 +119,7 @@ class OTrunkHelper
                      nil 
                    end
     end
-    return @questions
+    @questions
   end
 
  private
@@ -140,28 +147,64 @@ class OTrunkHelper
     end
   end
 
+  ## Multiple choice tests follow the UDL convention and 
+  ## holds the questions as document refs
   def _getQuestionsThruDocRefs
     questions = []
-    cards = activityRoot.getActivity.getContent.getCards.getVector
+    cards = activityRoot.getActivity.getContent.getCards
+
+    ## Kludge to take care of OTDataTables of pre-OTQuestion era
+    dtCount = 0
+    dtCorrectAnswers = ['0,0,0,1', '0,1,1,1', '1,0', '1,0,1,0,0,0,1,0',
+      '4,1,3,2']
+    tCount = 0
+    tQuestion = nil
+    tInput = nil
+    tCorrect = nil
 
     for doc in cards
       refs = doc.getDocumentRefs
       for ref in refs
-        if ref.is_a?(OTQuestion) or ref.is_a?(OTDataTable) or ref.is_a?(OTText)
+        if ref.is_a?(OTQuestion) 
           questions << ref
+        elsif ref.is_a?(OTDataTable)
+          ## Kludge for old format (WSU) digital circuit multi-choice
+          question = $otObjectService.createObject(OTQuestion.java_class)
+          question.setInput(ref)
+          text = $otObjectService.createObject(OTText.java_class)
+          text.setText(dtCorrectAnswers[dtCount])
+          question.setCorrectAnswer(text)
+          questions << question
+          dtCount += 1
+        elsif ref.is_a?(OTText)
+          ## Kludge for old format (WSU) digital circuit multi-choice(last question)
+          if tCount == 0
+            tQuestion = $otObjectService.createObject(OTQuestion.java_class)
+            tInput = $otObjectService.createObject(OTObjectSet.java_class)
+            tCorrect = $otObjectService.createObject(OTText.java_class)
+            tCorrect.setText('4,1,3,2')
+            tQuestion.setCorrectAnswer(tCorrect)
+          end
+          tInput.objects.add(ref)
+          if tCount == 3
+            tQuestion.setInput(tInput)
+            questions << tQuestion
+          end
+          tCount += 1
         end
       end
     end
-    return questions
+    questions
   end
 
+  ## Performance assessments has user data in the script object
   def _getQuestionsThruScriptObject
     questions = []
-    variables = $scriptObject.getVariables.getVector
+    variables = $scriptObject.getVariables
     for v in variables
       questions << v.getReference if v.getReference.is_a? OTQuestion
     end
-    return questions
+    questions
   end
 
 end
