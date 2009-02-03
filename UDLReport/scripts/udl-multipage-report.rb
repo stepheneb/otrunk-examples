@@ -348,13 +348,44 @@ def sectionQuestions(section)
     
   return questions unless section.content.is_a? org.concord.otrunk.ui.OTCardContainer
   
-  pageCards = section.content.cards.vector
+  puts "getting pages"
+  pageCards = allPages(section)
 
   pageCards.each do | doc |
     questions.concat documentQuestions(doc)
   end
 
   questions
+end
+
+def allPages(section)
+	puts "section class = " + section.class.to_s
+	puts "section.content class = " + section.content.class.to_s
+	allPagesForCardContainer(section.content)
+end
+
+def allPagesForCardContainer(cardContainer)
+	puts "cardContainer class = " + cardContainer.class.to_s
+	pages = cardContainer.cards.vector
+	puts "pages class = " + pages.class.to_s
+	innerPages = []
+	pages.each do |page|
+		page.documentRefs.each do | ref |
+			if ref.is_a? org.concord.otrunk.ui.OTCardContainer
+				innerPages.concat vectorToArray(allPagesForCardContainer(ref))
+				puts "added pages"
+			end
+		end
+	end
+	allPages = vectorToArray(pages).concat innerPages
+end
+
+def vectorToArray(vector)
+	array = []
+	vector.each do |i|
+		array << i
+	end
+	array
 end
 
 # takes an authored section
@@ -421,4 +452,10 @@ def glossaryTime(user)
 	glossary = @contentHelper.glossary()
 	userGlossary = userObject(glossary, user)
 	userGlossary.totalTimeOpenMs
+end
+
+###################
+### tts view
+###################
+def ttsInstances(section, user)
 end
