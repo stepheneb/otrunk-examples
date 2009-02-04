@@ -224,7 +224,7 @@ def questionAnswer(question)
   answer = questionAnswerRaw(question)
   
   answer = "No Answer" if answer == nil
-  truncate answer, 30
+  return answer
 end
 
 # this takes a userQuestion
@@ -255,10 +255,13 @@ end
 def questionAnswerHtml(question)
   correct = questionCorrect question
   text = questionAnswer question
+  return '' if text == nil
+  
+  shortText = truncate text, 30
 
   return text if correct == nil
-  return "<font color=\"ff0000\">#{text}</font>" unless correct
-  return "<font color=\"009900\">#{text}</font>"    
+  return "<font color=\"ff0000\">#{shortText}</font>" unless correct
+  return "<font color=\"009900\">#{shortText}</font>"    
 end
 
 def isChoiceQuestion(question)
@@ -457,10 +460,6 @@ def ttsInstances(section, user)
 	ttsCount = 0
 	userPages.each do |page|
 		if page.is_a? org.concord.otrunk.udl.document.OTUDLCompoundDoc
-			puts "page = "+page.to_s
-			puts "page class = "+page.class.to_s
-			puts "page.timesTTSProduced = "+page.timesTTSProduced.to_s
-			puts "page.timesTTSProduced class = "+page.timesTTSProduced.class.to_s
 			ttsCount += page.timesTTSProduced
 		end
 	end
