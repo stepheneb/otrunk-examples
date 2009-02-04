@@ -348,7 +348,6 @@ def sectionQuestions(section)
     
   return questions unless section.content.is_a? org.concord.otrunk.ui.OTCardContainer
   
-  puts "getting pages"
   pageCards = allPages(section)
 
   pageCards.each do | doc |
@@ -359,21 +358,16 @@ def sectionQuestions(section)
 end
 
 def allPages(section)
-	puts "section class = " + section.class.to_s
-	puts "section.content class = " + section.content.class.to_s
 	allPagesForCardContainer(section.content)
 end
 
 def allPagesForCardContainer(cardContainer)
-	puts "cardContainer class = " + cardContainer.class.to_s
 	pages = cardContainer.cards.vector
-	puts "pages class = " + pages.class.to_s
 	innerPages = []
 	pages.each do |page|
 		page.documentRefs.each do | ref |
 			if ref.is_a? org.concord.otrunk.ui.OTCardContainer
 				innerPages.concat vectorToArray(allPagesForCardContainer(ref))
-				puts "added pages"
 			end
 		end
 	end
@@ -458,4 +452,17 @@ end
 ### tts view
 ###################
 def ttsInstances(section, user)
+	userSection = userObject(section, user)
+	userPages = allPages(userSection)
+	ttsCount = 0
+	userPages.each do |page|
+		if page.is_a? org.concord.otrunk.udl.document.OTUDLCompoundDoc
+			puts "page = "+page.to_s
+			puts "page class = "+page.class.to_s
+			puts "page.timesTTSProduced = "+page.timesTTSProduced.to_s
+			puts "page.timesTTSProduced class = "+page.timesTTSProduced.class.to_s
+			ttsCount += page.timesTTSProduced
+		end
+	end
+	ttsCount
 end

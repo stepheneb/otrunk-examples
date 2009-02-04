@@ -1,0 +1,46 @@
+<div class="menu">
+  <table>
+    <tr>
+      <td><div class="menu_item"><%= linkToUnitPage "Unit Summary" %></div></td>
+      <td><div class="menu_item"><%= linkToObject "CSV", activityRoot(), $tts_csv_view %></div></td>
+    </tr>
+  </table>
+</div>
+<hr />
+<div id="content">
+  
+  <h2>Text-to-speech</h2>
+
+  <h3>Text-to-speech instances for <%= unitTitle %></h3>
+
+  <% sections = unitSections() %>
+  
+  <table>
+    <tr>
+     <th></th>
+     <% sections.each do |section| %>
+      <th><%= linkToObject section.name, section, $section_view %></th>  
+     <% end %>
+    </tr>
+    <% line_toggle = true %>
+    <% @users.each do |user| %>
+    <tr BGCOLOR = <%= line_toggle ? ROWCOLOR1 : ROWCOLOR2 %>>
+      <% line_toggle = !line_toggle %>
+        <% user_name = user.name
+           if user_name == nil or user_name.empty? then user_name = "blank" end
+         %>
+        <td><%= linkToObject user_name, user, $user_view %></td>
+       <% sections.each do |section| %>
+        <td style="text-align: center">
+          <%= ttsInstances(section, user) %>
+        </td> 
+       <% end %>
+      </tr>
+    <% end %>
+  </table>
+  
+  <% if $dashboard %>
+  <h3>Other student data</h3>
+    <%= linkToObject "Glossary entries", activityRoot(), $glossary_view %><br/>  
+  <% end #dashboard %>
+</div>
