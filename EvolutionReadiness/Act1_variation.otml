@@ -1,0 +1,643 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<otrunk id="2767fe20-6c7d-11dc-8314-0800200c9a66">
+  <imports>
+    <import class="org.concord.data.state.OTDataStore" />
+    <import class="org.concord.data.state.OTDataChannelDescription" />
+    <import class="org.concord.data.state.OTDataField" />
+    <import class="org.concord.data.state.OTDataTable" />
+    <import class="org.concord.datagraph.state.OTDataGraph" />
+    <import class="org.concord.datagraph.state.OTDataAxis" />
+    <import class="org.concord.datagraph.state.OTDataGraphable" />
+    <import class="org.concord.datagraph.state.OTDataCollector" />
+    <import class="org.concord.datagraph.state.OTMultiDataGraph" />
+    <import class="org.concord.datagraph.state.OTPluginView" />
+    <import class="org.concord.datagraph.state.OTDataBarGraphable" />
+    <import class="org.concord.framework.otrunk.view.OTFrame" />
+    <import class="org.concord.framework.otrunk.wrapper.OTBlob" />
+    <import class="org.concord.graph.util.state.OTDrawingTool" />
+    <import class="org.concord.graph.util.state.OTDrawingStamp" />
+    <import class="org.concord.graph.util.state.OTDrawingImageIcon" />
+    <import class="org.concord.graph.util.state.OTDrawingShape" />
+    <import class="org.concord.graph.util.state.OTDrawingTool2" />
+    <import class="org.concord.graph.util.state.OTPointTextLabel" />
+    <import class="org.concord.otrunk.OTInclude" />
+    <import class="org.concord.otrunk.OTSystem" />
+    <import class="org.concord.otrunk.browser.mozswing.OTMozSwing" />
+    <import class="org.concord.otrunk.overlay.OTOverlay" />
+    <import class="org.concord.otrunk.script.ui.OTScriptObject" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariable" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariableComponent" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariableView" />
+    <import class="org.concord.otrunk.script.js.OTJavascript" />
+    <import class="org.concord.otrunk.script.OTScriptEngineBundle" />
+    <import class="org.concord.otrunk.script.OTScriptEngineEntry" />
+    <import class="org.concord.otrunk.udl.OTAuthorNote" />
+    <import class="org.concord.otrunk.udl.OTUDLLabPage" />
+    <import class="org.concord.otrunk.udl.coach.OTUDLCoach" />
+    <import class="org.concord.otrunk.udl.coach.OTUDLCoachGroup" />
+    <import class="org.concord.otrunk.udl.coach.OTUDLCoachStatement" />
+    <import class="org.concord.otrunk.udl.OTUDLMenuRule" />
+    <import class="org.concord.otrunk.udl.document.OTDefinition" />
+    <import class="org.concord.otrunk.udl.document.OTDefinitionList" />
+    <import class="org.concord.otrunk.udl.document.OTDefinitionManager" />
+    <import class="org.concord.otrunk.udl.document.OTGlossary" />
+    <import class="org.concord.otrunk.udl.document.OTUDLCompoundDoc" />
+    <import class="org.concord.otrunk.udl.document.OTUDLDocumentViewConfig" />
+    <import class="org.concord.otrunk.graph.OTDataCollectorViewConfig" />
+    <import class="org.concord.otrunk.udl.question.OTUDLQuestion" />
+    <import class="org.concord.otrunk.udl.question.OTUDLLeveledQuestions" />
+    <import class="org.concord.otrunk.udl.question.OTUDLQuestionViewConfig" />
+    <import class="org.concord.otrunk.udl3.OTUDLMenu" />
+    <import class="org.concord.otrunk.udl3.OTUDLContainer" />
+    <import class="org.concord.otrunk.udl3.OTUDLSection" />
+    <import class="org.concord.otrunk.ui.OTButton" />
+    <import class="org.concord.otrunk.ui.OTCardContainer" />
+    <import class="org.concord.otrunk.ui.OTChoice" />
+    <import class="org.concord.otrunk.ui.OTChoiceMultiple" />
+    <import class="org.concord.otrunk.ui.OTCurriculumUnit" />
+    <import class="org.concord.otrunk.ui.OTImage" />
+    <import class="org.concord.otrunk.ui.OTImageMap" />
+    <import class="org.concord.otrunk.ui.OTLayerContainer" />
+    <import class="org.concord.otrunk.ui.OTModeSwitcher" />
+    <import class="org.concord.otrunk.ui.OTText" />
+    <import class="org.concord.otrunk.ui.OTPlacement" />
+    <import class="org.concord.otrunk.ui.OTPlacementContainer" />
+    <import class="org.concord.otrunk.ui.snapshot.OTSnapshot" />
+    <import class="org.concord.otrunk.ui.snapshot.OTSnapshotButton" />
+    <import class="org.concord.otrunk.ui.snapshot.OTSnapshotAlbum" />
+    <import class="org.concord.otrunk.ui.snapshot.OTSnapshotChooser" />
+    <import class="org.concord.otrunk.ui.swing.OTChoiceViewConfig" />
+    <import class="org.concord.otrunk.util.OTSharingBundle" />
+    <import class="org.concord.otrunk.view.OTObjectEditViewConfig" />
+    <import class="org.concord.otrunk.view.OTViewChild" />
+    <import class="org.concord.otrunk.view.OTViewEntry" />
+    <import class="org.concord.otrunk.view.OTViewBundle" />
+    <import class="org.concord.otrunk.view.OTViewMode" />
+    <import class="org.concord.otrunk.view.document.OTCompoundDoc" />
+    <import class="org.concord.otrunk.view.document.OTCssText" />
+    <import class="org.concord.otrunk.view.prototype.OTPrototypeViewEntry" />
+    <import class="org.concord.otrunk.view.prototype.OTPrototypeEventController" />
+    <import class="org.concord.otrunk.view.prototype.OTPrototypeMapEntry" />
+    <import class="org.concord.otrunknl4.OTNLogoModel" />
+    <import class="org.concord.sensor.state.OTDeviceConfig" />
+    <import class="org.concord.sensor.state.OTExperimentRequest" />
+    <import class="org.concord.sensor.state.OTInterfaceManager" />
+    <import class="org.concord.sensor.state.OTSensorDataProxy" />
+    <import class="org.concord.sensor.state.OTSensorRequest" />
+    <import class="org.concord.sensor.state.OTZeroSensor" />
+    <import class="org.concord.otrunk.udl.OTUDLNavBar" />
+    <import class="org.concord.datagraph.state.OTDataPointLabel" />
+    <import class="org.concord.otrunk.udl.OTZoom" />
+    <import class="org.concord.otrunk.udl.OTZoomTransform" />
+    <import class="org.concord.otrunkmw.OTModelerPage" />
+    <import class="org.concord.otrunkmw.OTMwDataProducer" />
+    <import class="org.concord.otrunkmw.OTMwChannelData" />
+    <import class="org.concord.otrunk.ui.OTSoundPlayer" />
+    <import class="org.concord.otrunk.util.OTReference" />
+    <import class="org.concord.smartgraph.OTSmartGraphTool" />
+    <import class="org.concord.otrunk.script.ui.OTScriptButton" />
+    <import class="org.concord.otrunk.script.jruby.OTJRuby" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariableRealObject" />
+    <import class="org.concord.framework.otrunk.wrapper.OTInt" />
+    <import class="org.concord.framework.otrunk.wrapper.OTBoolean" />
+  </imports>
+  <objects>
+    <OTSystem local_id="system">
+      <includes>
+        <OTInclude href="http://continuum.concord.org/otrunk/examples/LOOPS/global-imports/loops-view-bundle.otml" />
+      </includes>
+      <bundles>
+        <object refid="8d880970-c22a-11dc-95ff-0800200c9a66" />
+        <OTScriptEngineBundle>
+          <engines>
+            <OTScriptEngineEntry objectClass="org.concord.otrunk.script.jruby.OTJRuby" engineClass="org.concord.otrunk.script.jruby.OTJRubyEngine" />
+            <OTScriptEngineEntry objectClass="org.concord.otrunk.script.js.OTJavascript" engineClass="org.concord.otrunk.script.js.OTJavascriptEngine" />
+          </engines>
+        </OTScriptEngineBundle>
+        <OTSharingBundle />
+        <OTInterfaceManager>
+          <deviceConfigs>
+            <OTDeviceConfig configString="none" deviceId="10" />
+          </deviceConfigs>
+        </OTInterfaceManager>
+      </bundles>
+      <overlays>
+        <object refid="6cc8e2b0-c44e-11dc-95ff-0800200c9a66" />
+        <object refid="b5d8b4a0-db35-11dc-95ff-0800200c9a66" />
+        <OTOverlay>
+          <deltaObjectMap>
+            <entry key="${authoring_script.js}">
+              <OTJavascript src="http://continuum.concord.org/otrunk/examples/LOOPS/scripts/student_script.js" />
+            </entry>
+          </deltaObjectMap>
+        </OTOverlay>
+      </overlays>
+      <root>
+        <OTCurriculumUnit version="2" name="LOOPS Activity">
+          <activity>
+            <OTUDLSection local_id="section_1">
+              <header>
+                <OTCompoundDoc id="2767fe20-6c7d-11dc-8314-0800200c9a66!/section_1/header" showEditBar="false">
+                  <bodyText>
+                    <div class="title">What is Variation?</div>
+                  </bodyText>
+                </OTCompoundDoc>
+              </header>
+              <content>
+                <OTCardContainer local_id="activity-card-container" contentsMayScroll="true" loadViewOnlyOnDemand="true">
+                  <cards>
+                    <OTCompoundDoc local_id="page-1" name="1">
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <div class="subtitle">
+                                Think about this, you are walking down a street and you see a dog. 
+            How do you know it is a dog?
+                                <br />
+                                <img src="http://er.concord.org/images/ActivityOne/Dog-Breeds-poster.jpg" border="1" />
+                                <br />
+                                <br />
+                                <object refid="ebc9ee19-f39c-11dd-85ca-d75847cd2f0b" />
+                                <br />
+                                <br />
+                                <object refid="a222274a-f139-11dd-90ae-373118468e1c" />
+                                <br />
+                                <br />
+                                <object refid="30a41653-f13a-11dd-90ae-373118468e1c" />
+                                <br />
+                                <br />
+                              </div>
+                              <br />
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                        <OTAuthorNote id="ebc9ee19-f39c-11dd-85ca-d75847cd2f0b" name="Author's note">
+                          <note>
+                            <OTText text="Obviously need illustrate this, need fewer variations...." />
+                          </note>
+                        </OTAuthorNote>
+                        <OTText id="a222274a-f139-11dd-90ae-373118468e1c" name="Text field" text="Dogs have enough characteristics in common that when you see a dog you know it is a dog. Look at the picture. " rows="2" />
+                        <OTUDLQuestion id="30a41653-f13a-11dd-90ae-373118468e1c" name="Question" showConvertButton="false">
+                          <prompt>
+                            <OTCompoundDoc>
+                              <bodyText>List three ways in which the dogs in the picture are the same. (Hint: How they look, sound, behave.)</bodyText>
+                            </OTCompoundDoc>
+                          </prompt>
+                          <input>
+                            <OTText rows="1" />
+                          </input>
+                          <correctAnswer>
+                            <OTCompoundDoc>
+                              <bodyText>Answers can vary...they all bark, they all have fur, they all have four legs etc.</bodyText>
+                            </OTCompoundDoc>
+                          </correctAnswer>
+                        </OTUDLQuestion>
+                      </documentRefs>
+                    </OTCompoundDoc>
+                    <OTCompoundDoc id="957c20b0-f13a-11dd-90ae-373118468e1c" name="%957c20b0-f13a-11dd-90ae-373118468e1c" showEditBar="true">
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <div class="subtitle">
+                                Now look at the picture and think about how they are different 
+            from each other.
+                                <br />
+                                <object refid="aaeb5745-f13a-11dd-90ae-373118468e1c" />
+                                <br />
+                              </div>
+                              Need to add same picture of the dog.
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                        <OTUDLQuestion id="aaeb5745-f13a-11dd-90ae-373118468e1c" name="Question" showConvertButton="false">
+                          <prompt>
+                            <OTCompoundDoc>
+                              <bodyText>List three ways in which these dogs vary (differ) from one another.</bodyText>
+                            </OTCompoundDoc>
+                          </prompt>
+                          <input>
+                            <OTText />
+                          </input>
+                          <correctAnswer>
+                            <OTCompoundDoc>
+                              <bodyText>Size, shape, fur color, fur length, etc.</bodyText>
+                            </OTCompoundDoc>
+                          </correctAnswer>
+                        </OTUDLQuestion>
+                      </documentRefs>
+                    </OTCompoundDoc>
+                    <OTCompoundDoc id="16df24f9-f13b-11dd-90ae-373118468e1c" name="%16df24f9-f13b-11dd-90ae-373118468e1c" showEditBar="true">
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <div class="subtitle">Even dogs that have same parents differ from each other. Look at 
+            the picture of the puppies below.</div>
+                              <img src="http://er.concord.org/images/ActivityOne/puppies_002.jpg" border="1" />
+                              <br />
+                              <br />
+                              <br />
+                              <object refid="377b887e-f13b-11dd-90ae-373118468e1c" />
+                              <br />
+                              <br />
+                              <object refid="44fda1f9-f13b-11dd-90ae-373118468e1c" />
+                              <br />
+                              <br />
+                              <object refid="5459f9b4-f13b-11dd-90ae-373118468e1c" />
+                              <br />
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                        <OTUDLQuestion id="377b887e-f13b-11dd-90ae-373118468e1c" name="Question" showConvertButton="false">
+                          <prompt>
+                            <OTCompoundDoc>
+                              <bodyText>How are these puppies the same and how do they differ?</bodyText>
+                            </OTCompoundDoc>
+                          </prompt>
+                          <input>
+                            <OTText />
+                          </input>
+                        </OTUDLQuestion>
+                        <OTUDLQuestion id="44fda1f9-f13b-11dd-90ae-373118468e1c" name="Question" showConvertButton="false">
+                          <prompt>
+                            <OTCompoundDoc>
+                              <bodyText>Why do you think they might not look exactly the same?</bodyText>
+                            </OTCompoundDoc>
+                          </prompt>
+                          <input>
+                            <OTText />
+                          </input>
+                        </OTUDLQuestion>
+                        <OTUDLQuestion id="5459f9b4-f13b-11dd-90ae-373118468e1c" name="Question" showConvertButton="false">
+                          <prompt>
+                            <OTCompoundDoc>
+                              <bodyText>What do you think their parents look like?</bodyText>
+                            </OTCompoundDoc>
+                          </prompt>
+                          <input>
+                            <OTText />
+                          </input>
+                        </OTUDLQuestion>
+                      </documentRefs>
+                    </OTCompoundDoc>
+                    <OTCompoundDoc id="7cd1790b-f13b-11dd-90ae-373118468e1c" name="%7cd1790b-f13b-11dd-90ae-373118468e1c" showEditBar="true">
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <div class="subtitle">Plants Vary too.</div>
+                              <br />
+                              <img src="http://er.concord.org/images/ActivityOne/plantsvary.jpg" border="1" />
+                              <br />
+                              <object refid="85166e81-f145-11dd-91df-25a89b3dbdc9" />
+                              <br />
+                              <br />
+                              <br />
+                              <object refid="8ccc7618-f145-11dd-91df-25a89b3dbdc9" />
+                              <br />
+                              <br />
+                              <br />
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                        <OTText id="85166e81-f145-11dd-91df-25a89b3dbdc9" name="Text field">
+                          <text>Your job as a Junior Scientist is to gather data about these plants.  First, observe and record three variations in the individual plants in this species.</text>
+                        </OTText>
+                        <OTUDLQuestion id="8ccc7618-f145-11dd-91df-25a89b3dbdc9" name="Question" showConvertButton="false">
+                          <prompt>
+                            <OTCompoundDoc>
+                              <bodyText>List three ways in which the plants differ.</bodyText>
+                            </OTCompoundDoc>
+                          </prompt>
+                          <input>
+                            <OTText />
+                          </input>
+                        </OTUDLQuestion>
+                      </documentRefs>
+                    </OTCompoundDoc>
+                    <OTCompoundDoc id="afd0ffff-f145-11dd-91df-25a89b3dbdc9" name="%afd0ffff-f145-11dd-91df-25a89b3dbdc9" showEditBar="true">
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <div class="subtitle">Plants Vary</div>
+                              <br />
+                              <img src="http://er.concord.org/images/ActivityOne/plantsvary.jpg" border="1" />
+                              <br />
+                              <br />
+                              <object refid="492776f5-f396-11dd-85ca-d75847cd2f0b" />
+                              <br />
+                              <br />
+                              <br />
+                              <br />
+                              <object refid="8ccc7618-f145-11dd-91df-25a89b3dbdc9" />
+                              <br />
+                              <br />
+                              <br />
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                        <OTAuthorNote id="492776f5-f396-11dd-85ca-d75847cd2f0b" name="Author's note">
+                          <note>
+                            <OTText text="We will need to get a different set of plants for the next several pages. I included these plants to show a varitey. Note, I don't think we want to use a cactus....but we can talk about it." rows="2" />
+                          </note>
+                        </OTAuthorNote>
+                        <object refid="8ccc7618-f145-11dd-91df-25a89b3dbdc9" />
+                      </documentRefs>
+                    </OTCompoundDoc>
+                    <OTCompoundDoc id="d3df4704-f147-11dd-91df-25a89b3dbdc9" name="%d3df4704-f147-11dd-91df-25a89b3dbdc9" showEditBar="true">
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <div class="subtitle">On this page you will need to sort the plants looking carefully at 
+            the leaves and how they vary.</div>
+                              <br />
+                              <img src="http://er.concord.org/images/ActivityOne/sortleafsize.jpg" border="1" />
+                              <br />
+                              <br />
+                              <br />
+                              <object refid="801c86a7-f396-11dd-85ca-d75847cd2f0b" />
+                              <br />
+                              <br />
+                              <object refid="d9081405-f147-11dd-91df-25a89b3dbdc9" />
+                              <br />
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                        <OTAuthorNote id="801c86a7-f396-11dd-85ca-d75847cd2f0b" name="Author's note">
+                          <note>
+                            <OTText rows="3">
+                              <text>Need to be able to fit more plants per window, perhaps 8-10. Want to be able to sort by size of leaf.
+Also, I did not include the "Good job page" But that page would need to include a try again if they didn not get them in a good order. This is not a static image unlike the last few pages....these next few pages need students to be able to move the plants and for teh computer
+to be able to determine if the plants are in a reasonable order.</text>
+                            </OTText>
+                          </note>
+                        </OTAuthorNote>
+                        <OTText id="d9081405-f147-11dd-91df-25a89b3dbdc9" name="Text field">
+                          <text>Sort the plants by leaf size by placing each plant in a pot in the correct order.
+Click and drag each plant into a flower pot.</text>
+                        </OTText>
+                      </documentRefs>
+                    </OTCompoundDoc>
+                    <OTCompoundDoc id="c42e7146-f148-11dd-91df-25a89b3dbdc9" name="%c42e7146-f148-11dd-91df-25a89b3dbdc9" showEditBar="true">
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <div class="subtitle">
+                                Sort the plants by root shape.
+                                <br />
+                                <img src="http://er.concord.org/images/ActivityOne/root_order.jpg" border="1" />
+                                <br />
+                                <br />
+                                <object refid="4955c809-f398-11dd-85ca-d75847cd2f0b" />
+                                <br />
+                                <br />
+                                <object refid="bd6f00da-f398-11dd-85ca-d75847cd2f0b" />
+                                <br />
+                                <br />
+                              </div>
+                              <br />
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                        <OTText id="4955c809-f398-11dd-85ca-d75847cd2f0b" name="Text field">
+                          <text>Sort the plants by root shape by placing each plant ina pot in the correct order from deep roots to shallow roots.
+Click and drag each plant into a flower pot.</text>
+                        </OTText>
+                        <OTAuthorNote id="bd6f00da-f398-11dd-85ca-d75847cd2f0b" name="Author's note">
+                          <note>
+                            <OTText text="Once again need to have model work that once placed in certain order a message would pop up and give students feedback on success or have them try again." rows="2" />
+                          </note>
+                        </OTAuthorNote>
+                      </documentRefs>
+                    </OTCompoundDoc>
+                    <OTCompoundDoc id="dafc017c-f398-11dd-85ca-d75847cd2f0b" name="%dafc017c-f398-11dd-85ca-d75847cd2f0b" showEditBar="true">
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <div class="subtitle">
+                                Why is variation important?
+                                <br />
+                                <br />
+                                <object refid="e72827dd-f398-11dd-85ca-d75847cd2f0b" />
+                                <br />
+                                <br />
+                                <img src="http://er.concord.org/images/ActivityOne/root_mc.jpg" border="1" />
+                                <br />
+                                <br />
+                                <object refid="1c7999b4-f399-11dd-85ca-d75847cd2f0b" />
+                                <br />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                        <OTText id="e72827dd-f398-11dd-85ca-d75847cd2f0b" name="Text field">
+                          <text>Lets look at one example. 
+Roots are important. They absorb water and nutrients, they anchor plants, and hold them upright. You have observed that root shapes vary. Plants with different root shapes live better in different environments. 
+Plants with deep roots can reach water even if it doesn't rain very often.</text>
+                        </OTText>
+                        <OTUDLQuestion id="1c7999b4-f399-11dd-85ca-d75847cd2f0b" name="Question" showConvertButton="false">
+                          <prompt>
+                            <OTCompoundDoc>
+                              <bodyText>Which plant would have the easiest time surviving in a hot dry environment.</bodyText>
+                            </OTCompoundDoc>
+                          </prompt>
+                          <input>
+                            <OTChoice name="Multiple choice" alignContent="0">
+                              <choices>
+                                <OTCompoundDoc name="Plant A">
+                                  <bodyText>Plant A</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="Plant B">
+                                  <bodyText>Plant B</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="Plant C">
+                                  <bodyText>Plant C</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="Plant D">
+                                  <bodyText>Plant D</bodyText>
+                                </OTCompoundDoc>
+                              </choices>
+                            </OTChoice>
+                          </input>
+                        </OTUDLQuestion>
+                      </documentRefs>
+                    </OTCompoundDoc>
+                    <OTCompoundDoc id="07180262-f39a-11dd-85ca-d75847cd2f0b" name="%07180262-f39a-11dd-85ca-d75847cd2f0b" showEditBar="true">
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <div class="subtitle">
+                                Here is one last challenge.
+                                <br />
+                                <br />
+                                <object refid="dbf2abc3-f39a-11dd-85ca-d75847cd2f0b" />
+                                <br />
+                                <br />
+                                <img src="http://er.concord.org/images/ActivityOne/birdbeaks.jpg.png" border="1" />
+                                <br />
+                                <br />
+                                <img src="http://er.concord.org/images/ActivityOne/kingfisher.jpg" border="1" />
+                                <br />
+                                <br />
+                                <object refid="57ea1828-f39c-11dd-85ca-d75847cd2f0b" />
+                                <br />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                        <OTText id="dbf2abc3-f39a-11dd-85ca-d75847cd2f0b" name="Text field" text="Variation in plants and animals can be described as how one  differs from others of the same group. You have observed variations in dogs and plants. You also began to think about how the variations might help  them survive." />
+                        <OTUDLQuestion id="57ea1828-f39c-11dd-85ca-d75847cd2f0b" name="Question" showConvertButton="false">
+                          <prompt>
+                            <OTCompoundDoc>
+                              <bodyText>Look at the beak of the grey and white bird. Compare it to the beaks above. What type of food do you think it is most likely to eat?</bodyText>
+                            </OTCompoundDoc>
+                          </prompt>
+                          <input>
+                            <OTChoice name="Multiple choice" alignContent="0">
+                              <choices>
+                                <OTCompoundDoc name="Nectar">
+                                  <bodyText>Nectar</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="insects">
+                                  <bodyText>insects</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="grains">
+                                  <bodyText>grains</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="seeds">
+                                  <bodyText>seeds</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="fish">
+                                  <bodyText>fish</bodyText>
+                                </OTCompoundDoc>
+                              </choices>
+                            </OTChoice>
+                          </input>
+                        </OTUDLQuestion>
+                      </documentRefs>
+                    </OTCompoundDoc>
+                    <OTCompoundDoc id="b0be6bbc-f39c-11dd-85ca-d75847cd2f0b" name="%b0be6bbc-f39c-11dd-85ca-d75847cd2f0b" showEditBar="true">
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <div class="subtitle">Congratulations</div>
+                              You have completed activity 1 on variation......
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                    </OTCompoundDoc>
+                  </cards>
+                  <currentCard>
+                    <object refid="b0be6bbc-f39c-11dd-85ca-d75847cd2f0b" />
+                  </currentCard>
+                  <viewedCards>
+                    <object refid="${page-1}" />
+                    <object refid="957c20b0-f13a-11dd-90ae-373118468e1c" />
+                    <object refid="16df24f9-f13b-11dd-90ae-373118468e1c" />
+                    <object refid="7cd1790b-f13b-11dd-90ae-373118468e1c" />
+                    <object refid="afd0ffff-f145-11dd-91df-25a89b3dbdc9" />
+                    <object refid="d3df4704-f147-11dd-91df-25a89b3dbdc9" />
+                    <object refid="c42e7146-f148-11dd-91df-25a89b3dbdc9" />
+                    <object refid="dafc017c-f398-11dd-85ca-d75847cd2f0b" />
+                    <object refid="07180262-f39a-11dd-85ca-d75847cd2f0b" />
+                    <object refid="b0be6bbc-f39c-11dd-85ca-d75847cd2f0b" />
+                  </viewedCards>
+                </OTCardContainer>
+              </content>
+              <footer>
+                <object refid="${nav-bar}" />
+              </footer>
+              <north>
+                <object refid="2767fe20-6c7d-11dc-8314-0800200c9a66!/section_1/header" />
+              </north>
+              <center>
+                <object refid="${activity-card-container}" />
+              </center>
+              <south>
+                <object refid="${nav-bar}" />
+              </south>
+            </OTUDLSection>
+          </activity>
+          <script>
+            <object refid="${authoring-script}" />
+          </script>
+        </OTCurriculumUnit>
+      </root>
+      <library>
+        <object refid="b6350a20-e3b4-11dc-95ff-0800200c9a66" />
+        <OTUDLMenu local_id="section-1-menu">
+          <cardContainer>
+            <object refid="${activity-card-container}" />
+          </cardContainer>
+          <menuRule>
+            <object refid="${page-rule}" />
+          </menuRule>
+        </OTUDLMenu>
+        <OTSnapshotAlbum local_id="album" />
+        <OTUDLMenuRule local_id="page-rule" jumpToViewedCard="true" stepAhead="true" />
+        <OTJavascript local_id="change_page.js" src="http://continuum.concord.org/otrunk/examples/LOOPS/scripts/change_page.js" />
+        <OTJavascript local_id="show_message.js" src="http://continuum.concord.org/otrunk/examples/LOOPS/scripts/show_message.js" />
+        <OTJavascript local_id="loops_authoring_script.js" src="http://continuum.concord.org/otrunk/examples/LOOPS/scripts/loops_authoring_script.js" />
+        <OTScriptObject local_id="authoring-script">
+          <variables>
+            <OTScriptVariable name="cardContainer">
+              <reference>
+                <object refid="${activity-card-container}" />
+              </reference>
+            </OTScriptVariable>
+            <OTScriptVariable name="system">
+              <reference>
+                <object refid="${system}" />
+              </reference>
+            </OTScriptVariable>
+            <OTScriptVariable name="menuPageRule">
+              <reference>
+                <object refid="${page-rule}" />
+              </reference>
+            </OTScriptVariable>
+          </variables>
+          <script>
+            <object refid="${loops_authoring_script.js}" />
+          </script>
+          <scriptState />
+        </OTScriptObject>
+        <OTUDLNavBar local_id="nav-bar">
+          <menuView>
+            <object refid="29dc5ef0-c453-11dc-95ff-0800200c9a66" />
+          </menuView>
+          <cssColor>
+            <object refid="31193bb0-c44f-11dc-95ff-0800200c9a66" />
+          </cssColor>
+        </OTUDLNavBar>
+      </library>
+    </OTSystem>
+  </objects>
+</otrunk>
+
