@@ -25,7 +25,7 @@ def getText
     actionStr = '@controller.defaultTemplate'
   end
 
-  return eval(actionStr)
+  eval(actionStr)
 end
 
 def init
@@ -41,18 +41,18 @@ end
 
 def otImport(script)
   if script
-      srcProp = script.otClass().getProperty('src')
-      srcValue = script.otGet(srcProp)
-      eval(Java::JavaLang::String.new(script.src).to_s, nil, srcValue.getBlobURL().toExternalForm())
+    srcProp = script.otClass().getProperty('src')
+    srcValue = script.otGet(srcProp)
+    eval(Java::JavaLang::String.new(script.src).to_s, nil, srcValue.getBlobURL().toExternalForm())
   else
-    System.err.println("Cannot import #{script}")    
+    System.err.println("Cannot import #{script}")
   end
 end
 
 def getCsvText
   sep = "|"
   t = ['Teacher', 'Class', 'First Name', 'Last Name', 'Activity Name'].join(sep) + sep
-  
+
   @questions.questions.size.times do |i| 
     t << "Correct #{i+1}" + sep + (i + 1).to_s + sep
   end
@@ -74,7 +74,7 @@ def getCsvText
     t << @questions.getPoints(user).to_s
     t << "\n" 
   end
-  return t 
+  t
 end
 
 def getSurveyCsvText
@@ -93,7 +93,7 @@ def getSurveyCsvText
     end 
     t << newline
   end
-  return t 
+  t
 end
 
 def surveyAnswerText(user, question)
@@ -105,14 +105,19 @@ def surveyAnswerText(user, question)
     answer = userQuestion.getText
     return answer ? Util.trim(answer) : '-'
   end
-  return 'ERROR'
+  'ERROR'
 end
 
 def presentQuestion(question)
+  unless question.is_a?(OTQuestion)
+    System.err.println("mulichoice-report#presentQuestion: question is not an OTQuestion")
+    return ''
+  end 
+  
   text = ''
-  prompt = question.getPrompt()
+  prompt = @questions.prompt(question)
   if prompt and prompt.is_a?(OTCompoundDoc)
-    text += Util.toPlainText(question.getPrompt().getBodyText()) 
+    text += Util.toPlainText(question.getPrompt().getBodyText())
   else
     text += 'Question prompt not available'
   end
@@ -128,5 +133,5 @@ def presentQuestion(question)
       text += input.getBodyText.gsub(/<object .*?\/>/, '_')
     end
   end
-  return text
+  text
 end
