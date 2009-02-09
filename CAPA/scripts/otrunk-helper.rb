@@ -177,20 +177,25 @@ class OTrunkHelper
           questions << question
           dtCount += 1
         elsif ref.is_a?(OTText)
-          ## Kludge for old format (WSU) digital circuit multi-choice(last question)
-          if tCount == 0
-            tQuestion = $otObjectService.createObject(OTQuestion.java_class)
-            tInput = $otObjectService.createObject(OTObjectSet.java_class)
-            tCorrect = $otObjectService.createObject(OTText.java_class)
-            tCorrect.setText('4,1,3,2')
-            tQuestion.setCorrectAnswer(tCorrect)
+          if activityName == 'CAPA Student Survey'
+            ## Kludge for CAPA Survey question for name, age
+            questions << ref
+          else
+            ## Kludge for old format (WSU) digital circuit multi-choice(last question)
+            if tCount == 0
+              tQuestion = $otObjectService.createObject(OTQuestion.java_class)
+              tInput = $otObjectService.createObject(OTObjectSet.java_class)
+              tCorrect = $otObjectService.createObject(OTText.java_class)
+              tCorrect.setText('4,1,3,2')
+              tQuestion.setCorrectAnswer(tCorrect)
+            end
+            tInput.objects.add(ref)
+            if tCount == 3
+              tQuestion.setInput(tInput)
+              questions << tQuestion
+            end
+            tCount += 1
           end
-          tInput.objects.add(ref)
-          if tCount == 3
-            tQuestion.setInput(tInput)
-            questions << tQuestion
-          end
-          tCount += 1
         end
       end
     end
