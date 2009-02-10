@@ -93,7 +93,7 @@ otrunk_example_dirs.each do |path|
   if File.exists?("#{path}/jnlp_url.tmpl")
     jnlp_url_tmpl = File.read("#{path}/jnlp_url.tmpl")
   else      
-    jnlp_url_tmpl = "http://rails.dev.concord.org/sds/2/offering/144/jnlp/540/view?sailotrunk.otmlurl=%otml_url%&sailotrunk.hidetree=false"
+    jnlp_url_tmpl = "http://saildataservice.concord.org/2/offering/144/jnlp/540/view?sailotrunk.otmlurl=%otml_url%&sailotrunk.hidetree=false"
   end
 
   # Append: jnlp properties: otrunk.view.author=true and otrunk.view.mode=authoring
