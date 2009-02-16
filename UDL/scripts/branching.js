@@ -58,9 +58,11 @@ var button1Listener = new ActionListener()
 		cardContainer.setCurrentCard(replacementObject1);
 		cardContainer.getCards().remove(currentSection);
 		replacementObject1.getContent().setCurrentCard(firstPage1);
-		
+		placement.getComponents().remove(currentSection);
+		placement.getComponents().add(replacementObject1);
 	}
 }
+
 
 var button2Listener = new ActionListener()
 {
@@ -70,6 +72,8 @@ var button2Listener = new ActionListener()
 		cardContainer.setCurrentCard(replacementObject2);
 		cardContainer.getCards().remove(currentSection);
 		replacementObject2.getContent().setCurrentCard(firstPage2);
+		placement.getComponents().remove(currentSection);
+		placement.getComponents().add(replacementObject2);
 		
 	}
 }
@@ -82,6 +86,8 @@ var button3Listener = new ActionListener()
 		cardContainer.setCurrentCard(replacementObject3);
 		cardContainer.getCards().remove(currentSection);
 		replacementObject3.getContent().setCurrentCard(firstPage3);
+		placement.getComponents().remove(currentSection);
+		placement.getComponents().add(replacementObject3);
 		
 	}
 }
@@ -94,6 +100,8 @@ var button4Listener = new ActionListener()
 		cardContainer.setCurrentCard(replacementObject4);
 		cardContainer.getCards().remove(currentSection);
 		replacementObject4.getContent().setCurrentCard(firstPage4);
+		placement.getComponents().remove(currentSection);
+		placement.getComponents().add(replacementObject4);
 		
 	}
 }
