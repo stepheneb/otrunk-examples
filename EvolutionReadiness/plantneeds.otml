@@ -1,0 +1,583 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<otrunk id="2767fe20-6c7d-11dc-8314-0800200c9a66">
+  <imports>
+    <import class="org.concord.data.state.OTDataStore" />
+    <import class="org.concord.data.state.OTDataChannelDescription" />
+    <import class="org.concord.data.state.OTDataField" />
+    <import class="org.concord.data.state.OTDataTable" />
+    <import class="org.concord.datagraph.state.OTDataGraph" />
+    <import class="org.concord.datagraph.state.OTDataAxis" />
+    <import class="org.concord.datagraph.state.OTDataGraphable" />
+    <import class="org.concord.datagraph.state.OTDataCollector" />
+    <import class="org.concord.datagraph.state.OTMultiDataGraph" />
+    <import class="org.concord.datagraph.state.OTPluginView" />
+    <import class="org.concord.datagraph.state.OTDataBarGraphable" />
+    <import class="org.concord.framework.otrunk.view.OTFrame" />
+    <import class="org.concord.framework.otrunk.wrapper.OTBlob" />
+    <import class="org.concord.graph.util.state.OTDrawingTool" />
+    <import class="org.concord.graph.util.state.OTDrawingStamp" />
+    <import class="org.concord.graph.util.state.OTDrawingImageIcon" />
+    <import class="org.concord.graph.util.state.OTDrawingShape" />
+    <import class="org.concord.graph.util.state.OTDrawingTool2" />
+    <import class="org.concord.graph.util.state.OTPointTextLabel" />
+    <import class="org.concord.otrunk.OTInclude" />
+    <import class="org.concord.otrunk.OTSystem" />
+    <import class="org.concord.otrunk.browser.mozswing.OTMozSwing" />
+    <import class="org.concord.otrunk.overlay.OTOverlay" />
+    <import class="org.concord.otrunk.script.ui.OTScriptObject" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariable" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariableComponent" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariableView" />
+    <import class="org.concord.otrunk.script.js.OTJavascript" />
+    <import class="org.concord.otrunk.script.OTScriptEngineBundle" />
+    <import class="org.concord.otrunk.script.OTScriptEngineEntry" />
+    <import class="org.concord.otrunk.udl.OTAuthorNote" />
+    <import class="org.concord.otrunk.udl.OTUDLLabPage" />
+    <import class="org.concord.otrunk.udl.coach.OTUDLCoach" />
+    <import class="org.concord.otrunk.udl.coach.OTUDLCoachGroup" />
+    <import class="org.concord.otrunk.udl.coach.OTUDLCoachStatement" />
+    <import class="org.concord.otrunk.udl.OTUDLMenuRule" />
+    <import class="org.concord.otrunk.udl.document.OTDefinition" />
+    <import class="org.concord.otrunk.udl.document.OTDefinitionList" />
+    <import class="org.concord.otrunk.udl.document.OTDefinitionManager" />
+    <import class="org.concord.otrunk.udl.document.OTGlossary" />
+    <import class="org.concord.otrunk.udl.document.OTUDLCompoundDoc" />
+    <import class="org.concord.otrunk.udl.document.OTUDLDocumentViewConfig" />
+    <import class="org.concord.otrunk.graph.OTDataCollectorViewConfig" />
+    <import class="org.concord.otrunk.udl.question.OTUDLQuestion" />
+    <import class="org.concord.otrunk.udl.question.OTUDLLeveledQuestions" />
+    <import class="org.concord.otrunk.udl.question.OTUDLQuestionViewConfig" />
+    <import class="org.concord.otrunk.udl3.OTUDLMenu" />
+    <import class="org.concord.otrunk.udl3.OTUDLContainer" />
+    <import class="org.concord.otrunk.udl3.OTUDLSection" />
+    <import class="org.concord.otrunk.ui.OTButton" />
+    <import class="org.concord.otrunk.ui.OTCardContainer" />
+    <import class="org.concord.otrunk.ui.OTChoice" />
+    <import class="org.concord.otrunk.ui.OTChoiceMultiple" />
+    <import class="org.concord.otrunk.ui.OTCurriculumUnit" />
+    <import class="org.concord.otrunk.ui.OTImage" />
+    <import class="org.concord.otrunk.ui.OTImageMap" />
+    <import class="org.concord.otrunk.ui.OTLayerContainer" />
+    <import class="org.concord.otrunk.ui.OTModeSwitcher" />
+    <import class="org.concord.otrunk.ui.OTText" />
+    <import class="org.concord.otrunk.ui.OTPlacement" />
+    <import class="org.concord.otrunk.ui.OTPlacementContainer" />
+    <import class="org.concord.otrunk.ui.snapshot.OTSnapshot" />
+    <import class="org.concord.otrunk.ui.snapshot.OTSnapshotButton" />
+    <import class="org.concord.otrunk.ui.snapshot.OTSnapshotAlbum" />
+    <import class="org.concord.otrunk.ui.snapshot.OTSnapshotChooser" />
+    <import class="org.concord.otrunk.ui.swing.OTChoiceViewConfig" />
+    <import class="org.concord.otrunk.util.OTSharingBundle" />
+    <import class="org.concord.otrunk.view.OTObjectEditViewConfig" />
+    <import class="org.concord.otrunk.view.OTViewChild" />
+    <import class="org.concord.otrunk.view.OTViewEntry" />
+    <import class="org.concord.otrunk.view.OTViewBundle" />
+    <import class="org.concord.otrunk.view.OTViewMode" />
+    <import class="org.concord.otrunk.view.document.OTCompoundDoc" />
+    <import class="org.concord.otrunk.view.document.OTCssText" />
+    <import class="org.concord.otrunk.view.prototype.OTPrototypeViewEntry" />
+    <import class="org.concord.otrunk.view.prototype.OTPrototypeEventController" />
+    <import class="org.concord.otrunk.view.prototype.OTPrototypeMapEntry" />
+    <import class="org.concord.otrunknl4.OTNLogoModel" />
+    <import class="org.concord.sensor.state.OTDeviceConfig" />
+    <import class="org.concord.sensor.state.OTExperimentRequest" />
+    <import class="org.concord.sensor.state.OTInterfaceManager" />
+    <import class="org.concord.sensor.state.OTSensorDataProxy" />
+    <import class="org.concord.sensor.state.OTSensorRequest" />
+    <import class="org.concord.sensor.state.OTZeroSensor" />
+    <import class="org.concord.otrunk.udl.OTUDLNavBar" />
+    <import class="org.concord.datagraph.state.OTDataPointLabel" />
+    <import class="org.concord.otrunk.udl.OTZoom" />
+    <import class="org.concord.otrunk.udl.OTZoomTransform" />
+    <import class="org.concord.otrunkmw.OTModelerPage" />
+    <import class="org.concord.otrunkmw.OTMwDataProducer" />
+    <import class="org.concord.otrunkmw.OTMwChannelData" />
+    <import class="org.concord.otrunk.ui.OTSoundPlayer" />
+    <import class="org.concord.otrunk.util.OTReference" />
+    <import class="org.concord.smartgraph.OTSmartGraphTool" />
+    <import class="org.concord.otrunk.script.ui.OTScriptButton" />
+    <import class="org.concord.otrunk.script.jruby.OTJRuby" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariableRealObject" />
+    <import class="org.concord.framework.otrunk.wrapper.OTInt" />
+    <import class="org.concord.framework.otrunk.wrapper.OTBoolean" />
+  </imports>
+  <objects>
+    <OTSystem local_id="system">
+      <includes>
+        <OTInclude href="http://continuum.concord.org/otrunk/examples/LOOPS/global-imports/loops-view-bundle.otml" />
+      </includes>
+      <bundles>
+        <object refid="8d880970-c22a-11dc-95ff-0800200c9a66" />
+        <OTScriptEngineBundle>
+          <engines>
+            <OTScriptEngineEntry objectClass="org.concord.otrunk.script.jruby.OTJRuby" engineClass="org.concord.otrunk.script.jruby.OTJRubyEngine" />
+            <OTScriptEngineEntry objectClass="org.concord.otrunk.script.js.OTJavascript" engineClass="org.concord.otrunk.script.js.OTJavascriptEngine" />
+          </engines>
+        </OTScriptEngineBundle>
+        <OTSharingBundle />
+        <OTInterfaceManager>
+          <deviceConfigs>
+            <OTDeviceConfig configString="none" deviceId="10" />
+          </deviceConfigs>
+        </OTInterfaceManager>
+      </bundles>
+      <overlays>
+        <object refid="6cc8e2b0-c44e-11dc-95ff-0800200c9a66" />
+        <object refid="b5d8b4a0-db35-11dc-95ff-0800200c9a66" />
+        <OTOverlay>
+          <deltaObjectMap>
+            <entry key="${authoring_script.js}">
+              <OTJavascript src="http://continuum.concord.org/otrunk/examples/EvolutionReadiness/scripts/student_script.js" />
+            </entry>
+          </deltaObjectMap>
+        </OTOverlay>
+      </overlays>
+      <root>
+        <OTCurriculumUnit version="2" name="LOOPS Activity">
+          <activity>
+            <OTUDLSection local_id="section_1">
+              <header>
+                <OTCompoundDoc id="2767fe20-6c7d-11dc-8314-0800200c9a66!/section_1/header" showEditBar="false">
+                  <bodyText>
+                    <div class="title">What do plants need to survive?</div>
+                  </bodyText>
+                </OTCompoundDoc>
+              </header>
+              <content>
+                <OTCardContainer local_id="activity-card-container" contentsMayScroll="true" loadViewOnlyOnDemand="true">
+                  <cards>
+                    <OTCompoundDoc local_id="page-1" name="1">
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <div class="subtitle">How much water does this plant need?</div>
+                              Your job is to figure out how much water this plant needs. Try 
+          giving it different amounts and watch what happens. give the plant 
+          water for a week (note the calendar) and observe what happens. Then 
+          reset and try giving the SAME plant a different amount of water....
+                              <br />
+                              <br />
+                              <br />
+                              <object refid="3cba5ca2-fd20-11dd-9f6e-17201ee183c8" />
+                              <br />
+                              <br />
+                              <br />
+                              <object refid="b4246e24-fd20-11dd-9f6e-17201ee183c8" />
+                              <br />
+                              <br />
+                              <br />
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                        <OTAuthorNote id="3cba5ca2-fd20-11dd-9f6e-17201ee183c8" name="Author's note" color="2">
+                          <note>
+                            <OTText text="In this model, students are going to plant a seed and then give the plant a certain amount of water. They will need to give it several different amounts  and they will need to &quot;reset&quot; the model in order to do this. The goal will be to have the plant grow and  by day 7 a flower will form. If they feed it to much the plant will die or look bad and too little and the plant won't grow and/or will die. They can feed it specific amounts that they choose either with a beaker, or watering can." rows="3" />
+                          </note>
+                        </OTAuthorNote>
+                        <OTUDLQuestion id="b4246e24-fd20-11dd-9f6e-17201ee183c8" name="Question" showConvertButton="false">
+                          <prompt>
+                            <OTCompoundDoc>
+                              <bodyText>My plant needed</bodyText>
+                            </OTCompoundDoc>
+                          </prompt>
+                          <input>
+                            <OTChoice name="Multiple choice" alignContent="0">
+                              <choices>
+                                <OTCompoundDoc name="O cc">
+                                  <bodyText>O cc</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="5 cc">
+                                  <bodyText>5 cc</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="10 cc">
+                                  <bodyText>10 cc</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="20cc">
+                                  <bodyText>20cc</bodyText>
+                                </OTCompoundDoc>
+                              </choices>
+                            </OTChoice>
+                          </input>
+                        </OTUDLQuestion>
+                      </documentRefs>
+                    </OTCompoundDoc>
+                    <OTCompoundDoc id="b321925a-fd22-11dd-9f6e-17201ee183c8" name="%b321925a-fd22-11dd-9f6e-17201ee183c8" showEditBar="true">
+                      <documentRefs>
+                        <OTAuthorNote id="b13287a7-fd2c-11dd-8b0b-617b9bd6ad18" name="Author's note">
+                          <note>
+                            <OTText text="On this page the students will plant their plant in the garden, somehow set a control for the irrigation system  or a sprinkler and will watch the plant. As time passes a calendar (like in the old bugs bunny cartoons) flips showing each day the plant grows after it is watered. The plant will grow, produce a flower and drop 8-10 seeds on the ground in the garden." />
+                          </note>
+                        </OTAuthorNote>
+                        <OTUDLQuestion id="cfeb9baf-fd23-11dd-9f6e-17201ee183c8" name="Question" showConvertButton="false">
+                          <prompt>
+                            <OTCompoundDoc>
+                              <bodyText>Describe the life cycle of the plant.</bodyText>
+                            </OTCompoundDoc>
+                          </prompt>
+                          <input>
+                            <OTText />
+                          </input>
+                        </OTUDLQuestion>
+                      </documentRefs>
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <div class="subtitle">Set the sprinkler system to keep your plant alive.</div>
+                              Put your plant in the garden and set a sprinkler system to water the 
+          plants the right amount of water each day.
+                              <br />
+                              <br />
+                              <br />
+                              <br />
+                              <object refid="b13287a7-fd2c-11dd-8b0b-617b9bd6ad18" />
+                              <br />
+                              <br />
+                              <br />
+                              <br />
+                              <object refid="cfeb9baf-fd23-11dd-9f6e-17201ee183c8" />
+                              <br />
+                              <br />
+                              <br />
+                              <br />
+                              <br />
+                            </div>
+                          </div>
+                        </div>
+                        ba
+                      </bodyText>
+                    </OTCompoundDoc>
+                    <OTCompoundDoc id="0a52c7b6-fd24-11dd-9f6e-17201ee183c8" name="%0a52c7b6-fd24-11dd-9f6e-17201ee183c8" showEditBar="true">
+                      <documentRefs>
+                        <OTAuthorNote id="e761d06b-fd24-11dd-9f6e-17201ee183c8" name="Author's note">
+                          <note>
+                            <OTText text="In this case, new plants grow from the seeds and have variations from the parent plant. They look different (although the greatest difference is in the roots.&#xA;This is to get at learning goal that plants are different from parents and soon will set up the differences may mean they have different needs.  Again the model will have mulitple plants grow, with &quot;calendar&quot; or some sort of time is passing indicator." rows="2" />
+                          </note>
+                        </OTAuthorNote>
+                        <OTUDLQuestion id="50100ffd-fd25-11dd-9f6e-17201ee183c8" name="Question" showConvertButton="false">
+                          <prompt>
+                            <OTCompoundDoc>
+                              <bodyText>Did all the plants grow exactly the same with the same amount of water? Explain using your observations.</bodyText>
+                            </OTCompoundDoc>
+                          </prompt>
+                          <input>
+                            <OTText />
+                          </input>
+                        </OTUDLQuestion>
+                      </documentRefs>
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <div class="subtitle">Lets plant a whole garden.</div>
+                              Plant the seeds produced by your plant in garden. Set the sprinkler 
+          system.
+                              <br />
+                              <br />
+                              <object refid="e761d06b-fd24-11dd-9f6e-17201ee183c8" />
+                              <br />
+                              <br />
+                              <br />
+                              <object refid="50100ffd-fd25-11dd-9f6e-17201ee183c8" />
+                              <br />
+                              <br />
+                              <br />
+                              <br />
+                              <br />
+                              <br />
+                              <br />
+                              <br />
+                              <br />
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                    </OTCompoundDoc>
+                    <OTCompoundDoc id="63c05884-fd25-11dd-9f6e-17201ee183c8" name="%63c05884-fd25-11dd-9f6e-17201ee183c8" showEditBar="true">
+                      <documentRefs>
+                        <OTAuthorNote id="98eb2829-fd28-11dd-9f6e-17201ee183c8" name="Author's note">
+                          <note>
+                            <OTText text="The idea is to allow students to put the plants in a container that will allow the students to see the entire plant including the roots and to move them into the laboratory. As moved into the lab, the beaker would need to be labeled with &quot;parent plant&quot; and &quot;seedling 1&quot; etc.  " />
+                          </note>
+                        </OTAuthorNote>
+                      </documentRefs>
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <div class="subtitle">What might explain the difference in growth?</div>
+                              <br />
+                              <br />
+                              Your job is to investigate the plants and their differences. Place 
+          each plant in a beaker and click the "laboratory button below"
+                              <br />
+                              <br />
+                              <object refid="98eb2829-fd28-11dd-9f6e-17201ee183c8" />
+                              <br />
+                              <br />
+                              <br />
+                              <br />
+                              <br />
+                              <br />
+                              <br />
+                              <br />
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                    </OTCompoundDoc>
+                    <OTCompoundDoc id="d7324d7b-fd28-11dd-9f6e-17201ee183c8" name="%d7324d7b-fd28-11dd-9f6e-17201ee183c8" showEditBar="true">
+                      <documentRefs>
+                        <OTAuthorNote id="f36d5d3c-fd29-11dd-9f6e-17201ee183c8" name="Author's note">
+                          <note>
+                            <OTText>
+                              <text>Students will need to move the plants around and place in order based on characteristic it think is important. In this case we will need to have a variation of the roots be an obvious variation where as the leaves are not so obvious only height might be different and height could be correlated to root type and water.
+
+There is a flaw here in reasoning in that root size or depth is related to where water is found and not necessarily only to how much water a plant needs...need to deal with this.</text>
+                            </OTText>
+                          </note>
+                        </OTAuthorNote>
+                        <OTUDLQuestion id="5fa33cee-fd2a-11dd-9f6e-17201ee183c8" name="Question" showConvertButton="false">
+                          <prompt>
+                            <OTCompoundDoc>
+                              <bodyText>How could you test if the differences you observe are related to a plants need for water?</bodyText>
+                            </OTCompoundDoc>
+                          </prompt>
+                          <input>
+                            <OTText />
+                          </input>
+                        </OTUDLQuestion>
+                      </documentRefs>
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <div class="subtitle">Sort the plants!</div>
+                              At the beginning of this activity you explored how much water your 
+          plant needed. Do all the seeds need the same amount of water? what 
+          might account for the differences in the needs of water in your 
+          plant.
+                              <br />
+                              Sort the seedlings by what you think is important difference in how much water 
+          a plant gets.
+                              <br />
+                              <br />
+                              <object refid="f36d5d3c-fd29-11dd-9f6e-17201ee183c8" />
+                              <br />
+                              <br />
+                              <br />
+                              <object refid="5fa33cee-fd2a-11dd-9f6e-17201ee183c8" />
+                              <br />
+                              <br />
+                              <br />
+                              <br />
+                              <br />
+                              <br />
+                              <br />
+                              <br />
+                              <br />
+                              <br />
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                    </OTCompoundDoc>
+                    <OTCompoundDoc id="a8b0b715-fd2a-11dd-9f6e-17201ee183c8" name="%a8b0b715-fd2a-11dd-9f6e-17201ee183c8" showEditBar="true">
+                      <documentRefs>
+                        <OTAuthorNote id="410587c5-fd2d-11dd-8b0b-617b9bd6ad18" name="Author's note">
+                          <note>
+                            <OTText text="This activity is similar to the first page." />
+                          </note>
+                        </OTAuthorNote>
+                        <OTUDLQuestion id="f5117ae6-fd2a-11dd-9f6e-17201ee183c8" name="Question" showConvertButton="false">
+                          <prompt>
+                            <OTCompoundDoc>
+                              <bodyText>Does the first seedling have the same needs as the parent plant?</bodyText>
+                            </OTCompoundDoc>
+                          </prompt>
+                          <input>
+                            <OTText />
+                          </input>
+                        </OTUDLQuestion>
+                        <OTUDLQuestion id="1166229d-fd2b-11dd-9f6e-17201ee183c8" name="Question" showConvertButton="false">
+                          <prompt>
+                            <OTCompoundDoc>
+                              <bodyText>Does the second seedling have the same needs as the parent plant?</bodyText>
+                            </OTCompoundDoc>
+                          </prompt>
+                          <input>
+                            <OTText />
+                          </input>
+                        </OTUDLQuestion>
+                        <OTUDLQuestion id="1f48f9b4-fd2b-11dd-9f6e-17201ee183c8" name="Question" showConvertButton="false">
+                          <prompt>
+                            <OTCompoundDoc>
+                              <bodyText>Give a rule of thumb for how the roots are related to the amount of water it needs.</bodyText>
+                            </OTCompoundDoc>
+                          </prompt>
+                          <input>
+                            <OTText />
+                          </input>
+                        </OTUDLQuestion>
+                      </documentRefs>
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <div class="subtitle">Test your idea.</div>
+                              <br />
+                              Choose two of the seedlings. Choose two that are very different from 
+          each other. Like you did with the parent plant, water them and find 
+          the amount of water that best suits that plant.
+                              <br />
+                              <br />
+                              <br />
+                              <object refid="410587c5-fd2d-11dd-8b0b-617b9bd6ad18" />
+                              <br />
+                              <br />
+                              <br />
+                              <object refid="f5117ae6-fd2a-11dd-9f6e-17201ee183c8" />
+                              <br />
+                              <br />
+                              <br />
+                              <br />
+                              <br />
+                              <br />
+                              <object refid="1166229d-fd2b-11dd-9f6e-17201ee183c8" />
+                              <br />
+                              <br />
+                              <br />
+                              <br />
+                              <br />
+                              <object refid="1f48f9b4-fd2b-11dd-9f6e-17201ee183c8" />
+                              <br />
+                              <br />
+                              <br />
+                              <br />
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                    </OTCompoundDoc>
+                    <OTCompoundDoc id="61058473-fd2d-11dd-8b0b-617b9bd6ad18" name="%61058473-fd2d-11dd-8b0b-617b9bd6ad18" showEditBar="true">
+                      <bodyText>
+                        Please note:
+                        <br />
+                        It is intended that this activity have students starting with different 
+    variations so that not all students will get the same answers.
+                        <br />
+                        It would be nice to have a gallery that can perhaps collect journal entries 
+    that would have the plant the amount of water it needed to grow  and 
+    create a flower ( a sign of a plant not in stress).
+                        <br />
+                        In this way each computer could post the picture and students can compare.
+                        <br />
+                        <br />
+                        There are also several places in the activity to talk about what the model is 
+    doing well with...is it accurate?
+                        <br />
+                        the model speeds up time, plants are 
+    actually smaller on screen then in real life etc.
+                        <br />
+                        <br />
+                        At teh end of activity teacher discussion should need to get into a plant 
+    trait (roots) and how it relates to the plant getting water and surviving. 
+    How might different roots reflect different adaptations to the environment.
+                        <br />
+                        Could they do a different experiment for a differnet plant triat?
+                        <br />
+                        Also have teacher make connections to the idea that not all parents and 
+    offspring are identical and how might that relate to an individuals plants 
+    survival? The population of plants survival?
+                        <br />
+                        <br />
+                      </bodyText>
+                    </OTCompoundDoc>
+                  </cards>
+                  <currentCard>
+                    <object refid="61058473-fd2d-11dd-8b0b-617b9bd6ad18" />
+                  </currentCard>
+                  <viewedCards>
+                    <object refid="${page-1}" />
+                    <object refid="b321925a-fd22-11dd-9f6e-17201ee183c8" />
+                    <object refid="0a52c7b6-fd24-11dd-9f6e-17201ee183c8" />
+                    <object refid="63c05884-fd25-11dd-9f6e-17201ee183c8" />
+                    <object refid="d7324d7b-fd28-11dd-9f6e-17201ee183c8" />
+                    <object refid="a8b0b715-fd2a-11dd-9f6e-17201ee183c8" />
+                    <object refid="61058473-fd2d-11dd-8b0b-617b9bd6ad18" />
+                  </viewedCards>
+                </OTCardContainer>
+              </content>
+              <footer>
+                <object refid="${nav-bar}" />
+              </footer>
+              <north>
+                <object refid="2767fe20-6c7d-11dc-8314-0800200c9a66!/section_1/header" />
+              </north>
+              <center>
+                <object refid="${activity-card-container}" />
+              </center>
+              <south>
+                <object refid="${nav-bar}" />
+              </south>
+            </OTUDLSection>
+          </activity>
+          <script>
+            <object refid="${authoring-script}" />
+          </script>
+        </OTCurriculumUnit>
+      </root>
+      <library>
+        <object refid="b6350a20-e3b4-11dc-95ff-0800200c9a66" />
+        <OTUDLMenu local_id="section-1-menu">
+          <cardContainer>
+            <object refid="${activity-card-container}" />
+          </cardContainer>
+          <menuRule>
+            <object refid="${page-rule}" />
+          </menuRule>
+        </OTUDLMenu>
+        <OTSnapshotAlbum local_id="album" />
+        <OTUDLMenuRule local_id="page-rule" jumpToViewedCard="true" stepAhead="true" />
+        <OTJavascript local_id="change_page.js" src="http://continuum.concord.org/otrunk/examples/EvolutionReadiness/scripts/change_page.js" />
+        <OTJavascript local_id="show_message.js" src="http://continuum.concord.org/otrunk/examples/EvolutionReadiness/scripts/show_message.js" />
+        <OTJavascript local_id="loops_authoring_script.js" src="http://continuum.concord.org/otrunk/examples/EvolutionReadiness/scripts/loops_authoring_script.js" />
+        <OTScriptObject local_id="authoring-script">
+          <variables>
+            <OTScriptVariable name="cardContainer">
+              <reference>
+                <object refid="${activity-card-container}" />
+              </reference>
+            </OTScriptVariable>
+            <OTScriptVariable name="system">
+              <reference>
+                <object refid="${system}" />
+              </reference>
+            </OTScriptVariable>
+            <OTScriptVariable name="menuPageRule">
+              <reference>
+                <object refid="${page-rule}" />
+              </reference>
+            </OTScriptVariable>
+          </variables>
+          <script>
+            <object refid="${loops_authoring_script.js}" />
+          </script>
+          <scriptState />
+        </OTScriptObject>
+        <OTUDLNavBar local_id="nav-bar">
+          <menuView>
+            <object refid="29dc5ef0-c453-11dc-95ff-0800200c9a66" />
+          </menuView>
+          <cssColor>
+            <object refid="31193bb0-c44f-11dc-95ff-0800200c9a66" />
+          </cssColor>
+        </OTUDLNavBar>
+      </library>
+    </OTSystem>
+  </objects>
+</otrunk>
+
