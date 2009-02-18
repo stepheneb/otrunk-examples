@@ -30,9 +30,9 @@ end
 
 def embedObject(obj, view=nil)
   if view
-    "<object refid=\"#{ obj.otExternalId() } viewid=\"#{ view.otExternalId() }\" \"/>"
+    "<object refid=\"#{ obj.otExternalId() }\" viewid=\"#{ view.otExternalId() }\" />"
   else
-    "<object refid=\"#{ obj.otExternalId() }\"/>"
+    "<object refid=\"#{ obj.otExternalId() }\" />"
   end
 end
 
