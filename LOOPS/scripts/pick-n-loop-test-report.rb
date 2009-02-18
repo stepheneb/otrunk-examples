@@ -11,9 +11,6 @@ include_class 'org.concord.otrunk.view.OTGroupListManager'
 include_class 'org.concord.otrunk.view.OTGroupMember'
 
 def getText
-  if $model
-    return "<h1> Here</h1>"
-  end
   @otrunk = $graph.getOTObjectService().getOTrunkService(OTrunk.java_class);
   @groupListManager = $graph.getOTObjectService().getOTrunkService(OTGroupListManager.java_class);
   @overlayManager = $graph.getOTObjectService().getOTrunkService(OTUserOverlayManager.java_class);
