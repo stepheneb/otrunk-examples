@@ -1,0 +1,2751 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<otrunk id="2767fe20-6c7d-11dc-8314-0800200c9a66">
+  <imports>
+    <import class="org.concord.data.state.OTDataStore" />
+    <import class="org.concord.data.state.OTDataChannelDescription" />
+    <import class="org.concord.data.state.OTDataField" />
+    <import class="org.concord.data.state.OTDataTable" />
+    <import class="org.concord.datagraph.state.OTDataGraph" />
+    <import class="org.concord.datagraph.state.OTDataAxis" />
+    <import class="org.concord.datagraph.state.OTDataGraphable" />
+    <import class="org.concord.datagraph.state.OTDataCollector" />
+    <import class="org.concord.datagraph.state.OTMultiDataGraph" />
+    <import class="org.concord.datagraph.state.OTPluginView" />
+    <import class="org.concord.datagraph.state.OTDataBarGraphable" />
+    <import class="org.concord.framework.otrunk.view.OTFrame" />
+    <import class="org.concord.framework.otrunk.wrapper.OTBlob" />
+    <import class="org.concord.graph.util.state.OTDrawingTool" />
+    <import class="org.concord.graph.util.state.OTDrawingStamp" />
+    <import class="org.concord.graph.util.state.OTDrawingImageIcon" />
+    <import class="org.concord.graph.util.state.OTDrawingShape" />
+    <import class="org.concord.graph.util.state.OTDrawingTool2" />
+    <import class="org.concord.graph.util.state.OTPointTextLabel" />
+    <import class="org.concord.otrunk.OTInclude" />
+    <import class="org.concord.otrunk.OTSystem" />
+    <import class="org.concord.otrunk.browser.mozswing.OTMozSwing" />
+    <import class="org.concord.otrunk.overlay.OTOverlay" />
+    <import class="org.concord.otrunk.script.ui.OTScriptObject" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariable" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariableComponent" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariableView" />
+    <import class="org.concord.otrunk.script.js.OTJavascript" />
+    <import class="org.concord.otrunk.script.OTScriptEngineBundle" />
+    <import class="org.concord.otrunk.script.OTScriptEngineEntry" />
+    <import class="org.concord.otrunk.udl.OTAuthorNote" />
+    <import class="org.concord.otrunk.udl.OTUDLLabPage" />
+    <import class="org.concord.otrunk.udl.coach.OTUDLCoach" />
+    <import class="org.concord.otrunk.udl.coach.OTUDLCoachGroup" />
+    <import class="org.concord.otrunk.udl.coach.OTUDLCoachStatement" />
+    <import class="org.concord.otrunk.udl.OTUDLMenuRule" />
+    <import class="org.concord.otrunk.udl.document.OTDefinition" />
+    <import class="org.concord.otrunk.udl.document.OTDefinitionList" />
+    <import class="org.concord.otrunk.udl.document.OTDefinitionManager" />
+    <import class="org.concord.otrunk.udl.document.OTGlossary" />
+    <import class="org.concord.otrunk.udl.document.OTUDLCompoundDoc" />
+    <import class="org.concord.otrunk.udl.document.OTUDLDocumentViewConfig" />
+    <import class="org.concord.otrunk.graph.OTDataCollectorViewConfig" />
+    <import class="org.concord.otrunk.udl.question.OTUDLQuestion" />
+    <import class="org.concord.otrunk.udl.question.OTUDLLeveledQuestions" />
+    <import class="org.concord.otrunk.udl.question.OTUDLQuestionViewConfig" />
+    <import class="org.concord.otrunk.udl3.OTUDLMenu" />
+    <import class="org.concord.otrunk.udl3.OTUDLContainer" />
+    <import class="org.concord.otrunk.udl3.OTUDLSection" />
+    <import class="org.concord.otrunk.ui.OTButton" />
+    <import class="org.concord.otrunk.ui.OTCardContainer" />
+    <import class="org.concord.otrunk.ui.OTChoice" />
+    <import class="org.concord.otrunk.ui.OTChoiceMultiple" />
+    <import class="org.concord.otrunk.ui.OTCurriculumUnit" />
+    <import class="org.concord.otrunk.ui.OTImage" />
+    <import class="org.concord.otrunk.ui.OTImageMap" />
+    <import class="org.concord.otrunk.ui.OTLayerContainer" />
+    <import class="org.concord.otrunk.ui.OTModeSwitcher" />
+    <import class="org.concord.otrunk.ui.OTText" />
+    <import class="org.concord.otrunk.ui.OTPlacement" />
+    <import class="org.concord.otrunk.ui.OTPlacementContainer" />
+    <import class="org.concord.otrunk.ui.snapshot.OTSnapshot" />
+    <import class="org.concord.otrunk.ui.snapshot.OTSnapshotButton" />
+    <import class="org.concord.otrunk.ui.snapshot.OTSnapshotAlbum" />
+    <import class="org.concord.otrunk.ui.snapshot.OTSnapshotChooser" />
+    <import class="org.concord.otrunk.ui.swing.OTChoiceViewConfig" />
+    <import class="org.concord.otrunk.util.OTSharingBundle" />
+    <import class="org.concord.otrunk.view.OTObjectEditViewConfig" />
+    <import class="org.concord.otrunk.view.OTViewChild" />
+    <import class="org.concord.otrunk.view.OTViewEntry" />
+    <import class="org.concord.otrunk.view.OTViewBundle" />
+    <import class="org.concord.otrunk.view.OTViewMode" />
+    <import class="org.concord.otrunk.view.document.OTCompoundDoc" />
+    <import class="org.concord.otrunk.view.document.OTCssText" />
+    <import class="org.concord.otrunk.view.prototype.OTPrototypeViewEntry" />
+    <import class="org.concord.otrunk.view.prototype.OTPrototypeEventController" />
+    <import class="org.concord.otrunk.view.prototype.OTPrototypeMapEntry" />
+    <import class="org.concord.otrunknl4.OTNLogoModel" />
+    <import class="org.concord.sensor.state.OTDeviceConfig" />
+    <import class="org.concord.sensor.state.OTExperimentRequest" />
+    <import class="org.concord.sensor.state.OTInterfaceManager" />
+    <import class="org.concord.sensor.state.OTSensorDataProxy" />
+    <import class="org.concord.sensor.state.OTSensorRequest" />
+    <import class="org.concord.sensor.state.OTZeroSensor" />
+    <import class="org.concord.otrunk.udl.OTUDLNavBar" />
+    <import class="org.concord.datagraph.state.OTDataPointLabel" />
+    <import class="org.concord.otrunk.udl.OTZoom" />
+    <import class="org.concord.otrunk.udl.OTZoomTransform" />
+    <import class="org.concord.otrunkmw.OTModelerPage" />
+    <import class="org.concord.otrunkmw.OTMwDataProducer" />
+    <import class="org.concord.otrunkmw.OTMwChannelData" />
+    <import class="org.concord.otrunk.ui.OTSoundPlayer" />
+    <import class="org.concord.otrunk.util.OTReference" />
+    <import class="org.concord.smartgraph.OTSmartGraphTool" />
+    <import class="org.concord.otrunk.script.ui.OTScriptButton" />
+    <import class="org.concord.otrunk.script.jruby.OTJRuby" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariableRealObject" />
+    <import class="org.concord.framework.otrunk.wrapper.OTInt" />
+    <import class="org.concord.framework.otrunk.wrapper.OTBoolean" />
+  </imports>
+  <objects>
+    <OTSystem local_id="system">
+      <includes>
+        <OTInclude href="http://continuum.concord.org/otrunk/examples/LOOPS/global-imports/loops-view-bundle.otml" />
+      </includes>
+      <bundles>
+        <object refid="8d880970-c22a-11dc-95ff-0800200c9a66" />
+        <OTScriptEngineBundle>
+          <engines>
+            <OTScriptEngineEntry objectClass="org.concord.otrunk.script.jruby.OTJRuby" engineClass="org.concord.otrunk.script.jruby.OTJRubyEngine" />
+            <OTScriptEngineEntry objectClass="org.concord.otrunk.script.js.OTJavascript" engineClass="org.concord.otrunk.script.js.OTJavascriptEngine" />
+          </engines>
+        </OTScriptEngineBundle>
+        <OTSharingBundle />
+        <OTInterfaceManager>
+          <deviceConfigs>
+            <OTDeviceConfig configString="none" deviceId="10" />
+          </deviceConfigs>
+        </OTInterfaceManager>
+      </bundles>
+      <overlays>
+        <object refid="6cc8e2b0-c44e-11dc-95ff-0800200c9a66" />
+        <object refid="b5d8b4a0-db35-11dc-95ff-0800200c9a66" />
+        <OTOverlay>
+          <deltaObjectMap>
+            <entry key="${authoring_script.js}">
+              <OTJavascript src="http://continuum.concord.org/otrunk/examples/LOOPS/scripts/student_script.js" />
+            </entry>
+          </deltaObjectMap>
+        </OTOverlay>
+      </overlays>
+      <root>
+        <OTCurriculumUnit version="2" name="LOOPS Activity">
+          <activity>
+            <OTUDLSection local_id="section_1">
+              <header>
+                <OTCompoundDoc id="2767fe20-6c7d-11dc-8314-0800200c9a66!/section_1/header" showEditBar="false">
+                  <bodyText>
+                    <div class="title">Activity 3: Working with Position Graphs</div>
+                  </bodyText>
+                </OTCompoundDoc>
+              </header>
+              <content>
+                <OTCardContainer local_id="activity-card-container" contentsMayScroll="true" loadViewOnlyOnDemand="true">
+                  <cards>
+                    <OTCompoundDoc id="bcdfc592-0032-11de-a3ee-43c60806869b" name="%bcdfc592-0032-11de-a3ee-43c60806869b" showEditBar="true">
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <div class="subtitle">Thinking about your experience with motion and graphs</div>
+                              <br />
+                              <br />
+                              In this activity, you will be using motion probes to collect data, 
+          and computers to graph the motions that you make. Please answer 
+          these short questions, which will get you thinking about the topics 
+          of motion and graphing.
+                              <br />
+                              <br />
+                              <br />
+                              <div style="border-color: black; margin-right: 5px; border-top-width: 1px; padding-bottom: 2px; border-style: solid; margin-top: 5px; padding-top: 2px; border-bottom-width: 1px; padding-right: 2px; border-right-width: 1px; padding-left: 2px; margin-bottom: 5px; border-left-width: 1px; margin-left: 5px">
+                                <object refid="7ff3e340-0035-11de-a3ee-43c60806869b" />
+                                <br />
+                                <object viewid="29dc5ef0-c453-11dc-95ff-0800200c9a66" refid="7ff3e341-0035-11de-a3ee-43c60806869b" />
+                              </div>
+                              <br />
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                        <OTCardContainer id="7ff3e340-0035-11de-a3ee-43c60806869b" contentsMayScroll="false" loadViewOnlyOnDemand="true" closeViewOnExit="true">
+                          <cards>
+                            <OTUDLCompoundDoc id="7ff3e342-0035-11de-a3ee-43c60806869b">
+                              <bodyText>
+                                <object refid="84d06504-0035-11de-a3ee-43c60806869b" />
+                                <br />
+                              </bodyText>
+                              <documentRefs>
+                                <OTUDLQuestion id="84d06504-0035-11de-a3ee-43c60806869b" name="Question" showConvertButton="false">
+                                  <prompt>
+                                    <OTCompoundDoc>
+                                      <bodyText>Are you familiar with time graphs, such as temperature vs. time?</bodyText>
+                                    </OTCompoundDoc>
+                                  </prompt>
+                                  <input>
+                                    <OTChoice name="Multiple choice" alignContent="0">
+                                      <choices>
+                                        <OTCompoundDoc id="84d06504-0035-11de-a3ee-43c60806869b/input/choices[0]" name="1. Yes">
+                                          <bodyText>1. Yes</bodyText>
+                                        </OTCompoundDoc>
+                                        <OTCompoundDoc id="9960ad54-0035-11de-a3ee-43c60806869b" name="2. No">
+                                          <bodyText>2. No</bodyText>
+                                        </OTCompoundDoc>
+                                        <OTCompoundDoc name="3. Not sure">
+                                          <bodyText>3. Not sure</bodyText>
+                                        </OTCompoundDoc>
+                                      </choices>
+                                      <currentChoice>
+                                        <object refid="84d06504-0035-11de-a3ee-43c60806869b/input/choices[0]" />
+                                      </currentChoice>
+                                    </OTChoice>
+                                  </input>
+                                </OTUDLQuestion>
+                              </documentRefs>
+                            </OTUDLCompoundDoc>
+                            <OTUDLCompoundDoc id="9d0e7316-0035-11de-a3ee-43c60806869b" name="%9d0e7316-0035-11de-a3ee-43c60806869b" showEditBar="true">
+                              <documentRefs>
+                                <OTUDLQuestion id="a0a92607-0035-11de-a3ee-43c60806869b" name="Question" showConvertButton="false">
+                                  <prompt>
+                                    <OTCompoundDoc>
+                                      <bodyText>Have you used motion graphs before?</bodyText>
+                                    </OTCompoundDoc>
+                                  </prompt>
+                                  <input>
+                                    <OTChoice name="Multiple choice" alignContent="0">
+                                      <choices>
+                                        <OTCompoundDoc name="1. Yes">
+                                          <bodyText>1. Yes</bodyText>
+                                        </OTCompoundDoc>
+                                        <OTCompoundDoc id="bbe95087-0035-11de-a3ee-43c60806869b" name="2. No">
+                                          <bodyText>2. No</bodyText>
+                                        </OTCompoundDoc>
+                                        <OTCompoundDoc name="3. Not sure">
+                                          <bodyText>3. Not sure</bodyText>
+                                        </OTCompoundDoc>
+                                      </choices>
+                                      <currentChoice>
+                                        <object refid="bbe95087-0035-11de-a3ee-43c60806869b" />
+                                      </currentChoice>
+                                    </OTChoice>
+                                  </input>
+                                </OTUDLQuestion>
+                              </documentRefs>
+                              <bodyText>
+                                <object refid="a0a92607-0035-11de-a3ee-43c60806869b" />
+                                <br />
+                              </bodyText>
+                            </OTUDLCompoundDoc>
+                            <OTUDLCompoundDoc id="d44d8429-0035-11de-a3ee-43c60806869b" name="%d44d8429-0035-11de-a3ee-43c60806869b" showEditBar="true">
+                              <documentRefs>
+                                <OTUDLQuestion id="e184b1ea-0035-11de-a3ee-43c60806869b" name="Question" showConvertButton="false">
+                                  <prompt>
+                                    <OTCompoundDoc>
+                                      <bodyText>Which of the following graphs are you familiar with? (You can check more than one.)</bodyText>
+                                    </OTCompoundDoc>
+                                  </prompt>
+                                  <input>
+                                    <OTChoiceMultiple name="Multiple choice (check boxes)" alignContent="0">
+                                      <choices>
+                                        <OTCompoundDoc id="0fa7e9e5-0036-11de-a3ee-43c60806869b" name="Bar Graphs">
+                                          <bodyText>Bar Graphs</bodyText>
+                                        </OTCompoundDoc>
+                                        <OTCompoundDoc name="Pie Charts">
+                                          <bodyText>Pie Charts</bodyText>
+                                        </OTCompoundDoc>
+                                        <OTCompoundDoc id="0fa7e9e7-0036-11de-a3ee-43c60806869b" name="Growth Charts">
+                                          <bodyText>Growth Charts</bodyText>
+                                        </OTCompoundDoc>
+                                        <OTCompoundDoc name="Stock market graphs">
+                                          <bodyText>Stock market graphs</bodyText>
+                                        </OTCompoundDoc>
+                                        <OTCompoundDoc id="0fa7e9e9-0036-11de-a3ee-43c60806869b" name="Weather graphs">
+                                          <bodyText>Weather graphs</bodyText>
+                                        </OTCompoundDoc>
+                                        <OTCompoundDoc name="Other graphs">
+                                          <bodyText>Other graphs</bodyText>
+                                        </OTCompoundDoc>
+                                      </choices>
+                                      <currentChoices>
+                                        <object refid="0fa7e9e5-0036-11de-a3ee-43c60806869b" />
+                                        <object refid="0fa7e9e7-0036-11de-a3ee-43c60806869b" />
+                                        <object refid="0fa7e9e9-0036-11de-a3ee-43c60806869b" />
+                                      </currentChoices>
+                                    </OTChoiceMultiple>
+                                  </input>
+                                </OTUDLQuestion>
+                              </documentRefs>
+                              <bodyText>
+                                <object refid="e184b1ea-0035-11de-a3ee-43c60806869b" />
+                                <br />
+                              </bodyText>
+                            </OTUDLCompoundDoc>
+                            <OTUDLCompoundDoc id="12d4e6eb-0036-11de-a3ee-43c60806869b" name="%12d4e6eb-0036-11de-a3ee-43c60806869b" showEditBar="true">
+                              <documentRefs>
+                                <OTUDLQuestion id="1c0d48bc-0036-11de-a3ee-43c60806869b" name="Question" showConvertButton="false">
+                                  <prompt>
+                                    <OTCompoundDoc>
+                                      <bodyText>List three kinds of tranportation that you have used in the past week.</bodyText>
+                                    </OTCompoundDoc>
+                                  </prompt>
+                                  <input>
+                                    <OTText text="" />
+                                  </input>
+                                </OTUDLQuestion>
+                              </documentRefs>
+                              <bodyText>
+                                <object refid="1c0d48bc-0036-11de-a3ee-43c60806869b" />
+                                <br />
+                              </bodyText>
+                            </OTUDLCompoundDoc>
+                            <OTUDLCompoundDoc id="2ec575a3-0036-11de-a3ee-43c60806869b" name="%2ec575a3-0036-11de-a3ee-43c60806869b" showEditBar="true">
+                              <documentRefs>
+                                <OTUDLQuestion id="336b2ff4-0036-11de-a3ee-43c60806869b" name="Question" showConvertButton="false">
+                                  <prompt>
+                                    <OTCompoundDoc>
+                                      <bodyText>List two other kinds of transportation.</bodyText>
+                                    </OTCompoundDoc>
+                                  </prompt>
+                                  <input>
+                                    <OTText text="" />
+                                  </input>
+                                </OTUDLQuestion>
+                              </documentRefs>
+                              <bodyText>
+                                <object refid="336b2ff4-0036-11de-a3ee-43c60806869b" />
+                                <br />
+                              </bodyText>
+                            </OTUDLCompoundDoc>
+                            <OTUDLCompoundDoc id="3d7c8cab-0036-11de-a3ee-43c60806869b" name="%3d7c8cab-0036-11de-a3ee-43c60806869b" showEditBar="true">
+                              <documentRefs>
+                                <OTUDLQuestion id="44526d6c-0036-11de-a3ee-43c60806869b" name="Question" showConvertButton="false">
+                                  <prompt>
+                                    <OTCompoundDoc>
+                                      <bodyText>Describe in a few words something about one of these kinds of transportation.</bodyText>
+                                    </OTCompoundDoc>
+                                  </prompt>
+                                  <input>
+                                    <OTText text="" />
+                                  </input>
+                                </OTUDLQuestion>
+                              </documentRefs>
+                              <bodyText>
+                                <object refid="44526d6c-0036-11de-a3ee-43c60806869b" />
+                                <br />
+                              </bodyText>
+                            </OTUDLCompoundDoc>
+                            <OTUDLCompoundDoc id="551d2233-0036-11de-a3ee-43c60806869b" name="%551d2233-0036-11de-a3ee-43c60806869b" showEditBar="true">
+                              <documentRefs>
+                                <OTUDLQuestion id="5d4f3794-0036-11de-a3ee-43c60806869b" name="Question" showConvertButton="false">
+                                  <prompt>
+                                    <OTCompoundDoc>
+                                      <bodyText>Give an example of using numbers to describe the motion of one of these kinds of transportation.</bodyText>
+                                    </OTCompoundDoc>
+                                  </prompt>
+                                  <input>
+                                    <OTText text="" />
+                                  </input>
+                                </OTUDLQuestion>
+                              </documentRefs>
+                              <bodyText>
+                                <object refid="5d4f3794-0036-11de-a3ee-43c60806869b" />
+                                <br />
+                              </bodyText>
+                            </OTUDLCompoundDoc>
+                          </cards>
+                          <currentCard>
+                            <object refid="551d2233-0036-11de-a3ee-43c60806869b" />
+                          </currentCard>
+                          <viewedCards>
+                            <object refid="7ff3e342-0035-11de-a3ee-43c60806869b" />
+                            <object refid="9d0e7316-0035-11de-a3ee-43c60806869b" />
+                            <object refid="d44d8429-0035-11de-a3ee-43c60806869b" />
+                            <object refid="12d4e6eb-0036-11de-a3ee-43c60806869b" />
+                            <object refid="2ec575a3-0036-11de-a3ee-43c60806869b" />
+                            <object refid="3d7c8cab-0036-11de-a3ee-43c60806869b" />
+                            <object refid="551d2233-0036-11de-a3ee-43c60806869b" />
+                          </viewedCards>
+                        </OTCardContainer>
+                        <object refid="29dc5ef0-c453-11dc-95ff-0800200c9a66" />
+                        <OTUDLMenu id="7ff3e341-0035-11de-a3ee-43c60806869b" showBorder="false">
+                          <cardContainer>
+                            <object refid="7ff3e340-0035-11de-a3ee-43c60806869b" />
+                          </cardContainer>
+                          <menuRule>
+                            <OTUDLMenuRule jumpToViewedCard="true" stepAhead="true" />
+                          </menuRule>
+                        </OTUDLMenu>
+                      </documentRefs>
+                    </OTCompoundDoc>
+                    <OTCompoundDoc id="05e10dbb-0037-11de-a3ee-43c60806869b" name="%05e10dbb-0037-11de-a3ee-43c60806869b" showEditBar="true">
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <div class="subtitle">Focus for this activity</div>
+                              We are going to be working with a very simple model of a train 
+          system.Â  The train picks passengers up from one station and drops 
+          them off at a different station.Â 
+                              <br />
+                              <br />
+                              In the model, the 
+          train starts out at Station A, goes to Station B to pick up a 
+          passenger, and then returns to Station A.
+                              <br />
+                              <br />
+                              You will be the 
+          train, walking from Station A to Station B, and then back, and 
+          learning about graphing and how to describe motion mathematically.
+                              <br />
+                              <br />
+                              Station 
+          A and Station B will be locations marked on the floor.Â 
+                              <br />
+                              <br />
+                              Station 
+          A will be 1 meter in front of a motion probe, and Station B will be 
+          2 meters in front of the motion probe.
+                              <br />
+                              (picture)
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                    </OTCompoundDoc>
+                    <OTCompoundDoc local_id="page-1" name="1">
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <div class="subtitle">
+                                Demonstration
+                                <br />
+                              </div>
+                              Your teacher will now demostrate the use of the motion probe.
+                              <br />
+                              <br />
+                              Look 
+          at the motion graph during the demonstration.
+                              <br />
+                              <br />
+                              <object refid="26482efa-fc9e-11dd-93a6-0745b9c9fb5e" />
+                              <br />
+                              <br />
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                        <OTUDLQuestion id="26482efa-fc9e-11dd-93a6-0745b9c9fb5e" name="Question" showConvertButton="false">
+                          <prompt>
+                            <OTCompoundDoc>
+                              <bodyText>What do you see on the graph when your teacher moves in from of the probe?</bodyText>
+                            </OTCompoundDoc>
+                          </prompt>
+                          <input>
+                            <OTChoice name="Multiple choice" alignContent="0">
+                              <choices>
+                                <OTCompoundDoc name="1. Nothing changes.">
+                                  <bodyText>1. Nothing changes.</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="2. Lines and dots jump around on the screen.">
+                                  <bodyText>2. Lines and dots jump around on the screen.</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="3. A line appears on the screen at the end of the movement.">
+                                  <bodyText>3. A line appears on the screen at the end of the movement.</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="4. A line is slowly drawn across the screen from left to right.">
+                                  <bodyText>4. A line is slowly drawn across the screen from left to right.</bodyText>
+                                </OTCompoundDoc>
+                              </choices>
+                            </OTChoice>
+                          </input>
+                        </OTUDLQuestion>
+                      </documentRefs>
+                    </OTCompoundDoc>
+                    <OTCompoundDoc id="f3570343-fa01-11dd-a9f2-9149542af672" name="%f3570343-fa01-11dd-a9f2-9149542af672" showEditBar="true">
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <div class="subtitle">
+                                Your turn!
+                                <br />
+                              </div>
+                              <br />
+                              Set up your motion probe at the end of a desk or table. Measure and 
+          mark two locations: Station A, 1 meter directly in from of the 
+          probe, and Station B, 2 meters directly in from of the probe.
+                              <br />
+                              <table width="100%">
+                                <tr>
+                                  <td width="40%">
+                                    <div style="border-color: black; margin-right: 5px; border-top-width: 1px; padding-bottom: 2px; border-style: solid; margin-top: 5px; padding-top: 2px; border-bottom-width: 1px; padding-right: 2px; border-right-width: 1px; padding-left: 2px; margin-bottom: 5px; border-left-width: 1px; margin-left: 5px">
+                                      <object refid="a3336ce6-fa10-11dd-a9f2-9149542af672" />
+                                      <br />
+                                      <object viewid="29dc5ef0-c453-11dc-95ff-0800200c9a66" refid="a3336ce7-fa10-11dd-a9f2-9149542af672" />
+                                    </div>
+                                    <br />
+                                  </td>
+                                  <td width="60%">
+                                    <object refid="99a08f00-fa10-11dd-a9f2-9149542af672" />
+                                    <br />
+                                    <br />
+                                  </td>
+                                </tr>
+                              </table>
+                              <br />
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                        <OTCardContainer id="a3336ce6-fa10-11dd-a9f2-9149542af672" contentsMayScroll="false" loadViewOnlyOnDemand="true" closeViewOnExit="true">
+                          <cards>
+                            <OTUDLCompoundDoc id="a335dde8-fa10-11dd-a9f2-9149542af672" timesTTSProduced="1">
+                              <bodyText>
+                                <object refid="bdf7b09a-fa10-11dd-a9f2-9149542af672" />
+                                <br />
+                              </bodyText>
+                              <documentRefs>
+                                <OTUDLQuestion id="bdf7b09a-fa10-11dd-a9f2-9149542af672" name="Question" showConvertButton="false">
+                                  <prompt>
+                                    <OTCompoundDoc>
+                                      <bodyText>Click Start on the motion sensor graph and observe the graph while standing at Station A. 
+
+What do you see?</bodyText>
+                                    </OTCompoundDoc>
+                                  </prompt>
+                                  <input>
+                                    <OTChoice name="Multiple choice" alignContent="0">
+                                      <choices>
+                                        <OTCompoundDoc id="35f1bb16-fa13-11dd-a9f2-9149542af672" name="1. Nothing changes">
+                                          <bodyText>1. Nothing changes</bodyText>
+                                        </OTCompoundDoc>
+                                        <OTCompoundDoc name="2. Lines and dots jump around on the screen">
+                                          <bodyText>2. Lines and dots jump around on the screen</bodyText>
+                                        </OTCompoundDoc>
+                                        <OTCompoundDoc name="3. A line appears on the screen at the end of the movement.">
+                                          <bodyText>3. A line appears on the screen at the end of the movement.</bodyText>
+                                        </OTCompoundDoc>
+                                        <OTCompoundDoc id="bdf7b09a-fa10-11dd-a9f2-9149542af672/input/choices[3]" name="4. A line is slowly drawn across the screen from left to right">
+                                          <bodyText>4. A line is slowly drawn across the screen from left to right</bodyText>
+                                        </OTCompoundDoc>
+                                      </choices>
+                                      <currentChoice>
+                                        <object refid="bdf7b09a-fa10-11dd-a9f2-9149542af672/input/choices[3]" />
+                                      </currentChoice>
+                                    </OTChoice>
+                                  </input>
+                                </OTUDLQuestion>
+                              </documentRefs>
+                            </OTUDLCompoundDoc>
+                            <OTUDLCompoundDoc id="d22d55cc-fa10-11dd-a9f2-9149542af672" name="%d22d55cc-fa10-11dd-a9f2-9149542af672" showEditBar="true" timesTTSProduced="1">
+                              <documentRefs>
+                                <OTUDLQuestion id="d8b7125d-fa10-11dd-a9f2-9149542af672" name="Question" showConvertButton="false">
+                                  <prompt>
+                                    <OTCompoundDoc>
+                                      <bodyText>Click Start on the motion sensor graph and observe the graph while standing at Station B. 
+
+What do you see?</bodyText>
+                                    </OTCompoundDoc>
+                                  </prompt>
+                                  <input>
+                                    <OTChoice name="Multiple choice" alignContent="0">
+                                      <choices>
+                                        <OTCompoundDoc name="1. Nothing changes">
+                                          <bodyText>1. Nothing changes</bodyText>
+                                        </OTCompoundDoc>
+                                        <OTCompoundDoc name="2. Lines and dots jump around on the screen">
+                                          <bodyText>2. Lines and dots jump around on the screen</bodyText>
+                                        </OTCompoundDoc>
+                                        <OTCompoundDoc name="3. A line appears on the screen at the end of the movement.">
+                                          <bodyText>3. A line appears on the screen at the end of the movement.</bodyText>
+                                        </OTCompoundDoc>
+                                        <OTCompoundDoc id="d8b7125d-fa10-11dd-a9f2-9149542af672/input/choices[3]" name="4. A line is slowly drawn across the screen from left to right">
+                                          <bodyText>4. A line is slowly drawn across the screen from left to right</bodyText>
+                                        </OTCompoundDoc>
+                                      </choices>
+                                      <currentChoice>
+                                        <object refid="d8b7125d-fa10-11dd-a9f2-9149542af672/input/choices[3]" />
+                                      </currentChoice>
+                                    </OTChoice>
+                                  </input>
+                                </OTUDLQuestion>
+                              </documentRefs>
+                              <bodyText>
+                                <object refid="d8b7125d-fa10-11dd-a9f2-9149542af672" />
+                                <br />
+                                <br />
+                              </bodyText>
+                            </OTUDLCompoundDoc>
+                            <OTUDLCompoundDoc id="797988cf-fa18-11dd-92ba-337443f5143e" name="%797988cf-fa18-11dd-92ba-337443f5143e" showEditBar="true" timesTTSProduced="3">
+                              <documentRefs>
+                                <OTUDLQuestion id="7ed94450-fa18-11dd-92ba-337443f5143e" name="Question" showConvertButton="false">
+                                  <prompt>
+                                    <OTCompoundDoc>
+                                      <bodyText>Click Start on the motion sensor graph and observe the graph while moving around between the stations. 
+
+What do you see?</bodyText>
+                                    </OTCompoundDoc>
+                                  </prompt>
+                                  <input>
+                                    <OTText name="Open response" />
+                                  </input>
+                                </OTUDLQuestion>
+                              </documentRefs>
+                              <bodyText>
+                                <object refid="7ed94450-fa18-11dd-92ba-337443f5143e" />
+                                <br />
+                              </bodyText>
+                            </OTUDLCompoundDoc>
+                          </cards>
+                          <currentCard>
+                            <object refid="a335dde8-fa10-11dd-a9f2-9149542af672" />
+                          </currentCard>
+                          <viewedCards>
+                            <object refid="a335dde8-fa10-11dd-a9f2-9149542af672" />
+                            <object refid="d22d55cc-fa10-11dd-a9f2-9149542af672" />
+                            <object refid="797988cf-fa18-11dd-92ba-337443f5143e" />
+                          </viewedCards>
+                        </OTCardContainer>
+                        <object refid="29dc5ef0-c453-11dc-95ff-0800200c9a66" />
+                        <OTUDLMenu id="a3336ce7-fa10-11dd-a9f2-9149542af672" showBorder="false">
+                          <cardContainer>
+                            <object refid="a3336ce6-fa10-11dd-a9f2-9149542af672" />
+                          </cardContainer>
+                          <menuRule>
+                            <OTUDLMenuRule jumpToViewedCard="true" stepAhead="true" />
+                          </menuRule>
+                        </OTUDLMenu>
+                        <OTDataCollector id="99a08f00-fa10-11dd-a9f2-9149542af672" name="Motion" title="Motion Sensor Graph" autoScaleEnabled="true" showControlBar="true" useDefaultToolBar="true">
+                          <source>
+                            <OTDataGraphable name="Sensor" connectPoints="true" yColumn="1" drawMarks="false" color="255" xColumn="0" lineWidth="2.0" visible="true">
+                              <dataProducer>
+                                <OTSensorDataProxy name="dataproducer">
+                                  <request>
+                                    <OTExperimentRequest period="0.1">
+                                      <sensorRequests>
+                                        <OTSensorRequest stepSize="0.1" type="13" unit="m" port="0" requiredMax="4.0" displayPrecision="-2" requiredMin="-4.0" />
+                                      </sensorRequests>
+                                    </OTExperimentRequest>
+                                  </request>
+                                </OTSensorDataProxy>
+                              </dataProducer>
+                              <dataStore>
+                                <OTDataStore dt="0.1" numberChannels="1">
+                                  <channelDescriptions>
+                                    <OTDataChannelDescription name="dt" precision="2" numericData="true" />
+                                    <OTDataChannelDescription name="" unit="m" precision="-2" numericData="true" />
+                                  </channelDescriptions>
+                                </OTDataStore>
+                              </dataStore>
+                            </OTDataGraphable>
+                          </source>
+                          <xDataAxis>
+                            <OTDataAxis max="12.0" units="s" min="0.0" label="Time" labelFormat="Engineering" />
+                          </xDataAxis>
+                          <yDataAxis>
+                            <OTDataAxis max="3.0" units="m" min="-0.0" label="Motion" labelFormat="Engineering" />
+                          </yDataAxis>
+                        </OTDataCollector>
+                      </documentRefs>
+                    </OTCompoundDoc>
+                    <OTCompoundDoc id="691b9068-fc45-11dd-91fe-7db590c6d8f2" name="%691b9068-fc45-11dd-91fe-7db590c6d8f2" showEditBar="true">
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <div class="subtitle">Your Train Trip</div>
+                              Now plan and make your train trip: start at Station A, proceed to 
+          Station B, then return to Station A.  Make one trip, from A to B and 
+          back to A, during the 15 seconds of graphing.
+                              <br />
+                              Start the graphing by clicking Start on the motion sensor graph. Make several 
+          trips, until you have a graph that you are happy with and willing to 
+          share with the class. Then share the graph (STEPHEN, PUT THE SHARE 
+          BUTTON IN HERE SOMEWHERE!?!!?!?)
+                              <br />
+                              <table width="100%">
+                                <tr>
+                                  <td width="30%">
+                                    <object refid="c0cf7fb9-fc45-11dd-91fe-7db590c6d8f2" />
+                                    <br />
+                                  </td>
+                                  <td width="70%">
+                                    <object refid="cf5dd914-fc45-11dd-91fe-7db590c6d8f2" />
+                                    <br />
+                                    <br />
+                                  </td>
+                                </tr>
+                              </table>
+                              <br />
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                        <OTUDLQuestion id="c0cf7fb9-fc45-11dd-91fe-7db590c6d8f2" name="Question" showConvertButton="false">
+                          <prompt>
+                            <OTCompoundDoc>
+                              <bodyText>Write any comments or questions in the space below.</bodyText>
+                            </OTCompoundDoc>
+                          </prompt>
+                          <input>
+                            <OTText text="&#xA;&#xA;" />
+                          </input>
+                        </OTUDLQuestion>
+                        <OTDataCollector id="cf5dd914-fc45-11dd-91fe-7db590c6d8f2" name="Motion" title="Motion Sensor Graph" autoScaleEnabled="true" showControlBar="true" useDefaultToolBar="true">
+                          <source>
+                            <OTDataGraphable name="Sensor" connectPoints="true" yColumn="1" drawMarks="false" color="255" xColumn="0" lineWidth="2.0" visible="true">
+                              <dataProducer>
+                                <OTSensorDataProxy name="dataproducer">
+                                  <request>
+                                    <OTExperimentRequest period="0.1">
+                                      <sensorRequests>
+                                        <OTSensorRequest stepSize="0.1" type="13" unit="m" port="0" requiredMax="4.0" displayPrecision="-2" requiredMin="-4.0" />
+                                      </sensorRequests>
+                                    </OTExperimentRequest>
+                                  </request>
+                                </OTSensorDataProxy>
+                              </dataProducer>
+                              <dataStore>
+                                <OTDataStore dt="0.1" numberChannels="1">
+                                  <channelDescriptions>
+                                    <OTDataChannelDescription name="time" unit="s" precision="-2" numericData="true" />
+                                    <OTDataChannelDescription name="Position" unit="m" precision="-2" numericData="true" />
+                                  </channelDescriptions>
+                                  <values>
+                                    <float>1.040026</float>
+                                    <float>1.054621</float>
+                                    <float>1.062244</float>
+                                    <float>1.064167</float>
+                                    <float>1.065352</float>
+                                    <float>1.075414</float>
+                                    <float>1.081664</float>
+                                    <float>1.089717</float>
+                                    <float>1.111661</float>
+                                    <float>1.141022</float>
+                                    <float>1.177389</float>
+                                    <float>1.215146</float>
+                                    <float>1.240404</float>
+                                    <float>1.327475</float>
+                                    <float>1.401651</float>
+                                    <float>1.452475</float>
+                                    <float>1.522324</float>
+                                    <float>1.579038</float>
+                                    <float>1.639186</float>
+                                    <float>1.724351</float>
+                                    <float>1.806322</float>
+                                    <float>1.828729</float>
+                                    <float>1.839718</float>
+                                    <float>1.8516</float>
+                                    <float>1.83874</float>
+                                    <float>1.828077</float>
+                                    <float>1.791023</float>
+                                    <float>1.763036</float>
+                                    <float>1.709258</float>
+                                    <float>1.642963</float>
+                                    <float>1.583468</float>
+                                    <float>1.527286</float>
+                                    <float>1.481236</float>
+                                    <float>1.418134</float>
+                                    <float>1.355652</float>
+                                    <float>1.271002</float>
+                                    <float>1.198817</float>
+                                    <float>1.150414</float>
+                                    <float>1.117996</float>
+                                    <float>1.102474</float>
+                                    <float>1.100311</float>
+                                    <float>1.107763</float>
+                                    <float>1.132334</float>
+                                    <float>1.170572</float>
+                                    <float>1.238824</float>
+                                    <float>1.277252</float>
+                                    <float>1.326033</float>
+                                    <float>1.378368</float>
+                                    <float>1.438859</float>
+                                    <float>1.47945</float>
+                                    <float>1.546157</float>
+                                    <float>1.606356</float>
+                                    <float>1.652218</float>
+                                    <float>1.665216</float>
+                                    <float>1.698235</float>
+                                    <float>1.713516</float>
+                                    <float>1.696106</float>
+                                    <float>1.688688</float>
+                                    <float>1.680652</float>
+                                    <float>1.661301</float>
+                                    <float>1.636215</float>
+                                    <float>1.60421</float>
+                                    <float>1.559464</float>
+                                    <float>1.498045</float>
+                                    <float>1.446122</float>
+                                    <float>1.391709</float>
+                                    <float>1.35263</float>
+                                    <float>1.309034</float>
+                                    <float>1.257866</float>
+                                    <float>1.193477</float>
+                                    <float>1.130857</float>
+                                    <float>1.090987</float>
+                                    <float>1.069525</float>
+                                    <float>1.048474</float>
+                                    <float>1.037502</float>
+                                    <float>1.027577</float>
+                                    <float>1.035407</float>
+                                    <float>1.055462</float>
+                                    <float>1.085579</float>
+                                    <float>1.13685</float>
+                                    <float>1.176599</float>
+                                    <float>1.27641</float>
+                                    <float>1.374831</float>
+                                    <float>1.439048</float>
+                                    <float>1.505617</float>
+                                    <float>1.579072</float>
+                                    <float>1.649711</float>
+                                    <float>1.661318</float>
+                                    <float>1.712812</float>
+                                    <float>1.789461</float>
+                                    <float>1.85852</float>
+                                    <float>1.869269</float>
+                                    <float>1.870162</float>
+                                    <float>1.867517</float>
+                                    <float>1.862246</float>
+                                    <float>1.842758</float>
+                                    <float>1.806202</float>
+                                    <float>1.767483</float>
+                                    <float>1.694886</float>
+                                    <float>1.621123</float>
+                                    <float>1.558777</float>
+                                    <float>1.512297</float>
+                                    <float>1.461318</float>
+                                    <float>1.40754</float>
+                                    <float>1.355463</float>
+                                    <float>1.294336</float>
+                                    <float>1.223148</float>
+                                    <float>1.168271</float>
+                                    <float>1.108141</float>
+                                    <float>1.075139</float>
+                                    <float>1.050877</float>
+                                    <float>1.02507</float>
+                                    <float>1.031904</float>
+                                    <float>1.050757</float>
+                                    <float>1.073165</float>
+                                    <float>1.099246</float>
+                                    <float>1.139236</float>
+                                    <float>1.20117</float>
+                                    <float>1.284274</float>
+                                    <float>1.3647</float>
+                                    <float>1.422822</float>
+                                    <float>1.464718</float>
+                                    <float>1.520041</float>
+                                    <float>1.570195</float>
+                                    <float>1.565061</float>
+                                    <float>1.621226</float>
+                                    <float>1.684756</float>
+                                    <float>1.763757</float>
+                                    <float>1.787555</float>
+                                    <float>1.78115</float>
+                                    <float>1.747806</float>
+                                    <float>1.706734</float>
+                                    <float>1.658743</float>
+                                    <float>1.60797</float>
+                                    <float>1.569938</float>
+                                    <float>1.541006</float>
+                                    <float>1.48697</float>
+                                    <float>1.428797</float>
+                                    <float>1.349384</float>
+                                    <float>1.277252</float>
+                                    <float>1.221705</float>
+                                    <float>1.171379</float>
+                                    <float>1.127732</float>
+                                    <float>1.102852</float>
+                                    <float>1.052577</float>
+                                    <float>1.014219</float>
+                                    <float>0.97325</float>
+                                    <float>0.928539</float>
+                                    <float>0.908947</float>
+                                    <float>0.862433</float>
+                                    <float>0.825465</float>
+                                    <float>0.77167</float>
+                                    <float>0.727748</float>
+                                    <float>0.648936</float>
+                                    <float>0.597872</float>
+                                    <float>0.512724</float>
+                                    <float>0.43896</float>
+                                    <float>0.404757</float>
+                                    <float>0.401855</float>
+                                    <float>0.41238</float>
+                                    <float>0.366192</float>
+                                    <float>2.36575</float>
+                                    <float>2.368755</float>
+                                  </values>
+                                </OTDataStore>
+                              </dataStore>
+                            </OTDataGraphable>
+                          </source>
+                          <xDataAxis>
+                            <OTDataAxis max="15.0" units="s" min="0.0" label="Time" labelFormat="Engineering" />
+                          </xDataAxis>
+                          <yDataAxis>
+                            <OTDataAxis max="3.0" units="m" min="-0.0" label="Motion" labelFormat="Engineering" />
+                          </yDataAxis>
+                        </OTDataCollector>
+                      </documentRefs>
+                    </OTCompoundDoc>
+                    <OTCompoundDoc id="01bc85f9-fc48-11dd-91fe-7db590c6d8f2" name="%01bc85f9-fc48-11dd-91fe-7db590c6d8f2" showEditBar="true">
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <div class="subtitle">Discussing class graphs</div>
+                              Have a look at the class's graphs on the next page. Please answer 
+          and discuss the following questions. You may change your answers 
+          after the class discussion.
+                              <br />
+                              <br />
+                              <object refid="3febdd8a-fc48-11dd-91fe-7db590c6d8f2" />
+                              <br />
+                              <br />
+                              <object refid="4e2930b1-fc48-11dd-91fe-7db590c6d8f2" />
+                              <br />
+                              <br />
+                              <object refid="569baa78-fc48-11dd-91fe-7db590c6d8f2" />
+                              <br />
+                              <br />
+                              <object refid="6428995f-fc48-11dd-91fe-7db590c6d8f2" />
+                              <br />
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                        <OTUDLQuestion id="3febdd8a-fc48-11dd-91fe-7db590c6d8f2" name="Question" showConvertButton="false">
+                          <prompt>
+                            <OTCompoundDoc>
+                              <bodyText>Are the graphs all the same?</bodyText>
+                            </OTCompoundDoc>
+                          </prompt>
+                          <input>
+                            <OTText text="" />
+                          </input>
+                        </OTUDLQuestion>
+                        <OTUDLQuestion id="4e2930b1-fc48-11dd-91fe-7db590c6d8f2" name="Question" showConvertButton="false">
+                          <prompt>
+                            <OTCompoundDoc>
+                              <bodyText>What is similar about the graphs?</bodyText>
+                            </OTCompoundDoc>
+                          </prompt>
+                          <input>
+                            <OTText text="" />
+                          </input>
+                        </OTUDLQuestion>
+                        <OTUDLQuestion id="569baa78-fc48-11dd-91fe-7db590c6d8f2" name="Question" showConvertButton="false">
+                          <prompt>
+                            <OTCompoundDoc>
+                              <bodyText>What is different about the graphs?</bodyText>
+                            </OTCompoundDoc>
+                          </prompt>
+                          <input>
+                            <OTText text="" />
+                          </input>
+                        </OTUDLQuestion>
+                        <OTUDLQuestion id="6428995f-fc48-11dd-91fe-7db590c6d8f2" name="Question" showConvertButton="false">
+                          <prompt>
+                            <OTCompoundDoc>
+                              <bodyText>If you want everyone's graphs to match, what does everyone have to change or agree on?</bodyText>
+                            </OTCompoundDoc>
+                          </prompt>
+                          <input>
+                            <OTText text="" />
+                          </input>
+                        </OTUDLQuestion>
+                      </documentRefs>
+                    </OTCompoundDoc>
+                    <OTCompoundDoc id="dda939e4-fc49-11dd-91fe-7db590c6d8f2" name="%dda939e4-fc49-11dd-91fe-7db590c6d8f2" showEditBar="true">
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <div class="subtitle">
+                                Making and thinking about matching graphs
+                                <br />
+                              </div>
+                              <table width="100%">
+                                <tr>
+                                  <td width="30%">
+                                    Now that you have an idea about how to make motion sensor 
+                graphs match, try to do it! Make additional trips, share the 
+                class graphs, then answer the questions below, referring to 
+                your graph.
+                                    <br />
+                                    <br />
+                                    <br />
+                                    <div style="border-right-width: 1px; margin-left: 5px; padding-right: 2px; border-left-width: 1px; border-color: black; margin-right: 5px; padding-top: 2px; margin-bottom: 5px; border-top-width: 1px; padding-bottom: 2px; border-bottom-width: 1px; padding-left: 2px; margin-top: 5px; border-style: solid">
+                                      <object refid="003ef168-fc6e-11dd-8036-d7df917ab6ce" />
+                                      <br />
+                                      <object viewid="29dc5ef0-c453-11dc-95ff-0800200c9a66" refid="003ef169-fc6e-11dd-8036-d7df917ab6ce" />
+                                    </div>
+                                    <br />
+                                    <br />
+                                  </td>
+                                  <td width="70%">
+                                    <object refid="1fbcccc7-fc6b-11dd-8036-d7df917ab6ce" />
+                                    <br />
+                                    <br />
+                                  </td>
+                                </tr>
+                              </table>
+                              <br />
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                        <OTCardContainer id="003ef168-fc6e-11dd-8036-d7df917ab6ce" contentsMayScroll="false" loadViewOnlyOnDemand="true" closeViewOnExit="true">
+                          <cards>
+                            <OTUDLCompoundDoc id="003ef16a-fc6e-11dd-8036-d7df917ab6ce" timesTTSProduced="1">
+                              <bodyText>
+                                <object refid="079f37dc-fc6e-11dd-8036-d7df917ab6ce" />
+                                <br />
+                              </bodyText>
+                              <documentRefs>
+                                <OTUDLQuestion id="079f37dc-fc6e-11dd-8036-d7df917ab6ce" name="Question" showConvertButton="false">
+                                  <prompt>
+                                    <OTCompoundDoc>
+                                      <bodyText>What was the starting time for your trip to Station B? Mark this location on the graph.</bodyText>
+                                    </OTCompoundDoc>
+                                  </prompt>
+                                  <input>
+                                    <OTText text="" />
+                                  </input>
+                                </OTUDLQuestion>
+                              </documentRefs>
+                            </OTUDLCompoundDoc>
+                            <OTUDLCompoundDoc id="140707b3-fc6e-11dd-8036-d7df917ab6ce" name="%140707b3-fc6e-11dd-8036-d7df917ab6ce" showEditBar="true">
+                              <documentRefs>
+                                <OTUDLQuestion id="1e4344f4-fc6e-11dd-8036-d7df917ab6ce" name="Question" showConvertButton="false">
+                                  <prompt>
+                                    <OTCompoundDoc>
+                                      <bodyText>What was the ending time for your trip to Station B? Mark this location on the graph.</bodyText>
+                                    </OTCompoundDoc>
+                                  </prompt>
+                                  <input>
+                                    <OTText text="" />
+                                  </input>
+                                </OTUDLQuestion>
+                              </documentRefs>
+                              <bodyText>
+                                <object refid="1e4344f4-fc6e-11dd-8036-d7df917ab6ce" />
+                                <br />
+                              </bodyText>
+                            </OTUDLCompoundDoc>
+                            <OTUDLCompoundDoc id="272103ab-fc6e-11dd-8036-d7df917ab6ce" name="%272103ab-fc6e-11dd-8036-d7df917ab6ce" showEditBar="true">
+                              <documentRefs>
+                                <OTUDLQuestion id="2eae9bac-fc6e-11dd-8036-d7df917ab6ce" name="Question" showConvertButton="false">
+                                  <prompt>
+                                    <OTCompoundDoc>
+                                      <bodyText>What was the total time taken for the trip to Station B from Station A?</bodyText>
+                                    </OTCompoundDoc>
+                                  </prompt>
+                                  <input>
+                                    <OTText text="" />
+                                  </input>
+                                </OTUDLQuestion>
+                              </documentRefs>
+                              <bodyText>
+                                <object refid="2eae9bac-fc6e-11dd-8036-d7df917ab6ce" />
+                                <br />
+                              </bodyText>
+                            </OTUDLCompoundDoc>
+                            <OTUDLCompoundDoc id="33dc23a3-fc6e-11dd-8036-d7df917ab6ce" name="%33dc23a3-fc6e-11dd-8036-d7df917ab6ce" showEditBar="true">
+                              <documentRefs>
+                                <OTUDLQuestion id="3bd045a4-fc6e-11dd-8036-d7df917ab6ce" name="Question" showConvertButton="false">
+                                  <prompt>
+                                    <OTCompoundDoc>
+                                      <bodyText>What was the change in postion (position at the end  minus position at the beginning)?</bodyText>
+                                    </OTCompoundDoc>
+                                  </prompt>
+                                  <input>
+                                    <OTText text="1 meter" />
+                                  </input>
+                                </OTUDLQuestion>
+                              </documentRefs>
+                              <bodyText>
+                                <object refid="3bd045a4-fc6e-11dd-8036-d7df917ab6ce" />
+                                <br />
+                              </bodyText>
+                            </OTUDLCompoundDoc>
+                            <OTUDLCompoundDoc id="3f984a2b-fc6e-11dd-8036-d7df917ab6ce" name="%3f984a2b-fc6e-11dd-8036-d7df917ab6ce" showEditBar="true">
+                              <documentRefs>
+                                <OTUDLQuestion id="49a97fcc-fc6e-11dd-8036-d7df917ab6ce" name="Question" showConvertButton="false">
+                                  <prompt>
+                                    <OTCompoundDoc>
+                                      <bodyText>What was the average velocity (change in position divided by time)?</bodyText>
+                                    </OTCompoundDoc>
+                                  </prompt>
+                                  <input>
+                                    <OTText text="1/3 meters per second" />
+                                  </input>
+                                </OTUDLQuestion>
+                              </documentRefs>
+                              <bodyText>
+                                <object refid="49a97fcc-fc6e-11dd-8036-d7df917ab6ce" />
+                                <br />
+                              </bodyText>
+                            </OTUDLCompoundDoc>
+                            <OTUDLCompoundDoc id="f5672497-fc7a-11dd-adde-cb26dfcb56dd" name="%f5672497-fc7a-11dd-adde-cb26dfcb56dd" showEditBar="true">
+                              <documentRefs>
+                                <OTUDLQuestion id="f98c1628-fc7a-11dd-adde-cb26dfcb56dd" name="Question" showConvertButton="false">
+                                  <prompt>
+                                    <OTCompoundDoc>
+                                      <bodyText>Do you think the velocity was the same throughout the trip?</bodyText>
+                                    </OTCompoundDoc>
+                                  </prompt>
+                                  <input>
+                                    <OTText text="" />
+                                  </input>
+                                </OTUDLQuestion>
+                              </documentRefs>
+                              <bodyText>
+                                <object refid="f98c1628-fc7a-11dd-adde-cb26dfcb56dd" />
+                                <br />
+                              </bodyText>
+                            </OTUDLCompoundDoc>
+                          </cards>
+                          <currentCard>
+                            <object refid="f5672497-fc7a-11dd-adde-cb26dfcb56dd" />
+                          </currentCard>
+                          <viewedCards>
+                            <object refid="003ef16a-fc6e-11dd-8036-d7df917ab6ce" />
+                            <object refid="140707b3-fc6e-11dd-8036-d7df917ab6ce" />
+                            <object refid="272103ab-fc6e-11dd-8036-d7df917ab6ce" />
+                            <object refid="33dc23a3-fc6e-11dd-8036-d7df917ab6ce" />
+                            <object refid="3f984a2b-fc6e-11dd-8036-d7df917ab6ce" />
+                            <object refid="f5672497-fc7a-11dd-adde-cb26dfcb56dd" />
+                          </viewedCards>
+                        </OTCardContainer>
+                        <object refid="29dc5ef0-c453-11dc-95ff-0800200c9a66" />
+                        <OTUDLMenu id="003ef169-fc6e-11dd-8036-d7df917ab6ce" showBorder="false">
+                          <cardContainer>
+                            <object refid="003ef168-fc6e-11dd-8036-d7df917ab6ce" />
+                          </cardContainer>
+                          <menuRule>
+                            <OTUDLMenuRule jumpToViewedCard="true" stepAhead="true" />
+                          </menuRule>
+                        </OTUDLMenu>
+                        <OTDataCollector id="1fbcccc7-fc6b-11dd-8036-d7df917ab6ce" name="Motion" title="Motion Sensor Graph" autoScaleEnabled="true" showControlBar="true" useDefaultToolBar="true">
+                          <source>
+                            <OTDataGraphable id="843b1781-fc93-11dd-93a6-0745b9c9fb5e" name="Sensor" connectPoints="true" yColumn="1" drawMarks="false" color="255" xColumn="0" lineWidth="2.0" visible="true">
+                              <dataProducer>
+                                <OTSensorDataProxy name="dataproducer">
+                                  <request>
+                                    <OTExperimentRequest period="0.1">
+                                      <sensorRequests>
+                                        <OTSensorRequest stepSize="0.1" type="13" unit="m" port="0" requiredMax="4.0" displayPrecision="-2" requiredMin="-4.0" />
+                                      </sensorRequests>
+                                    </OTExperimentRequest>
+                                  </request>
+                                </OTSensorDataProxy>
+                              </dataProducer>
+                              <dataStore>
+                                <OTDataStore dt="0.1" numberChannels="1">
+                                  <values>
+                                    <float>0.967856</float>
+                                    <float>0.971318</float>
+                                    <float>0.976848</float>
+                                    <float>0.984168</float>
+                                    <float>0.992299</float>
+                                    <float>1.004098</float>
+                                    <float>1.01166</float>
+                                    <float>1.017809</float>
+                                    <float>1.033863</float>
+                                    <float>1.054069</float>
+                                    <float>1.0756</float>
+                                    <float>1.101593</float>
+                                    <float>1.140884</float>
+                                    <float>1.18896</float>
+                                    <float>1.234228</float>
+                                    <float>1.312845</float>
+                                    <float>1.338304</float>
+                                    <float>1.400504</float>
+                                    <float>1.419538</float>
+                                    <float>1.469216</float>
+                                    <float>1.511849</float>
+                                    <float>1.574463</float>
+                                    <float>1.633632</float>
+                                    <float>1.698933</float>
+                                    <float>1.760152</float>
+                                    <float>1.794206</float>
+                                    <float>1.834497</float>
+                                    <float>1.862953</float>
+                                    <float>1.898833</float>
+                                    <float>1.906154</float>
+                                    <float>1.896215</float>
+                                    <float>1.890651</float>
+                                    <float>1.866105</float>
+                                    <float>1.836891</float>
+                                    <float>1.816152</float>
+                                    <float>1.786369</float>
+                                    <float>1.740894</float>
+                                    <float>1.674577</float>
+                                    <float>1.61508</float>
+                                    <float>1.563353</float>
+                                    <float>1.494417</float>
+                                    <float>1.438538</float>
+                                    <float>1.362919</float>
+                                    <float>1.297566</float>
+                                    <float>1.248646</float>
+                                    <float>1.197986</float>
+                                    <float>1.162778</float>
+                                    <float>1.110688</float>
+                                    <float>1.068607</float>
+                                    <float>1.054034</float>
+                                    <float>1.040547</float>
+                                    <float>1.049986</float>
+                                    <float>1.059615</float>
+                                    <float>1.073998</float>
+                                    <float>1.126656</float>
+                                    <float>1.164345</float>
+                                    <float>1.204911</float>
+                                    <float>1.25309</float>
+                                    <float>1.308452</float>
+                                    <float>1.380058</float>
+                                    <float>1.442017</float>
+                                    <float>1.50427</float>
+                                    <float>1.577667</float>
+                                    <float>1.634752</float>
+                                    <float>1.701586</float>
+                                    <float>1.761806</float>
+                                    <float>1.810639</float>
+                                    <float>1.831361</float>
+                                    <float>1.849207</float>
+                                    <float>1.869602</float>
+                                    <float>1.873564</float>
+                                    <float>1.878214</float>
+                                    <float>1.878576</float>
+                                    <float>1.865399</float>
+                                    <float>1.831241</float>
+                                    <float>1.78661</float>
+                                    <float>1.736794</float>
+                                    <float>1.710509</float>
+                                    <float>1.661468</float>
+                                    <float>1.612393</float>
+                                    <float>1.559219</float>
+                                    <float>1.490266</float>
+                                    <float>1.415801</float>
+                                    <float>1.345866</float>
+                                    <float>1.278704</float>
+                                    <float>1.223945</float>
+                                    <float>1.186824</float>
+                                    <float>1.134649</float>
+                                    <float>1.096443</float>
+                                    <float>1.062165</float>
+                                    <float>1.043785</float>
+                                    <float>1.033295</float>
+                                    <float>1.034742</float>
+                                    <float>1.037326</float>
+                                    <float>1.076324</float>
+                                    <float>1.117975</float>
+                                    <float>1.146913</float>
+                                    <float>1.195919</float>
+                                    <float>1.25657</float>
+                                    <float>1.302355</float>
+                                    <float>1.349397</float>
+                                    <float>1.410099</float>
+                                    <float>1.471473</float>
+                                    <float>1.526508</float>
+                                    <float>1.591223</float>
+                                    <float>1.643468</float>
+                                    <float>1.688391</float>
+                                    <float>1.741411</float>
+                                    <float>1.786627</float>
+                                    <float>1.829277</float>
+                                    <float>1.855821</float>
+                                    <float>1.877611</float>
+                                    <float>1.882848</float>
+                                    <float>1.884553</float>
+                                    <float>1.885535</float>
+                                    <float>1.882142</float>
+                                    <float>1.869154</float>
+                                    <float>1.842024</float>
+                                    <float>1.785525</float>
+                                    <float>1.724702</float>
+                                    <float>1.664689</float>
+                                    <float>1.610653</float>
+                                    <float>1.557203</float>
+                                    <float>1.504769</float>
+                                    <float>1.446065</float>
+                                    <float>1.38166</float>
+                                    <float>1.323197</float>
+                                    <float>1.261927</float>
+                                    <float>1.207477</float>
+                                    <float>1.168049</float>
+                                    <float>1.109224</float>
+                                    <float>1.063732</float>
+                                    <float>1.030349</float>
+                                    <float>1.012401</float>
+                                    <float>1.003495</float>
+                                    <float>1.007474</float>
+                                    <float>1.01843</float>
+                                    <float>1.035121</float>
+                                    <float>1.058341</float>
+                                    <float>1.088485</float>
+                                    <float>1.111188</float>
+                                    <float>1.142814</float>
+                                    <float>1.190407</float>
+                                    <float>1.236674</float>
+                                    <float>1.282683</float>
+                                    <float>1.311587</float>
+                                    <float>1.331775</float>
+                                    <float>1.350465</float>
+                                    <float>1.359956</float>
+                                    <float>1.375821</float>
+                                    <float>1.392598</float>
+                                    <float>1.366261</float>
+                                    <float>1.394148</float>
+                                    <float>1.371738</float>
+                                    <float>1.363987</float>
+                                    <float>1.33777</float>
+                                    <float>1.334256</float>
+                                    <float>1.31281</float>
+                                    <float>1.272848</float>
+                                    <float>1.221619</float>
+                                    <float>1.169203</float>
+                                    <float>1.125089</float>
+                                    <float>1.081836</float>
+                                    <float>1.033967</float>
+                                    <float>1.004735</float>
+                                    <float>0.972989</float>
+                                    <float>0.913717</float>
+                                    <float>0.856804</float>
+                                    <float>0.801029</float>
+                                    <float>0.7395</float>
+                                    <float>0.64998</float>
+                                    <float>0.570382</float>
+                                    <float>0.502066</float>
+                                    <float>2.373425</float>
+                                    <float>2.370566</float>
+                                    <float>0.474075</float>
+                                    <float>0.411185</float>
+                                    <float>2.373236</float>
+                                    <float>2.373012</float>
+                                    <float>2.373425</float>
+                                    <float>2.370893</float>
+                                    <float>2.370945</float>
+                                    <float>2.370996</float>
+                                  </values>
+                                  <channelDescriptions>
+                                    <OTDataChannelDescription name="time" unit="s" precision="-2" numericData="true" />
+                                    <OTDataChannelDescription name="Position" unit="m" precision="-2" numericData="true" />
+                                  </channelDescriptions>
+                                </OTDataStore>
+                              </dataStore>
+                            </OTDataGraphable>
+                          </source>
+                          <xDataAxis>
+                            <OTDataAxis max="15.0" units="s" min="0.0" label="Time" labelFormat="Engineering" />
+                          </xDataAxis>
+                          <yDataAxis>
+                            <OTDataAxis max="3.0" units="m" min="-0.0" label="Motion" labelFormat="Engineering" />
+                          </yDataAxis>
+                          <labels>
+                            <OTDataPointLabel x="0.6010017" y="0.6900782" color="0xffffbe" fontSize="10" text="Start to station 2" xData="0.0" yData="0.967856">
+                              <dataGraphable>
+                                <object refid="843b1781-fc93-11dd-93a6-0745b9c9fb5e" />
+                              </dataGraphable>
+                            </OTDataPointLabel>
+                            <OTDataPointLabel x="3.5008347" y="2.4517705" color="0xffffbe" fontSize="10" text="Ending at staton 2" xData="3.0" yData="1.896215">
+                              <dataGraphable>
+                                <object refid="843b1781-fc93-11dd-93a6-0745b9c9fb5e" />
+                              </dataGraphable>
+                            </OTDataPointLabel>
+                            <OTDataPointLabel x="3.4065042" y="2.4517705" color="0xffffbe" fontSize="10" text="Start to station 1" xData="3.0" yData="1.896215">
+                              <dataGraphable>
+                                <object refid="843b1781-fc93-11dd-93a6-0745b9c9fb5e" />
+                              </dataGraphable>
+                            </OTDataPointLabel>
+                            <OTDataPointLabel x="5.406504" y="1.5961026" color="0xffffbe" fontSize="10" text="Ending at station 1" xData="5.0" yData="1.040547">
+                              <dataGraphable>
+                                <object refid="843b1781-fc93-11dd-93a6-0745b9c9fb5e" />
+                              </dataGraphable>
+                            </OTDataPointLabel>
+                            <OTDataPointLabel x="Infinity" y="Infinity" color="0xffffbe" fontSize="10" text="Data Point" />
+                          </labels>
+                        </OTDataCollector>
+                      </documentRefs>
+                    </OTCompoundDoc>
+                    <OTCompoundDoc id="43ff3acf-fc7b-11dd-adde-cb26dfcb56dd" name="%43ff3acf-fc7b-11dd-adde-cb26dfcb56dd" showEditBar="true">
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <div class="subtitle">
+                                Calculating another velocity
+                                <br />
+                              </div>
+                              <table width="100%">
+                                <tr>
+                                  <td width="30%">
+                                    Your graph is shown to the right. Now answer questions about 
+                the RETURN trip, back to Station A from Station B.
+                                    <br />
+                                    <br />
+                                    <div style="border-right-width: 1px; margin-left: 5px; padding-right: 2px; border-left-width: 1px; border-color: black; margin-right: 5px; padding-top: 2px; margin-bottom: 5px; border-top-width: 1px; padding-bottom: 2px; border-bottom-width: 1px; padding-left: 2px; border-style: solid; margin-top: 5px">
+                                      <object refid="cad338c9-fc7b-11dd-adde-cb26dfcb56dd" />
+                                      <br />
+                                      <object viewid="29dc5ef0-c453-11dc-95ff-0800200c9a66" refid="cad338ca-fc7b-11dd-adde-cb26dfcb56dd" />
+                                    </div>
+                                    <br />
+                                    <br />
+                                    <br />
+                                  </td>
+                                  <td width="70%">
+                                    <object refid="1fbcccc7-fc6b-11dd-8036-d7df917ab6ce" />
+                                    <br />
+                                    <br />
+                                  </td>
+                                </tr>
+                              </table>
+                              <br />
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                        <OTCardContainer id="cad338c9-fc7b-11dd-adde-cb26dfcb56dd" contentsMayScroll="false" loadViewOnlyOnDemand="true" closeViewOnExit="true">
+                          <cards>
+                            <OTUDLCompoundDoc id="cad338cb-fc7b-11dd-adde-cb26dfcb56dd" timesTTSProduced="1">
+                              <bodyText>
+                                <object refid="d1070d2d-fc7b-11dd-adde-cb26dfcb56dd" />
+                                <br />
+                              </bodyText>
+                              <documentRefs>
+                                <OTUDLQuestion id="d1070d2d-fc7b-11dd-adde-cb26dfcb56dd" name="Question" showConvertButton="false">
+                                  <prompt>
+                                    <OTCompoundDoc>
+                                      <bodyText>What was the starting time for your trip BACK to Station A? Mark this location on the graph.</bodyText>
+                                    </OTCompoundDoc>
+                                  </prompt>
+                                  <input>
+                                    <OTText text="" />
+                                  </input>
+                                </OTUDLQuestion>
+                              </documentRefs>
+                            </OTUDLCompoundDoc>
+                            <OTUDLCompoundDoc id="ef5784e4-fc7b-11dd-adde-cb26dfcb56dd" name="%ef5784e4-fc7b-11dd-adde-cb26dfcb56dd" showEditBar="true">
+                              <documentRefs>
+                                <OTUDLQuestion id="fd8b6229-fc7b-11dd-adde-cb26dfcb56dd" name="Question" showConvertButton="false">
+                                  <prompt>
+                                    <OTCompoundDoc>
+                                      <bodyText>What was the ending time for your trip back to Station A? Mark this location on the graph.</bodyText>
+                                    </OTCompoundDoc>
+                                  </prompt>
+                                  <input>
+                                    <OTText text="" />
+                                  </input>
+                                </OTUDLQuestion>
+                              </documentRefs>
+                              <bodyText>
+                                <object refid="fd8b6229-fc7b-11dd-adde-cb26dfcb56dd" />
+                                <br />
+                              </bodyText>
+                            </OTUDLCompoundDoc>
+                            <OTUDLCompoundDoc id="0771de50-fc7c-11dd-adde-cb26dfcb56dd" name="%0771de50-fc7c-11dd-adde-cb26dfcb56dd" showEditBar="true">
+                              <documentRefs>
+                                <OTUDLQuestion id="15bb1855-fc7c-11dd-adde-cb26dfcb56dd" name="Question" showConvertButton="false">
+                                  <prompt>
+                                    <OTCompoundDoc>
+                                      <bodyText>What was the total time taken for the trip?</bodyText>
+                                    </OTCompoundDoc>
+                                  </prompt>
+                                  <input>
+                                    <OTText text="" />
+                                  </input>
+                                </OTUDLQuestion>
+                              </documentRefs>
+                              <bodyText>
+                                <object refid="15bb1855-fc7c-11dd-adde-cb26dfcb56dd" />
+                                <br />
+                              </bodyText>
+                            </OTUDLCompoundDoc>
+                            <OTUDLCompoundDoc id="1a78c77c-fc7c-11dd-adde-cb26dfcb56dd" name="%1a78c77c-fc7c-11dd-adde-cb26dfcb56dd" showEditBar="true">
+                              <documentRefs>
+                                <OTUDLQuestion id="26a9a8d1-fc7c-11dd-adde-cb26dfcb56dd" name="Question" showConvertButton="false">
+                                  <prompt>
+                                    <OTCompoundDoc>
+                                      <bodyText>What was the change in position?  Is it positive or negative?</bodyText>
+                                    </OTCompoundDoc>
+                                  </prompt>
+                                  <input>
+                                    <OTText text="" />
+                                  </input>
+                                </OTUDLQuestion>
+                              </documentRefs>
+                              <bodyText>
+                                <object refid="26a9a8d1-fc7c-11dd-adde-cb26dfcb56dd" />
+                                <br />
+                              </bodyText>
+                            </OTUDLCompoundDoc>
+                            <OTUDLCompoundDoc id="459e9df4-fc7c-11dd-adde-cb26dfcb56dd" name="%459e9df4-fc7c-11dd-adde-cb26dfcb56dd" showEditBar="true">
+                              <documentRefs>
+                                <OTUDLQuestion id="487a94c5-fc7c-11dd-adde-cb26dfcb56dd" name="Question" showConvertButton="false">
+                                  <prompt>
+                                    <OTCompoundDoc>
+                                      <bodyText>What was the average velocity?  Is it positive or negative?</bodyText>
+                                    </OTCompoundDoc>
+                                  </prompt>
+                                  <input>
+                                    <OTText text="" />
+                                  </input>
+                                </OTUDLQuestion>
+                              </documentRefs>
+                              <bodyText>
+                                <object refid="487a94c5-fc7c-11dd-adde-cb26dfcb56dd" />
+                                <br />
+                              </bodyText>
+                            </OTUDLCompoundDoc>
+                          </cards>
+                          <currentCard>
+                            <object refid="459e9df4-fc7c-11dd-adde-cb26dfcb56dd" />
+                          </currentCard>
+                          <viewedCards>
+                            <object refid="cad338cb-fc7b-11dd-adde-cb26dfcb56dd" />
+                            <object refid="ef5784e4-fc7b-11dd-adde-cb26dfcb56dd" />
+                            <object refid="0771de50-fc7c-11dd-adde-cb26dfcb56dd" />
+                            <object refid="1a78c77c-fc7c-11dd-adde-cb26dfcb56dd" />
+                            <object refid="459e9df4-fc7c-11dd-adde-cb26dfcb56dd" />
+                          </viewedCards>
+                        </OTCardContainer>
+                        <object refid="29dc5ef0-c453-11dc-95ff-0800200c9a66" />
+                        <OTUDLMenu id="cad338ca-fc7b-11dd-adde-cb26dfcb56dd" showBorder="false">
+                          <cardContainer>
+                            <object refid="cad338c9-fc7b-11dd-adde-cb26dfcb56dd" />
+                          </cardContainer>
+                          <menuRule>
+                            <OTUDLMenuRule jumpToViewedCard="true" stepAhead="true" />
+                          </menuRule>
+                        </OTUDLMenu>
+                        <object refid="1fbcccc7-fc6b-11dd-8036-d7df917ab6ce" />
+                      </documentRefs>
+                    </OTCompoundDoc>
+                    <OTCompoundDoc id="ae12096c-fc9f-11dd-93a6-0745b9c9fb5e" name="%ae12096c-fc9f-11dd-93a6-0745b9c9fb5e" showEditBar="true">
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <div class="subtitle">
+                                What have you learned about position, time, and velocity?
+                                <br />
+                                <br />
+                                <object refid="bd535f0d-fc9f-11dd-93a6-0745b9c9fb5e" />
+                                <br />
+                                <br />
+                                <object refid="6fc836e9-fd0c-11dd-b931-bf4f44b39e73" />
+                                <br />
+                                <br />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                        <OTUDLQuestion id="bd535f0d-fc9f-11dd-93a6-0745b9c9fb5e" name="Question" showConvertButton="false">
+                          <prompt>
+                            <OTCompoundDoc>
+                              <bodyText>Which of the following must be known to find the velocity of the train? (check all that apply)</bodyText>
+                            </OTCompoundDoc>
+                          </prompt>
+                          <input>
+                            <OTChoiceMultiple name="Multiple choice (check boxes)" alignContent="0">
+                              <choices>
+                                <OTCompoundDoc name="1.The amount of the fare">
+                                  <bodyText>1.The amount of the fare</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="2. The start time">
+                                  <bodyText>2. The start time</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="3. How many passengers are on board">
+                                  <bodyText>3. How many passengers are on board</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="4. The weight of the train">
+                                  <bodyText>4. The weight of the train</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="5. The end time">
+                                  <bodyText>5. The end time</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="6. The change in position">
+                                  <bodyText>6. The change in position</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="7. The direction of travel">
+                                  <bodyText>7. The direction of travel</bodyText>
+                                </OTCompoundDoc>
+                              </choices>
+                            </OTChoiceMultiple>
+                          </input>
+                        </OTUDLQuestion>
+                        <OTUDLQuestion id="6fc836e9-fd0c-11dd-b931-bf4f44b39e73" name="Question" showConvertButton="false">
+                          <prompt>
+                            <OTCompoundDoc>
+                              <bodyText>How could you use a graph to describe the motion of a train?</bodyText>
+                            </OTCompoundDoc>
+                          </prompt>
+                          <input>
+                            <OTText text="&#xA;&#xA;&#xA;" />
+                          </input>
+                        </OTUDLQuestion>
+                      </documentRefs>
+                    </OTCompoundDoc>
+                    <OTCompoundDoc id="5470be8c-fd0d-11dd-b931-bf4f44b39e73" name="%5470be8c-fd0d-11dd-b931-bf4f44b39e73" showEditBar="true">
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <div class="subtitle">
+                                Reading another graph
+                                <br />
+                              </div>
+                              <table width="100%">
+                                <tr>
+                                  <td width="50%">
+                                    A graph showing the position of a train on another trip is 
+                shown to the right. Station A is at position 1, Station B is 
+                at position  2, Station C is at position 2.5 Answer the 
+                following questions about the trip:
+                                    <br />
+                                    <br />
+                                    <br />
+                                    <div style="padding-left: 2px; border-color: black; margin-left: 5px; margin-right: 5px; margin-top: 5px; margin-bottom: 5px; border-left-width: 1px; border-right-width: 1px; border-top-width: 1px; padding-bottom: 2px; padding-right: 2px; border-bottom-width: 1px; border-style: solid; padding-top: 2px">
+                                      <object refid="084c2403-fd0e-11dd-b931-bf4f44b39e73" />
+                                      <br />
+                                      <object viewid="29dc5ef0-c453-11dc-95ff-0800200c9a66" refid="084c2404-fd0e-11dd-b931-bf4f44b39e73" />
+                                    </div>
+                                    <br />
+                                    <br />
+                                    <br />
+                                    <br />
+                                  </td>
+                                  <td width="50%">
+                                    <object refid="7663151d-fd0d-11dd-b931-bf4f44b39e73" />
+                                    <br />
+                                    <br />
+                                    <br />
+                                  </td>
+                                </tr>
+                              </table>
+                              <br />
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                        <OTCardContainer id="084c2403-fd0e-11dd-b931-bf4f44b39e73" contentsMayScroll="false" loadViewOnlyOnDemand="true" closeViewOnExit="true">
+                          <cards>
+                            <OTUDLCompoundDoc id="084c2405-fd0e-11dd-b931-bf4f44b39e73">
+                              <bodyText>
+                                <object refid="0aff8437-fd0e-11dd-b931-bf4f44b39e73" />
+                                <br />
+                              </bodyText>
+                              <documentRefs>
+                                <OTUDLQuestion id="0aff8437-fd0e-11dd-b931-bf4f44b39e73" name="Question" showConvertButton="false">
+                                  <prompt>
+                                    <OTCompoundDoc>
+                                      <bodyText>What was the position of the train at time = 3 seconds?</bodyText>
+                                    </OTCompoundDoc>
+                                  </prompt>
+                                  <input>
+                                    <OTText />
+                                  </input>
+                                </OTUDLQuestion>
+                              </documentRefs>
+                            </OTUDLCompoundDoc>
+                            <OTUDLCompoundDoc id="1bdd4bce-fd0e-11dd-b931-bf4f44b39e73" name="%1bdd4bce-fd0e-11dd-b931-bf4f44b39e73" showEditBar="true">
+                              <documentRefs>
+                                <OTUDLQuestion id="1e3fa5cf-fd0e-11dd-b931-bf4f44b39e73" name="Question" showConvertButton="false">
+                                  <prompt>
+                                    <OTCompoundDoc>
+                                      <bodyText>What was the postion of the train at time = 5 seconds?</bodyText>
+                                    </OTCompoundDoc>
+                                  </prompt>
+                                  <input>
+                                    <OTText />
+                                  </input>
+                                </OTUDLQuestion>
+                              </documentRefs>
+                              <bodyText>
+                                <object refid="1e3fa5cf-fd0e-11dd-b931-bf4f44b39e73" />
+                                <br />
+                              </bodyText>
+                            </OTUDLCompoundDoc>
+                            <OTUDLCompoundDoc id="77900760-fd0e-11dd-b931-bf4f44b39e73" name="%77900760-fd0e-11dd-b931-bf4f44b39e73" showEditBar="true">
+                              <documentRefs>
+                                <OTUDLQuestion id="7f5466d1-fd0e-11dd-b931-bf4f44b39e73" name="Question" showConvertButton="false">
+                                  <prompt>
+                                    <OTCompoundDoc>
+                                      <bodyText>Was the train going faster or slower at 5 seconds compared to at 3 seconds?</bodyText>
+                                    </OTCompoundDoc>
+                                  </prompt>
+                                  <input>
+                                    <OTText />
+                                  </input>
+                                </OTUDLQuestion>
+                              </documentRefs>
+                              <bodyText>
+                                <object refid="7f5466d1-fd0e-11dd-b931-bf4f44b39e73" />
+                                <br />
+                              </bodyText>
+                            </OTUDLCompoundDoc>
+                            <OTUDLCompoundDoc id="95005848-fd0e-11dd-b931-bf4f44b39e73" name="%95005848-fd0e-11dd-b931-bf4f44b39e73" showEditBar="true">
+                              <documentRefs>
+                                <OTDataCollector id="c799aef9-fd0e-11dd-b931-bf4f44b39e73" name="Data graph" title="Data graph" showControlBar="true" useDefaultToolBar="true">
+                                  <source>
+                                    <OTDataGraphable name="Data Graph" connectPoints="true" controllable="true" yColumn="1" drawMarks="false" color="16711680" xColumn="0" lineWidth="2.0" visible="true">
+                                      <dataStore>
+                                        <OTDataStore />
+                                      </dataStore>
+                                    </OTDataGraphable>
+                                  </source>
+                                  <xDataAxis>
+                                    <OTDataAxis max="15.0" units="s" min="0.0" label="Time" labelFormat="Engineering" />
+                                  </xDataAxis>
+                                  <yDataAxis>
+                                    <OTDataAxis max="3.0" units="" min="-0.0" label="" labelFormat="Engineering" />
+                                  </yDataAxis>
+                                </OTDataCollector>
+                              </documentRefs>
+                              <bodyText>
+                                Sketch what the graph would look like if the train went twice as fast.
+                                <br />
+                                <br />
+                                <object refid="c799aef9-fd0e-11dd-b931-bf4f44b39e73" />
+                                <br />
+                              </bodyText>
+                            </OTUDLCompoundDoc>
+                          </cards>
+                          <currentCard>
+                            <object refid="95005848-fd0e-11dd-b931-bf4f44b39e73" />
+                          </currentCard>
+                          <viewedCards>
+                            <object refid="084c2405-fd0e-11dd-b931-bf4f44b39e73" />
+                            <object refid="1bdd4bce-fd0e-11dd-b931-bf4f44b39e73" />
+                            <object refid="77900760-fd0e-11dd-b931-bf4f44b39e73" />
+                            <object refid="95005848-fd0e-11dd-b931-bf4f44b39e73" />
+                          </viewedCards>
+                        </OTCardContainer>
+                        <object refid="29dc5ef0-c453-11dc-95ff-0800200c9a66" />
+                        <OTUDLMenu id="084c2404-fd0e-11dd-b931-bf4f44b39e73" showBorder="false">
+                          <cardContainer>
+                            <object refid="084c2403-fd0e-11dd-b931-bf4f44b39e73" />
+                          </cardContainer>
+                          <menuRule>
+                            <OTUDLMenuRule jumpToViewedCard="true" stepAhead="true" />
+                          </menuRule>
+                        </OTUDLMenu>
+                        <OTDataCollector id="7663151d-fd0d-11dd-b931-bf4f44b39e73" name="Data graph" title="Position Graph" showControlBar="true" useDefaultToolBar="true">
+                          <source>
+                            <OTDataGraphable name="Data Graph" connectPoints="true" controllable="true" yColumn="1" drawMarks="false" color="16711680" xColumn="0" lineWidth="2.0" visible="true">
+                              <dataStore>
+                                <OTDataStore numberChannels="2">
+                                  <values>
+                                    <float>-0.03797468</float>
+                                    <float>0.9809524</float>
+                                    <float>0.0</float>
+                                    <float>1.0</float>
+                                    <float>0.03797468</float>
+                                    <float>1.0</float>
+                                    <float>0.07594936</float>
+                                    <float>1.0</float>
+                                    <float>0.11392405</float>
+                                    <float>1.0</float>
+                                    <float>0.15189873</float>
+                                    <float>1.0</float>
+                                    <float>0.2278481</float>
+                                    <float>1.0</float>
+                                    <float>0.30379745</float>
+                                    <float>1.0</float>
+                                    <float>0.34177214</float>
+                                    <float>1.0</float>
+                                    <float>0.37974682</float>
+                                    <float>1.0</float>
+                                    <float>0.4177215</float>
+                                    <float>1.0</float>
+                                    <float>0.4556962</float>
+                                    <float>1.0</float>
+                                    <float>0.5316456</float>
+                                    <float>1.0</float>
+                                    <float>0.56962025</float>
+                                    <float>1.0</float>
+                                    <float>0.6075949</float>
+                                    <float>1.0</float>
+                                    <float>0.6455696</float>
+                                    <float>1.0</float>
+                                    <float>0.6835443</float>
+                                    <float>1.0</float>
+                                    <float>0.721519</float>
+                                    <float>1.0</float>
+                                    <float>0.75949365</float>
+                                    <float>1.0095239</float>
+                                    <float>0.79746836</float>
+                                    <float>1.0095239</float>
+                                    <float>0.87341774</float>
+                                    <float>1.0095239</float>
+                                    <float>0.98734176</float>
+                                    <float>1.0095239</float>
+                                    <float>1.0253165</float>
+                                    <float>1.0095239</float>
+                                    <float>1.1772152</float>
+                                    <float>1.0</float>
+                                    <float>1.2911392</float>
+                                    <float>1.0</float>
+                                    <float>1.4810127</float>
+                                    <float>0.9904762</float>
+                                    <float>1.556962</float>
+                                    <float>0.9904762</float>
+                                    <float>1.5949367</float>
+                                    <float>0.9904762</float>
+                                    <float>1.6329114</float>
+                                    <float>0.9904762</float>
+                                    <float>1.7088608</float>
+                                    <float>0.9904762</float>
+                                    <float>1.7848102</float>
+                                    <float>0.9904762</float>
+                                    <float>1.8227848</float>
+                                    <float>1.0</float>
+                                    <float>1.8607595</float>
+                                    <float>1.0</float>
+                                    <float>1.8987342</float>
+                                    <float>1.0285715</float>
+                                    <float>2.2405064</float>
+                                    <float>1.1904762</float>
+                                    <float>2.3544304</float>
+                                    <float>1.2380953</float>
+                                    <float>2.886076</float>
+                                    <float>1.4761904</float>
+                                    <float>3.379747</float>
+                                    <float>1.6952381</float>
+                                    <float>3.455696</float>
+                                    <float>1.7333333</float>
+                                    <float>3.5316455</float>
+                                    <float>1.7619047</float>
+                                    <float>3.5696204</float>
+                                    <float>1.7809523</float>
+                                    <float>3.6835444</float>
+                                    <float>1.8380952</float>
+                                    <float>3.835443</float>
+                                    <float>1.9047619</float>
+                                    <float>4.21519</float>
+                                    <float>2.0095239</float>
+                                    <float>4.253165</float>
+                                    <float>2.047619</float>
+                                    <float>4.291139</float>
+                                    <float>2.047619</float>
+                                    <float>4.329114</float>
+                                    <float>2.047619</float>
+                                    <float>4.518987</float>
+                                    <float>2.0666666</float>
+                                    <float>4.556962</float>
+                                    <float>2.0666666</float>
+                                    <float>4.746835</float>
+                                    <float>2.0761905</float>
+                                    <float>4.78481</float>
+                                    <float>2.0761905</float>
+                                    <float>4.898734</float>
+                                    <float>2.0761905</float>
+                                    <float>5.012658</float>
+                                    <float>2.0952382</float>
+                                    <float>5.088608</float>
+                                    <float>2.0952382</float>
+                                    <float>5.126582</float>
+                                    <float>2.1047618</float>
+                                    <float>5.240506</float>
+                                    <float>2.1047618</float>
+                                    <float>5.35443</float>
+                                    <float>2.1142857</float>
+                                    <float>5.392405</float>
+                                    <float>2.1238096</float>
+                                    <float>5.468354</float>
+                                    <float>2.1333334</float>
+                                    <float>5.506329</float>
+                                    <float>2.142857</float>
+                                    <float>5.5822783</float>
+                                    <float>2.1619048</float>
+                                    <float>5.658228</float>
+                                    <float>2.1714287</float>
+                                    <float>5.734177</float>
+                                    <float>2.1714287</float>
+                                    <float>5.772152</float>
+                                    <float>2.1714287</float>
+                                    <float>5.886076</float>
+                                    <float>2.1809523</float>
+                                    <float>5.924051</float>
+                                    <float>2.1904762</float>
+                                    <float>6.0</float>
+                                    <float>2.2</float>
+                                    <float>6.037975</float>
+                                    <float>2.209524</float>
+                                    <float>6.075949</float>
+                                    <float>2.2190475</float>
+                                    <float>6.113924</float>
+                                    <float>2.2190475</float>
+                                    <float>6.151899</float>
+                                    <float>2.2285714</float>
+                                    <float>6.189873</float>
+                                    <float>2.2285714</float>
+                                    <float>6.265823</float>
+                                    <float>2.2380953</float>
+                                    <float>6.341772</float>
+                                    <float>2.2380953</float>
+                                    <float>6.4177217</float>
+                                    <float>2.2476192</float>
+                                    <float>6.493671</float>
+                                    <float>2.2666667</float>
+                                    <float>6.531646</float>
+                                    <float>2.2666667</float>
+                                    <float>6.607595</float>
+                                    <float>2.2761905</float>
+                                    <float>6.721519</float>
+                                    <float>2.295238</float>
+                                    <float>6.759494</float>
+                                    <float>2.304762</float>
+                                    <float>6.835443</float>
+                                    <float>2.304762</float>
+                                    <float>6.873418</float>
+                                    <float>2.3142858</float>
+                                    <float>6.949367</float>
+                                    <float>2.3238096</float>
+                                    <float>6.987342</float>
+                                    <float>2.3333333</float>
+                                    <float>7.025316</float>
+                                    <float>2.3333333</float>
+                                    <float>7.063291</float>
+                                    <float>2.3428571</float>
+                                    <float>7.1392407</float>
+                                    <float>2.3428571</float>
+                                    <float>7.177215</float>
+                                    <float>2.352381</float>
+                                    <float>7.21519</float>
+                                    <float>2.352381</float>
+                                    <float>7.253165</float>
+                                    <float>2.3619049</float>
+                                    <float>7.291139</float>
+                                    <float>2.3714285</float>
+                                    <float>7.367089</float>
+                                    <float>2.3809524</float>
+                                    <float>7.405063</float>
+                                    <float>2.3904762</float>
+                                    <float>7.443038</float>
+                                    <float>2.3904762</float>
+                                    <float>7.481013</float>
+                                    <float>2.4</float>
+                                    <float>7.518987</float>
+                                    <float>2.4095237</float>
+                                    <float>7.670886</float>
+                                    <float>2.4285715</float>
+                                    <float>7.708861</float>
+                                    <float>2.4380953</float>
+                                    <float>7.746835</float>
+                                    <float>2.4380953</float>
+                                    <float>7.822785</float>
+                                    <float>2.447619</float>
+                                    <float>7.898734</float>
+                                    <float>2.4571428</float>
+                                    <float>7.936709</float>
+                                    <float>2.4571428</float>
+                                    <float>7.974684</float>
+                                    <float>2.4666667</float>
+                                    <float>8.012658</float>
+                                    <float>2.495238</float>
+                                    <float>8.35443</float>
+                                    <float>2.4857142</float>
+                                    <float>8.848102</float>
+                                    <float>2.504762</float>
+                                    <float>9.113924</float>
+                                    <float>2.5142858</float>
+                                    <float>9.227848</float>
+                                    <float>2.5142858</float>
+                                    <float>9.379746</float>
+                                    <float>2.5142858</float>
+                                    <float>9.455696</float>
+                                    <float>2.5142858</float>
+                                    <float>9.6075945</float>
+                                    <float>2.5238094</float>
+                                    <float>9.7215185</float>
+                                    <float>2.5238094</float>
+                                    <float>9.873418</float>
+                                    <float>2.5238094</float>
+                                    <float>9.987342</float>
+                                    <float>2.5238094</float>
+                                    <float>10.253164</float>
+                                    <float>2.5238094</float>
+                                    <float>10.670886</float>
+                                    <float>2.5142858</float>
+                                    <float>10.936708</float>
+                                    <float>2.5142858</float>
+                                    <float>12.037974</float>
+                                    <float>2.495238</float>
+                                    <float>12.07595</float>
+                                    <float>2.495238</float>
+                                    <float>12.151898</float>
+                                    <float>2.495238</float>
+                                    <float>12.227848</float>
+                                    <float>2.495238</float>
+                                    <float>12.265822</float>
+                                    <float>2.495238</float>
+                                    <float>12.341772</float>
+                                    <float>2.495238</float>
+                                    <float>12.417722</float>
+                                    <float>2.495238</float>
+                                    <float>12.531646</float>
+                                    <float>2.495238</float>
+                                    <float>12.56962</float>
+                                    <float>2.495238</float>
+                                    <float>12.683544</float>
+                                    <float>2.495238</float>
+                                    <float>12.759494</float>
+                                    <float>2.495238</float>
+                                    <float>12.987342</float>
+                                    <float>2.495238</float>
+                                    <float>13.025316</float>
+                                    <float>2.495238</float>
+                                    <float>13.556962</float>
+                                    <float>2.495238</float>
+                                    <float>13.898734</float>
+                                    <float>2.495238</float>
+                                    <float>14.012658</float>
+                                    <float>2.495238</float>
+                                    <float>14.088608</float>
+                                    <float>2.495238</float>
+                                    <float>14.2784815</float>
+                                    <float>2.495238</float>
+                                    <float>14.3924055</float>
+                                    <float>2.495238</float>
+                                    <float>14.886076</float>
+                                    <float>2.5238094</float>
+                                  </values>
+                                </OTDataStore>
+                              </dataStore>
+                            </OTDataGraphable>
+                          </source>
+                          <xDataAxis>
+                            <OTDataAxis max="15.0" units="s" min="0.0" label="Time" labelFormat="Engineering" />
+                          </xDataAxis>
+                          <yDataAxis>
+                            <OTDataAxis max="3.0" units="" min="-0.0" label="" labelFormat="Engineering" />
+                          </yDataAxis>
+                        </OTDataCollector>
+                      </documentRefs>
+                    </OTCompoundDoc>
+                    <OTCompoundDoc id="11434c52-02b6-11de-9394-e5f1263105eb" name="%11434c52-02b6-11de-9394-e5f1263105eb" showEditBar="true">
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <div class="subtitle">Creating a story</div>
+                              <table width="100%">
+                                <tr>
+                                  <td width="50%">
+                                    A graph showing the position of a train on another trip is 
+                shown to the right. The distances are in miles, and the time 
+                is in minutes.  Station A is at position  0, Station B is at 
+                position 10, Station C is at position 25.  Create a story 
+                about a train trip that matches the graph.  Feel free to 
+                invent characters and actions.  What might have happened, for 
+                example, after 35 minutes?
+                                    <br />
+                                    <br />
+                                    <object refid="fbb06bc1-02b6-11de-9394-e5f1263105eb" />
+                                    <br />
+                                    <br />
+                                    <br />
+                                    <br />
+                                    <br />
+                                    <br />
+                                    <br />
+                                    <br />
+                                  </td>
+                                  <td width="50%">
+                                    <br />
+                                    <object refid="30ad4a58-02b6-11de-9394-e5f1263105eb" />
+                                    <br />
+                                    <br />
+                                    <br />
+                                    <br />
+                                  </td>
+                                </tr>
+                              </table>
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                        <OTText id="fbb06bc1-02b6-11de-9394-e5f1263105eb" name="Text field" text="&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;" />
+                        <OTDataCollector id="30ad4a58-02b6-11de-9394-e5f1263105eb" name="Data graph" title="Position Graph" showControlBar="true" useDefaultToolBar="true">
+                          <source>
+                            <OTDataGraphable name="Data Graph" connectPoints="true" controllable="true" yColumn="1" drawMarks="false" color="16711680" xColumn="0" lineWidth="2.0" visible="true">
+                              <dataStore>
+                                <OTDataStore numberChannels="2">
+                                  <values>
+                                    <float>-2.4630542</float>
+                                    <float>-0.0</float>
+                                    <float>-2.2167487</float>
+                                    <float>0.3809524</float>
+                                    <float>-1.4778326</float>
+                                    <float>0.50793654</float>
+                                    <float>-1.2315271</float>
+                                    <float>0.50793654</float>
+                                    <float>-0.7389163</float>
+                                    <float>0.50793654</float>
+                                    <float>-0.24630542</float>
+                                    <float>-0.0</float>
+                                    <float>0.49261084</float>
+                                    <float>-0.0</float>
+                                    <float>0.7389163</float>
+                                    <float>-0.12698413</float>
+                                    <float>0.9852217</float>
+                                    <float>-0.12698413</float>
+                                    <float>1.2315271</float>
+                                    <float>-0.12698413</float>
+                                    <float>1.4778326</float>
+                                    <float>-0.12698413</float>
+                                    <float>1.7241379</float>
+                                    <float>-0.12698413</float>
+                                    <float>1.9704434</float>
+                                    <float>-0.12698413</float>
+                                    <float>6.1576357</float>
+                                    <float>0.8888889</float>
+                                    <float>12.807881</float>
+                                    <float>5.3333335</float>
+                                    <float>13.054187</float>
+                                    <float>5.714286</float>
+                                    <float>13.300492</float>
+                                    <float>5.84127</float>
+                                    <float>13.546798</float>
+                                    <float>6.2222223</float>
+                                    <float>13.793103</float>
+                                    <float>6.6031747</float>
+                                    <float>14.039409</float>
+                                    <float>6.984127</float>
+                                    <float>14.285714</float>
+                                    <float>7.111111</float>
+                                    <float>14.53202</float>
+                                    <float>7.2380953</float>
+                                    <float>14.778325</float>
+                                    <float>7.3650794</float>
+                                    <float>15.024631</float>
+                                    <float>7.3650794</float>
+                                    <float>15.270936</float>
+                                    <float>7.4920635</float>
+                                    <float>15.5172415</float>
+                                    <float>7.873016</float>
+                                    <float>16.009851</float>
+                                    <float>8.0</float>
+                                    <float>16.256157</float>
+                                    <float>8.126985</float>
+                                    <float>16.502462</float>
+                                    <float>8.380953</float>
+                                    <float>16.748768</float>
+                                    <float>8.5079365</float>
+                                    <float>16.995073</float>
+                                    <float>8.634921</float>
+                                    <float>17.241379</float>
+                                    <float>8.761905</float>
+                                    <float>17.487684</float>
+                                    <float>8.761905</float>
+                                    <float>17.73399</float>
+                                    <float>8.888889</float>
+                                    <float>17.980295</float>
+                                    <float>9.142858</float>
+                                    <float>18.2266</float>
+                                    <float>9.269841</float>
+                                    <float>18.472906</float>
+                                    <float>9.396826</float>
+                                    <float>18.719212</float>
+                                    <float>9.523809</float>
+                                    <float>18.965517</float>
+                                    <float>9.650794</float>
+                                    <float>19.211823</float>
+                                    <float>9.777778</float>
+                                    <float>19.458128</float>
+                                    <float>9.904762</float>
+                                    <float>19.704433</float>
+                                    <float>9.904762</float>
+                                    <float>19.950739</float>
+                                    <float>10.031746</float>
+                                    <float>20.197044</float>
+                                    <float>10.031746</float>
+                                    <float>20.689655</float>
+                                    <float>10.031746</float>
+                                    <float>20.93596</float>
+                                    <float>10.031746</float>
+                                    <float>21.182266</float>
+                                    <float>10.031746</float>
+                                    <float>21.674877</float>
+                                    <float>10.031746</float>
+                                    <float>21.921183</float>
+                                    <float>10.031746</float>
+                                    <float>22.167488</float>
+                                    <float>10.031746</float>
+                                    <float>22.413794</float>
+                                    <float>10.031746</float>
+                                    <float>22.660099</float>
+                                    <float>10.031746</float>
+                                    <float>22.906404</float>
+                                    <float>10.031746</float>
+                                    <float>23.15271</float>
+                                    <float>10.1587305</float>
+                                    <float>23.399015</float>
+                                    <float>10.1587305</float>
+                                    <float>23.64532</float>
+                                    <float>10.1587305</float>
+                                    <float>23.891626</float>
+                                    <float>10.1587305</float>
+                                    <float>24.137932</float>
+                                    <float>10.1587305</float>
+                                    <float>24.384237</float>
+                                    <float>10.285714</float>
+                                    <float>24.630543</float>
+                                    <float>10.285714</float>
+                                    <float>24.876848</float>
+                                    <float>10.412699</float>
+                                    <float>25.123152</float>
+                                    <float>10.412699</float>
+                                    <float>25.369457</float>
+                                    <float>10.539682</float>
+                                    <float>26.108374</float>
+                                    <float>10.666667</float>
+                                    <float>26.35468</float>
+                                    <float>10.920635</float>
+                                    <float>27.093596</float>
+                                    <float>11.174603</float>
+                                    <float>27.832512</float>
+                                    <float>11.555555</float>
+                                    <float>28.325123</float>
+                                    <float>11.809524</float>
+                                    <float>29.06404</float>
+                                    <float>12.31746</float>
+                                    <float>29.55665</float>
+                                    <float>12.571428</float>
+                                    <float>29.802956</float>
+                                    <float>12.952381</float>
+                                    <float>30.049261</float>
+                                    <float>13.079365</float>
+                                    <float>30.295567</float>
+                                    <float>13.587301</float>
+                                    <float>30.541872</float>
+                                    <float>13.714286</float>
+                                    <float>30.788177</float>
+                                    <float>13.8412695</float>
+                                    <float>31.034483</float>
+                                    <float>13.968254</float>
+                                    <float>31.280788</float>
+                                    <float>13.968254</float>
+                                    <float>31.7734</float>
+                                    <float>14.095238</float>
+                                    <float>32.019703</float>
+                                    <float>14.222222</float>
+                                    <float>32.26601</float>
+                                    <float>14.222222</float>
+                                    <float>32.512314</float>
+                                    <float>14.222222</float>
+                                    <float>32.75862</float>
+                                    <float>14.349206</float>
+                                    <float>33.004925</float>
+                                    <float>14.476191</float>
+                                    <float>33.251232</float>
+                                    <float>14.476191</float>
+                                    <float>33.497536</float>
+                                    <float>14.476191</float>
+                                    <float>33.743843</float>
+                                    <float>14.476191</float>
+                                    <float>33.990147</float>
+                                    <float>14.476191</float>
+                                    <float>34.236454</float>
+                                    <float>14.476191</float>
+                                    <float>34.482758</float>
+                                    <float>14.476191</float>
+                                    <float>34.729065</float>
+                                    <float>14.349206</float>
+                                    <float>34.97537</float>
+                                    <float>14.222222</float>
+                                    <float>35.46798</float>
+                                    <float>14.095238</float>
+                                    <float>35.714287</float>
+                                    <float>13.968254</float>
+                                    <float>35.96059</float>
+                                    <float>13.968254</float>
+                                    <float>36.206898</float>
+                                    <float>13.968254</float>
+                                    <float>36.4532</float>
+                                    <float>13.8412695</float>
+                                    <float>36.69951</float>
+                                    <float>13.8412695</float>
+                                    <float>36.945812</float>
+                                    <float>13.8412695</float>
+                                    <float>37.19212</float>
+                                    <float>13.714286</float>
+                                    <float>37.438423</float>
+                                    <float>13.587301</float>
+                                    <float>37.68473</float>
+                                    <float>13.460318</float>
+                                    <float>37.931034</float>
+                                    <float>13.333333</float>
+                                    <float>38.17734</float>
+                                    <float>13.079365</float>
+                                    <float>38.423645</float>
+                                    <float>12.952381</float>
+                                    <float>38.669952</float>
+                                    <float>12.571428</float>
+                                    <float>38.916256</float>
+                                    <float>12.571428</float>
+                                    <float>39.162563</float>
+                                    <float>12.190476</float>
+                                    <float>39.408867</float>
+                                    <float>12.063492</float>
+                                    <float>39.655174</float>
+                                    <float>11.936508</float>
+                                    <float>39.901478</float>
+                                    <float>11.809524</float>
+                                    <float>40.14778</float>
+                                    <float>11.68254</float>
+                                    <float>40.39409</float>
+                                    <float>11.555555</float>
+                                    <float>40.640392</float>
+                                    <float>11.428572</float>
+                                    <float>40.8867</float>
+                                    <float>11.428572</float>
+                                    <float>41.133003</float>
+                                    <float>11.428572</float>
+                                    <float>41.37931</float>
+                                    <float>11.301587</float>
+                                    <float>41.625614</float>
+                                    <float>11.174603</float>
+                                    <float>41.87192</float>
+                                    <float>10.920635</float>
+                                    <float>42.118225</float>
+                                    <float>10.793651</float>
+                                    <float>42.364532</float>
+                                    <float>10.666667</float>
+                                    <float>42.610836</float>
+                                    <float>10.539682</float>
+                                    <float>42.857143</float>
+                                    <float>10.412699</float>
+                                    <float>43.103447</float>
+                                    <float>10.285714</float>
+                                    <float>43.349754</float>
+                                    <float>10.1587305</float>
+                                    <float>43.596058</float>
+                                    <float>10.1587305</float>
+                                    <float>43.842365</float>
+                                    <float>9.904762</float>
+                                    <float>44.334976</float>
+                                    <float>9.650794</float>
+                                    <float>44.58128</float>
+                                    <float>9.523809</float>
+                                    <float>44.827587</float>
+                                    <float>9.396826</float>
+                                    <float>45.07389</float>
+                                    <float>9.269841</float>
+                                    <float>45.320198</float>
+                                    <float>8.634921</float>
+                                    <float>45.5665</float>
+                                    <float>7.873016</float>
+                                    <float>45.81281</float>
+                                    <float>7.7460318</float>
+                                    <float>46.059113</float>
+                                    <float>7.4920635</float>
+                                    <float>46.30542</float>
+                                    <float>7.4920635</float>
+                                    <float>46.551723</float>
+                                    <float>7.3650794</float>
+                                    <float>46.79803</float>
+                                    <float>7.2380953</float>
+                                    <float>47.044334</float>
+                                    <float>7.111111</float>
+                                    <float>47.29064</float>
+                                    <float>6.984127</float>
+                                    <float>47.536945</float>
+                                    <float>6.857143</float>
+                                    <float>47.783253</float>
+                                    <float>6.730159</float>
+                                    <float>48.029556</float>
+                                    <float>6.6031747</float>
+                                    <float>48.275864</float>
+                                    <float>6.3492064</float>
+                                    <float>48.522167</float>
+                                    <float>6.2222223</float>
+                                    <float>48.768475</float>
+                                    <float>6.2222223</float>
+                                    <float>49.01478</float>
+                                    <float>6.095238</float>
+                                    <float>49.261086</float>
+                                    <float>5.968254</float>
+                                    <float>49.50739</float>
+                                    <float>5.968254</float>
+                                    <float>49.753696</float>
+                                    <float>5.968254</float>
+                                    <float>50.0</float>
+                                    <float>5.2063494</float>
+                                    <float>50.246304</float>
+                                    <float>4.952381</float>
+                                    <float>50.49261</float>
+                                    <float>4.825397</float>
+                                    <float>50.738914</float>
+                                    <float>4.4444447</float>
+                                    <float>50.98522</float>
+                                    <float>4.1904764</float>
+                                    <float>51.477833</float>
+                                    <float>3.8095238</float>
+                                    <float>52.463055</float>
+                                    <float>3.5555556</float>
+                                    <float>52.70936</float>
+                                    <float>3.4285715</float>
+                                    <float>52.955666</float>
+                                    <float>3.4285715</float>
+                                    <float>53.69458</float>
+                                    <float>3.3015873</float>
+                                    <float>54.18719</float>
+                                    <float>3.047619</float>
+                                    <float>54.4335</float>
+                                    <float>2.920635</float>
+                                    <float>54.679802</float>
+                                    <float>2.7936509</float>
+                                    <float>54.92611</float>
+                                    <float>2.6666667</float>
+                                    <float>58.866997</float>
+                                    <float>1.2698413</float>
+                                    <float>59.1133</float>
+                                    <float>1.2698413</float>
+                                    <float>60.344826</float>
+                                    <float>1.0158731</float>
+                                    <float>62.561577</float>
+                                    <float>0.25396827</float>
+                                    <float>62.80788</float>
+                                    <float>0.25396827</float>
+                                    <float>63.30049</float>
+                                    <float>0.25396827</float>
+                                    <float>63.793102</float>
+                                    <float>0.25396827</float>
+                                    <float>64.28571</float>
+                                    <float>0.25396827</float>
+                                    <float>64.53202</float>
+                                    <float>0.25396827</float>
+                                    <float>64.77833</float>
+                                    <float>0.25396827</float>
+                                    <float>65.02463</float>
+                                    <float>0.25396827</float>
+                                    <float>65.270935</float>
+                                    <float>0.25396827</float>
+                                    <float>65.51724</float>
+                                    <float>0.25396827</float>
+                                    <float>65.76355</float>
+                                    <float>0.3809524</float>
+                                    <float>66.00985</float>
+                                    <float>0.50793654</float>
+                                    <float>66.25616</float>
+                                    <float>0.50793654</float>
+                                    <float>66.74877</float>
+                                    <float>0.7619048</float>
+                                    <float>66.99507</float>
+                                    <float>0.8888889</float>
+                                    <float>67.24138</float>
+                                    <float>1.0158731</float>
+                                    <float>67.487686</float>
+                                    <float>1.0158731</float>
+                                    <float>67.73399</float>
+                                    <float>1.2698413</float>
+                                    <float>68.47291</float>
+                                    <float>1.6507937</float>
+                                    <float>68.719215</float>
+                                    <float>1.9047619</float>
+                                    <float>69.21182</float>
+                                    <float>2.4126985</float>
+                                    <float>69.70444</float>
+                                    <float>3.4285715</float>
+                                    <float>70.197044</float>
+                                    <float>3.6825397</float>
+                                    <float>70.93596</float>
+                                    <float>4.571429</float>
+                                    <float>71.67487</float>
+                                    <float>6.4761906</float>
+                                    <float>71.92118</float>
+                                    <float>6.857143</float>
+                                    <float>72.16749</float>
+                                    <float>7.6190476</float>
+                                    <float>72.660095</float>
+                                    <float>8.5079365</float>
+                                    <float>73.64532</float>
+                                    <float>9.650794</float>
+                                    <float>74.63054</float>
+                                    <float>10.666667</float>
+                                    <float>75.36946</float>
+                                    <float>11.809524</float>
+                                    <float>76.60098</float>
+                                    <float>13.8412695</float>
+                                    <float>77.586205</float>
+                                    <float>14.857142</float>
+                                    <float>78.57143</float>
+                                    <float>15.873015</float>
+                                    <float>79.06404</float>
+                                    <float>16.126984</float>
+                                    <float>79.55665</float>
+                                    <float>16.761906</float>
+                                    <float>80.29556</float>
+                                    <float>17.52381</float>
+                                    <float>80.54187</float>
+                                    <float>17.777779</float>
+                                    <float>81.52709</float>
+                                    <float>18.539682</float>
+                                    <float>82.01971</float>
+                                    <float>18.793652</float>
+                                    <float>82.512314</float>
+                                    <float>19.174603</float>
+                                    <float>83.00493</float>
+                                    <float>19.682539</float>
+                                    <float>84.23645</float>
+                                    <float>20.952381</float>
+                                    <float>85.22167</float>
+                                    <float>22.47619</float>
+                                    <float>85.46798</float>
+                                    <float>22.984127</float>
+                                    <float>86.206894</float>
+                                    <float>23.36508</float>
+                                    <float>86.69951</float>
+                                    <float>23.619047</float>
+                                    <float>87.192116</float>
+                                    <float>23.873016</float>
+                                    <float>87.68473</float>
+                                    <float>24.0</float>
+                                    <float>87.93104</float>
+                                    <float>24.25397</float>
+                                    <float>88.17734</float>
+                                    <float>24.380953</float>
+                                    <float>88.423645</float>
+                                    <float>24.507936</float>
+                                    <float>88.66995</float>
+                                    <float>24.63492</float>
+                                    <float>88.91626</float>
+                                    <float>24.761906</float>
+                                    <float>89.40887</float>
+                                    <float>24.88889</float>
+                                    <float>89.90148</float>
+                                    <float>25.015873</float>
+                                    <float>90.39409</float>
+                                    <float>25.142857</float>
+                                    <float>90.640396</float>
+                                    <float>25.269842</float>
+                                    <float>90.886696</float>
+                                    <float>25.269842</float>
+                                    <float>91.133</float>
+                                    <float>25.269842</float>
+                                    <float>91.37931</float>
+                                    <float>25.269842</float>
+                                    <float>91.62562</float>
+                                    <float>25.269842</float>
+                                    <float>91.87192</float>
+                                    <float>25.269842</float>
+                                    <float>92.36453</float>
+                                    <float>25.269842</float>
+                                    <float>92.85714</float>
+                                    <float>25.269842</float>
+                                    <float>94.33498</float>
+                                    <float>25.269842</float>
+                                    <float>95.07389</float>
+                                    <float>25.269842</float>
+                                    <float>95.812805</float>
+                                    <float>25.269842</float>
+                                    <float>96.55173</float>
+                                    <float>25.269842</float>
+                                    <float>97.53695</float>
+                                    <float>25.269842</float>
+                                    <float>99.01478</float>
+                                    <float>25.269842</float>
+                                    <float>99.261086</float>
+                                    <float>25.269842</float>
+                                    <float>99.75369</float>
+                                    <float>25.142857</float>
+                                  </values>
+                                </OTDataStore>
+                              </dataStore>
+                            </OTDataGraphable>
+                          </source>
+                          <xDataAxis>
+                            <OTDataAxis max="100.0" units="minutes" min="0.0" label="Time" labelFormat="Engineering" />
+                          </xDataAxis>
+                          <yDataAxis>
+                            <OTDataAxis max="40.0" units="Miles" min="-0.0" label="Position" labelFormat="None" />
+                          </yDataAxis>
+                        </OTDataCollector>
+                      </documentRefs>
+                    </OTCompoundDoc>
+                    <OTCompoundDoc id="56c38413-fd14-11dd-b931-bf4f44b39e73" name="%56c38413-fd14-11dd-b931-bf4f44b39e73" showEditBar="true">
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <div class="subtitle">New Questions and Investigations</div>
+                              <br />
+                              <object refid="1ba525b6-fd28-11dd-bc1c-27c102bcc10d" />
+                              <br />
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                        <OTUDLQuestion id="1ba525b6-fd28-11dd-bc1c-27c102bcc10d" name="Question" showConvertButton="false">
+                          <prompt>
+                            <OTCompoundDoc>
+                              <bodyText>Are there additional investigations you would be interested in doing?</bodyText>
+                            </OTCompoundDoc>
+                          </prompt>
+                          <input>
+                            <OTText text="&#xA;&#xA;" />
+                          </input>
+                        </OTUDLQuestion>
+                      </documentRefs>
+                    </OTCompoundDoc>
+                    <OTCompoundDoc id="0006eb2d-003a-11de-a82a-2b69468a8016" name="%0006eb2d-003a-11de-a82a-2b69468a8016" showEditBar="true">
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <div class="subtitle">
+                                Velocity Summary
+                                <br />
+                              </div>
+                              "Velocity", (or "average velocity") is the "change of position" of 
+          an object, divided by the amount of time taken in moving.
+                              <br />
+                              <br />
+                              The 
+          "change in position" of an object is its "ending position", minus 
+          its "starting position."
+                              <br />
+                              <br />
+                              If your "starting 
+          position" is at position = 1.5 meters, and your "ending position" is 
+          at position = 3.5 meters, your "change of position" is
+                              <br />
+                              3.5m 
+          - 1.5m = 2 meters.
+                              <br />
+                              <br />
+                              If that has taken you 4 seconds, your 
+          "average velocity" is 2 meters divided by 4 seconds,
+                              <br />
+                              2m 
+          / 4s = .5 meters per second.
+                              <br />
+                              <br />
+                              If your "stating position" is at 
+          position = 3.5 meters and your "ending position" is at position = 
+          1.5 meters, your "change of position" is 1.5m - 3.5m = -2 meters. 
+          (It is negative!)
+                              <br />
+                              <br />
+                              If that has taken you 4 seconds, your 
+          'average velocity" is -2 meters divided by 4 seconds,
+                              <br />
+                              -2m / 
+          4s = -.5 meters per second. (It is negative, once again.)
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                    </OTCompoundDoc>
+                  </cards>
+                  <currentCard>
+                    <object refid="0006eb2d-003a-11de-a82a-2b69468a8016" />
+                  </currentCard>
+                  <viewedCards>
+                    <object refid="${page-1}" />
+                    <object refid="f3570343-fa01-11dd-a9f2-9149542af672" />
+                    <OTCompoundDoc id="3e59c844-fa03-11dd-a9f2-9149542af672" name="%3e59c844-fa03-11dd-a9f2-9149542af672" showEditBar="true">
+                      <bodyText />
+                    </OTCompoundDoc>
+                    <object refid="691b9068-fc45-11dd-91fe-7db590c6d8f2" />
+                    <object refid="01bc85f9-fc48-11dd-91fe-7db590c6d8f2" />
+                    <object refid="dda939e4-fc49-11dd-91fe-7db590c6d8f2" />
+                    <object refid="43ff3acf-fc7b-11dd-adde-cb26dfcb56dd" />
+                    <object refid="ae12096c-fc9f-11dd-93a6-0745b9c9fb5e" />
+                    <object refid="5470be8c-fd0d-11dd-b931-bf4f44b39e73" />
+                    <object refid="56c38413-fd14-11dd-b931-bf4f44b39e73" />
+                    <object refid="bcdfc592-0032-11de-a3ee-43c60806869b" />
+                    <object refid="05e10dbb-0037-11de-a3ee-43c60806869b" />
+                    <object refid="0006eb2d-003a-11de-a82a-2b69468a8016" />
+                    <object refid="11434c52-02b6-11de-9394-e5f1263105eb" />
+                  </viewedCards>
+                </OTCardContainer>
+              </content>
+              <footer>
+                <object refid="${nav-bar}" />
+              </footer>
+              <north>
+                <object refid="2767fe20-6c7d-11dc-8314-0800200c9a66!/section_1/header" />
+              </north>
+              <center>
+                <object refid="${activity-card-container}" />
+              </center>
+              <south>
+                <object refid="${nav-bar}" />
+              </south>
+            </OTUDLSection>
+          </activity>
+          <script>
+            <object refid="${authoring-script}" />
+          </script>
+        </OTCurriculumUnit>
+      </root>
+      <library>
+        <object refid="b6350a20-e3b4-11dc-95ff-0800200c9a66" />
+        <OTUDLMenu local_id="section-1-menu">
+          <cardContainer>
+            <object refid="${activity-card-container}" />
+          </cardContainer>
+          <menuRule>
+            <object refid="${page-rule}" />
+          </menuRule>
+        </OTUDLMenu>
+        <OTSnapshotAlbum local_id="album" />
+        <OTUDLMenuRule local_id="page-rule" jumpToViewedCard="true" stepAhead="true" />
+        <OTJavascript local_id="change_page.js" src="http://continuum.concord.org/otrunk/examples/LOOPS/scripts/change_page.js" />
+        <OTJavascript local_id="show_message.js" src="http://continuum.concord.org/otrunk/examples/LOOPS/scripts/show_message.js" />
+        <OTJavascript local_id="loops_authoring_script.js" src="http://continuum.concord.org/otrunk/examples/LOOPS/scripts/loops_authoring_script.js" />
+        <OTScriptObject local_id="authoring-script">
+          <variables>
+            <OTScriptVariable name="cardContainer">
+              <reference>
+                <object refid="${activity-card-container}" />
+              </reference>
+            </OTScriptVariable>
+            <OTScriptVariable name="system">
+              <reference>
+                <object refid="${system}" />
+              </reference>
+            </OTScriptVariable>
+            <OTScriptVariable name="menuPageRule">
+              <reference>
+                <object refid="${page-rule}" />
+              </reference>
+            </OTScriptVariable>
+          </variables>
+          <script>
+            <object refid="${loops_authoring_script.js}" />
+          </script>
+          <scriptState />
+        </OTScriptObject>
+        <OTUDLNavBar local_id="nav-bar">
+          <menuView>
+            <object refid="29dc5ef0-c453-11dc-95ff-0800200c9a66" />
+          </menuView>
+          <cssColor>
+            <object refid="31193bb0-c44f-11dc-95ff-0800200c9a66" />
+          </cssColor>
+        </OTUDLNavBar>
+      </library>
+    </OTSystem>
+  </objects>
+</otrunk>
