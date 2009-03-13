@@ -115,6 +115,7 @@ def checkType?(obj, klass)
   false
 end
 
+# multiuser root
 def rootObject
   @otrunk.root
 end
@@ -209,7 +210,8 @@ end
 def questionAnswerRaw(question)
   input = question.input
   if input.is_a? org.concord.otrunk.ui.OTText
-    answer = input.text
+  	answer = input.text
+  	answer = answer.gsub(/\s/," ") unless (answer == nil)
   else 
     if input.is_a? org.concord.otrunk.ui.OTChoice
       answer = currentChoiceText input
@@ -346,6 +348,31 @@ def documentQuestions(doc)
   questions  
 end
 
+def documentQuestionsForIds(doc, otids)
+  if @contentHelper.version == 1
+    v = @contentHelper.getDocumentQuestions(doc)
+    ret = []
+    for e in v do 
+      ret << e
+    end
+    return ret
+  end
+  questions = []
+  
+  objService = doc.oTObjectService
+  
+  doc.documentRefs.each do | ref |
+  	if ref.is_a? org.concord.otrunk.udl.question.OTUDLQuestion
+  		otid = objService.getExternalID(ref)
+    	questions << ref unless otids.index(otid) == nil 
+    end
+  end
+  
+  questions  
+end
+
+
+
 def sectionQuestions(section)
   questions = []
     
@@ -355,6 +382,24 @@ def sectionQuestions(section)
 
   pageCards.each do | doc |
     questions.concat documentQuestions(doc)
+  end
+
+  questions
+end
+
+# Very quick way of getting back any question in this section that
+# has a specific uuid
+def sectionQuestionsForIds(section, otids)
+  questions = []
+  
+  return questions unless section.content.is_a? org.concord.otrunk.ui.OTCardContainer
+  				
+  return sectionQuestions(section) if otids.empty? 
+  
+  pageCards = allPages(section)
+
+  pageCards.each do | doc |
+    questions.concat documentQuestionsForIds(doc, otids)
   end
 
   questions
