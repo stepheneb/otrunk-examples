@@ -1,0 +1,22 @@
+<%   
+  @userURLMap = {}
+  @users.each {|user|
+    realUserId = user.globalId
+    userDbURL = @otrunk.getOTDatabase(realUserId).sourceURL
+    @userURLMap[user] = userDbURL
+  }
+%>
+
+<% sep = '|' %> <!--field separator-->
+
+<% text1 = '' %>
+
+<% @users.each do |user| %>
+  <% text1 += user.name + sep + @userURLMap[user].to_s + sep %>
+  <% text1 += "\n" %>        
+<% end %>
+
+<pre>
+<%=text1%>
+</pre>
+
