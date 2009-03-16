@@ -3,7 +3,7 @@
 require 'find'
 require 'yaml'
 require 'time'
-require 'cgi'
+require 'uri'
 
 puts "Content-type: text/plain\n\n"
 
@@ -142,19 +142,19 @@ HERE
   Dir.glob("#{path}/*").sort.each do |subpath|
     filename = File.basename(subpath)
     if subpath =~ /.*otml$/
-      if svn_props = YAML::load(`svn info #{subpath}`)
+      if svn_props = YAML::load(`svn info "#{subpath}"`)
         gmt_time = gmt_time_from_svn_time(svn_props["Last Changed Date"])
       else
         gmt_time = (File.stat(subpath).mtime).gmtime
       end
       # look up the file in the .svn/entries file to gets its svn commit number 
-      svn_status = `svn status -v #{subpath}`
+      svn_status = `svn status -v "#{subpath}"`
       re = / *(\d*) *(\d*)/
       match = re.match(svn_status)
       svn_rev1 = match[1]
       svn_rev2 = match[2]
       example_name = filename[/(.*)\.otml/, 1]
-      otml_url = CGI.escape("http://continuum.concord.org/otrunk/examples/#{subpath}")
+      otml_url = URI.escape("http://continuum.concord.org/otrunk/examples/#{subpath}", /[#{URI::REGEXP::PATTERN::RESERVED}\s]/)
       trac_otml_url = "http://trac.cosmos.concord.org/projects/browser/trunk/common/java/otrunk/otrunk-examples/#{subpath}"
       jnlp_url = jnlp_url_tmpl.sub(/%otml_url%/, otml_url)
       jnlp_author_url = jnlp_url_tmpl_author.sub(/%otml_url%/, otml_url)
