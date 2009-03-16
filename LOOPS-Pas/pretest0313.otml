@@ -1,0 +1,1491 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<otrunk id="2767fe20-6c7d-11dc-8314-0800200c9a66">
+  <imports>
+    <import class="org.concord.data.state.OTDataStore" />
+    <import class="org.concord.data.state.OTDataChannelDescription" />
+    <import class="org.concord.data.state.OTDataField" />
+    <import class="org.concord.data.state.OTDataTable" />
+    <import class="org.concord.datagraph.state.OTDataGraph" />
+    <import class="org.concord.datagraph.state.OTDataAxis" />
+    <import class="org.concord.datagraph.state.OTDataGraphable" />
+    <import class="org.concord.datagraph.state.OTDataCollector" />
+    <import class="org.concord.datagraph.state.OTMultiDataGraph" />
+    <import class="org.concord.datagraph.state.OTPluginView" />
+    <import class="org.concord.datagraph.state.OTDataBarGraphable" />
+    <import class="org.concord.framework.otrunk.view.OTFrame" />
+    <import class="org.concord.framework.otrunk.wrapper.OTBlob" />
+    <import class="org.concord.graph.util.state.OTDrawingTool" />
+    <import class="org.concord.graph.util.state.OTDrawingStamp" />
+    <import class="org.concord.graph.util.state.OTDrawingImageIcon" />
+    <import class="org.concord.graph.util.state.OTDrawingShape" />
+    <import class="org.concord.graph.util.state.OTDrawingTool2" />
+    <import class="org.concord.graph.util.state.OTPointTextLabel" />
+    <import class="org.concord.otrunk.OTInclude" />
+    <import class="org.concord.otrunk.OTSystem" />
+    <import class="org.concord.otrunk.browser.mozswing.OTMozSwing" />
+    <import class="org.concord.otrunk.overlay.OTOverlay" />
+    <import class="org.concord.otrunk.script.ui.OTScriptObject" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariable" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariableComponent" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariableView" />
+    <import class="org.concord.otrunk.script.js.OTJavascript" />
+    <import class="org.concord.otrunk.script.OTScriptEngineBundle" />
+    <import class="org.concord.otrunk.script.OTScriptEngineEntry" />
+    <import class="org.concord.otrunk.udl.OTAuthorNote" />
+    <import class="org.concord.otrunk.udl.OTUDLLabPage" />
+    <import class="org.concord.otrunk.udl.coach.OTUDLCoach" />
+    <import class="org.concord.otrunk.udl.coach.OTUDLCoachGroup" />
+    <import class="org.concord.otrunk.udl.coach.OTUDLCoachStatement" />
+    <import class="org.concord.otrunk.udl.OTUDLMenuRule" />
+    <import class="org.concord.otrunk.udl.document.OTDefinition" />
+    <import class="org.concord.otrunk.udl.document.OTDefinitionList" />
+    <import class="org.concord.otrunk.udl.document.OTDefinitionManager" />
+    <import class="org.concord.otrunk.udl.document.OTGlossary" />
+    <import class="org.concord.otrunk.udl.document.OTUDLCompoundDoc" />
+    <import class="org.concord.otrunk.udl.document.OTUDLDocumentViewConfig" />
+    <import class="org.concord.otrunk.graph.OTDataCollectorViewConfig" />
+    <import class="org.concord.otrunk.udl.question.OTUDLQuestion" />
+    <import class="org.concord.otrunk.udl.question.OTUDLLeveledQuestions" />
+    <import class="org.concord.otrunk.udl.question.OTUDLQuestionViewConfig" />
+    <import class="org.concord.otrunk.udl3.OTUDLMenu" />
+    <import class="org.concord.otrunk.udl3.OTUDLContainer" />
+    <import class="org.concord.otrunk.udl3.OTUDLSection" />
+    <import class="org.concord.otrunk.ui.OTButton" />
+    <import class="org.concord.otrunk.ui.OTCardContainer" />
+    <import class="org.concord.otrunk.ui.OTChoice" />
+    <import class="org.concord.otrunk.ui.OTChoiceMultiple" />
+    <import class="org.concord.otrunk.ui.OTCurriculumUnit" />
+    <import class="org.concord.otrunk.ui.OTImage" />
+    <import class="org.concord.otrunk.ui.OTImageMap" />
+    <import class="org.concord.otrunk.ui.OTLayerContainer" />
+    <import class="org.concord.otrunk.ui.OTModeSwitcher" />
+    <import class="org.concord.otrunk.ui.OTText" />
+    <import class="org.concord.otrunk.ui.OTPlacement" />
+    <import class="org.concord.otrunk.ui.OTPlacementContainer" />
+    <import class="org.concord.otrunk.ui.snapshot.OTSnapshot" />
+    <import class="org.concord.otrunk.ui.snapshot.OTSnapshotButton" />
+    <import class="org.concord.otrunk.ui.snapshot.OTSnapshotAlbum" />
+    <import class="org.concord.otrunk.ui.snapshot.OTSnapshotChooser" />
+    <import class="org.concord.otrunk.ui.swing.OTChoiceViewConfig" />
+    <import class="org.concord.otrunk.util.OTSharingBundle" />
+    <import class="org.concord.otrunk.view.OTObjectEditViewConfig" />
+    <import class="org.concord.otrunk.view.OTViewChild" />
+    <import class="org.concord.otrunk.view.OTViewEntry" />
+    <import class="org.concord.otrunk.view.OTViewBundle" />
+    <import class="org.concord.otrunk.view.OTViewMode" />
+    <import class="org.concord.otrunk.view.document.OTCompoundDoc" />
+    <import class="org.concord.otrunk.view.document.OTCssText" />
+    <import class="org.concord.otrunk.view.prototype.OTPrototypeViewEntry" />
+    <import class="org.concord.otrunk.view.prototype.OTPrototypeEventController" />
+    <import class="org.concord.otrunk.view.prototype.OTPrototypeMapEntry" />
+    <import class="org.concord.otrunknl4.OTNLogoModel" />
+    <import class="org.concord.sensor.state.OTDeviceConfig" />
+    <import class="org.concord.sensor.state.OTExperimentRequest" />
+    <import class="org.concord.sensor.state.OTInterfaceManager" />
+    <import class="org.concord.sensor.state.OTSensorDataProxy" />
+    <import class="org.concord.sensor.state.OTSensorRequest" />
+    <import class="org.concord.sensor.state.OTZeroSensor" />
+    <import class="org.concord.otrunk.udl.OTUDLNavBar" />
+    <import class="org.concord.datagraph.state.OTDataPointLabel" />
+    <import class="org.concord.otrunk.udl.OTZoom" />
+    <import class="org.concord.otrunk.udl.OTZoomTransform" />
+    <import class="org.concord.otrunkmw.OTModelerPage" />
+    <import class="org.concord.otrunkmw.OTMwDataProducer" />
+    <import class="org.concord.otrunkmw.OTMwChannelData" />
+    <import class="org.concord.otrunk.ui.OTSoundPlayer" />
+    <import class="org.concord.otrunk.util.OTReference" />
+    <import class="org.concord.smartgraph.OTSmartGraphTool" />
+    <import class="org.concord.otrunk.script.ui.OTScriptButton" />
+    <import class="org.concord.otrunk.script.jruby.OTJRuby" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariableRealObject" />
+    <import class="org.concord.framework.otrunk.wrapper.OTInt" />
+    <import class="org.concord.framework.otrunk.wrapper.OTBoolean" />
+    <import class="org.concord.otrunk.ui.OTObjectSet" />
+  </imports>
+  <objects>
+    <OTSystem local_id="system">
+      <includes>
+        <OTInclude href="http://continuum.concord.org/otrunk/examples/LOOPS/global-imports/loops-view-bundle.otml" />
+      </includes>
+      <bundles>
+        <object refid="8d880970-c22a-11dc-95ff-0800200c9a66" />
+        <OTScriptEngineBundle>
+          <engines>
+            <OTScriptEngineEntry objectClass="org.concord.otrunk.script.jruby.OTJRuby" engineClass="org.concord.otrunk.script.jruby.OTJRubyEngine" />
+            <OTScriptEngineEntry objectClass="org.concord.otrunk.script.js.OTJavascript" engineClass="org.concord.otrunk.script.js.OTJavascriptEngine" />
+          </engines>
+        </OTScriptEngineBundle>
+        <OTSharingBundle />
+        <OTInterfaceManager>
+          <deviceConfigs>
+            <OTDeviceConfig configString="none" deviceId="10" />
+          </deviceConfigs>
+        </OTInterfaceManager>
+      </bundles>
+      <overlays>
+        <object refid="6cc8e2b0-c44e-11dc-95ff-0800200c9a66" />
+        <object refid="b5d8b4a0-db35-11dc-95ff-0800200c9a66" />
+        <OTOverlay>
+          <deltaObjectMap>
+            <entry key="${authoring_script.js}">
+              <OTJavascript src="http://continuum.concord.org/otrunk/examples/LOOPS/scripts/student_script.js" />
+            </entry>
+          </deltaObjectMap>
+        </OTOverlay>
+      </overlays>
+      <root>
+        <OTCurriculumUnit version="2" name="LOOPS Activity">
+          <activity>
+            <OTUDLSection local_id="section_1">
+              <header>
+                <OTCompoundDoc id="2767fe20-6c7d-11dc-8314-0800200c9a66!/section_1/header" showEditBar="false">
+                  <bodyText>
+                    <div class="title">
+                      LOOPS Pilot Pretest
+                      <br />
+                    </div>
+                  </bodyText>
+                </OTCompoundDoc>
+              </header>
+              <content>
+                <OTCardContainer local_id="activity-card-container" contentsMayScroll="true" loadViewOnlyOnDemand="true">
+                  <cards>
+                    <OTCompoundDoc local_id="page-1" name="1">
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <div class="subtitle">LOOPS Motion Pretest</div>
+                              <br />
+                              <br />
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                    </OTCompoundDoc>
+                    <OTCompoundDoc id="3ee063a8-1004-11de-b868-878d142ae5ae" name="%3ee063a8-1004-11de-b868-878d142ae5ae" showEditBar="true">
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <div class="subtitle">
+                                Question 1.
+                                <br />
+                                The graph below shows Susie’s speed on her bicycle 
+            at different times during the day.
+                                <br />
+                                <br />
+                                Insert Susie Image
+                                <br />
+                                <br />
+                                <object refid="8acdb510-117b-11de-9a2b-a903c22ad834" />
+                                <br />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                        <OTUDLQuestion id="8acdb510-117b-11de-9a2b-a903c22ad834" name="Question" showConvertButton="false">
+                          <prompt>
+                            <OTCompoundDoc>
+                              <bodyText>1.1 At what time is Susie traveling the fastest?</bodyText>
+                            </OTCompoundDoc>
+                          </prompt>
+                          <input>
+                            <OTText text="" />
+                          </input>
+                        </OTUDLQuestion>
+                      </documentRefs>
+                    </OTCompoundDoc>
+                    <OTCompoundDoc id="3c72e3a5-117d-11de-9a2b-a903c22ad834" name="%3c72e3a5-117d-11de-9a2b-a903c22ad834" showEditBar="true">
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <div class="subtitle">
+                                <br />
+                                <object refid="459ced96-117d-11de-9a2b-a903c22ad834" />
+                                <br />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                        <OTUDLQuestion id="459ced96-117d-11de-9a2b-a903c22ad834" name="Question" showConvertButton="false">
+                          <prompt>
+                            <OTCompoundDoc>
+                              <bodyText>1.2 Explain your answer. Use complete sentences.</bodyText>
+                            </OTCompoundDoc>
+                          </prompt>
+                          <input>
+                            <OTText />
+                          </input>
+                        </OTUDLQuestion>
+                      </documentRefs>
+                    </OTCompoundDoc>
+                    <OTCompoundDoc id="342d6a43-1179-11de-aefc-21e108db9c62" name="%342d6a43-1179-11de-aefc-21e108db9c62" showEditBar="true">
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <div class="subtitle">
+                                Question 2
+                                <br />
+                                <br />
+                                <object refid="520b22f4-1179-11de-aefc-21e108db9c62" />
+                                <br />
+                                <br />
+                                <object refid="c9d02915-117d-11de-9a2b-a903c22ad834" />
+                                <br />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                        <OTUDLQuestion id="520b22f4-1179-11de-aefc-21e108db9c62" name="Question" showConvertButton="false">
+                          <prompt>
+                            <OTCompoundDoc>
+                              <bodyText>2.1 Are Speed and Velocity the Same or Different</bodyText>
+                            </OTCompoundDoc>
+                          </prompt>
+                          <input>
+                            <OTChoice name="Multiple choice" alignContent="0">
+                              <choices>
+                                <OTCompoundDoc name="Same">
+                                  <bodyText>Same</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc id="6817ab02-1179-11de-aefc-21e108db9c62" name="Different">
+                                  <bodyText>Different</bodyText>
+                                </OTCompoundDoc>
+                              </choices>
+                            </OTChoice>
+                          </input>
+                          <correctAnswer>
+                            <object refid="6817ab02-1179-11de-aefc-21e108db9c62" />
+                          </correctAnswer>
+                        </OTUDLQuestion>
+                        <OTUDLQuestion id="c9d02915-117d-11de-9a2b-a903c22ad834" name="Question" showConvertButton="false">
+                          <prompt>
+                            <OTCompoundDoc>
+                              <bodyText>Explain your answer</bodyText>
+                            </OTCompoundDoc>
+                          </prompt>
+                          <input>
+                            <OTText />
+                          </input>
+                        </OTUDLQuestion>
+                      </documentRefs>
+                    </OTCompoundDoc>
+                    <OTCompoundDoc id="d74f591b-1179-11de-aefc-21e108db9c62" name="%d74f591b-1179-11de-aefc-21e108db9c62" showEditBar="true">
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <div class="subtitle">
+                                Question 3
+                                <br />
+                                Problem Statement: The mail carrier and a crazy dog begin traveling toward Ms. 
+            Calloway’s house 4:00 pm. The mail carrier starts 1200 meters East 
+            of the house and walks at 2 meters per second. crazy dog starts 
+            3600 meters West of Ms. Calloway’s house and runs at 3 meters per 
+            second.
+                              </div>
+                              <br />
+                              3.1 Draw a picture in the space below to help your friend understand 
+          the problem without reading the problem statement.
+                              <br />
+                              <br />
+                              <object refid="fc43a50c-1179-11de-aefc-21e108db9c62" />
+                              <br />
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                        <OTDrawingTool2 id="fc43a50c-1179-11de-aefc-21e108db9c62" name="Draw tool" />
+                      </documentRefs>
+                    </OTCompoundDoc>
+                    <OTCompoundDoc id="2a4412c1-117a-11de-aefc-21e108db9c62" name="%2a4412c1-117a-11de-aefc-21e108db9c62" showEditBar="true">
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <div class="subtitle">
+                                Question 3
+                                <br />
+                                <object refid="1836e13a-117c-11de-9a2b-a903c22ad834" />
+                                <br />
+                                <br />
+                                <object refid="31f84592-117a-11de-aefc-21e108db9c62" />
+                                <br />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                        <OTUDLQuestion id="1836e13a-117c-11de-9a2b-a903c22ad834" name="Question" showConvertButton="false">
+                          <prompt>
+                            <OTCompoundDoc>
+                              <bodyText>3.2 What time will the mail carrier arrive at Ms. Calloway’s house?</bodyText>
+                            </OTCompoundDoc>
+                          </prompt>
+                          <input>
+                            <OTText />
+                          </input>
+                        </OTUDLQuestion>
+                        <OTUDLQuestion id="31f84592-117a-11de-aefc-21e108db9c62" name="Question" showConvertButton="false">
+                          <prompt>
+                            <OTCompoundDoc>
+                              <bodyText>3.3 Explain your answer. Include any formulas or calculations you used.</bodyText>
+                            </OTCompoundDoc>
+                          </prompt>
+                          <input>
+                            <OTText />
+                          </input>
+                        </OTUDLQuestion>
+                      </documentRefs>
+                    </OTCompoundDoc>
+                    <OTCompoundDoc id="75176cce-1187-11de-bc78-8bfdd61249f5" name="%75176cce-1187-11de-bc78-8bfdd61249f5" showEditBar="true">
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <div class="subtitle">
+                                Question 3
+                                <br />
+                                <object refid="9e2511af-1187-11de-bc78-8bfdd61249f5" />
+                                <br />
+                                <br />
+                                <object refid="a8556816-1187-11de-bc78-8bfdd61249f5" />
+                                <br />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                        <OTUDLQuestion id="9e2511af-1187-11de-bc78-8bfdd61249f5" name="Question" showConvertButton="false">
+                          <prompt>
+                            <OTCompoundDoc>
+                              <bodyText>3.4 How far has the crazy dog traveled when the mail carrier arrives at Ms. Calloway’s house?</bodyText>
+                            </OTCompoundDoc>
+                          </prompt>
+                          <input>
+                            <OTText />
+                          </input>
+                        </OTUDLQuestion>
+                        <OTUDLQuestion id="a8556816-1187-11de-bc78-8bfdd61249f5" name="Question" showConvertButton="false">
+                          <prompt>
+                            <OTCompoundDoc>
+                              <bodyText>I3.5 Explain your answer. Include any formulas or calculations you used.</bodyText>
+                            </OTCompoundDoc>
+                          </prompt>
+                          <input>
+                            <OTText />
+                          </input>
+                        </OTUDLQuestion>
+                      </documentRefs>
+                    </OTCompoundDoc>
+                    <OTCompoundDoc id="1dbb4f06-1189-11de-b312-dd23ca87b0f1" name="%1dbb4f06-1189-11de-b312-dd23ca87b0f1" showEditBar="true">
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <div class="subtitle">Question 3.6</div>
+                              Draw a position versus time graph that shows the mail carrier’s trip 
+          toward Ms. Calloway’s house.
+                              <br />
+                              <br />
+                              <object refid="4ad24707-1189-11de-b312-dd23ca87b0f1" />
+                              <br />
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                        <OTDataCollector id="4ad24707-1189-11de-b312-dd23ca87b0f1" name="Data graph" title="Position Time graph">
+                          <source>
+                            <OTDataGraphable name="Data Graph" connectPoints="true" controllable="true" yColumn="1" drawMarks="false" color="16711680" xColumn="0" lineWidth="2.0" visible="true">
+                              <dataStore>
+                                <OTDataStore />
+                              </dataStore>
+                            </OTDataGraphable>
+                          </source>
+                          <xDataAxis>
+                            <OTDataAxis max="60.0" units="s" min="0.0" label="Time">
+                              <customGridLabels />
+                            </OTDataAxis>
+                          </xDataAxis>
+                          <yDataAxis>
+                            <OTDataAxis max="40.0" units="" min="-0.0" label="Position">
+                              <customGridLabels />
+                            </OTDataAxis>
+                          </yDataAxis>
+                        </OTDataCollector>
+                      </documentRefs>
+                    </OTCompoundDoc>
+                    <OTCompoundDoc id="7c5b8d4c-1189-11de-b312-dd23ca87b0f1" name="%7c5b8d4c-1189-11de-b312-dd23ca87b0f1" showEditBar="true">
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <div class="subtitle">Question 3.7</div>
+                              Draw a position versus time graph that shows the mail carrier’s
+                              <b>and</b>
+                              the crazy dog’s trips toward 
+Ms. Calloway’s house.
+                              <br />
+                              <br />
+                              <object refid="9cae168d-1189-11de-b312-dd23ca87b0f1" />
+                              <br />
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                        <OTDataCollector id="9cae168d-1189-11de-b312-dd23ca87b0f1" name="Data graph" title="Position Time graph">
+                          <source>
+                            <OTDataGraphable name="Data Graph" connectPoints="true" controllable="true" yColumn="1" drawMarks="false" color="16711680" xColumn="0" lineWidth="2.0" visible="true">
+                              <dataStore>
+                                <OTDataStore />
+                              </dataStore>
+                            </OTDataGraphable>
+                          </source>
+                          <xDataAxis>
+                            <OTDataAxis max="60.0" units="s" min="0.0" label="Time">
+                              <customGridLabels />
+                            </OTDataAxis>
+                          </xDataAxis>
+                          <yDataAxis>
+                            <OTDataAxis max="40.0" units="" min="-0.0" label="Position">
+                              <customGridLabels />
+                            </OTDataAxis>
+                          </yDataAxis>
+                        </OTDataCollector>
+                      </documentRefs>
+                    </OTCompoundDoc>
+                    <OTCompoundDoc id="30412223-117e-11de-bc78-8bfdd61249f5" name="%30412223-117e-11de-bc78-8bfdd61249f5" showEditBar="true">
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <div class="subtitle">
+                                The graph shows the motion of two soccer players, Jim and Ken, who 
+            each move
+in a straight line on the field. The graph shows their 
+            POSITION versus time.
+Jim’s graph is on top, Ken’s graph is on the 
+            bottom.
+                                <br />
+                                Insert Image
+                                <br />
+                                <br />
+                                <object refid="568ac4e4-117e-11de-bc78-8bfdd61249f5" />
+                                <br />
+                                <br />
+                                <object refid="ba0ba3b8-117e-11de-bc78-8bfdd61249f5" />
+                                <br />
+                                <br />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                        <OTUDLQuestion id="568ac4e4-117e-11de-bc78-8bfdd61249f5" name="Question" showConvertButton="false">
+                          <prompt>
+                            <OTCompoundDoc>
+                              <bodyText>During which time segments does Jim travel faster than Ken? Check ALL that apply</bodyText>
+                            </OTCompoundDoc>
+                          </prompt>
+                          <input>
+                            <OTChoiceMultiple name="Multiple choice (check boxes)" alignContent="0">
+                              <choices>
+                                <OTCompoundDoc id="7980f6fa-117e-11de-bc78-8bfdd61249f5" name="A">
+                                  <bodyText>A</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="B">
+                                  <bodyText>B</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="C">
+                                  <bodyText>C</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc id="79811e0d-117e-11de-bc78-8bfdd61249f5" name="D">
+                                  <bodyText>D</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="E">
+                                  <bodyText>E</bodyText>
+                                </OTCompoundDoc>
+                              </choices>
+                            </OTChoiceMultiple>
+                          </input>
+                          <correctAnswer>
+                            <OTObjectSet>
+                              <objects>
+                                <object refid="7980f6fa-117e-11de-bc78-8bfdd61249f5" />
+                                <object refid="79811e0d-117e-11de-bc78-8bfdd61249f5" />
+                              </objects>
+                            </OTObjectSet>
+                          </correctAnswer>
+                        </OTUDLQuestion>
+                        <OTUDLQuestion id="ba0ba3b8-117e-11de-bc78-8bfdd61249f5" name="Question" showConvertButton="false">
+                          <prompt>
+                            <OTCompoundDoc>
+                              <bodyText>Explain your answer</bodyText>
+                            </OTCompoundDoc>
+                          </prompt>
+                          <input>
+                            <OTText />
+                          </input>
+                        </OTUDLQuestion>
+                      </documentRefs>
+                    </OTCompoundDoc>
+                    <OTCompoundDoc id="c258941f-117e-11de-bc78-8bfdd61249f5" name="%c258941f-117e-11de-bc78-8bfdd61249f5" showEditBar="true">
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <div class="subtitle">
+                                Second part of question
+                                <br />
+                                Insert image again and need correct answers
+                                <br />
+                                <br />
+                                <object refid="2b27a22c-117f-11de-bc78-8bfdd61249f5" />
+                                <br />
+                                <br />
+                                <object refid="6d20fa30-117f-11de-bc78-8bfdd61249f5" />
+                                <br />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                        <OTUDLQuestion id="2b27a22c-117f-11de-bc78-8bfdd61249f5" name="Question" showConvertButton="false">
+                          <prompt>
+                            <OTCompoundDoc>
+                              <bodyText>During which time segments do Jim and Ken move in the same direction? Check ALL that apply</bodyText>
+                            </OTCompoundDoc>
+                          </prompt>
+                          <input>
+                            <OTChoiceMultiple name="Multiple choice (check boxes)" alignContent="0">
+                              <choices>
+                                <OTCompoundDoc name="A">
+                                  <bodyText>A</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="B">
+                                  <bodyText>B</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="C">
+                                  <bodyText>C</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="D">
+                                  <bodyText>D</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="E">
+                                  <bodyText>E</bodyText>
+                                </OTCompoundDoc>
+                              </choices>
+                            </OTChoiceMultiple>
+                          </input>
+                        </OTUDLQuestion>
+                        <OTUDLQuestion id="6d20fa30-117f-11de-bc78-8bfdd61249f5" name="Question" showConvertButton="false">
+                          <prompt>
+                            <OTCompoundDoc>
+                              <bodyText>IExplain your answer</bodyText>
+                            </OTCompoundDoc>
+                          </prompt>
+                          <input>
+                            <OTText />
+                          </input>
+                        </OTUDLQuestion>
+                      </documentRefs>
+                    </OTCompoundDoc>
+                    <OTCompoundDoc id="7742d1a7-117f-11de-bc78-8bfdd61249f5" name="%7742d1a7-117f-11de-bc78-8bfdd61249f5" showEditBar="true">
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <div class="subtitle">
+                                Some researchers are using motion sensing devices to study the 
+            motion patterns 
+of wild animals. The devices provide graphs of an 
+            animal’s VELOCITY vs. time 
+as it tracks its prey. The graph below 
+            shows a segment of an animal’s 
+VELOCITY.
+                                <br />
+                                Insert Image
+                                <br />
+                                <br />
+                                <object refid="ae526e38-117f-11de-bc78-8bfdd61249f5" />
+                                <br />
+                                <br />
+                                <object refid="f6af5d22-117f-11de-bc78-8bfdd61249f5" />
+                                <br />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                        <OTUDLQuestion id="ae526e38-117f-11de-bc78-8bfdd61249f5" name="Question" showConvertButton="false">
+                          <prompt>
+                            <OTCompoundDoc>
+                              <bodyText>Which of the following describes the motion of the animal during segment D?  Check ONLY one</bodyText>
+                            </OTCompoundDoc>
+                          </prompt>
+                          <input>
+                            <OTChoice name="Multiple choice" alignContent="0">
+                              <choices>
+                                <OTCompoundDoc id="e131808a-117f-11de-bc78-8bfdd61249f5" name="speeding up">
+                                  <bodyText>speeding up</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="slowing down">
+                                  <bodyText>slowing down</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="moving at constant speed">
+                                  <bodyText>moving at constant speed</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="not moving">
+                                  <bodyText>not moving</bodyText>
+                                </OTCompoundDoc>
+                              </choices>
+                            </OTChoice>
+                          </input>
+                          <correctAnswer>
+                            <object refid="e131808a-117f-11de-bc78-8bfdd61249f5" />
+                          </correctAnswer>
+                        </OTUDLQuestion>
+                        <OTUDLQuestion id="f6af5d22-117f-11de-bc78-8bfdd61249f5" name="Question" showConvertButton="false">
+                          <prompt>
+                            <OTCompoundDoc>
+                              <bodyText>Explain your answer</bodyText>
+                            </OTCompoundDoc>
+                          </prompt>
+                          <input>
+                            <OTText />
+                          </input>
+                        </OTUDLQuestion>
+                      </documentRefs>
+                    </OTCompoundDoc>
+                    <OTCompoundDoc id="00f47409-1180-11de-bc78-8bfdd61249f5" name="%00f47409-1180-11de-bc78-8bfdd61249f5" showEditBar="true">
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <div class="subtitle">
+                                Insert image again
+                                <br />
+                                <br />
+                                <object refid="1e92d9ca-1180-11de-bc78-8bfdd61249f5" />
+                                <br />
+                                <br />
+                                <object refid="54a3f234-1180-11de-bc78-8bfdd61249f5" />
+                                <br />
+                              </div>
+                              New page content
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                        <OTUDLQuestion id="1e92d9ca-1180-11de-bc78-8bfdd61249f5" name="Question" showConvertButton="false">
+                          <prompt>
+                            <OTCompoundDoc>
+                              <bodyText>Which of the following describes the motion of the animal during segment C? Check only one</bodyText>
+                            </OTCompoundDoc>
+                          </prompt>
+                          <input>
+                            <OTChoice name="Multiple choice" alignContent="0">
+                              <choices>
+                                <OTCompoundDoc name="speeding up">
+                                  <bodyText>speeding up</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="slowing down">
+                                  <bodyText>slowing down</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="moving at constant speed">
+                                  <bodyText>moving at constant speed</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc id="4ee6ad5f-1180-11de-bc78-8bfdd61249f5" name="not moving">
+                                  <bodyText>not moving</bodyText>
+                                </OTCompoundDoc>
+                              </choices>
+                            </OTChoice>
+                          </input>
+                          <correctAnswer>
+                            <object refid="4ee6ad5f-1180-11de-bc78-8bfdd61249f5" />
+                          </correctAnswer>
+                        </OTUDLQuestion>
+                        <OTUDLQuestion id="54a3f234-1180-11de-bc78-8bfdd61249f5" name="Question" showConvertButton="false">
+                          <prompt>
+                            <OTCompoundDoc>
+                              <bodyText>Explain your answer</bodyText>
+                            </OTCompoundDoc>
+                          </prompt>
+                          <input>
+                            <OTText />
+                          </input>
+                        </OTUDLQuestion>
+                      </documentRefs>
+                    </OTCompoundDoc>
+                    <OTCompoundDoc id="586d1d52-1182-11de-bc78-8bfdd61249f5" name="%586d1d52-1182-11de-bc78-8bfdd61249f5" showEditBar="true">
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <div class="subtitle">
+                                A car starts at point A and
+                                <u>speeds up</u>
+                                at a constant rate in 
+            the positive direction until it reaches point B in 3 seconds, 
+            where it suddenly stops. The car
+                                <u>waits</u>
+                                at point B for 3 
+            seconds. It then travels at
+                                <u>constant speed</u>
+                                in the opposite 
+            direction, reaching point A again in another 3 seconds.
+                                <br />
+                                Fix 
+            underline ADD CAR image
+                                <br />
+                                <br />
+                                Sketch a POSITION-TIME graph of the 
+            motion during these 9 seconds.
+                                <br />
+                                <br />
+                                <object refid="5df659d3-1182-11de-bc78-8bfdd61249f5" />
+                                <br />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                        <OTDataCollector id="5df659d3-1182-11de-bc78-8bfdd61249f5" name="Data graph" title="Position Time Graph" showControlBar="true" useDefaultToolBar="true">
+                          <source>
+                            <OTDataGraphable name="Data Graph" connectPoints="true" controllable="true" yColumn="1" drawMarks="false" color="16711680" xColumn="0" lineWidth="2.0" visible="true">
+                              <dataStore>
+                                <OTDataStore numberChannels="2" />
+                              </dataStore>
+                            </OTDataGraphable>
+                          </source>
+                          <xDataAxis>
+                            <OTDataAxis max="60.056606" units="s" min="0.056603774" label="Time" labelFormat="Engineering">
+                              <customGridLabels />
+                            </OTDataAxis>
+                          </xDataAxis>
+                          <yDataAxis>
+                            <OTDataAxis max="16.311983" units="" min="-23.688017" label="Position" labelFormat="Engineering">
+                              <customGridLabels />
+                            </OTDataAxis>
+                          </yDataAxis>
+                        </OTDataCollector>
+                      </documentRefs>
+                    </OTCompoundDoc>
+                    <OTCompoundDoc id="5fbfd9d1-1183-11de-bc78-8bfdd61249f5" name="%5fbfd9d1-1183-11de-bc78-8bfdd61249f5" showEditBar="true">
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <div class="subtitle">
+                                Insert Car image again
+                                <br />
+                                Sketch a VELOCITY-TIME graph of the motion during these 9 seconds.
+                                <br />
+                                <br />
+                                <object refid="80796242-1183-11de-bc78-8bfdd61249f5" />
+                                <br />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                        <OTDataCollector id="80796242-1183-11de-bc78-8bfdd61249f5" name="Data graph" title="Velocity Time Graph">
+                          <source>
+                            <OTDataGraphable name="Data Graph" connectPoints="true" controllable="true" yColumn="1" drawMarks="false" color="16711680" xColumn="0" lineWidth="2.0" visible="true">
+                              <dataStore>
+                                <OTDataStore />
+                              </dataStore>
+                            </OTDataGraphable>
+                          </source>
+                          <xDataAxis>
+                            <OTDataAxis max="60.0" units="s" min="0.0" label="Time">
+                              <customGridLabels />
+                            </OTDataAxis>
+                          </xDataAxis>
+                          <yDataAxis>
+                            <OTDataAxis max="40.0" units="" min="-0.0" label="Velocity">
+                              <customGridLabels />
+                            </OTDataAxis>
+                          </yDataAxis>
+                        </OTDataCollector>
+                      </documentRefs>
+                    </OTCompoundDoc>
+                    <OTCompoundDoc id="b47fdd87-1183-11de-bc78-8bfdd61249f5" name="%b47fdd87-1183-11de-bc78-8bfdd61249f5" showEditBar="true">
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <div class="subtitle">New Question</div>
+                              Vijay and Wei-Lynn have a 50 meter race. The finish line is at 50 
+          meters as shown in the graph below. They do not start a t the same 
+          position. Vijay starts 50 meters North of the finish line and 
+          Wei-Lynn starts 50 meters South of the finish line . The graph below 
+          shows the first 30 meters of both Vijay's and Wei-Lynn's runs.
+                              <br />
+                              <b>Insert Image</b>
+                              <br />
+                              <br />
+                              <object refid="b01f9b40-1184-11de-bc78-8bfdd61249f5" />
+                              <br />
+                              <br />
+                              <object refid="f0f7a4b3-1184-11de-bc78-8bfdd61249f5" />
+                              <br />
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                        <OTUDLQuestion id="b01f9b40-1184-11de-bc78-8bfdd61249f5" name="Question" showConvertButton="false">
+                          <prompt>
+                            <OTCompoundDoc>
+                              <bodyText>Who do you predict to win the race?</bodyText>
+                            </OTCompoundDoc>
+                          </prompt>
+                          <input>
+                            <OTChoice name="Multiple choice" alignContent="0">
+                              <choices>
+                                <OTCompoundDoc name="Wei-Lynn">
+                                  <bodyText>Wei-Lynn</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc id="d464464e-1184-11de-bc78-8bfdd61249f5" name="Vijay">
+                                  <bodyText>Vijay</bodyText>
+                                </OTCompoundDoc>
+                              </choices>
+                            </OTChoice>
+                          </input>
+                          <correctAnswer>
+                            <object refid="d464464e-1184-11de-bc78-8bfdd61249f5" />
+                          </correctAnswer>
+                        </OTUDLQuestion>
+                        <OTUDLQuestion id="f0f7a4b3-1184-11de-bc78-8bfdd61249f5" name="Question" showConvertButton="false">
+                          <prompt>
+                            <OTCompoundDoc>
+                              <bodyText>Explain your choice</bodyText>
+                            </OTCompoundDoc>
+                          </prompt>
+                          <input>
+                            <OTText />
+                          </input>
+                        </OTUDLQuestion>
+                      </documentRefs>
+                    </OTCompoundDoc>
+                    <OTCompoundDoc id="fb4e6eda-1184-11de-bc78-8bfdd61249f5" name="%fb4e6eda-1184-11de-bc78-8bfdd61249f5" showEditBar="true">
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <div class="subtitle">
+                                New Question
+                                <br />
+                                <br />
+                                <object refid="1b16444b-1185-11de-bc78-8bfdd61249f5" />
+                                <br />
+                                <br />
+                                <object refid="45b7f69e-1185-11de-bc78-8bfdd61249f5" />
+                                <br />
+                              </div>
+                              <br />
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                        <OTUDLQuestion id="1b16444b-1185-11de-bc78-8bfdd61249f5" name="Question" showConvertButton="false">
+                          <prompt>
+                            <OTCompoundDoc>
+                              <bodyText>Are speed and velocity the same or different?  (Choose one)</bodyText>
+                            </OTCompoundDoc>
+                          </prompt>
+                          <input>
+                            <OTChoice name="Multiple choice" alignContent="0">
+                              <choices>
+                                <OTCompoundDoc name="same">
+                                  <bodyText>same</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc id="37e04319-1185-11de-bc78-8bfdd61249f5" name="different">
+                                  <bodyText>different</bodyText>
+                                </OTCompoundDoc>
+                              </choices>
+                            </OTChoice>
+                          </input>
+                          <correctAnswer>
+                            <object refid="37e04319-1185-11de-bc78-8bfdd61249f5" />
+                          </correctAnswer>
+                        </OTUDLQuestion>
+                        <OTUDLQuestion id="45b7f69e-1185-11de-bc78-8bfdd61249f5" name="Question" showConvertButton="false">
+                          <prompt>
+                            <OTCompoundDoc>
+                              <bodyText>Explain your answer. Give one example. Use complete sentences.</bodyText>
+                            </OTCompoundDoc>
+                          </prompt>
+                          <input>
+                            <OTText />
+                          </input>
+                        </OTUDLQuestion>
+                      </documentRefs>
+                    </OTCompoundDoc>
+                    <OTCompoundDoc id="4d20a085-1185-11de-bc78-8bfdd61249f5" name="%4d20a085-1185-11de-bc78-8bfdd61249f5" showEditBar="true">
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <div class="subtitle">Carolyn Question  (can graphics be answer choices)</div>
+                              Carolyn walks a half mile to school. One morning, halfway to school, 
+          she stopped to watch a bird building a nest. When she realized she 
+          was late, she ran the rest of the way to school to avoid being 
+          marked late.  INSERT Graphics  Which graph below shows Carolyn’s 
+          speed during her walk to school?
+                              <br />
+                              <br />
+                              <object refid="0df7b146-1186-11de-bc78-8bfdd61249f5" />
+                              <br />
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                        <OTUDLQuestion id="0df7b146-1186-11de-bc78-8bfdd61249f5" name="Question" showConvertButton="false">
+                          <prompt>
+                            <OTCompoundDoc>
+                              <bodyText>Which graph shows Carolyn’s speed during her walk to school?  CHECK correct answer</bodyText>
+                            </OTCompoundDoc>
+                          </prompt>
+                          <input>
+                            <OTChoice name="Multiple choice" alignContent="0">
+                              <choices>
+                                <OTCompoundDoc name="A">
+                                  <bodyText>A</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="fred &lt;img src=&quot;images/animal.png&quot;/&gt;">
+                                  <bodyText>
+                                    fred
+                                    <img src="images/animal.png" />
+                                  </bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="B">
+                                  <bodyText>B</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="C">
+                                  <bodyText>C</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="D">
+                                  <bodyText>D</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="E">
+                                  <bodyText>E</bodyText>
+                                </OTCompoundDoc>
+                              </choices>
+                            </OTChoice>
+                          </input>
+                          <correctAnswer>
+                            <OTCompoundDoc id="4478545f-1186-11de-bc78-8bfdd61249f5" name="D">
+                              <bodyText>D</bodyText>
+                            </OTCompoundDoc>
+                          </correctAnswer>
+                        </OTUDLQuestion>
+                      </documentRefs>
+                    </OTCompoundDoc>
+                    <OTCompoundDoc id="7b51ecd5-1186-11de-bc78-8bfdd61249f5" name="%7b51ecd5-1186-11de-bc78-8bfdd61249f5" showEditBar="true">
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <div class="subtitle">Kaitlyn Question (can graphics be answers)</div>
+                              Kaitlyn is watching a wind-up toy walking across a table. She 
+          observes that the toy covers 1 cm every second for 10 seconds. Which 
+          graph below do you think most closely represents the toy’s journey 
+          across the table?
+                              <br />
+                              <b>Insert Image</b>
+                              <br />
+                              <br />
+                              <object refid="b396fc26-1186-11de-bc78-8bfdd61249f5" />
+                              <br />
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                        <OTUDLQuestion id="b396fc26-1186-11de-bc78-8bfdd61249f5" name="Question" showConvertButton="false">
+                          <prompt>
+                            <OTCompoundDoc>
+                              <bodyText>Which graph do you think most closely represents the toy’s journey across the table?</bodyText>
+                            </OTCompoundDoc>
+                          </prompt>
+                          <input>
+                            <OTChoice name="Multiple choice" alignContent="0">
+                              <choices>
+                                <OTCompoundDoc name="A">
+                                  <bodyText>A</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc id="c585225d-1186-11de-bc78-8bfdd61249f5" name="B">
+                                  <bodyText>B</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="C">
+                                  <bodyText>C</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="D">
+                                  <bodyText>D</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="E">
+                                  <bodyText>E</bodyText>
+                                </OTCompoundDoc>
+                              </choices>
+                            </OTChoice>
+                          </input>
+                          <correctAnswer>
+                            <object refid="c585225d-1186-11de-bc78-8bfdd61249f5" />
+                          </correctAnswer>
+                        </OTUDLQuestion>
+                      </documentRefs>
+                    </OTCompoundDoc>
+                    <OTCompoundDoc id="02fe7cab-11a2-11de-8d8c-67710b227609" name="%02fe7cab-11a2-11de-8d8c-67710b227609" showEditBar="true">
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <div class="subtitle">Please show me how to insert an image</div>
+                              <img src="images/animal.png" />
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                    </OTCompoundDoc>
+                  </cards>
+                  <currentCard>
+                    <object refid="4d20a085-1185-11de-bc78-8bfdd61249f5" />
+                  </currentCard>
+                  <viewedCards>
+                    <object refid="${page-1}" />
+                    <object refid="3ee063a8-1004-11de-b868-878d142ae5ae" />
+                    <OTCompoundDoc id="08e27fb2-1179-11de-aefc-21e108db9c62" name="%08e27fb2-1179-11de-aefc-21e108db9c62" showEditBar="true">
+                      <bodyText>
+                        <object refid="b2784767-117b-11de-9a2b-a903c22ad834" />
+                        <br />
+                        <br />
+                        <object refid="078367ce-117d-11de-9a2b-a903c22ad834" />
+                        <br />
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <br />
+                              <br />
+                              <br />
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                        <OTUDLQuestion id="b2784767-117b-11de-9a2b-a903c22ad834" name="Question" showConvertButton="false">
+                          <prompt>
+                            <OTCompoundDoc>
+                              <bodyText>1.2 Explain your answer. Use complete sentences.</bodyText>
+                            </OTCompoundDoc>
+                          </prompt>
+                          <input>
+                            <OTText />
+                          </input>
+                        </OTUDLQuestion>
+                        <OTUDLQuestion id="078367ce-117d-11de-9a2b-a903c22ad834" name="Question" showConvertButton="false">
+                          <prompt>
+                            <OTCompoundDoc>
+                              <bodyText>Insert question here</bodyText>
+                            </OTCompoundDoc>
+                          </prompt>
+                          <input>
+                            <OTText />
+                          </input>
+                        </OTUDLQuestion>
+                      </documentRefs>
+                    </OTCompoundDoc>
+                    <object refid="342d6a43-1179-11de-aefc-21e108db9c62" />
+                    <object refid="d74f591b-1179-11de-aefc-21e108db9c62" />
+                    <object refid="2a4412c1-117a-11de-aefc-21e108db9c62" />
+                    <OTCompoundDoc id="418941d9-117a-11de-aefc-21e108db9c62" name="%418941d9-117a-11de-aefc-21e108db9c62" showEditBar="true">
+                      <bodyText>
+                        <object refid="526c127a-117a-11de-aefc-21e108db9c62" />
+                        <br />
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <div class="subtitle" />
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                        <OTUDLQuestion id="526c127a-117a-11de-aefc-21e108db9c62" name="Question" showConvertButton="false">
+                          <prompt>
+                            <OTCompoundDoc>
+                              <bodyText>3.3 Explain your answer. Include any formulas or calculations you used.</bodyText>
+                            </OTCompoundDoc>
+                          </prompt>
+                          <input>
+                            <OTText />
+                          </input>
+                        </OTUDLQuestion>
+                      </documentRefs>
+                    </OTCompoundDoc>
+                    <OTCompoundDoc id="57fb4271-117a-11de-aefc-21e108db9c62" name="%57fb4271-117a-11de-aefc-21e108db9c62" showEditBar="true">
+                      <bodyText>
+                        <object refid="6cf76be2-117a-11de-aefc-21e108db9c62" />
+                        <br />
+                        <br />
+                        <object refid="9d836672-117a-11de-aefc-21e108db9c62" />
+                        <br />
+                      </bodyText>
+                      <documentRefs>
+                        <OTUDLQuestion id="6cf76be2-117a-11de-aefc-21e108db9c62" name="Question" showConvertButton="false">
+                          <prompt>
+                            <OTCompoundDoc>
+                              <bodyText>3.4 How far has the crazy dog traveled when the mail carrier arrives at Ms. Calloway’s house?</bodyText>
+                            </OTCompoundDoc>
+                          </prompt>
+                          <input>
+                            <OTText text="" />
+                          </input>
+                        </OTUDLQuestion>
+                        <OTUDLQuestion id="9d836672-117a-11de-aefc-21e108db9c62" name="Question" showConvertButton="false">
+                          <prompt>
+                            <OTCompoundDoc>
+                              <bodyText>3.5 Explain your answer. Include any formulas or calculations you used.</bodyText>
+                            </OTCompoundDoc>
+                          </prompt>
+                          <input>
+                            <OTText />
+                          </input>
+                        </OTUDLQuestion>
+                      </documentRefs>
+                    </OTCompoundDoc>
+                    <OTCompoundDoc id="743e8509-117a-11de-aefc-21e108db9c62" name="%743e8509-117a-11de-aefc-21e108db9c62" showEditBar="true">
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <div class="subtitle">New page</div>
+                              New page content
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                    </OTCompoundDoc>
+                    <OTCompoundDoc id="ae024529-117a-11de-aefc-21e108db9c62" name="%ae024529-117a-11de-aefc-21e108db9c62" showEditBar="true">
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <div class="subtitle">New page</div>
+                              New page content
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                    </OTCompoundDoc>
+                    <OTCompoundDoc id="ae24732a-117a-11de-aefc-21e108db9c62" name="%ae24732a-117a-11de-aefc-21e108db9c62" showEditBar="true">
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <div class="subtitle">
+                                3.6  Draw a position versus time graph that shows the mail 
+            carrier’s trip toward Ms. Calloway’s house.
+                                <br />
+                                <object refid="b70f784b-117a-11de-aefc-21e108db9c62" />
+                                <br />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                        <OTDrawingTool2 id="b70f784b-117a-11de-aefc-21e108db9c62" name="Draw tool" />
+                      </documentRefs>
+                    </OTCompoundDoc>
+                    <OTCompoundDoc id="c2499d8c-117a-11de-aefc-21e108db9c62" name="%c2499d8c-117a-11de-aefc-21e108db9c62" showEditBar="true">
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <div class="subtitle">
+                                3.7  Draw a position versus time graph that shows the mail 
+            carrier’s and the crazy dog’s trips toward Ms. Calloway’s house
+                                <br />
+                                <object refid="ca1c06bd-117a-11de-aefc-21e108db9c62" />
+                                <br />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                        <OTDrawingTool2 id="ca1c06bd-117a-11de-aefc-21e108db9c62" name="Draw tool">
+                          <graphables>
+                            <OTDrawingShape type="" fillType="clear" x="Infinity" y="Infinity" width="0.0" height="0.0" color="0x000000" strokeWidth="2.0" />
+                          </graphables>
+                        </OTDrawingTool2>
+                      </documentRefs>
+                    </OTCompoundDoc>
+                    <object refid="3c72e3a5-117d-11de-9a2b-a903c22ad834" />
+                    <object refid="30412223-117e-11de-bc78-8bfdd61249f5" />
+                    <object refid="c258941f-117e-11de-bc78-8bfdd61249f5" />
+                    <object refid="7742d1a7-117f-11de-bc78-8bfdd61249f5" />
+                    <object refid="00f47409-1180-11de-bc78-8bfdd61249f5" />
+                    <OTCompoundDoc name="%80d98aeb-1180-11de-bc78-8bfdd61249f5" showEditBar="true">
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <div class="subtitle">
+                                Car question
+                                <br />
+                                A car starts at point A and
+                                <u>speeds up</u>
+                                at a 
+            constant rate in the positive direction until it reaches point B 
+            in 3 seconds, where it suddenly stops. The car
+                                <u>waits</u>
+                                at 
+            point B for 3 seconds. It then travels at
+                                <u>constant speed</u>
+                                in 
+            the opposite direction, reaching point A again in another 3 
+            seconds.
+                                <br />
+                                Insert car image
+                                <br />
+                                Sketch a POSITION-TIME graph of 
+            the motion during these 9 seconds. (background can you add)
+                                <br />
+                                <br />
+                                <object refid="39e8c45c-1182-11de-bc78-8bfdd61249f5" />
+                                <br />
+                              </div>
+                              New page content
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                        <OTDrawingTool2 id="39e8c45c-1182-11de-bc78-8bfdd61249f5" name="Draw tool">
+                          <graphables>
+                            <OTDrawingShape type="" fillType="clear" x="Infinity" y="Infinity" width="0.0" height="0.0" color="0x000000" strokeWidth="2.0" />
+                            <OTDrawingShape type="" fillType="clear" x="Infinity" y="Infinity" width="0.0" height="0.0" color="0x000000" strokeWidth="2.0" />
+                          </graphables>
+                        </OTDrawingTool2>
+                      </documentRefs>
+                    </OTCompoundDoc>
+                    <object refid="586d1d52-1182-11de-bc78-8bfdd61249f5" />
+                    <object refid="5fbfd9d1-1183-11de-bc78-8bfdd61249f5" />
+                    <object refid="b47fdd87-1183-11de-bc78-8bfdd61249f5" />
+                    <object refid="fb4e6eda-1184-11de-bc78-8bfdd61249f5" />
+                    <object refid="4d20a085-1185-11de-bc78-8bfdd61249f5" />
+                    <object refid="7b51ecd5-1186-11de-bc78-8bfdd61249f5" />
+                    <OTCompoundDoc id="d1b5dca5-1186-11de-bc78-8bfdd61249f5" name="%d1b5dca5-1186-11de-bc78-8bfdd61249f5" showEditBar="true">
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <div class="subtitle">Please Show me how to add an image</div>
+                              New page content
+                              <br />
+                              <object refid="dcf2f42e-11a1-11de-8d8c-67710b227609" />
+                              <br />
+                              <br />
+                              <object refid="f3acfa43-11a1-11de-8d8c-67710b227609" />
+                              <br />
+                              <br />
+                              <object refid="b97542a9-11a1-11de-8d8c-67710b227609" />
+                              <br />
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                        <OTCompoundDoc id="dcf2f42e-11a1-11de-8d8c-67710b227609" name="Inner pages" showEditBar="false">
+                          <documentRefs>
+                            <OTCardContainer id="dcf31b3f-11a1-11de-8d8c-67710b227609" contentsMayScroll="false" loadViewOnlyOnDemand="true" closeViewOnExit="true">
+                              <cards>
+                                <OTUDLCompoundDoc id="dcf31b41-11a1-11de-8d8c-67710b227609">
+                                  <bodyText />
+                                </OTUDLCompoundDoc>
+                              </cards>
+                              <currentCard>
+                                <object refid="dcf31b41-11a1-11de-8d8c-67710b227609" />
+                              </currentCard>
+                              <viewedCards>
+                                <object refid="dcf31b41-11a1-11de-8d8c-67710b227609" />
+                              </viewedCards>
+                            </OTCardContainer>
+                            <OTUDLMenu id="dcf31b40-11a1-11de-8d8c-67710b227609" showBorder="false">
+                              <cardContainer>
+                                <object refid="dcf31b3f-11a1-11de-8d8c-67710b227609" />
+                              </cardContainer>
+                              <menuRule>
+                                <OTUDLMenuRule jumpToViewedCard="true" stepAhead="true" />
+                              </menuRule>
+                            </OTUDLMenu>
+                          </documentRefs>
+                          <bodyText>
+                            <div style="border-width:1px; border-color:black; border-style:solid; margin: 5px; padding:2px;">
+                              <object refid="dcf31b3f-11a1-11de-8d8c-67710b227609" />
+                              <br />
+                              <object refid="dcf31b40-11a1-11de-8d8c-67710b227609" viewId="29dc5ef0-c453-11dc-95ff-0800200c9a66" />
+                            </div>
+                          </bodyText>
+                        </OTCompoundDoc>
+                        <OTUDLLeveledQuestions id="f3acfa43-11a1-11de-8d8c-67710b227609" name="Leveled questions">
+                          <questions>
+                            <OTUDLQuestion name="L5">
+                              <prompt>
+                                <OTCompoundDoc>
+                                  <bodyText>Insert question here</bodyText>
+                                </OTCompoundDoc>
+                              </prompt>
+                              <input>
+                                <OTText />
+                              </input>
+                            </OTUDLQuestion>
+                            <OTUDLQuestion name="L4">
+                              <prompt>
+                                <OTCompoundDoc>
+                                  <bodyText>Insert question here</bodyText>
+                                </OTCompoundDoc>
+                              </prompt>
+                              <input>
+                                <OTText />
+                              </input>
+                            </OTUDLQuestion>
+                            <OTUDLQuestion name="L3">
+                              <prompt>
+                                <OTCompoundDoc>
+                                  <bodyText>Insert question here</bodyText>
+                                </OTCompoundDoc>
+                              </prompt>
+                              <input>
+                                <OTText />
+                              </input>
+                            </OTUDLQuestion>
+                            <OTUDLQuestion name="L2">
+                              <prompt>
+                                <OTCompoundDoc>
+                                  <bodyText>Insert question here</bodyText>
+                                </OTCompoundDoc>
+                              </prompt>
+                              <input>
+                                <OTText />
+                              </input>
+                            </OTUDLQuestion>
+                            <OTUDLQuestion name="L1">
+                              <prompt>
+                                <OTCompoundDoc>
+                                  <bodyText>Insert question here</bodyText>
+                                </OTCompoundDoc>
+                              </prompt>
+                              <input>
+                                <OTText />
+                              </input>
+                            </OTUDLQuestion>
+                          </questions>
+                        </OTUDLLeveledQuestions>
+                        <OTText id="b97542a9-11a1-11de-8d8c-67710b227609" name="Text field" rows="1" />
+                      </documentRefs>
+                    </OTCompoundDoc>
+                    <object refid="75176cce-1187-11de-bc78-8bfdd61249f5" />
+                    <OTCompoundDoc name="%fcda8f74-1188-11de-b312-dd23ca87b0f1" showEditBar="true" />
+                    <OTCompoundDoc name="%093084fd-1189-11de-b312-dd23ca87b0f1" showEditBar="true" />
+                    <object refid="1dbb4f06-1189-11de-b312-dd23ca87b0f1" />
+                    <object refid="7c5b8d4c-1189-11de-b312-dd23ca87b0f1" />
+                    <object refid="02fe7cab-11a2-11de-8d8c-67710b227609" />
+                  </viewedCards>
+                </OTCardContainer>
+              </content>
+              <footer>
+                <object refid="${nav-bar}" />
+              </footer>
+              <north>
+                <object refid="2767fe20-6c7d-11dc-8314-0800200c9a66!/section_1/header" />
+              </north>
+              <center>
+                <object refid="${activity-card-container}" />
+              </center>
+              <south>
+                <object refid="${nav-bar}" />
+              </south>
+            </OTUDLSection>
+          </activity>
+          <script>
+            <object refid="${authoring-script}" />
+          </script>
+        </OTCurriculumUnit>
+      </root>
+      <library>
+        <object refid="b6350a20-e3b4-11dc-95ff-0800200c9a66" />
+        <OTUDLMenu local_id="section-1-menu">
+          <cardContainer>
+            <object refid="${activity-card-container}" />
+          </cardContainer>
+          <menuRule>
+            <object refid="${page-rule}" />
+          </menuRule>
+        </OTUDLMenu>
+        <OTSnapshotAlbum local_id="album" />
+        <OTUDLMenuRule local_id="page-rule" jumpToViewedCard="true" stepAhead="true" />
+        <OTJavascript local_id="change_page.js" src="http://continuum.concord.org/otrunk/examples/LOOPS/scripts/change_page.js" />
+        <OTJavascript local_id="show_message.js" src="http://continuum.concord.org/otrunk/examples/LOOPS/scripts/show_message.js" />
+        <OTJavascript local_id="loops_authoring_script.js" src="http://continuum.concord.org/otrunk/examples/LOOPS/scripts/loops_authoring_script.js" />
+        <OTScriptObject local_id="authoring-script">
+          <variables>
+            <OTScriptVariable name="cardContainer">
+              <reference>
+                <object refid="${activity-card-container}" />
+              </reference>
+            </OTScriptVariable>
+            <OTScriptVariable name="system">
+              <reference>
+                <object refid="${system}" />
+              </reference>
+            </OTScriptVariable>
+            <OTScriptVariable name="menuPageRule">
+              <reference>
+                <object refid="${page-rule}" />
+              </reference>
+            </OTScriptVariable>
+          </variables>
+          <script>
+            <object refid="${loops_authoring_script.js}" />
+          </script>
+          <scriptState />
+        </OTScriptObject>
+        <OTUDLNavBar local_id="nav-bar">
+          <menuView>
+            <object refid="29dc5ef0-c453-11dc-95ff-0800200c9a66" />
+          </menuView>
+          <cssColor>
+            <object refid="31193bb0-c44f-11dc-95ff-0800200c9a66" />
+          </cssColor>
+        </OTUDLNavBar>
+      </library>
+    </OTSystem>
+  </objects>
+</otrunk>
+
