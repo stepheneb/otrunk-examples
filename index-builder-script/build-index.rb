@@ -3,6 +3,7 @@
 require 'find'
 require 'yaml'
 require 'time'
+require 'cgi'
 
 puts "Content-type: text/plain\n\n"
 
@@ -76,7 +77,7 @@ def gmt_time_from_svn_time(svn_time)
 end
 
 otrunk_example_dirs.each do |path|  
-  svn_props = YAML::load(`svn info #{path}`)
+  svn_props = YAML::load(`svn info "#{path}"`)
   gmt_time = gmt_time_from_svn_time(svn_props["Last Changed Date"])
   examples = Dir.glob("#{path}/*.otml").length
   index_page_body += "<tr><td><a href=""#{path}/ot-index.html"">#{path}</a></td>"
@@ -153,7 +154,7 @@ HERE
       svn_rev1 = match[1]
       svn_rev2 = match[2]
       example_name = filename[/(.*)\.otml/, 1]
-      otml_url = "http://continuum.concord.org/otrunk/examples/#{subpath}"
+      otml_url = CGI.escape("http://continuum.concord.org/otrunk/examples/#{subpath}")
       trac_otml_url = "http://trac.cosmos.concord.org/projects/browser/trunk/common/java/otrunk/otrunk-examples/#{subpath}"
       jnlp_url = jnlp_url_tmpl.sub(/%otml_url%/, otml_url)
       jnlp_author_url = jnlp_url_tmpl_author.sub(/%otml_url%/, otml_url)
