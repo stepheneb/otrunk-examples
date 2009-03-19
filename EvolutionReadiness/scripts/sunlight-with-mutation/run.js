@@ -4,7 +4,6 @@ importPackage(Packages.org.concord.biologica.engine);
 importPackage(Packages.org.concord.biologica.environment);
 importPackage(Packages.org.concord.biologica.test);
   			
-var env = envView.getEnvironment()
 var demoRun = new PopulationsTest(100)
 	
 function clicked() {

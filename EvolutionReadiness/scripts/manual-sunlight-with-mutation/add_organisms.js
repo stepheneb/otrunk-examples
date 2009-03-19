@@ -16,14 +16,12 @@ function clicked() {
         var mutationchance
         if (mutationCheck != null){
             if (mutationCheck.getSelected()) {
-                System.out.println("yes!")
-                mutationchance = new Float(0.1)
+                mutationchance = new Float(0.08)
             } else {
-                System.out.println("no!")
                 mutationchance = new Float(0)
             }
         } else {
-            mutationchance = new Float(0.1)
+            mutationchance = new Float(0.08)
         }
         org.setProperty("mutation-chance", mutationchance)  
         org.setOrganismImageForEnvironment("Fern_thin.gif");

@@ -3,11 +3,10 @@ importPackage(Packages.java.awt);
 importPackage(Packages.org.concord.biologica.environment);
 importPackage(Packages.org.concord.framework.otrunk);
 
-var env
 var world
   			
 function init() {
-	env = envView.getEnvironment()
+    System.out.println("setup")
 	world = env.getWorld()
 	env.setColumns(20)
 	env.setRows(20)

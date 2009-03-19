@@ -2,8 +2,7 @@ importPackage(Packages.java.lang);
 importPackage(Packages.java.awt);
 importPackage(Packages.org.concord.biologica.engine);
 importPackage(Packages.org.concord.biologica.environment);
-  			
-var env = envView.getEnvironment()
+
 var world = env.getWorld()
 
 function clicked() {
@@ -16,12 +15,12 @@ function clicked() {
         var mutationchance
         if (mutationCheck != null){
             if (mutationCheck.getSelected()) {
-                mutationchance = new Float(0.15)
+                mutationchance = new Float(0.11)
             } else {
                 mutationchance = new Float(0)
             }
         } else {
-            mutationchance = new Float(0.15)
+            mutationchance = new Float(0.11)
         }
         org.setProperty("mutation-chance", mutationchance)  
         org.setOrganismImageForEnvironment("Fern_thin.gif");

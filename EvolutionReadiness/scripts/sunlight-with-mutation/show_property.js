@@ -6,7 +6,6 @@ importPackage(Packages.org.concord.biologica.environment);
 var showingSun = false;
   			
 function clicked() {
-	var env = envView.getEnvironment()
 	for (var i = 0; i < 20; i++) {
 	        for (var j = 0; j < 20; j++) {
 	        	var envUnit = env.getEnvironmentUnit(i,j)
