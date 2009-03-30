@@ -17,9 +17,9 @@ function init() {
 	        for (var j = 0; j < 20; j++) {
 	        	var envUnit = new EnvironmentUnit(env, null, i, j)
 	        	env.setEnvironmentUnit(envUnit, i, j)
-	        	envUnit.getProperties().setPropertyValue("sunlight", new Float(0.8))
+	        	envUnit.setProperty("sunlight", new Float(0.8))
 	        	
-	        	var percentSunlight = envUnit.getProperties().getPropertyValue("sunlight")
+	        	var percentSunlight = envUnit.getProperty("sunlight")
 	        	var rg =  (1*percentSunlight.floatValue())
                 var color = new Color(0.7+(rg*0.2), 0.4+(rg*0.2), 0.3)
 	       //		var color = new Color(0.8, 0.5, 0.3)
@@ -42,7 +42,7 @@ var sunSliderChangeHandler =
         for (var i = 0; i < 20; i++) {
 	        for (var j = 0; j < 20; j++) {
 	        	var envUnit = env.getEnvironmentUnit(i, j)
-	        	envUnit.getProperties().setPropertyValue("sunlight", percentSunlightFloat)
+	        	envUnit.setProperty("sunlight", percentSunlightFloat)
 	        	
 	        	var color = new Color(0.7+(percentSunlight*0.2), 0.4+(percentSunlight*0.2), 0.3)
 	      // 		var color = new Color(0.8, 0.5, 0.3)
@@ -64,10 +64,8 @@ var mutationCheckChangeHandler =
 	        var org = allOrgs.get(i)
             if (!org.isDeleted()){
                 if (mutationCheck.getSelected()) {
-                    System.out.println("true!")
                     org.setProperty("mutation-chance", new Float(0.1)) 
                 } else {
-                    System.out.println("false!")
                     org.setProperty("mutation-chance", new Float(0)) 
                 }
             }

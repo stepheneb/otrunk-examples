@@ -17,7 +17,7 @@ function init() {
 	        	var envUnit = new EnvironmentUnit(env, null, i, j)
 	        	env.setEnvironmentUnit(envUnit, i, j)
 	        	var percentWater = 0
-	        	envUnit.getProperties().setPropertyValue("water", new Float(percentWater))
+	        	envUnit.setProperty("water", new Float(percentWater))
 	        	
 	       		var color = new Color(0.56, 0.42, 0.28)
 	        	var terrain = new Terrain(world, "terrain", color)

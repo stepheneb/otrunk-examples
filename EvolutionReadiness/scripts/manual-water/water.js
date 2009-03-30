@@ -11,10 +11,10 @@ function clicked() {
 	for (var i = 0; i < 20; i++) {
 	        for (var j = 0; j < 20; j++) {
 	        	var envUnit = env.getEnvironmentUnit(i,j);
-	        	var percentWater = envUnit.getProperties().getPropertyValue("waterx").floatValue()
+	        	var percentWater = envUnit.getProperty("waterx").floatValue()
 	        	var newPercentWater = percentWater + 0.1
 	        	if (newPercentWater > 1.0) newPercentWater = 1.0;
-	        	envUnit.getProperties().setPropertyValue("waterx", new Float(newPercentWater))
+	        	envUnit.setProperty("waterx", new Float(newPercentWater))
             }
         }
 	return true;

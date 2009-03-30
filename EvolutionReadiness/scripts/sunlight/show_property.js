@@ -12,7 +12,7 @@ function clicked() {
 	        	var envUnit = env.getEnvironmentUnit(i,j)
 	        	var color
 	        	if (!showingSun){
-		        	var percentSunlight = envUnit.getProperties().getPropertyValue("sunlight")
+		        	var percentSunlight = envUnit.getProperty("sunlight")
 		        	var rg =  (1*percentSunlight.floatValue())
 		        	color = new Color(rg, rg, 0)
 	        	} else {
