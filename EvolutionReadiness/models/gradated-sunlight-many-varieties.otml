@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<otrunk id="13d3fb4f-123a-425f-9d60-d84e145c0678">
+  <imports>
+  	<import class="org.concord.otrunk.OTIncludeRootObject" />
+  	<import class="org.concord.otrunk.OTInclude" />
+    <import class="org.concord.otrunk.OTSystem" />
+    <import class="org.concord.otrunk.biologica.OTOrganismPlacement" />
+    <import class="org.concord.otrunk.biologica.OTEnvironment" />
+    <import class="org.concord.otrunk.biologica.OTOrganism" />
+    <import class="org.concord.otrunk.biologica.OTWorld" />
+    <import class="org.concord.otrunk.biologica.agent.OTAgentSpecies" />
+    <import class="org.concord.otrunk.biologica.agent.OTAgentTrait" />
+    <import class="org.concord.otrunk.biologica.agent.OTAgentPropertyImageMap" />
+    <import class="org.concord.otrunk.biologica.environment.OTEnvironmentHolder"/>
+    <import class="org.concord.otrunk.biologica.rules.OTRule"/>
+    <import class="org.concord.otrunk.biologica.rules.OTRuleCondition"/>
+    <import class="org.concord.otrunk.biologica.rules.OTRuleConsequence"/>
+    <import class="org.concord.otrunk.view.OTViewEntry" />
+    <import class="org.concord.otrunk.view.OTViewBundle" />
+    <import class="org.concord.otrunk.view.document.OTCompoundDoc" />
+    <import class="org.concord.otrunk.script.ui.OTScriptObject" />
+    <import class="org.concord.otrunk.script.js.OTJavascript" />
+    <import class="org.concord.otrunk.script.OTScriptEngineBundle" />
+    <import class="org.concord.otrunk.script.OTScriptEngineEntry" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariable" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariableComponent" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariableRealObject" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariableView" />
+    <import class="org.concord.otrunk.script.ui.OTScriptButton" />
+    <import class="org.concord.framework.otrunk.view.OTFrame" />
+  </imports>
+	<idMap> 
+	  <idMapping local_id="plant-species" id="d6badf2a-2a90-49e3-813a-0c5453342010"/> 
+	</idMap> 
+  <objects>
+    <OTSystem>
+
+      <bundles>
+        <OTViewBundle showLeftPanel="false">
+          <viewEntries>
+            <OTViewEntry
+              objectClass="org.concord.otrunk.biologica.OTEnvironment"
+              viewClass="org.concord.otrunk.biologica.ui.OTEnvironmentView" />
+            <OTViewEntry
+              objectClass="org.concord.otrunk.script.ui.OTScriptObject"
+              viewClass="org.concord.otrunk.script.ui.OTScriptObjectView" />
+            <OTViewEntry
+              objectClass="org.concord.otrunk.view.document.OTDocument"
+              viewClass="org.concord.otrunk.view.document.OTDocumentView" />
+            <OTViewEntry 
+          	objectClass="org.concord.otrunk.script.ui.OTScriptButton" 
+          	viewClass="org.concord.otrunk.script.ui.OTScriptButtonView"/>
+          	<OTViewEntry 
+          		objectClass="org.concord.otrunk.biologica.environment.OTEnvironmentHolder" 
+          		viewClass="org.concord.otrunk.biologica.environment.OTEnvironmentHolderView"/>
+          </viewEntries>
+          <frame>
+            <OTFrame useScrollPane="false" width="640" height="590" />
+          </frame>
+        </OTViewBundle>
+        <OTScriptEngineBundle>
+          <engines>
+            <OTScriptEngineEntry
+              objectClass="org.concord.otrunk.script.js.OTJavascript"
+              engineClass="org.concord.otrunk.script.js.OTJavascriptEngine" />
+          </engines>
+        </OTScriptEngineBundle>
+      </bundles>
+		<includes>
+        <OTInclude href="species/varied-plants.otml" />
+      </includes>
+      <root>
+        <OTCompoundDoc name="Population">
+          <bodyText>
+          
+            <table >
+              <tr height="690">
+	              <td>
+	              	<object refid="${environment}" />
+	              </td>
+	              <td>
+	              	<object refid="${run-button}"/><br/>
+	              	<object refid="${add-fancy-ferns-button}"/><br/>
+	              </td>
+              </tr>
+            </table>
+          
+          		<object refid="${setup-script}"/>
+            </bodyText>
+          <documentRefs>
+          	<OTEnvironment local_id="environment" world="${peasimple_world}" 
+            	width="690" height="600" environmentWidth="10" environmentHeight="10"
+            	showRunButton="false">
+            	<rules>
+            		<OTRule>
+            			<conditions>
+            				<OTRuleCondition always="true"/>
+            			</conditions>
+            			<consequences>
+            				<OTRuleConsequence property="Health">
+            					<ruleScript>
+            						var diff = Math.abs(leaves - (sunlight*10))
+            						0.95 + ((10 - diff) / 200)
+            					</ruleScript>
+            					<propertyVariables>
+            						<string>leaves</string>
+            						<string>sunlight</string>
+            					</propertyVariables>
+            				</OTRuleConsequence>
+            			</consequences>
+            		</OTRule>
+            	</rules>
+            </OTEnvironment>
+            <OTScriptObject local_id="setup-script">
+             		<script>
+             			<OTJavascript src="../scripts/sunlight/setup.js"/>
+             		</script>
+             		<variables>
+             			<OTScriptVariableView name="envView" reference="${environment}"/>
+             		</variables>
+             </OTScriptObject>
+             <OTScriptButton local_id="add-fancy-ferns-button" text="Add Ferns">
+             		<script>
+             			<object refid="${add.js}"/>
+             		</script>
+             		<scriptVariables>
+             			<OTScriptVariableRealObject name="environment" reference="${environment}"/>
+             			<OTScriptVariableRealObject name="species" reference="${plant-species}"/>
+             		</scriptVariables>
+             </OTScriptButton>
+             <OTScriptButton local_id="run-button" text="Run">
+             		<script>
+             			<OTJavascript>
+             				<script>
+	             				function clicked()
+	             				{
+	             					envView.getEnvironmentView().run();
+	             				}
+             				</script>
+             			</OTJavascript>
+             		</script>
+             		<scriptVariables>
+             			<OTScriptVariableView name="envView" reference="${environment}"/>
+             		</scriptVariables>
+             </OTScriptButton>
+            
+
+            <!-- World definition: is ignored -->
+            <OTWorld
+              speciesPath="org/concord/biologica/worlds/peasimple.xml"
+              local_id="peasimple_world" />
+              
+              <OTJavascript local_id="add.js">
+     				<script>
+      				function clicked()
+      				{
+      					for (var i = 0; i&lt;10; i++){
+      						environment.addAgent(species.createAgent());
+      					}
+      				}
+     				</script>
+     			</OTJavascript>
+          </documentRefs>
+        </OTCompoundDoc>
+
+      </root>
+
+    </OTSystem>
+  </objects>
+</otrunk>
