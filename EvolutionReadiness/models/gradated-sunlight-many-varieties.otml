@@ -80,7 +80,8 @@
 	              </td>
 	              <td>
 	              	<object refid="${run-button}"/><br/>
-	              	<object refid="${add-fancy-ferns-button}"/><br/>
+	              	<object refid="${add-thin-ferns-button}"/><br/>
+	              	<object refid="${add-mixed-ferns-button}"/><br/>
 	              </td>
               </tr>
             </table>
@@ -100,7 +101,7 @@
             				<OTRuleConsequence property="Health">
             					<ruleScript>
             						var diff = Math.abs(leaves - (sunlight*10))
-            						return 0.95 + ((10 - diff) / 200)
+            						return 0.90 + ((10 - diff) / 100)
             					</ruleScript>
             					<propertyVariables>
             						<string>leaves</string>
@@ -119,9 +120,18 @@
              			<OTScriptVariableView name="envView" reference="${environment}"/>
              		</variables>
              </OTScriptObject>
-             <OTScriptButton local_id="add-fancy-ferns-button" text="Add Ferns">
+             <OTScriptButton local_id="add-thin-ferns-button" text="Add thin ferns">
              		<script>
-             			<object refid="${add.js}"/>
+             			<object refid="${add-thin.js}"/>
+             		</script>
+             		<scriptVariables>
+             			<OTScriptVariableRealObject name="environment" reference="${environment}"/>
+             			<OTScriptVariableRealObject name="species" reference="${plant-species}"/>
+             		</scriptVariables>
+             </OTScriptButton>
+             <OTScriptButton local_id="add-mixed-ferns-button" text="Add mixed ferns">
+             		<script>
+             			<object refid="${add-mixed.js}"/>
              		</script>
              		<scriptVariables>
              			<OTScriptVariableRealObject name="environment" reference="${environment}"/>
@@ -150,7 +160,19 @@
               speciesPath="org/concord/biologica/worlds/peasimple.xml"
               local_id="peasimple_world" />
               
-              <OTJavascript local_id="add.js">
+              <OTJavascript local_id="add-thin.js">
+     				<script>
+     				var defaultProperties = new Array(new Array("leaves",10))
+     				
+      				function clicked()
+      				{
+      					for (var i = 0; i&lt;10; i++){
+      						environment.addAgent(species.createAgent(defaultProperties));
+      					}
+      				}
+     				</script>
+     			</OTJavascript>
+     			<OTJavascript local_id="add-mixed.js">
      				<script>
       				function clicked()
       				{
