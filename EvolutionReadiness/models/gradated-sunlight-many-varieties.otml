@@ -55,7 +55,7 @@
           		viewClass="org.concord.otrunk.biologica.environment.OTEnvironmentHolderView"/>
           </viewEntries>
           <frame>
-            <OTFrame useScrollPane="false" width="640" height="590" />
+            <OTFrame useScrollPane="false" width="800" height="590" />
           </frame>
         </OTViewBundle>
         <OTScriptEngineBundle>
@@ -76,10 +76,9 @@
             <table >
               <tr height="690">
 	              <td>
-	              	<object refid="${environment}" />
+	              	<object refid="${env-holder}" />
 	              </td>
 	              <td>
-	              	<object refid="${run-button}"/><br/>
 	              	<object refid="${add-thin-ferns-button}"/><br/>
 	              	<object refid="${add-mixed-ferns-button}"/><br/>
 	              </td>
@@ -89,35 +88,39 @@
           		<object refid="${setup-script}"/>
             </bodyText>
           <documentRefs>
-          	<OTEnvironment local_id="environment" world="${peasimple_world}" 
-            	width="690" height="600" environmentWidth="10" environmentHeight="10"
-            	showRunButton="false">
-            	<rules>
-            		<OTRule>
-            			<conditions>
-            				<OTRuleCondition always="true"/>
-            			</conditions>
-            			<consequences>
-            				<OTRuleConsequence property="Health">
-            					<ruleScript>
-            						var diff = Math.abs(leaves - (sunlight*10))
-            						return 0.90 + ((10 - diff) / 100)
-            					</ruleScript>
-            					<propertyVariables>
-            						<string>leaves</string>
-            						<string>sunlight</string>
-            					</propertyVariables>
-            				</OTRuleConsequence>
-            			</consequences>
-            		</OTRule>
-            	</rules>
-            </OTEnvironment>
+          	<OTEnvironmentHolder local_id="env-holder" width="730" height="600" >
+          		<environment>
+		          	<OTEnvironment local_id="environment" world="${peasimple_world}" 
+		            	width="550" height="500" environmentWidth="10" environmentHeight="10"
+		            	showRunButton="false">
+		            	<rules>
+		            		<OTRule>
+		            			<conditions>
+		            				<OTRuleCondition always="true"/>
+		            			</conditions>
+		            			<consequences>
+		            				<OTRuleConsequence property="Health">
+		            					<ruleScript>
+		            						var diff = Math.abs(leaves - (sunlight*10))
+		            						return 0.90 + ((10 - diff) / 100)
+		            					</ruleScript>
+		            					<propertyVariables>
+		            						<string>leaves</string>
+		            						<string>sunlight</string>
+		            					</propertyVariables>
+		            				</OTRuleConsequence>
+		            			</consequences>
+		            		</OTRule>
+		            	</rules>
+		            </OTEnvironment>
+		        </environment>
+		    </OTEnvironmentHolder>
             <OTScriptObject local_id="setup-script">
              		<script>
-             			<OTJavascript src="../scripts/sunlight/setup.js"/>
+             			<OTJavascript src="scripts/gradated-sunlight/setup.js"/>
              		</script>
              		<variables>
-             			<OTScriptVariableView name="envView" reference="${environment}"/>
+             			<OTScriptVariableRealObject name="env" reference="${environment}"/>
              		</variables>
              </OTScriptObject>
              <OTScriptButton local_id="add-thin-ferns-button" text="Add thin ferns">
@@ -136,21 +139,6 @@
              		<scriptVariables>
              			<OTScriptVariableRealObject name="environment" reference="${environment}"/>
              			<OTScriptVariableRealObject name="species" reference="${plant-species}"/>
-             		</scriptVariables>
-             </OTScriptButton>
-             <OTScriptButton local_id="run-button" text="Run">
-             		<script>
-             			<OTJavascript>
-             				<script>
-	             				function clicked()
-	             				{
-	             					envView.getEnvironmentView().run();
-	             				}
-             				</script>
-             			</OTJavascript>
-             		</script>
-             		<scriptVariables>
-             			<OTScriptVariableView name="envView" reference="${environment}"/>
              		</scriptVariables>
              </OTScriptButton>
             

@@ -7,7 +7,6 @@ var env
 var world
   			
 function init() {
-	env = envView.getEnvironment()
 	world = env.getWorld()
 	env.setColumns(20)
 	env.setRows(20)
