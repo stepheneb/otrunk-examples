@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<otrunk id="f080c070-7c8a-417c-a3fe-0737a7302806">
+  <imports>
+    <import class="org.concord.otrunk.OTSystem" />
+    <import class="org.concord.otrunk.OTInclude" />
+    <import class="org.concord.otrunk.OTIncludeRootObject" />
+    <import class="org.concord.otrunk.view.OTViewBundle" />
+    <import class="org.concord.otrunk.view.OTViewMode" />
+    <import class="org.concord.otrunk.view.OTViewEntry" />
+    <import class="org.concord.otrunk.script.ui.OTXHTMLScriptViewEntry" />
+    <import class="org.concord.otrunk.view.OTMultiUserRoot" />
+    <import class="org.concord.otrunk.view.document.OTCompoundDoc"/>
+    <import class="org.concord.otrunk.view.document.OTDocumentViewConfig"/>
+    <import class="org.concord.otrunk.script.ui.OTXHTMLScript" />
+    <import class="org.concord.otrunk.script.jruby.OTJRuby" />
+    <import class="org.concord.otrunk.script.OTScriptEngineBundle" />
+    <import class="org.concord.otrunk.script.OTScriptEngineEntry" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariable" />
+    <import class="org.concord.framework.otrunk.wrapper.OTBlob" />
+    <import class="org.concord.otrunk.view.OTViewChild"/>
+    <import class="org.concord.framework.otrunk.view.OTFrame" />
+    <import class="org.concord.otrunk.intrasession.OTMultiUser" />
+    <import class="org.concord.framework.otrunk.wrapper.OTHash" />
+  </imports>
+  <objects>
+  <OTSystem local_id="system">
+    <includes>
+      <OTInclude href="global-imports/loops-view-bundle.otml" />
+    </includes>
+    <bundles>
+      <object refid="8d880970-c22a-11dc-95ff-0800200c9a66" />
+      <OTViewBundle showLeftPanel="false">
+        <frame>
+          <OTFrame width="850" height="600" />
+        </frame>
+        <viewEntries>
+          <OTViewEntry objectClass="org.concord.otrunk.view.OTMultiUserRoot"
+            viewClass="org.concord.otrunk.view.OTMultiUserRootView" />
+          <OTViewEntry objectClass="org.concord.otrunk.script.ui.OTXHTMLScript"
+            viewClass="org.concord.otrunk.script.ui.OTXHTMLScriptView" />
+          <OTDocumentViewConfig objectClass="org.concord.otrunk.view.document.OTDocument"
+            viewClass="org.concord.otrunk.view.document.OTDocumentView"
+            css="
+            body { background-color:#FFFFFF; color:#333333; font-family:Tahoma,'Trebuchet MS',sans-serif; line-height:1.5em; }
+            h1 { color:#FFD32C; font-size:1.5em; margin-bottom:0px; }
+            h2 { color:#FFD32C; font-size:1.3em; margin-bottom:0px; }
+            h2 { color:#FFD32C; font-size:1.1em; margin: 2em 0em 1em 0em; }
+            .menu { color: #982f10; background-color: #fffee9;  color: #982f10; margin: 0px 1px; padding: 5px; }
+            .menu_item { background-color: #fffee9; color: #982f10; margin: 1px 0px; padding: 0px 10px; }
+              .menu_item a { color: #51a656; }
+                .menu_item.selected a { color: #318636; }
+            #navlist ul { margin: 0; padding: 0; list-style: none; width: 150px; }
+            #navlist li { display: inline; list-style-type: none;list-style-type: none; padding-right: 10px; }
+            #content { margin:5px; padding:5px; }
+            " />
+        </viewEntries>
+      </OTViewBundle>
+      <OTScriptEngineBundle>
+        <engines>
+          <OTScriptEngineEntry objectClass="org.concord.otrunk.script.jruby.OTJRuby" engineClass="org.concord.otrunk.script.jruby.OTJRubyEngine" />
+          <OTScriptEngineEntry objectClass="org.concord.otrunk.script.js.OTJavascript" engineClass="org.concord.otrunk.script.js.OTJavascriptEngine" />
+        </engines>
+      </OTScriptEngineBundle>
+    </bundles>
+    <includes>
+      <OTInclude local_id="activity" href="force-motion.otml" />
+    </includes>
+    <root>
+      <OTMultiUserRoot local_id="multi_user_root"
+        reportTemplateViewEntry="${report_main_view}">
+        <userList>
+          <!--
+            the local_id is set so this can be used as a report template in the
+            DIY
+          -->
+          <OTIncludeRootObject local_id="external_user_list_url"
+            href="http://loops.staging.concord.org/external_otrunk_activities/11/ot_learner_data.xml" />
+        </userList>
+        <reportTemplate>
+          <!--
+            the local_id is set so this can be used as a report template in the
+            DIY
+          -->
+          <OTIncludeRootObject local_id="external_activity_url" href="force-motion.otml" />
+        </reportTemplate>
+      </OTMultiUserRoot>
+    </root>
+      <library>
+        <OTXHTMLScriptViewEntry local_id="report_main_view"
+          objectClass="org.concord.framework.otrunk.OTObject" viewClass="org.concord.otrunk.script.ui.OTXHTMLScriptView">
+          <script>
+            <OTJRuby local_id="erb_controller" src="jres:///org/concord/report/library/erb-template-runner.rb" />
+          </script>
+          <variables>
+            <OTScriptVariable name="template">
+              <reference>
+                <OTBlob src="report-templates/fm-teacher-dashboard-main.html.erb" />
+              </reference>
+            </OTScriptVariable>
+            <OTScriptVariable name="libraryScript">
+              <reference>
+                <OTBlob src="jres:///org/concord/report/library/multipage-report-library.rb" />
+              </reference>
+            </OTScriptVariable>
+            <OTScriptVariable name="pick_n_objectmap"
+               reference="4bcdf958-e446-4a84-8008-515057aab2df" />
+            <OTScriptVariable name="poll_objectmap"
+               reference="cf54dd9c-2473-47a2-b249-463a4647831b" />
+            <OTScriptVariable name="picknview"
+               reference="40d7460a-e55f-47bc-9668-6d13a4835ce1" />
+            <OTScriptVariable name="pollview"
+               reference="12b9b413-8aee-4fc7-b1a7-fe272f17509e" />
+          </variables>
+        </OTXHTMLScriptViewEntry>
+        <OTHash id="cf54dd9c-2473-47a2-b249-463a4647831b" name="Poll objects">
+          <entries>
+          <entry key="Activity 2, Step 5">
+            <object refid="643eaae7-0e98-11de-87e7-2f8c138c15b4" />
+          </entry>
+          <entry key="Activity 2, Step 6.1">
+            <object refid="bdf7b09a-fa10-11dd-a9f2-9149542af672" />
+          </entry>
+          <entry key="Activity 4, Step 1">
+            <object refid="43b4c6f7-0a91-11de-aeec-bf5ff23a8e31" />
+          </entry>
+          </entries>
+        </OTHash>
+        <OTHash id="4bcdf958-e446-4a84-8008-515057aab2df" name="Pick N objects">
+          <entries>
+          <entry key="Activity 2, Step 2">
+            <object refid="9693176f-08f7-11de-8291-9b621571c4a0" />
+          </entry>
+          <entry key="Activity 2, Step 7">
+            <object refid="76e832ef-1325-11de-8daf-13a6245619a0" />
+          </entry>
+          <entry key="Activity 2, Step 9">
+            <object refid="1fbcccc7-fc6b-11dd-8036-d7df917ab6ce" />
+          </entry>
+          <entry key="Activity 2, Step 11">
+            <object refid="da21d9ac-093d-11de-ba38-5d7d4603ee1f" />
+          </entry>
+          <entry key="Activity 4, Step 2">
+            <object refid="16b69ab8-08f1-11de-97e3-d3de67f0b589" />
+          </entry>
+          <entry key="Activity 4, Step 2">
+            <object refid="74e57140-1559-11de-8c30-0800200c9a66" />
+          </entry>
+          </entries>
+          </OTHash>
+      </library>
+    </OTSystem>
+  </objects>
+</otrunk>
