@@ -84,6 +84,7 @@
 	              </td>
 	              <td>
 	              	<object refid="${add-fancy-ferns-button}"/><br/>
+	              	<object refid="${clear-button}"/><br/>
 	              	Difference between halves:<br/>
 	              	<object refid="${sun-slider}"/><br/><br/>
 	              </td>
@@ -101,12 +102,14 @@
 		            	<rules>
 		            		<OTRule>
 		            			<conditions>
-		            				<OTRuleCondition always="true"/>
+		            				<OTRuleCondition property="Health" maxValue="0.5"/>
+		            				<OTRuleCondition property="sunlight" minValue="1.0"/>
 		            			</conditions>
 		            			<consequences>
+		            				<OTRuleConsequence property="happiness" newValue="0"/>
 		            				<OTRuleConsequence property="Health">
 		            					<ruleScript>
-			            					var diff = Math.abs(leaves - (sunlight*10))
+			            					var diff = Math.abs(leaves - (sunlight))
 			            					return 0.80 + ((10 - diff) / 50)
 		            					</ruleScript>
 		            					<propertyVariables>
@@ -129,13 +132,29 @@
               			<OTScriptVariable name="sunSlider" reference="${sun-slider}"/>
               		</variables>
               </OTScriptObject>
-             <OTScriptButton local_id="add-fancy-ferns-button" text="Add Ferns">
+             <OTScriptButton local_id="add-fancy-ferns-button" text="Add Plants">
              		<script>
              			<object refid="${add.js}"/>
              		</script>
              		<scriptVariables>
              			<OTScriptVariableRealObject name="environment" reference="${environment}"/>
              			<OTScriptVariableRealObject name="species" reference="${plant-species}"/>
+             		</scriptVariables>
+             </OTScriptButton>
+             <OTScriptButton local_id="clear-button" text="Clear">
+             		<script>
+             			<OTJavascript>
+     				<script>function clicked()
+      				{
+      					for (var i = 0; i&lt;10; i++){
+      						environment.removeAllAgents();
+      					}
+      				}
+     				</script>
+     			</OTJavascript>
+             		</script>
+             		<scriptVariables>
+             			<OTScriptVariableRealObject name="environment" reference="${environment}"/>
              		</scriptVariables>
              </OTScriptButton>
              
