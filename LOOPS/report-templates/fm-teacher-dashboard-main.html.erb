@@ -1,35 +1,44 @@
 <%
+  PICK_N_CLASS = java.lang.Class::for_name("org.concord.otrunk.intrasession.OTMultiUserPickN")
+  POLL_CLASS = java.lang.Class::for_name("org.concord.otrunk.intrasession.OTMultiUserPollingGraph")
+  
   wrapped_objs = { }
   objects = @otrunk.getAllObjects(org.concord.otrunk.intrasession.OTMultiUser.java_class)
-  puts "Found #{objects} OTMultiUser objects"
   objects.each do |wrapper|
-    puts "OTMultiUser with type: #{wrapper.type}"
-    wrapped_objs[wrapper.type] ||= {}
+    klass = wrapper.get_class
+    if PICK_N_CLASS.is_assignable_from(klass)
+      klass = PICK_N_CLASS
+    elsif POLL_CLASS.is_assignable_from(klass)
+      klass = POLL_CLASS
+    end
+
+    wrapped_objs[klass] ||= {}
     multiObj = wrapper.object
     section_otids = @otrunk.getParents(wrapper.global_id, org.concord.otrunk.udl3.OTUDLSection.java_class, true)
     doc_otids = @otrunk.getParents(wrapper.global_id, org.concord.otrunk.view.document.OTDocument.java_class, true)
     section_otids.each do |otid|
       section = @otrunk.root_object_service.getOTObject(otid)
       section_num = section.name[/\d+/].to_i
-      wrapped_objs[wrapper.type][section_num] ||= { }
+      wrapped_objs[klass][section_num] ||= { }
       i = 0
       section.content.cards.each do |card|
         i += 1
         if doc_otids.include?(card.getGlobalId())
-          wrapped_objs[wrapper.type][section_num][i] ||= [ ]
-          wrapped_objs[wrapper.type][section_num][i] << wrapper
+          wrapped_objs[klass][section_num][i] ||= [ ]
+          wrapped_objs[klass][section_num][i] << wrapper
         end
       end
     end
   end
 %>
-<% wrapped_objs.keys.sort.each do |type| %>
+<% wrapped_objs.keys.sort {|a,b| a.name <=> b.name }.each do |type| %>
   <h1>
-<%= case type
-  when org.concord.otrunk.intrasession.OTMultiUser::TYPE_PICK_N
+<%= if PICK_N_CLASS.is_assignable_from(type)
     "Pick N"
-  when org.concord.otrunk.intrasession.OTMultiUser::TYPE_POLL
+  elsif POLL_CLASS.is_assignable_from(type)
     "Poll"
+  else
+    type
  end %>
   </h1>
   <% wrapped_objs[type].keys.sort.each do |ak| %>
@@ -37,9 +46,9 @@
     <% wrapped_objs[type][ak].keys.sort.each do |sk| %>
       <h3>Section <%= sk %></h3>
       <% wrapped_objs[type][ak][sk].each do |obj| %>
-        <% if type == org.concord.otrunk.intrasession.OTMultiUser::TYPE_PICK_N %>
+        <% if PICK_N_CLASS.is_assignable_from(type) %>
           <%= embedObject(obj, $picknview) %><br/>
-        <% elsif type == org.concord.otrunk.intrasession.OTMultiUser::TYPE_POLL %>
+        <% elsif POLL_CLASS.is_assignable_from(type) %>
           <%= embedObject(obj, $pollview) %><br/>
         <% end %>
       <% end %>
