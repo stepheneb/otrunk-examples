@@ -16,20 +16,24 @@
     multiObj = wrapper.object
     section_otids = @otrunk.getParents(wrapper.global_id, org.concord.otrunk.udl3.OTUDLSection.java_class, true)
     doc_otids = @otrunk.getParents(wrapper.global_id, org.concord.otrunk.view.document.OTDocument.java_class, true)
-    section_otids.each do |otid|
-      section = @otrunk.root_object_service.getOTObject(otid)
-      section_num = section.name[/\d+/].to_i
-      puts "parsing section: #{section.name} with id: #{otid}"
-      wrapped_objs[klass][section_num] ||= { }
-      i = 0
-      section.content.cards.each do |card|
-        i += 1
-        if doc_otids.include?(card.getGlobalId())
-          wrapped_objs[klass][section_num][i] ||= [ ]
-          wrapped_objs[klass][section_num][i] << wrapper
+    doc_otids.each do |doc_otid|
+      section_otids = @otrunk.getParents(doc_otid, org.concord.otrunk.udl3.OTUDLSection.java_class, true)
+      section_otids.each do |otid|
+        section = @otrunk.root_object_service.getOTObject(otid)
+        section_num = section.name[/\d+/].to_i
+        puts "parsing section: #{section.name} with id: #{otid}"
+        wrapped_objs[klass][section_num] ||= { }
+        i = 0
+        section.content.cards.each do |card|
+          i += 1
+          if doc_otid.equals(card.getGlobalId())
+            wrapped_objs[klass][section_num][i] ||= [ ]
+            wrapped_objs[klass][section_num][i] << wrapper
+          end
         end
       end
     end
+
   end
 %>
 <% wrapped_objs.keys.sort {|a,b| a.name <=> b.name }.each do |type| %>
