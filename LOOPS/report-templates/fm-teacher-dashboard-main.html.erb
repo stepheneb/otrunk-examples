@@ -14,10 +14,9 @@
 
     wrapped_objs[klass] ||= {}
     multiObj = wrapper.object
-    section_otids = @otrunk.getParents(wrapper.global_id, org.concord.otrunk.udl3.OTUDLSection.java_class, true)
-    doc_otids = @otrunk.getParents(wrapper.global_id, org.concord.otrunk.view.document.OTDocument.java_class, true)
+    doc_otids = @otrunk.getReferences(wrapper.global_id, org.concord.otrunk.view.document.OTDocument.java_class, true)
     doc_otids.each do |doc_otid|
-      section_otids = @otrunk.getParents(doc_otid, org.concord.otrunk.udl3.OTUDLSection.java_class, true)
+      section_otids = @otrunk.getReferences(doc_otid, org.concord.otrunk.udl3.OTUDLSection.java_class, true)
       section_otids.each do |otid|
         section = @otrunk.root_object_service.getOTObject(otid)
         section_num = section.name[/\d+/].to_i
