@@ -1,61 +1,67 @@
 <%
-  PICK_N_CLASS = java.lang.Class::for_name("org.concord.otrunk.intrasession.OTMultiUserPickN")
-  POLL_CLASS = java.lang.Class::for_name("org.concord.otrunk.intrasession.OTMultiUserPollingGraph")
-  
-  wrapped_objs = { }
-  objects = @otrunk.getAllObjects(org.concord.otrunk.intrasession.OTMultiUser.java_class)
-  objects.each do |wrapper|
-    klass = wrapper.get_class
-    if PICK_N_CLASS.is_assignable_from(klass)
-      klass = PICK_N_CLASS
-    elsif POLL_CLASS.is_assignable_from(klass)
-      klass = POLL_CLASS
-    end
+PICK_N_CLASS = java.lang.Class::for_name("org.concord.otrunk.intrasession.OTMultiUserPickN")
+POLL_CLASS = java.lang.Class::for_name("org.concord.otrunk.intrasession.OTMultiUserPollingGraph")
 
-    wrapped_objs[klass] ||= {}
-    multiObj = wrapper.object
-    doc_otids = @otrunk.getIncomingReferences(wrapper.global_id, org.concord.otrunk.view.document.OTDocument.java_class, true)
-    doc_otids.each do |doc_otid|
-      section_otids = @otrunk.getIncomingReferences(doc_otid, org.concord.otrunk.udl3.OTUDLSection.java_class, true)
-      section_otids.each do |otid|
-        section = @otrunk.root_object_service.getOTObject(otid)
-        section_num = section.name[/\d+/].to_i
-        puts "parsing section: #{section.name} with id: #{otid}"
-        wrapped_objs[klass][section_num] ||= { }
-        i = 0
-        section.content.cards.each do |card|
-          i += 1
-          if doc_otid.equals(card.getGlobalId())
-            wrapped_objs[klass][section_num][i] ||= [ ]
-            wrapped_objs[klass][section_num][i] << wrapper
-          end
+def getClassString(klass)
+  if PICK_N_CLASS.is_assignable_from(klass)
+    "Pick N"
+  elsif POLL_CLASS.is_assignable_from(klass)
+    "Poll"
+  else
+    type.to_s
+  end
+end
+
+activities = {}
+objects = @otrunk.getAllObjects(org.concord.otrunk.intrasession.OTMultiUser.java_class)
+objects.each do |wrapper|
+  klass = wrapper.get_class
+  if PICK_N_CLASS.is_assignable_from(klass)
+    klass = PICK_N_CLASS
+  elsif POLL_CLASS.is_assignable_from(klass)
+    klass = POLL_CLASS
+  end
+
+  multiObj = wrapper.object
+  doc_otids = @otrunk.getIncomingReferences(wrapper.global_id, org.concord.otrunk.view.document.OTDocument.java_class, true)
+  doc_otids.each do |doc_otid|
+    section_otids = @otrunk.getIncomingReferences(doc_otid, org.concord.otrunk.udl3.OTUDLSection.java_class, true)
+    section_otids.each do |otid|
+      section = @otrunk.root_object_service.getOTObject(otid)
+      i = 0
+      section.content.cards.each do |card|
+        i += 1
+        if doc_otid.equals(card.getGlobalId())
+          activities[section] ||= {}
+          steps = activities[section]
+          steps[i] ||= {}
+          types = steps[i]
+          types[klass] ||= []
+          types[klass] << wrapper
         end
       end
     end
-
   end
+end
+
+otTabContainer = @otrunk.root_object_service.createObject(org.concord.otrunk.ui.OTTabContainer.java_class)
+activityTabs = otTabContainer.tabs
+activities.keys.sort {|a,b| a.name[/\d+/].to_i <=> b.name[/\d+/].to_i }.each do |activity_key|
+  activity = activities[activity_key]
+  activityTabContainer = @otrunk.root_object_service.createObject(org.concord.otrunk.ui.OTTabContainer.java_class)
+  activityTabs.putObject(activity_key.name, activityTabContainer)
+  
+  stepTabs = activityTabContainer.tabs
+  activity.keys.sort.each do |step_key|
+    step = activity[step_key]
+    step.keys.sort.each do |type_key|
+      objs = step[type_key]
+      objs.each do |obj|
+        stepTabs.putObject("#{step_key} - #{getClassString(type_key)}", obj)
+      end
+    end
+  end
+end
 %>
-<% wrapped_objs.keys.sort {|a,b| a.name <=> b.name }.each do |type| %>
-  <h1>
-<%= if PICK_N_CLASS.is_assignable_from(type)
-    "Pick N"
-  elsif POLL_CLASS.is_assignable_from(type)
-    "Poll"
-  else
-    type
- end %>
-  </h1>
-  <% wrapped_objs[type].keys.sort.each do |ak| %>
-    <h2>Activity <%= ak %></h2>
-    <% wrapped_objs[type][ak].keys.sort.each do |sk| %>
-      <h3>Section <%= sk %></h3>
-      <% wrapped_objs[type][ak][sk].each do |obj| %>
-        <% if PICK_N_CLASS.is_assignable_from(type) %>
-          <%= embedObject(obj, $picknview) %><br/>
-        <% elsif POLL_CLASS.is_assignable_from(type) %>
-          <%= embedObject(obj, $pollview) %><br/>
-        <% end %>
-      <% end %>
-    <% end %>
-  <% end %>
-<% end %>
+
+<%= embedObject(otTabContainer) %>
