@@ -354,10 +354,11 @@
           you've finished, please submit your graph for anonymous sharing by 
           clicking the SUBMIT button below the graph.
                               <br />
-                              You may be able to see some of the class' graphs if your teacher chooses 
-          several and "releases" them for viewing: You'll see the graphs in a 
-          pop-up window that will appear after you click on the Results button 
-          below.
+                              <br />
+                              You may be able 
+          to see some of the class' graphs if your teacher chooses several and 
+          "releases" them for viewing: You'll see the graphs in a pop-up 
+          window that will appear after you click on the Results button below.
                               <br />
                               <br />
                               <br />
@@ -778,7 +779,49 @@
                             <OTMenuRule jumpToViewedCard="true" stepAhead="true" />
                           </menuRule>
                         </OTMenu>
-                        <object refid="99a08f00-fa10-11dd-a9f2-9149542af672" />
+                        <OTDataCollector id="7c2d1f83-2b7a-11de-9d76-b392396f84c9" name="Motion" title="Motion Sensor Graph" autoScaleEnabled="true" showControlBar="true" useDefaultToolBar="true">
+                          <source>
+                            <OTDataGraphable name="Sensor" connectPoints="true" yColumn="1" drawMarks="false" color="255" xColumn="0" lineWidth="2.0" visible="true">
+                              <dataProducer>
+                                <OTTimeLimitDataProducerFilter name="time limit" timeLimit="14000" sourceChannel="1">
+                                  <source>
+                                    <OTLinearProducerFilter name="linear" k1="-1.0" k0="1.5" sourceChannel="1">
+                                      <source>
+                                        <OTSensorDataProxy name="dataproducer">
+                                          <request>
+                                            <OTExperimentRequest period="0.1">
+                                              <sensorRequests>
+                                                <OTSensorRequest stepSize="0.1" type="13" unit="m" port="0" requiredMax="4.0" displayPrecision="-2" requiredMin="-4.0" />
+                                              </sensorRequests>
+                                            </OTExperimentRequest>
+                                          </request>
+                                        </OTSensorDataProxy>
+                                      </source>
+                                    </OTLinearProducerFilter>
+                                  </source>
+                                </OTTimeLimitDataProducerFilter>
+                              </dataProducer>
+                              <dataStore>
+                                <OTDataStore dt="0.1" numberChannels="1">
+                                  <channelDescriptions>
+                                    <OTDataChannelDescription name="dt" precision="2" numericData="true" />
+                                    <OTDataChannelDescription name="" numericData="true" />
+                                  </channelDescriptions>
+                                </OTDataStore>
+                              </dataStore>
+                            </OTDataGraphable>
+                          </source>
+                          <xDataAxis>
+                            <OTDataAxis max="15.0" units="s" min="0.0" label="Time" labelFormat="Engineering">
+                              <customGridLabels />
+                            </OTDataAxis>
+                          </xDataAxis>
+                          <yDataAxis>
+                            <OTDataAxis max="2.5" units="m" min="-1.0" label="Motion" labelFormat="Engineering">
+                              <customGridLabels />
+                            </OTDataAxis>
+                          </yDataAxis>
+                        </OTDataCollector>
                       </documentRefs>
                       <bodyText>
                         <div class="buffer">
@@ -809,7 +852,7 @@
                               <table width="100%">
                                 <tr>
                                   <td width="40%">
-                                    <div style="border-right-width: 1px; margin-top: 5px; margin-right: 5px; padding-left: 2px; border-top-width: 1px; margin-bottom: 5px; padding-top: 2px; border-style: solid; padding-bottom: 2px; border-color: black; border-left-width: 1px; padding-right: 2px; margin-left: 5px; border-bottom-width: 1px">
+                                    <div style="padding-right: 2px; margin-left: 5px; border-right-width: 1px; border-bottom-width: 1px; border-top-width: 1px; margin-bottom: 5px; border-left-width: 1px; padding-bottom: 2px; border-color: black; border-style: solid; margin-right: 5px; margin-top: 5px; padding-top: 2px; padding-left: 2px">
                                       <object refid="a3336ce6-fa10-11dd-a9f2-9149542af672" />
                                       <br />
                                       <br />
@@ -818,13 +861,9 @@
                                       <br />
                                       <object viewid="d937d590-14fd-11de-8c30-0800200c9a66" refid="a3336ce7-fa10-11dd-a9f2-9149542af672" />
                                     </div>
-                                    <br />
                                   </td>
                                   <td width="60%">
-                                    <object refid="99a08f00-fa10-11dd-a9f2-9149542af672" />
-                                    <br />
-                                    <br />
-                                    <br />
+                                    <object refid="7c2d1f83-2b7a-11de-9d76-b392396f84c9" />
                                   </td>
                                 </tr>
                               </table>
