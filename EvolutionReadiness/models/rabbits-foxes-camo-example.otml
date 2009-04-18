@@ -18,6 +18,7 @@
     <import class="org.concord.otrunk.ui.OTSlider"/>
     <import class="org.concord.otrunk.view.OTViewEntry" />
     <import class="org.concord.otrunk.view.OTViewBundle" />
+    <import class="org.concord.otrunk.view.OTViewMode" />
     <import class="org.concord.otrunk.view.document.OTCompoundDoc" />
     <import class="org.concord.otrunk.script.ui.OTScriptObject" />
     <import class="org.concord.otrunk.script.js.OTJavascript" />
@@ -39,8 +40,26 @@
 
       <bundles>
         <OTViewBundle showLeftPanel="false">
+        	<modes>
+            <OTViewMode name="authoring">
+              <map>
+                <entry key="${env-view}">
+                  <OTViewEntry objectClass="org.concord.otrunk.biologica.OTEnvironment" viewClass="org.concord.otrunk.biologica.ui.OTEnvironmentEditView" />
+                </entry>
+                <entry key="${env-holder-view}">
+                  <OTViewEntry objectClass="org.concord.otrunk.biologica.environment.OTEnvironmentHolder" viewClass="org.concord.otrunk.biologica.environment.OTEnvironmentHolderEditView" />
+                </entry>
+              </map>
+            </OTViewMode>
+          </modes>
           <viewEntries>
-            <OTViewEntry
+            <OTViewEntry local_id="env-holder-view" 
+            	objectClass="org.concord.otrunk.biologica.environment.OTEnvironmentHolder" 
+            	viewClass="org.concord.otrunk.biologica.environment.OTEnvironmentHolderView" />
+           	<OTViewEntry 
+           		objectClass="org.concord.otrunk.biologica.rules.OTRule" 
+           		viewClass="org.concord.otrunk.biologica.ui.OTRuleEditView" />
+            <OTViewEntry local_id="env-view" 
               objectClass="org.concord.otrunk.biologica.OTEnvironment"
               viewClass="org.concord.otrunk.biologica.ui.OTEnvironmentView" />
             <OTViewEntry
@@ -103,7 +122,7 @@
 		            	width="550" height="500" environmentWidth="10" environmentHeight="10"
 		            	showRunButton="false">
 		            	<rules>
-		            		<OTRule description="Health depends on leaves and sunlight">
+		            		<OTRule description="Chance of being seen depends on brownness">
 		                      <conditions>
 		                        <OTRuleCondition property="color" equals="brown"/>
 		                      </conditions>
