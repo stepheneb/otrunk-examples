@@ -16,15 +16,6 @@ activities = {}
 objects = @otrunk.getAllObjects(org.concord.otrunk.intrasession.OTMultiUser.java_class)
 
 objects.each do |wrapper|
-  klass = wrapper.get_class
-  if PICK_N_CLASS.is_assignable_from(klass)
-    klass = getClassString(PICK_N_CLASS)
-  elsif POLL_CLASS.is_assignable_from(klass)
-    klass = getClassString(POLL_CLASS)
-  else
-    klass = getClassString(klass)
-  end
-
   multiObj = wrapper.object
   doc_otids = @otrunk.getIncomingReferences(wrapper.global_id, org.concord.otrunk.view.document.OTDocument.java_class, true)
   doc_otids.each do |doc_otid|
@@ -36,9 +27,8 @@ objects.each do |wrapper|
         i += 1
         if doc_otid.equals(card.getGlobalId())
           activities[section] ||= {}
-          activities[section][i] ||= {}
-          activities[section][i][klass] ||= []
-          activities[section][i][klass] << wrapper
+          activities[section][i] ||= []
+          activities[section][i] << wrapper
         end
       end
     end
@@ -58,17 +48,19 @@ activities.keys.sort {|a,b| a.name <=> b.name }.each do |activity_key|
   stepTabs = activityTabContainer.tabs
   activity.keys.sort.each do |step_key|
     step = activity[step_key]
-    step.keys.sort.each do |type_key|
-      objs = step[type_key]
-      i = 0
-      objs.each do |obj|
-        i += 1
-        tabTitle = "#{step_key} - #{type_key}"
-        if objs.size > 1
-          tabTitle << " (#{i})"
-        end
-        stepTabs.putObject(tabTitle, obj)
+    tabTitle = "Step #{step_key}"
+    stepTabContainer = @otrunk.root_object_service.createObject(org.concord.otrunk.ui.OTTabContainer.java_class)
+    stepTabContainer.contents_may_scroll = true
+    substepTabs = stepTabContainer.tabs
+    stepTabs.putObject(tabTitle, stepTabContainer)
+    i = 0
+    step.each do |obj|
+      i += 1
+      tabTitle = "#{getClassString(obj.get_class)}"
+      if step.size > 1
+        tabTitle << " (#{i})"
       end
+      substepTabs.putObject(tabTitle, obj)
     end
   end
 end
