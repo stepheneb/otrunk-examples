@@ -14,6 +14,7 @@ end
 
 activities = {}
 objects = @otrunk.getAllObjects(org.concord.otrunk.intrasession.OTMultiUser.java_class)
+
 objects.each do |wrapper|
   klass = wrapper.get_class
   if PICK_N_CLASS.is_assignable_from(klass)
@@ -35,11 +36,9 @@ objects.each do |wrapper|
         i += 1
         if doc_otid.equals(card.getGlobalId())
           activities[section] ||= {}
-          steps = activities[section]
-          steps[i] ||= {}
-          types = steps[i]
-          types[klass] ||= []
-          types[klass] << wrapper
+          activities[section][i] ||= {}
+          activities[section][i][klass] ||= []
+          activities[section][i][klass] << wrapper
         end
       end
     end
@@ -57,13 +56,18 @@ activities.keys.sort {|a,b| a.name <=> b.name }.each do |activity_key|
   activityTabs.putObject(activity_key.name, activityTabContainer)
   
   stepTabs = activityTabContainer.tabs
-  activity.collect{|k,v| puts "#{k} => #{v}" }
   activity.keys.sort.each do |step_key|
     step = activity[step_key]
     step.keys.sort.each do |type_key|
       objs = step[type_key]
+      i = 0
       objs.each do |obj|
-        stepTabs.putObject("#{step_key} - #{type_key}", obj)
+        i += 1
+        tabTitle = "#{step_key} - #{type_key}"
+        if objs.size > 1
+          tabTitle << " (#{i})"
+        end
+        stepTabs.putObject(tabTitle, obj)
       end
     end
   end
