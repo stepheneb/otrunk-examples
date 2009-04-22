@@ -1,6 +1,8 @@
 <%
 PICK_N_CLASS = java.lang.Class::for_name("org.concord.otrunk.intrasession.OTMultiUserPickN")
 POLL_CLASS = java.lang.Class::for_name("org.concord.otrunk.intrasession.OTMultiUserPollingGraph")
+DOC_CLASS = java.lang.Class::for_name("org.concord.otrunk.view.document.OTDocument")
+CARD_CLASS = java.lang.Class::for_name("org.concord.otrunk.ui.OTCardContainer")
 
 def getClassString(klass)
   if PICK_N_CLASS.is_assignable_from(klass)
@@ -15,23 +17,31 @@ end
 activities = {}
 objects = @otrunk.getAllObjects(org.concord.otrunk.intrasession.OTMultiUser.java_class)
 
-objects.each do |wrapper|
-  multiObj = wrapper.object
-  doc_otids = @otrunk.getIncomingReferences(wrapper.global_id, org.concord.otrunk.view.document.OTDocument.java_class, true)
-  doc_otids.each do |doc_otid|
-    section_otids = @otrunk.getIncomingReferences(doc_otid, org.concord.otrunk.ui.OTSection.java_class, true)
-    section_otids.each do |otid|
-      section = @otrunk.root_object_service.getOTObject(otid)
-      i = 0
-      section.content.cards.each do |card|
-        i += 1
-        if doc_otid.equals(card.getGlobalId())
-          activities[section] ||= {}
-          activities[section][i] ||= []
-          activities[section][i] << wrapper
+objects.each do |multi_user|
+  section_otid_paths = @otrunk.getIncomingReferences(multi_user.global_id, org.concord.otrunk.ui.OTSection.java_class, true)
+  section_otid_paths.each do |section_path|
+    step_indexes = []
+    section = @otrunk.root_object_service.getOTObject(section_path[section_path.size - 1].source)
+    section_path.each do |reference|
+      source = @otrunk.root_object_service.getOTObject(reference.source)
+      if CARD_CLASS.is_assignable_from(source.get_class)
+        dest = @otrunk.root_object_service.getOTObject(reference.dest)
+        if DOC_CLASS.is_assignable_from(dest.get_class)
+          # figure out what step this is
+          i = 0
+          source.cards.each do |card|
+            i += 1
+            if reference.dest.equals(card.getGlobalId())
+              step_indexes.unshift(i)
+            end
+          end
         end
       end
     end
+    # now that we've figured out the full path to the object, save the info
+    activities[section] ||= {}
+    activities[section][step_indexes] ||= []
+    activities[section][step_indexes] << multi_user
   end
 end
 
@@ -45,7 +55,7 @@ activities.keys.sort {|a,b| a.name <=> b.name }.each do |activity_key|
   stepTabs = activityTabContainer.tabs
   activity.keys.sort.each do |step_key|
     step = activity[step_key]
-    tabTitle = "Step #{step_key}"
+    tabTitle = "Step #{step_key.join(".")}"
     stepTabContainer = @otrunk.root_object_service.createObject(org.concord.otrunk.ui.OTTabContainer.java_class)
     stepTabContainer.contents_may_scroll = true
     stepTabContainer.height = 500
