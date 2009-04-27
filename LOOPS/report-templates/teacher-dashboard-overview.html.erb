@@ -1,0 +1,95 @@
+<%
+PICK_N_CLASS = java.lang.Class::for_name("org.concord.otrunk.intrasession.OTMultiUserPickN")
+POLL_CLASS = java.lang.Class::for_name("org.concord.otrunk.intrasession.OTMultiUserPollingGraph")
+DOC_CLASS = java.lang.Class::for_name("org.concord.otrunk.view.document.OTDocument")
+CARD_CLASS = java.lang.Class::for_name("org.concord.otrunk.ui.OTCardContainer")
+
+def getClassString(klass)
+  if PICK_N_CLASS.is_assignable_from(klass)
+    "Pick N"
+  elsif POLL_CLASS.is_assignable_from(klass)
+    "Poll"
+  else
+    klass.name.to_s
+  end
+end
+
+sections = {}
+objects = @otrunk.getAllObjects(org.concord.otrunk.ui.question.OTQuestion.java_class)
+
+objects.each do |multi_user|
+  section_otid_paths = @otrunk.getIncomingReferences(multi_user.global_id, org.concord.otrunk.ui.OTSection.java_class, true)
+  section_otid_paths.each do |section_path|
+    step_indexes = []
+    section = @otrunk.root_object_service.getOTObject(section_path[section_path.size - 1].source)
+    section_path.each do |reference|
+      source = @otrunk.root_object_service.getOTObject(reference.source)
+      if CARD_CLASS.is_assignable_from(source.get_class)
+        dest = @otrunk.root_object_service.getOTObject(reference.dest)
+        if DOC_CLASS.is_assignable_from(dest.get_class)
+          # figure out what step this is
+          i = 0
+          source.cards.each do |card|
+            i += 1
+            if reference.dest.equals(card.getGlobalId())
+              step_indexes.unshift(i)
+            end
+          end
+        end
+      end
+    end
+    # now that we've figured out the full path to the object, save the info
+    sections[section] ||= {}
+    sections[section][step_indexes] ||= []
+    sections[section][step_indexes] << multi_user
+  end
+end
+%>
+<table border='1'>
+<tr>
+  <td rowspan="2">&nbsp;</td>
+<% # FIRST THE ACTIVITY TITLES %>
+<%
+sections.keys.sort {|a,b| a.name <=> b.name }.each do |section|
+  steps = sections[section]
+  question_count = steps.collect{|k,v| v.size}.inject{|sum, val| val + sum }
+%>
+  <td colspan="<%= question_count %>"><%= section.name %></td>
+<% end %>
+  </tr>
+  
+<% # THEN THE STEP/QUESTION HEADERS %>
+  <tr>
+<%
+sections.keys.sort {|a,b| a.name <=> b.name }.each do |section|
+  steps = sections[section]
+  steps.keys.sort.each do |step_index|
+    step = steps[step_index]
+    step.each do |obj|
+      tabTitle = "#{promptText(obj)}"
+%>
+    <td width="120">Step <%= step_index.join(".") %><br/><%= tabTitle %></td>
+<%   end %>
+<%  end %>
+<% end %>
+  </tr>
+  
+<% # NOW EACH USER ROW %>
+<% users.each do |user| %>
+  <tr>
+    <td><%= user.name %></td>
+<%
+sections.keys.sort {|a,b| a.name <=> b.name }.each do |section|
+  steps = sections[section]
+  steps.keys.sort.each do |step_index|
+    step = steps[step_index]
+    step.each do |obj|
+%>
+    <td><%= questionAnswerHtml(userObject(obj, user), user, false) %></td>
+<%   end %>
+<%  end %>
+<% end %>
+  </tr>
+<% end %>
+</tr>
+</table>
