@@ -25,7 +25,8 @@
 importPackage(Packages.java.lang);
 importClass(Packages.java.awt.Color);
 
-importClass(Packages.org.concord.framework.simulation.SimulationListener);
+importClass(Packages.org.concord.framework.startable.StartableListener);
+importClass(Packages.org.concord.framework.startable.StartableEvent);
 importClass(Packages.org.concord.framework.simulation.StepListener);
 importClass(Packages.org.concord.collisions.engine.JPartWorld);
 importClass(Packages.org.concord.collisions.event.CollisionsListener);
@@ -134,17 +135,13 @@ var daemonListener =  new DaemonCollListener()
  * When the simulation gets reset, it means the player wants to try again, so
  * this script calls the initialization method whenever the player resets
  */
-var simulationListener = new SimulationListener()
+var startableListener = new StartableListener()
 {
-	simulationStarted: function(evt)
+	startableEvent: function(evt)
 	{
-	},
-	simulationStopped: function(evt)
-	{
-	},
-	simulationReset: function(evt)
-	{
-		initial();
+	  if(evt.type == StartableEvent.StartableEventType.RESET) {
+			initial();		  
+	  }
 	}
 };
 
@@ -221,7 +218,7 @@ function setupActivity()
 {
 	world = objView.getWorldModel();
 	world.addStepListener(stepsListener,1000);
-	objView.addSimulationListener(simulationListener);
+	objView.addStartableListener(startableListener);
 	objView.addCollisionsListener(collisionsListener);
 
 	//Get the pirate guy
