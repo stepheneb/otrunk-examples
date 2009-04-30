@@ -97,71 +97,6 @@ var sectionHandler =
 
 var sectionListener = new OTChangeListener(sectionHandler);
 
-var sectionContainerHandler =
-{
-		stateChanged: function(evt)
-		{
-			if (evt.getProperty().equalsIgnoreCase("currentCard")){
-				var numCards = evt.getSource().getCards().size();
-				var section = evt.getSource().getCards().get(numCards-1);
-				section.getContent().addOTChangeListener(pageContainerListener);
-			}
-			if (evt.getProperty().equalsIgnoreCase("cards")) {
-				var numCards = evt.getSource().getCards().size();
-				var section = evt.getSource().getCards().get(numCards-1);
-				section.setName("Section "+numCards);
-				
-				var header = section.getHeader();
-				
-				header.setShowEditBar(false);
-				
-				header.setBodyText("<div class=\"title\">"+
-									"Section " + numCards +
-								"</div>");
-				
-				var doc = section.getContent().getCurrentCard();
-				
-				doc.setBodyText("<div class=\"buffer\">"+
-									"<div class=\"border\">"+
-										"<div class=\"body\">"+
-										"<div class=\"subtitle\">\n"+
-												"New page"+
-											"\n</div>\n"+
-											"New page content"+
-										"\n</div>"+
-									"</div>"+
-								"</div>");
-				
-				pages.push(doc)	
-				pages[pages.length-1].addOTChangeListener(pageListener);
-								
-				var menu = doc.getOTObjectService().createObject(sampleMenu.otClass().getInstanceClass());
-				menu.setCardContainer(section.getContent());
-				menu.setMenuRule(menuPageRule);
-				
-				var footer = section.getFooter();
-				
-				footer.setShowEditBar(false);
-				
-				var otid = menu.getOTObjectService().getExternalID(menu);
-				var viewid = menu.getOTObjectService().getExternalID(menuHorizontalView);
-				
-				footer.setBodyText("<div align=\"center\">" +
-									"<table>"+
-											"<tr>"+
-												"<td>"+
-													"<object refid=\""+otid+"\" viewid=\""+viewid+"\"/>" +
-												"</td>"+
-											"</tr>"+
-									"</table>"+
-									"</div>");
-								
-				section.getContent().addOTChangeListener(pageContainerListener);
-				section.addOTChangeListener(sectionListener);
-			}
-		}
-};
-var sectionContainerListener = new OTChangeListener(sectionContainerHandler);
 
 var pageContainerHandler =
 {
@@ -195,55 +130,21 @@ var sectionCardContainers = [];
 var pages = [];
 
 function init() {
-	System.out.println("init")
-	cardContainer.addOTChangeListener(sectionContainerListener);
+	cardContainer.addOTChangeListener(pageContainerListener);
 	
 	var pageIndex = 0;
-	for (var i = 0; i < cardContainer.getCards().size(); i++){
-		sections[i] = cardContainer.getCards().get(i);
-		sections[i].addOTChangeListener(sectionListener);
 		
-		sectionCardContainers[i] = sections[i].getContent();
-		sectionCardContainers[i].addOTChangeListener(pageContainerListener);
-		
-		for (var j = 0; j < sectionCardContainers[i].getCards().size(); j++){
-			pages[pageIndex] = sectionCardContainers[i].getCards().get(j);
+		for (var j = 0; j < cardContainer.getCards().size(); j++){
+			pages[pageIndex] = cardContainer.getCards().get(j);
 			pages[pageIndex].addOTChangeListener(pageListener);
-			// addPageNumber(pages[pageIndex], j+1);
-			// turn off definitions for pre- and post-
-			if ((i == 0) || (i == (cardContainer.getCards().size()-1))){
-				pages[pageIndex].setShowDefinitions(false);
-			} else {
-				pages[pageIndex].setShowDefinitions(true);
-			}
 			pageIndex++;
 		}
-	}
 	
 	return true;
 }
 
-function addPageNumber(page, number) {
-	var text = page.getBodyText();
-	if (text.indexOf("<!-- title -->") > -1){
-		text = text.replaceAll("<!-- title -->","<div class=\"subtitle\"> </div>");
-	}
-	page.setBodyText(text);
-	if (text.indexOf("no-page-number") > -1){
-		return;
-	}
-	if (text.indexOf("<div class=\"page-number\">") > -1){
-		text = text.replaceAll("<div class=\"page-number\">.*</div>","<div class=\"page-number\">"+number+"</div>");
-	} else {
-		var startBody = "<div class=\"body\">";
-		var number = "<div class=\"page-number\">"+number+"</div>";
-		var table = "<table width=\"100%\"><tr>\n<td><div class=\"subtitle\"> </div></td>\n<td align=\"right\">"+number+"</td>\n</tr></table>";
-		text = text.replaceAll(startBody, startBody+"\n"+table);
-	}
-	page.setBodyText(text);
-}
 
 function save() {
-	cardContainer.removeOTChangeListener(sectionContainerListener);
+	cardContainer.removeOTChangeListener(pageContainerListener);
 	return true;
 }
