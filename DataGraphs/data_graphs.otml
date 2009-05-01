@@ -24,6 +24,7 @@
     <import class="org.concord.graph.util.state.OTDrawingImageIcon"/>
     <import class="org.concord.graph.util.state.OTDrawingShape"/>
     <import class="org.concord.graph.util.state.OTPointTextLabel"/>
+    <import class="org.concord.data.state.OTTimeLimitDataProducerFilter"/>
   </imports>
   <objects>
     <OTSystem>
@@ -336,7 +337,7 @@
                 <OTDataGraphable connectPoints="true" color="0x0000ff"
                   drawMarks="false" name="Pressure1" xColumn="0" yColumn="1">
                   <dataProducer>
-                    <OTWaveGenerator timeScale="0.2" sampleTime="0.3"/>
+                    <OTWaveGenerator timeScale="0.2" sampleTime="0.3" amplitude="1"/>
                   </dataProducer>
                 </OTDataGraphable>
               </source>
@@ -344,13 +345,14 @@
 				<OTDataGraphable connectPoints="true" color="0xff0000"
                   drawMarks="false" name="Pressure2" xColumn="0" yColumn="1">
                   <dataProducer>
-                    <OTWaveGenerator timeScale="0.4" sampleTime="0.3"/>
+                    <OTWaveGenerator timeScale="0.4" sampleTime="0.3" amplitude="1.5"/>
                   </dataProducer>
                 </OTDataGraphable>
 				<OTDataGraphable connectPoints="true" color="0x00ff00"
                   drawMarks="false" name="Pressure3" xColumn="0" yColumn="1">
                   <dataProducer>
-                    <OTWaveGenerator timeScale="0.6" sampleTime="0.3"/>                  </dataProducer>
+                    <OTWaveGenerator timeScale="0.6" sampleTime="0.3" amplitude="2"/>
+                  </dataProducer>
                 </OTDataGraphable>
               </graphables>
               <xDataAxis>
@@ -371,6 +373,26 @@
               </source>
               <xDataAxis>
                 <OTDataAxis min="0" max="100" label="Time" units="min"/>
+              </xDataAxis>
+              <yDataAxis>
+                <OTDataAxis min="-2" max="2" label="sin(x)"/>
+              </yDataAxis>
+            </OTDataCollector>
+            <OTDataCollector name="Timelimit Graph">
+              <source>
+                <OTDataGraphable connectPoints="true" color="0x0000ff"
+                  drawMarks="false" name="Wave" xColumn="0" yColumn="1">
+                  <dataProducer>
+                    <OTTimeLimitDataProducerFilter timeLimit="2000" sourceChannel="1">
+                      <source>
+                        <OTWaveGenerator sampleTime="0.3"/>
+                      </source>
+                    </OTTimeLimitDataProducerFilter>
+                  </dataProducer>
+                </OTDataGraphable>
+              </source>
+              <xDataAxis>
+                <OTDataAxis min="0" max="5" label="Time" units="s"/>
               </xDataAxis>
               <yDataAxis>
                 <OTDataAxis min="-2" max="2" label="sin(x)"/>
