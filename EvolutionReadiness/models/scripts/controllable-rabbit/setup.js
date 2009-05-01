@@ -7,7 +7,8 @@ importPackage(Packages.org.concord.biologica.environment);
 importPackage(Packages.org.concord.framework.otrunk);
   	
 var rabbit = rabbit_species.createAgent()
-		
+var rabbits = []
+	
 function init() {
 	world = env.getWorld()
 	env.setWrapNorthSouth(false)
@@ -26,7 +27,7 @@ function init() {
         
         
 	rabbit.setAge(20)
-//	rabbit.setProperty("Speed", 0)
+	rabbit.setProperty("Speed", 0)
 	rabbit.setProperty("is immortal", true)
 	rabbit.setProperty("max offspring", 0)
 	env.addAgent(rabbit)
@@ -41,6 +42,8 @@ function init() {
 	window.addKeyListener(arrowListener)
 	
 	env.addStepListener(stepListener)
+	
+	add.addActionListener(buttonListener)
 	
 	return true;
 }
@@ -73,7 +76,6 @@ var stepHandler =
 	{
 		var hunger = rabbit.getProperty("Hunger").intValue()
 		slider.setValue(hunger * 4)
-		System.out.println("hunger = "+hunger)
 		if (hunger == 250){
 			JOptionPane.showMessageDialog(null, "Oh no! Your rabbit died of hunger.")
 			rabbit.setProperty("Hunger", 0)
@@ -91,6 +93,17 @@ var stepHandler =
 				var plant = plant_species.createAgent();
 				plant.setAge(i*2)
 				env.addAgent(plant)
+			}
+		}
+		
+		for (var i=0; i<rabbits.length; i++){
+			var newRabbit = rabbits[i];
+			if (newRabbit != null){
+				var newHunger = newRabbit.getProperty("Hunger").intValue()
+				if (newHunger > 250){
+					env.removeAgent(newRabbit)
+					newRabbit = null
+				}
 			}
 		}
 	}
@@ -118,6 +131,20 @@ var grassSliderChangeHandler =
 
 }
 var grassSliderChangeListener = new OTChangeListener(grassSliderChangeHandler)
+
+var buttonHandler =
+{
+		actionPerformed: function(evt)
+		{
+			var newRabbit = rabbit_species.createAgent()
+			newRabbit.setAge(20)
+			newRabbit.setProperty("is immortal", true)
+			newRabbit.setProperty("max offspring", 0)
+			env.addAgent(newRabbit)
+			rabbits[rabbits.length] = newRabbit
+		}
+};
+var buttonListener = new ActionListener(buttonHandler);
 
 function save() {
 	return true;
