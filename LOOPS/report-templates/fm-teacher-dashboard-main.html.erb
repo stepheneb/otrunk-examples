@@ -3,6 +3,9 @@ PICK_N_CLASS = java.lang.Class::for_name("org.concord.otrunk.intrasession.OTMult
 POLL_CLASS = java.lang.Class::for_name("org.concord.otrunk.intrasession.OTMultiUserPollingGraph")
 DOC_CLASS = java.lang.Class::for_name("org.concord.otrunk.view.document.OTDocument")
 CARD_CLASS = java.lang.Class::for_name("org.concord.otrunk.ui.OTCardContainer")
+OVERLAY_CLASS = java.lang.Class::for_name("org.concord.otrunk.overlay.OTOverlayWrapper")
+MULTI_CLASS = java.lang.Class::for_name("org.concord.otrunk.intrasession.OTMultiUser")
+SECTION_CLASS = java.lang.Class::for_name("org.concord.otrunk.ui.OTSection")
 
 def getClassString(klass)
   if PICK_N_CLASS.is_assignable_from(klass)
@@ -15,11 +18,19 @@ def getClassString(klass)
 end
 
 activities = {}
-objects = @otrunk.getAllObjects(org.concord.otrunk.intrasession.OTMultiUser.java_class)
+objects = @otrunk.getAllObjects(MULTI_CLASS)
+overlays = @otrunk.getAllObjects(OVERLAY_CLASS)
 
 objects.each do |multi_user|
-  section_otid_paths = @otrunk.getIncomingReferences(multi_user.global_id, org.concord.otrunk.ui.OTSection.java_class, true)
+  $stderr.puts "#{multi_user}"
+  next if multi_user.object == nil
+  $stderr.puts "multi-user has object"
+  wrapper_otid_paths = @otrunk.getIncomingReferences(multi_user.object.global_id, OVERLAY_CLASS, true)
+  next if wrapper_otid_paths.size < 1
+  first_path = wrapper_otid_paths[0]
+  section_otid_paths = @otrunk.getIncomingReferences(first_path[first_path.size-1].source,  SECTION_CLASS, true)
   section_otid_paths.each do |section_path|
+    $stderr.puts "checking path"
     step_indexes = []
     section = @otrunk.root_object_service.getOTObject(section_path[section_path.size - 1].source)
     section_path.each do |reference|
@@ -42,6 +53,7 @@ objects.each do |multi_user|
     activities[section] ||= {}
     activities[section][step_indexes] ||= []
     activities[section][step_indexes] << multi_user
+$stderr.puts "multi-user added"
   end
 end
 
