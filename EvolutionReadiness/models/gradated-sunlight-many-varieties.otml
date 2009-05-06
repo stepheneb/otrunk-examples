@@ -15,6 +15,7 @@
     <import class="org.concord.otrunk.biologica.rules.OTRule" />
     <import class="org.concord.otrunk.biologica.rules.OTRuleCondition" />
     <import class="org.concord.otrunk.biologica.rules.OTRuleConsequence" />
+    <import class="org.concord.otrunk.ui.OTCurriculumUnit" />
     <import class="org.concord.otrunk.view.OTViewEntry" />
     <import class="org.concord.otrunk.view.OTViewBundle" />
     <import class="org.concord.otrunk.view.OTViewMode" />
@@ -33,31 +34,7 @@
   <objects>
     <OTSystem>
       <bundles>
-        <OTViewBundle showLeftPanel="false">
-          <modes>
-            <OTViewMode name="authoring">
-              <map>
-                <entry key="${env-view}">
-                  <OTViewEntry objectClass="org.concord.otrunk.biologica.OTEnvironment" viewClass="org.concord.otrunk.biologica.ui.OTEnvironmentEditView" />
-                </entry>
-                <entry key="${env-holder-view}">
-                  <OTViewEntry objectClass="org.concord.otrunk.biologica.environment.OTEnvironmentHolder" viewClass="org.concord.otrunk.biologica.environment.OTEnvironmentHolderEditView" />
-                </entry>
-              </map>
-            </OTViewMode>
-          </modes>
-          <viewEntries>
-            <OTViewEntry local_id="env-holder-view" objectClass="org.concord.otrunk.biologica.environment.OTEnvironmentHolder" viewClass="org.concord.otrunk.biologica.environment.OTEnvironmentHolderView" />
-          	<OTViewEntry local_id="env-view" objectClass="org.concord.otrunk.biologica.OTEnvironment" viewClass="org.concord.otrunk.biologica.ui.OTEnvironmentEditView" />
-            <OTViewEntry objectClass="org.concord.otrunk.biologica.rules.OTRule" viewClass="org.concord.otrunk.biologica.ui.OTRuleEditView" />
-            <OTViewEntry objectClass="org.concord.otrunk.script.ui.OTScriptObject" viewClass="org.concord.otrunk.script.ui.OTScriptObjectView" />
-            <OTViewEntry objectClass="org.concord.otrunk.view.document.OTDocument" viewClass="org.concord.otrunk.view.document.OTDocumentView" />
-            <OTViewEntry objectClass="org.concord.otrunk.script.ui.OTScriptButton" viewClass="org.concord.otrunk.script.ui.OTScriptButtonView" />
-            </viewEntries>
-          <frame>
-            <OTFrame useScrollPane="false" width="800" height="590" />
-          </frame>
-        </OTViewBundle>
+      	<object refid="8d880970-c22a-11dc-95ff-0800200c9a66" />
         <OTScriptEngineBundle>
           <engines>
             <OTScriptEngineEntry objectClass="org.concord.otrunk.script.js.OTJavascript" engineClass="org.concord.otrunk.script.js.OTJavascriptEngine" />
@@ -65,9 +42,12 @@
         </OTScriptEngineBundle>
       </bundles>
       <includes>
+      	<OTInclude href="../global-imports/er-view-bundle.otml" />
         <OTInclude href="species/varied-plants.otml" />
       </includes>
       <root>
+      	<OTCurriculumUnit version="2" name="ER Activity">
+          <activity>
         <OTCompoundDoc name="Population">
           <bodyText>
             <table>
@@ -80,6 +60,7 @@
                   <br />
                   <object refid="${add-mixed-ferns-button}" />
                   <br />
+                  <object refid="${clear-button}"/><br/>
                 </td>
               </tr>
             </table>
@@ -169,6 +150,20 @@
               </variables>
               <scriptState />
             </OTScriptObject>
+            <OTScriptButton local_id="clear-button" text="Clear">
+             		<script>
+             			<OTJavascript>
+     				<script>function clicked()
+      				{
+      					environment.removeAllAgents();
+      				}
+     				</script>
+     			</OTJavascript>
+             		</script>
+             		<scriptVariables>
+             			<OTScriptVariableRealObject name="environment" reference="${environment}"/>
+             		</scriptVariables>
+             </OTScriptButton>
             <OTScriptButton local_id="add-thin-ferns-button" text="Add thin ferns">
               <script>
                 <object refid="${add-thin.js}" />
@@ -225,6 +220,8 @@
             </OTJavascript>
           </documentRefs>
         </OTCompoundDoc>
+        </activity>
+        </OTCurriculumUnit>
       </root>
     </OTSystem>
   </objects>
