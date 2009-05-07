@@ -30,39 +30,39 @@ This model shows how hydrogen and oxygen burn to form water. The equation for th
 <size>14</size></content>
 
 <content start="128" end="129">
-<bold>true</bold><size>17</size></content>
+<size>17</size><bold>true</bold></content>
 
 </paragraph>
 <paragraph start="129" end="145">
 <Alignment>1</Alignment>
 <LeftIndent>8.0</LeftIndent>
 <content start="129" end="131">
-<bold>true</bold><size>17</size></content>
+<size>17</size><bold>true</bold></content>
 
 <content start="131" end="132">
-<bold>true</bold><size>11</size></content>
+<size>11</size><bold>true</bold></content>
 
 <content start="132" end="136">
-<bold>true</bold><size>17</size></content>
+<size>17</size><bold>true</bold></content>
 
 <content start="136" end="137">
-<bold>true</bold><size>11</size></content>
+<size>11</size><bold>true</bold></content>
 
 <content start="137" end="142">
-<bold>true</bold><size>17</size></content>
+<size>17</size><bold>true</bold></content>
 
 <content start="142" end="143">
-<bold>true</bold><size>11</size></content>
+<size>11</size><bold>true</bold></content>
 
 <content start="143" end="145">
-<bold>true</bold><size>17</size></content>
+<size>17</size><bold>true</bold></content>
 
 </paragraph>
 <paragraph start="145" end="146">
 <Alignment>1</Alignment>
 <LeftIndent>8.0</LeftIndent>
 <content start="145" end="146">
-<bold>true</bold><size>17</size></content>
+<size>17</size><bold>true</bold></content>
 
 </paragraph>
 <paragraph start="146" end="151">
@@ -94,7 +94,7 @@ This model shows how hydrogen and oxygen burn to form water. The equation for th
         Then press the spark button to initiate the reaction.
       &lt;/li&gt;
     &lt;/ol&gt;
-    &lt;img height=&quot;143&quot; width=&quot;262&quot; src=&quot;highlight-key.gif&quot;&gt;
+    &lt;img width=&quot;262&quot; src=&quot;highlight-key.gif&quot; height=&quot;143&quot;&gt;
     &lt;br&gt;
   &lt;/body&gt;
 &lt;/html&gt;
@@ -187,14 +187,13 @@ This model shows how hydrogen and oxygen burn to form water. The equation for th
 <model>4</model>
 <script>stop;
 define %molecule rand()*(%number_of_molecules-1);
-set %molecule round(%molecule);
 define %atom1 0;
 set %atom1 atomOfMolecule(%molecule,0);
 define %atom2 0;
 set %atom2 atomOfMolecule(%molecule,1);
 while ((%atom[%atom1].id != 1) or (%atom[%atom1].ry &lt; 10) or (%atom[%atom1].rx &gt; 30));
 print id: %atom[%atom1].id    x: %atom[%atom1].rx   y: %atom[%atom1].ry;
-	set %molecule round(rand()*(%number_of_molecules-1));
+	set %molecule rand()*(%number_of_molecules-1);
 	set %atom1 atomOfMolecule(%molecule,0);
 endwhile;
 set %atom2 atomOfMolecule(%molecule,1);
@@ -206,7 +205,7 @@ define %sparkY 0;
 set %sparkY (%atom[%atom1].ry+%atom[%atom2].ry)/2;
 add image spark.gif (%sparkX, &quot;%sparkY-4.3&quot;); //make point of spark appear at bond.
 select image none;
-select molecule %molecule;
+select atom %atom1 or %atom2;
 set visible off;
 delay 0.25;
 set visible on;
