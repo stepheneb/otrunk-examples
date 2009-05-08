@@ -22,17 +22,15 @@ objects = @otrunk.getAllObjects(MULTI_CLASS)
 overlays = @otrunk.getAllObjects(OVERLAY_CLASS)
 
 objects.each do |multi_user|
-  $stderr.puts "#{multi_user}"
   next if multi_user.object == nil
-  $stderr.puts "multi-user has object"
   wrapper_otid_paths = @otrunk.getIncomingReferences(multi_user.object.global_id, OVERLAY_CLASS, true)
   next if wrapper_otid_paths.size < 1
   first_path = wrapper_otid_paths[0]
   section_otid_paths = @otrunk.getIncomingReferences(first_path[first_path.size-1].source,  SECTION_CLASS, true)
   section_otid_paths.each do |section_path|
-    $stderr.puts "checking path"
     step_indexes = []
     section = @otrunk.root_object_service.getOTObject(section_path[section_path.size - 1].source)
+    section.name ||= "Unknown Activity"
     section_path.each do |reference|
       source = @otrunk.root_object_service.getOTObject(reference.source)
       if CARD_CLASS.is_assignable_from(source.get_class)
@@ -53,17 +51,20 @@ objects.each do |multi_user|
     activities[section] ||= {}
     activities[section][step_indexes] ||= []
     activities[section][step_indexes] << multi_user
-$stderr.puts "multi-user added"
   end
 end
 
 otTabContainer = @otrunk.root_object_service.createObject(org.concord.otrunk.ui.OTTabContainer.java_class)
 activityTabs = otTabContainer.tabs
-activities.keys.sort {|a,b| (a.name ? a.name : "unknown activity") <=> (b.name ? b.name : "unknown activity") }.each do |activity_key|
+activities.keys.sort {|a,b| a.name <=> b.name }.each do |activity_key|
   activity = activities[activity_key]
   activityTabContainer = @otrunk.root_object_service.createObject(org.concord.otrunk.ui.OTTabContainer.java_class)
+  i = 1
+  while activityTabs.object_keys.contains(activity_key.name)
+    activity_key.name = activity_key.name.sub(/( \d+)?$/, " #{i += 1}")
+  end
   activityTabs.putObject(activity_key.name, activityTabContainer)
-  
+
   stepTabs = activityTabContainer.tabs
   activity.keys.sort.each do |step_key|
     step = activity[step_key]
