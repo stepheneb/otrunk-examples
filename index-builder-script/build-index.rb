@@ -7,8 +7,6 @@ require 'find'
 require 'yaml'
 require 'time'
 require 'uri'
-require 'cgi'
-
 
 # print error messages on stdout so we can see them in the browser
 STDERR.reopen(STDOUT)
@@ -17,10 +15,12 @@ puts "Hello I am running as "
 system("whoami")
 puts ""
 
-cgi = CGI.new
-dir = cgi['dir']
+# hard code the directory for now, but the goal is to have another script
+# which calls this one with different directories
+dir = "examples"
+
 if dir.nil? || dir.empty?
-  puts "Must give a dir param indicating which index to build"
+  puts "Must argument indicating which index to build"
   exit
 end
 
