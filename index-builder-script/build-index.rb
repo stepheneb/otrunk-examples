@@ -103,7 +103,7 @@ otrunk_example_dirs.each do |path|
   svn_props = YAML::load(`svn info "#{path}"`)
   gmt_time = gmt_time_from_svn_time(svn_props["Last Changed Date"])
   examples = Dir.glob("#{path}/*.otml").length
-  index_page_body += "<tr><td><a href=""#{path}/ot-index.html"">#{path}</a></td>"
+  index_page_body += "<tr><td><a href=""#{path}/"">#{path}</a></td>"
   index_page_body += "<td class='timestyle'>#{gmt_time}</td>"
   index_page_body += "<td>#{examples}</td></tr>\n"
 end
@@ -111,6 +111,8 @@ end
 index_page_body += "</tbody></table>"
 index_page_body += "<hr/><br/><br/><a href='/cgi-script/build-index.rb'>Update Index</a>"
 
+writeHtmlPage("OTrunk Examples", index_page_body, "index.html")
+# FIXME this should be changed to a redirect
 writeHtmlPage("OTrunk Examples", index_page_body, "example-index.html")
 
 otrunk_example_dirs.each do |path|
@@ -201,12 +203,16 @@ HEREDOC
   otml_launchers += "</tbody></table><hr/>"
   all_files += "</table>"
 
-  index_page_body = "<a href=""../example-index.html"">Examples Index ...</a><br/>\n"  +  
+  index_page_body = "<a href=""../"">Examples Index ...</a><br/>\n"  +  
     "<a href=""http://confluence.concord.org/display/CSP/#{path}"">Confluence Notes</a><br/>\n" +
     otml_launchers + java_web_start_warning + description_of_jnlps + all_files
 
   index_page_body += "<hr/>The jnlp urls were constructed using the following template:<br/>\n"
   index_page_body += jnlp_url_tmpl + "<br/>\n"
   index_page_body += "You can change this string by putting it in a file named: <b>jnlp_url.tmpl</b> in this directory"
+  writeHtmlPage("#{path} Examples", index_page_body, "#{path}/index.html");
+
+  # need to write out the ot-index.html with a redirect for backwards compatability
+  # or for now just write it out twice :)
   writeHtmlPage("#{path} Examples", index_page_body, "#{path}/ot-index.html");
 end
