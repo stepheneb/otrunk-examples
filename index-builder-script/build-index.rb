@@ -1,11 +1,14 @@
-#! /usr/bin/ruby -w
+#! /usr/local/bin/ruby -w
+
+puts "Content-type: text/plain\n\n"
+puts "Starting"
 
 require 'find'
 require 'yaml'
 require 'time'
 require 'uri'
+require 'cgi'
 
-puts "Content-type: text/plain\n\n"
 
 # print error messages on stdout so we can see them in the browser
 STDERR.reopen(STDOUT)
@@ -14,9 +17,23 @@ puts "Hello I am running as "
 system("whoami")
 puts ""
 
-Dir.chdir("../otrunk/examples")
+cgi = CGI.new
+dir = cgi['dir']
+if dir.nil? || dir.empty?
+  puts "Must give a dir param indicating which index to build"
+  exit
+end
+
+if /\.\./.match(dir)
+  puts "dir param cannot contain '..'"
+  exit
+end
+
+Dir.chdir("../#{dir}")
 puts "In directory "
 puts Dir.pwd
+
+$config = YAML::load("config.yml")
 
 # update the content directories
 puts `svn up`
@@ -28,10 +45,10 @@ def writeHtmlPage(title, body, filename)
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en-US" xml:lang="en-US">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-  <link rel="stylesheet" type="text/css" media="all" href="/otrunk/examples/index-builder-script/style.css" />
-  <script type="text/javascript" src="/otrunk/examples/index-builder-script/prototype.js"></script>
-  <script type="text/javascript" src="/otrunk/examples/index-builder-script/fastinit.js"></script>
-  <script type="text/javascript" src="/otrunk/examples/index-builder-script/tablesort.js"></script>	
+  <link rel="stylesheet" type="text/css" media="all" href="#{$config['subdir']}/examples/index-builder-script/style.css" />
+  <script type="text/javascript" src="#{$config['subdir']}/examples/index-builder-script/prototype.js"></script>
+  <script type="text/javascript" src="#{$config['subdir']}/examples/index-builder-script/fastinit.js"></script>
+  <script type="text/javascript" src="#{$config['subdir']}/examples/index-builder-script/tablesort.js"></script>	
   <TITLE>#{title}</TITLE>
   <style type="text/css">
   h3 {margin-bottom: 0.5em; margin-top:2em; border-bottom: 1px solid }
@@ -86,7 +103,7 @@ otrunk_example_dirs.each do |path|
 end
 
 index_page_body += "</tbody></table>"
-index_page_body += "<hr/><br/><br/><a href='http://continuum.concord.org/cgi-script/build-index.rb'>Update Index</a>"
+index_page_body += "<hr/><br/><br/><a href='#{$config['host']}/cgi-script/build-index.rb'>Update Index</a>"
 
 writeHtmlPage("OTrunk Examples", index_page_body, "example-index.html")
 
@@ -154,7 +171,7 @@ HERE
       svn_rev1 = match[1]
       svn_rev2 = match[2]
       example_name = filename[/(.*)\.otml/, 1]
-      otml_url = URI.escape("http://continuum.concord.org/otrunk/examples/#{subpath}", /[#{URI::REGEXP::PATTERN::RESERVED}\s]/)
+      otml_url = URI.escape("#{$config['host']}#{$config['subdir']}/examples/#{subpath}", /[#{URI::REGEXP::PATTERN::RESERVED}\s]/)
       trac_otml_url = "http://trac.cosmos.concord.org/projects/browser/trunk/common/java/otrunk/otrunk-examples/#{subpath}"
       jnlp_url = jnlp_url_tmpl.sub(/%otml_url%/, otml_url)
       jnlp_author_url = jnlp_url_tmpl_author.sub(/%otml_url%/, otml_url)
