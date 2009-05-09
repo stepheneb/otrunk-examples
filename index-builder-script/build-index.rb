@@ -15,6 +15,13 @@ puts "Hello I am running as "
 system("whoami")
 puts ""
 
+$config = YAML::load_file("config.yml")
+$config['host'] = "" if $config['host'].nil?
+$config['subdir'] = "" if $config['subdir'].nil?
+
+puts "host: #{$config['host']}"
+puts "subdir: #{$config['subdir']}"
+
 # hard code the directory for now, but the goal is to have another script
 # which calls this one with different directories
 dir = "examples"
@@ -33,7 +40,6 @@ Dir.chdir("../#{dir}")
 puts "In directory "
 puts Dir.pwd
 
-$config = YAML::load("config.yml")
 
 # update the content directories
 puts `svn up`
@@ -103,7 +109,7 @@ otrunk_example_dirs.each do |path|
 end
 
 index_page_body += "</tbody></table>"
-index_page_body += "<hr/><br/><br/><a href='#{$config['host']}/cgi-script/build-index.rb'>Update Index</a>"
+index_page_body += "<hr/><br/><br/><a href='/cgi-script/build-index.rb'>Update Index</a>"
 
 writeHtmlPage("OTrunk Examples", index_page_body, "example-index.html")
 
