@@ -36,7 +36,7 @@ if /\.\./.match(dir)
   exit
 end
 
-Dir.chdir("../#{dir}")
+Dir.chdir("..#{$config['subdir']}/#{dir}")
 puts "In directory "
 puts Dir.pwd
 
