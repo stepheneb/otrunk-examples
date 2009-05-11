@@ -1,0 +1,81 @@
+<div class="menu">
+  <table>
+    <tr>
+      <td><div class="menu_item"><%= linkToUnitPage "Unit Summary" %></div></td>
+      <td><div class="menu_item"><%= linkToObject "Back to standard view", activityRoot(), $leveled_questions_view %></div></td>
+    </tr>
+  </table>
+</div>
+
+<hr />
+
+  <h3>Scaffolding level</h3>
+  <% text = '' %>
+    
+    <% sections = unitSections() %>
+    
+    
+      <% text += "User|" %>
+      
+      <% sections.each do |section| %>
+	      <% questions = sectionLeveledQuestions(section) %>
+	      <% questions.each do |levQuestion| %>
+	      	<% question = levQuestion.questions.get(0) %>
+	        <% text +=  truncate(promptText(question), 30) + "|" %>  
+	      <% end %>
+      <% end %>
+      
+    <% text += "\n" %>  
+     
+    <% @users.each do |user| %>
+        <% text += user.name + "|" %>
+         <% sections.each do |section| %>
+	         <% questions = sectionLeveledQuestions(section) %>
+	         <% questions.each do |levQuestion| %>
+	          	<% userQuestion = userObject(levQuestion, user) %>
+	          	<% text += userQuestion.currentIndex.to_s + "|"%>  
+	        <% end %>
+	    <% end %>  
+	   	<% text += "\n" %>      
+      	
+    <% end %> 
+    
+    <pre>
+    <%=text%>
+    </pre>
+
+  
+  <h3>Levels clicked through</h3>
+	<% text = '' %>
+    
+    <% sections = unitSections() %>
+    
+    
+      <% text += "User|" %>
+      
+      <% sections.each do |section| %>
+	      <% questions = sectionLeveledQuestions(section) %>
+	      <% questions.each do |levQuestion| %>
+	      	<% question = levQuestion.questions.get(0) %>
+	        <% text +=  truncate(promptText(question), 30) + "|" %>  
+	      <% end %>
+      <% end %>
+      
+    <% text += "\n" %>  
+     
+    <% @users.each do |user| %>
+        <% text += user.name + "|" %>
+         <% sections.each do |section| %>
+	         <% questions = sectionLeveledQuestions(section) %>
+	         <% questions.each do |levQuestion| %>
+	          	<% userQuestion = userObject(levQuestion, user) %>
+	          	<% text += userQuestion.timesClicked.to_s + "|"%>  
+	        <% end %>
+	    <% end %>  
+	   	<% text += "\n" %>      
+      	
+    <% end %> 
+    
+    <pre>
+    <%=text%>
+    </pre>

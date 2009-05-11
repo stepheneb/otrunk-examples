@@ -1,0 +1,81 @@
+<div class="menu">
+  <table>
+    <tr>
+      <td><div class="menu_item"><%= linkToUnitPage "Unit Summary" %></div></td>
+      <td><div class="menu_item"><%= linkToObject "CSV", activityRoot(), $leveled_questions_csv_view %></div></td>
+    </tr>
+  </table>
+</div>
+
+<hr />
+
+<div id="content">
+  
+  <h3>Scaffolding level</h3>
+  <table>
+    
+    <% sections = unitSections() %>
+    
+    <tr>
+      <th>User</th>
+      
+      <% sections.each do |section| %>
+	      <% questions = sectionLeveledQuestions(section) %>
+	      <% questions.each do |levQuestion| %>
+	      	<% question = levQuestion.questions.get(0) %>
+	        <th><%= popupLinkToObject truncate(promptText(question), 30), question, $question_popup_view %></th>  
+	      <% end %>
+      <% end %>
+    </tr>
+    <% line_toggle = true %>
+    
+    <% @users.each do |user| %>
+      <tr BGCOLOR = <%= line_toggle ? ROWCOLOR1 : ROWCOLOR2 %>>
+        <% line_toggle = !line_toggle %>
+        <td><%= linkToObject user.name, user, $user_view %></td>
+        
+         <% sections.each do |section| %>
+	         <% questions = sectionLeveledQuestions(section) %>
+	         <% questions.each do |levQuestion| %>
+	          	<% userQuestion = userObject(levQuestion, user) %>
+	          	<td><%= userQuestion.currentIndex %></td>  
+	        <% end %>
+	    <% end %>        
+      </tr>
+    <% end %>   
+  </table>
+  
+  <h3>Levels clicked through</h3>
+  <table>
+    
+    <% sections = unitSections() %>
+    
+    <tr>
+      <th>User</th>
+      
+      <% sections.each do |section| %>
+	      <% questions = sectionLeveledQuestions(section) %>
+	      <% questions.each do |levQuestion| %>
+	      	<% question = levQuestion.questions.get(0) %>
+	        <th><%= popupLinkToObject truncate(promptText(question), 30), question, $question_popup_view %></th>  
+	      <% end %>
+      <% end %>
+    </tr>
+    <% line_toggle = true %>
+    
+    <% @users.each do |user| %>
+      <tr BGCOLOR = <%= line_toggle ? ROWCOLOR1 : ROWCOLOR2 %>>
+        <% line_toggle = !line_toggle %>
+        <td><%= linkToObject user.name, user, $user_view %></td>
+        
+         <% sections.each do |section| %>
+	         <% questions = sectionLeveledQuestions(section) %>
+	         <% questions.each do |levQuestion| %>
+	          	<% userQuestion = userObject(levQuestion, user) %>
+	          	<td><%= userQuestion.timesClicked %></td>  
+	        <% end %>
+	    <% end %>        
+      </tr>
+    <% end %>   
+  </table>
+</div>
