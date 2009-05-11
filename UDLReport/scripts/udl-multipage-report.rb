@@ -348,6 +348,16 @@ def documentQuestions(doc)
   questions  
 end
 
+def documentLeveledQuestions(doc)
+  questions = []
+  
+  doc.documentRefs.each do | ref |
+    questions << ref if ref.is_a? org.concord.otrunk.udl.question.OTUDLLeveledQuestions
+  end
+
+  questions  
+end
+
 def documentQuestionsForIds(doc, otids)
   if @contentHelper.version == 1
     v = @contentHelper.getDocumentQuestions(doc)
@@ -382,6 +392,20 @@ def sectionQuestions(section)
 
   pageCards.each do | doc |
     questions.concat documentQuestions(doc)
+  end
+
+  questions
+end
+
+def sectionLeveledQuestions(section)
+  questions = []
+    
+  return questions unless section.content.is_a? org.concord.otrunk.ui.OTCardContainer
+  
+  pageCards = allPages(section)
+
+  pageCards.each do | doc |
+    questions.concat documentLeveledQuestions(doc)
   end
 
   questions
