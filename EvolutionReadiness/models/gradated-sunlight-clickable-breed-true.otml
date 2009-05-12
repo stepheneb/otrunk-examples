@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<otrunk id="13d3fb4f-123a-425f-9d60-d84e145c0678">
+  <imports>
+    <import class="org.concord.otrunk.OTIncludeRootObject" />
+    <import class="org.concord.otrunk.OTInclude" />
+    <import class="org.concord.otrunk.OTSystem" />
+    <import class="org.concord.otrunk.biologica.OTOrganismPlacement" />
+    <import class="org.concord.otrunk.biologica.OTEnvironment" />
+    <import class="org.concord.otrunk.biologica.OTOrganism" />
+    <import class="org.concord.otrunk.biologica.OTWorld" />
+    <import class="org.concord.otrunk.biologica.agent.OTAgentSpecies" />
+    <import class="org.concord.otrunk.biologica.agent.OTAgentTrait" />
+    <import class="org.concord.otrunk.biologica.agent.OTAgentPropertyImageMap" />
+    <import class="org.concord.otrunk.biologica.environment.OTAddAgentButton" />
+    <import class="org.concord.otrunk.biologica.environment.OTEnvironmentHolder" />
+    <import class="org.concord.otrunk.biologica.rules.OTRule" />
+    <import class="org.concord.otrunk.biologica.rules.OTRuleCondition" />
+    <import class="org.concord.otrunk.biologica.rules.OTRuleConsequence" />
+    <import class="org.concord.otrunk.ui.OTCurriculumUnit" />
+    <import class="org.concord.otrunk.view.OTViewEntry" />
+    <import class="org.concord.otrunk.view.OTViewBundle" />
+    <import class="org.concord.otrunk.view.OTViewMode" />
+    <import class="org.concord.otrunk.view.document.OTCompoundDoc" />
+    <import class="org.concord.otrunk.script.ui.OTScriptObject" />
+    <import class="org.concord.otrunk.script.js.OTJavascript" />
+    <import class="org.concord.otrunk.script.OTScriptEngineBundle" />
+    <import class="org.concord.otrunk.script.OTScriptEngineEntry" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariable" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariableComponent" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariableRealObject" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariableView" />
+    <import class="org.concord.otrunk.script.ui.OTScriptButton" />
+    <import class="org.concord.framework.otrunk.view.OTFrame" />
+  </imports>
+  <idMap> 
+	<idMapping local_id="plant-species" id="f5732706-c9c2-4e29-8c99-4c668dda89b0"/>
+  </idMap> 
+  <objects>
+    <OTSystem>
+      <bundles>
+      	<object refid="8d880970-c22a-11dc-95ff-0800200c9a66" />
+        <OTScriptEngineBundle>
+          <engines>
+            <OTScriptEngineEntry objectClass="org.concord.otrunk.script.js.OTJavascript" engineClass="org.concord.otrunk.script.js.OTJavascriptEngine" />
+          </engines>
+        </OTScriptEngineBundle>
+      </bundles>
+      <includes>
+      	<OTInclude href="../global-imports/er-view-bundle.otml" />
+        <OTInclude href="species/annual-varied-plants.otml" />
+      </includes>
+      <root>
+      	<OTCurriculumUnit version="2" name="ER Activity">
+          <activity>
+        <OTCompoundDoc name="Population">
+          <bodyText>
+            <table>
+              <tr height="690">
+                <td>
+	              	<object refid="${env-holder}" />
+                </td>
+                <td>
+                  <object refid="${add-thin-ferns-button}" />
+                  <br />
+                  <object refid="${add-mixed-ferns-button}" />
+                  <br />
+                  <object refid="${clear-button}"/><br/>
+                </td>
+              </tr>
+            </table>
+            <object refid="${setup-script}" />
+            <object refid="${setup-species-script}" />
+          </bodyText>
+          <documentRefs>
+            <OTEnvironmentHolder local_id="env-holder" width="730" height="600">
+              <environment>
+                <OTEnvironment local_id="environment" width="550" height="500" 
+                		environmentWidth="10" environmentHeight="10" showRunButton="false"
+                		winterLength="15" summerLength="50">
+                  <world>
+                    <object refid="${peasimple_world}" />
+                  </world>
+                  <rules>
+                    <OTRule description="Health depends on leaves and sunlight">
+                      <conditions>
+                        <OTRuleCondition always="true" />
+                      </conditions>
+                      <consequences>
+                        <OTRuleConsequence property="Health">
+                          <ruleScript>var diff = Math.abs(leaves - (sunlight*10))
+		            						return 1.0 - ((diff) / 100)</ruleScript>
+                          <propertyVariables>
+                            <string>leaves</string>
+                            <string>sunlight</string>
+                          </propertyVariables>
+                        </OTRuleConsequence>
+                      </consequences>
+                    </OTRule>
+                    <OTRule description="Leaf description rule">
+                      <conditions>
+                        <OTRuleCondition property="leaves" maxValue="3.0" />
+                      </conditions>
+                      <consequences>
+                        <OTRuleConsequence property="type of leaves" newValueString="bushy" />
+                      </consequences>
+                    </OTRule>
+                    <OTRule description="Leaf description rule">
+                      <conditions>
+                        <OTRuleCondition property="leaves" minValue="3.1" maxValue="6.0" />
+                      </conditions>
+                      <consequences>
+                        <OTRuleConsequence property="type of leaves" newValueString="medium" />
+                      </consequences>
+                    </OTRule>
+                    <OTRule description="Leaf description rule">
+                      <conditions>
+                        <OTRuleCondition property="leaves" minValue="6.1" />
+                      </conditions>
+                      <consequences>
+                        <OTRuleConsequence property="type of leaves" newValueString="thin" />
+                      </consequences>
+                    </OTRule>
+                    <OTRule description="Health description rule">
+                      <conditions>
+                        <OTRuleCondition property="Health" maxValue="0.95" />
+                      </conditions>
+                      <consequences>
+                        <OTRuleConsequence property="health" newValueString="Unhealthy" />
+                      </consequences>
+                    </OTRule>
+                    <OTRule description="Health description rule">
+                      <conditions>
+                        <OTRuleCondition property="Health" minValue="0.9501" />
+                      </conditions>
+                      <consequences>
+                        <OTRuleConsequence property="health" newValueString="Healthy" />
+                      </consequences>
+                    </OTRule>
+                  </rules>
+                </OTEnvironment>
+              </environment>
+              <traitsToShow>
+                <string>type of leaves</string>
+                <string>Health</string>
+              </traitsToShow>
+              <addAgentsButtons>
+              	<OTAddAgentButton text="Add thin plants" species="${plant-species}">
+              		<agentTraits>
+              			<OTAgentTrait property="leaves">
+              				<defaultValues>
+              					<int>10</int>
+              				</defaultValues>
+              			</OTAgentTrait>
+              		</agentTraits>
+              	</OTAddAgentButton>
+              	<OTAddAgentButton text="Add medium plants" species="${plant-species}">
+              		<agentTraits>
+              			<OTAgentTrait property="leaves">
+              				<defaultValues>
+              					<int>5</int>
+              				</defaultValues>
+              			</OTAgentTrait>
+              		</agentTraits>
+              	</OTAddAgentButton>
+              	<OTAddAgentButton text="Add bushy plants" species="${plant-species}">
+              		<agentTraits>
+              			<OTAgentTrait property="leaves">
+              				<defaultValues>
+              					<int>1</int>
+              				</defaultValues>
+              			</OTAgentTrait>
+              		</agentTraits>
+              	</OTAddAgentButton>
+              </addAgentsButtons>
+            </OTEnvironmentHolder>
+            <OTScriptObject local_id="setup-script">
+              <script>
+                <OTJavascript src="scripts/gradated-sunlight/setup.js" />
+              </script>
+              <variables>
+                <OTScriptVariableRealObject name="env">
+                  <reference>
+                    <object refid="${environment}" />
+                  </reference>
+                </OTScriptVariableRealObject>
+              </variables>
+              <scriptState />
+            </OTScriptObject>
+             <OTScriptObject local_id="setup-species-script">
+              <script>
+                <OTJavascript>
+     				<script>function init()
+      				{
+      					species.setMutationChance(0)
+      				}
+     				</script>
+     			</OTJavascript>
+              </script>
+              <variables>
+                <OTScriptVariableRealObject name="species">
+                  <reference>
+                    <object refid="${plant-species}" />
+                  </reference>
+                </OTScriptVariableRealObject>
+              </variables>
+              <scriptState />
+            </OTScriptObject>
+            <OTScriptButton local_id="clear-button" text="Clear">
+             		<script>
+             			<OTJavascript>
+     				<script>function clicked()
+      				{
+      					environment.removeAllAgents();
+      				}
+     				</script>
+     			</OTJavascript>
+             		</script>
+             		<scriptVariables>
+             			<OTScriptVariableRealObject name="environment" reference="${environment}"/>
+             		</scriptVariables>
+             </OTScriptButton>
+            <OTScriptButton local_id="add-thin-ferns-button" text="Add thin ferns">
+              <script>
+                <object refid="${add-thin.js}" />
+              </script>
+              <scriptVariables>
+                <OTScriptVariableRealObject name="environment">
+                  <reference>
+                    <object refid="${environment}" />
+                  </reference>
+                </OTScriptVariableRealObject>
+                <OTScriptVariableRealObject name="species">
+                  <reference>
+                    <object refid="${plant-species}" />
+                  </reference>
+                </OTScriptVariableRealObject>
+              </scriptVariables>
+            </OTScriptButton>
+            <OTScriptButton local_id="add-mixed-ferns-button" text="Add mixed ferns">
+              <script>
+                <object refid="${add-mixed.js}" />
+              </script>
+              <scriptVariables>
+                <OTScriptVariableRealObject name="environment">
+                  <reference>
+                    <object refid="${environment}" />
+                  </reference>
+                </OTScriptVariableRealObject>
+                <OTScriptVariableRealObject name="species">
+                  <reference>
+                    <object refid="${plant-species}" />
+                  </reference>
+                </OTScriptVariableRealObject>
+              </scriptVariables>
+            </OTScriptButton>
+            <!-- World definition: is ignored -->
+            <OTWorld local_id="peasimple_world" speciesPath="org/concord/biologica/worlds/peasimple.xml" />
+            <OTJavascript local_id="add-thin.js">
+              <script>var defaultProperties = new Array(new Array("leaves",10))
+     				
+      				function clicked()
+      				{
+      					for (var i = 0; i&lt;1; i++){
+      						environment.addAgent(species.createAgent(defaultProperties));
+      					}
+      				}</script>
+            </OTJavascript>
+            <OTJavascript local_id="add-mixed.js">
+              <script>function clicked()
+      				{
+      					for (var i = 0; i&lt;10; i++){
+      						environment.addAgent(species.createAgent());
+      					}
+      				}</script>
+            </OTJavascript>
+          </documentRefs>
+        </OTCompoundDoc>
+        </activity>
+        </OTCurriculumUnit>
+      </root>
+    </OTSystem>
+  </objects>
+</otrunk>
+
