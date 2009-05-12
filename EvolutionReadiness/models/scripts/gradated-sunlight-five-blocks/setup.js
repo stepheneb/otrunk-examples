@@ -12,8 +12,17 @@ function init() {
 	        for (var j = 0; j < 20; j++) {
 	        	var envUnit = new EnvironmentUnit(env, null, i, j)
 	        	env.setEnvironmentUnit(envUnit, i, j)
-	        	var block = j/4
-	        	var percentSunlight = 1 - (Math.floor(j/4) * 0.25)
+	        	if (j < 4)
+	        		percentSunlight = 1.0
+	        	else if (j < 8)
+	        		percentSunlight = 0.75
+	        	else if (j < 12)
+	        		percentSunlight = 0.5
+	        	else if (j < 16)
+	        		percentSunlight = 0.25
+	        	else if (j < 20)
+	        		percentSunlight = 0.1
+	        		
 	        	envUnit.setProperty("sunlight", new Float(percentSunlight))
 	        	
 	        	var r =  (1*percentSunlight) * 0.5
