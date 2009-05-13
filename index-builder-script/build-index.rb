@@ -77,7 +77,7 @@ otrunk_example_dirs = Dir.glob('*/*.otml').collect {|p| File.dirname(p)}.uniq
 index_page_body = <<HEREDOC
 <table id='index' class='sortable'>
   <thead>
-    <tr><th class='sortfirstasc'>Category</th>
+    <tr><th class='sortfirstasc text'>Category</th>
     <th class='date'>Date of last change</th>
     <th>Number of examples</th>
   </thead>
