@@ -1,0 +1,133 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US" xml:lang="en-US">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link rel="stylesheet" type="text/css" media="all" href="<%= $html_resource_root %>/style.css" />
+  <script type="text/javascript" src="<%= $html_resource_root %>/prototype.js"></script>
+  <script type="text/javascript" src="<%= $html_resource_root %>/fastinit.js"></script>
+  <script type="text/javascript" src="<%= $html_resource_root %>/tablesort.js"></script>	
+  <TITLE><%= html_title %></TITLE>
+  <style type="text/css">
+  h3 {margin-bottom: 0.5em; margin-top:2em; border-bottom: 1px solid }
+  h4 {margin-bottom: 0.2em}
+  </style>
+</head>
+
+<BODY BGCOLOR="#FFFFFF">
+<h2>
+<% parents = $tree_node.parents %>
+<% parents.each_with_index do |parent, i| %>
+<a href="<%= "../" * (parents.length - i) + INDEX_SUFFIX %>"><%= parent.name %></a> /  
+<% end %>
+<%= $tree_node.name %>
+</h2>
+
+<%#
+This used to have a link to the confluence notes, but with full nesting it won't be 
+so easy
+<a href="http://confluence.concord.org/display/CSP/#{path}">Confluence Notes</a><br/>
+%>
+
+<% if not dirs.empty? %>
+<table id='folders' class='sortable'>
+  <thead>
+    <tr><th class='sortfirstasc'>Folder</th>
+    <th class='date'>Date of last change</th>
+    <th>Number of examples</th>
+  </thead>
+  <tbody>
+  <% dirs.each do |dir| %>
+    <tr>
+      <td><a href="<%= dir.path%>"><%= dir.name %></a></td>
+      <td class='timestyle'><%= dir.update_time %></td>
+      <td><%= dir.num_otmls %></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
+<% end %>
+
+<% if not otmls.empty? %>
+<table cellspacing=2 id='otmls' class='sortable''>
+  <thead>
+    <tr>
+      <th><b>OTML</b></th>
+      <th class='nosort'><b>jnlp</b></th>
+      <th class='nosort'><b>jnlp</b></th>
+      <th class='date'>Date of last change</th>
+      <th><b>otml file</b></th>
+      <th class='number sortfirstdesc'><b>most recent revision</b></th>
+    </tr>
+  </thead>
+  <tbody>
+  <% otmls.each do |otml| %>
+    <tr>
+      <td width=220><%= otml.name%></td>
+      <td width=60><a href="<%= otml.jnlp_url %>">learner</a></td>
+      <td width=60><a href="<%= otml.jnlp_author_url %>">author</a></td>
+      <td width=180 class='timestyle'><%= otml.update_time%></td>
+      <td width=260><a href="<%= otml.path %>"><%= otml.path %></a></td>
+      <td width=180><%= otml.svn_rev_link %></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
+<% end %>
+
+<hr/>
+
+<SCRIPT LANGUAGE="JavaScript">
+// Row Hide function.
+// by tcadieux
+
+function expandcontract() {
+if (document.getElementById('all_files_link').innerHTML == "show"){
+document.getElementById('all_files_table').style.display = "";
+document.getElementById('all_files_link').innerHTML = "hide";
+} else {
+document.getElementById('all_files_table').style.display = "none";
+document.getElementById('all_files_link').innerHTML = "show";
+}
+return false
+}
+</SCRIPT>
+  
+<h4>All Files (<span onclick="expandcontract()" id="all_files_link">show</span>)</h4>
+
+<table id="all_files_table" style="display: none">
+  <% all_files.each do |file| %> 
+  <tr>
+    <td><a href="<%= file %>"><%= file %></a></td>
+  </tr>
+  <% end %>
+</table>
+<hr/>
+
+<h4>Description of the difference between running an activity in learner mode and author mode</h4>
+<p>Running an OTrunk example in learner mode uses the default view mode which assumes a learner. In addition if you use the File menu to save the otml only the differences between the activity otml and the changes will be saved. The otml saved is the learner difference otml and is often much smaller than activty otml.</p>
+<p>Running an OTrunk example in author mode sets the following jnlp properties:</p>
+<ul>
+<li>otrunk.view.author=true</li>
+<li>otrunk.view.mode=authoring</li>
+</ul>
+<p>Setting otrunk.view.author to true causes the entire OTrunk state to be saved as otml when a File save is performed. Setting otrunk.view.mode to authoring is used in the view system to enable authoring affordances in the views. Many examples do not have special authoring views. The Basic Example: document-edit.otml does have both authoring and student view modes.</p>
+<hr/>
+
+<h4>MacOS X Java Web Start Problem</h4>
+<p>If you are using Java 1.5 on MacOS 10.4 or 10.5 you will almost certainly need to run some version of the fixes described on
+our <a href="http://confluence.concord.org/display/CCTR/How+to+fix+Mac+OS+X+WebStart+bugs">How to fix Mac OS X WebStart bugs</a>,
+once on each computer you run the Concord SAIL-OTrunk activities on. If you update Java on your Macintosh you will
+need to fix this problem again. The problem appears on Mac OS X computers when starting a Java Web Start program
+you have run before -- if a jar file needs to be updated the download process will freeze without completing.</p>
+<hr/>
+
+The jnlp urls were constructed using the following template:<br/>
+<%= jnlp_url_tmpl %><br/>
+You can change this string by putting it in a file named: <b>jnlp_url.tmpl</b> in this directory
+
+<% if not LOCAL_NO_SERVER %>
+  <hr/><br/><a href='/cgi-script/build-index.rb'>Update Index</a>
+<% end %>
+
+</BODY>
+</HTML>
