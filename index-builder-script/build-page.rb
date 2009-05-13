@@ -82,7 +82,7 @@ Dir.glob("*").sort.each do |filename|
   end
   
   # need to figure out the relative subpath, relative to the web directory 
-  if LOCAL_NO_SERVER
+  if NO_SERVER
     absolute_url = "file://#{abs_path}";
   else
     absolute_url = abs_path.sub(/#{$web_root_directory}/, $web_root_url)

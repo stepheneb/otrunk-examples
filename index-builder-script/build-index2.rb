@@ -20,36 +20,35 @@ puts "svn version: " + `svn --version --quiet`
 $erb = ERB.new File.read("index.erb")
 $erb.filename = "index.erb"
 
+$build_page_script = File.expand_path("build-page.rb")
+
 config = YAML::load_file("config.yml")
 config.default= "";
 
 HOST = config['host']
 SUB_DIR = config['subdir']
-LOCAL_ROOT = config.fetch('local_root', '..')
-LOCAL_NO_SERVER = config['local_no_server']
+FILES_ROOT = config.fetch('files_root', '..')
+NO_SERVER = config['no_server']
 
 FOLDERS = YAML::load_file("folders.yml")
 
 puts "host: #{HOST}"
 puts "subdir: #{SUB_DIR}"
-puts "local_root: #{LOCAL_ROOT}"
-puts "local_no_root: #{LOCAL_NO_SERVER}"
+puts "files_root: #{FILES_ROOT}"
+puts "no_server: #{NO_SERVER}"
 
-if LOCAL_NO_SERVER
+Dir.chdir(FILES_ROOT)
+
+if NO_SERVER
   $html_resource_root = "file:///#{Dir.pwd}"
+  INDEX_SUFFIX = "index.html"
 else
   $html_resource_root = "#{SUB_DIR}/examples/index-builder-script" 
   $web_root_url = "#{HOST}#{SUB_DIR}"
+  $web_root_directory = Dir.pwd
+  INDEX_SUFFIX = ""
 end
  
-INDEX_SUFFIX = LOCAL_NO_SERVER ? "index.html" : ""
-$build_page_script = File.expand_path("build-page.rb")
-
-# initially this is just a hard coded test framework for new build page and erb template
-Dir.chdir(LOCAL_ROOT)
-
-$web_root_directory = Dir.pwd
-
 FOLDERS.each do |folder, svn_path|
   if ! File.directory?(folder)
     puts `svn co http://svn.concord.org/svn/projects/#{svn_path}  #{folder}`
