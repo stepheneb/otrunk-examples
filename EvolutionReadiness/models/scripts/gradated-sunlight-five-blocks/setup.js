@@ -4,23 +4,23 @@ importPackage(Packages.org.concord.biologica.environment);
   			
 function init() {
 	var world = env.getWorld()
-	env.setColumns(20)
-	env.setRows(20)
+	env.setColumns(15)
+	env.setRows(15)
 	env.setWrapNorthSouth(false)
 	env.setWrapEastWest(false)
-	for (var i = 0; i < 20; i++) {
-	        for (var j = 0; j < 20; j++) {
+	for (var i = 0; i < 15; i++) {
+	        for (var j = 0; j < 15; j++) {
 	        	var envUnit = new EnvironmentUnit(env, null, i, j)
 	        	env.setEnvironmentUnit(envUnit, i, j)
-	        	if (j < 4)
+	        	if (j < 3)
 	        		percentSunlight = 1.0
-	        	else if (j < 8)
+	        	else if (j < 6)
 	        		percentSunlight = 0.75
-	        	else if (j < 12)
+	        	else if (j < 9)
 	        		percentSunlight = 0.5
-	        	else if (j < 16)
+	        	else if (j < 12)
 	        		percentSunlight = 0.25
-	        	else if (j < 20)
+	        	else if (j < 15)
 	        		percentSunlight = 0.1
 	        		
 	        	envUnit.setProperty("sunlight", new Float(percentSunlight))
