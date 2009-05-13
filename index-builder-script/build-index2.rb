@@ -27,7 +27,8 @@ HOST = config['host']
 SUB_DIR = config['subdir']
 LOCAL_ROOT = config.fetch('local_root', '..')
 LOCAL_NO_SERVER = config['local_no_server']
-FOLDERS = config.fetch('folders', {"examples" => "trunk/common/java/otrunk/otrunk-examples"})
+
+FOLDERS = YAML::load_file("folders.yml")
 
 puts "host: #{HOST}"
 puts "subdir: #{SUB_DIR}"
