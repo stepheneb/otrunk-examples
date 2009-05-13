@@ -53,6 +53,11 @@ FOLDERS.each do |folder, svn_path|
   if ! File.directory?(folder)
     puts `svn co http://svn.concord.org/svn/projects/#{svn_path}  #{folder}`
     STDOUT.flush
+  else
+    Dir.chdir(folder) do 
+	  puts `svn up`
+	  STDOUT.flush
+	end
   end
 
   tree = FileTree.new(folder, nil)
