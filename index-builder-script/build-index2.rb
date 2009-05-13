@@ -21,6 +21,7 @@ $erb = ERB.new File.read("index.erb")
 $erb.filename = "index.erb"
 
 $build_page_script = File.expand_path("build-page.rb")
+$site_index_erb = File.expand_path("site-index.erb")
 
 config = YAML::load_file("config.yml")
 config.default= "";
@@ -81,5 +82,12 @@ FOLDERS.each do |folder, svn_path|
   end
 
 end
+
+site_index_erb = ERB.new File.read($site_index_erb)
+site_index_erb.filename = "site-index.erb"
+File.open("index.html", "w") do |f|
+  f << site_index_erb.result(binding)
+end
+
 
 puts "Total Time: #{Time.now - start_time}s"
