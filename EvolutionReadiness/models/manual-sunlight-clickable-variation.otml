@@ -102,6 +102,7 @@
 		            </OTEnvironment>
 		        </environment>
 		        <buttons>
+		        <object refid="${add-mixed-ferns-button}" />
               	<object refid="${clear-button}"/>
               </buttons>
               <addAgentsButtons>
@@ -178,6 +179,24 @@
              		</scriptVariables>
              </OTScriptButton>
              
+             <OTScriptButton local_id="add-mixed-ferns-button" text="Scatter mixed seeds">
+              <script>
+                <object refid="${add-mixed.js}" />
+              </script>
+              <scriptVariables>
+                <OTScriptVariableRealObject name="environment">
+                  <reference>
+                    <object refid="${environment}" />
+                  </reference>
+                </OTScriptVariableRealObject>
+                <OTScriptVariableRealObject name="species">
+                  <reference>
+                    <object refid="${plant-species}" />
+                  </reference>
+                </OTScriptVariableRealObject>
+              </scriptVariables>
+            </OTScriptButton>
+             
              <OTSlider local_id="sun-slider" value="100" numTicks="10"/>
             
 
@@ -186,18 +205,14 @@
               speciesPath="org/concord/biologica/worlds/peasimple.xml"
               local_id="peasimple_world" />
               
-              <OTJavascript local_id="add.js">
-     				<script>
-     				var defaultProperties = new Array(new Array("leaves",10))
-     				
-      				function clicked()
+              <OTJavascript local_id="add-mixed.js">
+              <script>function clicked()
       				{
-      					for (var i = 0; i&lt;10; i++){
-      						environment.addAgent(species.createAgent(defaultProperties));
+      					for (var i = 0; i&lt;15; i++){
+      						environment.addAgent(species.createAgent());
       					}
-      				}
-     				</script>
-     			</OTJavascript>
+      				}</script>
+            </OTJavascript>
           </documentRefs>
         </OTCompoundDoc>
 		</activity>
