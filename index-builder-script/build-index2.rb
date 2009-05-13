@@ -30,6 +30,7 @@ HOST = config['host']
 SUB_DIR = config['subdir']
 FILES_ROOT = config.fetch('files_root', '..')
 NO_SERVER = config['no_server']
+SCRIPT_ROOT = Dir.pwd
 
 FOLDERS = YAML::load_file("folders.yml")
 
@@ -41,7 +42,7 @@ puts "no_server: #{NO_SERVER}"
 Dir.chdir(FILES_ROOT)
 
 if NO_SERVER
-  $html_resource_root = "file:///#{Dir.pwd}"
+  $html_resource_root = "file:///#{SCRIPT_ROOT}"
   INDEX_SUFFIX = "index.html"
 else
   $html_resource_root = "#{SUB_DIR}/examples/index-builder-script" 
