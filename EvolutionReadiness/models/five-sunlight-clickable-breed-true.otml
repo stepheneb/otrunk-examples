@@ -137,6 +137,7 @@
                 </OTEnvironment>
               </environment>
               <buttons>
+                <object refid="${survey-button}"/>
               	<object refid="${clear-button}"/>
               </buttons>
               <traitsToShow>
@@ -252,6 +253,42 @@
              		<scriptVariables>
              			<OTScriptVariableRealObject name="environment" reference="${environment}"/>
              			<OTScriptVariableRealObject name="holder" reference="${env-holder}"/>
+             		</scriptVariables>
+             </OTScriptButton>
+             <OTScriptButton local_id="survey-button" text="Survey">
+             		<script>
+             			<OTJavascript>
+		     				<script>
+		     				importPackage(Packages.java.lang);
+		     				importPackage(Packages.java.awt);
+		     				importPackage(Packages.org.concord.biologica.environment);
+		     				importClass(Packages.javax.swing.JOptionPane);
+		     				
+		     				function clicked()
+		      				{
+		      					var agents = environment.getAllAgents();
+		      					var thin = 0
+		      					var medium = 0
+		      					var bushy = 0
+		      					for (var i=0; i &lt; agents.size(); i++){
+		      					    var agent = agents.get(i)
+		      						var leaves = agent.getPropertyValueAsInteger("leaves")
+		      						if (leaves &lt; 4)
+		      						     bushy++
+		      						else if (leaves &lt; 7)
+		      						     medium++
+		      						else
+		      						     thin++
+		      					}
+		      					var messageString = "There are:\n  "+thin+" thin plants,\n  "+medium+" medium plants, and\n  "+bushy+" bushy plants.";
+		      					
+								JOptionPane.showMessageDialog(null, messageString);
+		      				}
+		     				</script>
+		     			</OTJavascript>
+             		</script>
+             		<scriptVariables>
+             			<OTScriptVariableRealObject name="environment" reference="${environment}"/>
              		</scriptVariables>
              </OTScriptButton>
             <OTScriptButton local_id="add-thin-ferns-button" text="Add thin ferns">
