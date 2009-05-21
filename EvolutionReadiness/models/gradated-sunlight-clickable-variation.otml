@@ -193,7 +193,6 @@
      				<script>function init()
       				{
       					species.setMutationChance(0.12);
-      					environment.setStepCount(0);
       				}
      				</script>
      			</OTJavascript>
@@ -207,18 +206,42 @@
               </variables>
               <scriptState />
             </OTScriptObject>
-            <OTScriptButton local_id="clear-button" text="Clear">
+            <OTScriptButton local_id="clear-button" text="Reset">
              		<script>
              			<OTJavascript>
-     				<script>function clicked()
+     				<script>
+     				importPackage(Packages.java.lang);
+     				importPackage(Packages.java.awt);
+     				importPackage(Packages.org.concord.biologica.environment);
+     				
+     				function clicked()
       				{
       					environment.removeAllAgents();
+      					environment.setStepCount(0);
+      					holder.pauseAction();
+      					var world = environment.getWorld()
+      					for (var i = 0; i &lt; 15; i++) {
+					        for (var j = 0; j &lt; 15; j++) {
+					        	var envUnit = new EnvironmentUnit(environment, null, i, j)
+					        	environment.setEnvironmentUnit(envUnit, i, j)
+					        	envUnit.setProperty("sunlight", new Float(1 - (j/15)))
+					        	
+					        	var percentSunlight = envUnit.getProperty("sunlight")
+					        	var r =  (1*percentSunlight.floatValue()) * 0.5
+					        	var g = r * 0.5
+					        	var b = g * 0.2
+					        	var color = new Color(r+0.3, g+0.2, b+0.1)
+					        	var terrain = new Terrain(world, "terrain", color)
+					        	envUnit.setTerrain(terrain)
+				            }
+				        }
       				}
      				</script>
      			</OTJavascript>
              		</script>
              		<scriptVariables>
              			<OTScriptVariableRealObject name="environment" reference="${environment}"/>
+             			<OTScriptVariableRealObject name="holder" reference="${env-holder}"/>
              		</scriptVariables>
              </OTScriptButton>
             <OTScriptButton local_id="add-thin-ferns-button" text="Add thin ferns">
