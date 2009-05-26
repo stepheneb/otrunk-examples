@@ -191,7 +191,7 @@ function init() {
 
 function postMWInit() {
 	
-	var pageComps = page.getEmbeddedComponent(Class.forName("org.concord.modeler.PageButton")).values().toArray();
+	var pageComps = page.getEmbeddedComponent(PageButton).values().toArray();
 	if (pageComps != null) {
 		for (var i = 0; i < pageComps.length; i++) {
 			var obj = pageComps[i];
@@ -202,7 +202,7 @@ function postMWInit() {
 	}
 	resetButton.addActionListener(resetButtonListener);
 	
-	var sliderComps = page.getEmbeddedComponent(Class.forName("org.concord.modeler.PageSlider")).values().toArray();
+	var sliderComps = page.getEmbeddedComponent(PageSlider).values().toArray();
 	if (sliderComps != null) {
 		for (var i = 0; i < sliderComps.length; i++) {
 			var obj = sliderComps[i];
@@ -213,10 +213,10 @@ function postMWInit() {
 		}
 	}
 	
-	var models = page.getEmbeddedComponent(Class.forName("org.concord.modeler.ModelCanvas")).values().toArray();
+	var models = page.getEmbeddedComponent(ModelCanvas).values().toArray();
 	if (models != null) {
 		for (var i = 0; i < models.length; i++) {
-			model = models[i].getContainer().getModel();
+			model = models[i].getMdContainer().getModel();
 			model.addModelListener(modelListener);
 		}
 	}
