@@ -216,7 +216,7 @@ function postMWInit() {
 	var models = page.getEmbeddedComponent(ModelCanvas).values().toArray();
 	if (models != null) {
 		for (var i = 0; i < models.length; i++) {
-			model = models[i].getMdContainer().getModel();
+			model = models[i].getContainer().getModel();
 			model.addModelListener(modelListener);
 		}
 	}
