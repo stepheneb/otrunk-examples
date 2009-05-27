@@ -1,0 +1,119 @@
+<otrunk id="4acd8fa0-4ae7-11de-8a39-0800200c9a66">
+  <imports>
+    <import class="org.concord.otrunk.OTSystem" />
+    <import class="org.concord.otrunk.view.OTFolderObject" />
+    <import class="org.concord.otrunk.view.OTViewEntry" />
+    <import class="org.concord.otrunk.view.OTViewService" />
+    <import class="org.concord.otrunk.view.document.OTCompoundDoc" />
+    <import class="org.concord.otrunk.control.OTButton" />
+    <import class="org.concord.sensor.state.OTDeviceConfig" />
+    <import class="org.concord.sensor.state.OTExperimentRequest" />
+    <import class="org.concord.sensor.state.OTInterfaceManager" />
+    <import class="org.concord.sensor.state.OTSensorDataProxy" />
+    <import class="org.concord.sensor.state.OTSensorRequest" />
+    <import class="org.concord.sensor.state.OTLoggingRequest" />
+    <import class="org.concord.sensor.state.OTSetupLogger" />
+    <import class="org.concord.sensor.state.OTZeroSensor" />
+    <import class="org.concord.sensor.view.OTLoggerRecordChooser" />
+    <import class="org.concord.sensor.view.OTLoggerImporter" />
+    <import class="org.concord.data.state.OTDataStore" />
+    <import class="org.concord.data.state.OTDataChannelDescription" />
+    <import class="org.concord.datagraph.state.OTDataGraph" />
+    <import class="org.concord.datagraph.state.OTDataCollector" />
+    <import class="org.concord.datagraph.state.OTMultiDataGraph" />
+    <import class="org.concord.datagraph.state.OTDataGraphable" />
+    <import class="org.concord.datagraph.state.OTDataAxis" />
+    <import class="org.concord.datagraph.state.OTPluginView" />
+    <import class="org.concord.datagraph.state.OTMultiDataSetControl" />
+    <import class="org.concord.otrunk.view.prototype.OTPrototypeViewEntry" />
+    <import
+      class="org.concord.otrunk.view.prototype.OTPrototypeEventController" />
+    <import class="org.concord.otrunk.view.prototype.OTPrototypeMapEntry" />
+    <import class="org.concord.otrunk.ui.OTChoice" />
+    <import class="org.concord.data.state.OTLinearProducerFilter" />
+    <import class="org.concord.data.state.OTIntegratingProducerFilter" />
+  </imports>
+  <objects>
+    <OTSystem>
+      <services>
+        <OTViewService>
+          <viewEntries>
+            <OTViewEntry objectClass="org.concord.datagraph.state.OTDataGraph"
+              viewClass="org.concord.datagraph.state.OTDataGraphView" />
+            <OTViewEntry objectClass="org.concord.data.state.OTDataField"
+              viewClass="org.concord.data.state.OTDataFieldView" />
+            <OTViewEntry objectClass="org.concord.datagraph.state.OTDataCollector"
+              viewClass="org.concord.datagraph.state.OTDataCollectorView" />
+            <OTViewEntry objectClass="org.concord.graph.util.state.OTDrawingTool"
+              viewClass="org.concord.datagraph.state.OTDataDrawingToolView" />
+            <OTViewEntry objectClass="org.concord.datagraph.state.OTMultiDataGraph"
+              viewClass="org.concord.datagraph.state.OTMultiDataGraphView" />
+            <OTViewEntry
+              objectClass="org.concord.datagraph.state.OTMultiDataSetControl"
+              viewClass="org.concord.datagraph.state.OTMultiDataSetControlView" />
+            <OTViewEntry objectClass="org.concord.sensor.view.OTLoggerRecordChooser"
+              viewClass="org.concord.sensor.view.OTLoggerRecordChooserView" />
+            <OTViewEntry objectClass="org.concord.sensor.view.OTLoggerImporter"
+              viewClass="org.concord.sensor.view.OTLoggerImporterView" />
+            <OTViewEntry objectClass="org.concord.otrunk.control.OTButton"
+              viewClass="org.concord.otrunk.control.OTButtonView" />
+            <OTViewEntry
+              objectClass="org.concord.otrunk.view.document.OTCompoundDoc"
+              viewClass="org.concord.otrunk.view.document.OTDocumentView" />
+            <OTViewEntry local_id="choice_view"
+              objectClass="org.concord.otrunk.ui.OTChoice"
+              viewClass="org.concord.otrunk.ui.swing.OTChoiceComboBoxView" />
+          </viewEntries>
+        </OTViewService>
+        <OTInterfaceManager local_id="interface_manager">
+          <deviceConfigs>
+            <OTDeviceConfig name="psuedo device" deviceId="0"/>
+          </deviceConfigs>
+        </OTInterfaceManager>
+      </services>
+      <root>
+        <OTDataCollector name="Multiple Datasets"
+          local_id="data_object_id_172" multipleGraphableEnabled="true">
+          <source>
+            <OTDataGraphable connectPoints="true" color="0x0000ff"
+              drawMarks="false" name="2 Temperatures" xColumn="0" yColumn="1">
+              <dataProducer>
+                <OTSensorDataProxy name="Temperature 1"
+                  local_id="dc_two_temps">
+                  <request>
+                    <OTExperimentRequest period="0.1">
+                      <sensorRequests>
+                        <OTSensorRequest type="0"
+                          stepSize="0.1" displayPrecision="-1" port="0"
+                          unit="degC" requiredMax="40" requiredMin="-10" />
+                        <OTSensorRequest type="0"
+                          stepSize="0.1" displayPrecision="-1" port="0"
+                          unit="degC" requiredMax="40" requiredMin="-10" />
+                      </sensorRequests>
+                    </OTExperimentRequest>
+                  </request>
+                </OTSensorDataProxy>
+              </dataProducer>
+            </OTDataGraphable>
+          </source>
+          <graphables>
+            <OTDataGraphable connectPoints="true" color="0xff0000"
+              drawMarks="false" name="Temperature 2" xColumn="0"
+              yColumn="1">
+              <dataProducer>
+                <object refid="${dc_two_temps}"/>
+              </dataProducer>
+            </OTDataGraphable>
+          </graphables>
+          <xDataAxis>
+            <OTDataAxis min="0" max="60" label="Time" units="s" />
+          </xDataAxis>
+          <yDataAxis>
+            <OTDataAxis min="-10" max="40" label="Temperature"
+              units="degC" />
+          </yDataAxis>
+        </OTDataCollector>
+      </root>
+    </OTSystem>
+  </objects>
+</otrunk>
