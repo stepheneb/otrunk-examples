@@ -13,15 +13,15 @@ function init() {
 	        	var envUnit = new EnvironmentUnit(env, null, i, j)
 	        	env.setEnvironmentUnit(envUnit, i, j)
 	        	if (j < 3)
-	        		percentSunlight = 1.0
+	        		percentSunlight = 0.1
 	        	else if (j < 6)
-	        		percentSunlight = 0.75
+	        		percentSunlight = 0.25
 	        	else if (j < 9)
 	        		percentSunlight = 0.5
 	        	else if (j < 12)
-	        		percentSunlight = 0.25
+	        		percentSunlight = 0.75
 	        	else if (j < 15)
-	        		percentSunlight = 0.1
+	        		percentSunlight = 1.0
 	        		
 	        	envUnit.setProperty("sunlight", new Float(percentSunlight))
 	        	
@@ -34,6 +34,7 @@ function init() {
 	        	envUnit.setTerrain(terrain)
             }
         }
+    holder.repaint();
 	return true;
 }
 
