@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <otrunk id="13d3fb4f-123a-425f-9d60-d84e145c0678">
   <imports>
-  	<import class="org.concord.otrunk.OTIncludeRootObject" />
-  	<import class="org.concord.otrunk.OTInclude" />
+    <import class="org.concord.otrunk.OTIncludeRootObject" />
+    <import class="org.concord.otrunk.OTInclude" />
     <import class="org.concord.otrunk.OTSystem" />
     <import class="org.concord.otrunk.biologica.OTOrganismPlacement" />
     <import class="org.concord.otrunk.biologica.OTEnvironment" />
@@ -11,13 +11,13 @@
     <import class="org.concord.otrunk.biologica.agent.OTAgentSpecies" />
     <import class="org.concord.otrunk.biologica.agent.OTAgentTrait" />
     <import class="org.concord.otrunk.biologica.agent.OTAgentPropertyImageMap" />
-    <import class="org.concord.otrunk.biologica.environment.OTEnvironmentHolder"/>
-    <import class="org.concord.otrunk.biologica.rules.OTRule"/>
-    <import class="org.concord.otrunk.biologica.rules.OTRuleCondition"/>
-    <import class="org.concord.otrunk.biologica.rules.OTRuleConsequence"/>
-    <import class="org.concord.otrunk.ui.OTButton"/>
+    <import class="org.concord.otrunk.biologica.environment.OTEnvironmentHolder" />
+    <import class="org.concord.otrunk.biologica.rules.OTRule" />
+    <import class="org.concord.otrunk.biologica.rules.OTRuleCondition" />
+    <import class="org.concord.otrunk.biologica.rules.OTRuleConsequence" />
+    <import class="org.concord.otrunk.ui.OTButton" />
     <import class="org.concord.otrunk.ui.OTCurriculumUnit" />
-    <import class="org.concord.otrunk.ui.OTSlider"/>
+    <import class="org.concord.otrunk.ui.OTSlider" />
     <import class="org.concord.otrunk.view.OTViewEntry" />
     <import class="org.concord.otrunk.view.OTViewBundle" />
     <import class="org.concord.otrunk.view.document.OTCompoundDoc" />
@@ -38,9 +38,8 @@
 	</idMap> 
   <objects>
     <OTSystem>
-
       <bundles>
-      	<object refid="8d880970-c22a-11dc-95ff-0800200c9a66" />
+        <object refid="8d880970-c22a-11dc-95ff-0800200c9a66" />
         <OTViewBundle showLeftPanel="false">
           <frame>
             <OTFrame useScrollPane="false" width="800" height="590" />
@@ -48,90 +47,268 @@
         </OTViewBundle>
         <OTScriptEngineBundle>
           <engines>
-            <OTScriptEngineEntry
-              objectClass="org.concord.otrunk.script.js.OTJavascript"
-              engineClass="org.concord.otrunk.script.js.OTJavascriptEngine" />
+            <OTScriptEngineEntry objectClass="org.concord.otrunk.script.js.OTJavascript" engineClass="org.concord.otrunk.script.js.OTJavascriptEngine" />
           </engines>
         </OTScriptEngineBundle>
       </bundles>
-	  <includes>
-	  	<OTInclude href="../global-imports/er-view-bundle.otml" />
+      <includes>
+        <OTInclude href="../global-imports/er-view-bundle.otml" />
         <OTInclude href="species/white-rabbits.otml" />
         <OTInclude href="species/slow-growth-plants.otml" />
       </includes>
       <root>
-      	<OTCurriculumUnit version="2" name="LOOPS Activity">
+        <OTCurriculumUnit version="2" name="LOOPS Activity">
           <activity>
-        <OTCompoundDoc name="Population">
-          <bodyText>
-          
-            <table >
-              <tr height="690">
-	              <td>
-	              	<object refid="${env-holder}" />
-	              </td>
-	              <td>
-	              	Hunger:<br/>
-	              	<object refid="${hunger-slider}" /><br/>
-	              	<object refid="${add-rabbit}"/><br />
-                  <object refid="${clear-button}"/><br/>
-	              </td>
-              </tr>
-            </table>
-          
-          		<object refid="${setup-script}"/>
-            </bodyText>
-          <documentRefs>
-          	<OTEnvironmentHolder local_id="env-holder" width="730" height="600" >
-          		<environment>
-		          	<OTEnvironment local_id="environment" world="${peasimple_world}" 
-		            	width="550" height="500" environmentWidth="8" environmentHeight="8"
-		            	showRunButton="false">
-		            </OTEnvironment>
-		        </environment>
-		    </OTEnvironmentHolder>
-		    <OTScriptObject local_id="setup-script">
-             		<script>
-             			<OTJavascript src="scripts/controllable-rabbit/setup.js"/>
-             		</script>
-             		<variables>
-             			<OTScriptVariableRealObject name="env" reference="${environment}"/>
-             			<OTScriptVariableRealObject name="rabbit_species" reference="${rabbit-species}"/>
-             			<OTScriptVariableRealObject name="plant_species" reference="${plant-species}"/>
-             			<OTScriptVariableRealObject name="window" reference="${env-holder}"/>
-             			<OTScriptVariableComponent name="slider" reference="${hunger-slider}"/>
-             			<OTScriptVariableComponent name="add" reference="${add-rabbit}"/>
-             		</variables>
-             </OTScriptObject>
-             
-             <OTSlider local_id="hunger-slider"
-             	maxValue="200"/>
-             	
-             <OTButton local_id="add-rabbit" text="Add another rabbit"/>
-             <OTScriptButton local_id="clear-button" text="Clear">
-             		<script>
-             			<OTJavascript>
-     				<script>function clicked()
-      				{
-      					environment.removeAllAgents();
-      				}
-     				</script>
-     			</OTJavascript>
-             		</script>
-             		<scriptVariables>
-             			<OTScriptVariableRealObject name="environment" reference="${environment}"/>
-             		</scriptVariables>
-             </OTScriptButton>
-            <!-- World definition: is ignored -->
-            <OTWorld
-              speciesPath="org/concord/biologica/worlds/peasimple.xml"
-              local_id="peasimple_world" />
-          </documentRefs>
-        </OTCompoundDoc>
-		</activity>
-		</OTCurriculumUnit>
-      </root>
+            <OTCompoundDoc name="Population">
+              <bodyText>
+                <table>
+                  <tr height="690">
+                    <td>
+                      <object refid="${env-holder}" />
+                    </td>
+                    <td>
+                      Energy:
+                      <br />
+                      <object refid="${hunger-slider}" />
+                      <br />
+                    </td>
+                  </tr>
+                </table>
+                <object refid="${setup-script}" />
+              </bodyText>
+              <documentRefs>
+                <OTEnvironmentHolder local_id="env-holder" width="730" height="600">
+                  <environment>
+                    <OTEnvironment local_id="environment" width="550" height="500" environmentWidth="8" environmentHeight="8" showRunButton="false">
+                      <world>
+                        <OTWorld local_id="peasimple_world" speciesPath="org/concord/biologica/worlds/peasimple.xml" />
+                      </world>
+                    </OTEnvironment>
+                  </environment>
+                  <buttons>
+                    <OTButton local_id="add-rabbit" text="Add another rabbit" />
+                    <OTScriptButton local_id="clear-button" text="Clear">
+                      <script>
+                        <OTJavascript>
+                          <script>function clicked()
+	     				{
+	     					environment.removeAllAgents();
+	     				}</script>
+                        </OTJavascript>
+                      </script>
+                      <scriptVariables>
+                        <OTScriptVariableRealObject name="environment">
+                          <reference>
+                            <object refid="${environment}" />
+                          </reference>
+                        </OTScriptVariableRealObject>
+                      </scriptVariables>
+                    </OTScriptButton>
+                  </buttons>
+                  <scripts>
+                    <OTScriptObject local_id="setup-script" name="Setup script">
+                      <script>
+                        <OTJavascript src="scripts/controllable-rabbit/setup.js">
+                          <script>importPackage(Packages.java.lang);
+importPackage(Packages.java.awt);
+importPackage(Packages.java.awt.event);
+importPackage(Packages.java.swing);
+importClass(Packages.javax.swing.JOptionPane);
+importPackage(Packages.org.concord.biologica.environment);
+importPackage(Packages.org.concord.framework.otrunk);
+  	
+var rabbit = rabbit_species.createAgent()
+var rabbits = []
+	
+function init() {
+	world = env.getWorld()
+	env.setWrapNorthSouth(false)
+	env.setWrapEastWest(false)
+	for (var i = 0; i &lt; 8; i++) {
+	        for (var j = 0; j &lt; 8; j++) {
+	        	var envUnit = new EnvironmentUnit(env, null, i, j)
+	        	envUnit.setProperty("brownness", new Float(0.0))
+	        	env.setEnvironmentUnit(envUnit, i, j)
+	        	var color = new Color(0.3, 0.8, 0.1)
+	        	
+	        	var terrain = new Terrain(world, "terrain", color)
+	        	envUnit.setTerrain(terrain)
+            }
+        }
+        
+        
+	rabbit.setAge(20)
+	rabbit.setProperty("Speed", 0)
+	rabbit.setProperty("is immortal", true)
+	rabbit.setProperty("max offspring", 0)
+	env.addAgent(rabbit)
+	
+	for (var i = 0; i &lt; 25; i++) {
+		var plant = plant_species.createAgent();
+		plant.setAge(i*2)
+		env.addAgent(plant)
+	}
+	
+	window.requestFocus()
+	window.addKeyListener(arrowListener)
+	
+	env.addStepListener(stepListener)
+	
+	add.addOTChangeListener(buttonListener)
+	
+	return true;
+}
 
+var arrowHandler =
+{
+    keyPressed: function(evt)
+    {
+    	var keyCode = evt.getKeyCode()
+    	var loc = rabbit.getLocation()
+    	var newLoc
+    	if (keyCode == evt.VK_UP){
+    		newLoc = new Point(loc.x, loc.y - 3)
+    	} else if (keyCode == evt.VK_DOWN){
+    		newLoc = new Point(loc.x, loc.y + 3)
+    	} else if (keyCode == evt.VK_LEFT){
+    		newLoc = new Point(loc.x - 3, loc.y)
+    	} else if (keyCode == evt.VK_RIGHT){
+    		newLoc = new Point(loc.x + 3, loc.y)
+    	}
+    	rabbit.setLocation(newLoc)
+    }
+
+}
+var arrowListener = new KeyListener(arrowHandler)
+
+var stepHandler =
+{
+	environmentStepped: function()
+	{
+		var hunger = rabbit.getProperty("Hunger").intValue()
+		slider.setValue(hunger/2.5)
+		if (hunger == 250){
+			JOptionPane.showMessageDialog(null, "Oh no! Your rabbit died of hunger.")
+			rabbit.setProperty("Hunger", 0)
+			env.removeAgent(rabbit)
+			JOptionPane.showMessageDialog(null, "Try again!")
+			env.removeAllAgents()
+			rabbit = rabbit_species.createAgent()
+			rabbit.setAge(20)
+			rabbit.setProperty("Speed", 0)
+			rabbit.setProperty("is immortal", true)
+			rabbit.setProperty("max offspring", 0)
+			env.addAgent(rabbit)
+			
+			for (var i = 0; i &lt; 25; i++) {
+				var plant = plant_species.createAgent();
+				plant.setAge(i*2)
+				env.addAgent(plant)
+			}
+		}
+		
+		for (var i=0; i&lt;rabbits.length; i++){
+			var newRabbit = rabbits[i];
+			if (newRabbit != null){
+				var newHunger = newRabbit.getProperty("Hunger").intValue()
+				if (newHunger &gt; 250){
+					env.removeAgent(newRabbit)
+					newRabbit = null
+				}
+			}
+		}
+	}
+}
+var stepListener = new EnvironmentStepListener(stepHandler)
+
+var grassSliderChangeHandler =
+{
+    stateChanged: function(evt)
+    {
+        var brownness = ((100 - evt.getValue()) / 100)
+        var brownnessFloat = new Float(brownness)
+        for (var i = 0; i &lt; 20; i++) {
+	        for (var j = 0; j &lt; 20; j++) {
+	        	var envUnit = env.getEnvironmentUnit(i, j)
+	        	envUnit.setProperty("brownness", brownnessFloat)
+	        	
+	        	var color = new Color(0.3+(brownness*0.5), 0.8-(brownness*0.1), 0.1+(brownness*0.3))
+	      // 		var color = new Color(0.8, 0.5, 0.3)
+                var terrain = new Terrain(world, "terrain", color)
+	        	envUnit.setTerrain(terrain)
+            }
+        }
+    }
+
+}
+var grassSliderChangeListener = new OTChangeListener(grassSliderChangeHandler)
+
+var buttonHandler =
+{
+		stateChanged: function(evt)
+		{
+		System.err.println("change!");
+			if (evt.getSource().getClicked()){
+			System.err.println("click!");
+				var newRabbit = rabbit_species.createAgent()
+				newRabbit.setAge(20)
+				newRabbit.setProperty("is immortal", true)
+				newRabbit.setProperty("max offspring", 0)
+				env.addAgent(newRabbit)
+				rabbits[rabbits.length] = newRabbit
+			}
+		}
+};
+var buttonListener = new OTChangeListener(buttonHandler);
+
+function save() {
+	return true;
+}</script>
+                        </OTJavascript>
+                      </script>
+                      <variables>
+                        <OTScriptVariableRealObject name="env">
+                          <reference>
+                            <object refid="${environment}" />
+                          </reference>
+                        </OTScriptVariableRealObject>
+                        <OTScriptVariableRealObject name="rabbit_species">
+                          <reference>
+                            <object refid="f05fc1b1-ea0e-4d6e-a21e-7d089860445a" />
+                          </reference>
+                        </OTScriptVariableRealObject>
+                        <OTScriptVariableRealObject name="plant_species">
+                          <reference>
+                            <object refid="c90dbfc0-d3bc-4c7b-a6e0-7af1f8464390" />
+                          </reference>
+                        </OTScriptVariableRealObject>
+                        <OTScriptVariableRealObject name="window">
+                          <reference>
+                            <object refid="${env-holder}" />
+                          </reference>
+                        </OTScriptVariableRealObject>
+                        <OTScriptVariable name="slider">
+                          <reference>
+                            <object refid="${hunger-slider}" />
+                          </reference>
+                        </OTScriptVariable>
+                        <OTScriptVariable name="add">
+                          <reference>
+                            <object refid="${add-rabbit}" />
+                          </reference>
+                        </OTScriptVariable>
+                      </variables>
+                      <scriptState />
+                    </OTScriptObject>
+                  </scripts>
+                </OTEnvironmentHolder>
+                <OTSlider local_id="hunger-slider" value="100.0" precision="1.0" />
+              </documentRefs>
+            </OTCompoundDoc>
+          </activity>
+        </OTCurriculumUnit>
+      </root>
     </OTSystem>
   </objects>
 </otrunk>
+
