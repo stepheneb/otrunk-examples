@@ -44,12 +44,13 @@
     <import class="org.concord.otrunk.ui.OTText" />
     <import class="org.concord.otrunk.ui.OTPlacement" />
     <import class="org.concord.otrunk.ui.OTPlacementContainer" />
-    <import class="org.concord.otrunk.ui.snapshot.OTSnapshot" />
-    <import class="org.concord.otrunk.ui.snapshot.OTSnapshotButton" />
-    <import class="org.concord.otrunk.ui.snapshot.OTSnapshotAlbum" />
-    <import class="org.concord.otrunk.ui.snapshot.OTSnapshotChooser" />
     <import class="org.concord.otrunk.ui.swing.OTChoiceViewConfig" />
     <import class="org.concord.otrunk.util.OTSharingBundle" />
+    <import class="org.concord.otrunk.util.OTLabbookBundle" />
+    <import class="org.concord.otrunk.util.OTLabbookEntry" />
+    <import class="org.concord.otrunk.labbook.OTLabbookButton" />
+    <import class="org.concord.otrunk.labbook.OTLabbook" />
+    <import class="org.concord.otrunk.labbook.OTLabbookEntryChooser" />
     <import class="org.concord.otrunk.view.OTObjectEditViewConfig" />
     <import class="org.concord.otrunk.view.OTViewChild" />
     <import class="org.concord.otrunk.view.OTViewEntry" />
@@ -110,6 +111,7 @@
             <OTDeviceConfig configString="none" deviceId="10" />
           </deviceConfigs>
         </OTInterfaceManager>
+        <OTLabbookBundle />
       </bundles>
       <overlays>
         <object refid="6cc8e2b0-c44e-11dc-95ff-0800200c9a66" />
@@ -156,6 +158,7 @@
                               <object refid="ac51812d-3a54-11de-87fd-db993fdba086" />
                               <br />
                               <object refid="d53c6587-15d7-4be5-8b5a-a7e1bd151f5b" />
+                              <object refid="${album}"/>
                               <br />
                               <object refid="0b618d7b-3a84-11de-877b-0176bc3e3c26" />
                               <br />
@@ -168,14 +171,11 @@
                         <OTModelerPage id="ac51812d-3a54-11de-87fd-db993fdba086" name="Molecular workbench" authoredDataURL="models/chem/sketcher1.cml">
                           <variables />
                         </OTModelerPage>
-                        <OTSnapshotButton id="d53c6587-15d7-4be5-8b5a-a7e1bd151f5b" name="Snapshot Button" componentIndices="12and">
-                          <snapshotAlbum>
-                            <object refid="bdf45d86-c0b7-4f25-ba0b-2f8baf717680" />
-                          </snapshotAlbum>
+                        <OTLabbookButton id="d53c6587-15d7-4be5-8b5a-a7e1bd151f5b" name="Snapshot Button" componentIndices="12and">
                           <target>
                             <object refid="ac51812d-3a54-11de-87fd-db993fdba086" />
                           </target>
-                        </OTSnapshotButton>
+                        </OTLabbookButton>
                         <OTOverlayWrapper id="0b618d7b-3a84-11de-877b-0176bc3e3c26" name="SnapshotSave">
                           <wrappedObject>
                             <OTQuestion id="9603788f-3a83-11de-877b-0176bc3e3c26" name="Snapshot1">
@@ -185,11 +185,7 @@
                                 </OTCompoundDoc>
                               </prompt>
                               <input>
-                                <OTSnapshotChooser name="Snapshot" allowMultipleSelections="false">
-                                  <album>
-                                    <OTSnapshotAlbum id="bdf45d86-c0b7-4f25-ba0b-2f8baf717680" name="Album1" />
-                                  </album>
-                                </OTSnapshotChooser>
+                                <OTLabbookEntryChooser name="Labbook chooser" allowMultipleSelections="false" />
                               </input>
                             </OTQuestion>
                           </wrappedObject>
@@ -497,7 +493,7 @@
             <object refid="${page-rule}" />
           </menuRule>
         </OTMenu>
-        <OTSnapshotAlbum local_id="album" />
+        <OTLabbook local_id="album" />
         <OTMenuRule local_id="page-rule" jumpToViewedCard="true" stepAhead="true" />
         <OTJavascript local_id="change_page.js" src="scripts/change_page.js" />
         <OTJavascript local_id="show_message.js" src="scripts/show_message.js" />
