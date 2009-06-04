@@ -21,7 +21,6 @@ function init() {
 	        	var percentSunlight = envUnit.getProperty("sunlight")
 	        	var rg =  (1*percentSunlight.floatValue())
                 var color = new Color(0.7+(rg*0.2), 0.4+(rg*0.2), 0.3)
-	       //		var color = new Color(0.8, 0.5, 0.3)
 	        	var terrain = new Terrain(world, "terrain", color)
 	        	envUnit.setTerrain(terrain)
             }
@@ -47,6 +46,7 @@ var sunSliderChangeHandler =
 	        	envUnit.setTerrain(terrain)
             }
         }
+        holder.repaint()
     }
 
 }
