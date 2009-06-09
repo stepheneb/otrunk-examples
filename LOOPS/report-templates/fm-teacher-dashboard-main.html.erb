@@ -109,6 +109,25 @@ objects.each do |multi_user|
     step_indexes = []
     section = @otrunk.root_object_service.getOTObject(section_path[section_path.size - 1].source)
     section.name ||= "Unknown Activity"
+    # get the index of the section in the overall project
+    puts "Finding card container parents of section #{section.name}"
+    proj_otid_paths = @otrunk.getIncomingReferences(section.getGlobalId(), CARD_CLASS, true)
+    # take the first one
+    section_index = -1
+    puts "#{proj_otid_paths.size} card containers found wrapping the section #{section.name}"
+    proj_otid_paths.each do |proj_path|
+      next if section_index != -1
+      puts "Checking: #{proj_path[proj_path.size-1].source}"
+      card_container = @otrunk.root_object_service.getOTObject(proj_path[proj_path.size-1].source)
+      # figure out what step this is
+      i = 0
+      card_container.cards.each do |card|
+        i += 1
+        if section.equals(card)
+          section_index = i
+        end
+      end
+    end
     section_path.each do |reference|
       source = @otrunk.root_object_service.getOTObject(reference.source)
       if CARD_CLASS.is_assignable_from(source.get_class)
@@ -127,6 +146,7 @@ objects.each do |multi_user|
     end
     # now that weve figured out the full path to the object, save the info
     activities[section] ||= {}
+    activities[section]["index"] = section_index
     activities[section][step_indexes] ||= []
     activities[section][step_indexes] << multi_user
   end
@@ -152,26 +172,29 @@ user_progress=[]
 # first, the table header:
 row = [""]
 last_step="undefined"
-activities.keys.sort {|a,b| a.name <=> b.name }.each do |activity|
+activities.keys.sort {|a,b| [activities[a]["index"], a.name] <=> [activities[b]["index"], b.name] }.each do |activity|
   activity_name = activity.name
   sections = activities[activity]
+  index_val = sections.delete("index")
   sections.keys.sort.each do |step_key|
     if (step_key[0] != last_step) 
       row << "#{activity_name} : #{step_key[0]}"
     end
      last_step = step_key[0]
   end
+  sections["index"] = index_val
 end
 user_progress << row
 
 user_list.each_with_index do |group_user,index|
   user = group_user.get_user_object
   row = [group_user.name]
-  activities.keys.sort {|a,b| a.name <=> b.name }.each do |activity_key|
+  activities.keys.sort {|a,b| [activities[a]["index"], a.name] <=> [activities[b]["index"], b.name] }.each do |activity_key|
     activity = activities[activity_key]
     last_step_no = -1
     total_steps = 0
     step_count = 0
+    index_val = activity.delete("index")
     activity.keys.sort.each do |step_key|
       step_no = step_key[0]
       if(last_step_no != step_no)
@@ -191,6 +214,7 @@ user_list.each_with_index do |group_user,index|
         end
       end
     end
+    activity["index"] = index_val
     unless (total_steps <1) 
       row << (step_count * 100)/total_steps
     end
@@ -212,16 +236,17 @@ EOD
 progressContainer.set_body_text(body_text)
 activityTabs.putObject('Student progress', progressContainer)
 
-activities.keys.sort {|a,b| a.name <=> b.name }.each do |activity_key|
+activities.keys.sort {|a,b| [activities[a]["index"], a.name] <=> [activities[b]["index"], b.name] }.each do |activity_key|
   activity = activities[activity_key]
   activityTabContainer = @otrunk.root_object_service.createObject(org.concord.otrunk.ui.OTTabContainer.java_class)
   i = 1
   while activityTabs.object_keys.contains(activity_key.name)
     activity_key.name = activity_key.name.sub(/( \d+)?$/, " #{i += 1}")
   end
-  activityTabs.putObject(activity_key.name, activityTabContainer)
+  activityTabs.putObject("#{activity["index"]} - #{activity_key.name}", activityTabContainer)
 
   stepTabs = activityTabContainer.tabs
+  activity.delete("index")
   activity.keys.sort.each do |step_key|
     step = activity[step_key]
     tabTitle = "Step #{step_key.join(".")}"
