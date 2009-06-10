@@ -22,43 +22,6 @@ def getClassString(klass)
   end
 end
 
-#################################################
-## simple google API wrapper. 
-## supports more verbose params such as:
-## name, width, height, type, data, percent
-## simple example: chart(:percent=> 80)
-## 
-#################################################
-def chart(params)
-  types = {
-    :pie => 'p',
-    :bar => 'bvs'
-  }
-  name = params[:name] || 'untitled'
-  width = params[:width] || params[:height] || 40;
-  height = params[:height] || width || 40;
-  type = types[params[:type]] || params[:type] || types[:pie]
-  percent = params[:percent] ? [params[:percent],(100-params[:percent])] : nil
-  data = params[:data] || percent || [80,20]
-  labels = params[:labels] || nil
-  params[:chco] ||= params[:color]
-  [:data,:percent,:type,:height,:width,:name, :color].each { |s| params.delete(s) }
-  
-  params[:chs] ||= "#{width}x#{height}"
-  params[:chd] ||= "t:#{data.join(",")}"
-  params[:cht] ||= type
-  if (labels)
-    params[:chl] = labels.join("|")
-  end
-  param_strings = []
-  params.keys.each do |key|
-    param_strings.push "#{key}=#{params[key]}"
-  end
-  params_string = param_strings.join("&")
-  alt_tag = "graph: #{name} (#{width}x#{height})"
-  return %[<img src="http://chart.apis.google.com/chart?#{params_string}" alt="#{name}">] 
-end
-
 
 #################################################
 ## table(rows[][])
@@ -189,23 +152,30 @@ user_progress << row
 user_list.each_with_index do |group_user,index|
   user = group_user.get_user_object
   row = [(maskUserNames? ? group_user.uuid : group_user.name)]
+  
+  # each top-level activity eg: Lets Graph with probes
   activities.keys.sort {|a,b| [activities[a]["index"], a.name] <=> [activities[b]["index"], b.name] }.each do |activity_key|
     activity = activities[activity_key]
     last_step_no = -1
+    index_val = activity.delete("index")
     total_steps = 0
     step_count = 0
-    index_val = activity.delete("index")
+    # each step-key ([step][substep])
     activity.keys.sort.each do |step_key|
       step_no = step_key[0]
+
+      # new step entered:
       if(last_step_no != step_no)
-        sub_step_total = 0
-        sub_step_cpunt = 0
         if (total_steps > 0)
           row << (step_count * 100)/total_steps
+          total_steps = 0
+          step_count = 0
         end
       end
       last_step_no = step_no
       step = activity[step_key]
+      
+      # check for sub-steps
       step.each do |obj|
         total_steps +=1
         puts obj.get_object.inspect
@@ -215,7 +185,7 @@ user_list.each_with_index do |group_user,index|
       end
     end
     activity["index"] = index_val
-    unless (total_steps <1) 
+    if (total_steps > 0)
       row << (step_count * 100)/total_steps
     end
   end
@@ -226,10 +196,10 @@ progressContainer = @otrunk.root_object_service.createObject(CPDOC_CLASS)
 body_text = <<-EOD
   <div style="text-align: center;">
     <div style="text-align: center; font-size: 24px">
-      Student progress
+      Student progress ....
     </div>
     <div style="margin: 20px;">
-      #{table(percent!(user_progress))}
+      #{ table(percent!(user_progress)) }
     </div>
   </div>
 EOD
@@ -268,9 +238,12 @@ activities.keys.sort {|a,b| [activities[a]["index"], a.name] <=> [activities[b][
   end
 end
 %>
-<div style="width: 100%; height: 100%;">
+
+<div style="width: 100%; height: 100%; text-align: center;">
   <%= embedObject(otTabContainer) %>
+  <%= linkToMainReport('reload') %>
 </div>
+
 
 
 
