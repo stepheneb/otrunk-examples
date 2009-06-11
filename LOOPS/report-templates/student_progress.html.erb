@@ -1,0 +1,123 @@
+<%
+ref_require($helper)
+
+
+#################################################
+## table(rows[][])
+## return htmltable from elements of rows
+#################################################
+def table(rows)
+  data = ""
+  rows.each do |row|
+    data << "<tr>"
+      row.each do |column|
+        data << %[ <td align="center">#{column}</td> ]
+      end
+    data << "</tr>"
+  end
+  return %[ <table>#{data}</table> ]
+end
+
+####################################################
+## percent!(rows[][])
+## creates graph data from percentage matrix
+####################################################
+def percent!(rows)
+  # some default sample data:
+  rows ||= [
+    ['','section 1','section 2','section 3'],
+    ['student 1',100,0,0],
+    ['2',100,40,20],
+    ['student 3',50,0,0]
+  ]
+  rows.each do |row|
+    row.map! { |i| i.class == Fixnum ? chart(:percent=>i, :color=>"00FF00") : i }
+  end
+  return rows
+end
+
+
+##
+## Create student progress panel:
+##  #{table(percent!(user_list.map { |u| [] << u.name << rand(100) << rand(100) << rand(100) } ))}
+group_manager = @otrunk.getRootObjectService().getOTrunkService(GROUP_MANAGER_CLASS)
+user_overlay_manager = @otrunk.getRootObjectService().getOTrunkService(org.concord.otrunk.overlay.OTUserOverlayManager.java_class)
+user_list = group_manager.getUserList()
+
+# destination matrix for table rows:
+user_progress=[]
+
+# first, the table header:
+row = [""]
+last_step="undefined"
+activities = get_activities();
+activities.keys.sort {|a,b| a.name <=> b.name }.each do |activity|
+  activity_name = activity.name
+  sections = activities[activity]
+  sections.delete("index")
+  sections.keys.sort.each do |step_key|
+    if (step_key[0] != last_step) 
+      row << "#{activity_name} : #{step_key[0]}"
+    end
+     last_step = step_key[0]
+  end
+end
+user_progress << row
+
+user_list.each_with_index do |group_user,index|
+  user = group_user.get_user_object
+  row = [group_user.name]
+  activities.keys.sort {|a,b| a.name <=> b.name }.each do |activity_key|
+    activity = activities[activity_key]
+    last_step_no = -1
+    total_steps = 0
+    step_count = 0
+    activity.keys.sort.each do |step_key|
+      step_no = step_key[0]
+      if(last_step_no != step_no)
+        sub_step_total = 0
+        sub_step_cpunt = 0
+        if (total_steps > 0)
+          row << (step_count * 100)/total_steps
+        end
+      end
+      last_step_no = step_no
+      step = activity[step_key]
+      step.each do |obj|
+        total_steps +=1
+        puts obj.get_object.inspect
+        if (@otrunk.isModified(obj,user_overlay_manager.getObjectService(user),true))
+          step_count += 1
+        end
+      end
+    end
+    unless (total_steps <1) 
+      row << (step_count * 100)/total_steps
+    end
+  end
+  user_progress << row
+end
+
+%>
+<OTCompoundDoc>
+  <div style="text-align: center;">
+    <div style="text-align: center; font-size: 24px">
+      Student progress:
+    </div>
+    <div style="margin: 20px;">
+      <%= table(percent!(user_progress)) %>
+    </div>
+    <p>
+      updated at: <%= Time.now.to_s %> <br/>
+      test string: <%= $test_string %> <br/>
+    </p>
+    <hr/>
+    <%= linkToObject "refresh", activityRoot(), $student_progress %>
+  </div>
+</OTCompoundDoc>
+
+
+
+
+
+
