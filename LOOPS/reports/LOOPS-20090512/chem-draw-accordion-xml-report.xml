@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<otrunk id="99873F41-2E0D-45FF-8D0B-AE28599C8C2F">
+  <imports>
+    <import class="org.concord.framework.otrunk.view.OTFrame" />
+    <import class="org.concord.framework.otrunk.wrapper.OTBlob" />
+    <import class="org.concord.otrunk.OTInclude" />
+    <import class="org.concord.otrunk.OTIncludeRootObject" />
+    <import class="org.concord.otrunk.OTSystem" />
+    <import class="org.concord.otrunk.script.jruby.OTJRuby" />
+    <import class="org.concord.otrunk.script.OTScriptEngineBundle" />
+    <import class="org.concord.otrunk.script.OTScriptEngineEntry" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariable" />
+    <import class="org.concord.otrunk.script.ui.OTXHTMLScriptViewEntry" />
+    <import class="org.concord.otrunk.view.OTMultiUserRoot" />
+    <import class="org.concord.otrunk.view.OTViewBundle" />
+    <import class="org.concord.otrunk.view.OTViewEntry" />
+    <import class="org.concord.otrunk.view.OTViewMode" />
+    <import class="org.concord.otrunk.view.document.OTCssText" />
+    <import class="org.concord.otrunk.view.document.OTDocumentViewConfig" />
+  </imports>
+  <objects>
+    <OTSystem local_id="system">
+      <bundles>
+        <OTViewBundle showLeftPanel="false" id="EB995FC8-6B8C-4D1C-B9D3-FF689AFBEAEE">
+          <frame>
+            <OTFrame width="850" height="600" />
+          </frame>
+          <viewEntries>
+            <OTViewEntry objectClass="org.concord.otrunk.view.OTMultiUserRoot"
+              viewClass="org.concord.otrunk.view.OTMultiUserRootView" />
+            <OTDocumentViewConfig
+              objectClass="org.concord.otrunk.view.document.OTDocument"
+              viewClass="org.concord.otrunk.view.document.OTDocumentView">
+            </OTDocumentViewConfig>
+          </viewEntries>
+        </OTViewBundle>
+        <OTScriptEngineBundle id="C8151E3C-A995-4D19-8CFE-F726CCE3FB86">
+          <engines>
+            <OTScriptEngineEntry objectClass="org.concord.otrunk.script.jruby.OTJRuby"
+              engineClass="org.concord.otrunk.script.jruby.OTJRubyEngine" />
+          </engines>
+        </OTScriptEngineBundle>
+      </bundles>
+      <root>
+        <OTMultiUserRoot local_id="multi_user_root"
+          reportTemplateViewEntry="${report_xml_view}">
+          <userList>
+            <!--
+              the local_id is so this can be used as a report template in the
+              DIY
+            -->
+            <!-- <OTIncludeRootObject local_id="external_user_list_url"
+              href="http://loops.diy.concord.org/external_otrunk_activities/15/ot_learner_data.xml/>-->
+            <OTIncludeRootObject local_id="external_user_list_url"
+              href="http://loops.diy.concord.org/external_otrunk_activities/15/ot_learner_data.xml?users=352,357" />
+          </userList>
+          <reportTemplate>
+            <OTIncludeRootObject local_id="external_activity_url"
+              href="http://svn.concord.org/svn/projects/tags/common/java/otrunk/otrunk-examples/LOOPS-20090512/chem-draw-accordion.otml" />
+          </reportTemplate>
+        </OTMultiUserRoot>
+      </root>
+      <library>
+        <OTXHTMLScriptViewEntry local_id="template_report_view"
+              objectClass="org.concord.framework.otrunk.OTObject"
+              viewClass="org.concord.otrunk.script.ui.OTXHTMLScriptView">
+          <script>
+            <OTJRuby local_id="erb_controller" src="../../scripts/report/aggregate-report.rb" />
+          </script>
+          <variables>
+            <OTScriptVariable name="xml_view">
+              <reference>
+                <object refid="${report_xml_view}"/>
+              </reference>
+            </OTScriptVariable>
+            <OTScriptVariable name="libraryScript">
+              <reference>
+                <OTBlob src="jres:///org/concord/report/library/multipage-report-library.rb" />
+              </reference>
+            </OTScriptVariable>
+            <OTScriptVariable name="otrunkHelperScript">
+              <reference>
+                <OTBlob src="../../scripts/report/otrunk-helper.rb" />
+              </reference>
+            </OTScriptVariable>
+            <OTScriptVariable name="questionScript">
+              <reference>
+                <OTBlob src="../../scripts/report/questions.rb" />
+              </reference>
+            </OTScriptVariable>
+            <OTScriptVariable name="xmlReportScript">
+              <reference>
+                <OTBlob src="../../scripts/report/xml-report.rb" />
+              </reference>
+            </OTScriptVariable>
+          </variables>
+        </OTXHTMLScriptViewEntry>
+        <OTXHTMLScriptViewEntry local_id="report_xml_view"
+              objectClass="org.concord.framework.otrunk.OTObject"
+              viewClass="org.concord.otrunk.script.ui.OTXHTMLScriptView"
+              template="${template_report_view}">
+          <variables>
+            <OTScriptVariable name="template">
+              <reference>
+                <OTBlob src="../../report-templates/xml-report.html.erb" />
+              </reference>
+            </OTScriptVariable>
+          </variables>
+        </OTXHTMLScriptViewEntry>
+      </library>
+    </OTSystem>
+  </objects>
+</otrunk>
