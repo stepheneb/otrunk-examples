@@ -89,22 +89,62 @@
       </OTMultiUserRoot>
     </root>
       <library>
-        <OTXHTMLScriptViewEntry local_id="report_main_view"
-          objectClass="org.concord.framework.otrunk.OTObject" viewClass="org.concord.otrunk.script.ui.OTXHTMLScriptView">
+     	 
+      	<!--  template for other view-scripts: -->
+        <OTXHTMLScriptViewEntry 
+        	local_id="report_template" 
+        	viewClass="org.concord.otrunk.script.ui.OTXHTMLScriptView" 
+        	objectClass="org.concord.framework.otrunk.OTObject">
           <script>
-            <OTJRuby local_id="erb_controller" src="jres:///org/concord/report/library/erb-template-runner.rb" />
+            <OTJRuby local_id="erb_controller" src="jres:/org/concord/report/library/erb-template-runner.rb" />
           </script>
+          
+          <variables>
+            <OTScriptVariable name="libraryScript">
+              <reference>
+                <!--   <OTBlob src="http://svn.concord.org/svn/projects/trunk/common/java/otrunk/otrunk-report-libraries/src/main/resources/org/concord/report/library/multipage-report-library.rb" /> -->
+                <OTBlob src="file:///Users/npaessel/lab/cc-maven/otrunk-report-libraries/src/main/resources/org/concord/report/library/multipage-report-library.rb" />
+              </reference>
+            </OTScriptVariable>
+            
+            <OTScriptVariable name="helper">
+              <reference>
+                <OTBlob src="report-templates/report_helper.rb" />
+              </reference>
+            </OTScriptVariable> 
+            
+            <OTScriptVariable name="student_progress" reference="${student_progress}" />
+         	
+            
+          </variables>
+        </OTXHTMLScriptViewEntry>
+        
+        <OTXHTMLScriptViewEntry 
+	       	template="${report_template}"
+	       	local_id="report_main_view" 
+	       	viewClass="org.concord.otrunk.script.ui.OTXHTMLScriptView" 
+	       	objectClass="org.concord.framework.otrunk.OTObject">
           <variables>
             <OTScriptVariable name="template">
               <reference>
                 <OTBlob src="report-templates/fm-teacher-dashboard-main.html.erb" />
               </reference>
-            </OTScriptVariable>
-            <OTScriptVariable name="libraryScript">
+            </OTScriptVariable>            
+          </variables>
+        </OTXHTMLScriptViewEntry>
+        
+        <OTXHTMLScriptViewEntry 
+        	template="${report_template}"
+        	local_id="student_progress" 
+        	viewClass="org.concord.otrunk.script.ui.OTXHTMLScriptView" 
+        	objectClass="org.concord.framework.otrunk.OTObject">
+         
+          <variables>
+            <OTScriptVariable name="template">
               <reference>
-                <OTBlob src="http://svn.concord.org/svn/projects/trunk/common/java/otrunk/otrunk-report-libraries/src/main/resources/org/concord/report/library/multipage-report-library.rb" />
+                <OTBlob src="report-templates/student_progress.html.erb" />
               </reference>
-            </OTScriptVariable>
+            </OTScriptVariable>            
           </variables>
         </OTXHTMLScriptViewEntry>
       </library>
