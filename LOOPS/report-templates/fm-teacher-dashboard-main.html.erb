@@ -1,211 +1,20 @@
 <%
-PICK_N_CLASS = java.lang.Class::for_name("org.concord.otrunk.intrasession.OTMultiUserPickN")
-POLL_CLASS = java.lang.Class::for_name("org.concord.otrunk.intrasession.OTMultiUserPollingGraph")
-DOC_CLASS = java.lang.Class::for_name("org.concord.otrunk.view.document.OTDocument")
-CPDOC_CLASS = java.lang.Class::for_name("org.concord.otrunk.view.document.OTCompoundDoc")
-CARD_CLASS = java.lang.Class::for_name("org.concord.otrunk.ui.OTCardContainer")
-OVERLAY_CLASS = java.lang.Class::for_name("org.concord.otrunk.overlay.OTOverlayWrapper")
-MULTI_CLASS = java.lang.Class::for_name("org.concord.otrunk.intrasession.OTMultiUser")
-SECTION_CLASS = java.lang.Class::for_name("org.concord.otrunk.ui.OTSection")
-GROUP_MANAGER_CLASS = java.lang.Class::for_name("org.concord.otrunk.view.OTGroupListManager")
-
-#################################################
-##
-#################################################
-def getClassString(klass)
-  if PICK_N_CLASS.is_assignable_from(klass)
-    "Pick N"
-  elsif POLL_CLASS.is_assignable_from(klass)
-    "Poll"
-  else
-    type.to_s
-  end
-end
-
-
-#################################################
-## table(rows[][])
-## return htmltable from elements of rows
-#################################################
-def table(rows)
-  data = ""
-  rows.each do |row|
-    data << "<tr>"
-      row.each do |column|
-        data << %[ <td align="center">#{column}</td> ]
-      end
-    data << "</tr>"
-  end
-  return %[ <table border="1px" width="100%">#{data}</table> ]
-end
-
-####################################################
-## percent!(rows[][])
-## creates graph data from percentage matrix
-####################################################
-def percent!(rows)
-  # some default sample data:
-  rows ||= [
-    ['','section 1','section 2','section 3'],
-    ['student 1',100,0,0],
-    ['2',100,40,20],
-    ['student 3',50,0,0]
-  ]
-  rows.each do |row|
-    row.map! { |i| i.class == Fixnum ? chart(:percent=>i, :color=>"00FF00") : i }
-  end
-  return rows
-end
-  
-
-activities = {}
-objects = @otrunk.getAllObjects(MULTI_CLASS)
-overlays = @otrunk.getAllObjects(OVERLAY_CLASS)
-
-objects.each do |multi_user|
-  next if multi_user.object == nil
-  wrapper_otid_paths = @otrunk.getIncomingReferences(multi_user.object.global_id, OVERLAY_CLASS, true)
-  next if wrapper_otid_paths.size < 1
-  first_path = wrapper_otid_paths[0]
-  section_otid_paths = @otrunk.getIncomingReferences(first_path[first_path.size-1].source,  SECTION_CLASS, true)
-  section_otid_paths.each do |section_path|
-    step_indexes = []
-    section = @otrunk.root_object_service.getOTObject(section_path[section_path.size - 1].source)
-    section.name ||= "Unknown Activity"
-    # get the index of the section in the overall project
-    puts "Finding card container parents of section #{section.name}"
-    proj_otid_paths = @otrunk.getIncomingReferences(section.getGlobalId(), CARD_CLASS, true)
-    # take the first one
-    section_index = -1
-    puts "#{proj_otid_paths.size} card containers found wrapping the section #{section.name}"
-    proj_otid_paths.each do |proj_path|
-      next if section_index != -1
-      puts "Checking: #{proj_path[proj_path.size-1].source}"
-      card_container = @otrunk.root_object_service.getOTObject(proj_path[proj_path.size-1].source)
-      # figure out what step this is
-      i = 0
-      card_container.cards.each do |card|
-        i += 1
-        if section.equals(card)
-          section_index = i
-        end
-      end
-    end
-    section_path.each do |reference|
-      source = @otrunk.root_object_service.getOTObject(reference.source)
-      if CARD_CLASS.is_assignable_from(source.get_class)
-        dest = @otrunk.root_object_service.getOTObject(reference.dest)
-        if DOC_CLASS.is_assignable_from(dest.get_class)
-          # figure out what step this is
-          i = 0
-          source.cards.each do |card|
-            i += 1
-            if reference.dest.equals(card.getGlobalId())
-              step_indexes.unshift(i)
-            end
-          end
-        end
-      end
-    end
-    # now that weve figured out the full path to the object, save the info
-    activities[section] ||= {}
-    activities[section]["index"] = section_index
-    activities[section][step_indexes] ||= []
-    activities[section][step_indexes] << multi_user
-  end
-end
-
+ref_require($helper)
 ## 
 ## Create outter tab-navigation
 ##
 otTabContainer = @otrunk.root_object_service.createObject(org.concord.otrunk.ui.OTTabContainer.java_class)
 activityTabs = otTabContainer.tabs
 
-
 ##
-## Create student progress panel:
-##  #{table(percent!(user_list.map { |u| [] << u.name << rand(100) << rand(100) << rand(100) } ))}
-group_manager = @otrunk.getRootObjectService().getOTrunkService(GROUP_MANAGER_CLASS)
-user_overlay_manager = @otrunk.getRootObjectService().getOTrunkService(org.concord.otrunk.overlay.OTUserOverlayManager.java_class)
-user_list = group_manager.getUserList()
+## Include the student_progress sub-view
+## 
+child_view = @otrunk.root_object_service.createObject(org.concord.otrunk.view.OTViewChild.java_class)
+child_view.object=$model
+child_view.viewid=$student_progress
+activityTabs.putObject('Student progress', child_view)
 
-# destination matrix for table rows:
-user_progress=[]
-
-# first, the table header:
-row = [""]
-last_step="undefined"
-activities.keys.sort {|a,b| [activities[a]["index"], a.name] <=> [activities[b]["index"], b.name] }.each do |activity|
-  activity_name = activity.name
-  sections = activities[activity]
-  index_val = sections.delete("index")
-  sections.keys.sort.each do |step_key|
-    if (step_key[0] != last_step) 
-      row << "#{activity_name} : #{step_key[0]}"
-    end
-     last_step = step_key[0]
-  end
-  sections["index"] = index_val
-end
-user_progress << row
-
-user_list.each_with_index do |group_user,index|
-  user = group_user.get_user_object
-  row = [(maskUserNames? ? group_user.uuid : group_user.name)]
-  
-  # each top-level activity eg: Lets Graph with probes
-  activities.keys.sort {|a,b| [activities[a]["index"], a.name] <=> [activities[b]["index"], b.name] }.each do |activity_key|
-    activity = activities[activity_key]
-    last_step_no = -1
-    index_val = activity.delete("index")
-    total_steps = 0
-    step_count = 0
-    # each step-key ([step][substep])
-    activity.keys.sort.each do |step_key|
-      step_no = step_key[0]
-
-      # new step entered:
-      if(last_step_no != step_no)
-        if (total_steps > 0)
-          row << (step_count * 100)/total_steps
-          total_steps = 0
-          step_count = 0
-        end
-      end
-      last_step_no = step_no
-      step = activity[step_key]
-      
-      # check for sub-steps
-      step.each do |obj|
-        total_steps +=1
-        puts obj.get_object.inspect
-        if (@otrunk.isModified(obj,user_overlay_manager.getObjectService(user),true))
-          step_count += 1
-        end
-      end
-    end
-    activity["index"] = index_val
-    if (total_steps > 0)
-      row << (step_count * 100)/total_steps
-    end
-  end
-  user_progress << row
-end
-
-progressContainer = @otrunk.root_object_service.createObject(CPDOC_CLASS)
-body_text = <<-EOD
-  <div style="text-align: center;">
-    <div style="text-align: center; font-size: 24px">
-      Student progress ....
-    </div>
-    <div style="margin: 20px;">
-      #{ table(percent!(user_progress)) }
-    </div>
-  </div>
-EOD
-progressContainer.set_body_text(body_text)
-activityTabs.putObject('Student progress', progressContainer)
-
+activities = get_activities();
 activities.keys.sort {|a,b| [activities[a]["index"], a.name] <=> [activities[b]["index"], b.name] }.each do |activity_key|
   activity = activities[activity_key]
   activityTabContainer = @otrunk.root_object_service.createObject(org.concord.otrunk.ui.OTTabContainer.java_class)
@@ -240,8 +49,11 @@ end
 %>
 
 <div style="width: 100%; height: 100%; text-align: center;">
+  <h3>
+    <%= teacher_name() %> : <%= class_name() %>
+  </h3>
+  <hr/>
   <%= embedObject(otTabContainer) %>
-  <%= linkToMainReport('reload') %>
 </div>
 
 
