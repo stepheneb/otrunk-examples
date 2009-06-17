@@ -47,7 +47,7 @@ otmls = []
 start_otmls_time = Time.now
 
 start_svn_info_time = Time.now
-dir_svn_info = `svn info * 2>/dev/null`
+dir_svn_info = `svn info --depth immediates . 2>/dev/null`
 svn_info_time = Time.now - start_svn_info_time
 
 start_svn_yaml_time = Time.now
