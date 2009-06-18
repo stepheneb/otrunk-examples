@@ -17,6 +17,7 @@
     <import class="org.concord.otrunk.biologica.rules.OTRuleCondition" />
     <import class="org.concord.otrunk.biologica.rules.OTRuleConsequence" />
     <import class="org.concord.otrunk.ui.OTCurriculumUnit" />
+    <import class="org.concord.otrunk.ui.OTPlacement" />
     <import class="org.concord.otrunk.ui.snapshot.OTSnapshot" />
     <import class="org.concord.otrunk.ui.snapshot.OTSnapshotButton" />
     <import class="org.concord.otrunk.ui.snapshot.OTSnapshotAlbum" />
@@ -36,13 +37,10 @@
     <import class="org.concord.otrunk.script.ui.OTScriptButton" />
     <import class="org.concord.framework.otrunk.view.OTFrame" />
   </imports>
-  <idMap> 
-	<idMapping local_id="plant-species" id="f5732706-c9c2-4e29-8c99-4c668dda89b0"/>
-  </idMap> 
   <objects>
     <OTSystem>
       <bundles>
-      	<object refid="8d880970-c22a-11dc-95ff-0800200c9a66" />
+        <object refid="8d880970-c22a-11dc-95ff-0800200c9a66" />
         <OTScriptEngineBundle>
           <engines>
             <OTScriptEngineEntry objectClass="org.concord.otrunk.script.js.OTJavascript" engineClass="org.concord.otrunk.script.js.OTJavascriptEngine" />
@@ -50,172 +48,204 @@
         </OTScriptEngineBundle>
       </bundles>
       <includes>
-      	<OTInclude href="../global-imports/er-view-bundle.otml" />
+        <OTInclude href="../global-imports/er-view-bundle.otml" />
         <OTInclude href="species/annual-varied-plants.otml" />
       </includes>
       <root>
-      	<OTCurriculumUnit version="2" name="ER Activity">
+        <OTCurriculumUnit version="2" name="ER Activity">
           <activity>
-        <OTCompoundDoc name="Population" id="f25a29f8-4422-42c9-bb4c-1f13d399245c">
-          <bodyText>
-            <table>
-              <tr height="690">
-                <td>
-	              	<object refid="${env-holder}" />
-                </td>
-              </tr>
-            </table>
-            <object refid="${setup-script}" />
-            <object refid="${setup-species-script}" />
-          </bodyText>
-          <documentRefs>
-            <OTEnvironmentHolder local_id="env-holder" width="730" height="600">
-              <environment>
-                <OTEnvironment local_id="environment" width="550" height="500" 
-                		environmentWidth="10" environmentHeight="10" showRunButton="false"
-                		winterLength="15" summerLength="50" orgSizeMultiplier="1.5">
-                  <world>
-                    <object refid="${peasimple_world}" />
-                  </world>
-                  <rules>
-                    <OTRule description="Health depends on leaves and sunlight">
-                      <conditions>
-                        <OTRuleCondition always="true" />
-                      </conditions>
-                      <consequences>
-                        <OTRuleConsequence property="Health">
-                          <ruleScript>var diff = Math.abs(leaves - (sunlight*10))
+            <OTCompoundDoc id="f25a29f8-4422-42c9-bb4c-1f13d399245c" name="Population">
+              <bodyText>
+                <table>
+                  <tr height="690">
+                    <td>
+                      <object refid="${env-holder}" />
+                    </td>
+                  </tr>
+                </table>
+                <object refid="${setup-script}" />
+                <object refid="${setup-species-script}" />
+              </bodyText>
+              <documentRefs>
+                <OTEnvironmentHolder local_id="env-holder" width="730" height="600">
+                  <environment>
+                    <OTEnvironment local_id="environment" width="550" height="500" environmentWidth="10" environmentHeight="10" showRunButton="false" winterLength="15" summerLength="50" orgSizeMultiplier="1.5" backgroundImageSrc="images/sun5levels.jpg">
+                      <world>
+                        <object refid="${peasimple_world}" />
+                      </world>
+                      <barriers>
+                      	<OTPlacement x="0" y="0" width="23" height="150"/>
+                      	<OTPlacement x="128" y="0" width="30" height="150"/>
+                      	<OTPlacement x="23" y="0" width="106" height="9"/>
+                      	<OTPlacement x="23" y="20" width="106" height="10"/>
+                      	<OTPlacement x="23" y="41" width="106" height="10"/>
+                      	<OTPlacement x="23" y="62" width="106" height="10"/>
+                      	<OTPlacement x="23" y="83" width="106" height="10"/>
+                      	<OTPlacement x="23" y="104" width="106" height="46"/>
+                      </barriers>
+                      <rules>
+                        <OTRule description="Health depends on leaves and sunlight">
+                          <conditions>
+                            <OTRuleCondition always="true" />
+                          </conditions>
+                          <consequences>
+                            <OTRuleConsequence property="Health">
+                              <ruleScript>var diff = Math.abs(leaves - (sunlight*10))
 		            						return 1.0 - ((diff*3) / 100)</ruleScript>
-                          <propertyVariables>
-                            <string>leaves</string>
-                            <string>sunlight</string>
-                          </propertyVariables>
-                        </OTRuleConsequence>
-                      </consequences>
-                    </OTRule>
-                    <OTRule description="Leaf description rule">
-                      <conditions>
-                        <OTRuleCondition property="leaves" maxValue="3.0" />
-                      </conditions>
-                      <consequences>
-                        <OTRuleConsequence property="type of leaves" newValueString="bushy" />
-                      </consequences>
-                    </OTRule>
-                    <OTRule description="Leaf description rule">
-                      <conditions>
-                        <OTRuleCondition property="leaves" minValue="3.1" maxValue="6.0" />
-                      </conditions>
-                      <consequences>
-                        <OTRuleConsequence property="type of leaves" newValueString="medium" />
-                      </consequences>
-                    </OTRule>
-                    <OTRule description="Leaf description rule">
-                      <conditions>
-                        <OTRuleCondition property="leaves" minValue="6.1" />
-                      </conditions>
-                      <consequences>
-                        <OTRuleConsequence property="type of leaves" newValueString="thin" />
-                      </consequences>
-                    </OTRule>
-                    <OTRule description="Health description rule">
-                      <conditions>
-                        <OTRuleCondition property="Health" maxValue="0.95" />
-                      </conditions>
-                      <consequences>
-                        <OTRuleConsequence property="health" newValueString="Unhealthy" />
-                      </consequences>
-                    </OTRule>
-                    <OTRule description="Health description rule">
-                      <conditions>
-                        <OTRuleCondition property="Health" minValue="0.9501" />
-                      </conditions>
-                      <consequences>
-                        <OTRuleConsequence property="health" newValueString="Healthy" />
-                      </consequences>
-                    </OTRule>
-                  </rules>
-                </OTEnvironment>
-              </environment>
-              <buttons>
-                <object refid="${survey-button}"/>
-              	<object refid="${clear-button}"/>
-              </buttons>
-              <traitsToShow>
-                <string>type of leaves</string>
-                <string>Health</string>
-              </traitsToShow>
-              <addAgentsButtons>
-              	<OTAddAgentButton text="Add bushy plants" species="${plant-species}">
-              		<agentTraits>
-              			<OTAgentTrait property="leaves">
-              				<defaultValues>
-              					<int>1</int>
-              				</defaultValues>
-              			</OTAgentTrait>
-              		</agentTraits>
-              	</OTAddAgentButton>
-              	<OTAddAgentButton text="Add medium plants" species="${plant-species}">
-              		<agentTraits>
-              			<OTAgentTrait property="leaves">
-              				<defaultValues>
-              					<int>5</int>
-              				</defaultValues>
-              			</OTAgentTrait>
-              		</agentTraits>
-              	</OTAddAgentButton>
-              	<OTAddAgentButton text="Add thin plants" species="${plant-species}">
-              		<agentTraits>
-              			<OTAgentTrait property="leaves">
-              				<defaultValues>
-              					<int>10</int>
-              				</defaultValues>
-              			</OTAgentTrait>
-              		</agentTraits>
-              	</OTAddAgentButton>
-              </addAgentsButtons>
-            </OTEnvironmentHolder>
-            <OTScriptObject local_id="setup-script">
+                              <propertyVariables>
+                                <string>leaves</string>
+                                <string>sunlight</string>
+                              </propertyVariables>
+                            </OTRuleConsequence>
+                          </consequences>
+                        </OTRule>
+                        <OTRule description="Leaf description rule">
+                          <conditions>
+                            <OTRuleCondition property="leaves" maxValue="3.0" />
+                          </conditions>
+                          <consequences>
+                            <OTRuleConsequence property="type of leaves" newValueString="bushy" />
+                          </consequences>
+                        </OTRule>
+                        <OTRule description="Leaf description rule">
+                          <conditions>
+                            <OTRuleCondition property="leaves" minValue="3.1" maxValue="6.0" />
+                          </conditions>
+                          <consequences>
+                            <OTRuleConsequence property="type of leaves" newValueString="medium" />
+                          </consequences>
+                        </OTRule>
+                        <OTRule description="Leaf description rule">
+                          <conditions>
+                            <OTRuleCondition property="leaves" minValue="6.1" />
+                          </conditions>
+                          <consequences>
+                            <OTRuleConsequence property="type of leaves" newValueString="thin" />
+                          </consequences>
+                        </OTRule>
+                        <OTRule description="Health description rule">
+                          <conditions>
+                            <OTRuleCondition property="Health" maxValue="0.95" />
+                          </conditions>
+                          <consequences>
+                            <OTRuleConsequence property="health" newValueString="Unhealthy" />
+                          </consequences>
+                        </OTRule>
+                        <OTRule description="Health description rule">
+                          <conditions>
+                            <OTRuleCondition property="Health" minValue="0.9501" />
+                          </conditions>
+                          <consequences>
+                            <OTRuleConsequence property="health" newValueString="Healthy" />
+                          </consequences>
+                        </OTRule>
+                      </rules>
+                    </OTEnvironment>
+                  </environment>
+                  <buttons>
+                  <OTScriptButton local_id="add-mixed-ferns-button" text="Scatter mixed seeds">
               <script>
-                <OTJavascript src="scripts/gradated-sunlight-five-blocks/setup.js" />
+                <object refid="${add-mixed.js}" />
               </script>
-              <variables>
-                <OTScriptVariableRealObject name="env">
+              <scriptVariables>
+                <OTScriptVariableRealObject name="environment">
                   <reference>
                     <object refid="${environment}" />
                   </reference>
                 </OTScriptVariableRealObject>
-                <OTScriptVariableRealObject name="holder">
-                  <reference>
-                    <object refid="${env-holder}" />
-                  </reference>
-                </OTScriptVariableRealObject>
-              </variables>
-              <scriptState />
-            </OTScriptObject>
-             <OTScriptObject local_id="setup-species-script">
-              <script>
-                <OTJavascript>
-     				<script>function init()
-      				{
-      					species.setMutationChance(0)
-      				}
-     				</script>
-     			</OTJavascript>
-              </script>
-              <variables>
                 <OTScriptVariableRealObject name="species">
                   <reference>
-                    <object refid="${plant-species}" />
+                    <object refid="f5732706-c9c2-4e29-8c99-4c668dda89b0" />
                   </reference>
                 </OTScriptVariableRealObject>
-              </variables>
-              <scriptState />
-            </OTScriptObject>
-            <OTScriptButton local_id="clear-button" text="Reset">
-             		<script>
-             			<OTJavascript>
-     				<script>
-     				importPackage(Packages.java.lang);
+              </scriptVariables>
+            </OTScriptButton>
+                    <object refid="${survey-button}" />
+                    <object refid="${clear-button}" />
+                  </buttons>
+                  <traitsToShow>
+                    <string>type of leaves</string>
+                    <string>Health</string>
+                  </traitsToShow>
+                  <addAgentsButtons>
+                    <OTAddAgentButton text="Add bushy plants">
+                      <species>
+                        <object refid="f5732706-c9c2-4e29-8c99-4c668dda89b0" />
+                      </species>
+                      <agentTraits>
+                        <OTAgentTrait property="leaves">
+                          <defaultValues>
+                            <int>1</int>
+                          </defaultValues>
+                        </OTAgentTrait>
+                      </agentTraits>
+                    </OTAddAgentButton>
+                    <OTAddAgentButton text="Add medium plants">
+                      <species>
+                        <object refid="f5732706-c9c2-4e29-8c99-4c668dda89b0" />
+                      </species>
+                      <agentTraits>
+                        <OTAgentTrait property="leaves">
+                          <defaultValues>
+                            <int>5</int>
+                          </defaultValues>
+                        </OTAgentTrait>
+                      </agentTraits>
+                    </OTAddAgentButton>
+                    <OTAddAgentButton text="Add thin plants">
+                      <species>
+                        <object refid="f5732706-c9c2-4e29-8c99-4c668dda89b0" />
+                      </species>
+                      <agentTraits>
+                        <OTAgentTrait property="leaves">
+                          <defaultValues>
+                            <int>10</int>
+                          </defaultValues>
+                        </OTAgentTrait>
+                      </agentTraits>
+                    </OTAddAgentButton>
+                  </addAgentsButtons>
+                </OTEnvironmentHolder>
+                <OTScriptObject local_id="setup-script">
+                  <script>
+                    <OTJavascript src="scripts/gradated-sunlight-five-blocks/setup.js" />
+                  </script>
+                  <variables>
+                    <OTScriptVariableRealObject name="env">
+                      <reference>
+                        <object refid="${environment}" />
+                      </reference>
+                    </OTScriptVariableRealObject>
+                    <OTScriptVariableRealObject name="holder">
+                      <reference>
+                        <object refid="${env-holder}" />
+                      </reference>
+                    </OTScriptVariableRealObject>
+                  </variables>
+                  <scriptState />
+                </OTScriptObject>
+                <OTScriptObject local_id="setup-species-script">
+                  <script>
+                    <OTJavascript>
+                      <script>function init()
+      				{
+      					species.setMutationChance(0)
+      				}</script>
+                    </OTJavascript>
+                  </script>
+                  <variables>
+                    <OTScriptVariableRealObject name="species">
+                      <reference>
+                        <object refid="f5732706-c9c2-4e29-8c99-4c668dda89b0" />
+                      </reference>
+                    </OTScriptVariableRealObject>
+                  </variables>
+                  <scriptState />
+                </OTScriptObject>
+                <OTScriptButton local_id="clear-button" text="Reset">
+                  <script>
+                    <OTJavascript>
+                      <script>importPackage(Packages.java.lang);
      				importPackage(Packages.java.awt);
      				importPackage(Packages.org.concord.biologica.environment);
      				
@@ -230,15 +260,15 @@
 					        	var envUnit = new EnvironmentUnit(environment, null, i, j)
 					        	environment.setEnvironmentUnit(envUnit, i, j)
 					        	if (j &lt; 3)
-					        		percentSunlight = 0.1
+					        		percentSunlight = 1.0
 					        	else if (j &lt; 6)
-					        		percentSunlight = 0.25
+					        		percentSunlight = 0.75
 					        	else if (j &lt; 9)
 					        		percentSunlight = 0.5
 					        	else if (j &lt; 12)
-					        		percentSunlight = 0.75
+					        		percentSunlight = 0.25
 					        	else if (j &lt; 15)
-					        		percentSunlight = 1.0
+					        		percentSunlight = 0.1
 					        		
 					        	envUnit.setProperty("sunlight", new Float(percentSunlight))
 					        	
@@ -251,20 +281,26 @@
 					        	envUnit.setTerrain(terrain)
 				            }
 				        }
-      				}
-     				</script>
-     			</OTJavascript>
-             		</script>
-             		<scriptVariables>
-             			<OTScriptVariableRealObject name="environment" reference="${environment}"/>
-             			<OTScriptVariableRealObject name="holder" reference="${env-holder}"/>
-             		</scriptVariables>
-             </OTScriptButton>
-             <OTScriptButton local_id="survey-button" text="Survey">
-             		<script>
-             			<OTJavascript>
-		     				<script>
-		     				importPackage(Packages.java.lang);
+      				}</script>
+                    </OTJavascript>
+                  </script>
+                  <scriptVariables>
+                    <OTScriptVariableRealObject name="environment">
+                      <reference>
+                        <object refid="${environment}" />
+                      </reference>
+                    </OTScriptVariableRealObject>
+                    <OTScriptVariableRealObject name="holder">
+                      <reference>
+                        <object refid="${env-holder}" />
+                      </reference>
+                    </OTScriptVariableRealObject>
+                  </scriptVariables>
+                </OTScriptButton>
+                <OTScriptButton local_id="survey-button" text="Survey">
+                  <script>
+                    <OTJavascript>
+                      <script>importPackage(Packages.java.lang);
 		     				importPackage(Packages.java.awt);
 		     				importPackage(Packages.org.concord.biologica.environment);
 		     				importClass(Packages.javax.swing.JOptionPane);
@@ -288,52 +324,55 @@
 		      					var messageString = "There are:\n  "+thin+" thin plants,\n  "+medium+" medium plants, and\n  "+bushy+" bushy plants.";
 		      					
 								JOptionPane.showMessageDialog(null, messageString);
-		      				}
-		     				</script>
-		     			</OTJavascript>
-             		</script>
-             		<scriptVariables>
-             			<OTScriptVariableRealObject name="environment" reference="${environment}"/>
-             		</scriptVariables>
-             </OTScriptButton>
-            <OTScriptButton local_id="add-thin-ferns-button" text="Add thin ferns">
-              <script>
-                <object refid="${add-thin.js}" />
-              </script>
-              <scriptVariables>
-                <OTScriptVariableRealObject name="environment">
-                  <reference>
-                    <object refid="${environment}" />
-                  </reference>
-                </OTScriptVariableRealObject>
-                <OTScriptVariableRealObject name="species">
-                  <reference>
-                    <object refid="${plant-species}" />
-                  </reference>
-                </OTScriptVariableRealObject>
-              </scriptVariables>
-            </OTScriptButton>
-            <OTScriptButton local_id="add-mixed-ferns-button" text="Add mixed ferns">
-              <script>
-                <object refid="${add-mixed.js}" />
-              </script>
-              <scriptVariables>
-                <OTScriptVariableRealObject name="environment">
-                  <reference>
-                    <object refid="${environment}" />
-                  </reference>
-                </OTScriptVariableRealObject>
-                <OTScriptVariableRealObject name="species">
-                  <reference>
-                    <object refid="${plant-species}" />
-                  </reference>
-                </OTScriptVariableRealObject>
-              </scriptVariables>
-            </OTScriptButton>
-            <!-- World definition: is ignored -->
-            <OTWorld local_id="peasimple_world" speciesPath="org/concord/biologica/worlds/peasimple.xml" />
-            <OTJavascript local_id="add-thin.js">
-              <script>var defaultProperties = new Array(new Array("leaves",10))
+		      				}</script>
+                    </OTJavascript>
+                  </script>
+                  <scriptVariables>
+                    <OTScriptVariableRealObject name="environment">
+                      <reference>
+                        <object refid="${environment}" />
+                      </reference>
+                    </OTScriptVariableRealObject>
+                  </scriptVariables>
+                </OTScriptButton>
+                <OTScriptButton local_id="add-thin-ferns-button" text="Add thin ferns">
+                  <script>
+                    <object refid="${add-thin.js}" />
+                  </script>
+                  <scriptVariables>
+                    <OTScriptVariableRealObject name="environment">
+                      <reference>
+                        <object refid="${environment}" />
+                      </reference>
+                    </OTScriptVariableRealObject>
+                    <OTScriptVariableRealObject name="species">
+                      <reference>
+                        <object refid="f5732706-c9c2-4e29-8c99-4c668dda89b0" />
+                      </reference>
+                    </OTScriptVariableRealObject>
+                  </scriptVariables>
+                </OTScriptButton>
+                <OTScriptButton local_id="add-mixed-ferns-button" text="Add mixed ferns">
+                  <script>
+                    <object refid="${add-mixed.js}" />
+                  </script>
+                  <scriptVariables>
+                    <OTScriptVariableRealObject name="environment">
+                      <reference>
+                        <object refid="${environment}" />
+                      </reference>
+                    </OTScriptVariableRealObject>
+                    <OTScriptVariableRealObject name="species">
+                      <reference>
+                        <object refid="f5732706-c9c2-4e29-8c99-4c668dda89b0" />
+                      </reference>
+                    </OTScriptVariableRealObject>
+                  </scriptVariables>
+                </OTScriptButton>
+                <!-- World definition: is ignored -->
+                <OTWorld local_id="peasimple_world" speciesPath="org/concord/biologica/worlds/peasimple.xml" />
+                <OTJavascript local_id="add-thin.js">
+                  <script>var defaultProperties = new Array(new Array("leaves",10))
      				
       				function clicked()
       				{
@@ -341,9 +380,9 @@
       						environment.addAgent(species.createAgent(defaultProperties));
       					}
       				}</script>
-            </OTJavascript>
-            <OTJavascript local_id="add-mixed.js">
-              <script>function clicked()
+                </OTJavascript>
+                <OTJavascript local_id="add-mixed.js">
+                  <script>function clicked()
       				{
       					var defaultProperties = new Array(new Array("leaves",10))
       					for (var i = 0; i&lt;6; i++){
@@ -360,10 +399,10 @@
       						environment.addAgent(species.createAgent(defaultProperties));
       					}
       				}</script>
-            </OTJavascript>
-          </documentRefs>
-        </OTCompoundDoc>
-        </activity>
+                </OTJavascript>
+              </documentRefs>
+            </OTCompoundDoc>
+          </activity>
         </OTCurriculumUnit>
       </root>
     </OTSystem>
