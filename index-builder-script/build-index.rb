@@ -123,7 +123,7 @@ otrunk_example_dirs.each do |path|
   end
 
   # Append: jnlp properties: otrunk.view.author=true and otrunk.view.mode=authoring
-  jnlp_url_tmpl_author = jnlp_url_tmpl + "&jnlp_properties=otrunk.view.author%253Dtrue%2526otrunk.view.mode%253Dauthoring"
+  jnlp_url_tmpl_author = jnlp_url_tmpl + "&jnlp_properties=otrunk.view.author%3Dtrue%26otrunk.view.mode%3Dauthoring"
 
   otml_launchers = <<HEREDOC
 <h4>Run Examples</h4> 
