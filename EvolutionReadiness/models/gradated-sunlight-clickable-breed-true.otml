@@ -63,9 +63,7 @@
                     <OTRuleCondition always="true" />
                   </conditions>
                   <consequences>
-                    <OTRuleConsequence property="Health">
-                      <ruleScript>var diff = Math.abs(leaves - (sunlight*10)) 
-return 1.0 - ((diff*5) / 100)</ruleScript>
+                    <OTRuleConsequence property="Health" ruleScript="var diff = Math.abs(leaves - (sunlight*10)); return 1.0 - ((diff*5) / 100)">
                       <propertyVariables>
                         <string>leaves</string>
                         <string>sunlight</string>
@@ -153,15 +151,18 @@ function init() {
         }
 var firstWinterMessageShown = false;
 var stepHandler = {
-	environmentStepped: function()
-	{
+	environmentStepped: function(){
 		var firstSquare = env.getEnvironmentUnit(0, 0);
 		var currentSeason = firstSquare.getProperty("Season");
 		if ((currentSeason == "winter") &amp;&amp; (firstWinterMessageShown == false)) {
 			firstWinterMessageShown = true;
-			JOptionPane.showMessageDialog(null,"message you want to show");
+			JOptionPane.showMessageDialog(null,"Oops!!  " +
+			"Winter has come. \n"+
+			"All your plants have died. Boo hoo! \n" +
+			"But if they've made seeds maybe baby plants will grow. \n" +
+			"Click 'OK' and let's see what happens.");
 		}
-		
+		return true;
 	}		
 }
 
@@ -324,7 +325,7 @@ function save() {
             <string>Health</string>
           </traitsToShow>
           <addAgentsButtons>
-            <OTAddAgentButton text="Add bushy plants">
+            <OTAddAgentButton text="Add Plant A">
               <species>
                 <object refid="f5732706-c9c2-4e29-8c99-4c668dda89b0" />
               </species>
@@ -336,7 +337,7 @@ function save() {
                 </OTAgentTrait>
               </agentTraits>
             </OTAddAgentButton>
-            <OTAddAgentButton text="Add medium plants">
+            <OTAddAgentButton text="Add Plant B">
               <species>
                 <object refid="f5732706-c9c2-4e29-8c99-4c668dda89b0" />
               </species>
@@ -348,7 +349,7 @@ function save() {
                 </OTAgentTrait>
               </agentTraits>
             </OTAddAgentButton>
-            <OTAddAgentButton text="Add thin plants">
+            <OTAddAgentButton text="Add Plant C">
               <species>
                 <object refid="f5732706-c9c2-4e29-8c99-4c668dda89b0" />
               </species>
