@@ -12,13 +12,13 @@ function init() {
 	        for (var j = 0; j < 15; j++) {
 	        	var envUnit = new EnvironmentUnit(env, null, i, j)
 	        	env.setEnvironmentUnit(envUnit, i, j)
-	        	if (j < 2)
+	        	if (j < 3)
 	        		percentSunlight = 1.0
-	        	else if (j < 5)
-	        		percentSunlight = 0.75
 	        	else if (j < 6)
-	        		percentSunlight = 0.5
+	        		percentSunlight = 0.75
 	        	else if (j < 9)
+	        		percentSunlight = 0.5
+	        	else if (j < 11)
 	        		percentSunlight = 0.25
 	        	else if (j < 15)
 	        		percentSunlight = 0.1
