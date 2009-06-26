@@ -51,7 +51,7 @@
         <OTInclude href="species/annual-varied-plants.otml" />
       </includes>
       <root>
-        <OTEnvironmentHolder local_id="env-holder" width="730" height="600">
+        <OTEnvironmentHolder local_id="env-holder" width="730" height="600" toolbar="run">
           <environment>
             <OTEnvironment local_id="environment" width="550" height="500" environmentWidth="10" environmentHeight="10" showRunButton="false" winterLength="15" summerLength="50" orgSizeMultiplier="1.5">
               <world>
@@ -71,30 +71,6 @@
                     </OTRuleConsequence>
                   </consequences>
                 </OTRule>
-                <OTRule description="Leaf description rule">
-                  <conditions>
-                    <OTRuleCondition property="leaves" maxValue="3.0" />
-                  </conditions>
-                  <consequences>
-                    <OTRuleConsequence property="type of leaves" newValueString="bushy" />
-                  </consequences>
-                </OTRule>
-                <OTRule description="Leaf description rule">
-                  <conditions>
-                    <OTRuleCondition property="leaves" minValue="3.1" maxValue="6.0" />
-                  </conditions>
-                  <consequences>
-                    <OTRuleConsequence property="type of leaves" newValueString="medium" />
-                  </consequences>
-                </OTRule>
-                <OTRule description="Leaf description rule">
-                  <conditions>
-                    <OTRuleCondition property="leaves" minValue="6.1" />
-                  </conditions>
-                  <consequences>
-                    <OTRuleConsequence property="type of leaves" newValueString="thin" />
-                  </consequences>
-                </OTRule>
                 <OTRule description="Health description rule">
                   <conditions>
                     <OTRuleCondition property="Health" maxValue="0.95" />
@@ -109,6 +85,14 @@
                   </conditions>
                   <consequences>
                     <OTRuleConsequence property="health" newValueString="Healthy" />
+                  </consequences>
+                </OTRule>
+                <OTRule description="Offspring rule">
+                  <conditions>
+                    <OTRuleCondition always="true" />
+                  </conditions>
+                  <consequences>
+                    <OTRuleConsequence property="max offspring" newValueFloat="12.0" />
                   </consequences>
                 </OTRule>
               </rules>
@@ -202,23 +186,23 @@ function save() {
             </OTScriptObject>
           </scripts>
           <buttons>
-            <OTScriptButton local_id="add-mixed-ferns-button" text="Scatter mixed seeds">
+            <!--            <OTScriptButton local_id="add-mixed-ferns-button" text="Scatter mixed seeds">
               <script>
                 <OTJavascript local_id="add-mixed.js">
                   <script>function clicked()
       				{
       					var defaultProperties = new Array(new Array("leaves",10))
-      					for (var i = 0; i&lt;10; i++){
+      					for (var i = 0; i&lt;20; i++){
       						environment.addAgent(species.createAgent(defaultProperties));
       					}
       					
       					defaultProperties = new Array(new Array("leaves",5))
-      					for (var i = 0; i&lt;10; i++){
+      					for (var i = 0; i&lt;20; i++){
       						environment.addAgent(species.createAgent(defaultProperties));
       					}
       					
       					defaultProperties = new Array(new Array("leaves",1))
-      					for (var i = 0; i&lt;10; i++){
+      					for (var i = 0; i&lt;20; i++){
       						environment.addAgent(species.createAgent(defaultProperties));
       					}
       				}</script>
@@ -237,7 +221,7 @@ function save() {
                 </OTScriptVariableRealObject>
               </scriptVariables>
             </OTScriptButton>
-            <OTScriptButton local_id="survey-button" text="Survey">
+                <OTScriptButton local_id="survey-button" text="Survey">
               <script>
                 <OTJavascript>
                   <script>importPackage(Packages.java.lang);
@@ -274,7 +258,7 @@ function save() {
                   </reference>
                 </OTScriptVariableRealObject>
               </scriptVariables>
-            </OTScriptButton>
+            </OTScriptButton> -->
             <OTScriptButton local_id="clear-button" text="Reset">
               <script>
                 <OTJavascript>
@@ -323,21 +307,10 @@ function save() {
           <traitsToShow>
             <string>type of leaves</string>
             <string>Health</string>
+            <string>max offspring</string>
           </traitsToShow>
           <addAgentsButtons>
             <OTAddAgentButton text="Add Plant A">
-              <species>
-                <object refid="f5732706-c9c2-4e29-8c99-4c668dda89b0" />
-              </species>
-              <agentTraits>
-                <OTAgentTrait property="leaves">
-                  <defaultValues>
-                    <int>1</int>
-                  </defaultValues>
-                </OTAgentTrait>
-              </agentTraits>
-            </OTAddAgentButton>
-            <OTAddAgentButton text="Add Plant B">
               <species>
                 <object refid="f5732706-c9c2-4e29-8c99-4c668dda89b0" />
               </species>
@@ -349,6 +322,18 @@ function save() {
                 </OTAgentTrait>
               </agentTraits>
             </OTAddAgentButton>
+            <OTAddAgentButton text="Add Plant B">
+              <species>
+                <object refid="f5732706-c9c2-4e29-8c99-4c668dda89b0" />
+              </species>
+              <agentTraits>
+                <OTAgentTrait property="leaves">
+                  <defaultValues>
+                    <int>9</int>
+                  </defaultValues>
+                </OTAgentTrait>
+              </agentTraits>
+            </OTAddAgentButton>
             <OTAddAgentButton text="Add Plant C">
               <species>
                 <object refid="f5732706-c9c2-4e29-8c99-4c668dda89b0" />
@@ -356,7 +341,7 @@ function save() {
               <agentTraits>
                 <OTAgentTrait property="leaves">
                   <defaultValues>
-                    <int>10</int>
+                    <int>1</int>
                   </defaultValues>
                 </OTAgentTrait>
               </agentTraits>
