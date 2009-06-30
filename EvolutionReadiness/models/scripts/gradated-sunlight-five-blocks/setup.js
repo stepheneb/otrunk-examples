@@ -25,11 +25,10 @@ function init() {
 	        		
 	        	envUnit.setProperty("sunlight", new Float(percentSunlight))
 	        	
-	        	var r =  (1*percentSunlight) * 0.5
+	        	var r =  (percentSunlight) * 0.5
 	        	var g = r * 0.5
 	        	var b = g * 0.2
 	        	var color = new Color(r+0.3, g+0.2, b+0.1)
-	       //		var color = new Color(0.8, 0.5, 0.3)
 	        	var terrain = new Terrain(world, "terrain", color)
 	        	envUnit.setTerrain(terrain)
             }

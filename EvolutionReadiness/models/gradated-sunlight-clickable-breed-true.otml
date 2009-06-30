@@ -63,7 +63,7 @@
                     <OTRuleCondition always="true" />
                   </conditions>
                   <consequences>
-                    <OTRuleConsequence property="Health" ruleScript="var diff = Math.abs(leaves - (sunlight*10)); return 1.0 - ((diff*5) / 100)">
+                    <OTRuleConsequence property="Health" ruleScript="var diff = Math.abs(leaves - (sunlight*10)); return 1.0 - ((diff*3) / 100)">
                       <propertyVariables>
                         <string>leaves</string>
                         <string>sunlight</string>
@@ -87,14 +87,6 @@
                     <OTRuleConsequence property="health" newValueString="Healthy" />
                   </consequences>
                 </OTRule>
-                <OTRule description="Offspring rule">
-                  <conditions>
-                    <OTRuleCondition always="true" />
-                  </conditions>
-                  <consequences>
-                    <OTRuleConsequence property="max offspring" newValueFloat="12.0" />
-                  </consequences>
-                </OTRule>
               </rules>
             </OTEnvironment>
           </environment>
@@ -103,58 +95,72 @@
               <script>
                 <OTJavascript src="scripts/gradated-sunlight/setup.js">
                   <script>importPackage(Packages.java.lang);
-importPackage(Packages.java.awt);
-importPackage(Packages.org.concord.biologica.environment);
-importClass(Packages.javax.swing.JOptionPane);
-  			
-function init() {
-	var world = env.getWorld()
-	env.setColumns(15)
-	env.setRows(15)
-	env.setWrapNorthSouth(false)
-	env.setWrapEastWest(false)
-	for (var i = 0; i &lt; 15; i++) {
-	        for (var j = 0; j &lt; 15; j++) {
-	        	var envUnit = new EnvironmentUnit(env, null, i, j)
-	        	env.setEnvironmentUnit(envUnit, i, j)
-	        	envUnit.setProperty("sunlight", new Float(1 - (j/15)))
-	        	
-	        	var percentSunlight = envUnit.getProperty("sunlight")
-	        	var r =  (1*percentSunlight.floatValue()) * 0.5
-	        	var g = r * 0.5
-	        	var b = g * 0.2
-	        	var color = new Color(r+0.3, g+0.2, b+0.1)
-	       //		var color = new Color(0.8, 0.5, 0.3)
-	        	var terrain = new Terrain(world, "terrain", color)
-	        	envUnit.setTerrain(terrain)
-            }
-        }
+					importPackage(Packages.java.awt);
+					importPackage(Packages.org.concord.biologica.environment);
+					importClass(Packages.javax.swing.JOptionPane);
+					  			
+					function init() {
+						var world = env.getWorld();
+						env.setColumns(10);
+						env.setRows(10);
+						env.setWrapNorthSouth(false);
+						env.setWrapEastWest(false);
+						for (var i = 0; i &lt; 10; i++) {
+					        for (var j = 0; j &lt; 10; j++) {
+					        	var envUnit = new EnvironmentUnit(env, null, i, j)
+					        	env.setEnvironmentUnit(envUnit, i, j)
+					        	envUnit.setProperty("sunlight", new Float(1 - (j/10)))
+					        	var percentSunlight = envUnit.getProperty("sunlight")
+					        	var r =  (1*percentSunlight.floatValue()) * 0.5
+					        	var g = r * 0.5
+					        	var b = g * 0.2
+					        	var color = new Color(r+0.3, g+0.2, b+0.1)
+					        	var terrain = new Terrain(world, "terrain", color)
+					        	envUnit.setTerrain(terrain)
+				            }
+				        }
+//					env.addStepListener(stepListener)
+					return true;
+					}
+				var winterCounter = 0;
+				var waitingFor = "winter"; 	
+				var stepHandler = {
+					environmentStepped: function(){
+						var firstSquare = env.getEnvironmentUnit(0, 0);
+						var currentSeason = firstSquare.getProperty("Season");
+						if (currentSeason == "winter"){
+							if (waitingFor == "winter"){
+//								System.out.println ("winter counter = " + winterCounter + ", waiting for " + waitingFor);
+								waitingFor = "spring"; 
+//								System.out.println ("winter counter = " + winterCounter + ", waiting for " + waitingFor);
+								winterCounter ++; 
+//								System.out.println ("winter counter = " + winterCounter + ", waiting for " + waitingFor);
+								
+								if (winterCounter == 1){
+									JOptionPane.showMessageDialog(null,"Oops!!  " +
+									"Winter has come. \n"+
+									"All your plants have died. Boo hoo! \n" +
+									"But if they've made seeds maybe baby plants will grow. \n" +
+									"Click 'OK' and let's see what happens.");
 
-	env.addStepListener(stepListener)
-	return true;
-        }
-var firstWinterMessageShown = false;
-var stepHandler = {
-	environmentStepped: function(){
-		var firstSquare = env.getEnvironmentUnit(0, 0);
-		var currentSeason = firstSquare.getProperty("Season");
-		if ((currentSeason == "winter") &amp;&amp; (firstWinterMessageShown == false)) {
-			firstWinterMessageShown = true;
-			JOptionPane.showMessageDialog(null,"Oops!!  " +
-			"Winter has come. \n"+
-			"All your plants have died. Boo hoo! \n" +
-			"But if they've made seeds maybe baby plants will grow. \n" +
-			"Click 'OK' and let's see what happens.");
-		}
-		return true;
-	}		
-}
-
-var stepListener = new EnvironmentStepListener(stepHandler)	
-
-function save() {
-	return true;
-}</script>
+								}
+								else if (winterCounter &gt; 1){
+									JOptionPane.showMessageDialog(null,"This is winter number " + winterCounter);
+									return;
+								}							
+							} 
+							return; 
+						} 	
+						waitingFor = "winter";
+						return;
+					}		
+				}
+				
+				var stepListener = new EnvironmentStepListener(stepHandler)	
+				
+				function save() {
+					return true;
+				}</script>
                 </OTJavascript>
               </script>
               <variables>
@@ -272,11 +278,11 @@ function save() {
 	      					environment.setStepCount(0);
 	      					holder.pauseAction();
 	      					var world = environment.getWorld()
-	      					for (var i = 0; i &lt; 15; i++) {
-						        for (var j = 0; j &lt; 15; j++) {
+	      					for (var i = 0; i &lt; 10; i++) {
+						        for (var j = 0; j &lt; 10; j++) {
 						        	var envUnit = new EnvironmentUnit(environment, null, i, j)
 						        	environment.setEnvironmentUnit(envUnit, i, j)
-						        	envUnit.setProperty("sunlight", new Float(1 - (j/15)))
+						        	envUnit.setProperty("sunlight", new Float(1 - (j/10)))
 						        	
 						        	var percentSunlight = envUnit.getProperty("sunlight")
 						        	var r =  (1*percentSunlight.floatValue()) * 0.5
@@ -317,7 +323,7 @@ function save() {
               <agentTraits>
                 <OTAgentTrait property="leaves">
                   <defaultValues>
-                    <int>5</int>
+                    <int>6</int>
                   </defaultValues>
                 </OTAgentTrait>
               </agentTraits>
@@ -341,7 +347,7 @@ function save() {
               <agentTraits>
                 <OTAgentTrait property="leaves">
                   <defaultValues>
-                    <int>1</int>
+                    <int>2</int>
                   </defaultValues>
                 </OTAgentTrait>
               </agentTraits>
