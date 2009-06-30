@@ -8,15 +8,15 @@ var world
   			
 function init() {
 	world = env.getWorld()
-	env.setColumns(20)
-	env.setRows(20)
+	env.setColumns(4)
+	env.setRows(4)
 	env.setWrapNorthSouth(false)
 	env.setWrapEastWest(false)
-	for (var i = 0; i < 20; i++) {
-	        for (var j = 0; j < 20; j++) {
+	for (var i = 0; i < 4; i++) {
+	        for (var j = 0; j < 4; j++) {
 	        	var envUnit = new EnvironmentUnit(env, null, i, j)
 	        	env.setEnvironmentUnit(envUnit, i, j)
-	        	envUnit.setProperty("sunlight", new Float(1.0))
+	        	envUnit.setProperty("sunlight", new Float(0.5))
 	        	
 	        	var percentSunlight = envUnit.getProperty("sunlight")
 	        	var rg =  (1*percentSunlight.floatValue())
@@ -35,8 +35,8 @@ var sunSliderChangeHandler =
     {
         var percentSunlight = (evt.getValue() / 100)
         var percentSunlightFloat = new Float(percentSunlight)
-        for (var i = 0; i < 20; i++) {
-	        for (var j = 0; j < 20; j++) {
+        for (var i = 0; i < 4; i++) {
+	        for (var j = 0; j < 4; j++) {
 	        	var envUnit = env.getEnvironmentUnit(i, j)
 	        	envUnit.setProperty("sunlight", percentSunlightFloat)
 	        	
