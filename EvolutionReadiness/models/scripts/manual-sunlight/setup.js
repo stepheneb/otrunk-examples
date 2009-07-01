@@ -34,6 +34,8 @@ var sunSliderChangeHandler =
     stateChanged: function(evt)
     {
         var percentSunlight = (evt.getValue() / 100)
+        if (percentSunlight < 0.1) 
+             percentSunlight = 0.1;
         var percentSunlightFloat = new Float(percentSunlight)
         for (var i = 0; i < 4; i++) {
 	        for (var j = 0; j < 4; j++) {
