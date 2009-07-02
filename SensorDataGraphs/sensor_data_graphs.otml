@@ -230,7 +230,7 @@ Sensor Type Ids from SensorConfig
               				<mapping>
               					<OTPrototypeMapEntry
               						modelProperty="deviceConfigs[0]"
-              						prototypeProperty="currentChoice" />
+              						prototypeProperty="currentChoices[0]" />
               				</mapping>
               			</OTPrototypeEventController>
               		</controller>
@@ -986,6 +986,50 @@ Sensor Type Ids from SensorConfig
               </xDataAxis>
               <yDataAxis>
                 <OTDataAxis min="10" max="50" label="Temperature" units="degC"/>
+              </yDataAxis>
+            </OTDataCollector>
+            <OTDataCollector name="Two Temperature Sensors"
+              title="Temperature Graphs"
+              multipleGraphableEnabled="true">
+              <source>
+                <OTDataGraphable connectPoints="true"
+                  color="0x0000ff" drawMarks="false" name="Ice &amp; Salt (Ch 2)"
+                  xColumn="0" yColumn="2">
+                  <dataProducer>
+                    <OTSensorDataProxy name="Temperature 1"
+                      local_id="dc_two_temps">
+                      <request>
+                        <OTExperimentRequest period="0.1">
+                          <sensorRequests>
+                            <OTSensorRequest type="0"
+                              stepSize="0.1" displayPrecision="-1" port="0"
+                              unit="degC" requiredMax="40" requiredMin="-10" />
+                            <OTSensorRequest type="0"
+                              stepSize="0.1" displayPrecision="-1" port="1"
+                              unit="degC" requiredMax="40" requiredMin="-10" />
+                          </sensorRequests>
+                        </OTExperimentRequest>
+                      </request>
+                    </OTSensorDataProxy>
+                  </dataProducer>
+                </OTDataGraphable>
+              </source>
+              <graphables>
+                <OTDataGraphable connectPoints="true"
+                  color="0xff0000" drawMarks="false" name="Ice Cream (Ch 1)"
+                  xColumn="0" yColumn="1">
+                  <dataProducer>
+                    <object refid="${dc_two_temps}" />
+                  </dataProducer>
+                </OTDataGraphable>
+              </graphables>
+              <xDataAxis>
+                <OTDataAxis min="0" max="1200" label="Time"
+                  units="min" />
+              </xDataAxis>
+              <yDataAxis>
+                <OTDataAxis min="-20" max="30" label="Temperature"
+                  units="degC" />
               </yDataAxis>
             </OTDataCollector>
             <OTLoggerRecordChooser name="logger test"/>
