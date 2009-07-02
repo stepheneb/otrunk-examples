@@ -68,6 +68,11 @@
     <import class="org.concord.otrunk.ui.snapshot.OTSnapshotChooser" />
     <import class="org.concord.otrunk.ui.swing.OTChoiceViewConfig" />
     <import class="org.concord.otrunk.util.OTSharingBundle" />
+    <import class="org.concord.otrunk.util.OTLabbookBundle" />
+    <import class="org.concord.otrunk.util.OTLabbookEntry" />
+    <import class="org.concord.otrunk.labbook.OTLabbookButton" />
+    <import class="org.concord.otrunk.labbook.OTLabbook" />
+    <import class="org.concord.otrunk.labbook.OTLabbookEntryChooser" />
     <import class="org.concord.otrunk.view.OTObjectEditViewConfig" />
     <import class="org.concord.otrunk.view.OTViewChild" />
     <import class="org.concord.otrunk.view.OTViewEntry" />
@@ -106,7 +111,7 @@
   <objects>
     <OTSystem local_id="system">
       <includes>
-        <OTInclude href="http://otrunk.concord.org/examples/EvolutionReadiness/global-imports/er-view-bundle.otml" />
+        <OTInclude href="global-imports/er-view-bundle.otml" />
         <OTInclude href="http://otrunk.concord.org/examples/EvolutionReadiness/models/five-sunlight-clickable-breed-true.otml" />
         <OTInclude href="http://otrunk.concord.org/examples/EvolutionReadiness/models/five-sunlight-clickable-breed-true-generations.otml" />
       </includes>
@@ -124,6 +129,7 @@
             <OTDeviceConfig configString="none" deviceId="10" />
           </deviceConfigs>
         </OTInterfaceManager>
+        <OTLabbookBundle />
       </bundles>
       <overlays>
         <object refid="6cc8e2b0-c44e-11dc-95ff-0800200c9a66" />
@@ -206,11 +212,11 @@
                               Plant the seeds by 
           clicking on the plant images and then clicking inside the flower 
           boxes. Click the Play button,
-                              <img height="20" src="jres:///org/concord/biologica/ui/play.png" width="20" />
+                              <img src="jres:///org/concord/biologica/ui/play.png" height="20" width="20" />
                               , to start growing the plants. Experiment until you have at least 
           three flowering plants of each variety. When you have grown the 
           flowering plants, pause the model using the pause button,
-                              <img height="20" src="jres:///org/concord/biologica/ui/pause.png" width="20" />
+                              <img src="jres:///org/concord/biologica/ui/pause.png" height="20" width="20" />
                               , and then take a snapshot.
                               <br />
                               <i>
@@ -230,6 +236,9 @@
                                 <tr height="690">
                                   <td>
                                     <object refid="13d3fb4f-123a-425f-9d60-d84e145c0678!/env-holder" />
+                                    <br />
+                                    <object refid="27968571-673f-11de-bb79-1f97355fd679" />
+                                    <br />
                                   </td>
                                 </tr>
                               </table>
@@ -240,6 +249,11 @@
                       </bodyText>
                       <documentRefs>
                         <object refid="13d3fb4f-123a-425f-9d60-d84e145c0678!/env-holder" />
+                        <OTLabbookButton id="27968571-673f-11de-bb79-1f97355fd679" name="Labbook button">
+                          <target>
+                            <object refid="13d3fb4f-123a-425f-9d60-d84e145c0678!/env-holder" />
+                          </target>
+                        </OTLabbookButton>
                       </documentRefs>
                     </OTCompoundDoc>
                     <OTCompoundDoc id="aa4dfe20-4c7b-11de-ae0b-29ea07303359" name="%aa4dfe20-4c7b-11de-ae0b-29ea07303359" showEditBar="true">
@@ -385,6 +399,9 @@
                               </table>
                               <br />
                               <br />
+                              <object refid="848059c0-6742-11de-972e-1b4ad0e71f70" />
+                              <br />
+                              <br />
                               <br />
                               <object refid="b1b0d13f-5c14-11de-9720-f7d97bee081b" />
                               <br />
@@ -399,6 +416,11 @@
                       </bodyText>
                       <documentRefs>
                         <object refid="daac087d-faec-4f71-8619-806327c96b54!/env-holder" />
+                        <OTLabbookButton id="848059c0-6742-11de-972e-1b4ad0e71f70" name="Labbook button">
+                          <target>
+                            <object refid="daac087d-faec-4f71-8619-806327c96b54!/env-holder" />
+                          </target>
+                        </OTLabbookButton>
                         <OTQuestion id="b1b0d13f-5c14-11de-9720-f7d97bee081b" name="Question">
                           <prompt>
                             <OTCompoundDoc>
@@ -494,7 +516,7 @@
                             </OTCompoundDoc>
                           </prompt>
                           <input>
-                            <OTText />
+                            <OTLabbookEntryChooser id="954c2006-6742-11de-972e-1b4ad0e71f70" name="Labbook chooser" />
                           </input>
                         </OTQuestion>
                         <OTQuestion id="951cf6e9-59cb-11de-a5db-816f0ecf984e" name="Question">
@@ -566,7 +588,6 @@
             <object refid="${page-rule}" />
           </menuRule>
         </OTUDLMenu>
-        <OTSnapshotAlbum local_id="album" />
         <OTUDLMenuRule local_id="page-rule" jumpToViewedCard="true" stepAhead="true" />
         <OTJavascript local_id="change_page.js" src="http://otrunk.concord.org/examples/EvolutionReadiness/scripts/change_page.js" />
         <OTJavascript local_id="show_message.js" src="http://otrunk.concord.org/examples/EvolutionReadiness/scripts/show_message.js" />
@@ -601,6 +622,9 @@
           <cssColor>
             <object refid="31193bb0-c44f-11dc-95ff-0800200c9a66" />
           </cssColor>
+          <album>
+            <OTLabbook local_id="album" />
+          </album>
         </OTNavBar>
       </library>
     </OTSystem>
