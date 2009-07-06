@@ -1,0 +1,48 @@
+
+  <% 
+	text = "MAP=1" + "\n"
+	sep = '|'
+	ttsTotals = []
+	sections = unitSections() 
+	
+	# The report will only show questions with the following otids.
+	# To show ALL questions, use
+	# otids = []
+	otids = ["2c3a41d3-336d-11dd-ad04-77a011da7331",
+  				"723fb918-5cce-11dd-a44f-cb6fd6615a5c"]
+	
+	text += sep
+	sections.each do |section|
+		questions = sectionQuestionsForIds(section, otids)
+	    	
+	    	questions.each do |question|
+	    		text += truncate(promptText(question), 20) + sep
+	    	end
+	end
+	text += "\n"
+	    
+	@users.each do |user|
+		userTotal = 0
+		user_name = user.name
+	    	if user_name == nil or user_name.empty? then user_name = "blank" 
+	    end
+	    text +=user_name + sep
+	    
+	    sections.each_with_index do |section, i|
+	    	questions = sectionQuestionsForIds(section, otids)
+	    	
+	    	questions.each do |question|
+	    		userQuestion = userObject(question, user)
+	    		text += answerLabel(userQuestion) + sep
+	    	end
+	   	end
+	    text += "\n"
+	end
+  %>
+ 
+
+<pre>
+<%=text%>
+</pre>
+
+  

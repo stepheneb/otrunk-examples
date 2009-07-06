@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<otrunk id="f080c070-7c8a-417c-a3fe-0737a7302806">
+	<imports>
+		<import class="org.concord.graph.util.state.OTDrawingTool" />
+		<import class="org.concord.otrunk.OTSystem" />
+		<import class="org.concord.otrunk.OTInclude" />
+		<import class="org.concord.otrunk.OTIncludeRootObject" />
+		<import class="org.concord.otrunk.view.OTViewBundle" />
+		<import class="org.concord.otrunk.view.OTViewMode" />
+		<import class="org.concord.otrunk.view.OTViewEntry" />
+		<import class="org.concord.otrunk.script.ui.OTXHTMLScriptViewEntry" />
+		<import class="org.concord.otrunk.view.OTMultiUserRoot" />
+		<import class="org.concord.otrunk.view.document.OTCompoundDoc" />
+		<import class="org.concord.otrunk.view.document.OTDocumentViewConfig" />
+		<import class="org.concord.otrunk.script.ui.OTXHTMLScript" />
+		<import class="org.concord.otrunk.script.jruby.OTJRuby" />
+		<import class="org.concord.otrunk.script.OTScriptEngineBundle" />
+		<import class="org.concord.otrunk.script.OTScriptEngineEntry" />
+		<import class="org.concord.otrunk.script.ui.OTScriptVariable" />
+		<import class="org.concord.framework.otrunk.wrapper.OTBlob" />
+		<import class="org.concord.framework.otrunk.wrapper.OTBoolean" />
+		<import class="org.concord.framework.otrunk.wrapper.OTInt" />
+		<import class="org.concord.framework.otrunk.wrapper.OTObjectSet"/>
+		<import class="org.concord.otrunk.view.OTViewChild" />
+		<import class="org.concord.framework.otrunk.view.OTFrame" />
+		<import class="org.concord.otrunk.view.prototype.OTPrototypeEventController" />
+		<import class="org.concord.otrunk.view.prototype.OTPrototypeViewEntry" />
+		<import class="org.concord.otrunk.view.prototype.OTPrototypeMapEntry" />
+		<import class="org.concord.otrunk.ui.OTCheckBox" />
+		<import class="org.concord.otrunk.ui.OTChoice" />
+		<import class="org.concord.otrunk.ui.OTText" />
+		<import class="org.concord.otrunk.ui.OTButton" />
+		<import class="org.concord.otrunk.overlay.OTOverlaySaveAction"/>
+		<import class="org.concord.otrunk.ui.swing.OTUnsetButtonViewConfig" />
+		<import class="org.concord.otrunk.ui.OTChoicePrototypeController" />
+		<import class="org.concord.otrunk.ui.swing.OTChoiceViewConfig" />
+		<import class="org.concord.otrunk.ui.OTIconSwitcherViewConfig" />
+		<import class="org.concord.otrunk.ui.OTImage" />
+	</imports>
+	<objects>
+		<OTSystem local_id="system">
+			<includes>
+				<OTInclude href="../EvolutionReadiness/global-imports/er-view-bundle.otml" />
+			</includes>
+			<bundles>
+				<!-- include the global udl view bundle -->
+				<object refid="8d880970-c22a-11dc-95ff-0800200c9a66" />
+				<OTViewBundle showLeftPanel="false">
+					<frame>
+						<OTFrame width="850" height="600" />
+					</frame>
+					<viewEntries>
+						<OTViewEntry objectClass="org.concord.otrunk.view.OTMultiUserRoot"
+							viewClass="org.concord.otrunk.view.OTMultiUserRootView" />
+						<OTDocumentViewConfig
+							objectClass="org.concord.otrunk.view.document.OTDocument"
+							viewClass="org.concord.otrunk.view.document.OTDocumentView"
+							css="
+							body { background-color:#FFFFFF; color:#333333; font-family:Tahoma,'Trebuchet MS',sans-serif; line-height:1.5em; }
+              h1 { color:#FFD32C; font-size:1.5em; margin-bottom:0px; }
+              h2 { color:#FFD32C; font-size:1.3em; margin-bottom:0px; }
+              h2 { color:#FFD32C; font-size:1.1em; margin: 2em 0em 1em 0em; }
+              .menu { color: #982f10; background-color: #fffee9;  color: #982f10; margin: 0px 1px; padding: 5px; }
+              .menu_item { background-color: #fffee9; color: #982f10; margin: 1px 0px; padding: 0px 10px; }
+                .menu_item a { color: #51a656; }
+                  .menu_item.selected a { color: #318636; }
+              #navlist ul { margin: 0; padding: 0; list-style: none; width: 150px; }
+              #navlist li { display: inline; list-style-type: none;list-style-type: none; padding-right: 10px; }
+              #content { margin:5px; padding:5px; }
+              " />
+						<OTViewEntry objectClass="org.concord.otrunk.ui.OTCheckBox"
+							viewClass="org.concord.otrunk.ui.swing.OTCheckBoxView" />
+					</viewEntries>
+				</OTViewBundle>
+				<OTScriptEngineBundle>
+					<engines>
+						<OTScriptEngineEntry objectClass="org.concord.otrunk.script.jruby.OTJRuby"
+							engineClass="org.concord.otrunk.script.jruby.OTJRubyEngine" />
+					</engines>
+				</OTScriptEngineBundle>
+			</bundles>
+			<root>
+				<OTMultiUserRoot local_id="multi_user_root"
+					groupOverlayURL="http://rails.dev.concord.org/webdav/test/udl-teacher-dashboard-0001.otml"
+					reportTemplateViewEntry="${report_section_view}">
+					<userList>
+						<!--
+							the local_id is so this can be used as a report template in the
+							DIY example learner data:
+							http://rails.dev.concord.org/udl/external_otrunk_activities/42/ot_learner_data.xml
+							Dummy example learner data:
+							http://rails.dev.concord.org/diy/external_otrunk_activities/25/ot_learner_data
+							More users:
+							http://udl.diy.concord.org/external_otrunk_activities/46/ot_learner_data?users=1242%2C1243%2C1245%2C1246%2C1247%2C1248%2C1249%2C1250%2C1251%2C1252%2C1253%2C1254%2C1255%2C1256%2C1257
+							requires activity:
+							http://svn.concord.org/svn/projects/tags/java/common/otrunk/otrunk-examples/UDL-fresno-08-08-05/udl-clouds-34.otml"
+							local_id="external_activity_url
+						-->
+						<OTIncludeRootObject local_id="external_user_list_url"
+							href="http://er.diy.concord.org/external_otrunk_activities/10/ot_learner_data?users=35%2C36" />
+					</userList>
+					<reportTemplate>
+						<OTIncludeRootObject local_id="external_activity_url"
+							href="http://otrunk.concord.org/examples/EvolutionReadiness/plants-1-v08.otml" />
+					</reportTemplate>
+				</OTMultiUserRoot>
+			</root>
+			<library>
+				<OTXHTMLScriptViewEntry local_id="template_report_view"
+					objectClass="org.concord.framework.otrunk.OTObject" viewClass="org.concord.otrunk.script.ui.OTXHTMLScriptView">
+					<script>
+						<OTJRuby local_id="erb_controller" src="scripts/er-multipage-report.rb" />
+					</script>
+					<variables>
+						<OTScriptVariable name="section_view" reference="${report_section_view}" />
+						<OTScriptVariable name="user_view" reference="${report_user_view}" />
+						<OTScriptVariable name="question_popup_view"
+							reference="${question_popup_view}" />
+						<OTScriptVariable name="dashboard" reference="${true}" />
+						<OTScriptVariable name="text_size"
+							reference="11444C03-DBC1-4BA3-848D-244D5FAC57B5"/>
+					</variables>
+				</OTXHTMLScriptViewEntry>
+				<OTXHTMLScriptViewEntry local_id="report_section_view"
+					template="${template_report_view}" objectClass="org.concord.framework.otrunk.OTObject"
+					viewClass="org.concord.otrunk.script.ui.OTXHTMLScriptView">
+					<variables>
+						<OTScriptVariable name="template">
+							<reference>
+								<OTBlob src="templates/section.html.erb" />
+							</reference>
+						</OTScriptVariable>
+					</variables>
+				</OTXHTMLScriptViewEntry>
+				<OTXHTMLScriptViewEntry local_id="report_user_view"
+					template="${template_report_view}" objectClass="org.concord.framework.otrunk.OTObject"
+					viewClass="org.concord.otrunk.script.ui.OTXHTMLScriptView">
+					<variables>
+						<OTScriptVariable name="template">
+							<reference>
+								<OTBlob src="templates/user.html.erb" />
+							</reference>
+						</OTScriptVariable>
+					</variables>
+				</OTXHTMLScriptViewEntry>
+				<OTXHTMLScriptViewEntry local_id="question_popup_view"
+					template="${template_report_view}" objectClass="org.concord.framework.otrunk.OTObject"
+					viewClass="org.concord.otrunk.script.ui.OTXHTMLScriptView">
+					<variables>
+						<OTScriptVariable name="template">
+							<reference>
+								<OTBlob src="templates/question-view.html.erb" />
+							</reference>
+						</OTScriptVariable>
+					</variables>
+				</OTXHTMLScriptViewEntry>
+				<OTChoiceViewConfig local_id="combobox_view" 
+				    objectClass="org.concord.otrunk.ui.OTChoice"
+				    viewClass="org.concord.otrunk.ui.swing.OTChoiceComboBoxView"/>
+				<OTViewEntry local_id="overlay_sync_view" 
+					objectClass="org.concord.framework.otrunk.OTObject"
+					viewClass="org.concord.otrunk.overlay.OTOverlaySyncView" />					    	
+				<OTBoolean local_id="true" value="true" />
+			</library>
+		</OTSystem>
+	</objects>
+</otrunk>
