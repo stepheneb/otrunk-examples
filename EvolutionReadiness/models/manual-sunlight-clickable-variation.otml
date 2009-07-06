@@ -69,13 +69,11 @@
                     </td>
                   </tr>
                 </table>
-                <object refid="${setup-script}" />
-                <object refid="${setup-species-script}" />
               </bodyText>
               <documentRefs>
-                <OTEnvironmentHolder local_id="env-holder" width="590" height="460" toolbar="run,cursor,reset">
+                <OTEnvironmentHolder local_id="env-holder" width="590" height="460" toolbar="run,cursor,reset" useSpeedSlider="true">
                   <environment>
-                    <OTEnvironment local_id="environment" environmentWidth="10" environmentHeight="10" showRunButton="false" winterLength="15" summerLength="50" orgSizeMultiplier="2">
+                    <OTEnvironment local_id="environment" environmentWidth="10" environmentHeight="10" showRunButton="false" winterLength="15" summerLength="50" orgSizeMultiplier="2.0">
                       <world>
                         <object refid="${peasimple_world}" />
                       </world>
@@ -85,8 +83,7 @@
                             <OTRuleCondition always="true" />
                           </conditions>
                           <consequences>
-                            <OTRuleConsequence property="Health" ruleScript="var diff = Math.abs(leaves - (sunlight*10));
-                            	 return 1.0 - ((diff*5) / 100)">
+                            <OTRuleConsequence property="Health" ruleScript="var diff = Math.abs(leaves - (sunlight*10));                               return 1.0 - ((diff*5) / 100)">
                               <propertyVariables>
                                 <string>leaves</string>
                                 <string>sunlight</string>
@@ -97,11 +94,6 @@
                       </rules>
                     </OTEnvironment>
                   </environment>
-                  <buttons>
-                    <object refid="${add-mixed-ferns-button}" />
-                    <object refid="${survey-button}" />
-                    <object refid="${clear-button}" />
-                  </buttons>
                   <addAgentsButtons>
                     <OTAddAgentButton text="Add Plant A">
                       <species>
@@ -140,6 +132,10 @@
                       </agentTraits>
                     </OTAddAgentButton>
                   </addAgentsButtons>
+                  <scripts>
+                    <object refid="${setup-script}" />
+                    <object refid="${setup-species-script}" />
+                  </scripts>
                 </OTEnvironmentHolder>
                 <OTScriptObject local_id="setup-script">
                   <script>
@@ -205,8 +201,7 @@
                     </OTScriptVariableRealObject>
                   </scriptVariables>
                 </OTScriptButton>
-                
-              <OTScriptButton local_id="add-mixed-ferns-button" text="Scatter mixed seeds">
+                <OTScriptButton local_id="add-mixed-ferns-button" text="Scatter mixed seeds">
                   <script>
                     <object refid="${add-mixed.js}" />
                   </script>
@@ -222,8 +217,7 @@
                       </reference>
                     </OTScriptVariableRealObject>
                   </scriptVariables>
-                </OTScriptButton>								 
-                
+                </OTScriptButton>
                 <OTSlider local_id="sun-slider" value="50.0" numTicks="10" />
                 <!-- World definition: is ignored -->
                 <OTWorld local_id="peasimple_world" speciesPath="org/concord/biologica/worlds/peasimple.xml" />
@@ -246,7 +240,6 @@
       					}
       				}</script>
                 </OTJavascript>
-                
                 <OTScriptButton local_id="survey-button" text="Survey">
                   <script>
                     <OTJavascript>
@@ -284,8 +277,7 @@
                       </reference>
                     </OTScriptVariableRealObject>
                   </scriptVariables>
-                </OTScriptButton>					 
-                
+                </OTScriptButton>
               </documentRefs>
             </OTCompoundDoc>
           </activity>
