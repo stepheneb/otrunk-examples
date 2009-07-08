@@ -7,6 +7,9 @@ var env
 var world
   			
 function init() {
+	env.removeAllAgents()
+	env.setStepCount(0)
+	envHolder.pauseAction()
 	world = env.getWorld()
 	env.setColumns(4)
 	env.setRows(4)
