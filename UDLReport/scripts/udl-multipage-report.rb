@@ -16,7 +16,11 @@ ROWCOLOR2 = "#FFFFFF"
 
 # Called when the script view is loaded
 def getText
-  otImport($otrunkHelperScript) if defined?($otrunkHelperScript)
+  if defined?($otrunkHelperScript)
+    otImport($otrunkHelperScript)
+    @otrunkHelper = OTrunkHelper.new
+  end
+
   otImport($xmlReportScript) if defined?($xmlReportScript)
   
   init
@@ -31,7 +35,6 @@ end
 def init
   # Order of statements is probably important here
   @debug = true
-  @otrunkHelper = OTrunkHelper.new
   @otrunk = $viewContext.getViewService(OTrunk.java_class)
   @contentHelper = UDLContentHelper.getUDLContentHelper(activityRoot)
   @userListService = $viewContext.getViewService(OTUserListService.java_class)
