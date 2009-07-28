@@ -1,5 +1,6 @@
 require 'jruby'
 require 'erb'
+
 include_class 'java.lang.System'
 include_class 'org.concord.framework.otrunk.view.OTUserListService'
 include_class 'org.concord.framework.otrunk.OTrunk'
@@ -15,6 +16,9 @@ ROWCOLOR2 = "#FFFFFF"
 
 # Called when the script view is loaded
 def getText
+  otImport($otrunkHelperScript) if defined?($otrunkHelperScript)
+  otImport($xmlReportScript) if defined?($xmlReportScript)
+  
   init
   if $action
     actionStr = $action.string
@@ -26,14 +30,29 @@ end
 
 def init
   # Order of statements is probably important here
-  @debug = true  
+  @debug = true
+  @otrunkHelper = OTrunkHelper.new
   @otrunk = $viewContext.getViewService(OTrunk.java_class)
-  @contentHelper = UDLContentHelper.getUDLContentHelper(activityRoot)  
+  @contentHelper = UDLContentHelper.getUDLContentHelper(activityRoot)
   @userListService = $viewContext.getViewService(OTUserListService.java_class)
   @users = @userListService.getUserList().sort_by {|user| 
-    (user.name && !user.name.empty?) ? user.name.split.values_at(-1, 0) : [""] 
+    (user.name && !user.name.empty?) ? user.name.split.values_at(-1, 0) : [""]
   }
   @overlayManager = $viewContext.getViewService(OTUserOverlayManager.java_class)
+end
+
+def otImport(script)
+  if script
+      srcProp = script.otClass().getProperty('src')
+      srcValue = script.otGet(srcProp)
+      eval(Java::JavaLang::String.new(script.src).to_s, nil, srcValue.getBlobURL().toExternalForm())
+  else
+    System.err.println("Cannot import #{script}")
+  end
+end
+
+def sysProp(key, default)
+  (prop = System.getProperty(key)) ? prop : default
 end
 
 def default_template
@@ -533,4 +552,22 @@ def ttsInstances(section, user)
 		end
 	end
 	ttsCount
+end
+
+def getXmlReport
+  report = XmlReport.new('udl', @otrunkHelper)
+  
+  sections = unitSections
+  sections.each_with_index do |section, i|
+    sectionId = (i+1).to_s
+    report.addSection(section, sectionId)
+    questions = sectionQuestions(section)
+    report.addQuestions(questions, sectionId)
+  end
+  
+  @users.each do |user|
+    studentElem = report.addStudent(user)
+  end
+  puts report.getText
+  report.getText
 end

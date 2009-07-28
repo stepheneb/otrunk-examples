@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- XML Report sent to portal-wide report -->
+<otrunk id="DB8FF294-E7D1-4458-A2C4-60F9B3847A62">
+  <imports>
+    <import class="org.concord.graph.util.state.OTDrawingTool" />
+    <import class="org.concord.otrunk.OTSystem" />
+    <import class="org.concord.otrunk.OTInclude" />
+    <import class="org.concord.otrunk.OTIncludeRootObject" />
+    <import class="org.concord.otrunk.view.OTViewBundle" />
+    <import class="org.concord.otrunk.view.OTViewMode" />
+    <import class="org.concord.otrunk.view.OTViewEntry" />
+    <import class="org.concord.otrunk.script.ui.OTXHTMLScriptViewEntry" />
+    <import class="org.concord.otrunk.view.OTMultiUserRoot" />
+    <import class="org.concord.otrunk.view.document.OTCompoundDoc" />
+    <import class="org.concord.otrunk.view.document.OTDocumentViewConfig" />
+    <import class="org.concord.otrunk.script.ui.OTXHTMLScript" />
+    <import class="org.concord.otrunk.script.jruby.OTJRuby" />
+    <import class="org.concord.otrunk.script.OTScriptEngineBundle" />
+    <import class="org.concord.otrunk.script.OTScriptEngineEntry" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariable" />
+    <import class="org.concord.framework.otrunk.wrapper.OTBlob" />
+    <import class="org.concord.framework.otrunk.wrapper.OTBoolean" />
+    <import class="org.concord.framework.otrunk.wrapper.OTInt" />
+    <import class="org.concord.framework.otrunk.wrapper.OTObjectSet"/>
+    <import class="org.concord.otrunk.view.OTViewChild" />
+    <import class="org.concord.framework.otrunk.view.OTFrame" />
+    <import class="org.concord.otrunk.view.prototype.OTPrototypeEventController" />
+    <import class="org.concord.otrunk.view.prototype.OTPrototypeViewEntry" />
+    <import class="org.concord.otrunk.view.prototype.OTPrototypeMapEntry" />
+    <import class="org.concord.otrunk.ui.OTCheckBox" />
+    <import class="org.concord.otrunk.ui.OTChoice" />
+    <import class="org.concord.otrunk.ui.OTText" />
+    <import class="org.concord.otrunk.ui.OTButton" />
+    <import class="org.concord.otrunk.overlay.OTOverlaySaveAction"/>
+    <import class="org.concord.otrunk.ui.swing.OTUnsetButtonViewConfig" />
+    <import class="org.concord.otrunk.ui.OTChoicePrototypeController" />
+    <import class="org.concord.otrunk.ui.swing.OTChoiceViewConfig" />
+    <import class="org.concord.otrunk.ui.OTIconSwitcherViewConfig" />
+    <import class="org.concord.otrunk.ui.OTImage" />
+  </imports>
+  <objects>
+    <OTSystem local_id="system">
+      <includes>
+        <OTInclude href="../UDL/global-imports/udl-view-bundle.otml" />
+      </includes>
+      <bundles>
+        <!-- include the global udl view bundle -->
+        <object refid="8d880970-c22a-11dc-95ff-0800200c9a66" />
+        <OTViewBundle showLeftPanel="false">
+          <frame>
+            <OTFrame width="850" height="600" />
+          </frame>
+          <viewEntries>
+            <OTViewEntry objectClass="org.concord.otrunk.view.OTMultiUserRoot"
+              viewClass="org.concord.otrunk.view.OTMultiUserRootView" />
+            <OTDocumentViewConfig
+              objectClass="org.concord.otrunk.view.document.OTDocument"
+              viewClass="org.concord.otrunk.view.document.OTDocumentView"/>
+            <OTViewEntry objectClass="org.concord.otrunk.ui.OTCheckBox"
+              viewClass="org.concord.otrunk.ui.swing.OTCheckBoxView" />
+          </viewEntries>
+        </OTViewBundle>
+        <OTScriptEngineBundle>
+          <engines>
+            <OTScriptEngineEntry objectClass="org.concord.otrunk.script.jruby.OTJRuby"
+              engineClass="org.concord.otrunk.script.jruby.OTJRubyEngine" />
+          </engines>
+        </OTScriptEngineBundle>
+      </bundles>
+      <root>
+        <OTMultiUserRoot local_id="multi_user_root"
+            reportTemplateViewEntry="${questions_xml_view}">
+          <userList>
+            <!--
+              the local_id "external_user_list_url" is so this can be used as a 
+              report template in the DIY example learner data:
+              1059: Eve: diy73
+            -->
+            <OTIncludeRootObject local_id="external_user_list_url"
+              href="http://udl.diy.concord.org/external_otrunk_activities/73/ot_learner_data?users=1059"/>
+          </userList>
+          <reportTemplate>
+            <OTIncludeRootObject local_id="external_activity_url"
+              href="http://svn.concord.org/svn/projects/tags/common/java/otrunk/otrunk-examples/UDL-20090218/udl-clouds-34.otml"/>
+          </reportTemplate>
+        </OTMultiUserRoot>
+      </root>
+      <library>
+        <OTXHTMLScriptViewEntry local_id="template_report_view"
+          objectClass="org.concord.framework.otrunk.OTObject" viewClass="org.concord.otrunk.script.ui.OTXHTMLScriptView">
+          <script>
+            <OTJRuby local_id="erb_controller" src="scripts/udl-multipage-report.rb" />
+          </script>
+          <variables>
+            <OTScriptVariable name="otrunkHelperScript">
+              <reference>
+                <OTBlob src="scripts/otrunk-helper.rb" />
+              </reference>
+            </OTScriptVariable>
+            <OTScriptVariable name="xmlReportScript">
+              <reference>
+                <OTBlob src="scripts/xml-report.rb" />
+              </reference>
+            </OTScriptVariable>
+          </variables>
+        </OTXHTMLScriptViewEntry>
+        <OTXHTMLScriptViewEntry local_id="questions_xml_view"
+          template="${template_report_view}" objectClass="org.concord.framework.otrunk.OTObject"
+          viewClass="org.concord.otrunk.script.ui.OTXHTMLScriptView">
+          <variables>
+            <OTScriptVariable name="template">
+              <reference>
+                <OTBlob src="templates/questions-xml-view.html.erb" />
+              </reference>
+            </OTScriptVariable>
+          </variables>
+        </OTXHTMLScriptViewEntry>
+      </library>
+    </OTSystem>
+  </objects>
+</otrunk>
