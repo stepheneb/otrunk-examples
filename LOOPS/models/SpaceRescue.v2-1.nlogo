@@ -5,28 +5,20 @@ breed [flames flame]
 breed [rockets rocket]
 
 
-rockets-own [x-pos y-pos x-vel y-vel mass fuel fire-countdown blasts-remaining r-score shuttle-count ]
+rockets-own [x-pos y-pos x-vel y-vel mass fuel countdown ]
 ; fuel is the amount of fuel remaining. Right now, the fuel is massless. 
-; fire-countdown is the number of seconds remaining in one firing cycle. 
-; blasts-remaining is the number of blasts remaining to be delivered during the current firing cycle. 
+; countdown is the number of seconds remaining in one firing cycle. 
 ; [x-pos y-pos] is the location of the rocket, even when off-screen. [xcor ycor] is set to [x-pos y-pos] when on-screen
 ; [x-vel y-vel] is the velocity of the rocket
-; r-score is the rocket's current score
-; shuttle-count is the current number of shuttles onboard the rocket
 
-shuttles-own [sx-pos sy-pos sx-vel sy-vel time-to-live towed? by-whom value] ; each shuttle has a value, position, velocity, and time to live
-; pointers-own [direction] ; Direction can be "h" or "v"
-; markers-own [direction] ; Direction can be "h" or "v"
-; vel-indicators-own [ID direction] ; Direction can be "h" or "v"
+shuttles-own [sx-pos sy-pos sx-vel sy-vel towed? by-whom shuttle-mass] ; each shuttle has a value, position, velocity, and time to live
 ; towed? asks whether the shuttle is being towed by a rocket
 ; by-whom contains the "who" of the towing rocket. 
 
-globals [t shuttle-mass fuel-remaining] 
-; the following globals that define the motor are defined in the UI
-; the user cannot fire a rocket a second time for "fire-duration" seconds. Any fire commands within that time are ignored.
-; the total impulse delivered for each command is given by the global "impluse"
-; this impulse is delivered as N separate blasts over the "fire-duration" time. Hence, the impulse of each blast is impluse/blasts-per-fire
-; the rocket-mass is the mass of the rockets when they are not carrying shuttles. The total mass of each rocket is this plus the mass of its shuttles
+globals [t tmax fuel-remaining blackout ] 
+; t is the time elapsed since start was pressed
+; the user cannot fire a rocket a second time for "blackout" seconds. Any fire commands within that time are ignored.
+; tmax is the maximum time allowed
 
 ; the following set up the system---------------------------------------------
 
@@ -43,7 +35,8 @@ end
 
 To setup-globals
   set t 0                          ; t is the game time in seconds
-  set shuttle-mass 50
+  set blackout 2                   ; sets the minimum time in seconds between rocket fires. 
+  set tmax 45
 end
   
 to setup-rockets                            ; this version creates one rocket
@@ -52,10 +45,10 @@ to setup-rockets                            ; this version creates one rocket
   ask rockets [                             ; set the variables that are common to all rockets
     set size 6
     set shape "rocket" 
-    set mass 5
+    set mass 20
     set xcor x-pos set ycor y-pos         ; xcor and ycor are program variables assigned to every object that define where it is placed
     ]
-  set fuel-remaining 8
+  set fuel-remaining 20
 end
     
 to setup-flames                               ; these are the flames from the rocket engines
@@ -94,11 +87,12 @@ end
 to setup-shuttles  ; these are the blue shuttles that are not onboard rockets at the start of the game.
   ; the owned variables are value position, velocity, and time-to-live
   create-shuttles 1 
-    [ set sx-pos (max-pxcor - 5)  set sy-pos 0 ]
+    [ set sx-pos (max-pxcor - 10)  set sy-pos 0 ]
   ask shuttles [
     set size 8
     set shape "ufo side"
     set color blue
+    set shuttle-mass 40
     set xcor sx-pos set ycor sy-pos 
     set towed? false          ; at start, the shuttle is not being towed 
       ]
@@ -107,9 +101,30 @@ end
 
 ; the following support the user game keys--------------------------------------------
 
+to fire-left
+  if fuel-remaining > 0 [
+    ask rockets with [color = red] 
+      [if countdown <= 0 [
+        set heading 270
+        set x-vel x-vel - 100  / mass
+        fire-rockets 270 x-pos y-pos 
+        set countdown blackout]]]
+end
+
+to fire-right
+  if fuel-remaining > 0 [
+    ask rockets with [color = red] [
+      if countdown <= 0 [
+        set heading 90
+        set x-vel x-vel + 100  / mass
+        fire-rockets 90 x-pos y-pos
+        set countdown blackout]
+      ]]
+end 
+  
 to fire-rockets [head x y]  
   if on-screen? x y [
-    ask flames [
+      ask flames [
       set heading head
       setxy x y
       back 2
@@ -130,15 +145,16 @@ to go
     check-explode
     pickup-shuttle                                 ; see whether any rockets can pick up a shuttle
     set t (t + .05) 
-    if t >= 40 [beep stop] ]
+    if t >= tmax [beep stop] ]
   every .2 [                                      ; every 2-tenths of a second
+    ask rockets [set countdown countdown - .2   ; reduce the time duing which the rocket engine cannot fire
     ask rockets with [on-screen? x-pos y-pos]      ; for each rocket on-screen drop a dot marking the rocket's path
       [ hatch-puffs 1 [set color white set size .3 set shape "cloud" ]] ; create a puff at the on-screen rocket
     ask puffs [
       set color (color - .2)                      ; fade all puffs and kill them off when they become black
       if color > 10 [die]]                       ; note: color below 0 becomes very large!
-    ask flames [ht]]                                 ; turn off the flames if they happen to be on
-    every .5 [update-graph ]          
+    ask flames [ht]                                 ; turn off the flames if they happen to be on
+    update-graph ]]          
 end
 
 to move-rockets
@@ -180,18 +196,17 @@ end
 
 to pickup-shuttle ; picks up a shuttle if a rocket is near it and sufficiently near its velocity
   ask rockets [
-    let vx x-vel let vy y-vel let m mass let w who
+    let vx x-vel let vy y-vel let m mass let w who ; this is how I get access to rocket variables inside 'ask shuttles'   
     ask shuttles in-radius 2 [
       if not towed? [
-      let closing-speed sqrt ( (vx - sx-vel) ^ 2 + (vy - sy-vel) ^ 2 ) ;
-      if closing-speed <= 5 [     ; the rocket can pick up the shuttle
-;       set score (score + value)                ; we may want a different scoring algorithm
-        set m m + shuttle-mass             ; increase the mass of the rocket
- ;       set shuttle-count shuttle-count + 1      ; increase the number of onboard shuttles
-        set color red
-        set towed? true  
-        set by-whom w]]    ]                              ; the shuttle is now being towed
-    set mass m                           
+        let closing-speed sqrt ( (vx - sx-vel) ^ 2 + (vy - sy-vel) ^ 2 ) ;
+        if closing-speed <= 5 [     ; the rocket can pick up the shuttle
+          set vx (m * vx + shuttle-mass * sx-vel ) / (m + shuttle-mass) ; conserve momentum in collision
+          set m m + shuttle-mass             ; increase the mass of the rocket 
+          set color red
+          set towed? true  
+          set by-whom w]]    ]                              ; the shuttle is now being towed
+    set mass m  set x-vel vx                                ; this extracts rocket variables computed inside 'ask shuttles'                     
     ]
 end
 
@@ -243,12 +258,12 @@ end
   
 @#$#@#$#@
 GRAPHICS-WINDOW
-215
-25
-830
-161
+195
+11
+810
+157
 60
-10
+11
 5.0
 1
 10
@@ -261,20 +276,20 @@ GRAPHICS-WINDOW
 1
 -60
 60
--10
-10
+-11
+11
 0
 0
 1
 ticks
 
 BUTTON
-15
-133
-70
-167
+19
+124
+74
+158
 Left
-if fuel-remaining > 0 [\nask rockets with [color = red] \n    [set heading 270\n    set x-vel x-vel - 100  / mass\n    fire-rockets 270 x-pos y-pos ]]
+fire-left
 NIL
 1
 T
@@ -285,22 +300,22 @@ NIL
 NIL
 
 TEXTBOX
-78
-133
-128
-172
+82
+124
+132
+163
 Fire Rocket
 14
 0.0
 1
 
 BUTTON
-130
-133
-185
-166
+134
+124
+189
+157
 Right
-if fuel-remaining > 0 [\n  ask rockets with [color = red] [\n    set heading 90\n    set x-vel x-vel + 100  / mass\n    fire-rockets 90 x-pos y-pos]]
+fire-right
 NIL
 1
 T
@@ -311,10 +326,10 @@ NIL
 NIL
 
 BUTTON
-12
-23
-94
-61
+19
+10
+101
+48
 Setup
 setup
 NIL
@@ -327,10 +342,10 @@ NIL
 NIL
 
 BUTTON
-100
-23
-177
-61
+110
+10
+187
+48
 Start/stop
 go
 T
@@ -343,28 +358,28 @@ NIL
 NIL
 
 MONITOR
-12
-67
-94
-124
+19
+54
+101
+111
 Time left
-40 - t
-1
+tmax - t
+0
 1
 14
 
 PLOT
-224
-180
-820
-425
+209
+173
+805
+418
 velocity graph
 time
 velocity
 0.0
 41.0
--25.0
-25.0
+-16.0
+16.0
 true
 true
 PENS
@@ -372,10 +387,10 @@ PENS
 "Shuttle Velocity" 0.5 0 -13345367 true
 
 MONITOR
-101
-67
-181
-124
+108
+54
+188
+111
 Fuel Left
 Fuel-remaining
 17
@@ -385,7 +400,7 @@ Fuel-remaining
 @#$#@#$#@
 WHAT IS IT?
 -----------
-This version of Rocket Rescue is designed as a way to get to understand the environment
+This version of Rocket Rescue focuses attention on the rate of change of velocity because the rocket engines are restricted in how many blasts they can deliver per unit time. In this case, they can fire no more than once every two seconds. 
 
 HOW IT WORKS
 ------------
@@ -393,13 +408,11 @@ This is an accurate simulation of frictionless motion.
 
 HOW TO USE IT
 -------------
-The left and right buttons each deliver an impulse to the rocket. Be sure to not enter the red sections at each end. 
+The left and right buttons each deliver an impulse to the rocket or rocket-shuttle combination
 
 THINGS TO NOTICE
 ----------------
-Note that to slow down, you have to turn around and fire. 
-Note how much more difficult it is to bring back the shuttle. Why does this happen? 
-
+Note that you have to plan ahead in order to speed up and slow down without crashing into the end walls. 
 
 THINGS TO TRY
 -------------
@@ -409,10 +422,9 @@ EXTENDING THE MODEL
 -------------------
 You can change the masses of the rocket and shuttle to see what happens. 
 
-
 RELATED MODELS
 --------------
-This only the simplest of a series of Rocket Rescue games that introduce key ideas about force and motion. 
+This only one of  a series of Rocket Rescue games that introduce key ideas about force and motion. 
 
 
 CREDITS AND REFERENCES
