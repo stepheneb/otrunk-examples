@@ -52,9 +52,9 @@
         <OTInclude href="species/annual-varied-plants.otml" />
       </includes>
       <root>
-        <OTEnvironmentHolder local_id="env-holder" width="590" height="460" toolbar="run,reset">
+        <OTEnvironmentHolder local_id="env-holder" width="590" height="460" toolbar="run,cursor,reset">
           <environment>
-            <OTEnvironment local_id="environment" environmentWidth="10" environmentHeight="10" showRunButton="false" winterLength="-1" summerLength="50" orgSizeMultiplier="1.5" backgroundImageSrc="jres:///org/concord/er/resources/images/envs/sun5levels.jpg">
+            <OTEnvironment local_id="environment" environmentWidth="10" environmentHeight="10" showRunButton="false" winterLength="-1" summerLength="50" orgSizeMultiplier="1.5" backgroundImageSrc="jres:/org/concord/er/resources/images/envs/sun5levels.jpg">
               <world>
                 <OTWorld local_id="peasimple_world" speciesPath="org/concord/biologica/worlds/peasimple.xml" />
               </world>
@@ -74,7 +74,7 @@
                     <OTRuleCondition always="true" />
                   </conditions>
                   <consequences>
-                    <OTRuleConsequence property="Health" ruleScript="var diff = Math.abs(leaves - (sunlight*10)); return 1.0 - ((diff*7) / 100)">
+                    <OTRuleConsequence property="Health" ruleScript="var diff = Math.abs(leaves - (sunlight*10)); return 1.0 - ((diff) / 20)">
                       <propertyVariables>
                         <string>leaves</string>
                         <string>sunlight</string>
@@ -92,11 +92,27 @@
                 </OTRule>
                 <OTRule description="Immortality rule">
                   <conditions>
-                    <OTRuleCondition property="Has flower" equals="true" />
+                    <OTRuleCondition property="Health" minValue="0.87" maxValue="1.0" />
                   </conditions>
                   <consequences>
                     <OTRuleConsequence property="is immortal" newValueBoolean="true" />
                     <OTRuleConsequence property="Days to seed" newValueFloat="-1.0" />
+                  </consequences>
+                </OTRule>
+                <OTRule description="Flower rule">
+                  <conditions>
+                    <OTRuleCondition property="Health" maxValue="0.95" />
+                  </conditions>
+                  <consequences>
+                    <OTRuleConsequence property="Chance of flowering" newValueFloat="0.0" />
+                  </consequences>
+                </OTRule>
+                <OTRule description="Flower health is 1">
+                  <conditions>
+                    <OTRuleCondition property="Has flower" equals="true" />
+                  </conditions>
+                  <consequences>
+                    <OTRuleConsequence property="Health" newValueFloat="1.0" />
                   </consequences>
                 </OTRule>
               </rules>
@@ -104,7 +120,7 @@
           </environment>
           <traitsToShow>
             <string>leaves</string>
-            <string>roots</string>
+            <string>Health</string>
           </traitsToShow>
           <addAgentsButtons>
             <OTAddAgentButton text="Add Plant A">
