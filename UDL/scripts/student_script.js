@@ -9,6 +9,7 @@
  */
 importClass(Packages.java.lang.Class);
 importClass(Packages.java.lang.System);
+importClass(Packages.java.lang.StringBuffer);
 importClass(Packages.java.util.HashMap);
 importClass(Packages.java.util.regex.Matcher);
 importClass(Packages.java.util.regex.Pattern);
@@ -142,10 +143,9 @@ function addRemoveWrapupPages(wrapup, hide){
 			}
 		}
 		// if it wasn't, check the titles
-		if (section == null){
-			var text = page.getBodyText()
+		if (section == null && page.getBodyText() != null){
 			var titlePattern = Pattern.compile("class=\"subtitle\">([^>]*)<")
-			var matcher = titlePattern.matcher(text)
+			var matcher = titlePattern.matcher(new java.lang.StringBuffer(page.getBodyText()))
 			while (matcher.find()) {
 				var title = matcher.group(1).trim()
 				for(var k=0; k<curnitHelper.getSections().size(); k++) {
