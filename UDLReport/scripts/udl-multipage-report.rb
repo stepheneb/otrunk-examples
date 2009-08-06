@@ -165,7 +165,16 @@ end
 #####################
 
 def embedObjectFromUserOverlay(user, obj, viewEntry=nil)
-  obj = @overlayManager.getOTObject(user, obj.getGlobalId())
+  # need to make sure we get the correct method from the overlayManager
+  # there are multiple getOTObject methods in the overlaymanager that take 2 args
+  # and if one is null than it is ambiguous which one will get called
+  # be nice if you could do something like: 
+  #    @overlayManager.invoke [:getOTObject, org.concord.otrunk.user.OTUserObject, org.concord.framework.otrunk.OTID] 
+  method = @overlayManager.java_class.declared_method(:getOTObject, org.concord.otrunk.user.OTUserObject, 
+    org.concord.framework.otrunk.OTID )
+  obj = method.invoke @overlayManager.java_object, user.nil? ? Java.primitive_to_java(nil) : user.java_object, obj.getGlobalId().java_object
+  obj = Java.java_to_ruby(obj)
+  
   if obj
     embedObject(obj, viewEntry)
   else
