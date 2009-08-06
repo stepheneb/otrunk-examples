@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<otrunk id="13d3fb4f-123a-425f-9d60-d84e145c0678">
+  <imports>
+  	<import class="org.concord.otrunk.OTIncludeRootObject" />
+  	<import class="org.concord.otrunk.OTInclude" />
+    <import class="org.concord.otrunk.OTSystem" />
+    <import class="org.concord.otrunk.biologica.OTOrganismPlacement" />
+    <import class="org.concord.otrunk.biologica.OTEnvironment" />
+    <import class="org.concord.otrunk.biologica.OTOrganism" />
+    <import class="org.concord.otrunk.biologica.OTWorld" />
+    <import class="org.concord.otrunk.biologica.agent.OTAgentSpecies" />
+    <import class="org.concord.otrunk.biologica.agent.OTAgentTrait" />
+    <import class="org.concord.otrunk.biologica.agent.OTAgentPropertyImageMap" />
+    <import class="org.concord.otrunk.biologica.environment.OTEnvironmentHolder"/>
+    <import class="org.concord.otrunk.biologica.rules.OTRule"/>
+    <import class="org.concord.otrunk.biologica.rules.OTRuleCondition"/>
+    <import class="org.concord.otrunk.biologica.rules.OTRuleConsequence"/>
+    <import class="org.concord.otrunk.ui.OTSlider"/>
+    <import class="org.concord.otrunk.view.OTViewEntry" />
+    <import class="org.concord.otrunk.view.OTViewBundle" />
+    <import class="org.concord.otrunk.view.document.OTCompoundDoc" />
+    <import class="org.concord.otrunk.script.ui.OTScriptObject" />
+    <import class="org.concord.otrunk.script.js.OTJavascript" />
+    <import class="org.concord.otrunk.script.OTScriptEngineBundle" />
+    <import class="org.concord.otrunk.script.OTScriptEngineEntry" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariable" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariableComponent" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariableRealObject" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariableView" />
+    <import class="org.concord.otrunk.script.ui.OTScriptButton" />
+    <import class="org.concord.framework.otrunk.view.OTFrame" />
+  </imports>
+	<idMap> 
+	  <idMapping local_id="plant-species" id="f5732706-c9c2-4e29-8c99-4c668dda89b0"/> 
+	</idMap> 
+  <objects>
+    <OTSystem>
+
+      <bundles>
+      	<object refid="8d880970-c22a-11dc-95ff-0800200c9a66" />
+        <OTScriptEngineBundle>
+          <engines>
+            <OTScriptEngineEntry
+              objectClass="org.concord.otrunk.script.js.OTJavascript"
+              engineClass="org.concord.otrunk.script.js.OTJavascriptEngine" />
+          </engines>
+        </OTScriptEngineBundle>
+      </bundles>
+	<includes>
+		<OTInclude href="../global-imports/er-view-bundle.otml" />
+        <OTInclude href="species/annual-leaves-and-roots-plants.otml" />
+      </includes>
+      <root>
+        <OTCompoundDoc name="Population">
+          <bodyText>
+          
+            <table >
+              <tr height="690">
+	              <td>
+	              	<object refid="${env-holder}" /><br/><br/>
+	              </td>
+	              <td>
+	              	<object refid="${add-fancy-ferns-button}"/><br/>
+	            <!-- 
+	              	<object refid="${clear-button}"/><br/>
+	             -->
+	              	Difference between halves: light<br/>
+	              	<object refid="${sun-slider}"/><br/><br/>
+	              	 
+	              	Difference between halves: water<br/>
+	              	<object refid="${water-slider}"/><br/><br/>
+	              	
+	              </td>
+              </tr>
+            </table>
+          
+          		<object refid="${setup-script}"/>
+            </bodyText>
+          <documentRefs>
+          <OTEnvironmentHolder local_id="env-holder" width="730" height="600" >
+          		<environment>
+		          	<OTEnvironment local_id="environment" world="${peasimple_world}" 
+		            	width="550" height="500" environmentWidth="10" environmentHeight="10"
+		            	showRunButton="false">
+		            	<rules>
+		            		<OTRule>
+		            			<conditions>
+		            				<OTRuleCondition always="true"/>
+		            			</conditions>
+		            			<consequences>
+		            				<OTRuleConsequence property="Health">
+		            					<ruleScript>
+			            					var diff = Math.abs(leaves - (sunlight*10)) + Math.abs(roots - (water*10))
+			            					return (1 - diff * 0.01)
+		            					</ruleScript>
+		            					<propertyVariables>
+		            						<string>leaves</string>
+		            						<string>roots</string>
+		            						<string>sunlight</string>
+		            						<string>water</string>
+		            					</propertyVariables>
+		            				</OTRuleConsequence>
+		            			</consequences>
+		            		</OTRule>
+		            	</rules>
+		            </OTEnvironment>
+            	</environment>
+            	<traitsToShow>
+            		<string>leaves</string>
+            		<string>roots</string>
+            	</traitsToShow>
+            </OTEnvironmentHolder>
+            <OTScriptObject local_id="setup-script">
+              		<script>
+              			<OTJavascript src="scripts/manual-sunlight-split-environments/setup.js"/>
+              		</script>   
+              		<variables>
+              			<OTScriptVariableRealObject name="env" reference="${environment}"/>
+              			<OTScriptVariable name="sunSlider" reference="${sun-slider}"/>
+              			<OTScriptVariable name="waterSlider" reference="${water-slider}"/>
+              			<OTScriptVariableRealObject name="species" reference="${plant-species}"/>
+              		</variables>
+              </OTScriptObject>
+             <OTScriptButton local_id="add-fancy-ferns-button" text="Add Plants">
+             		<script>
+             			<object refid="${add.js}"/>
+             		</script>
+             		<scriptVariables>
+             			<OTScriptVariableRealObject name="environment" reference="${environment}"/>
+             			<OTScriptVariableRealObject name="species" reference="${plant-species}"/>
+             		</scriptVariables>
+             </OTScriptButton>
+             <OTScriptButton local_id="clear-button" text="Clear">
+             		<script>
+             			<OTJavascript>
+     				<script>function clicked()
+      				{
+      					environment.removeAllAgents();
+      				}
+     				</script>
+     			</OTJavascript>
+             		</script>
+             		<scriptVariables>
+             			<OTScriptVariableRealObject name="environment" reference="${environment}"/>
+             		</scriptVariables>
+             </OTScriptButton>
+             
+             <OTSlider local_id="sun-slider" value="0" numTicks="10"/>
+             <OTSlider local_id="water-slider" value="0" numTicks="10"/>
+
+            <!-- World definition: is ignored -->
+            <OTWorld
+              speciesPath="org/concord/biologica/worlds/peasimple.xml"
+              local_id="peasimple_world" />
+              
+              <OTJavascript local_id="add.js">
+     				<script>
+     				var defaultProperties = new Array(new Array("leaves",5),new Array("roots",5))
+     				
+      				function clicked()
+      				{
+      					for (var i = 0; i&lt;10; i++){
+      						environment.addAgent(species.createAgent(defaultProperties));
+      					}
+      				}
+     				</script>
+     			</OTJavascript>
+          </documentRefs>
+        </OTCompoundDoc>
+
+      </root>
+
+    </OTSystem>
+  </objects>
+</otrunk>

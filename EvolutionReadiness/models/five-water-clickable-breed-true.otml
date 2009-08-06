@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<otrunk id="13d3fb4f-123a-425f-9d60-d84e145c0678">
+<otrunk id="24d3fb4f-123a-425f-9d60-d84e145c0689">
   <imports>
     <import class="org.concord.otrunk.OTIncludeRootObject" />
     <import class="org.concord.otrunk.OTInclude" />
@@ -49,12 +49,12 @@
       </bundles>
       <includes>
         <OTInclude href="../global-imports/er-view-bundle.otml" />
-        <OTInclude href="species/annual-varied-plants.otml" />
+        <OTInclude href="species/annual-leaves-and-roots-plants.otml" />
       </includes>
       <root>
         <OTEnvironmentHolder local_id="env-holder" width="590" height="460" toolbar="run,cursor,reset">
           <environment>
-            <OTEnvironment local_id="environment" environmentWidth="10" environmentHeight="10" showRunButton="false" winterLength="-1" summerLength="50" orgSizeMultiplier="1.5" backgroundImageSrc="jres:/org/concord/er/resources/images/envs/sun5levels.jpg">
+            <OTEnvironment local_id="environment" environmentWidth="10" environmentHeight="10" showRunButton="false" winterLength="-1" summerLength="50" orgSizeMultiplier="1.5" backgroundImageSrc="jres:/org/concord/er/resources/images/envs/water5levels.png">
               <world>
                 <OTWorld local_id="peasimple_world" speciesPath="org/concord/biologica/worlds/peasimple.xml" />
               </world>
@@ -69,25 +69,17 @@
                 <OTPlacement x="25" y="133" width="115" height="17" />
               </barriers>
               <rules>
-                <OTRule description="Health depends on leaves and sunlight">
+                <OTRule description="Health depends on roots and water">
                   <conditions>
                     <OTRuleCondition always="true" />
                   </conditions>
                   <consequences>
-                    <OTRuleConsequence property="Health" ruleScript="var diff = Math.abs(leaves - (sunlight*10)); return 1.0 - ((diff) / 20)">
+                    <OTRuleConsequence property="Health" ruleScript="var diff = Math.abs(roots - (water*10)); return 1.0 - ((diff) / 20)">
                       <propertyVariables>
-                        <string>leaves</string>
-                        <string>sunlight</string>
+                        <string>roots</string>
+                        <string>water</string>
                       </propertyVariables>
                     </OTRuleConsequence>
-                  </consequences>
-                </OTRule>
-                <OTRule description="Leaf description rule">
-                  <conditions>
-                    <OTRuleCondition property="leaves" maxValue="3.0" />
-                  </conditions>
-                  <consequences>
-                    <OTRuleConsequence property="type of leaves" newValueString="bushy" />
                   </consequences>
                 </OTRule>
                 <OTRule description="Immortality rule">
@@ -123,38 +115,38 @@
             <string>Health</string>
           </traitsToShow>
           <addAgentsButtons>
-            <OTAddAgentButton text="Add Plant A" limit="-1">
+            <OTAddAgentButton text="Add Plant A">
               <species>
                 <object refid="f5732706-c9c2-4e29-8c99-4c668dda89b0" />
               </species>
               <agentTraits>
-                <OTAgentTrait property="leaves">
+                <OTAgentTrait property="roots">
                   <defaultValues>
-                    <float>5.0</float>
+                    <int>5</int>
                   </defaultValues>
                 </OTAgentTrait>
               </agentTraits>
             </OTAddAgentButton>
-            <OTAddAgentButton text="Add Plant B" limit="-1">
+            <OTAddAgentButton text="Add Plant B">
               <species>
                 <object refid="f5732706-c9c2-4e29-8c99-4c668dda89b0" />
               </species>
               <agentTraits>
-                <OTAgentTrait property="leaves">
+                <OTAgentTrait property="roots">
                   <defaultValues>
-                    <float>10.0</float>
+                    <int>10</int>
                   </defaultValues>
                 </OTAgentTrait>
               </agentTraits>
             </OTAddAgentButton>
-            <OTAddAgentButton text="Add Plant C" limit="-1">
+            <OTAddAgentButton text="Add Plant C">
               <species>
                 <object refid="f5732706-c9c2-4e29-8c99-4c668dda89b0" />
               </species>
               <agentTraits>
-                <OTAgentTrait property="leaves">
+                <OTAgentTrait property="roots">
                   <defaultValues>
-                    <float>1.0</float>
+                    <int>1</int>
                   </defaultValues>
                 </OTAgentTrait>
               </agentTraits>
@@ -163,7 +155,7 @@
           <scripts>
             <OTScriptObject local_id="setup-script" name="Setup script">
               <script>
-                <OTJavascript src="scripts/gradated-sunlight-five-blocks/setup.js">
+                <OTJavascript src="scripts/gradated-water-five-blocks/setup.js">
                   <script>importPackage(Packages.java.lang);
 importPackage(Packages.java.awt);
 importPackage(Packages.org.concord.biologica.environment);
@@ -182,19 +174,19 @@ function init() {
 	        	var envUnit = new EnvironmentUnit(env, null, i, j)
 	        	env.setEnvironmentUnit(envUnit, i, j)
 	        	if (j &lt; 3)
-	        		percentSunlight = 1.0
+	        		percentWater = 1.0
 	        	else if (j &lt; 6)
-	        		percentSunlight = 0.75
+	        		percentWater = 0.75
 	        	else if (j &lt; 9)
-	        		percentSunlight = 0.5
+	        		percentWater = 0.5
 	        	else if (j &lt; 11)
-	        		percentSunlight = 0.25
+	        		percentWater = 0.25
 	        	else if (j &lt; 15)
-	        		percentSunlight = 0.1
+	        		percentWater = 0.1
 	        		
-	        	envUnit.setProperty("sunlight", new Float(percentSunlight))
+	        	envUnit.setProperty("water", new Float(percentWater))
 	        	
-	        	var r =  (percentSunlight) * 0.5
+	        	var r =  (percentWater) * 0.5
 	        	var g = r * 0.5
 	        	var b = g * 0.2
 	        	var color = new Color(r+0.3, g+0.2, b+0.1)
