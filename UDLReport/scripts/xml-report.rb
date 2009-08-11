@@ -64,8 +64,7 @@ class XmlReport
   def _getQuestionElem(question, index, sectionId)
     questionType = _getQuestionType(question)
     elem = REXML::Element.new('question')
-    elem.add_attributes('id' => (index + 1).to_s,
-      'section' => sectionId,
+    elem.add_attributes('id' => question.otExternalId,
       'prompt' => _plainPromptText(question),
       'type' => questionType)
     elem
@@ -73,7 +72,7 @@ class XmlReport
 
   def _getAnswerElem(question, index, user)
     elem = REXML::Element.new('answer')
-    elem.attributes['questionId'] = (index + 1).to_s
+    elem.attributes['questionId'] = question.otExternalId
     case _getQuestionType(question)
       when 'choice' then
         _doChoiceAnswerElem(elem, question)
