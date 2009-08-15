@@ -148,35 +148,46 @@
 					return true;
 					}
 				var winterCounter = 0;
-				var waitingFor = "winter"; 	
+				var waitingFor = "fall";
 				var stepHandler = {
 					environmentStepped: function(){
 						var firstSquare = env.getEnvironmentUnit(0, 0);
 						var currentSeason = firstSquare.getProperty("Season");
-						if (currentSeason == "winter"){
+						if (waitingFor == currentSeason) {
+							if (waitingFor == "fall") {
+								waitingFor = "winter";
+////							envHolder.pause();
+								showMessage("Oops!!  " +
+									"Fall is here. \n"+
+									"Your plants with flowers will drop seeds for next year! \n" +
+									"Count them now and then. \n" +
+									"Click 'OK' and let's see what happens.", env);
+
+								return;
+							}
 							if (waitingFor == "winter"){
-//								System.out.println ("winter counter = " + winterCounter + ", waiting for " + waitingFor);
-								waitingFor = "spring"; 
 //								System.out.println ("winter counter = " + winterCounter + ", waiting for " + waitingFor);
 								winterCounter ++; 
 //								System.out.println ("winter counter = " + winterCounter + ", waiting for " + waitingFor);
 								
+								waitingFor = "fall";
 								if (winterCounter == 1){
+////								envHolder.pause();
 									showMessage("Oops!!  " +
-									"Winter has come. \n"+
-									"All your plants have died. Boo hoo! \n" +
-									"But if they've made seeds maybe baby plants will grow. \n" +
-									"Click 'OK' and let's see what happens.", env);
-
+										"Winter has come. \n"+
+										"All your plants have died. Boo hoo! \n" +
+										"But if they've made seeds maybe baby plants will grow. \n" +
+										"Click 'OK' and let's see what happens.", env);
+									
+////								envHolder.run();
 								}
 								else if (winterCounter &gt; 1){
 						//			JOptionPane.showMessageDialog(null,"This is winter number " + winterCounter);
 									return;
-								}							
-							} 
-							return; 
-						} 	
-						waitingFor = "winter";
+								}		
+								return;					
+							}
+						} 
 						return;
 					}		
 				}
