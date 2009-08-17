@@ -18,6 +18,10 @@ class OTrunkHelper
     _sanityCheck
     @otrunk = $viewContext.getViewService(OTrunk.java_class)
   end
+
+  def otrunk
+    @otrunk
+  end
   
   ## Return root of the main OTML (e.g., the report otml)
   def rootObject

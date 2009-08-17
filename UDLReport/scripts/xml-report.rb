@@ -51,7 +51,14 @@ class XmlReport
   end
   
   def addStudent(user)
-    studentElem = @studentsElem.add_element('student', 'name' => user.name)
+    realUserId = user.globalId
+    userDbURL = @otrunkHelper.otrunk.getOTDatabase(realUserId).sourceURL
+
+    # need to do do a regex to get the workgroup id
+    # http://saildataservice.concord.org/13/workgroups/69320/ot_learner_data.xml
+    workgroup_id = /.*\/workgroups\/([0-9]*)\/.*/.match(userDbURL.to_s)[1]    
+
+    studentElem = @studentsElem.add_element('student', {'name' => user.name, 'sds_workgroup_id' => workgroup_id})
     answersElem = studentElem.add_element('answers')
     @questions.each_with_index do |question, index|
       userQuestion = @otrunkHelper.userObject(question, user)
