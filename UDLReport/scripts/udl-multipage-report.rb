@@ -569,7 +569,11 @@ end
 def getXmlReport
   report = XmlReport.new('udl', @otrunkHelper)
   
-  sections = unitSections
+  ## Ignoring all sections except pre-test & post-test, for the time being.
+  sections = unitSections.select do |section|
+    section.name.strip =~ /\A(pre|post).*test.*/i
+  end
+
   sections.each_with_index do |section, i|
     sectionId = (i+1).to_s
     report.addSection(section, sectionId)
