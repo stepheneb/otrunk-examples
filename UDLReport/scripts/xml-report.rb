@@ -133,7 +133,6 @@ class XmlReport
       elsif input.is_a?(OTImage)
         return 'image'
       end
-      puts "UNKNOWN INPUT TYPE #{input.getClass.getName} - #{question.prompt.text}"
     end
     return 'unknown'
   end
