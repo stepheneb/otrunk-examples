@@ -258,8 +258,14 @@ class XmlReport
     end
     
     def setupAnswerElement(element, otrunkHelper, user)      
-      userGlosWord = getUserGlosWord(user)            
-      element.text = userGlosWord.studentDefinition.to_s if userGlosWord
+      userGlosWord = getUserGlosWord(user)
+      if userGlosWord
+        element.text = userGlosWord.studentDefinition.to_s
+      else
+        # set the text to be empty in the hopes that this doesn't
+        # get picked up by the completion report
+        element.text = ""
+      end      
     end
     
     def questionId()
@@ -276,8 +282,14 @@ class XmlReport
     end
     
     def setupAnswerElement(element, otrunkHelper, user)      
-      userGlosWord = getUserGlosWord(user)      
-      element.text = userGlosWord.shownCount.to_s if userGlosWord
+      userGlosWord = getUserGlosWord(user)
+      if userGlosWord
+        element.text = userGlosWord.shownCount.to_s
+      else
+        # set the text to be empty in the hopes that this doesn't
+        # get picked up by the completion report
+        element.text = ""
+      end      
     end
 
     def questionId()
