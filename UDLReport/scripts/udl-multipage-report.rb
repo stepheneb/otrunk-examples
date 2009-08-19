@@ -579,8 +579,22 @@ def getXmlReport
     report.addSection(section, sectionId)
     questions = sectionQuestions(section)
     report.addQuestions(questions, sectionId)
+    
   end
-  
+
+  unitSections.each do |section|
+    levQuestions = sectionLeveledQuestions(section)
+    levQuestions.each do |lq|
+      report.addQuestionWrapper(XmlReport::LeveledQuestionLevelWrapper.new(lq, @otrunkHelper))
+      report.addQuestionWrapper(XmlReport::LeveledQuestionClickedWrapper.new(lq, @otrunkHelper))
+    end
+  end
+
+  glossaryWords().each do |glossWord|
+    report.addQuestionWrapper(XmlReport::GlossaryWordStudentDefWrapper.new(glossWord, @otrunkHelper))
+    report.addQuestionWrapper(XmlReport::GlossaryWordShownCountWrapper.new(glossWord, @otrunkHelper))      
+  end
+      
   @users.each do |user|
     studentElem = report.addStudent(user)
   end

@@ -145,6 +145,85 @@ class OTrunkHelper
     @questions
   end
 
+  ## Return a number corresponding to the choice, beginning with 1.
+  ## choosers: an OTChoice
+  ## choice: user's choice, as can be retrieved with getCurrentChoice()
+  def getChoiceNum(chooser, choice)
+    num = 0
+    chooser.getChoices.each_with_index do |option, i|
+      if option.otExternalId == choice.otExternalId
+        num = i + 1
+        break
+      end
+    end
+    num
+  end
+  
+  ## Returns a list of pairs [choiceNum, choiceText]
+  def getCurrentChoices(chooser)
+    choices = []
+    answer = chooser.currentChoice
+  
+    if answer
+      choices << [getChoiceNum(chooser, answer), toPlainText(answer)]
+    elsif chooser.currentChoices.size > 0
+      chooser.currentChoices.each do |item|
+        choices << [getChoiceNum(chooser, item), toPlainText(item)]
+      end
+    end
+    choices
+  end
+  
+  ## image: an OTImage
+  def getImageBlobUrl(image)
+    url = ''
+    if image.isResourceSet("imageBytes")
+      imageBytesProp = image.otClass.getProperty('imageBytes')
+      return nil if imageBytesProp.nil?
+  
+      blob = image.otGet(imageBytesProp)
+      if blob.nil?
+        return nil
+      else
+        puts 'blob class=' + blob.java_class.to_s
+        url = blob.getBlobURL
+        if url.nil?
+          return nil
+        else
+          return url
+        end
+      end
+    end
+  end
+    
+  def promptText(question)
+    obj = question.prompt
+    if obj.is_a? org.concord.otrunk.view.document.OTCompoundDoc
+      obj.bodyText
+    elsif obj.is_a? org.concord.otrunk.ui.OTText
+      obj.text
+    end
+  end
+  
+  def plainPromptText(question)
+    toPlainText(question.prompt)
+  end
+  
+  def toPlainText(obj)
+    text = ''
+    if obj.is_a? org.concord.otrunk.view.document.OTCompoundDoc
+      text = obj.bodyText
+    elsif obj.is_a? org.concord.otrunk.ui.OTText
+      text = obj.text
+    elsif obj.is_a? String
+      text = obj
+    end
+    text.gsub!(/<.*?>/, '')
+    text.gsub!(/\s+/, ' ')
+    text.strip
+  end
+
+  
  private
 
   def _addQuestion(sectionName, question)
