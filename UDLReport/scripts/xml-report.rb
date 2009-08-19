@@ -66,7 +66,8 @@ class XmlReport
     
     def setupQuestionElement(elem)
       questionType = XmlReport.getQuestionType(@question)
-      if questionType == 'choice'
+      case questionType
+      when 'choice' then
         correctAnswer = @question.correctAnswer
         if correctAnswer
           if correctAnswer.is_a? OTObjectSet
@@ -104,7 +105,13 @@ class XmlReport
           # check if the correct Answer actually matches one of the objects in the choices list
           # there are cases of correct answers for choices that don't actually match
         end
+      when 'text' then
+        correctAnswer = @question.correctAnswer
+        if correctAnswer
+          elem.add_attributes('correctAnswer' => @otrunkHelper.toPlainText(correctAnswer))
+        end
       end
+      
       elem.add_attributes(
       'prompt' => @otrunkHelper.plainPromptText(@question),
       'type' => questionType)
