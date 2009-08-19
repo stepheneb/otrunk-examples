@@ -258,8 +258,8 @@ class XmlReport
     end
     
     def setupAnswerElement(element, otrunkHelper, user)      
-      userGlosWord = getUserGlosWord(user)      
-      element.text = userGlosWord.studentDefinition.to_s
+      userGlosWord = getUserGlosWord(user)            
+      element.text = userGlosWord.studentDefinition.to_s if userGlosWord
     end
     
     def questionId()
@@ -277,7 +277,7 @@ class XmlReport
     
     def setupAnswerElement(element, otrunkHelper, user)      
       userGlosWord = getUserGlosWord(user)      
-      element.text = userGlosWord.shownCount.to_s
+      element.text = userGlosWord.shownCount.to_s if userGlosWord
     end
 
     def questionId()
