@@ -190,20 +190,26 @@ class XmlReport
     end
 
   end
-  
-  class LeveledQuestionLevelWrapper
+
+  class CalculatedValueWrapper
+    def setupQuestionElement(element)
+      element.add_attributes('prompt' => getPrompt(),
+        'type' => 'text',  'tags' => getTags())
+    end
+  end
+    
+  class LeveledQuestionLevelWrapper < CalculatedValueWrapper
     def initialize(question, otrunkHelper)
       @question = question
       @otrunkHelper = otrunkHelper
     end
-    
-    def setupQuestionElement(element)
-      element.add_attributes('prompt' => getPrompt(),
-        'type' => 'text')
-    end
-    
+        
     def getPrompt()
       "Level of Leveled Question: " + @otrunkHelper.plainPromptText(@question.questions.get(0))
+    end
+    
+    def getTags()
+      "leveled_question_level"
     end
     
     def setupAnswerElement(element, otrunkHelper, user)
@@ -222,6 +228,10 @@ class XmlReport
       "Times Clicked of Leveled Question: " + @otrunkHelper.plainPromptText(@question.questions.get(0))
     end
     
+    def getTags()
+      "leveled_question_changed_count"
+    end
+
     def setupAnswerElement(element, otrunkHelper, user)
       userQuestion = @otrunkHelper.userObject(@question, user)      
       element.text = userQuestion.timesClicked.to_s
@@ -232,7 +242,7 @@ class XmlReport
     end
   end
 
-  class GlossaryWordStudentDefWrapper
+  class GlossaryWordStudentDefWrapper < CalculatedValueWrapper
     def initialize(glosWord, otrunkHelper)
       @glosWord = glosWord
       @otrunkHelper = otrunkHelper
@@ -243,8 +253,8 @@ class XmlReport
       @contentHelper = UDLContentHelper.getUDLContentHelper(activityRoot)
     end
     
-    def setupQuestionElement(element)
-      element.add_attributes('prompt' => getPrompt(), 'type' => 'text')
+    def getTags()
+      "student_definition"
     end
     
     def getPrompt()
@@ -279,6 +289,10 @@ class XmlReport
     
     def getPrompt()
       "Shown Count of #{@glosWord.word}"
+    end
+    
+    def getTags()
+      "definition_shown_count"
     end
     
     def setupAnswerElement(element, otrunkHelper, user)      
