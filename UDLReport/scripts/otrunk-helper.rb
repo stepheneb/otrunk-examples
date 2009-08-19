@@ -159,16 +159,16 @@ class OTrunkHelper
     num
   end
   
-  ## Returns a list of pairs [choiceNum, choiceText]
+  ## Returns a list of pairs [choiceNum, choice]
   def getCurrentChoices(chooser)
     choices = []
     answer = chooser.currentChoice
   
     if answer
-      choices << [getChoiceNum(chooser, answer), toPlainText(answer)]
+      choices << [getChoiceNum(chooser, answer), answer]
     elsif chooser.currentChoices.size > 0
       chooser.currentChoices.each do |item|
-        choices << [getChoiceNum(chooser, item), toPlainText(item)]
+        choices << [getChoiceNum(chooser, item), item]
       end
     end
     choices

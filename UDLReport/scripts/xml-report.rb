@@ -5,6 +5,7 @@ include_class 'org.concord.otrunk.ui.OTChoice'
 include_class 'org.concord.otrunk.ui.OTImage'
 include_class 'org.concord.otrunk.ui.OTText'
 include_class 'org.concord.otrunk.ui.question.OTQuestion'
+include_class 'org.concord.framework.otrunk.wrapper.OTObjectSet'
 
 class XmlReport
   
@@ -65,9 +66,48 @@ class XmlReport
     
     def setupQuestionElement(elem)
       questionType = XmlReport.getQuestionType(@question)
+      if questionType == 'choice'
+        correctAnswer = @question.correctAnswer
+        if correctAnswer
+          if correctAnswer.is_a? OTObjectSet
+            correctAnswerText = correctAnswer.objects.collect{|answer|
+              @otrunkHelper.toPlainText(answer)
+            }.join("; ")
+            if correctAnswer.objects.size > 0
+              @hasScore = true
+              @maxScore = correctAnswer.objects.size
+            end
+
+            # check if the correctAnswers are all in the choices
+            # if not then do not include the hasScore
+            correctAnswer.objects.each do |answer|
+              if not @question.input.choices.include? answer
+                @hasScore = false
+                break
+              end
+            end
+
+          else
+            @maxScore = 1
+            correctAnswerText = @otrunkHelper.toPlainText(correctAnswer)
+            if @question.input.choices.include? correctAnswer
+              @hasScore = true
+            end
+          end
+
+          if @hasScore
+            elem.add_attributes('hasScore' => 'true', 'maxScore' => @maxScore.to_s)
+          end
+
+          elem.add_attributes('correctAnswer' => correctAnswerText)
+
+          # check if the correct Answer actually matches one of the objects in the choices list
+          # there are cases of correct answers for choices that don't actually match
+        end
+      end
       elem.add_attributes(
-        'prompt' => @otrunkHelper.plainPromptText(@question),
-        'type' => questionType)
+      'prompt' => @otrunkHelper.plainPromptText(@question),
+      'type' => questionType)
       elem
     end
 
@@ -100,10 +140,29 @@ class XmlReport
         answerElem.text = 'NO_ANSWER'
         return
       end
+
+      score = 0
+      
+      correctAnswer = @question.correctAnswer
       choicesElem = answerElem.add_element('choices')
-      currentChoices.each do |num, text|
+      currentChoices.each do |num, choice|
         choiceElem = choicesElem.add_element('choice')
-        choiceElem.add_attributes('num' => num.to_s, 'text' => text)
+        choiceElem.add_attributes('num' => num.to_s, 'text' => @otrunkHelper.toPlainText(choice))
+        if @hasScore
+          if correctAnswer.is_a? OTObjectSet
+            if correctAnswer.objects.include? choice
+              score += 1
+            end                            
+          else
+            if correctAnswer == choice
+              score = 1
+            end                  
+          end          
+        end
+      end
+      
+      if @hasScore
+        answerElem.add_attributes('score' => score)
       end
     end
   
@@ -262,6 +321,5 @@ class XmlReport
       'activity' => activityName
     })
   end
-
 
 end
