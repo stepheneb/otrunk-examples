@@ -123,7 +123,7 @@ class XmlReport
 
       case XmlReport.getQuestionType(@question)
         when 'choice' then
-          _doChoiceAnswerElem(elem, userQuestion)
+          _doChoiceAnswerElem(elem, userQuestion, user)
         when 'text' then
           _doTextAnswerElem(elem, userQuestion)
         when 'image' then
@@ -141,7 +141,7 @@ class XmlReport
     
     private 
     
-    def _doChoiceAnswerElem(answerElem, question)
+    def _doChoiceAnswerElem(answerElem, question, user)
       currentChoices = @otrunkHelper.getCurrentChoices(question.input)
       if currentChoices.size == 0
         answerElem.text = 'NO_ANSWER'
@@ -151,6 +151,7 @@ class XmlReport
       score = 0
       
       correctAnswer = @question.correctAnswer
+      correctAnswer = @otrunkHelper.userObject(correctAnswer, user) if correctAnswer
       choicesElem = answerElem.add_element('choices')
       currentChoices.each do |num, choice|
         choiceElem = choicesElem.add_element('choice')
