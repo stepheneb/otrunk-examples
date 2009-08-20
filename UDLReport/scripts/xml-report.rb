@@ -169,7 +169,7 @@ class XmlReport
       end
       
       if @hasScore
-        answerElem.add_attributes('score' => score)
+        answerElem.add_attributes('score' => score.to_s)
       end
     end
   
