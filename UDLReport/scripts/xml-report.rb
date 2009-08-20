@@ -123,11 +123,11 @@ class XmlReport
 
       case XmlReport.getQuestionType(@question)
         when 'choice' then
-          _doChoiceAnswerElem(elem, @question)
+          _doChoiceAnswerElem(elem, userQuestion)
         when 'text' then
-          _doTextAnswerElem(elem, @question)
+          _doTextAnswerElem(elem, userQuestion)
         when 'image' then
-          _doImageAnswerElem(elem, @question)
+          _doImageAnswerElem(elem, userQuestion)
       else
         elem.text = 'UNKNOWN'
         STDERR.puts("getAnswerElem: Unknown question type!")
