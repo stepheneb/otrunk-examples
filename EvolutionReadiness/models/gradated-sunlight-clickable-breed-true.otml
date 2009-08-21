@@ -156,8 +156,8 @@
 						if (waitingFor == currentSeason) {
 							if (waitingFor == "fall") {
 								waitingFor = "winter";
-////							envHolder.pause();
-								showMessage("Oops!!  " +
+////							envHolder.pauseAction();
+								showMessage(
 									"Fall is here. \n"+
 									"Your plants with flowers will drop seeds for next year! \n" +
 									"Count them now and then. \n" +
@@ -170,11 +170,12 @@
 								winterCounter ++; 
 //								System.out.println ("winter counter = " + winterCounter + ", waiting for " + waitingFor);
 								
-								waitingFor = "fall";
+								waitingFor = "spring";
+								envHolder.snowCover(1.0);
 								if (winterCounter == 1){
-////								envHolder.pause();
-									showMessage("Oops!!  " +
-										"Winter has come. \n"+
+////								envHolder.pauseAction();
+									showMessage(
+										"Winter has come and snow has fallen. \n"+
 										"All your plants have died. Boo hoo! \n" +
 										"But if they've made seeds maybe baby plants will grow. \n" +
 										"Click 'OK' and let's see what happens.", env);
@@ -186,6 +187,10 @@
 									return;
 								}		
 								return;					
+							}
+							if (waitingFor == "spring"){
+								waitingFor = "fall";
+								envHolder.snowCover(0.0);
 							}
 						} 
 						return;
