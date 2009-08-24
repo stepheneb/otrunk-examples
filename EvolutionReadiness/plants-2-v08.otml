@@ -22,6 +22,7 @@
     <import class="org.concord.graph.util.state.OTPointTextLabel" />
     <import class="org.concord.otrunk.OTInclude" />
     <import class="org.concord.otrunk.OTSystem" />
+    <import class="org.concord.otrunk.biologica.data.OTBiologicaModelDataProducer" />
     <import class="org.concord.otrunk.browser.mozswing.OTMozSwing" />
     <import class="org.concord.otrunk.overlay.OTOverlay" />
     <import class="org.concord.otrunk.script.ui.OTScriptObject" />
@@ -112,7 +113,7 @@
     <OTSystem local_id="system">
       <includes>
         <OTInclude href="http://otrunk.concord.org/examples/EvolutionReadiness/global-imports/er-view-bundle.otml" />
-        <OTInclude href="http://otrunk.concord.org/examples/EvolutionReadiness/models/gradated-sunlight-clickable-breed-true.otml" />
+        <OTInclude href="models/gradated-sunlight-clickable-breed-true.otml" />
       </includes>
       <bundles>
         <object refid="8d880970-c22a-11dc-95ff-0800200c9a66" />
@@ -136,7 +137,7 @@
         <OTOverlay>
           <deltaObjectMap>
             <entry key="${authoring_script.js}">
-              <OTJavascript src="http://otrunk.concord.org/examples/EvolutionReadiness/scripts/student_script.js" />
+              <OTJavascript src="http://continuum.concord.org/otrunk/examples/LOOPS/scripts/student_script.js" />
             </entry>
           </deltaObjectMap>
         </OTOverlay>
@@ -218,38 +219,13 @@
           think they will grow best. To plant, click one of the plant buttons 
           and then click anywhere in the field. Each time you click you will 
           plant one seed. Click the Play button,
-                              <img src="jres:///org/concord/biologica/ui/play.png" width="20" height="20" />
+                              <img src="jres:///org/concord/biologica/ui/play.png" height="20" width="20" />
                               , to start growing the plants. Experiment until you have figured out 
           which seeds grow best in which location. Click the Reset button,
-                              <img src="jres:///org/concord/biologica/ui/reset.png" width="20" height="20" />
+                              <img src="jres:///org/concord/biologica/ui/reset.png" height="20" width="20" />
                               , to clear all your plants and start over. Run the model as many 
           times as you want. Try to get all three types of plant to grow and 
           make flowers.
-                              <br />
-                              <i>We have a model with a bar graph either under it 
-          or to one side. The model will run until the first winter and then 
-          it will put up a dialog box. The model should stop when the message 
-          comes up. The message should be different if none of the plants has 
-          produced seeds. It should have a hint of some sort and the model 
-          should only run when the kid clicks on the run button (to give time 
-          to plant additional seeds before the next winter comes) and then it 
-          should stop at the next winter. The winter messages should keep 
-          coming until there are at least some seeds -- after that we can just 
-          run through the winters without a message. After there are seeds 
-          (and therefore a viable plant population, for the first two years 
-          the model should stop and the message should refer to the bar graph 
-          and explain what it does. On the third year it should ask the 
-          student to fill in how many plants there are of each kind. (It would 
-          be nice if it could do this and hide the model, making the kid read 
-          the information off the bar graph, but I'm not sure we know how to 
-          do this.) The model should then run until there are at least five 
-          flowering plants of each kind, at which time it should put up a 
-          dialog box that points out the . saying "Congratulations! You've got 
-          all three types of plants growing and making seeds! If you want, you 
-          can run the model now and watch what happens. When you have lots of 
-          plants take a snapshot and then click on the arrow to go to the next 
-          page."</i>
-                              <br />
                               <br />
                               <br />
                               <table>
@@ -258,6 +234,10 @@
                                     <object refid="74b44c32-6749-11de-bcf3-1dd54fefde48" />
                                     <br />
                                     <object refid="13d3fb4f-123a-425f-9d60-d84e145c0678!/env-holder" />
+                                    <br />
+                                  </td>
+                                  <td width="250">
+                                    <object refid="0c9660fd-81e1-11de-bbc8-4fb62548ece1" />
                                     <br />
                                   </td>
                                 </tr>
@@ -275,6 +255,50 @@
                           </target>
                         </OTLabbookButton>
                         <object refid="13d3fb4f-123a-425f-9d60-d84e145c0678!/env-holder" />
+                        <OTDataCollector id="0c9660fd-81e1-11de-bbc8-4fb62548ece1" name="Number of plants" title="Number of plants" showLabelCoordinates="true" labelDecimalPlaces="2" showControlBar="false" useDefaultToolBar="false" displayButtons="7,">
+                          <source>
+                            <OTDataBarGraphable name="Number of organisms" connectPoints="true" drawMarks="false" lineWidth="10.0" color="192" yColumn="1" xColumn="0" showAllChannels="true" showControlButtons="true" showToolButtons="true" visible="true">
+                              <dataProducer>
+                                <OTBiologicaModelDataProducer>
+                                  <modelHolder>
+                                    <object refid="13d3fb4f-123a-425f-9d60-d84e145c0678!/env-holder" />
+                                  </modelHolder>
+                                  <categories>
+                                    <string>Plants</string>
+                                  </categories>
+                                </OTBiologicaModelDataProducer>
+                              </dataProducer>
+                              <dataStore>
+                                <OTDataStore sampleKeepLimit="10" dt="1.0" numberChannels="11">
+                                  <channelDescriptions>
+                                    <OTDataChannelDescription name="dt" precision="2" numericData="true" />
+                                    <OTDataChannelDescription name="#0" numericData="true" />
+                                    <OTDataChannelDescription name="#1" numericData="true" />
+                                    <OTDataChannelDescription name="#2" numericData="true" />
+                                    <OTDataChannelDescription name="#3" numericData="true" />
+                                    <OTDataChannelDescription name="#4" numericData="true" />
+                                    <OTDataChannelDescription name="#5" numericData="true" />
+                                    <OTDataChannelDescription name="#6" numericData="true" />
+                                    <OTDataChannelDescription name="#7" numericData="true" />
+                                    <OTDataChannelDescription name="#8" numericData="true" />
+                                    <OTDataChannelDescription name="#9" numericData="true" />
+                                    <OTDataChannelDescription name="#10" numericData="true" />
+                                  </channelDescriptions>
+                                </OTDataStore>
+                              </dataStore>
+                            </OTDataBarGraphable>
+                          </source>
+                          <xDataAxis>
+                            <OTDataAxis max="12.0" min="0.0" label="Leaf Type" units="" labelFormat="Engineering">
+                              <customGridLabels />
+                            </OTDataAxis>
+                          </xDataAxis>
+                          <yDataAxis>
+                            <OTDataAxis max="50.0" min="-0.0" label="Plants" units="" labelFormat="Engineering">
+                              <customGridLabels />
+                            </OTDataAxis>
+                          </yDataAxis>
+                        </OTDataCollector>
                       </documentRefs>
                     </OTCompoundDoc>
                     <OTCompoundDoc id="68e84608-4f89-11de-aa53-2bc376578157" name="%68e84608-4f89-11de-aa53-2bc376578157" showEditBar="true">
@@ -799,10 +823,11 @@
                     </OTCompoundDoc>
                   </cards>
                   <currentCard>
-                    <object refid="${page-1}" />
+                    <object refid="d76f21f7-4f86-11de-aa53-2bc376578157" />
                   </currentCard>
                   <viewedCards>
                     <object refid="${page-1}" />
+                    <object refid="d76f21f7-4f86-11de-aa53-2bc376578157" />
                   </viewedCards>
                 </OTCardContainer>
               </content>
@@ -877,4 +902,3 @@
     </OTSystem>
   </objects>
 </otrunk>
-
