@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<otrunk id="13d3fb4f-123a-425f-9d60-d84e145c0678">
+  <imports>
+    <import class="org.concord.otrunk.OTIncludeRootObject" />
+    <import class="org.concord.otrunk.OTInclude" />
+    <import class="org.concord.otrunk.OTSystem" />
+    <import class="org.concord.otrunk.biologica.OTOrganismPlacement" />
+    <import class="org.concord.otrunk.biologica.OTEnvironment" />
+    <import class="org.concord.otrunk.biologica.OTOrganism" />
+    <import class="org.concord.otrunk.biologica.OTWorld" />
+    <import class="org.concord.otrunk.biologica.agent.OTAgentSpecies" />
+    <import class="org.concord.otrunk.biologica.agent.OTAgentTrait" />
+    <import class="org.concord.otrunk.biologica.agent.OTAgentPropertyImageMap" />
+    <import class="org.concord.otrunk.biologica.environment.OTAddAgentButton" />
+    <import class="org.concord.otrunk.biologica.environment.OTEnvironmentHolder" />
+    <import class="org.concord.otrunk.biologica.rules.OTRule" />
+    <import class="org.concord.otrunk.biologica.rules.OTRuleCondition" />
+    <import class="org.concord.otrunk.biologica.rules.OTRuleConsequence" />
+    <import class="org.concord.otrunk.ui.OTCurriculumUnit" />
+    <import class="org.concord.otrunk.ui.OTPlacement" />
+    <import class="org.concord.otrunk.ui.snapshot.OTSnapshot" />
+    <import class="org.concord.otrunk.ui.snapshot.OTSnapshotButton" />
+    <import class="org.concord.otrunk.ui.snapshot.OTSnapshotAlbum" />
+    <import class="org.concord.otrunk.ui.snapshot.OTSnapshotChooser" />
+    <import class="org.concord.otrunk.view.OTViewEntry" />
+    <import class="org.concord.otrunk.view.OTViewBundle" />
+    <import class="org.concord.otrunk.view.OTViewMode" />
+    <import class="org.concord.otrunk.view.document.OTCompoundDoc" />
+    <import class="org.concord.otrunk.script.ui.OTScriptObject" />
+    <import class="org.concord.otrunk.script.js.OTJavascript" />
+    <import class="org.concord.otrunk.script.OTScriptEngineBundle" />
+    <import class="org.concord.otrunk.script.OTScriptEngineEntry" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariable" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariableComponent" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariableRealObject" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariableView" />
+    <import class="org.concord.otrunk.script.ui.OTScriptButton" />
+    <import class="org.concord.framework.otrunk.view.OTFrame" />
+  </imports>
+  <objects>
+    <OTSystem>
+      <bundles>
+        <object refid="8d880970-c22a-11dc-95ff-0800200c9a66" />
+        <OTScriptEngineBundle>
+          <engines>
+            <OTScriptEngineEntry objectClass="org.concord.otrunk.script.js.OTJavascript" engineClass="org.concord.otrunk.script.js.OTJavascriptEngine" />
+          </engines>
+        </OTScriptEngineBundle>
+      </bundles>
+      <includes>
+        <OTInclude href="../global-imports/er-view-bundle.otml" />
+        <OTInclude href="species/annual-varied-plants.otml" />
+      </includes>
+      <root>
+        <OTEnvironmentHolder local_id="env-holder" width="590" height="460" toolbar="run,cursor,reset">
+          <environment>
+            <OTEnvironment local_id="environment" environmentWidth="10" environmentHeight="10" showRunButton="false" winterLength="15" summerLength="50" orgSizeMultiplier="1.5" backgroundImageSrc="jres:/org/concord/er/resources/images/envs/sun10levels.png">
+              <world>
+                <OTWorld local_id="peasimple_world" speciesPath="org/concord/biologica/worlds/peasimple.xml" />
+              </world>
+              <barriers>
+                <OTPlacement x="0" y="0" width="10" height="150" />
+              </barriers>
+              <rules>
+                <OTRule description="Health depends on leaves and sunlight">
+                  <conditions>
+                    <OTRuleCondition always="true" />
+                  </conditions>
+                  <consequences>
+                    <OTRuleConsequence property="Health" ruleScript="var diff = Math.abs(leaves - (sunlight*10)); return 1.0 - ((diff*9) / 100)">
+                      <propertyVariables>
+                        <string>leaves</string>
+                        <string>sunlight</string>
+                      </propertyVariables>
+                    </OTRuleConsequence>
+                  </consequences>
+                </OTRule>
+              </rules>
+            </OTEnvironment>
+          </environment>
+          <buttons>
+            <OTScriptButton local_id="survey-button" text="Survey">
+              <script>
+                <OTJavascript>
+                  <script>importPackage(Packages.java.lang);
+		     				importPackage(Packages.java.awt);
+		     				importPackage(Packages.org.concord.biologica.environment);
+		     				importClass(Packages.javax.swing.JOptionPane);
+		     				
+		     				function clicked()
+		      				{
+		      					var agents = environment.getAllAgents();
+		      					var thin = 0
+		      					var medium = 0
+		      					var bushy = 0
+		      					for (var i=0; i &lt; agents.size(); i++){
+		      					    var agent = agents.get(i)
+		      						var leaves = agent.getPropertyValueAsInteger("leaves")
+		      						if (leaves &lt; 4)
+		      						     bushy++
+		      						else if (leaves &lt; 7)
+		      						     medium++
+		      						else
+		      						     thin++
+		      					}
+		      					var messageString = "There are:\n  "+bushy+" Plant As,\n  "+medium+" Plant Bs, and\n  "+thin+" Plant Cs.";
+		      					
+								JOptionPane.showMessageDialog(null, messageString);
+		      				}</script>
+                </OTJavascript>
+              </script>
+              <scriptVariables>
+                <OTScriptVariableRealObject name="environment">
+                  <reference>
+                    <object refid="${environment}" />
+                  </reference>
+                </OTScriptVariableRealObject>
+              </scriptVariables>
+            </OTScriptButton>
+          </buttons>
+          <scripts>
+            <OTScriptObject local_id="setup-script" name="Setup world">
+              <script>
+                <OTJavascript src="scripts/gradated-sunlight/setup.js">
+                  <script>importPackage(Packages.java.lang);
+					importPackage(Packages.java.awt);
+					importPackage(Packages.org.concord.biologica.environment);
+					importClass(Packages.javax.swing.JOptionPane);
+					  			
+					function init() {
+						env.removeAllAgents()
+						env.setStepCount(0)
+						envHolder.pauseAction()
+						var world = env.getWorld();
+						env.setColumns(10);
+						env.setRows(10);
+						env.setWrapNorthSouth(false);
+						env.setWrapEastWest(false);
+						for (var i = 0; i &lt; 10; i++) {
+					        for (var j = 0; j &lt; 10; j++) {
+					        	var envUnit = new EnvironmentUnit(env, null, i, j)
+					        	env.setEnvironmentUnit(envUnit, i, j)
+					        	envUnit.setProperty("sunlight", new Float((j+1)/10))
+					        	var color = new Color(0.3, 0.2, 0.1)
+					        	var terrain = new Terrain(world, "terrain", color)
+					        	envUnit.setTerrain(terrain)
+				            }
+				        }
+					env.addStepListener(stepListener)
+					return true;
+					}
+				var winterCounter = 0;
+				var waitingFor = "winter";
+				var stepHandler = {
+					environmentStepped: function(){
+						var firstSquare = env.getEnvironmentUnit(0, 0);
+						var currentSeason = firstSquare.getProperty("Season");
+						if (waitingFor == currentSeason) {
+							if (waitingFor == "winter"){
+								winterCounter ++; 								
+								waitingFor = "spring";
+								envHolder.snowCover(1.0);	
+							return;					
+							}
+							if (waitingFor == "spring"){
+								waitingFor = "winter";
+								envHolder.snowCover(0.0);
+							}
+						} 
+						return;
+					}		
+				}
+				
+				var stepListener = new EnvironmentStepListener(stepHandler)	
+				
+				function save() {
+					return true;
+				}</script>
+                  <scripts>
+                    <OTJavascript src="scripts/common/message.js" />
+                  </scripts>
+                </OTJavascript>
+              </script>
+              <variables>
+                <OTScriptVariableRealObject name="env">
+                  <reference>
+                    <object refid="${environment}" />
+                  </reference>
+                </OTScriptVariableRealObject>
+                <OTScriptVariableRealObject name="envHolder">
+                  <reference>
+                    <object refid="${env-holder}" />
+                  </reference>
+                </OTScriptVariableRealObject>
+              </variables>
+              <scriptState />
+            </OTScriptObject>
+            <OTScriptObject local_id="setup-species-script" name="Setup species">
+              <script>
+                <OTJavascript>
+                  <script>function init()
+	      				{
+	      					species.setMutationChance(0.3)
+	      				}</script>
+                </OTJavascript>
+              </script>
+              <variables>
+                <OTScriptVariableRealObject name="species">
+                  <reference>
+                    <object refid="f5732706-c9c2-4e29-8c99-4c668dda89b0" />
+                  </reference>
+                </OTScriptVariableRealObject>
+              </variables>
+              <scriptState />
+            </OTScriptObject>
+          </scripts>
+          <traitsToShow>
+            <string>leaves</string>
+            <string>roots</string>
+          </traitsToShow>
+          <addAgentsButtons>
+            <OTAddAgentButton text="Add Plant A">
+              <species>
+                <object refid="f5732706-c9c2-4e29-8c99-4c668dda89b0" />
+              </species>
+              <agentTraits>
+                <OTAgentTrait property="roots">
+                  <defaultValues>
+                    <float>5.0</float>
+                  </defaultValues>
+                </OTAgentTrait>
+                <OTAgentTrait property="leaves">
+                  <defaultValues>
+                    <float>5.0</float>
+                  </defaultValues>
+                </OTAgentTrait>
+              </agentTraits>
+            </OTAddAgentButton>
+          </addAgentsButtons>
+        </OTEnvironmentHolder>
+      </root>
+    </OTSystem>
+  </objects>
+</otrunk>
+
