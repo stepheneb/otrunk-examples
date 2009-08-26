@@ -1,0 +1,889 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<otrunk id="2767fe20-6c7d-11dc-8314-0800200c9a66">
+  <imports>
+    <import class="org.concord.data.state.OTDataStore" />
+    <import class="org.concord.data.state.OTDataChannelDescription" />
+    <import class="org.concord.data.state.OTDataField" />
+    <import class="org.concord.data.state.OTDataTable" />
+    <import class="org.concord.datagraph.state.OTDataGraph" />
+    <import class="org.concord.datagraph.state.OTDataAxis" />
+    <import class="org.concord.datagraph.state.OTDataGraphable" />
+    <import class="org.concord.datagraph.state.OTDataCollector" />
+    <import class="org.concord.datagraph.state.OTMultiDataGraph" />
+    <import class="org.concord.datagraph.state.OTPluginView" />
+    <import class="org.concord.datagraph.state.OTDataBarGraphable" />
+    <import class="org.concord.framework.otrunk.view.OTFrame" />
+    <import class="org.concord.framework.otrunk.wrapper.OTBlob" />
+    <import class="org.concord.graph.util.state.OTDrawingTool" />
+    <import class="org.concord.graph.util.state.OTDrawingStamp" />
+    <import class="org.concord.graph.util.state.OTDrawingImageIcon" />
+    <import class="org.concord.graph.util.state.OTDrawingShape" />
+    <import class="org.concord.graph.util.state.OTDrawingTool2" />
+    <import class="org.concord.graph.util.state.OTPointTextLabel" />
+    <import class="org.concord.otrunk.OTInclude" />
+    <import class="org.concord.otrunk.OTSystem" />
+    <import class="org.concord.otrunk.browser.mozswing.OTMozSwing" />
+    <import class="org.concord.otrunk.overlay.OTOverlay" />
+    <import class="org.concord.otrunk.script.ui.OTScriptObject" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariable" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariableComponent" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariableView" />
+    <import class="org.concord.otrunk.script.js.OTJavascript" />
+    <import class="org.concord.otrunk.script.OTScriptEngineBundle" />
+    <import class="org.concord.otrunk.script.OTScriptEngineEntry" />
+    <import class="org.concord.otrunk.udl.OTAuthorNote" />
+    <import class="org.concord.otrunk.udl.OTUDLLabPage" />
+    <import class="org.concord.otrunk.udl.coach.OTUDLCoach" />
+    <import class="org.concord.otrunk.udl.coach.OTUDLCoachGroup" />
+    <import class="org.concord.otrunk.udl.coach.OTUDLCoachStatement" />
+    <import class="org.concord.otrunk.udl.OTUDLMenuRule" />
+    <import class="org.concord.otrunk.udl.document.OTDefinition" />
+    <import class="org.concord.otrunk.udl.document.OTDefinitionList" />
+    <import class="org.concord.otrunk.udl.document.OTDefinitionManager" />
+    <import class="org.concord.otrunk.udl.document.OTGlossary" />
+    <import class="org.concord.otrunk.udl.document.OTUDLCompoundDoc" />
+    <import class="org.concord.otrunk.udl.document.OTUDLDocumentViewConfig" />
+    <import class="org.concord.otrunk.graph.OTDataCollectorViewConfig" />
+    <import class="org.concord.otrunk.udl.question.OTUDLQuestion" />
+    <import class="org.concord.otrunk.udl.question.OTUDLLeveledQuestions" />
+    <import class="org.concord.otrunk.udl.question.OTUDLQuestionViewConfig" />
+    <import class="org.concord.otrunk.udl3.OTUDLMenu" />
+    <import class="org.concord.otrunk.udl3.OTUDLContainer" />
+    <import class="org.concord.otrunk.udl3.OTUDLSection" />
+    <import class="org.concord.otrunk.ui.OTButton" />
+    <import class="org.concord.otrunk.ui.OTCardContainer" />
+    <import class="org.concord.otrunk.ui.OTChoice" />
+    <import class="org.concord.otrunk.ui.OTChoiceMultiple" />
+    <import class="org.concord.otrunk.ui.OTCurriculumUnit" />
+    <import class="org.concord.otrunk.ui.OTImage" />
+    <import class="org.concord.otrunk.ui.OTImageMap" />
+    <import class="org.concord.otrunk.ui.OTLayerContainer" />
+    <import class="org.concord.otrunk.ui.OTModeSwitcher" />
+    <import class="org.concord.otrunk.ui.OTText" />
+    <import class="org.concord.otrunk.ui.OTPlacement" />
+    <import class="org.concord.otrunk.ui.OTPlacementContainer" />
+    <import class="org.concord.otrunk.ui.snapshot.OTSnapshot" />
+    <import class="org.concord.otrunk.ui.snapshot.OTSnapshotButton" />
+    <import class="org.concord.otrunk.ui.snapshot.OTSnapshotAlbum" />
+    <import class="org.concord.otrunk.ui.snapshot.OTSnapshotChooser" />
+    <import class="org.concord.otrunk.ui.swing.OTChoiceViewConfig" />
+    <import class="org.concord.otrunk.util.OTSharingBundle" />
+    <import class="org.concord.otrunk.util.OTLabbookBundle" />
+    <import class="org.concord.otrunk.util.OTLabbookEntry" />
+    <import class="org.concord.otrunk.labbook.OTLabbookButton" />
+    <import class="org.concord.otrunk.labbook.OTLabbook" />
+    <import class="org.concord.otrunk.labbook.OTLabbookEntryChooser" />
+    <import class="org.concord.otrunk.view.OTObjectEditViewConfig" />
+    <import class="org.concord.otrunk.view.OTViewChild" />
+    <import class="org.concord.otrunk.view.OTViewEntry" />
+    <import class="org.concord.otrunk.view.OTViewBundle" />
+    <import class="org.concord.otrunk.view.OTViewMode" />
+    <import class="org.concord.otrunk.view.document.OTCompoundDoc" />
+    <import class="org.concord.otrunk.view.document.OTCssText" />
+    <import class="org.concord.otrunk.view.prototype.OTPrototypeViewEntry" />
+    <import class="org.concord.otrunk.view.prototype.OTPrototypeEventController" />
+    <import class="org.concord.otrunk.view.prototype.OTPrototypeMapEntry" />
+    <import class="org.concord.otrunknl4.OTNLogoModel" />
+    <import class="org.concord.sensor.state.OTDeviceConfig" />
+    <import class="org.concord.sensor.state.OTExperimentRequest" />
+    <import class="org.concord.sensor.state.OTInterfaceManager" />
+    <import class="org.concord.sensor.state.OTSensorDataProxy" />
+    <import class="org.concord.sensor.state.OTSensorRequest" />
+    <import class="org.concord.sensor.state.OTZeroSensor" />
+    <import class="org.concord.otrunk.ui.menu.OTNavBar" />
+    <import class="org.concord.datagraph.state.OTDataPointLabel" />
+    <import class="org.concord.otrunk.udl.OTZoom" />
+    <import class="org.concord.otrunk.udl.OTZoomTransform" />
+    <import class="org.concord.otrunkmw.OTModelerPage" />
+    <import class="org.concord.otrunkmw.OTMwDataProducer" />
+    <import class="org.concord.otrunkmw.OTMwChannelData" />
+    <import class="org.concord.otrunk.ui.OTSoundPlayer" />
+    <import class="org.concord.otrunk.util.OTReference" />
+    <import class="org.concord.smartgraph.OTSmartGraphTool" />
+    <import class="org.concord.otrunk.script.ui.OTScriptButton" />
+    <import class="org.concord.otrunk.script.jruby.OTJRuby" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariableRealObject" />
+    <import class="org.concord.framework.otrunk.wrapper.OTInt" />
+    <import class="org.concord.framework.otrunk.wrapper.OTBoolean" />
+    <import class="org.concord.otrunk.ui.question.OTQuestion" />
+    <import class="org.concord.otrunk.ui.OTObjectSet" />
+  </imports>
+  <objects>
+    <OTSystem local_id="system">
+      <includes>
+        <OTInclude href="http://otrunk.concord.org/examples/EvolutionReadiness/global-imports/er-view-bundle.otml" />
+        <OTInclude href="http://otrunk.concord.org/examples/EvolutionReadiness/models/five-sunlight-clickable-breed-true.otml" />
+        <OTInclude href="http://otrunk.concord.org/examples/EvolutionReadiness/models/five-sunlight-clickable-breed-true-limited-seeds.otml" />
+      </includes>
+      <bundles>
+        <object refid="8d880970-c22a-11dc-95ff-0800200c9a66" />
+        <OTScriptEngineBundle>
+          <engines>
+            <OTScriptEngineEntry objectClass="org.concord.otrunk.script.jruby.OTJRuby" engineClass="org.concord.otrunk.script.jruby.OTJRubyEngine" />
+            <OTScriptEngineEntry objectClass="org.concord.otrunk.script.js.OTJavascript" engineClass="org.concord.otrunk.script.js.OTJavascriptEngine" />
+          </engines>
+        </OTScriptEngineBundle>
+        <OTSharingBundle />
+        <OTInterfaceManager>
+          <deviceConfigs>
+            <OTDeviceConfig configString="none" deviceId="10" />
+          </deviceConfigs>
+        </OTInterfaceManager>
+        <OTLabbookBundle />
+      </bundles>
+      <overlays>
+        <object refid="6cc8e2b0-c44e-11dc-95ff-0800200c9a66" />
+        <object refid="b5d8b4a0-db35-11dc-95ff-0800200c9a66" />
+      </overlays>
+      <root>
+        <OTCurriculumUnit version="2" name="ER Activity">
+          <activity>
+            <OTUDLSection local_id="section_1">
+              <header>
+                <OTCompoundDoc id="2767fe20-6c7d-11dc-8314-0800200c9a66!/section_1/header" showEditBar="false">
+                  <bodyText>
+                    <div class="title">Activity 1: The Virtual Greenhouse</div>
+                  </bodyText>
+                </OTCompoundDoc>
+              </header>
+              <content>
+                <OTCardContainer local_id="activity-card-container" contentsMayScroll="true" loadViewOnlyOnDemand="true">
+                  <cards>
+                    <OTCompoundDoc local_id="page-1" name="1">
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <div class="subtitle">Introduction: Studying the natural world</div>
+                              Scientists make discoveries about the wide variety of living things 
+          on the earth every day. The job of these scientists is to explain 
+          things about the living world as well as they can.
+                              <br />
+                              <br />
+                              <center>
+                                <img src="http://er.concord.org/artwork/plants/pl_34_intro.png" border="0" />
+                              </center>
+                              <br />
+                              <br />
+                              In this activity, you will investigate Mystery Plants in the Virtual 
+          Greenhouse. You will learn how some plants are adapted to live in 
+          different environments. First, you need to know a little bit about 
+          how scientists organize plants and animals into groups called
+                              <b>species</b>
+                              . 
+          Click the blue arrow below to get started!
+                              <br />
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                    </OTCompoundDoc>
+                    <OTCompoundDoc id="8d39d57e-7e04-11de-9e5e-83ba3ad02e14" name="%8d39d57e-7e04-11de-9e5e-83ba3ad02e14" showEditBar="true">
+                      <documentRefs>
+                        <OTQuestion id="6c3ffdcf-7e06-11de-9e5e-83ba3ad02e14" name="Question" showImmediateFeedback="true" showCheckAnswersButton="false" correctAnswerFeedback="You are right!  Dogs and cats are different species.  They cannot have babies together." incorrectAnswerFeedback="No way!  Have you ever seen a cat-dog?  Dogs and cats cannot have babies together.">
+                          <prompt>
+                            <OTCompoundDoc>
+                              <bodyText>Do you think cats and dogs are the same species?</bodyText>
+                            </OTCompoundDoc>
+                          </prompt>
+                          <input>
+                            <OTChoice name="Multiple choice" horizontal="false" alignContent="0">
+                              <choices>
+                                <OTCompoundDoc name="Yes">
+                                  <bodyText>Yes</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc id="b12911fd-8c04-11de-9520-afea715a3888" name="No">
+                                  <bodyText>No</bodyText>
+                                </OTCompoundDoc>
+                              </choices>
+                            </OTChoice>
+                          </input>
+                          <correctAnswer>
+                            <OTObjectSet>
+                              <objects>
+                                <object refid="b12911fd-8c04-11de-9520-afea715a3888" />
+                              </objects>
+                            </OTObjectSet>
+                          </correctAnswer>
+                        </OTQuestion>
+                      </documentRefs>
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <div class="subtitle">Introduction: What is a species?</div>
+                              Isn't it amazing how many different kinds of plants and animals live 
+          on the earth? Scientists organize these plants and animals into 
+          different groups. A group of plants or animals that can have babies 
+          together, share similar features, and live in the same environment 
+          is called a
+                              <b>species</b>
+                              .
+                              <br />
+                              <br />
+                              <br />
+                              <center>
+                                <img src="http://er.concord.org/artwork/plants/bulldog.jpg" border="0" />
+                                <img src="http://er.concord.org/artwork/plants/cat.jpg" border="0" />
+                              </center>
+                              <br />
+                              <br />
+                              <br />
+                              <object refid="6c3ffdcf-7e06-11de-9e5e-83ba3ad02e14" />
+                              <br />
+                              <br />
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                    </OTCompoundDoc>
+                    <OTCompoundDoc id="18614e94-8051-11de-88c1-51478b11f317" name="%18614e94-8051-11de-88c1-51478b11f317" showEditBar="true">
+                      <documentRefs>
+                        <OTQuestion id="6eeee661-8051-11de-88c1-51478b11f317" name="Question" showImmediateFeedback="true" showCheckAnswersButton="false" correctAnswerFeedback="That's right. Even though they look different, dogs ARE all the same species and can have puppies together." incorrectAnswerFeedback="Surprise!  Even though they look different, dogs ARE all the same species and can have puppies together.">
+                          <prompt>
+                            <OTCompoundDoc>
+                              <bodyText>Are all these dogs the same species?</bodyText>
+                            </OTCompoundDoc>
+                          </prompt>
+                          <input>
+                            <OTChoice name="Multiple choice" horizontal="false" alignContent="0">
+                              <choices>
+                                <OTCompoundDoc id="f177c741-8c04-11de-9520-afea715a3888" name="Yes">
+                                  <bodyText>Yes</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="No">
+                                  <bodyText>No</bodyText>
+                                </OTCompoundDoc>
+                              </choices>
+                            </OTChoice>
+                          </input>
+                          <correctAnswer>
+                            <OTObjectSet>
+                              <objects>
+                                <object refid="f177c741-8c04-11de-9520-afea715a3888" />
+                              </objects>
+                            </OTObjectSet>
+                          </correctAnswer>
+                        </OTQuestion>
+                      </documentRefs>
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <div class="subtitle">Animals: Different breeds of dogs</div>
+                              Many people have pets.  Maybe you have a dog. Have you ever noticed 
+          how many kinds of dogs there are? Look at the dogs below. Think 
+          about how they are different and how they are the same. Scientists 
+          call these differences breeds.
+                              <br />
+                              <br />
+                              <center>
+                                <img src="http://er.concord.org/artwork/plants/stbernard.jpg" border="0" />
+                                <img src="http://er.concord.org/artwork/plants/corgi.jpg" border="0" />
+                                <img src="http://er.concord.org/artwork/plants/dalmation.jpg" border="0" />
+                                <img src="http://er.concord.org/artwork/plants/welsh.jpg" border="0" />
+                                <img src="http://er.concord.org/artwork/plants/weenie.jpg" border="0" />
+                                <br />
+                                <br />
+                                <br />
+                                <object refid="6eeee661-8051-11de-88c1-51478b11f317" />
+                                <br />
+                                <br />
+                              </center>
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                    </OTCompoundDoc>
+                    <OTCompoundDoc id="96b261d5-81da-11de-9eff-1164da91701a" name="%96b261d5-81da-11de-9eff-1164da91701a" showEditBar="true">
+                      <documentRefs>
+                        <OTQuestion id="33adfeda-8055-11de-88c1-51478b11f317" name="Question">
+                          <prompt>
+                            <OTCompoundDoc>
+                              <bodyText>Why do you think people choose Labradoodles as pets?</bodyText>
+                            </OTCompoundDoc>
+                          </prompt>
+                          <input>
+                            <OTText />
+                          </input>
+                          <correctAnswer>
+                            <OTCompoundDoc>
+                              <bodyText>People choose Labradoodles as pets because they want a friendly dog that doesn't make people sneeze.</bodyText>
+                            </OTCompoundDoc>
+                          </correctAnswer>
+                        </OTQuestion>
+                        <OTQuestion id="9b9ded22-81dc-11de-9eff-1164da91701a" name="Question">
+                          <prompt>
+                            <OTCompoundDoc>
+                              <bodyText>How does the Labradoodle help explain that dogs are one species?</bodyText>
+                            </OTCompoundDoc>
+                          </prompt>
+                          <input>
+                            <OTText />
+                          </input>
+                          <correctAnswer>
+                            <OTCompoundDoc>
+                              <bodyText>Labradoodles are a mix (hybrid) of two varieties of the same species.  Labradoodles are bred for their desirable traits.</bodyText>
+                            </OTCompoundDoc>
+                          </correctAnswer>
+                        </OTQuestion>
+                      </documentRefs>
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <div class="subtitle">Animals: Dogs are a species</div>
+                              Even though there are many breeds of dogs, they are all the same 
+          species and share many of the same traits. People choose dogs as 
+          pets for different reasons. Poodles are smart dogs with curly hair 
+          that doesn't make people with allergies sneeze. Labradors are 
+          friendly dogs, but their fur can make some people sneeze. People 
+          breed Poodles and Labradors to get Labradoodle puppies.
+                              <br />
+                              <br />
+                              <table width="100%">
+                                <tr>
+                                  <td>
+                                    <center />
+                                  </td>
+                                  <td>
+                                    <b>Mother: Poodle</b>
+                                  </td>
+                                  <td>
+                                    <b>Father: Labrador</b>
+                                  </td>
+                                  <td>
+                                    <b>Child: Labradoodle</b>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <center />
+                                  </td>
+                                  <td>
+                                    <img src="http://er.concord.org/artwork/plants/poodle.jpg" border="0" />
+                                  </td>
+                                  <td>
+                                    <img src="http://er.concord.org/artwork/plants/blacklab.jpg" border="0" />
+                                  </td>
+                                  <td>
+                                    <img src="http://er.concord.org/artwork/plants/labradoodle-puppy.jpg" border="0" />
+                                  </td>
+                                </tr>
+                              </table>
+                              <br />
+                              <br />
+                              <object refid="33adfeda-8055-11de-88c1-51478b11f317" />
+                              <br />
+                              <br />
+                              <object refid="9b9ded22-81dc-11de-9eff-1164da91701a" />
+                              <br />
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                    </OTCompoundDoc>
+                    <OTCompoundDoc name="%97d8732a-85d0-11de-a9df-1f6df443b572" showEditBar="true">
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <div class="subtitle">
+                                Animals: Living in the wild
+                                <br />
+                              </div>
+                              In nature, animals are not bred to have special features. The 
+          environment plays the most important role in where animals live and 
+          what they look like.
+                              <br />
+                              <br />
+                              Did you know that there are different 
+          kinds of elephants? Asian and African elephants share many 
+          similarities, but they do not have babies together in the wild 
+          because they live on different continents. African elephants are 
+          taller than Asian elephants and have much bigger ears than Asian 
+          elephants. African and Asian elephants are two different species.
+                              <br />
+                              <br />
+                              <table width="100%">
+                                <tr>
+                                  <td>
+                                    <center />
+                                  </td>
+                                  <td>
+                                    <b>African Elephant</b>
+                                  </td>
+                                  <td>
+                                    <b>Asian Elephant</b>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <center />
+                                  </td>
+                                  <td>
+                                    <img src="http://er.concord.org/artwork/plants/ele_african.jpg" border="0" />
+                                  </td>
+                                  <td>
+                                    <img src="http://er.concord.org/artwork/plants/ele_asian.jpg" border="0" />
+                                  </td>
+                                </tr>
+                              </table>
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                    </OTCompoundDoc>
+                    <OTCompoundDoc name="%3a421bfe-85d6-11de-99f8-87e0c5ee661f" showEditBar="true">
+                      <documentRefs>
+                        <OTQuestion id="35225983-85d7-11de-99f8-87e0c5ee661f" name="Question" showImmediateFeedback="true" showCheckAnswersButton="false" correctAnswerFeedback="That's right!  They are all the same species, but have been bred to bring out certain features." incorrectAnswerFeedback="They look very different, but they are all the same species. They have been bred to bring out certain features.">
+                          <prompt>
+                            <OTCompoundDoc>
+                              <bodyText>Do you think these vegetables are all the same species?</bodyText>
+                            </OTCompoundDoc>
+                          </prompt>
+                          <input>
+                            <OTChoice name="Multiple choice" horizontal="false" alignContent="0">
+                              <choices>
+                                <OTCompoundDoc id="35225983-85d7-11de-99f8-87e0c5ee661f/input/choices[0]" name="Yes">
+                                  <bodyText>Yes</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc id="ad50c3be-8c05-11de-9520-afea715a3888" name="No">
+                                  <bodyText>No</bodyText>
+                                </OTCompoundDoc>
+                              </choices>
+                            </OTChoice>
+                          </input>
+                          <correctAnswer>
+                            <OTObjectSet>
+                              <objects>
+                                <object refid="35225983-85d7-11de-99f8-87e0c5ee661f/input/choices[0]" />
+                              </objects>
+                            </OTObjectSet>
+                          </correctAnswer>
+                        </OTQuestion>
+                      </documentRefs>
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <div class="subtitle">Plants: Different types of vegetables</div>
+                              Some plants have also been bred by farmers over a long time to bring 
+          out certain variations. Have you eaten any of these vegetables?
+                              <br />
+                              <br />
+                              <table align="center" width="100%">
+                                <tr>
+                                  <td>
+                                    <img src="http://er.concord.org/artwork/plants/brussels-sprouts.jpg" border="0" />
+                                  </td>
+                                  <td>
+                                    <img src="http://er.concord.org/artwork/plants/broccoli.jpg" border="0" />
+                                  </td>
+                                  <td>
+                                    <img src="http://er.concord.org/artwork/plants/kale.jpg" border="0" />
+                                  </td>
+                                  <td>
+                                    <img src="http://er.concord.org/artwork/plants/cauliflower.jpg" border="0" />
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <b>Brussels sprouts</b>
+                                  </td>
+                                  <td>
+                                    <b>Broccoli</b>
+                                  </td>
+                                  <td>
+                                    <b>Kale</b>
+                                  </td>
+                                  <td>
+                                    <b>Cauliflower</b>
+                                  </td>
+                                </tr>
+                              </table>
+                              <br />
+                              <br />
+                              <object refid="35225983-85d7-11de-99f8-87e0c5ee661f" />
+                              <br />
+                              <br />
+                              <br />
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                    </OTCompoundDoc>
+                    <OTCompoundDoc id="b6f573dd-8058-11de-88c1-51478b11f317" name="%b6f573dd-8058-11de-88c1-51478b11f317" showEditBar="true">
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <div class="subtitle">Plants: Growing in the wild</div>
+                              Just like animals, plants are not bred in nature to have special 
+          features. The environment plays the most important role in where 
+          plants can live and what they look like.
+                              <br />
+                              <br />
+                              Hosta plants have 
+          large leaves that help them get the most amount of sun. They grow 
+          best in shaded areas. If they get too much sun, their leaves turn 
+          brown and eventually die. A silvery plant called Artemisia has very 
+          thin leaves and grows best in sunnier places. Artemisia plants do 
+          not survive in the shade. Hosta and Artemisia plants are two 
+          different species.
+                              <br />
+                              <center>
+                                <table width="100%">
+                                  <tr />
+                                  <tr>
+                                    <td>
+                                      <center />
+                                    </td>
+                                    <td>
+                                      <b>Hosta</b>
+                                    </td>
+                                    <td>
+                                      <b>Artemisia</b>
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td>
+                                      <center />
+                                    </td>
+                                    <td>
+                                      <img src="http://er.concord.org/artwork/plants/hosta.jpg" border="0" />
+                                    </td>
+                                    <td>
+                                      <img src="http://er.concord.org/artwork/plants/artemisia.jpg" border="0" />
+                                    </td>
+                                  </tr>
+                                </table>
+                              </center>
+                              <br />
+                              <br />
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                    </OTCompoundDoc>
+                    <OTCompoundDoc id="b773b29f-4c79-11de-ae0b-29ea07303359" name="%b773b29f-4c79-11de-ae0b-29ea07303359" showEditBar="true">
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <div class="subtitle">The Virtual Greenhouse: Growing plants</div>
+                              It's time to grow plants in the Virtual Greenhouse. The flower boxes 
+          below all have different amounts of sunlight. The box at the top has 
+          the most light and the box at the bottom has the least light. There 
+          are three different types of plants that you can grow.
+                              <br />
+                              <br />
+                              <b>Your 
+          challenge:</b>
+                              Experiment! Which plants grow best in the different 
+          amounts of light?
+                              <br />
+                              <br />
+                              <b>Instructions:</b>
+                              Plant the seeds by 
+          clicking on the plant buttons and then clicking inside the flower 
+          boxes. Click the Play button
+                              <img height="20" width="20" src="jres:///org/concord/biologica/ui/play.png" />
+                              to start growing the plants. If the plants do not grow, click the 
+          Reset button
+                              <img height="20" width="20" src="jres:///org/concord/biologica/ui/reset.png" />
+                              and try again. Experiment until you have at least three flowering 
+          plants of each variety. A healthy plant grows a flower. Then, take a 
+          picture of your flower boxes using the snapshot button. Run the 
+          model as many times as you like.
+                              <br />
+                              <br />
+                              <b>Lab book:</b>
+                              Scientists 
+          take notes about their experiments. You can take snapshots of your 
+          flower boxes to save in your lab book. You can also write notes in 
+          your lab book.
+                              <br />
+                              <table width="100%">
+                                <tr>
+                                  <td />
+                                </tr>
+                              </table>
+                              <br />
+                              <table>
+                                <tr height="690">
+                                  <td>
+                                    <object refid="27968571-673f-11de-bb79-1f97355fd679" />
+                                    <br />
+                                    <object refid="13d3fb4f-123a-425f-9d60-d84e145c0678!/env-holder" />
+                                    <br />
+                                  </td>
+                                </tr>
+                              </table>
+                              <br />
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                        <OTLabbookButton id="27968571-673f-11de-bb79-1f97355fd679" name="Labbook button">
+                          <target>
+                            <object refid="13d3fb4f-123a-425f-9d60-d84e145c0678!/env-holder" />
+                          </target>
+                        </OTLabbookButton>
+                        <object refid="13d3fb4f-123a-425f-9d60-d84e145c0678!/env-holder" />
+                      </documentRefs>
+                    </OTCompoundDoc>
+                    <OTCompoundDoc id="aa4dfe20-4c7b-11de-ae0b-29ea07303359" name="%aa4dfe20-4c7b-11de-ae0b-29ea07303359" showEditBar="true">
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <div class="subtitle">The Virtual Greenhouse: Flower box challenge</div>
+                              Did you notice that the three types of plants each grow best in 
+          different flower boxes?
+                              <br />
+                              <br />
+                              <b>Your challenge:</b>
+                              Test your 
+          theory of how much light each plant needs to be healthy. Remember 
+          that a healthy plant will flower. (Hint: look at your lab book!)
+                              <br />
+                              <br />
+                              <b>Instructions:</b>
+                              Plant
+                              <b>one</b>
+                              seed of each plant by clicking on the plant button 
+          and then clicking
+                              <b>once</b>
+                              inside the flower box. Click the Play 
+          button
+                              <img height="20" width="20" src="jres:///org/concord/biologica/ui/play.png" />
+                              to start growing the plants. Take a snapshot and write a description 
+          in your lab book of where each seed was planted. If the plants do 
+          not grow, click the Reset button
+                              <img height="20" width="20" src="jres:///org/concord/biologica/ui/reset.png" />
+                              and try again.
+                              <br />
+                              <br />
+                              <b>Keep in mind:</b>
+                              A plant will wither, die, 
+          and disappear if planted in the wrong amount of light.
+                              <br />
+                              <table width="100%">
+                                <tr>
+                                  <td />
+                                </tr>
+                              </table>
+                              <br />
+                              <table>
+                                <tr height="690">
+                                  <td>
+                                    <object refid="${labbook-button}" />
+                                    <br />
+                                    <object refid="22d3fb4f-123a-425f-9d60-d84e145c0678!/env-holder" />
+                                    <br />
+                                  </td>
+                                </tr>
+                              </table>
+                              <br />
+                              <i>
+                                <br />
+                              </i>
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                        <OTLabbookButton local_id="labbook-button" name="Labbook button">
+                          <target>
+                            <object refid="22d3fb4f-123a-425f-9d60-d84e145c0678!/env-holder" />
+                          </target>
+                        </OTLabbookButton>
+                        <object refid="22d3fb4f-123a-425f-9d60-d84e145c0678!/env-holder" />
+                      </documentRefs>
+                    </OTCompoundDoc>
+                    <OTCompoundDoc id="ea71c284-7e0a-11de-9e5e-83ba3ad02e14" name="%ea71c284-7e0a-11de-9e5e-83ba3ad02e14" showEditBar="true">
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <div class="subtitle">
+                                The Virtual Greenhouse: Mystery Plants
+                                <br />
+                              </div>
+                              In the Virtual Greenhouse, you planted three Mystery Plants. These 
+          plants grew under different amounts of light. Can you make any 
+          conclusions yet about whether they are the same or different 
+          species? Respond to the following questions and see if they provide 
+          more clues.
+                              <br />
+                              <br />
+                              Remember that a group of plants or animals that 
+          can have babies together, share similar features, and live in the 
+          same environment is called a
+                              <b>species</b>
+                              .
+                              <br />
+                              <center>
+                                <img src="http://er.concord.org/artwork/plants/leaves1-w150.png" border="0" />
+                                <img src="http://er.concord.org/artwork/plants/leaves5-w150.png" border="0" />
+                                <img src="http://er.concord.org/artwork/plants/leaves10-w150.png" border="0" />
+                              </center>
+                              <object refid="aadbde9f-81ea-11de-80d2-a9202c6441f7" />
+                              <br />
+                              <br />
+                              <br />
+                              <object refid="994452bb-81ec-11de-80d2-a9202c6441f7" />
+                              <br />
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                        <OTQuestion id="aadbde9f-81ea-11de-80d2-a9202c6441f7" name="Question">
+                          <prompt>
+                            <OTCompoundDoc>
+                              <bodyText>What differences did you notice in the three plants?</bodyText>
+                            </OTCompoundDoc>
+                          </prompt>
+                          <input>
+                            <OTText />
+                          </input>
+                          <correctAnswer>
+                            <OTCompoundDoc>
+                              <bodyText>The plants have different sizes and shapes of leaves.</bodyText>
+                            </OTCompoundDoc>
+                          </correctAnswer>
+                        </OTQuestion>
+                        <OTQuestion id="994452bb-81ec-11de-80d2-a9202c6441f7" name="Question" showImmediateFeedback="true" showCheckAnswersButton="false" correctAnswerFeedback="Correct!  The plants cannot live in the same environment." incorrectAnswerFeedback="Nope.  The plants cannot live in the same environment.">
+                          <prompt>
+                            <OTCompoundDoc>
+                              <bodyText>Can the three plants live in the same environment?</bodyText>
+                            </OTCompoundDoc>
+                          </prompt>
+                          <input>
+                            <OTChoice name="Multiple choice" horizontal="false" alignContent="0">
+                              <choices>
+                                <OTCompoundDoc name="Yes">
+                                  <bodyText>Yes</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc id="d4b31bc5-82b6-11de-a6f6-998be6929932" name="No">
+                                  <bodyText>No</bodyText>
+                                </OTCompoundDoc>
+                              </choices>
+                            </OTChoice>
+                          </input>
+                          <correctAnswer>
+                            <OTObjectSet>
+                              <objects>
+                                <object refid="d4b31bc5-82b6-11de-a6f6-998be6929932" />
+                              </objects>
+                            </OTObjectSet>
+                          </correctAnswer>
+                        </OTQuestion>
+                      </documentRefs>
+                    </OTCompoundDoc>
+                    <OTCompoundDoc id="be5da091-4c82-11de-ae0b-29ea07303359" name="%be5da091-4c82-11de-ae0b-29ea07303359" showEditBar="true">
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <div class="subtitle">Conclusion</div>
+                              In the Virtual Greenhouse, you planted seeds and they grew to be 
+          healthy plants with flowers. But they never made new seeds, which 
+          means they did not have babies. In the next activity, we'll explore 
+          what happens when plants have babies. You will experiment more with 
+          Mystery Plants and find out if they are the same or different 
+          species.
+                              <br />
+                              <br />
+                              You have completed Activity 1! Close this window to 
+          save your work.
+                              <br />
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                    </OTCompoundDoc>
+                  </cards>
+                  <currentCard>
+                    <object refid="${page-1}" />
+                  </currentCard>
+                  <viewedCards>
+                    <object refid="${page-1}" />
+                  </viewedCards>
+                </OTCardContainer>
+              </content>
+              <footer>
+                <object refid="${nav-bar}" />
+              </footer>
+              <north>
+                <object refid="2767fe20-6c7d-11dc-8314-0800200c9a66!/section_1/header" />
+              </north>
+              <center>
+                <object refid="${activity-card-container}" />
+              </center>
+              <south>
+                <object refid="${nav-bar}" />
+              </south>
+            </OTUDLSection>
+          </activity>
+          <script>
+            <object refid="${authoring-script}" />
+          </script>
+        </OTCurriculumUnit>
+      </root>
+      <library>
+        <object refid="b6350a20-e3b4-11dc-95ff-0800200c9a66" />
+        <OTUDLMenu local_id="section-1-menu">
+          <cardContainer>
+            <object refid="${activity-card-container}" />
+          </cardContainer>
+          <menuRule>
+            <object refid="${page-rule}" />
+          </menuRule>
+        </OTUDLMenu>
+        <OTUDLMenuRule local_id="page-rule" jumpToViewedCard="true" stepAhead="true" />
+        <OTJavascript local_id="change_page.js" src="http://otrunk.concord.org/examples/EvolutionReadiness/scripts/change_page.js" />
+        <OTJavascript local_id="show_message.js" src="http://otrunk.concord.org/examples/EvolutionReadiness/scripts/show_message.js" />
+        <OTJavascript local_id="authoring_script.js" src="http://otrunk.concord.org/examples/EvolutionReadiness/scripts/authoring_script.js" />
+        <OTScriptObject local_id="authoring-script">
+          <variables>
+            <OTScriptVariable name="cardContainer">
+              <reference>
+                <object refid="${activity-card-container}" />
+              </reference>
+            </OTScriptVariable>
+            <OTScriptVariable name="system">
+              <reference>
+                <object refid="${system}" />
+              </reference>
+            </OTScriptVariable>
+            <OTScriptVariable name="menuPageRule">
+              <reference>
+                <object refid="${page-rule}" />
+              </reference>
+            </OTScriptVariable>
+          </variables>
+          <script>
+            <object refid="${authoring_script.js}" />
+          </script>
+          <scriptState />
+        </OTScriptObject>
+        <OTNavBar local_id="nav-bar">
+          <menuView>
+            <object refid="29dc5ef0-c453-11dc-95ff-0800200c9a66" />
+          </menuView>
+          <cssColor>
+            <object refid="31193bb0-c44f-11dc-95ff-0800200c9a66" />
+          </cssColor>
+          <album>
+            <OTLabbook local_id="album" />
+          </album>
+        </OTNavBar>
+      </library>
+    </OTSystem>
+  </objects>
+</otrunk>
+
