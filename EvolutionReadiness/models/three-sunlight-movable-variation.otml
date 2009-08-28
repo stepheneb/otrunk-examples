@@ -145,7 +145,7 @@
             <string>Health</string>
           </traitsToShow>
           <addAgentsButtons>
-            <OTAddAgentButton text="Add Plant A" limit="-1">
+            <OTAddAgentButton text="Add Plant A" limit="1">
               <species>
                 <object refid="f5732706-c9c2-4e29-8c99-4c668dda89b0" />
               </species>
@@ -172,7 +172,7 @@ importPackage(Packages.java.awt);
 importPackage(Packages.org.concord.biologica.environment);
   			
 function init() {
-                        env.removeAllAgents()
+                       env.removeAllAgents()
                        env.setStepCount(0)
                        envHolder.pauseAction()
 	var world = env.getWorld()
@@ -243,42 +243,63 @@ var rand;
 function init() {
 	env.addChangeListener(changeListener)
 	env.addStepListener(stepListener)
+//	env.addChangeListener(resetListener)
 	
 	rand = new Random()
 	
 	return true;
 }
-
+var yearCount = 0;
 var message1StepCount = 0;
 var message2StepCount = 0;
+var message3StepCount = 0;
 var waitingForMessage1 = false;
 var waitingForMessage2 = false;
+var waitingForMessage3 = false;
+
 
 var changeHandler = {
 	environmentChanged: function(evt){
 		var agents = env.getAllAgents()
-		if (agents.size() == 1){				// generation 1
-			if (evt.getType() == EnvironmentChangeEvent.SEASON_CHANGE){
-				if (evt.getValue() == "spring" || evt.getValue() == "summer" ){
-					setPropertyOnAllAgents("Chance of flowering", 0.0)
-					setPropertyOnAllAgents("Days to seed", -1)
-				}
-				if (evt.getValue() == "fall"){
-					setPropertyOnAllAgents("Chance of flowering", 0.5)
-				}
+		if (agents.size != 0) var firstAgent = agents.get(0)
+		if (evt.getType() == EnvironmentChangeEvent.SEASON_CHANGE){
+			var season = evt.getValue()
+//			System.out.println("In change handler, season = " + season);
+			if (season == "winter"){
+			yearCount ++
+//			System.out.println("Year = " + yearCount + ", season = " + evt.getValue());
 			}
-		} else {								// generation 2
-			if (evt.getType() == EnvironmentChangeEvent.SEASON_CHANGE){
-				if (evt.getValue() == "summer"){
-					waitingForMessage1 = true
+			if (agents.size() == 1){			// generation 1
+				if(firstAgent.getPropertyValueAsFloat("Health") &lt; 1.0){		//seed planted in the wrong place
+				setPropertyOnAllAgents("Chance of flowering", 0.0)
+					if (season == "summer"){
+						showMessage("Oops! You planted your seed in the wrong place. Your plant is going to wither and won't make new seeds.", env)
+					}
+					if (season == "fall"){
+						firstAgent.setProperty("Health",0.0)
+						waitingForMessage3 = true;
+					}
 				}
-				if (evt.getValue() == "fall"){
-					env.setWinterLength(-1)
-					waitingForMessage2 = true;
-				}
+			else if (season == "spring" || evt.getValue() == "summer" ){			//seed planted in the right place		
+				setPropertyOnAllAgents("Chance of flowering", 0.0)
+				setPropertyOnAllAgents("Days to seed", -1)
+			}
+			else if (season == "fall"){
+				setPropertyOnAllAgents("Chance of flowering", 0.2)
 			}
 		}
-	}		
+			else {								// generation &gt; 1
+				waitingForMessage3 = false;
+				if (season == "summer"){
+						waitingForMessage1 = true
+					}
+				if (season == "fall"){
+						env.setWinterLength(-1)
+						waitingForMessage2 = true;
+				}
+			}
+		}		
+	}
 }
 				
 var changeListener = new EnvironmentChangeListener(changeHandler)	
@@ -295,11 +316,14 @@ var flowerAge = 0
 
 var stepHandler = {
 	environmentStepped: function(){
-		if (env.getStepCount &lt; 2)
+		var stepCount = env.getStepCount()
+		var season = env.getSeason()
+//		System.out.println("Step count = " + stepCount + ", season = " + season)
+		if (stepCount &lt; 2)
 			flowerAge = 0
-		
 		var agents = env.getAllAgents()
-		if (agents.size() == 1 &amp;&amp; agents.get(0).getProperty("Has flower").equals(true)){
+		var firstAgent = agents.get(0)
+		if (agents.size() == 1 &amp;&amp; firstAgent.getProperty("Has flower").equals(true) &amp;&amp; firstAgent.getPropertyValueAsFloat("Health") &gt; 0.9){
 			flowerAge++
 			if (flowerAge &gt; 6){
 				makeBabies(agents.get(0))
@@ -311,6 +335,8 @@ var stepHandler = {
 					if (message1StepCount == 5){
 						showMessage("Take a look at the new plants that are growing. Do they all look exactly the same?\nYou can use the information tool to look at the plants closely.", env)
 						envHolder.pauseAction()
+						message1StepCount = 0
+						waitingForMessage1 = false
 					}
 		}
 		
@@ -319,7 +345,22 @@ var stepHandler = {
 					if (message2StepCount == 5){
 						showMessage("It looks like some of your plants have wilted! Why do you think this happened?", env)
 						envHolder.pauseAction()
+						message2StepCount = 0
+						waitingForMessage2 = false
 					}	
+		}
+		
+				
+		if (waitingForMessage3 == true){
+		System.out.println("waitingForMessage3 = " + waitingForMessage3);
+		System.out.println("message3StepCount = " + message3StepCount);
+			message3StepCount++;
+			if (message3StepCount == 2){
+				showMessage("Your plant has died and left no seeds so no new plants will grow. Try again.", env)
+				envHolder.reset();
+				message3StepCount = 0
+				waitingForMessage3 = false;
+			}	
 		}
 		
 	}		
@@ -379,6 +420,22 @@ function onTopOfSomeone(agent){
 	return false
 }
 				
+var resetHandler= {
+	environmentChanged: function(evt){
+		if (evt.getType() == EnvironmentChangeEvent.RESET){
+		System.out.println("In reset handler")
+			yearCount = 0;
+			message1StepCount = 0;
+			message2StepCount = 0;
+			message3StepCount = 0;
+			waitingForMessage1 = false;
+			waitingForMessage2 = false;
+			waitingForMessage3 = false;
+		}
+	}
+}
+			
+var resetListener = new EnvironmentChangeListener(resetHandler)
 
 function save() {
 	return true;
