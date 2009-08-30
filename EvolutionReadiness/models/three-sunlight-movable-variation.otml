@@ -67,7 +67,7 @@
                 <OTPlacement x="25" y="123" width="117" height="27" />
               </barriers>
               <rules>
-                <OTRule description="Health depends on leaves and sunlight">
+                <OTRule description="Gen 1. Health">
                   <conditions>
                     <OTRuleCondition property="gen" equalsValue="1.0" />
                   </conditions>
@@ -80,20 +80,10 @@
                     </OTRuleConsequence>
                   </consequences>
                 </OTRule>
-                <OTRule description="Gen 2: Health 1.0 in spring">
+                
+                <OTRule description="Health of future generations">
                   <conditions>
-                    <OTRuleCondition property="gen" equalsValue="2.0" />
-                    <OTRuleCondition property="Season" equals="spring" />
-                  </conditions>
-                  <consequences>
-                    <OTRuleConsequence property="Health" newValueFloat="1.0" />
-                    <OTRuleConsequence property="Chance of flowering" newValueFloat="0.0" />
-                  </consequences>
-                </OTRule>
-                <OTRule description="Gen 2: Health depends on leaves and sunlight in fall">
-                  <conditions>
-                    <OTRuleCondition property="gen" equalsValue="2.0" />
-                    <OTRuleCondition property="Season" equals="fall" />
+                    <OTRuleCondition property="gen" minValue="3.0" maxValue="100.0" />
                   </conditions>
                   <consequences>
                     <OTRuleConsequence property="Health" ruleScript="var diff = Math.abs(leaves - (sunlight*10)); return 1.0 - ((diff) / 20)">
@@ -104,14 +94,43 @@
                     </OTRuleConsequence>
                   </consequences>
                 </OTRule>
-                <OTRule description="Leaf description rule">
+                
+                <OTRule description="Gen 2. Health in spring">
                   <conditions>
-                    <OTRuleCondition property="leaves" maxValue="3.0" />
+                    <OTRuleCondition property="gen" equalsValue="2.0" />
+                    <OTRuleCondition property="Season" equals="spring" />
                   </conditions>
                   <consequences>
-                    <OTRuleConsequence property="type of leaves" newValueString="bushy" />
+                    <OTRuleConsequence property="Health" newValueFloat="1.0" />
                   </consequences>
                 </OTRule>
+                
+                <OTRule description="Gen 2. Health in summer">
+                  <conditions>
+                    <OTRuleCondition property="gen" equalsValue="2.0" />
+                    <OTRuleCondition property="Season" equals="summer" />
+                  </conditions>
+                  <consequences>
+                    <OTRuleConsequence property="Health" newValueFloat="1.0" />
+                  </consequences>
+                </OTRule>
+                
+                <OTRule description="Gen 2. Health in fall">
+                  <conditions>
+                    <OTRuleCondition property="gen" equalsValue="2.0" />
+                    <OTRuleCondition property="Season" equals="fall" />
+                  </conditions>
+                  <consequences>
+                    <OTRuleConsequence property="Health" ruleScript="var diff = Math.abs(leaves - (sunlight*10)); return 1.0 - ((diff) / 20)">
+                    <OTRuleConsequence property="Chance of flowering" newValueFloat="1.0" />
+                      <propertyVariables>
+                        <string>leaves</string>
+                        <string>sunlight</string>
+                      </propertyVariables>
+                    </OTRuleConsequence>
+                  </consequences>
+                </OTRule>
+               
                 <OTRule description="Immortality in spring">
                   <conditions>
                     <OTRuleCondition property="Season" equals="spring" />
@@ -120,15 +139,7 @@
                     <OTRuleConsequence property="is immortal" newValueBoolean="true" />
                   </consequences>
                 </OTRule>
-                <OTRule description="Die in winter">
-                  <conditions>
-                    <OTRuleCondition property="Season" equals="winter" />
-                  </conditions>
-                  <consequences>
-                    <OTRuleConsequence property="is immortal" newValueBoolean="false" />
-                    <OTRuleConsequence property="Health" newValueFloat="0.0" />
-                  </consequences>
-                </OTRule>
+                
                 <OTRule description="Flower health is 1">
                   <conditions>
                     <OTRuleCondition property="Has flower" equals="true" />
@@ -137,6 +148,28 @@
                     <OTRuleConsequence property="Health" newValueFloat="1.0" />
                   </consequences>
                 </OTRule>
+                
+                <OTRule description="Gen 1. Flowering">
+                  <conditions>
+                    <OTRuleCondition property="gen" equalsValue="1.0" />
+                    <OTRuleCondition property="Season" equals="summer" />
+                    <OTRuleCondition property="Health" minValue="0.99" maxValue="1.0" />
+                  </conditions>
+                  <consequences>
+                    <OTRuleConsequence property="Chance of flowering" newValueFloat="0.5" />
+                  </consequences>
+                </OTRule>
+                
+                <OTRule description="Die in winter">
+                  <conditions>
+                    <OTRuleCondition property="Season" equals="winter" />
+                  </conditions>
+                  <consequences>
+                    <OTRuleConsequence property="Health" newValueFloat="0.0" />
+                    <OTRuleConsequence property="is immortal" newValueBoolean="false" />
+                  </consequences>
+                </OTRule>
+                
               </rules>
             </OTEnvironment>
           </environment>
@@ -172,9 +205,9 @@ importPackage(Packages.java.awt);
 importPackage(Packages.org.concord.biologica.environment);
   			
 function init() {
-                       env.removeAllAgents()
-                       env.setStepCount(0)
-                       envHolder.pauseAction()
+    env.removeAllAgents()
+    env.setStepCount(0)
+    envHolder.pauseAction()
 	var world = env.getWorld()
 	env.setColumns(15)
 	env.setRows(15)
@@ -243,7 +276,7 @@ var rand;
 function init() {
 	env.addChangeListener(changeListener)
 	env.addStepListener(stepListener)
-//	env.addChangeListener(resetListener)
+	env.addChangeListener(resetListener)
 	
 	rand = new Random()
 	
@@ -256,49 +289,63 @@ var message3StepCount = 0;
 var waitingForMessage1 = false;
 var waitingForMessage2 = false;
 var waitingForMessage3 = false;
+var makeSeedsCount = 0;
+var readyToMakeSeeds = false;
 
 
 var changeHandler = {
 	environmentChanged: function(evt){
 		var agents = env.getAllAgents()
-		if (agents.size != 0) var firstAgent = agents.get(0)
-		if (evt.getType() == EnvironmentChangeEvent.SEASON_CHANGE){
-			var season = evt.getValue()
-//			System.out.println("In change handler, season = " + season);
-			if (season == "winter"){
-			yearCount ++
-//			System.out.println("Year = " + yearCount + ", season = " + evt.getValue());
-			}
-			if (agents.size() == 1){			// generation 1
-				if(firstAgent.getPropertyValueAsFloat("Health") &lt; 1.0){		//seed planted in the wrong place
-				setPropertyOnAllAgents("Chance of flowering", 0.0)
+		if (agents.size() &gt; 0) {
+			var firstAgent = agents.get(0)
+			firstAgent.setProperty("Seed mid-Fall", false)
+			firstAgent.setProperty("Days to seed", 1000)		
+			if (evt.getType() == EnvironmentChangeEvent.SEASON_CHANGE){
+				var season = evt.getValue()
+				if (season == "summer"){
+					yearCount ++
+				}	
+				if (firstAgent.getProperty("gen") == 1){			//first generation
+					if(firstAgent.getPropertyValueAsFloat("Health") &lt; 1.0){		//seed planted in the wrong place
+						setPropertyOnAllAgents("Chance of flowering", 0.0)
+						if (season == "summer"){
+							showMessage("You planted your seed in a flowerbox where the light level is wrong for it.\n" +
+							"It won't make a flower and it won't drop any seeds.", env)
+							firstAgent.setProperty("is immortal",false)
+							firstAgent.setProperty("Health",0.1)
+							waitingForMessage3 = true
+						}
+					}
+					else if	(season == "spring"){			//seed planted in the right place		
+						setPropertyOnAllAgents("Chance of flowering", 0.0)
+					}
+					
+					else if	(season == "summer" ){	
+						setPropertyOnAllAgents("Chance of flowering", 0.2)
+					}
+					
+					else if (season == "fall"){
+						showMessage("Congratulations! Your plant has grown a flower!\nSoon it will drop seeds that will grow into baby plants!", env)
+						readyToMakeSeeds = true
+					}
+				}
+				else if (firstAgent.getProperty("gen") == 2){						// second generation
+					if (season == "spring"){
+						setPropertyOnAllAgents("Health", 1.0)
+						setPropertyOnAllAgents("Chance of flowering", 0.0)
+						
+					}
 					if (season == "summer"){
-						showMessage("Oops! You planted your seed in the wrong place. Your plant is going to wither and won't make new seeds.", env)
+						setPropertyOnAllAgents("Health", 1.0)
+						setPropertyOnAllAgents("Chance of flowering", 0.0)
+						waitingForMessage1 = true;
 					}
 					if (season == "fall"){
-						firstAgent.setProperty("Health",0.0)
-						waitingForMessage3 = true;
+						waitingForMessage2 = true;
 					}
 				}
-			else if (season == "spring" || evt.getValue() == "summer" ){			//seed planted in the right place		
-				setPropertyOnAllAgents("Chance of flowering", 0.0)
-				setPropertyOnAllAgents("Days to seed", -1)
-			}
-			else if (season == "fall"){
-				setPropertyOnAllAgents("Chance of flowering", 0.2)
 			}
 		}
-			else {								// generation &gt; 1
-				waitingForMessage3 = false;
-				if (season == "summer"){
-						waitingForMessage1 = true
-					}
-				if (season == "fall"){
-						env.setWinterLength(-1)
-						waitingForMessage2 = true;
-				}
-			}
-		}		
 	}
 }
 				
@@ -312,64 +359,56 @@ function setPropertyOnAllAgents(property, value){
 	}
 }
 
-var flowerAge = 0
-
 var stepHandler = {
 	environmentStepped: function(){
-		var stepCount = env.getStepCount()
-		var season = env.getSeason()
-//		System.out.println("Step count = " + stepCount + ", season = " + season)
-		if (stepCount &lt; 2)
-			flowerAge = 0
 		var agents = env.getAllAgents()
-		var firstAgent = agents.get(0)
-		if (agents.size() == 1 &amp;&amp; firstAgent.getProperty("Has flower").equals(true) &amp;&amp; firstAgent.getPropertyValueAsFloat("Health") &gt; 0.9){
-			flowerAge++
-			if (flowerAge &gt; 6){
-				makeBabies(agents.get(0))
+		if (agents.size() == 1){
+			firstAgent = agents.get(0)
+			if (readyToMakeSeeds){
+				makeSeedsCount++
+				if (makeSeedsCount == 16){
+					makeSeeds(firstAgent)
+				}
 			}
 		}
 		
 		if (waitingForMessage1 == true){
 			message1StepCount++;
-					if (message1StepCount == 5){
-						showMessage("Take a look at the new plants that are growing. Do they all look exactly the same?\nYou can use the information tool to look at the plants closely.", env)
-						envHolder.pauseAction()
-						message1StepCount = 0
-						waitingForMessage1 = false
-					}
+			if (message1StepCount == 15){
+				var season = env.getSeason()
+				System.out.println("season = " + season)
+				showMessage("Take a look at the new plants that are growing.\nDo they all look exactly the same?\nYou can use the information tool to look at the plants closely.", env)
+				message1StepCount = 0
+				waitingForMessage1 = false
+			}	
 		}
 		
-		if (waitingForMessage2 == true){
-			message2StepCount++;
-					if (message2StepCount == 5){
-						showMessage("It looks like some of your plants have wilted! Why do you think this happened?", env)
-						envHolder.pauseAction()
-						message2StepCount = 0
-						waitingForMessage2 = false
-					}	
+		if(waitingForMessage2 == true){
+			message2StepCount++
+			if (message2StepCount == 7){
+				showMessage("Two of your plants have wilted! Why do you think this happened?\n" +
+				"Try moving them to a different flowerbox and see what happens.", env)
+				envHolder.pauseAction()
+				message2StepCount = 0
+				waitingForMessage2 = false
+			}	
 		}
-		
+	
 				
 		if (waitingForMessage3 == true){
-		System.out.println("waitingForMessage3 = " + waitingForMessage3);
-		System.out.println("message3StepCount = " + message3StepCount);
 			message3StepCount++;
-			if (message3StepCount == 2){
-				showMessage("Your plant has died and left no seeds so no new plants will grow. Try again.", env)
-				envHolder.reset();
+			if	(message3StepCount == 16){
+				showMessage("Your plant has died and left no seeds so no new plants will grow.\n Hit 'reset' and try again.", env)
 				message3StepCount = 0
 				waitingForMessage3 = false;
 			}	
 		}
-		
 	}		
 }
-				
+			
 var stepListener = new EnvironmentStepListener(stepHandler)	
 
-function makeBabies(agent){
-	
+function makeSeeds(agent){
 	agent.setProperty("Has flower", false)
 	
 	for (var i = 0; i &lt; 4; i++){
@@ -400,7 +439,7 @@ function setLocation(parent, child){
 	var yLocParent = parent.getLocation().y;
 	
 	do {
-		var xLocChild = xLocParent - 30 + (rand.nextInt(60))
+		var xLocChild = xLocParent - 50 + (rand.nextInt(100))
 		var yLocChild = yLocParent - 5 + (rand.nextInt(10))
 		child.setLocation(new Point(xLocChild, yLocChild))
 	} while (env.isInBarrier(child) || onTopOfSomeone(child))
@@ -431,6 +470,9 @@ var resetHandler= {
 			waitingForMessage1 = false;
 			waitingForMessage2 = false;
 			waitingForMessage3 = false;
+			makeSeedsCount = 0;
+			readyToMakeSeeds = false;
+//			envHolder.getAgentCreator.reset()
 		}
 	}
 }
