@@ -69,9 +69,9 @@
             <object refid="54343311-963a-11de-93ee-d3ede154332c" />
           </bodyText>
           <documentRefs>
-          	<OTEnvironmentHolder local_id="env-holder" toolbar="run,cursor,reset" useSpeedSlider="true">
+          	<OTEnvironmentHolder local_id="env-holder" toolbar="run,cursor,reset" useSpeedSlider="true" width="590" height="460" >
                       <environment>
-                        <OTEnvironment local_id="environment" environmentWidth="15" environmentHeight="15" width="590" height="460" showRunButton="false" winterLength="15" summerLength="50" orgSizeMultiplier="1.5" backgroundImageSrc="images/mountains1.png">
+                        <OTEnvironment local_id="environment" environmentWidth="15" environmentHeight="15" showRunButton="false" winterLength="2" summerLength="40" orgSizeMultiplier="1.5" backgroundImageSrc="images/mountains1.png">
                           <world>
                             <OTWorld local_id="peasimple_world" speciesPath="org/concord/biologica/worlds/peasimple.xml" />
                           </world>
@@ -136,32 +136,8 @@
 					        		envUnit.setTerrain(terrain)
 					            }
 					        }
-						env.addStepListener(stepListener)
 						return true;
 						}
-					var winterCounter = 0;
-					var waitingFor = "winter";
-					var stepHandler = {
-						environmentStepped: function(){
-							var firstSquare = env.getEnvironmentUnit(0, 0);
-							var currentSeason = firstSquare.getProperty("Season");
-							if (waitingFor == currentSeason) {
-								if (waitingFor == "winter"){
-									winterCounter ++; 								
-									waitingFor = "spring";
-									envHolder.snowCover(1.0);	
-								return;					
-								}
-								if (waitingFor == "spring"){
-									waitingFor = "winter";
-									envHolder.snowCover(0.0);
-								}
-							} 
-							return;
-						}		
-					}
-					
-					var stepListener = new EnvironmentStepListener(stepHandler)	
 					
 					function save() {
 						return true;
@@ -209,7 +185,7 @@
                         <string>roots</string>
                       </traitsToShow>
                       <addAgentsButtons>
-                        <OTAddAgentButton text="Add Plant A">
+                        <OTAddAgentButton text="Add Plant A" quantity="20" click="false">
                           <species>
                             <object refid="f5732706-c9c2-4e29-8c99-4c668dda89b0" />
                           </species>
