@@ -102,6 +102,7 @@
                   </conditions>
                   <consequences>
                     <OTRuleConsequence property="Health" newValueFloat="1.0" />
+                    <OTRuleConsequence property="Chance of flowering" newValueFloat="0.0" />
                   </consequences>
                 </OTRule>
                 
@@ -134,6 +135,16 @@
                 <OTRule description="Immortality in spring">
                   <conditions>
                     <OTRuleCondition property="Season" equals="spring" />
+                  </conditions>
+                  <consequences>
+                    <OTRuleConsequence property="is immortal" newValueBoolean="true" />
+                  </consequences>
+                </OTRule>
+                
+                
+                <OTRule description="Gen 2 immortality">
+                  <conditions>
+                    <OTRuleCondition property="gen" equalsValue="2.0" />
                   </conditions>
                   <consequences>
                     <OTRuleConsequence property="is immortal" newValueBoolean="true" />
@@ -286,9 +297,11 @@ var yearCount = 0;
 var message1StepCount = 0;
 var message2StepCount = 0;
 var message3StepCount = 0;
+var message4StepCount = 0;
 var waitingForMessage1 = false;
 var waitingForMessage2 = false;
 var waitingForMessage3 = false;
+var waitingForMessage4 = false;
 var makeSeedsCount = 0;
 var readyToMakeSeeds = false;
 
@@ -377,7 +390,8 @@ var stepHandler = {
 			if (message1StepCount == 15){
 				var season = env.getSeason()
 				System.out.println("season = " + season)
-				showMessage("Take a look at the new plants that are growing.\nDo they all look exactly the same?\nYou can use the information tool to look at the plants closely.", env)
+				showMessage("Take a look at the new plants that are growing.\nDo they all look exactly the same?\nYou can use the information tool to look at the plants closely.\nPress Play to restart the model when you are done looking.", env)
+				envHolder.pauseAction()
 				message1StepCount = 0
 				waitingForMessage1 = false
 			}	
@@ -388,12 +402,13 @@ var stepHandler = {
 			if (message2StepCount == 7){
 				showMessage("Two of your plants have wilted! Why do you think this happened?\n" +
 				"Try moving them to a different flowerbox and see what happens.", env)
-				envHolder.pauseAction()
 				message2StepCount = 0
 				waitingForMessage2 = false
+				waitingForMessage4 = true
+				
+				env.setWinterLength(-1)
 			}	
 		}
-	
 				
 		if (waitingForMessage3 == true){
 			message3StepCount++;
@@ -401,6 +416,27 @@ var stepHandler = {
 				showMessage("Your plant has died and left no seeds so no new plants will grow.\n Hit 'reset' and try again.", env)
 				message3StepCount = 0
 				waitingForMessage3 = false;
+			}	
+		}
+				
+		if (waitingForMessage4 == true){
+			var allAgentsAreHealthy = true
+			var agents = env.getAllAgents()
+			for (var i = 0; i &lt; agents.size(); i++) {
+				var agent = agents.get(i)
+				var health = agent.getProperty("Health")
+				if (health &lt; 0.99) {
+					allAgentsAreHealthy = false
+					break
+				}
+			}
+			
+			if (allAgentsAreHealthy){	
+				message4StepCount++;
+			}
+			if	(message4StepCount == 16){
+				showMessage("Good job! Each of your plants is in an environment that makes it healthy!\n If you want to experiment again, you can reset the model,\nor you can continue to the next page.", env)
+				waitingForMessage4 = false;
 			}	
 		}
 	}		
