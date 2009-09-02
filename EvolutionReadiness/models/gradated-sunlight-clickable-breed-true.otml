@@ -52,9 +52,9 @@
         <OTInclude href="species/annual-varied-plants.otml" />
       </includes>
       <root>
-        <OTEnvironmentHolder local_id="env-holder" width="590" height="460" toolbar="run,cursor,reset">
+        <OTEnvironmentHolder local_id="env-holder" width="590" height="460" toolbar="run,cursor,reset" useSpeedSlider="true">
           <environment>
-            <OTEnvironment local_id="environment" environmentWidth="10" environmentHeight="10" showRunButton="false" winterLength="15" summerLength="50" orgSizeMultiplier="1.5" backgroundImageSrc="jres:///org/concord/er/resources/images/envs/sun10levels.png">
+            <OTEnvironment local_id="environment" environmentWidth="10" environmentHeight="10" showRunButton="false" winterLength="15" summerLength="50" orgSizeMultiplier="1.5" backgroundImageSrc="jres:/org/concord/er/resources/images/envs/sun10levels.png">
               <world>
                 <OTWorld local_id="peasimple_world" speciesPath="org/concord/biologica/worlds/peasimple.xml" />
               </world>
@@ -67,7 +67,15 @@
                     <OTRuleCondition always="true" />
                   </conditions>
                   <consequences>
-                    <OTRuleConsequence property="Health" ruleScript="var diff = Math.abs(leaves - (sunlight*10)); return 1.0 - ((diff*9) / 100)">
+                    <OTRuleConsequence property="Health" ruleScript="
+	                      	var diff = Math.abs(leaves - (sunlight*10));
+		                    var healthAtOneUnitDiff = 0.98;
+		                    var a = 0.2 - 0.25*healthAtOneUnitDiff;
+		                    var b =1.25*healthAtOneUnitDiff -1.2;
+		                    var c = 1;
+		                    var h = a*diff*diff + b*diff + c;
+		                    if (h &gt; 0) return h;
+		                    else return 0;">
                       <propertyVariables>
                         <string>leaves</string>
                         <string>sunlight</string>
@@ -75,47 +83,44 @@
                     </OTRuleConsequence>
                   </consequences>
                 </OTRule>
+                <OTRule description="No flowers on withered plants!">
+                  <conditions>
+                    <OTRuleCondition property="Health" minValue="0.0" maxValue="0.99" />
+                  </conditions>
+                  <consequences>
+                    <OTRuleConsequence property="Chance of flowering" newValueFloat="0.0" />
+                  </consequences>
+                </OTRule>
+                <OTRule description="withered plants die in summer">
+                  <conditions>
+                    <OTRuleCondition property="Health" minValue="0.9" maxValue="0.99" />
+                    <OTRuleCondition property="Season" equals="summer" />
+                  </conditions>
+                  <consequences>
+                    <OTRuleConsequence property="is immortal" newValueBoolean="true" />
+                  </consequences>
+                </OTRule>
+                <OTRule description="Withered plants immortal in spring">
+                  <conditions>
+                    <OTRuleCondition property="Health" minValue="0.85" maxValue="0.99" />
+                    <OTRuleCondition property="Season" equals="spring" />
+                  </conditions>
+                  <consequences>
+                    <OTRuleConsequence property="is immortal" newValueBoolean="true" />
+                  </consequences>
+                </OTRule>
+                <OTRule description="Withered plants die in fall">
+                  <conditions>
+                    <OTRuleCondition property="Health" minValue="0.85" maxValue="0.99" />
+                    <OTRuleCondition property="Season" equals="fall" />
+                  </conditions>
+                  <consequences>
+                    <OTRuleConsequence property="is immortal" newValueBoolean="false" />
+                  </consequences>
+                </OTRule>
               </rules>
             </OTEnvironment>
           </environment>
-          <buttons>
-          	<OTScriptButton local_id="survey-button" text="Survey">
-             		<script>
-             			<OTJavascript>
-		     				<script>
-		     				importPackage(Packages.java.lang);
-		     				importPackage(Packages.java.awt);
-		     				importPackage(Packages.org.concord.biologica.environment);
-		     				importClass(Packages.javax.swing.JOptionPane);
-		     				
-		     				function clicked()
-		      				{
-		      					var agents = environment.getAllAgents();
-		      					var thin = 0
-		      					var medium = 0
-		      					var bushy = 0
-		      					for (var i=0; i &lt; agents.size(); i++){
-		      					    var agent = agents.get(i)
-		      						var leaves = agent.getPropertyValueAsInteger("leaves")
-		      						if (leaves &lt; 4)
-		      						     bushy++
-		      						else if (leaves &lt; 7)
-		      						     medium++
-		      						else
-		      						     thin++
-		      					}
-		      					var messageString = "There are:\n  "+bushy+" Plant As,\n  "+medium+" Plant Bs, and\n  "+thin+" Plant Cs.";
-		      					
-								JOptionPane.showMessageDialog(null, messageString);
-		      				}
-		     				</script>
-		     			</OTJavascript>
-             		</script>
-             		<scriptVariables>
-             			<OTScriptVariableRealObject name="environment" reference="${environment}"/>
-             		</scriptVariables>
-             </OTScriptButton>
-          </buttons>
           <scripts>
             <OTScriptObject local_id="setup-script" name="Setup world">
               <script>
@@ -126,8 +131,8 @@
 					importClass(Packages.javax.swing.JOptionPane);
 					  			
 					function init() {
-						env.removeAllAgents();
-						env.setStepCount(0);
+						env.removeAllAgents()
+						env.setStepCount(0)
 						envHolder.pauseAction()
 						var world = env.getWorld();
 						env.setColumns(10);
@@ -181,9 +186,9 @@
 				function save() {
 					return true;
 				}</script>
-				<scripts>
-					<OTJavascript src="scripts/common/message.js"/>
-				</scripts>
+                  <scripts>
+                    <OTJavascript src="scripts/common/message.js" />
+                  </scripts>
                 </OTJavascript>
               </script>
               <variables>
@@ -221,7 +226,6 @@
           </scripts>
           <traitsToShow>
             <string>leaves</string>
-            <string>health</string>
           </traitsToShow>
           <addAgentsButtons>
             <OTAddAgentButton text="Add Plant A">
@@ -231,10 +235,10 @@
               <agentTraits>
                 <OTAgentTrait property="leaves">
                   <defaultValues>
-                    <int>6</int>
+                    <int>5</int>
                   </defaultValues>
                 </OTAgentTrait>
-                 <OTAgentTrait property="roots">
+                <OTAgentTrait property="roots">
                   <defaultValues>
                     <int>5</int>
                   </defaultValues>
@@ -251,7 +255,7 @@
                     <int>10</int>
                   </defaultValues>
                 </OTAgentTrait>
-                  <OTAgentTrait property="roots">
+                <OTAgentTrait property="roots">
                   <defaultValues>
                     <int>5</int>
                   </defaultValues>
@@ -268,7 +272,7 @@
                     <int>2</int>
                   </defaultValues>
                 </OTAgentTrait>
-                  <OTAgentTrait property="roots">
+                <OTAgentTrait property="roots">
                   <defaultValues>
                     <int>5</int>
                   </defaultValues>
