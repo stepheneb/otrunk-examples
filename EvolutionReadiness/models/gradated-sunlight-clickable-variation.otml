@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<otrunk id="13d3fb4f-123a-425f-9d60-d84e145c0678">
+<otrunk id="24d3fb4f-123a-425f-9d60-d84e145c0678">
   <imports>
     <import class="org.concord.otrunk.OTIncludeRootObject" />
     <import class="org.concord.otrunk.OTInclude" />
@@ -67,12 +67,55 @@
                     <OTRuleCondition always="true" />
                   </conditions>
                   <consequences>
-                    <OTRuleConsequence property="Health" ruleScript="var diff = Math.abs(leaves - (sunlight*10)); return 1.0 - ((diff*8) / 100)">
+                    <OTRuleConsequence property="Health">
+                      <ruleScript>var diff = Math.abs(leaves - (sunlight*10)); 
+						var healthAtOneUnitDiff = 0.98; 
+	                    var a = 0.2 - 0.25*healthAtOneUnitDiff;
+	                    var b =1.25*healthAtOneUnitDiff -1.2;
+	                    var c = 1;
+						var h = a*diff*diff + b*diff + c; 
+						if (h &gt; 0) return h; else return 0;
+					</ruleScript>
                       <propertyVariables>
                         <string>leaves</string>
                         <string>sunlight</string>
                       </propertyVariables>
                     </OTRuleConsequence>
+                  </consequences>
+                </OTRule>
+                <OTRule description="No flowers on withered plants!">
+                  <conditions>
+                    <OTRuleCondition property="Health" minValue="0.0" maxValue="0.99" />
+                  </conditions>
+                  <consequences>
+                    <OTRuleConsequence property="Chance of flowering" newValueFloat="0.0" />
+                  </consequences>
+                </OTRule>
+                <OTRule description="withered plants die in summer">
+                  <conditions>
+                    <OTRuleCondition property="Health" minValue="0.9" maxValue="0.99" />
+                    <OTRuleCondition property="Season" equals="summer" />
+                  </conditions>
+                  <consequences>
+                    <OTRuleConsequence property="is immortal" newValueBoolean="true" />
+                  </consequences>
+                </OTRule>
+                <OTRule description="Withered plants immortal in spring">
+                  <conditions>
+                    <OTRuleCondition property="Health" minValue="0.85" maxValue="0.99" />
+                    <OTRuleCondition property="Season" equals="spring" />
+                  </conditions>
+                  <consequences>
+                    <OTRuleConsequence property="is immortal" newValueBoolean="true" />
+                  </consequences>
+                </OTRule>
+                <OTRule description="Withered plants die in fall">
+                  <conditions>
+                    <OTRuleCondition property="Health" minValue="0.85" maxValue="0.99" />
+                    <OTRuleCondition property="Season" equals="fall" />
+                  </conditions>
+                  <consequences>
+                    <OTRuleConsequence property="is immortal" newValueBoolean="false" />
                   </consequences>
                 </OTRule>
               </rules>
@@ -136,7 +179,7 @@
                 <OTJavascript>
                   <script>function init()
 	      				{
-	      					species.setMutationChance(0.3)
+	      					species.setMutationChance(0.2)
 	      				}</script>
                 </OTJavascript>
               </script>
@@ -152,7 +195,6 @@
           </scripts>
           <traitsToShow>
             <string>leaves</string>
-            <string>roots</string>
           </traitsToShow>
           <addAgentsButtons>
             <OTAddAgentButton text="Add Plant A">
@@ -162,7 +204,7 @@
               <agentTraits>
                 <OTAgentTrait property="leaves">
                   <defaultValues>
-                    <int>6</int>
+                    <int>5</int>
                   </defaultValues>
                 </OTAgentTrait>
                 <OTAgentTrait property="roots">
