@@ -59,8 +59,9 @@ class XmlReport
   end
   
   class StandardQuestionWrapper
-    def initialize(question, otrunkHelper)
+    def initialize(question, section, otrunkHelper)
       @question = question
+      @section = section
       @otrunkHelper = otrunkHelper
     end
     
@@ -114,7 +115,7 @@ class XmlReport
       
       elem.add_attributes(
       'prompt' => @otrunkHelper.plainPromptText(@question),
-      'type' => questionType)
+      'type' => questionType, 'tags' => getTags())
       elem
     end
 
@@ -137,6 +138,10 @@ class XmlReport
     
     def questionId()
       @question.otExternalId
+    end
+    
+    def getTags()
+      "question " + XmlReport.sectionTag(@section)
     end
     
     private 
@@ -200,13 +205,15 @@ class XmlReport
   end
     
   class LeveledQuestionLevelWrapper < CalculatedValueWrapper
-    def initialize(question, otrunkHelper)
+    def initialize(question, section, otrunkHelper)
       @question = question
+      @section = section
       @otrunkHelper = otrunkHelper
     end
         
     def getPrompt()
-      "Level of Leveled Question: " + @otrunkHelper.plainPromptText(@question.questions.get(0))
+      "Level of Leveled Question: " + @otrunkHelper.plainPromptText(@question.questions.get(0)) +
+        " section: " + @section.name
     end
     
     def getTags()
@@ -226,7 +233,8 @@ class XmlReport
   
   class LeveledQuestionClickedWrapper < LeveledQuestionLevelWrapper 
     def getPrompt()
-      "Times Clicked of Leveled Question: " + @otrunkHelper.plainPromptText(@question.questions.get(0))
+      "Times Clicked of Leveled Question: " + @otrunkHelper.plainPromptText(@question.questions.get(0)) +
+        " section: " + @section.name
     end
     
     def getTags()
@@ -314,10 +322,108 @@ class XmlReport
     end
   end
 
+  class LabBookUsageWrapper < CalculatedValueWrapper
+    def initialize(labbook, otrunkHelper)
+      @labbook = labbook
+      @otrunkHelper = otrunkHelper
+    end
+
+    def getPrompt()
+      "LabBook Usage"
+    end
     
-  def addQuestions(questions, sectionId)
+    def getTags()
+      "labbook_usage"
+    end
+    
+    def setupAnswerElement(element, otrunkHelper, user)
+      userLabbook = @otrunkHelper.userObject(@labbook, user)
+      element.text = userLabbook.entries.size.to_s
+    end
+    
+    def questionId()
+      "labbook_usage:#{@labbook.otExternalId}"
+    end
+    
+  end
+  class SectionWrapper < CalculatedValueWrapper
+    def initialize(section, otrunkHelper)
+      @section = section
+      @otrunkHelper = otrunkHelper
+
+      # these are weird hacks inorder to make the udl-multipage-report methods
+      # work from this class
+      @otrunk = @otrunkHelper.otrunk
+      @contentHelper = UDLContentHelper.getUDLContentHelper(activityRoot)
+    end
+  end
+  
+  class SectionVisitedWrapper < SectionWrapper
+    def getPrompt()
+      "Visited: " + @section.name
+    end
+    
+    def getTags()
+      "visited_section"
+    end
+    
+    def setupAnswerElement(element, otrunkHelper, user)
+      userSection = @otrunkHelper.userObject(@section, user)
+      if visitedSections(user).include?(userSection)
+        element.text = "1"
+      else
+        element.text = "0"
+      end      
+    end
+    
+    def questionId()
+      "visited_section:#{@section.otExternalId}"
+    end
+  end
+
+  class SectionTTSUsageWrapper < SectionWrapper
+    def getPrompt()
+      "TTS Usage: " + @section.name
+    end
+    
+    def getTags()
+      "tts_usage_section"
+    end
+    
+    def setupAnswerElement(element, otrunkHelper, user)
+      element.text = ttsInstances(@section, user).to_s
+    end
+    
+    def questionId()
+      "tts_usage_section:#{@section.otExternalId}"
+    end
+  end
+      
+  class SectionCoachUsageWrapper < SectionWrapper
+    def getPrompt()
+      "Coach Usage: " + @section.name
+    end
+    
+    def getTags()
+      "coach_usage_section"
+    end
+    
+    def setupAnswerElement(element, otrunkHelper, user)
+      element.text = coachViews(@section, user).to_s
+    end
+    
+    def questionId()
+      "coach_usage_section:#{@section.otExternalId}"
+    end
+  end
+
+  def self.sectionTag(section)
+    return section.name.gsub(/\W/, '_').downcase
+  end
+  
+  def addQuestions(questions, section)
     questions.each{|q|
-      addQuestionWrapper(StandardQuestionWrapper.new(q, @otrunkHelper))
+      addQuestionWrapper(StandardQuestionWrapper.new(q, section, @otrunkHelper))
     }
   end
   

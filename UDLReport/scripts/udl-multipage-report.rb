@@ -508,6 +508,14 @@ def pretest
   end
 end
 
+def labBookBundle
+  activityOTMLRootDO = activityRoot.oTObjectService.mainDb.root
+  activitySystem = activityRoot.oTObjectService.getOTObject(activityOTMLRootDO.globalId)
+  activitySystem.bundles.find {|b| 
+    b.otClass.instanceClass == org.concord.otrunk.util.OTLabbookBundle.java_class
+  }
+end
+
 ###################
 ### section view
 ###################
@@ -566,6 +574,20 @@ def ttsInstances(section, user)
 	ttsCount
 end
 
+def coachViews(section, user)
+  userSection = userObject(section, user)
+  userPages = allPages(userSection)
+  coachViews = 0
+  userPages.each do |page|
+    if page.is_a? org.concord.otrunk.udl.document.OTUDLCompoundDoc
+      page.coachStatements.each do |s|
+        coachViews += s.timesClicked
+      end
+    end
+  end
+  coachViews  
+end
+
 def getXmlReport
   report = XmlReport.new('udl', @otrunkHelper)
   
@@ -578,23 +600,28 @@ def getXmlReport
     sectionId = (i+1).to_s
     report.addSection(section, sectionId)
     questions = sectionQuestions(section)
-    report.addQuestions(questions, sectionId)
+    report.addQuestions(questions, section)
     
   end
 
   unitSections.each do |section|
     levQuestions = sectionLeveledQuestions(section)
     levQuestions.each do |lq|
-      report.addQuestionWrapper(XmlReport::LeveledQuestionLevelWrapper.new(lq, @otrunkHelper))
-      report.addQuestionWrapper(XmlReport::LeveledQuestionClickedWrapper.new(lq, @otrunkHelper))
+      report.addQuestionWrapper(XmlReport::LeveledQuestionLevelWrapper.new(lq, section, @otrunkHelper))
+      report.addQuestionWrapper(XmlReport::LeveledQuestionClickedWrapper.new(lq, section, @otrunkHelper))
     end
+    report.addQuestionWrapper(XmlReport::SectionVisitedWrapper.new(section, @otrunkHelper))
+    report.addQuestionWrapper(XmlReport::SectionTTSUsageWrapper.new(section, @otrunkHelper))
+    report.addQuestionWrapper(XmlReport::SectionCoachUsageWrapper.new(section, @otrunkHelper))
   end
 
   glossaryWords().each do |glossWord|
     report.addQuestionWrapper(XmlReport::GlossaryWordStudentDefWrapper.new(glossWord, @otrunkHelper))
     report.addQuestionWrapper(XmlReport::GlossaryWordShownCountWrapper.new(glossWord, @otrunkHelper))      
   end
-      
+
+  report.addQuestionWrapper(XmlReport::LabBookUsageWrapper.new(labBookBundle, @otrunkHelper))
+        
   @users.each do |user|
     studentElem = report.addStudent(user)
   end
