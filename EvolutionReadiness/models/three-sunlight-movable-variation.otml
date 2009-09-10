@@ -388,6 +388,7 @@ var waitingForMessage3 = false;
 var waitingForMessage4 = false;
 var makeSeedsCount = 0;
 var readyToMakeSeeds = false;
+var popSize = -1
 
 
 var changeHandler = {
@@ -458,8 +459,22 @@ function setPropertyOnAllAgents(property, value){
 
 var stepHandler = {
 	environmentStepped: function(){
+	
 		var agents = env.getAllAgents()
-		if (agents.size() == 1){
+		
+		if (agents.size() &lt; popSize &amp;&amp; agents.size() &lt; 6){
+			showMessage("Uh oh! You dropped a of the plants in between the flower boxes and it died.\n If you want to restart, click the Restart button.", env)
+			popSize = agents.size()
+			return
+		}
+		
+		if (agents.size() == 0){
+			return
+		}
+		
+		popSize = agents.size()
+		
+		if (popSize == 1){
 			firstAgent = agents.get(0)
 			if (readyToMakeSeeds){
 				makeSeedsCount++
@@ -592,6 +607,7 @@ var resetHandler= {
 			waitingForMessage3 = false;
 			makeSeedsCount = 0;
 			readyToMakeSeeds = false;
+			popSize = 0
 //			envHolder.getAgentCreator.reset()
 		}
 	}
