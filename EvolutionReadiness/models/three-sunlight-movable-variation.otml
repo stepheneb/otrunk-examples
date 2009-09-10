@@ -234,6 +234,7 @@
                 <OTRule description="Flower health is 1">
                   <conditions>
                     <OTRuleCondition property="Has flower" equals="true" />
+                    <OTRuleCondition property="sunlight" equalsValue="6" />
                   </conditions>
                   <consequences>
                     <OTRuleConsequence property="Health" newValueFloat="1.0" />
@@ -248,6 +249,39 @@
                   </conditions>
                   <consequences>
                     <OTRuleConsequence property="Chance of flowering" newValueFloat="0.5" />
+                  </consequences>
+                </OTRule>
+                
+                <OTRule description="Gen 1. Losing the flower">
+                  <conditions>
+                    <OTRuleCondition property="gen" equalsValue="1.0" />
+                    <OTRuleCondition property="Has flower" equals="true" />
+                    <OTRuleCondition property="Health" maxValue="0.99" />
+                  </conditions>
+                  <consequences>
+                    <OTRuleConsequence property="Has flower" newValueBoolean="false" />
+                  </consequences>
+                </OTRule>
+                
+                <OTRule description="Gen 1. If Unhealthy">
+                  <conditions>
+                    <OTRuleCondition property="gen" equalsValue="1.0" />
+                    <OTRuleCondition property="Health" maxValue="0.99" />
+                  </conditions>
+                  <consequences>
+                    <OTRuleConsequence property="Chance of flowering" newValueFloat="0.0" />
+                  </consequences>
+                </OTRule>
+                
+                <OTRule description="Gen 1. If Unhealthy">
+                  <conditions>
+                    <OTRuleCondition property="gen" equalsValue="1.0" />
+                    <OTRuleCondition property="Health" maxValue="0.99" />
+                    <OTRuleCondition property="Season" equals="fall" />
+                  </conditions>
+                  <consequences>
+                    <OTRuleConsequence property="Health" newValueFloat="0.7" />
+                    <OTRuleConsequence property="is immortal" newValueBoolean="false" />
                   </consequences>
                 </OTRule>
                 
@@ -389,6 +423,10 @@ var waitingForMessage4 = false;
 var makeSeedsCount = 0;
 var readyToMakeSeeds = false;
 var popSize = -1
+var generation = 1
+var previousHealth = -1
+var shownNoMorePlantsMessage = false
+var shownWiltedMessage = false
 
 
 var changeHandler = {
@@ -405,12 +443,12 @@ var changeHandler = {
 				}	
 				if (firstAgent.getProperty("gen") == 1){			//first generation
 					if(firstAgent.getPropertyValueAsFloat("Health") &lt; 1.0){		//seed planted in the wrong place
-						setPropertyOnAllAgents("Chance of flowering", 0.0)
 						if (season == "summer"){
-							showMessage("You planted your seed in a flowerbox where the light level is wrong for it.\n" +
-							"It won't make a flower and it won't drop any seeds.", env)
-							firstAgent.setProperty("is immortal",false)
-							firstAgent.setProperty("Health",0.1)
+							if (!shownWiltedMessage){
+								showMessage("You planted your seed in a flowerbox where the light level is wrong for it.\n" +
+								"It won't make a flower and it won't drop any seeds.", env)
+								shownWiltedMessage = true
+							}
 							waitingForMessage3 = true
 						}
 					}
@@ -422,7 +460,7 @@ var changeHandler = {
 						setPropertyOnAllAgents("Chance of flowering", 0.2)
 					}
 					
-					else if (season == "fall"){
+					else if (season == "fall" &amp;&amp; firstAgent.getPropertyValueAsBoolean("Has flower")){
 						showMessage("Congratulations! Your plant has grown a flower!\nSoon it will drop seeds that will grow into baby plants!", env)
 						readyToMakeSeeds = true
 					}
@@ -462,20 +500,38 @@ var stepHandler = {
 	
 		var agents = env.getAllAgents()
 		
-		if (agents.size() &lt; popSize &amp;&amp; agents.size() &lt; 6){
-			showMessage("Uh oh! You dropped a of the plants in between the flower boxes and it died.\n If you want to restart, click the Restart button.", env)
-			popSize = agents.size()
+		
+		if (agents.size() == 0){
+			if (!shownNoMorePlantsMessage) {
+				if (waitingForMessage3)
+					showMessage("Your plant wilted and died, and left no seeds so no new plants will grow.\n Hit 'reset' and try again.", env)
+				else
+					showMessage("You have no more plants!\n If you want to restart, click the Restart button.", env)
+				shownNoMorePlantsMessage = true
+			}
 			return
 		}
 		
-		if (agents.size() == 0){
+		
+		if (agents.size() &lt; popSize &amp;&amp; agents.size() &lt; 6){
+			showMessage("Uh oh, you dropped a plant in between the flower boxes and it died!\n If you want to restart, click the Restart button.", env)
+			popSize = agents.size()
 			return
 		}
 		
 		popSize = agents.size()
 		
-		if (popSize == 1){
+		if (generation == 1){
 			firstAgent = agents.get(0)
+			
+			var health = firstAgent.getPropertyValueAsFloat("Health")
+			if (health &lt; previousHealth &amp;&amp; !shownWiltedMessage){
+				showMessage("Careful! You moved your plant to a flowerbox that made it wilted.", env)
+				shownWiltedMessage = true
+				waitingForMessage3 = true
+			}
+			previousHealth = health
+			
 			if (readyToMakeSeeds){
 				makeSeedsCount++
 				if (makeSeedsCount == 16){
@@ -488,7 +544,6 @@ var stepHandler = {
 			message1StepCount++;
 			if (message1StepCount == 15){
 				var season = env.getSeason()
-				System.out.println("season = " + season)
 				showMessage("Take a look at the new plants that are growing.\nDo they all look exactly the same?\nYou can use the information tool to look at the plants closely.\nPress Play to restart the model when you are done looking.", env)
 				envHolder.pauseAction()
 				message1StepCount = 0
@@ -506,15 +561,6 @@ var stepHandler = {
 				waitingForMessage4 = true
 				
 				env.setWinterLength(-1)
-			}	
-		}
-				
-		if (waitingForMessage3 == true){
-			message3StepCount++;
-			if	(message3StepCount == 16){
-				showMessage("Your plant has died and left no seeds so no new plants will grow.\n Hit 'reset' and try again.", env)
-				message3StepCount = 0
-				waitingForMessage3 = false;
 			}	
 		}
 				
@@ -545,6 +591,7 @@ var stepListener = new EnvironmentStepListener(stepHandler)
 
 function makeSeeds(agent){
 	agent.setProperty("Has flower", false)
+	generation = 2
 	
 	for (var i = 0; i &lt; 4; i++){
 		var agentTrait = new AgentTrait()
@@ -597,7 +644,6 @@ function onTopOfSomeone(agent){
 var resetHandler= {
 	environmentChanged: function(evt){
 		if (evt.getType() == EnvironmentChangeEvent.RESET){
-		System.out.println("In reset handler")
 			yearCount = 0;
 			message1StepCount = 0;
 			message2StepCount = 0;
@@ -608,6 +654,9 @@ var resetHandler= {
 			makeSeedsCount = 0;
 			readyToMakeSeeds = false;
 			popSize = 0
+			generation = 1
+			shownNoMorePlantsMessage = false
+			shownWiltedMessage = false
 //			envHolder.getAgentCreator.reset()
 		}
 	}
