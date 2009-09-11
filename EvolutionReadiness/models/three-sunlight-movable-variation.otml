@@ -67,94 +67,14 @@
                 <OTPlacement x="25" y="123" width="117" height="27" />
               </barriers>
               <rules>
-              	<OTRule descript="Leaf type">
-                	<conditions>
-                    	<OTRuleCondition property="leaves" equalsValue="1.0"/>
-                	</conditions>
-                	<consequences>
-                		<OTRuleConsequence property="Leaf type" newValueFloat="1"/>
-                	</consequences>
-                </OTRule>
-                <OTRule descript="Leaf type">
-                	<conditions>
-                    	<OTRuleCondition property="leaves" equalsValue="2.0"/>
-                	</conditions>
-                	<consequences>
-                		<OTRuleConsequence property="Leaf type" newValueFloat="2"/>
-                	</consequences>
-                </OTRule>
-                <OTRule descript="Leaf type">
-                	<conditions>
-                    	<OTRuleCondition property="leaves" equalsValue="3.0"/>
-                	</conditions>
-                	<consequences>
-                		<OTRuleConsequence property="Leaf type" newValueFloat="3"/>
-                	</consequences>
-                </OTRule>
-                <OTRule descript="Leaf type">
-                	<conditions>
-                    	<OTRuleCondition property="leaves" equalsValue="4.0"/>
-                	</conditions>
-                	<consequences>
-                		<OTRuleConsequence property="Leaf type" newValueFloat="4"/>
-                	</consequences>
-                </OTRule>
-                <OTRule descript="Leaf type">
-                	<conditions>
-                    	<OTRuleCondition property="leaves" equalsValue="5.0"/>
-                	</conditions>
-                	<consequences>
-                		<OTRuleConsequence property="Leaf type" newValueFloat="5"/>
-                	</consequences>
-                </OTRule>
-                <OTRule descript="Leaf type">
-                	<conditions>
-                    	<OTRuleCondition property="leaves" equalsValue="6.0"/>
-                	</conditions>
-                	<consequences>
-                		<OTRuleConsequence property="Leaf type" newValueFloat="6"/>
-                	</consequences>
-                </OTRule>
-                <OTRule descript="Leaf type">
-                	<conditions>
-                    	<OTRuleCondition property="leaves" equalsValue="7.0"/>
-                	</conditions>
-                	<consequences>
-                		<OTRuleConsequence property="Leaf type" newValueFloat="7"/>
-                	</consequences>
-                </OTRule>
-                <OTRule descript="Leaf type">
-                	<conditions>
-                    	<OTRuleCondition property="leaves" equalsValue="8.0"/>
-                	</conditions>
-                	<consequences>
-                		<OTRuleConsequence property="Leaf type" newValueFloat="8"/>
-                	</consequences>
-                </OTRule>
-                <OTRule descript="Leaf type">
-                	<conditions>
-                    	<OTRuleCondition property="leaves" equalsValue="9.0"/>
-                	</conditions>
-                	<consequences>
-                		<OTRuleConsequence property="Leaf type" newValueFloat="9"/>
-                	</consequences>
-                </OTRule>
-                <OTRule descript="Leaf type">
-                	<conditions>
-                    	<OTRuleCondition property="leaves" equalsValue="10.0"/>
-                	</conditions>
-                	<consequences>
-                		<OTRuleConsequence property="Leaf type" newValueFloat="10"/>
-                	</consequences>
-                </OTRule>
                 <OTRule description="Gen 1. Health">
                   <conditions>
                     <OTRuleCondition property="gen" equalsValue="1.0" />
                   </conditions>
                   <consequences>
-                    <OTRuleConsequence property="Health" ruleScript="var diff = Math.abs(leaves - (sunlight*10)); return 1.0 - ((diff) / 20)">
+                    <OTRuleConsequence property="Health" ruleScript="var diff = Math.abs((11 - size_of_leaves) - (sunlight*10)); return 1 - (diff /  20)">
                       <propertyVariables>
-                        <string>leaves</string>
+                        <string>size of leaves</string>
                         <string>sunlight</string>
                       </propertyVariables>
                     </OTRuleConsequence>
@@ -166,9 +86,9 @@
                     <OTRuleCondition property="gen" minValue="3.0" maxValue="100.0" />
                   </conditions>
                   <consequences>
-                    <OTRuleConsequence property="Health" ruleScript="var diff = Math.abs(leaves - (sunlight*10)); return 1.0 - ((diff) / 20)">
+                    <OTRuleConsequence property="Health" ruleScript="var diff = Math.abs((11 - size_of_leaves) - (sunlight*10)); return 1 - (diff /  20)">
                       <propertyVariables>
-                        <string>leaves</string>
+                        <string>size of leaves</string>
                         <string>sunlight</string>
                       </propertyVariables>
                     </OTRuleConsequence>
@@ -193,6 +113,7 @@
                   </conditions>
                   <consequences>
                     <OTRuleConsequence property="Health" newValueFloat="1.0" />
+                    <OTRuleConsequence property="Chance of flowering" newValueFloat="0" />
                   </consequences>
                 </OTRule>
                 
@@ -202,13 +123,12 @@
                     <OTRuleCondition property="Season" equals="fall" />
                   </conditions>
                   <consequences>
-                    <OTRuleConsequence property="Health" ruleScript="var diff = Math.abs(leaves - (sunlight*10)); return 1.0 - ((diff) / 20)">
-                    <OTRuleConsequence property="Chance of flowering" newValueFloat="1.0" />
-                      <propertyVariables>
-                        <string>leaves</string>
+                    <OTRuleConsequence property="Health" ruleScript="var diff = Math.abs((11 - size_of_leaves) - (sunlight*10)); return 1 - (diff /  20)" >
+                    	<propertyVariables>
+                        <string>size of leaves</string>
                         <string>sunlight</string>
                       </propertyVariables>
-                    </OTRuleConsequence>
+                     </OTRuleConsequence>
                   </consequences>
                 </OTRule>
                
@@ -299,7 +219,7 @@
             </OTEnvironment>
           </environment>
           <traitsToShow>
-            <string>Leaf type</string>
+            <string>size of leaves</string>
           </traitsToShow>
           <addAgentsButtons>
             <OTAddAgentButton text="Add Plant A" limit="1">
@@ -307,19 +227,14 @@
                 <object refid="f5732706-c9c2-4e29-8c99-4c668dda89b0" />
               </species>
               <agentTraits>
-                <OTAgentTrait property="leaves">
+                <OTAgentTrait property="size of leaves">
                   <defaultValues>
-                    <float>6.0</float>
+                    <float>5.0</float>
                   </defaultValues>
                 </OTAgentTrait>
                 <OTAgentTrait property="gen">
                   <defaultValues>
                     <int>1</int>
-                  </defaultValues>
-                </OTAgentTrait>
-                <OTAgentTrait property="Leaf type">
-                  <defaultValues>
-                    <int>6</int>
                   </defaultValues>
                 </OTAgentTrait>
               </agentTraits>
@@ -579,6 +494,9 @@ var stepHandler = {
 			if (allAgentsAreHealthy){	
 				message4StepCount++;
 			}
+			if (message4StepCount == 10){
+				setPropertyOnAllAgents("Chance of flowering", 1.0)
+			}
 			if	(message4StepCount == 16){
 				showMessage("Good job! Each of your plants is in an environment that makes it healthy!\n If you want to experiment again, you can reset the model,\nor you can continue to the next page.", env)
 				waitingForMessage4 = false;
@@ -595,21 +513,21 @@ function makeSeeds(agent){
 	
 	for (var i = 0; i &lt; 4; i++){
 		var agentTrait = new AgentTrait()
-		agentTrait.setProperty("leaves", null, 6.0)
+		agentTrait.setProperty("size of leaves", null, 5.0)
 		var child = agent.cloneSelf(agentTrait)
 		child.setProperty("gen", 2)
 		setLocation(agent, child)
 		env.addAgent(child)
 	}
 	agentTrait = new AgentTrait()
-	agentTrait.setProperty("leaves", null, 8.0)
+	agentTrait.setProperty("size of leaves", null, 3.0)
 	var child =  agent.cloneSelf(agentTrait)
 	child.setProperty("gen", 2)
 	setLocation(agent, child)
 	env.addAgent(child)
 	
 	agentTrait = new AgentTrait()
-	agentTrait.setProperty("leaves", null, 4.0)
+	agentTrait.setProperty("size of leaves", null, 7.0)
 	child =  agent.cloneSelf(agentTrait)
 	child.setProperty("gen", 2)
 	setLocation(agent, child)

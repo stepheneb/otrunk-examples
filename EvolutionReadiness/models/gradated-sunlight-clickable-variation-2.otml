@@ -62,101 +62,22 @@
                 <OTPlacement x="0" y="0" width="10" height="150" />
               </barriers>
               <rules>
-                <OTRule descript="Leaf type">
-                	<conditions>
-                    	<OTRuleCondition property="leaves" equalsValue="1.0"/>
-                	</conditions>
-                	<consequences>
-                		<OTRuleConsequence property="Leaf type" newValueFloat="1"/>
-                	</consequences>
-                </OTRule>
-                <OTRule descript="Leaf type">
-                	<conditions>
-                    	<OTRuleCondition property="leaves" equalsValue="2.0"/>
-                	</conditions>
-                	<consequences>
-                		<OTRuleConsequence property="Leaf type" newValueFloat="2"/>
-                	</consequences>
-                </OTRule>
-                <OTRule descript="Leaf type">
-                	<conditions>
-                    	<OTRuleCondition property="leaves" equalsValue="3.0"/>
-                	</conditions>
-                	<consequences>
-                		<OTRuleConsequence property="Leaf type" newValueFloat="3"/>
-                	</consequences>
-                </OTRule>
-                <OTRule descript="Leaf type">
-                	<conditions>
-                    	<OTRuleCondition property="leaves" equalsValue="4.0"/>
-                	</conditions>
-                	<consequences>
-                		<OTRuleConsequence property="Leaf type" newValueFloat="4"/>
-                	</consequences>
-                </OTRule>
-                <OTRule descript="Leaf type">
-                	<conditions>
-                    	<OTRuleCondition property="leaves" equalsValue="5.0"/>
-                	</conditions>
-                	<consequences>
-                		<OTRuleConsequence property="Leaf type" newValueFloat="5"/>
-                	</consequences>
-                </OTRule>
-                <OTRule descript="Leaf type">
-                	<conditions>
-                    	<OTRuleCondition property="leaves" equalsValue="6.0"/>
-                	</conditions>
-                	<consequences>
-                		<OTRuleConsequence property="Leaf type" newValueFloat="6"/>
-                	</consequences>
-                </OTRule>
-                <OTRule descript="Leaf type">
-                	<conditions>
-                    	<OTRuleCondition property="leaves" equalsValue="7.0"/>
-                	</conditions>
-                	<consequences>
-                		<OTRuleConsequence property="Leaf type" newValueFloat="7"/>
-                	</consequences>
-                </OTRule>
-                <OTRule descript="Leaf type">
-                	<conditions>
-                    	<OTRuleCondition property="leaves" equalsValue="8.0"/>
-                	</conditions>
-                	<consequences>
-                		<OTRuleConsequence property="Leaf type" newValueFloat="8"/>
-                	</consequences>
-                </OTRule>
-                <OTRule descript="Leaf type">
-                	<conditions>
-                    	<OTRuleCondition property="leaves" equalsValue="9.0"/>
-                	</conditions>
-                	<consequences>
-                		<OTRuleConsequence property="Leaf type" newValueFloat="9"/>
-                	</consequences>
-                </OTRule>
-                <OTRule descript="Leaf type">
-                	<conditions>
-                    	<OTRuleCondition property="leaves" equalsValue="10.0"/>
-                	</conditions>
-                	<consequences>
-                		<OTRuleConsequence property="Leaf type" newValueFloat="10"/>
-                	</consequences>
-                </OTRule>
                 <OTRule description="Health depends on leaves and sunlight">
                   <conditions>
                     <OTRuleCondition always="true" />
                   </conditions>
                   <consequences>
-                    <OTRuleConsequence property="Health">
-                      <ruleScript>var diff = Math.abs(leaves - (sunlight*10)); 
-						var healthAtOneUnitDiff = 0.98; 
-	                    var a = 0.2 - 0.25*healthAtOneUnitDiff;
-	                    var b =1.25*healthAtOneUnitDiff -1.2;
-	                    var c = 1;
-						var h = a*diff*diff + b*diff + c; 
-						if (h &gt; 0) return h; else return 0;</ruleScript>
+                    <OTRuleConsequence property="Health" ruleScript="
+                    		var diff = Math.abs((11 - size_of_leaves) - (sunlight*10));
+		                    var healthAtOneUnitDiff = 0.98;
+		                    var a = 0.2 - 0.25*healthAtOneUnitDiff;
+		                    var b =1.25*healthAtOneUnitDiff -1.2;
+		                    var c = 1;
+		                    var h = a*diff*diff + b*diff + c;
+		                    if (h &gt; 0) return h;
+		                    else return 0;">
                       <propertyVariables>
-                        <string>leaves</string>
+                        <string>size of leaves</string>
                         <string>sunlight</string>
                       </propertyVariables>
                     </OTRuleConsequence>
@@ -297,7 +218,7 @@
             </OTScriptObject>
           </scripts>
           <traitsToShow>
-            <string>Leaf type</string>
+            <string>size of leaves</string>
           </traitsToShow>
           <addAgentsButtons>
             <OTAddAgentButton text="Add Plant A">
@@ -305,17 +226,46 @@
                 <object refid="f5732706-c9c2-4e29-8c99-4c668dda89b0" />
               </species>
               <agentTraits>
+                <OTAgentTrait property="size of leaves">
+                  <defaultValues>
+                    <int>5</int>
+                  </defaultValues>
+                </OTAgentTrait>
                 <OTAgentTrait property="roots">
                   <defaultValues>
-                    <float>5.0</float>
+                    <int>5</int>
                   </defaultValues>
                 </OTAgentTrait>
-                <OTAgentTrait property="leaves">
+              </agentTraits>
+            </OTAddAgentButton>
+            <OTAddAgentButton text="Add Plant B">
+              <species>
+                <object refid="f5732706-c9c2-4e29-8c99-4c668dda89b0" />
+              </species>
+              <agentTraits>
+                <OTAgentTrait property="size of leaves">
                   <defaultValues>
-                    <float>6.0</float>
+                    <int>1</int>
                   </defaultValues>
                 </OTAgentTrait>
-                <OTAgentTrait property="Leaf type">
+                <OTAgentTrait property="roots">
+                  <defaultValues>
+                    <int>5</int>
+                  </defaultValues>
+                </OTAgentTrait>
+              </agentTraits>
+            </OTAddAgentButton>
+            <OTAddAgentButton text="Add Plant C">
+              <species>
+                <object refid="f5732706-c9c2-4e29-8c99-4c668dda89b0" />
+              </species>
+              <agentTraits>
+                <OTAgentTrait property="size of leaves">
+                  <defaultValues>
+                    <int>9</int>
+                  </defaultValues>
+                </OTAgentTrait>
+                <OTAgentTrait property="roots">
                   <defaultValues>
                     <int>5</int>
                   </defaultValues>
