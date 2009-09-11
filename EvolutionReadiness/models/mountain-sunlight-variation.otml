@@ -66,7 +66,7 @@
               </tr>
             </table>
             <br />
-            <object refid="54343311-963a-11de-93ee-d3ede154332c" />
+            <object refid="${slider-script}" />
           </bodyText>
           <documentRefs>
           	<OTEnvironmentHolder local_id="env-holder" toolbar="run,cursor,reset" useSpeedSlider="true" width="590" height="460" >
@@ -274,11 +274,17 @@
                 <OTJavascript>
                   <script>importPackage(Packages.java.lang);
 importPackage(Packages.java.net);
+importPackage(Packages.java.awt.geom);
 importPackage(Packages.javax.swing);
 importPackage(Packages.org.concord.framework.otrunk);
+
+var barriers
+var env = envHolder.getEnvironment()
              
 function init() {
 	slider.addOTChangeListener(sliderChangeListener)
+	barriers = env.getBarriers()
+	env.setBarriers(new Area())
 }
 
 
@@ -292,18 +298,23 @@ var sliderChangeHandler =
         if (val == 0){
         	url = new URL(baseUrl, "images/mountains1.png")
         	setSunlight(0.5,0.5)
+			env.setBarriers(new Area())
         } else if (val == 1){
         	url = new URL(baseUrl, "images/mountains2.png")
         	setSunlight(0.4,0.6)
+        	env.setBarriers(barriers)
         } else if (val == 2){
         	url = new URL(baseUrl, "images/mountains3.png")
         	setSunlight(0.3,0.7)
+        	env.setBarriers(barriers)
         } else if (val == 3){
         	url = new URL(baseUrl, "images/mountains4.png")
         	setSunlight(0.2,0.8)
+        	env.setBarriers(barriers)
         } else if (val == 4){
         	url = new URL(baseUrl, "images/mountains5.png")
         	setSunlight(0.1,0.9)
+        	env.setBarriers(barriers)
         }
         envHolder.getEnvironmentView().setBackgroundImageUrl(url)
     }
@@ -312,7 +323,6 @@ var sliderChangeHandler =
 var sliderChangeListener = new OTChangeListener(sliderChangeHandler)
 
 function setSunlight(left, right){
-		env = envHolder.getEnvironment()
 		for (var i = 0; i &lt; 15; i++) {
 			var sunlight
 			if (i &lt; 8)
