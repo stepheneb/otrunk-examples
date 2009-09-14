@@ -277,6 +277,7 @@ importPackage(Packages.java.net);
 importPackage(Packages.java.awt.geom);
 importPackage(Packages.javax.swing);
 importPackage(Packages.org.concord.framework.otrunk);
+importPackage(Packages.org.concord.biologica.environment);
 
 var barriers
 var env = envHolder.getEnvironment()
@@ -297,6 +298,8 @@ function init() {
 	envHolder.getEnvironmentView().addBackgroundImageUrl(url)
 	url = new URL(baseUrl, "images/mountains5.png")
 	envHolder.getEnvironmentView().addBackgroundImageUrl(url)
+	
+	env.addChangeListener(resetListener)
 }
 
 
@@ -346,6 +349,16 @@ function setSunlight(left, right){
 		}
 }
 
+var resetHandler= {
+	environmentChanged: function(evt){
+		if (evt.getType() == EnvironmentChangeEvent.RESET){
+			sliderView.setValue(0)
+		}
+	}
+}
+			
+var resetListener = new EnvironmentChangeListener(resetHandler)
+
 function save() {
   return true;
 }</script>
@@ -370,6 +383,11 @@ function save() {
                     <OTSlider local_id="slider" minimum="0.0" maximum="4.0" snapToMarks="true" precision="1.0" numMajorTicks="4" />
                   </reference>
                 </OTScriptVariable>
+                <OTScriptVariableComponent name="sliderView">
+                  <reference>
+                    <object refid="${slider}" />
+                  </reference>
+                </OTScriptVariableComponent>
               </variables>
             </OTScriptObject>
           </documentRefs>
