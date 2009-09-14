@@ -481,7 +481,6 @@ var stepHandler = {
 				
 		if (waitingForMessage4 == true){
 			var allAgentsAreHealthy = true
-			var agents = env.getAllAgents()
 			for (var i = 0; i &lt; agents.size(); i++) {
 				var agent = agents.get(i)
 				var health = agent.getProperty("Health")
@@ -498,7 +497,10 @@ var stepHandler = {
 				setPropertyOnAllAgents("Chance of flowering", 1.0)
 			}
 			if	(message4StepCount == 16){
-				showMessage("Good job! Each of your plants is in an environment that makes it healthy!\n If you want to experiment again, you can reset the model,\nor you can continue to the next page.", env)
+				if (agents.size() == 6)
+					showMessage("Good job! Each of your plants is in an environment that makes it healthy!\nIf you want to experiment again, you can reset the model,\nor you can continue to the next page.", env)
+				else
+					showMessage("Each of your plants is in an environment that makes it healthy!\nHowever, some of your plants were dropped between flower boxes.\nIf you want to try again to make all six plants healthy, you can reset the model.", env)
 				waitingForMessage4 = false;
 			}	
 		}
