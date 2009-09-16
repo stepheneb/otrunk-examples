@@ -4,6 +4,7 @@ ref_require($helper)
 ## Create outter tab-navigation
 ##
 otTabContainer = @otrunk.root_object_service.createObject(org.concord.otrunk.ui.OTTabContainer.java_class)
+otTabContainer.name = "Project"
 activityTabs = otTabContainer.tabs
 
 ##
@@ -22,6 +23,7 @@ activities.keys.sort {|a,b| [activities[a]["index"], a.name] <=> [activities[b][
   while activityTabs.object_keys.contains(activity_key.name)
     activity_key.name = activity_key.name.sub(/( \d+)?$/, " #{i += 1}")
   end
+  activityTabContainer.name = "#{activity["index"]} - #{activity_key.name}" 
   activityTabs.putObject("#{activity["index"]} - #{activity_key.name}", activityTabContainer)
 
   stepTabs = activityTabContainer.tabs
@@ -30,6 +32,7 @@ activities.keys.sort {|a,b| [activities[a]["index"], a.name] <=> [activities[b][
     step = activity[step_key]
     tabTitle = "Step #{step_key.join(".")}"
     stepTabContainer = @otrunk.root_object_service.createObject(org.concord.otrunk.ui.OTTabContainer.java_class)
+    stepTabContainer.name = tabTitle
     stepTabContainer.contents_may_scroll = true
     stepTabContainer.height = 500
     stepTabContainer.width = 700
