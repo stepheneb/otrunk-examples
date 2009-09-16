@@ -24,6 +24,8 @@ importClass(Packages.org.concord.otrunk.ui.OTCardContainer);
 importClass(Packages.org.concord.otrunk.udl3.OTUDLMenu);
 importPackage(Packages.org.concord.framework.otrunk);
 importClass(Packages.java.lang.System);
+importClass(Packages.java.util.regex.Matcher);
+importClass(Packages.java.util.regex.Pattern);
 importClass(Packages.javax.swing.JOptionPane);
 
 var objectAboveSnapshotButton;
@@ -120,10 +122,29 @@ var pageContainerHandler =
 				pages[pages.length-1].addOTChangeListener(pageListener);
 			} else if (evt.getProperty().equalsIgnoreCase("currentCard")) {
 				objectAboveSnapshotButton = null;
+				setPageNumber(evt.getSource())
 			}
 		}
 };
 var pageContainerListener = new OTChangeListener(pageContainerHandler);
+
+function setPageNumber(cardContainer){
+	var text = titleDoc.getBodyText();
+				
+	var currCard = cardContainer.getCurrentCard()
+	var cardNumber = 0;
+	for (var i=0; i < cardContainer.getCards().size(); i++){
+		if (cardContainer.getCards().get(i) == currCard){
+			cardNumber = i;
+			break;
+		}
+	}
+	
+	
+	var titlePattern = Pattern.compile("class=\"page-number\">([^>]*)<")
+	var matcher = titlePattern.matcher(new java.lang.StringBuffer(text))
+	titleDoc.setBodyText(matcher.replaceAll("class=\"page-number\">page "+(cardNumber+1)+"<"))
+}
 
 var sections = [];
 var sectionCardContainers = [];
@@ -131,6 +152,7 @@ var pages = [];
 
 function init() {
 	cardContainer.addOTChangeListener(pageContainerListener);
+	setPageNumber(cardContainer)
 	
 	var pageIndex = 0;
 		
