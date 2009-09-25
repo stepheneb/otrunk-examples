@@ -48,7 +48,6 @@
     <import class="org.concord.otrunk.view.OTViewMode" />
     <import class="org.concord.otrunk.view.document.OTCompoundDoc" />
     <import class="org.concord.otrunk.view.document.OTCssText" />
-    <import class="org.concord.otrunk.view.document.OTDocumentViewConfig" />
     <import class="org.concord.otrunk.view.document.edit.OTDocumentEditViewConfig" />
     <import class="org.concord.otrunk.view.prototype.OTPrototypeEventController" />
     <import class="org.concord.otrunk.view.prototype.OTPrototypeMapEntry" />
@@ -58,6 +57,11 @@
     <import class="org.concord.smartgraph.OTSmartGraphTool" />
     <import class="org.concord.otrunk.ui.swing.OTObjectModeSwitcherView"/>
     <import class="org.concord.otrunk.ui.swing.OTObjectModeSwitcherViewConfig"/>
+    <import class="org.concord.otrunk.udl.document.OTUDLDocumentViewConfig" />
+    <import class="org.concord.otrunk.udl.document.OTDefinition" />
+    <import class="org.concord.otrunk.udl.document.OTDefinitionList" />
+    <import class="org.concord.otrunk.udl.document.OTDefinitionManager" />
+    <import class="org.concord.otrunk.udl.document.OTGlossary" />
   </imports>
   <idMap>
     <idMapping local_id="css-font" id="23cc14f0-c44f-11dc-95ff-0800200c9a66"/>
@@ -467,7 +471,7 @@ function save() {
             </OTViewMode>
           </modes>
           <frame>
-            <OTFrame useScrollPane="false" openMaximized="true" />
+            <OTFrame useScrollPane="false" openMaximized="false" />
           </frame>
           <views>
           	<OTViewEntry local_id="biologica-model-container-view" objectClass="org.concord.otrunk.biologica.ui.OTBiologicaModelContainer" viewClass="org.concord.otrunk.biologica.ui.OTBiologicaModelContainerView"/>
@@ -495,12 +499,12 @@ function save() {
             <OTViewEntry objectClass="org.concord.otrunk.ui.OTObjectSet" viewClass="org.concord.otrunk.ui.swing.OTObjectSetView"/>
             <OTViewEntry local_id="script-button-view" objectClass="org.concord.otrunk.script.ui.OTScriptButton" viewClass="org.concord.otrunk.script.ui.OTScriptButtonView"/>
             <OTViewEntry local_id="script-button-for-authors" objectClass="org.concord.otrunk.script.ui.OTScriptButton" viewClass="org.concord.otrunk.ui.swing.OTNullView"/>
-            <!--<OTViewEntry objectClass="org.concord.otrunk.udl.document.OTGlossary" viewClass="org.concord.otrunk.udl.document.OTGlossaryView"/>-->
-            <!--<OTViewEntry objectClass="org.concord.otrunk.udl.document.OTDefinition" viewClass="org.concord.otrunk.udl.document.OTDefinitionView"/>-->
+            <OTViewEntry objectClass="org.concord.otrunk.udl.document.OTGlossary" viewClass="org.concord.otrunk.udl.document.OTGlossaryView"/>
+            <OTViewEntry objectClass="org.concord.otrunk.udl.document.OTDefinition" viewClass="org.concord.otrunk.udl.document.OTDefinitionView"/>
             <OTViewEntry objectClass="org.concord.otrunk.ui.OTLayerContainer" viewClass="org.concord.otrunk.ui.swing.OTLayerContainerView"/>
             <OTViewEntry local_id="smart-graph-question-view" objectClass="org.concord.smartgraph.OTSmartGraphQuestion" viewClass="org.concord.smartgraph.OTSmartGraphQuestionView" />
       <OTViewEntry local_id="smart-graph-view" objectClass="org.concord.smartgraph.OTSmartGraphTool" viewClass="org.concord.smartgraph.OTSmartGraphToolHiddenView" />
-            <OTViewEntry objectClass="org.concord.otrunk.ui.menu.OTNavBar" viewClass="org.concord.otrunk.ui.menu.OTNavBarView"/>
+            <OTViewEntry objectClass="org.concord.otrunk.udl.OTUDLNavBar" viewClass="org.concord.otrunk.udl.ui.OTUDLNavBarView"/>
             <!--<OTViewEntry local_id="lab-page-view" objectClass="org.concord.otrunk.udl.OTUDLLabPage" viewClass="org.concord.otrunk.udl.ui.OTUDLLabPageView"/>-->
             <OTViewEntry local_id="sound-grapher-view" viewClass="org.concord.multimedia.state.ui.OTSoundDataCollectorView" objectClass="org.concord.multimedia.state.OTSoundDataCollector" />
             <OTViewEntry local_id="mw-view" objectClass="org.concord.otrunkmw.OTModelerPage" viewClass="org.concord.otrunkmw.OTModelerPageView" />
@@ -552,16 +556,16 @@ function save() {
             <OTViewEntry id="40d7460a-e55f-47bc-9668-6d13a4835ce1" objectClass="org.concord.otrunk.intrasession.OTMultiUserPickN" viewClass="org.concord.otrunk.intrasession.ui.OTMultiUserConcatTeacherView" />
             <OTViewEntry id="12b9b413-8aee-4fc7-b1a7-fe272f17509e" objectClass="org.concord.otrunk.intrasession.OTMultiUserPollingGraph" viewClass="org.concord.otrunk.intrasession.ui.OTMultiUserPollingGraphView" />
             <OTViewEntry id="1b8f0a7a-0a5c-409d-ae40-c5b6e6f1e614" objectClass="org.concord.otrunk.intrasession.OTMultiUserPollingGraph" viewClass="org.concord.otrunk.intrasession.ui.OTMultiUserPollingGraphTeacherView" />
-            <OTDocumentViewConfig id="0d03b9c0-e48a-11dc-95ff-0800200c9a66" objectClass="org.concord.otrunk.view.document.OTCompoundDoc" viewClass="org.concord.otrunk.udl.document.OTUDLDocumentView" updateViewOnChange="true">
-              <!--<definitionManager>
-                <object refid="b6350a20-e3b4-11dc-95ff-0800200c9a66" />
-              </definitionManager>-->
+            <OTUDLDocumentViewConfig id="0d03b9c0-e48a-11dc-95ff-0800200c9a66" objectClass="org.concord.otrunk.view.document.OTCompoundDoc" viewClass="org.concord.otrunk.udl.document.OTUDLDocumentView" updateViewOnChange="true">
+              <definitionManager>
+                <object refid="901a7d64-1b4b-4088-aeb2-998d9f2d8741" />
+              </definitionManager>
               <cssBlocks>
                 <OTCssText id="23cc14f0-c44f-11dc-95ff-0800200c9a66" src="../css/otrunk-normal-font.css" />
                 <OTCssText id="31193bb0-c44f-11dc-95ff-0800200c9a66" src="../css/otrunk-56-color.css" />
                 <OTCssText id="3cefc800-c44f-11dc-95ff-0800200c9a66" src="../css/otrunk-normal-layout.css" />
               </cssBlocks>
-            </OTDocumentViewConfig>
+            </OTUDLDocumentViewConfig>
             <OTPrototypeViewEntry id="textsize-choice-view" objectClass="org.concord.otrunk.OTSystem" viewClass="org.concord.otrunk.view.prototype.OTPrototypeView" copyPrototype="false">
               <viewEntry>
                 <object refid="${choice-combo-view}" />
@@ -620,14 +624,19 @@ function save() {
         </OTViewBundle>
       </bundles>
       <library>
-        <!--<OTDefinitionManager id="b6350a20-e3b4-11dc-95ff-0800200c9a66">
+        <OTDefinitionManager id="901a7d64-1b4b-4088-aeb2-998d9f2d8741">
           <definitions>
-            <OTDefinitionList src="../glossary/common-glossary.txt"/>
+            <OTDefinitionList src="../glossaries/evolution-glossary.txt" />
           </definitions>
           <frame>
             <OTFrame local_id="definition_frame" width="300" height="190" borderlessPopup="true" />
           </frame>
-        </OTDefinitionManager>-->
+        </OTDefinitionManager>
+        <OTGlossary id="71f887c8-fd36-47d6-a4fd-1c84f74c9334">
+         	<definitionManager>
+         		<object refid="901a7d64-1b4b-4088-aeb2-998d9f2d8741"/>
+         	</definitionManager>
+         </OTGlossary>
         <OTCompoundDoc id="234e6400-c450-11dc-95ff-0800200c9a66" name="overlays-pulldown-menus"  showEditBar="false">
           <bodyText />
         </OTCompoundDoc>
