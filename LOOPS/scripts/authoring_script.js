@@ -169,8 +169,7 @@ var pageContainerHandler =
 		{
 			if (evt.getProperty().equalsIgnoreCase("cards") &&
 				evt.getOperation().equals(OTChangeEvent.OP_ADD)) {
-				var numCards = evt.getSource().getCards().size();
-				var doc = evt.getSource().getCards().get(numCards-1);
+				var doc = evt.getValue();
 				doc.setBodyText("<div class=\"buffer\">"+
 									"<div class=\"border\">"+
 										"<div class=\"body\">"+
