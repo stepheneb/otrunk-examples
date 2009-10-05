@@ -1,12 +1,19 @@
 importClass(Packages.javax.swing.JOptionPane);
 
-function showMessageWithoutPausing(message){
-	JOptionPane.showMessageDialog(null, message);
+function showMessageWithoutPausing(message, component){
+	if (component != null)
+		JOptionPane.showMessageDialog(component, message);
+	else
+		JOptionPane.showMessageDialog(null, message);
 }
 
 // show message and pause model
-function showMessage(message, environment){
+function showMessage(message, environment, component){
 	environment.getEnvironmentView().pause()
-	var x = JOptionPane.showMessageDialog(null, message);
+	if (component != null)
+		var x = JOptionPane.showMessageDialog(component, message);
+	else
+		var x = JOptionPane.showMessageDialog(null, message);
+		
 	environment.getEnvironmentView().run()
 }
