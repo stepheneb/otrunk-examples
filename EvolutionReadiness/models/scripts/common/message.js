@@ -1,6 +1,6 @@
 importClass(Packages.javax.swing.JOptionPane);
 
-function showMessage(message){
+function showMessageWithoutPausing(message){
 	JOptionPane.showMessageDialog(null, message);
 }
 
