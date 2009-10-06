@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<otrunk id="2767fe20-6c7d-11dc-8314-0800200c9a66">
+<otrunk id="ebe40bbd-ed78-439e-8eab-9f8d54c62476">
   <imports>
     <import class="org.concord.data.state.OTDataStore" />
     <import class="org.concord.data.state.OTDataChannelDescription" />
@@ -43,6 +43,7 @@
     <import class="org.concord.otrunk.udl.document.OTGlossary" />
     <import class="org.concord.otrunk.udl.document.OTUDLCompoundDoc" />
     <import class="org.concord.otrunk.udl.document.OTUDLDocumentViewConfig" />
+    <import class="org.concord.otrunk.udl.OTUDLNavBar" />
     <import class="org.concord.otrunk.graph.OTDataCollectorViewConfig" />
     <import class="org.concord.otrunk.udl.question.OTUDLQuestion" />
     <import class="org.concord.otrunk.udl.question.OTUDLLeveledQuestions" />
@@ -68,6 +69,11 @@
     <import class="org.concord.otrunk.ui.snapshot.OTSnapshotChooser" />
     <import class="org.concord.otrunk.ui.swing.OTChoiceViewConfig" />
     <import class="org.concord.otrunk.util.OTSharingBundle" />
+    <import class="org.concord.otrunk.util.OTLabbookBundle" />
+    <import class="org.concord.otrunk.util.OTLabbookEntry" />
+    <import class="org.concord.otrunk.labbook.OTLabbookButton" />
+    <import class="org.concord.otrunk.labbook.OTLabbook" />
+    <import class="org.concord.otrunk.labbook.OTLabbookEntryChooser" />
     <import class="org.concord.otrunk.view.OTObjectEditViewConfig" />
     <import class="org.concord.otrunk.view.OTViewChild" />
     <import class="org.concord.otrunk.view.OTViewEntry" />
@@ -100,11 +106,15 @@
     <import class="org.concord.otrunk.script.ui.OTScriptVariableRealObject" />
     <import class="org.concord.framework.otrunk.wrapper.OTInt" />
     <import class="org.concord.framework.otrunk.wrapper.OTBoolean" />
+    <import class="org.concord.otrunk.ui.question.OTQuestion" />
+    <import class="org.concord.otrunk.ui.OTObjectSet" />
   </imports>
   <objects>
     <OTSystem local_id="system">
       <includes>
         <OTInclude href="global-imports/er-view-bundle.otml" />
+        <OTInclude href="models/five-sunlight-clickable-breed-true.otml" />
+        <OTInclude href="models/five-sunlight-clickable-breed-true-limited-seeds.otml" />
       </includes>
       <bundles>
         <object refid="8d880970-c22a-11dc-95ff-0800200c9a66" />
@@ -120,56 +130,60 @@
             <OTDeviceConfig configString="none" deviceId="10" />
           </deviceConfigs>
         </OTInterfaceManager>
+        <OTLabbookBundle />
       </bundles>
       <overlays>
         <object refid="6cc8e2b0-c44e-11dc-95ff-0800200c9a66" />
         <object refid="b5d8b4a0-db35-11dc-95ff-0800200c9a66" />
-        <OTOverlay>
-          <deltaObjectMap>
-            <entry key="${authoring_script.js}">
-              <OTJavascript src="scripts/student_script.js" />
-            </entry>
-          </deltaObjectMap>
-        </OTOverlay>
       </overlays>
       <root>
         <OTCurriculumUnit version="2" name="ER Activity">
           <activity>
-                <OTUDLSection local_id="section_1" >
-                  <header>
-                    <OTCompoundDoc showEditBar="false">
+            <OTUDLSection local_id="section_1">
+              <header>
+                <OTUDLCompoundDoc id="cb1eb3c8-ca0a-4ffc-8a9c-c349de692773" showEditBar="false">
+                  <bodyText>
+                    <table width="100%">
+                      <tr>
+                        <td>
+                          <div class="title">ER Activity</div>
+                        </td>
+                        <td align="right">
+                          <div class="page-number">page 1</div>
+                        </td>
+                      </tr>
+                    </table>
+                  </bodyText>
+                </OTUDLCompoundDoc>
+              </header>
+              <content>
+                <OTCardContainer local_id="activity-card-container" contentsMayScroll="true" loadViewOnlyOnDemand="true">
+                  <cards>
+                    <OTUDLCompoundDoc local_id="page-1" name="1">
                       <bodyText>
-                        <div class="title">[Activity title]</div>
-                      </bodyText>
-                    </OTCompoundDoc>
-                  </header>
-                  <content>
-                    <OTCardContainer local_id="activity-card-container" contentsMayScroll="true" loadViewOnlyOnDemand="true">
-                      <cards>
-                        <OTCompoundDoc local_id="page-1" name="1" showDefinitions="true">
-                          <bodyText>
-                            <div class="buffer">
-                              <div class="border">
-                                <div class="body">
-                                        <div class="subtitle">
-                                        	[Page title]
-                                        </div>
-                                  <br/><br/>
-                                </div>
-                              </div>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <div class="subtitle">Subtitle</div>
+                              Content
                             </div>
-                          </bodyText>
-                        </OTCompoundDoc>
-                      </cards>
-                      <currentCard>
-                        <object refid="${page-1}" />
-                      </currentCard>
-                    </OTCardContainer>
-                  </content>
-                  <footer>
-                    <object refid="${nav-bar}" />
-                  </footer>
-                </OTUDLSection>
+                          </div>
+                        </div>
+                      </bodyText>
+                    </OTUDLCompoundDoc>
+                  </cards>
+                  <currentCard>
+                    <object refid="${page-1}" />
+                  </currentCard>
+                  <viewedCards>
+                    <object refid="${page-1}" />
+                  </viewedCards>
+                </OTCardContainer>
+              </content>
+              <footer>
+                <object refid="${nav-bar}" />
+              </footer>
+            </OTUDLSection>
           </activity>
           <script>
             <object refid="${authoring-script}" />
@@ -177,19 +191,7 @@
         </OTCurriculumUnit>
       </root>
       <library>
-        <object refid="b6350a20-e3b4-11dc-95ff-0800200c9a66" />
-        <OTUDLMenu local_id="section-1-menu">
-          <cardContainer>
-            <object refid="${activity-card-container}" />
-          </cardContainer>
-          <menuRule>
-            <object refid="${page-rule}" />
-          </menuRule>
-        </OTUDLMenu>
-        <OTSnapshotAlbum local_id="album" />
         <OTUDLMenuRule local_id="page-rule" jumpToViewedCard="true" stepAhead="true" />
-        <OTJavascript local_id="change_page.js" src="scripts/change_page.js" />
-        <OTJavascript local_id="show_message.js" src="scripts/show_message.js" />
         <OTJavascript local_id="authoring_script.js" src="scripts/authoring_script.js" />
         <OTScriptObject local_id="authoring-script">
           <variables>
@@ -208,22 +210,35 @@
                 <object refid="${page-rule}" />
               </reference>
             </OTScriptVariable>
+            <OTScriptVariable name="titleDoc">
+              <reference>
+                <object refid="cb1eb3c8-ca0a-4ffc-8a9c-c349de692773" />
+              </reference>
+            </OTScriptVariable>
           </variables>
           <script>
             <object refid="${authoring_script.js}" />
           </script>
           <scriptState />
         </OTScriptObject>
-        <OTNavBar local_id="nav-bar">
+        <OTUDLNavBar local_id="nav-bar">
           <menuView>
             <object refid="29dc5ef0-c453-11dc-95ff-0800200c9a66" />
           </menuView>
           <cssColor>
             <object refid="31193bb0-c44f-11dc-95ff-0800200c9a66" />
           </cssColor>
-        </OTNavBar>
+          <album>
+            <OTLabbook local_id="album" />
+          </album>
+          <glossary>
+            <object refid="71f887c8-fd36-47d6-a4fd-1c84f74c9334" />
+          </glossary>
+          <menuRule>
+            <object refid="${page-rule}" />
+          </menuRule>
+        </OTUDLNavBar>
       </library>
     </OTSystem>
   </objects>
 </otrunk>
-
