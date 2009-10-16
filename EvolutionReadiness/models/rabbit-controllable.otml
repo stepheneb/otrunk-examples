@@ -230,19 +230,21 @@
 							{
 							    keyPressed: function(evt)
 							    {
-							    	var keyCode = evt.getKeyCode()
-							    	var loc = rabbit.getLocation()
-							    	var newLoc
-							    	if (keyCode == evt.VK_UP){
-							    		newLoc = new Point(loc.x, loc.y - 3)
-							    	} else if (keyCode == evt.VK_DOWN){
-							    		newLoc = new Point(loc.x, loc.y + 3)
-							    	} else if (keyCode == evt.VK_LEFT){
-							    		newLoc = new Point(loc.x - 3, loc.y)
-							    	} else if (keyCode == evt.VK_RIGHT){
-							    		newLoc = new Point(loc.x + 3, loc.y)
+							    	if (rabbit != null) {
+								    	var keyCode = evt.getKeyCode()
+								    	var loc = rabbit.getLocation()
+								    	var newLoc
+								    	if (keyCode == evt.VK_UP){
+								    		newLoc = new Point(loc.x, loc.y - 3)
+								    	} else if (keyCode == evt.VK_DOWN){
+								    		newLoc = new Point(loc.x, loc.y + 3)
+								    	} else if (keyCode == evt.VK_LEFT){
+								    		newLoc = new Point(loc.x - 3, loc.y)
+								    	} else if (keyCode == evt.VK_RIGHT){
+								    		newLoc = new Point(loc.x + 3, loc.y)
+								    	}
+								    	rabbit.setLocation(newLoc)
 							    	}
-							    	rabbit.setLocation(newLoc)
 							    }
 							
 							}
@@ -252,19 +254,22 @@
 							{
 								environmentStepped: function()
 								{
-									envHolder.getParent().getParent().requestFocus()
-									var hunger = 100 - rabbit.getProperty("energy").intValue()
-									slider.setValue(hunger)
-									if (hunger &gt; 20){
-										rabbit.setProperty("current behavior", "EATING")
-									} else {
-										rabbit.setProperty("current behavior", "WANDERING")
-									}
-									if (hunger &gt; 99){
-										env.removeAgent(rabbit)
-										envHolder.pauseAction()
-										rabbit.setProperty("Hunger", 0)
-										showMessageWithoutPausing("Oh no! Your rabbit died of hunger.\nTry again by pressing the Restart button", envHolder)
+									if (rabbit != null){
+										envHolder.getParent().getParent().requestFocus()
+										var hunger = 100 - rabbit.getProperty("energy").intValue()
+										slider.setValue(hunger)
+										if (hunger &gt; 20){
+											rabbit.setProperty("current behavior", "EATING")
+										} else {
+											rabbit.setProperty("current behavior", "WANDERING")
+										}
+										if (hunger &gt; 99){
+											env.removeAgent(rabbit)
+											envHolder.pauseAction()
+											rabbit.setProperty("Hunger", 0)
+											showMessageWithoutPausing("Oh no! Your rabbit died of hunger.\nTry again by pressing the Restart button", envHolder)
+											rabbit = null
+										}
 									}
 										
 								}
