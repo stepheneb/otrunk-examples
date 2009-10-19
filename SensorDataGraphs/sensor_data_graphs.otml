@@ -129,6 +129,7 @@ Sensor Type Ids from SensorConfig
         <OTInterfaceManager local_id="interface_manager">
           <deviceConfigs>
             <object refid="${pasco_usb}"/>
+            <!-- <object refid="${vernier_go_link_config_1}" /> -->
           </deviceConfigs>
         </OTInterfaceManager>
       </services>
@@ -448,6 +449,22 @@ Sensor Type Ids from SensorConfig
               </xDataAxis>
               <yDataAxis>
                 <OTDataAxis min="-10" max="10" label="Voltage" units="V"/>
+              </yDataAxis>
+            </OTDataCollector>
+            <OTDataCollector name="Current">
+              <source>
+                <OTDataGraphable connectPoints="true" color="0xff0000"
+                  drawMarks="false" name="Dataset1" xColumn="0" yColumn="1">
+                  <dataProducer>
+                    <object refid="${current_dp}"/>
+                  </dataProducer>
+                </OTDataGraphable>
+              </source>
+              <xDataAxis>
+                <OTDataAxis min="0" max="10" label="Time" units="s"/>
+              </xDataAxis>
+              <yDataAxis>
+                <OTDataAxis min="0" max="1" label="Current" units="A"/>
               </yDataAxis>
             </OTDataCollector>
             <OTDataCollector name="Force 3N">
@@ -1179,6 +1196,27 @@ Sensor Type Ids from SensorConfig
                           <unit>V</unit>
                           <requiredMax>9</requiredMax>
                           <requiredMin>-9</requiredMin>
+                        </OTSensorRequest>
+                      </sensorRequests>
+                    </OTExperimentRequest>
+                  </request>
+                </OTSensorDataProxy>
+                <OTSensorDataProxy local_id="current_dp">
+                  <name>Current</name>
+                  <request>
+                    <OTExperimentRequest>
+                      <period>0.1</period>
+                      <sensorRequests>
+                        <OTSensorRequest>
+                          <type>10</type>
+                          <!-- type of sensor -->
+                          <stepSize>0.1</stepSize>
+                          <!-- requested resolution -->
+                          <displayPrecision>-3</displayPrecision>
+                          <port>0</port>
+                          <unit>A</unit>
+                          <requiredMax>1</requiredMax>
+                          <requiredMin>-1</requiredMin>
                         </OTSensorRequest>
                       </sensorRequests>
                     </OTExperimentRequest>
