@@ -67,10 +67,82 @@
       					<td>
       						<object refid="${env-holder}"/>
       					</td>
-      					<td width="5%"></td>
+  					</tr>
+  					<tr>
       					<td>
-      					Hunger:<br/><br/>
-      						<object refid="${slider}"/>
+      						<table>
+      							<tr>
+      								<td>
+      									<b>Rabbit</b>
+      								</td>
+      								<td>
+      									Hunger bonus:<br/>
+      									<object refid="${rabbit-hunger-bonus-slider}"/>
+      								</td>
+      								<td>
+      									Mating desire bonus:<br/>
+      									<object refid="${rabbit-mating-desire-bonus-slider}"/>
+      								</td>
+      								<td>
+      									Max energy:<br/>
+      									<object refid="${rabbit-max-energy-slider}"/>
+      								</td>
+      								<td>
+      									Metabolism:<br/>
+      									<object refid="${rabbit-metabolism-slider}"/>
+      								</td>
+      								<td>
+      									Chance of being seen:<br/>
+      									<object refid="${rabbit-chance-of-being-seen-slider}"/>
+      								</td>
+      								<td>
+      									Vision distance:<br/>
+      									<object refid="${rabbit-vision-distance-slider}"/>
+      								</td>
+      								<td>
+      									Max age:<br/>
+      									<object refid="${rabbit-max-age-slider}"/>
+      								</td>
+      							</tr>
+      							<tr>
+      								<td>
+      									<b>Fox</b>
+      								</td>
+      								<td>
+      									Hunger bonus:<br/>
+      									<object refid="${fox-hunger-bonus-slider}"/>
+      								</td>
+      								<td>
+      									Mating desire bonus:<br/>
+      									<object refid="${fox-mating-desire-bonus-slider}"/>
+      								</td>
+      								<td>
+      									Max energy:<br/>
+      									<object refid="${fox-max-energy-slider}"/>
+      								</td>
+      								<td>
+      									Metabolism:<br/>
+      									<object refid="${fox-metabolism-slider}"/>
+      								</td>
+      								<td>
+      									Chance of being seen:<br/>
+      									<object refid="${fox-chance-of-being-seen-slider}"/>
+      								</td>
+      								<td>
+      									Vision distance:<br/>
+      									<object refid="${fox-vision-distance-slider}"/>
+      								</td>
+      								<td>
+      									Max age:<br/>
+      									<object refid="${fox-max-age-slider}"/>
+      								</td>
+      							</tr>
+      							<tr>
+      								<td>
+      									<object refid="${slider-script}"/>
+      								</td>
+      							</tr>
+      						</table>
       					</td>
       				</tr>
       			</table>
@@ -78,7 +150,7 @@
       		<documentRefs>
 		      	<OTEnvironmentHolder local_id="env-holder" width="590" height="460" toolbar="run,cursor,reset" useSpeedSlider="true">
 		          <environment>
-		            <OTEnvironment local_id="environment" environmentWidth="15" environmentHeight="15" showRunButton="false" winterLength="15" summerLength="50" showWinterImage="false" orgSizeMultiplier="2" backgroundImageSrc="images/mountains1.png">
+		            <OTEnvironment local_id="environment" environmentWidth="20" environmentHeight="20" showRunButton="false" winterLength="15" summerLength="50" showWinterImage="false" orgSizeMultiplier="2" backgroundImageSrc="images/mountains1.png">
 		              <world>
 		                <OTWorld local_id="peasimple_world" speciesPath="org/concord/biologica/worlds/peasimple.xml" />
 		              </world>
@@ -120,18 +192,17 @@
 									var world = env.getWorld();
 									env.setWrapNorthSouth(false);
 									env.setWrapEastWest(false);
-									for (var i = 0; i &lt; 15; i++) {
-								        for (var j = 0; j &lt; 15; j++) {
+									for (var i = 0; i &lt; 20; i++) {
+								        for (var j = 0; j &lt; 20; j++) {
 								        	var envUnit = new EnvironmentUnit(env, null, i, j)
 								        	env.setEnvironmentUnit(envUnit, i, j)
-								        	envUnit.setProperty("sunlight", new Float((j+1)/10))
 								        	var color = new Color(0.3, 0.2, 0.1)
 								        	var terrain = new Terrain(world, "terrain", color)
 								        	envUnit.setTerrain(terrain)
 							            }
 							        }
 							        
-							        for (var i = 0; i &lt; 30; i++) {
+							        for (var i = 0; i &lt; 50; i++) {
 							        	var plant = plant_species.createAgent();
 										plant.setAge(i*2)
 										env.addAgent(plant)
@@ -200,7 +271,7 @@
 		            <string>size of leaves</string>
 		          </traitsToShow>
 		          <addAgentsButtons>
-		          	<OTAddAgentButton text="Add plants" quantity="10" click="false" limit="-1">
+		          	<OTAddAgentButton text="Add plants" quantity="20" click="false" limit="-1">
 	                  <species>
 	                    <object refid="${plant-species}" />
 	                  </species>
@@ -209,57 +280,139 @@
 	                  <species>
 	                    <object refid="${rabbit-species}" />
 	                  </species>
-	                  <agentTraits>
-	                    <OTAgentTrait property="max offspring">
-	                      <defaultValues>
-	                        <int>2</int>
-	                      </defaultValues>
-	                    </OTAgentTrait>
-	                    <OTAgentTrait property="max energy">
-	                      <defaultValues>
-	                        <float>100</float>
-	                      </defaultValues>
-	                    </OTAgentTrait>
-	                    <OTAgentTrait property="age limit">
-	                      <defaultValues>
-	                        <float>1000</float>
-	                      </defaultValues>
-	                    </OTAgentTrait>
-	                    <OTAgentTrait property="food quantity">
-	                      <defaultValues>
-	                        <float>100</float>
-	                      </defaultValues>
-	                    </OTAgentTrait>
-	                  </agentTraits>
 	                </OTAddAgentButton>
 	                <OTAddAgentButton text="Add fox" quantity="1" click="false" limit="-1">
 	                  <species>
 	                    <object refid="${fox-species}" />
 	                  </species>
-	                  <agentTraits>
-	                    <OTAgentTrait property="max offspring">
-	                      <defaultValues>
-	                        <int>2</int>
-	                      </defaultValues>
-	                    </OTAgentTrait>
-	                    <OTAgentTrait property="max energy">
-	                      <defaultValues>
-	                        <float>300</float>
-	                      </defaultValues>
-	                    </OTAgentTrait>
-	                    <OTAgentTrait property="age limit">
-	                      <defaultValues>
-	                        <float>1000</float>
-	                      </defaultValues>
-	                    </OTAgentTrait>
-	                  </agentTraits>
 	                </OTAddAgentButton>
 		          </addAgentsButtons>
-		          <logAddedAgentProperties>
-		          	<string>size of leaves</string>
-		          </logAddedAgentProperties>
 		        </OTEnvironmentHolder>
-		        <OTSlider local_id="slider" minimum="0" maximum="100" value="0" numTicks="10"/>
+		        <OTSlider local_id="rabbit-hunger-bonus-slider" minimum="-100" maximum="100" value="0" numTicks="30"/>
+		        <OTSlider local_id="fox-hunger-bonus-slider" minimum="-100" maximum="100" value="0" numTicks="30"/>
+		        <OTSlider local_id="rabbit-mating-desire-bonus-slider" minimum="-50" maximum="50" value="0" numTicks="20"/>
+		        <OTSlider local_id="fox-mating-desire-bonus-slider" minimum="-50" maximum="50" value="0" numTicks="20"/>
+		        <OTSlider local_id="rabbit-max-energy-slider" minimum="0" maximum="500" value="100" numTicks="20"/>
+		        <OTSlider local_id="fox-max-energy-slider" minimum="0" maximum="500" value="300" numTicks="20"/>
+		        <OTSlider local_id="rabbit-metabolism-slider" minimum="0" maximum="15" value="3" numTicks="15"/>
+		        <OTSlider local_id="fox-metabolism-slider" minimum="0" maximum="15" value="3" numTicks="15"/>
+		        <OTSlider local_id="rabbit-chance-of-being-seen-slider" minimum="0" maximum="100" value="100" numTicks="20"/>
+		        <OTSlider local_id="fox-chance-of-being-seen-slider" minimum="0" maximum="100" value="90" numTicks="20"/>
+		        <OTSlider local_id="rabbit-vision-distance-slider" minimum="0" maximum="100" value="30" numTicks="20"/>
+		        <OTSlider local_id="fox-vision-distance-slider" minimum="0" maximum="100" value="35" numTicks="20"/>
+		        <OTSlider local_id="rabbit-max-age-slider" minimum="0" maximum="2000" value="1000" numTicks="20"/>
+		        <OTSlider local_id="fox-max-age-slider" minimum="0" maximum="2000" value="1000" numTicks="20"/>
+		        <OTScriptButton local_id="slider-script" name="Slider script" text="Update">
+	              <script>
+	                <OTJavascript>
+	                  <script>importPackage(Packages.java.lang);
+						importPackage(Packages.java.awt);
+						importPackage(Packages.org.concord.biologica.environment);
+						importPackage(Packages.org.concord.biologica.agebt);
+						
+						function clicked() {
+								rabbit_species.setTrait("hunger bonus", rabbit_hunger_bonus_slider.getValue())
+								rabbit_species.setTrait("mating desire bonus", rabbit_mating_desire_bonus_slider.getValue())
+								rabbit_species.setTrait("max energy", rabbit_max_energy_slider.getValue())
+								rabbit_species.setTrait("metabolism", rabbit_metabolism_slider.getValue())
+								rabbit_species.setTrait("chance of being seen", rabbit_chance_of_being_seen_slider.getValue())
+								rabbit_species.setTrait("vision distance", rabbit_vision_distance_slider.getValue())
+								rabbit_species.setTrait("age limit", rabbit_max_age_slider.getValue())
+								fox_species.setTrait("hunger bonus", fox_hunger_bonus_slider.getValue())
+								fox_species.setTrait("mating desire bonus", fox_mating_desire_bonus_slider.getValue())
+								fox_species.setTrait("max energy", fox_max_energy_slider.getValue())
+								fox_species.setTrait("metabolism", fox_metabolism_slider.getValue())
+								fox_species.setTrait("chance of being seen", fox_chance_of_being_seen_slider.getValue())
+								fox_species.setTrait("vision distance", fox_vision_distance_slider.getValue())
+								fox_species.setTrait("age limit", fox_max_age_slider.getValue())
+							}
+							
+							</script>
+	                </OTJavascript>
+	              </script>
+	              <scriptVariables>
+	                <OTScriptVariableRealObject name="rabbit_species">
+	                	<reference>
+	                		<object refid="${rabbit-species}"/>
+	                	</reference>
+	                </OTScriptVariableRealObject>
+	                <OTScriptVariableRealObject name="fox_species">
+	                	<reference>
+	                		<object refid="${fox-species}"/>
+	                	</reference>
+	                </OTScriptVariableRealObject>
+	                <OTScriptVariable name="rabbit_hunger_bonus_slider">
+	                	<reference>
+	                		<object refid="${rabbit-hunger-bonus-slider}"/>
+	                	</reference>
+	                </OTScriptVariable>
+	                <OTScriptVariable name="rabbit_mating_desire_bonus_slider">
+	                	<reference>
+	                		<object refid="${rabbit-mating-desire-bonus-slider}"/>
+	                	</reference>
+	                </OTScriptVariable>
+	                <OTScriptVariable name="rabbit_max_energy_slider">
+	                	<reference>
+	                		<object refid="${rabbit-max-energy-slider}"/>
+	                	</reference>
+	                </OTScriptVariable>
+	                <OTScriptVariable name="rabbit_metabolism_slider">
+	                	<reference>
+	                		<object refid="${rabbit-metabolism-slider}"/>
+	                	</reference>
+	                </OTScriptVariable>
+	                <OTScriptVariable name="rabbit_chance_of_being_seen_slider">
+	                	<reference>
+	                		<object refid="${rabbit-chance-of-being-seen-slider}"/>
+	                	</reference>
+	                </OTScriptVariable>
+	                <OTScriptVariable name="rabbit_vision_distance_slider">
+	                	<reference>
+	                		<object refid="${rabbit-vision-distance-slider}"/>
+	                	</reference>
+	                </OTScriptVariable>
+	                <OTScriptVariable name="rabbit_max_age_slider">
+	                	<reference>
+	                		<object refid="${rabbit-max-age-slider}"/>
+	                	</reference>
+	                </OTScriptVariable>
+	                <OTScriptVariable name="fox_hunger_bonus_slider">
+	                	<reference>
+	                		<object refid="${fox-hunger-bonus-slider}"/>
+	                	</reference>
+	                </OTScriptVariable>
+	                <OTScriptVariable name="fox_mating_desire_bonus_slider">
+	                	<reference>
+	                		<object refid="${fox-mating-desire-bonus-slider}"/>
+	                	</reference>
+	                </OTScriptVariable>
+	                <OTScriptVariable name="fox_max_energy_slider">
+	                	<reference>
+	                		<object refid="${fox-max-energy-slider}"/>
+	                	</reference>
+	                </OTScriptVariable>
+	                <OTScriptVariable name="fox_metabolism_slider">
+	                	<reference>
+	                		<object refid="${fox-metabolism-slider}"/>
+	                	</reference>
+	                </OTScriptVariable>
+	                <OTScriptVariable name="fox_chance_of_being_seen_slider">
+	                	<reference>
+	                		<object refid="${fox-chance-of-being-seen-slider}"/>
+	                	</reference>
+	                </OTScriptVariable>
+	                <OTScriptVariable name="fox_vision_distance_slider">
+	                	<reference>
+	                		<object refid="${fox-vision-distance-slider}"/>
+	                	</reference>
+	                </OTScriptVariable>
+	                <OTScriptVariable name="fox_max_age_slider">
+	                	<reference>
+	                		<object refid="${fox-max-age-slider}"/>
+	                	</reference>
+	                </OTScriptVariable>
+	              </scriptVariables>
+	            </OTScriptButton>
       		</documentRefs>
       	</OTCompoundDoc>
         
