@@ -1,0 +1,35 @@
+<% section = activityRoot.activity %>
+
+<hr />
+
+<div id="content">
+  <h2>Activity: <%= sectionTitle %></h2>
+  
+  <h3>Questions</h3>
+  <table>
+    <% question_correct = {}; question_answered = {}; num_users = 0; gradable_questions = 0 %>
+      
+    <tr>
+      <th>User</th>
+      <% models = sectionModels(section) %>
+      <% models.each do |model| %>
+        <th><%= model.object_id %></th>  
+      <% end %>
+    </tr>
+    <% line_toggle = true %>
+    <% @users.each do |user| %>
+      <% num_users += 1 %>
+      <tr BGCOLOR = <%= line_toggle ? ROWCOLOR1 : ROWCOLOR2 %>>
+        <% line_toggle = !line_toggle %>
+        <td><%= user.name %></td>
+        <% models.each do |model| %>
+          <% userModel = userObject(model, user) %>
+          <% userModelReportsMap = userObject($model_reports_map, user) %>
+          <%= runReport(userModel, userModelReportsMap)
+             %>
+          <td>1</td>  
+        <% end %>  
+      </tr>
+    <% end %>     
+  </table>
+</div>

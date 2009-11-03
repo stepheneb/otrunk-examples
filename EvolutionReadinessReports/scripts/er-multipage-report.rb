@@ -3,9 +3,11 @@ require 'erb'
 include_class 'java.lang.System'
 include_class 'org.concord.framework.otrunk.view.OTUserListService'
 include_class 'org.concord.framework.otrunk.OTrunk'
+include_class 'org.concord.otrunk.OTrunkUtil'
 include_class 'org.concord.framework.otrunk.wrapper.OTString'
 include_class 'org.concord.datagraph.state.OTDataGraph'
 include_class 'org.concord.datagraph.state.OTDataGraphable'
+include_class 'org.concord.otrunk.OTrunkUtil'
 include_class 'org.concord.otrunk.script.ui.OTScriptVariable'
 include_class 'org.concord.otrunk.udl.UDLContentHelper'
 include_class 'org.concord.otrunk.overlay.OTUserOverlayManager'
@@ -67,6 +69,7 @@ def objectIdStr(obj)
 end
 
 def embedObject(obj, viewEntry=nil)
+  return if obj == nil
   tag = "<object refid=\"#{ objectIdStr(obj) }\" "
   tag += "viewid=\"#{ objectIdStr(viewEntry) }\" "  if viewEntry
   tag += "/>"
@@ -239,8 +242,6 @@ def questionCorrect (question)
     if question.input.currentChoices == nil
       return nil
     else
-        puts 'checking....'
-        puts question.correctAnswer.objects.get(0) == question.input.currentChoices.get(0)
         return question.correctAnswer.objects.get(0) == question.input.currentChoices.get(0)
     end
   end
@@ -386,15 +387,11 @@ end
 
 
 def sectionQuestions(section)
-  puts section
   questions = []
     
   return questions unless section.content.is_a? org.concord.otrunk.ui.OTCardContainer
-  puts "looking"
   pageCards = allPages(section)
-  puts pageCards
   pageCards.each do | doc |
-    puts documentQuestions(doc)
     questions.concat documentQuestions(doc)
   end
 
@@ -480,6 +477,40 @@ def pretest
     return section if section.getIsPretest()
   end
 end
+
+###################
+### models
+###################
+def sectionModels(section)
+  models = []
+    
+  return models unless section.content.is_a? org.concord.otrunk.ui.OTCardContainer
+  pageCards = allPages(section)
+  pageCards.each do | doc |
+    models.concat documentModels(doc)
+  end
+
+  models
+end
+
+def documentModels(doc)
+  models = []
+  doc.documentRefs.each do | ref |
+    models << ref if ref.is_a? org.concord.otrunk.biologica.environment.OTEnvironmentHolder
+  end
+
+  models  
+end
+
+def runReport(model, modelMap)
+	script = OTrunkUtil.getObjectFromMapWithIdKeys(modelMap.map, model)
+	runReportWithScript(model, script) unless script == nil
+end
+
+def runReportWithScript(model, script)
+	#return script
+end
+	
 
 ###################
 ### section view
