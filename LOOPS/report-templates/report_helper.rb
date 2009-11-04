@@ -45,14 +45,14 @@ def get_activities()
       section = @otrunk.root_object_service.getOTObject(section_path[section_path.size - 1].source)
       section.name ||= "Unknown Activity"
       # get the index of the section in the overall project
-      puts "Finding card container parents of section #{section.name}"
+      # puts "Finding card container parents of section #{section.name}"
       proj_otid_paths = @otrunk.getIncomingReferences(section.getGlobalId(), CARD_CLASS, true)
       # take the first one
       section_index = -1
-      puts "#{proj_otid_paths.size} card containers found wrapping the section #{section.name}"
+      # puts "#{proj_otid_paths.size} card containers found wrapping the section #{section.name}"
       proj_otid_paths.each do |proj_path|
         next if section_index != -1
-        puts "Checking: #{proj_path[proj_path.size-1].source}"
+        # puts "Checking: #{proj_path[proj_path.size-1].source}"
         card_container = @otrunk.root_object_service.getOTObject(proj_path[proj_path.size-1].source)
         # figure out what step this is
         i = 0
