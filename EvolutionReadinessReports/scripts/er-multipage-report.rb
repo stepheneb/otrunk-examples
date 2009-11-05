@@ -1,16 +1,19 @@
 require 'jruby'
 require 'erb'
+
 include_class 'java.lang.System'
-include_class 'org.concord.framework.otrunk.view.OTUserListService'
+
 include_class 'org.concord.framework.otrunk.OTrunk'
-include_class 'org.concord.otrunk.OTrunkUtil'
+include_class 'org.concord.framework.otrunk.view.OTUserListService'
+include_class 'org.concord.framework.otrunk.wrapper.OTObjectSet'
 include_class 'org.concord.framework.otrunk.wrapper.OTString'
 include_class 'org.concord.datagraph.state.OTDataGraph'
 include_class 'org.concord.datagraph.state.OTDataGraphable'
 include_class 'org.concord.otrunk.OTrunkUtil'
+include_class 'org.concord.otrunk.overlay.OTUserOverlayManager'
 include_class 'org.concord.otrunk.script.ui.OTScriptVariable'
 include_class 'org.concord.otrunk.udl.UDLContentHelper'
-include_class 'org.concord.otrunk.overlay.OTUserOverlayManager'
+include_class 'org.concord.otrunk.ui.OTChoice'
 
 ROWCOLOR1 = "#FFFEE9"
 ROWCOLOR2 = "#FFFFFF"
@@ -212,13 +215,13 @@ end
 
 def questionAnswerRaw(question)
   input = question.input
+  answer = nil
   if input.is_a? org.concord.otrunk.ui.OTText
-  	answer = input.text
-  	answer = answer.gsub(/\s/," ") unless (answer == nil)
-  else 
-    if input.is_a? org.concord.otrunk.ui.OTChoice
-      answer = currentChoiceText input
-    end
+    answer = input.text.gsub(/\s/," ") if input.text
+  elsif input.is_a? org.concord.otrunk.view.document.OTCompoundDoc
+    answer = input.bodyText.gsub(/\s/," ") if input.bodyText
+  elsif input.is_a? org.concord.otrunk.ui.OTChoice
+    answer = currentChoiceText input
   end
   
   answer
@@ -232,22 +235,25 @@ def questionAnswer(question)
   return answer
 end
 
-# this takes a userQuestion
-def questionCorrect (question)
-  return nil unless question.correctAnswer
-
-  return nil if question.input.is_a? org.concord.otrunk.ui.OTText
-
-  if question.input.is_a? org.concord.otrunk.ui.OTChoice
-    if question.input.currentChoices == nil
-      return nil
-    else
-        return question.correctAnswer.objects.get(0) == question.input.currentChoices.get(0)
-    end
+## PARAMS:
+##   question: a userQuestion
+## RETURNS:
+##   true: correct answer
+##   false: incorrect answer
+##   nil: question is not gradable or no correct answer is defined
+def questionCorrect(question)
+  if question.correctAnswer &&
+     question.correctAnswer.is_a?(OTObjectSet) &&
+     question.input.is_a?(OTChoice) &&
+     question.input.currentChoices &&
+     question.input.currentChoices.size > 0
+  then
+    return question.correctAnswer.objects.get(0) == question.input.currentChoices.get(0)
   end
+  nil
 end
 
-def questionAnswered (question)
+def questionAnswered(question)
   questionAnswerRaw(question) != nil
 end
 
