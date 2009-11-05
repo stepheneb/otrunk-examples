@@ -5,6 +5,8 @@ ref_require($helper)
 ##
 otTabContainer = @otrunk.root_object_service.createObject(org.concord.otrunk.ui.OTTabContainer.java_class)
 otTabContainer.name = "Project"
+otTabContainer.height = 700
+otTabContainer.width = 750
 activityTabs = otTabContainer.tabs
 
 ##
@@ -13,6 +15,7 @@ activityTabs = otTabContainer.tabs
 child_view = @otrunk.root_object_service.createObject(org.concord.otrunk.view.OTViewChild.java_class)
 child_view.object=$model
 child_view.viewid=$student_progress
+child_view.use_scroll_pane = true
 activityTabs.putObject('Student progress', child_view)
 
 activities = get_activities();
@@ -33,7 +36,7 @@ activities.keys.sort {|a,b| [activities[a]["index"], a.name] <=> [activities[b][
     tabTitle = "Step #{step_key.join(".")}"
     stepTabContainer = @otrunk.root_object_service.createObject(org.concord.otrunk.ui.OTTabContainer.java_class)
     stepTabContainer.name = tabTitle
-    stepTabContainer.contents_may_scroll = true
+    stepTabContainer.contents_may_scroll = false
     stepTabContainer.height = 500
     stepTabContainer.width = 700
     substepTabs = stepTabContainer.tabs
