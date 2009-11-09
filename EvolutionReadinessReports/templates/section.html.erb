@@ -1,9 +1,7 @@
-<% section = activityRoot.activity %>
-
 <div class="menu">
   <table>
     <tr>
-	  <td><div class="menu_item"><%= linkToObject "Model reports", section, $model_reports_view %></div></td>
+	  <td><div class="menu_item"><%= @erbHelper.linkToObject "Model reports", @otrunkHelper.rootObject, $model_reports_view %></div></td>
     </tr>
   </table>
 </div>
@@ -11,42 +9,42 @@
 <hr />
 
 <div id="content">
-  <h2>Activity: <%= sectionTitle %></h2>
+  <h2>Activity: <%= @activity.title %></h2>
   
   <h3>Questions</h3>
-  <table>
+  <table class="report_table">
     <% question_correct = {}; question_answered = {}; num_users = 0; gradable_questions = 0 %>
       
     <tr>
       <th>User</th>
-      <% questions = sectionQuestions(section) %>
+      <% questions = @activity.sectionQuestions(activityRoot.activity) %>
       <% questions.each do |question| %>
-          <% gradable_questions += 1 if questionGradable(question) %>
+          <% gradable_questions += 1 if @questionHelper.gradable?(question) %>
           <% question_correct[question] = 0; question_answered[question] = 0 %>
-        <th><%= popupLinkToObject truncate(promptText(question), 30), question, $question_popup_view %></th>  
+        <th><%= @erbHelper.popupLinkToObject Util.truncate(@questionHelper.plainPromptText(question), 30), question, $question_popup_view %></th>  
       <% end %>
       <th>Score</th>
     </tr>
     <% line_toggle = true %>
-    <% @users.each do |user| %>
+    <% @otrunkHelper.users.each do |user| %>
       <% num_users += 1 %>
       <tr BGCOLOR = <%= line_toggle ? ROWCOLOR1 : ROWCOLOR2 %>>
         <% line_toggle = !line_toggle %>
         <td><%= user.name %></td>
         <% user_correct = 0; user_answered = 0 %>
         <% questions.each do |question| %>
-          <% userQuestion = userObject(question, user) %>
-          <% if questionCorrect(userQuestion) 
+          <% userQuestion = @otrunkHelper.userObject(question, user) %>
+          <% if @questionHelper.questionCorrect(userQuestion) 
                user_correct += 1 
                question_correct[question] += 1
              end 
              
-             if questionAnswered(userQuestion) and questionGradable(question)
+             if @questionHelper.questionAnswered(userQuestion) and @questionHelper.gradable?(question)
                user_answered += 1
-               question_answered[question] += 1               
+               question_answered[question] += 1
              end
              %>
-          <td><%= questionAnswerHtml userQuestion %></td>  
+          <td><%= @questionHelper.questionAnswerHtml(userQuestion) %></td>
         <% end %>        
         <td><img src="http://chart.apis.google.com/chart?cht=p&chd=t:<%= "#{user_correct},#{gradable_questions - user_correct}" %>&chs=40&40"/><br/>
            <%= "#{user_correct}/#{gradable_questions}" %></td>
@@ -56,7 +54,7 @@
         <td>Score: Correct/ Answered/ Possible</td>
         <% questions.each do |question| %>
           <td>
-            <% if questionGradable(question) %>             
+            <% if @questionHelper.gradable?(question) %>
               <img src="http://chart.apis.google.com/chart?cht=p&chd=t:<%= "#{question_correct[question]},#{question_answered[question] - question_correct[question]},#{num_users - question_answered[question]}" %>&chs=40&40"/><br/>
               <%= "#{question_correct[question]}/#{question_answered[question]}/#{num_users}" %>
             <% else %>

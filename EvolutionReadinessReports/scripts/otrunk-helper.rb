@@ -1,0 +1,75 @@
+require 'jruby'
+
+include_class 'java.lang.System'
+
+include_class 'org.concord.framework.otrunk.OTrunk'
+include_class 'org.concord.framework.otrunk.view.OTUserListService'
+include_class 'org.concord.otrunk.overlay.OTUserOverlayManager'
+
+## OTrunk related routines
+class OTrunkHelper
+  
+  attr_reader :otrunk
+  attr_reader :overlayManager
+  attr_reader :users
+
+  def initialize(otObjectService, viewContext)
+    @otObjectService = otObjectService
+    @viewContext = viewContext
+    @otrunk = @viewContext.getViewService(OTrunk.java_class)
+    @overlayManager = viewContext.getViewService(OTUserOverlayManager.java_class)
+    userListService = viewContext.getViewService(OTUserListService.java_class)
+    @users = userListService.getUserList().sort_by { |user| #sort users by name
+      (user.name && !user.name.empty?) ? user.name.downcase.split.values_at(-1, 0) : ['']
+    }
+  end
+  
+  ## Return root of the main OTML
+  def rootObject
+    @otrunk.getRoot
+  end
+
+  ## Return runtime user object
+  def userObject(obj, user)
+    @otrunk.getUserRuntimeObject(obj, user)
+  end
+
+  def hasUserModified(obj, user)
+    @otrunk.hasUserModified(obj, user)
+  end
+  
+  def schoolName
+    name = System.getProperty('report.school.name')
+    (name == nil) ? 'Unknown' : name
+  end
+
+  def teacherName
+    name = System.getProperty('report.teacher.name')
+    (name == nil) ? 'Unknown' : name
+  end
+
+  def className
+    name = System.getProperty('report.class.name')
+    (name == nil) ? 'Unknown' : name
+  end
+
+  def activityName
+    name = System.getProperty('report.activity.name')
+    (name == nil) ? 'Unknown' : name
+  end
+
+  def otCreate(rconstant, &block)
+    otObj = @otObjectService.createObject(rconstant.java_class)
+    yield otObj
+    otObj
+  end
+  
+  def objectIdStr(obj)
+    begin
+      obj.getGlobalId().toInternalForm()
+    rescue NoMethodError
+      obj.otExternalId()
+    end
+  end
+  
+end

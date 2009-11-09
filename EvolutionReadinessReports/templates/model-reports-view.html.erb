@@ -1,35 +1,63 @@
-<% section = activityRoot.activity %>
+<div class="menu">
+  <table>
+    <tr>
+      <td><div class="menu_item"><%= @erbHelper.linkToObject("Report Main", @otrunkHelper.rootObject, $report_section_view) %></div></td>
+    </tr>
+  </table>
+</div>
 
 <hr />
 
 <div id="content">
-  <h2>Activity: <%= sectionTitle %></h2>
+  <h2>Activity: <%= @activity.title %></h2>
   
   <h3>Questions</h3>
-  <table>
+  <table class="report_table">
     <% question_correct = {}; question_answered = {}; num_users = 0; gradable_questions = 0 %>
       
-    <tr>
-      <th>User</th>
-      <% models = sectionModels(section) %>
+    <tr bgcolor="<%= ROWCOLOR1 %>">
+      <th rowspan="2"></th>
+      <% models = @activity.sectionModels(@activity.activity) %>
       <% models.each do |model| %>
-        <th><%= model.object_id %></th>  
+        <th colspan="7" style="text-align: left;">Model <%= model.object_id %></th>
       <% end %>
     </tr>
+    <tr bgcolor="<%= ROWCOLOR2 %>">
+      <% models.each do |model| %>
+        <th>Total correct</th>
+        <th>Total incorrect</th>
+        <th>Percent correct</th>
+        <th>Correct boxes</th>
+        <th>Total correct flowers</th>
+        <th>Types planted per box</th>
+        <th>Plated all possibilities?</th>
+      <% end %>
+    </tr>
+    
     <% line_toggle = true %>
-    <% @users.each do |user| %>
+    <% @otrunkHelper.users.each do |user| %>
       <% num_users += 1 %>
-      <tr BGCOLOR = <%= line_toggle ? ROWCOLOR1 : ROWCOLOR2 %>>
+      <tr bgcolor="<%= line_toggle ? ROWCOLOR1 : ROWCOLOR2 %>">
         <% line_toggle = !line_toggle %>
         <td><%= user.name %></td>
         <% models.each do |model| %>
-          <% userModel = userObject(model, user) %>
-          <% userModelReportsMap = userObject($model_reports_map, user) %>
-          <%= runReport(userModel, userModelReportsMap)
-             %>
-          <td>1</td>  
-        <% end %>  
+          <% userModel = @otrunkHelper.userObject(model, user) %>
+          <% unless userModel.modelActivityData %>
+            <% 7.times do %>
+              <td></td>
+            <% end %>
+            <% next %>
+          <% end %>
+          <% reporter = FlowerPotModelReporter.new(userModel) %>
+          <td><%= reporter.total_correct %></td>
+          <td><%= reporter.total_incorrect %></td>
+          <td><%= reporter.percent_correct ? "%.0f%" % [reporter.percent_correct] : 'N/A' %></td>
+          <td><%= reporter.correct_boxes %></td>
+          <td><%= reporter.correct_flowers%>/3</td>
+          <td><%= reporter.types_planted_per_box.inspect %></td>
+          <td><%= reporter.planted_all_possibilities %></td>
+        <% end %>
       </tr>
-    <% end %>     
+    <% end %>
   </table>
 </div>
