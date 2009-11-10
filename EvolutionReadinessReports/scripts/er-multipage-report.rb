@@ -58,12 +58,11 @@ def activityRoot
   @otrunkHelper.rootObject.reportTemplate.reference
 end
 
-def runReport(model, modelMap)
-  script = OTrunkUtil.getObjectFromMapWithIdKeys(modelMap.map, model)
-  runReportWithScript(model, script) unless script == nil
+def modelReporterClass(model)
+  stringObj = OTrunkUtil.getObjectFromMapWithIdKeys($model_reports_map.map, model)
+  stringObj ? Object.const_get(stringObj.string) : nil
 end
 
-def runReportWithScript(model, script)
-  #return script
+def createModelReporter(model)
+  modelReporterClass(model).new(model)
 end
-

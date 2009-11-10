@@ -1,13 +1,30 @@
 class FlowerPotModelReporter
   
-  attr_reader :total_correct
-  attr_reader :total_incorrect
-  attr_reader :percent_correct
-  attr_reader :correct_boxes
-  attr_reader :types_planted_per_box
-  attr_reader :planted_all_possibilities
-  attr_reader :percent_correct
-  attr_reader :correct_flowers
+  @@fields = [:total_correct, 
+    :total_incorrect,
+    :percent_correct,
+    :correct_boxes,
+    :correct_flowers,
+    :types_planted_per_box,
+    :planted_all_possibilities
+    ]
+  @@fields.each { |field| attr_reader field }
+    
+  @@numFields = @@fields.length
+  
+  def self.num_fields
+    @@numFields
+  end
+  
+  def self.report_header
+    '<th>Total correct</th>' +
+    '<th>Total incorrect</th>' +
+    '<th>Percent correct</th>' +
+    '<th>Correct boxes</th>' +
+    '<th>Total correct flowers</th>' +
+    '<th>Types planted per box</th>' +
+    '<th>Planted all possibilities?</th>'
+  end
   
   def initialize(model)
     @total_correct = 0
@@ -21,6 +38,16 @@ class FlowerPotModelReporter
     else
       Util.log("FlowerPotModelReporter: Model #{model} doesn't have model activity data")
     end
+  end
+  
+  def report_row
+    "<td>#{@total_correct}</td>" +
+    "<td>#{@total_incorrect}</td>" +
+    "<td>#{@percent_correct ? '%.0f%' % [@percent_correct] : 'N/A'}</td>" +
+    "<td>#{@correct_boxes}</td>" +
+    "<td>#{@correct_flowers}/3</td>" +
+    "<td>#{@types_planted_per_box.inspect}</td>" +
+    "<td>#{@planted_all_possibilities}</td>"
   end
   
   def parseModelActivityData(modelActivityData)

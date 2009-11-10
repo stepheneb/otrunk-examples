@@ -20,18 +20,15 @@
       <th rowspan="2"></th>
       <% models = @activity.sectionModels(@activity.activity) %>
       <% models.each do |model| %>
-        <th colspan="7" style="text-align: left;">Model <%= model.object_id %></th>
+        <% puts model.otExternalId %>
+        <th colspan="<%= modelReporterClass(model).num_fields %>" style="text-align: left;">
+          Model <%= model.object_id %>
+        </th>
       <% end %>
     </tr>
     <tr bgcolor="<%= ROWCOLOR2 %>">
       <% models.each do |model| %>
-        <th>Total correct</th>
-        <th>Total incorrect</th>
-        <th>Percent correct</th>
-        <th>Correct boxes</th>
-        <th>Total correct flowers</th>
-        <th>Types planted per box</th>
-        <th>Planted all possibilities?</th>
+        <%= modelReporterClass(model).report_header %>
       <% end %>
     </tr>
     
@@ -49,6 +46,8 @@
             <% end %>
             <% next %>
           <% end %>
+          <%= createModelReporter(userModel).report_row %>
+          <% if false %>
           <% reporter = FlowerPotModelReporter.new(userModel) %>
           <td><%= reporter.total_correct %></td>
           <td><%= reporter.total_incorrect %></td>
@@ -57,6 +56,7 @@
           <td><%= reporter.correct_flowers%>/3</td>
           <td><%= reporter.types_planted_per_box.inspect %></td>
           <td><%= reporter.planted_all_possibilities %></td>
+          <% end %>
         <% end %>
       </tr>
     <% end %>
