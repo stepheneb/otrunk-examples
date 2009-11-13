@@ -38,6 +38,10 @@
     <import class="org.concord.otrunk.ui.OTSlider" />
     <import class="org.concord.framework.otrunk.view.OTFrame" />
   </imports>
+  <idMap> 
+  	<idMapping local_id="rabbit-species" id="f05fc1b1-ea0e-4d6e-a21e-7d089860445a"/>
+  	<idMapping local_id="fox-species" id="c59a7a17-5585-4860-b6a5-803e74ea2dbd"/>
+  </idMap> 
   <objects>
     <OTSystem>
       <bundles>
@@ -52,6 +56,7 @@
         <OTInclude href="../global-imports/er-view-bundle.otml" />
         <OTInclude href="species/annual-varied-plants.otml" />
         <OTInclude href="species/white-rabbits.otml" />
+        <OTInclude href="species/foxes.otml" />
       </includes>
       <root>
       	<OTCompoundDoc>
@@ -72,7 +77,7 @@
       		<documentRefs>
 		      	<OTEnvironmentHolder local_id="env-holder" width="590" height="460" toolbar="run,cursor,reset" useSpeedSlider="true">
 		          <environment>
-		            <OTEnvironment local_id="environment" environmentWidth="10" environmentHeight="10" showRunButton="false" winterLength="15" summerLength="50" orgSizeMultiplier="2.5" backgroundImageSrc="images/mountains1.png">
+		            <OTEnvironment local_id="environment" environmentWidth="10" environmentHeight="10" showRunButton="false" winterLength="15" summerLength="50" showWinterImage="false" orgSizeMultiplier="2.5" backgroundImageSrc="images/mountains1.png">
 		              <world>
 		                <OTWorld local_id="peasimple_world" speciesPath="org/concord/biologica/worlds/peasimple.xml" />
 		              </world>
@@ -93,7 +98,7 @@
 		                    <OTRuleCondition property="species name" equals="Plants" />
 		                  </conditions>
 		                  <consequences>
-		                    <OTRuleConsequence property="max offspring" newValueFloat="3" />
+		                    <OTRuleConsequence property="max offspring" newValueFloat="4" />
 		                  </consequences>
 		                </OTRule>
 		                <OTRule description="Fewer offspring">
@@ -267,7 +272,7 @@
 											env.removeAgent(rabbit)
 											envHolder.pauseAction()
 											rabbit.setProperty("Hunger", 0)
-											showMessageWithoutPausing("Oh no! Your rabbit died of hunger.\nTry again by pressing the Restart button.\n(Or keep running by pressing the Play button.)", envHolder)
+											showMessageWithoutPausing("Oh no! Your rabbit died of hunger.\nTry again by pressing the Restart button.", envHolder)
 											rabbit = null
 										}
 									}
@@ -346,9 +351,10 @@
 		            <string>size of leaves</string>
 		          </traitsToShow>
 		          <addAgentsButtons>
+		          <!-- 
 		          	<OTAddAgentButton text="Add Rabbit" quantity="1" click="false" limit="20">
 	                  <species>
-	                    <object refid="f05fc1b1-ea0e-4d6e-a21e-7d089860445a" />
+	                    <object refid="${rabbit-species}" />
 	                  </species>
 	                  <agentTraits>
 	                    <OTAgentTrait property="max offspring">
@@ -368,6 +374,29 @@
 	                    </OTAgentTrait>
 	                  </agentTraits>
 	                </OTAddAgentButton>
+	                <OTAddAgentButton text="Add fox" quantity="1" click="false" limit="20">
+	                  <species>
+	                    <object refid="${fox-species}" />
+	                  </species>
+	                  <agentTraits>
+	                    <OTAgentTrait property="max offspring">
+	                      <defaultValues>
+	                        <int>2</int>
+	                      </defaultValues>
+	                    </OTAgentTrait>
+	                    <OTAgentTrait property="hunger limit">
+	                      <defaultValues>
+	                        <float>50</float>
+	                      </defaultValues>
+	                    </OTAgentTrait>
+	                    <OTAgentTrait property="age limit">
+	                      <defaultValues>
+	                        <float>1000</float>
+	                      </defaultValues>
+	                    </OTAgentTrait>
+	                  </agentTraits>
+	                </OTAddAgentButton>
+	                -->
 		          </addAgentsButtons>
 		          <logAddedAgentProperties>
 		          	<string>size of leaves</string>
