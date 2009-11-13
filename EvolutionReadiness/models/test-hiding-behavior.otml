@@ -1,0 +1,352 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<otrunk id="13d3fb4f-123a-425f-9d60-d84e145c0678">
+  <imports>
+  	<import class="org.concord.data.state.OTDataStore" />
+    <import class="org.concord.data.state.OTDataChannelDescription" />
+    <import class="org.concord.data.state.OTDataField" />
+    <import class="org.concord.data.state.OTDataTable" />
+    <import class="org.concord.datagraph.state.OTDataGraph" />
+    <import class="org.concord.datagraph.state.OTDataAxis" />
+    <import class="org.concord.datagraph.state.OTDataGraphable" />
+    <import class="org.concord.datagraph.state.OTDataCollector" />
+    <import class="org.concord.datagraph.state.OTMultiDataGraph" />
+    <import class="org.concord.datagraph.state.OTPluginView" />
+    <import class="org.concord.datagraph.state.OTDataBarGraphable" />
+    <import class="org.concord.otrunk.OTIncludeRootObject" />
+    <import class="org.concord.otrunk.OTInclude" />
+    <import class="org.concord.otrunk.OTSystem" />
+    <import class="org.concord.otrunk.biologica.OTOrganismPlacement" />
+    <import class="org.concord.otrunk.biologica.OTEnvironment" />
+    <import class="org.concord.otrunk.biologica.OTOrganism" />
+    <import class="org.concord.otrunk.biologica.OTWorld" />
+    <import class="org.concord.otrunk.biologica.agent.OTAgentSpecies" />
+    <import class="org.concord.otrunk.biologica.agent.OTAgentTrait" />
+    <import class="org.concord.otrunk.biologica.agent.OTAgentPropertyImageMap" />
+    <import class="org.concord.otrunk.biologica.environment.OTAddAgentButton" />
+    <import class="org.concord.otrunk.biologica.environment.OTEnvironmentHolder" />
+    <import class="org.concord.otrunk.biologica.rules.OTRule" />
+    <import class="org.concord.otrunk.biologica.rules.OTRuleCondition" />
+    <import class="org.concord.otrunk.biologica.rules.OTRuleConsequence" />
+    <import class="org.concord.otrunk.biologica.data.OTBiologicaModelDataProducer" />
+    <import class="org.concord.otrunk.ui.OTCurriculumUnit" />
+    <import class="org.concord.otrunk.ui.OTPlacement" />
+    <import class="org.concord.otrunk.ui.snapshot.OTSnapshot" />
+    <import class="org.concord.otrunk.ui.snapshot.OTSnapshotButton" />
+    <import class="org.concord.otrunk.ui.snapshot.OTSnapshotAlbum" />
+    <import class="org.concord.otrunk.ui.snapshot.OTSnapshotChooser" />
+    <import class="org.concord.otrunk.view.OTViewEntry" />
+    <import class="org.concord.otrunk.view.OTViewBundle" />
+    <import class="org.concord.otrunk.view.OTViewMode" />
+    <import class="org.concord.otrunk.view.document.OTCompoundDoc" />
+    <import class="org.concord.otrunk.script.ui.OTScriptObject" />
+    <import class="org.concord.otrunk.script.js.OTJavascript" />
+    <import class="org.concord.otrunk.script.OTScriptEngineBundle" />
+    <import class="org.concord.otrunk.script.OTScriptEngineEntry" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariable" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariableComponent" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariableRealObject" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariableView" />
+    <import class="org.concord.otrunk.script.ui.OTScriptButton" />
+    <import class="org.concord.otrunk.ui.OTSlider" />
+    <import class="org.concord.otrunk.ui.OTSliderLabel" />
+    <import class="org.concord.framework.otrunk.view.OTFrame" />
+  </imports>
+  <idMap> 
+  	<idMapping local_id="rabbit-species" id="f05fc1b1-ea0e-4d6e-a21e-7d089860445a"/>
+  	<idMapping local_id="fox-species" id="c59a7a17-5585-4860-b6a5-803e74ea2dbd"/>
+  	<idMapping local_id="plant-species" id="f5732706-c9c2-4e29-8c99-4c668dda89b0"/>
+  	<idMapping local_id="holes" id="d670b7f4-2f3b-466a-90da-8a18e2862430"/>
+  </idMap> 
+  <objects>
+    <OTSystem>
+      <bundles>
+        <object refid="8d880970-c22a-11dc-95ff-0800200c9a66" />
+        <OTViewBundle>
+        	<frame>
+            	<OTFrame useScrollPane="false" openMaximized="false" />
+          </frame>
+        </OTViewBundle>
+        <OTScriptEngineBundle>
+          <engines>
+            <OTScriptEngineEntry objectClass="org.concord.otrunk.script.js.OTJavascript" engineClass="org.concord.otrunk.script.js.OTJavascriptEngine" />
+          </engines>
+        </OTScriptEngineBundle>
+      </bundles>
+      <includes>
+        <OTInclude href="../global-imports/er-view-bundle.otml" />
+        <OTInclude href="species/annual-varied-plants.otml" />
+        <OTInclude href="species/white-rabbits.otml" />
+        <OTInclude href="species/foxes.otml" />
+        <OTInclude href="species/env-feature-holes.otml" />
+      </includes>
+      <root>
+      	<OTCompoundDoc>
+      		<bodyText>
+      			<table width="100%">
+      				<tr>
+      					<td>
+      						<object refid="${env-holder}"/>
+      					</td>
+  					</tr>
+      			</table>
+      		</bodyText>
+      		<documentRefs>
+		      	<OTEnvironmentHolder local_id="env-holder" width="590" height="460" toolbar="run,cursor,reset" useSpeedSlider="true">
+		          <environment>
+		            <OTEnvironment local_id="environment" environmentWidth="7" environmentHeight="5" showRunButton="false" winterLength="15" summerLength="50" showWinterImage="false" orgSizeMultiplier="2" backgroundImageSrc="images/mountains1.png">
+		              <world>
+		                <OTWorld local_id="peasimple_world" speciesPath="org/concord/biologica/worlds/peasimple.xml" />
+		              </world>
+		              <barriers>
+		                <OTPlacement x="0" y="0" width="10" height="150" />
+		              </barriers>
+		              <rules>
+		                <OTRule description="All plants healthy">
+		                  <conditions>
+		                    <OTRuleCondition property="species name" equals="Plants" />
+		                  </conditions>
+		                  <consequences>
+		                    <OTRuleConsequence property="Health" newValueFloat="0.99" />
+		                  </consequences>
+		                </OTRule>
+		              </rules>
+		            </OTEnvironment>
+		          </environment>
+		          <scripts>
+		            <OTScriptObject local_id="setup-script" name="Setup world">
+		              <script>
+		                <OTJavascript src="scripts/gradated-sunlight/setup.js">
+		                  <script>importPackage(Packages.java.lang);
+							importPackage(Packages.java.awt);
+							importPackage(Packages.org.concord.biologica.environment);
+							importClass(Packages.javax.swing.JOptionPane);
+							
+							function init() {
+									setup()
+									env.addChangeListener(resetListener)
+							        
+									return true;
+								}
+								
+								function setup(){
+									env.removeAllAgents()
+									env.setStepCount(0)
+									envHolder.pauseAction()
+									var world = env.getWorld();
+									env.setWrapNorthSouth(false);
+									env.setWrapEastWest(false);
+									for (var i = 0; i &lt; 7; i++) {
+								        for (var j = 0; j &lt; 5; j++) {
+								        	var envUnit = new EnvironmentUnit(env, null, i, j)
+								        	env.setEnvironmentUnit(envUnit, i, j)
+								        	var color = new Color(0.3, 0.2, 0.1)
+								        	var terrain = new Terrain(world, "terrain", color)
+								        	envUnit.setTerrain(terrain)
+							            }
+							        }
+							        
+							        env.step()
+								}
+								
+								var resetHandler= {
+									environmentChanged: function(evt){
+										if (evt.getType() == EnvironmentChangeEvent.RESET){
+											setup()
+										}
+									}
+								}
+											
+								var resetListener = new EnvironmentChangeListener(resetHandler)
+						
+						function save() {
+							return true;
+						}</script>
+		                  <scripts>
+		                    <OTJavascript src="scripts/common/message.js" />
+		                  </scripts>
+		                </OTJavascript>
+		              </script>
+		              <variables>
+		                <OTScriptVariableRealObject name="env">
+		                  <reference>
+		                    <object refid="${environment}" />
+		                  </reference>
+		                </OTScriptVariableRealObject>
+		                <OTScriptVariableRealObject name="envHolder">
+		                  <reference>
+		                    <object refid="${env-holder}" />
+		                  </reference>
+		                </OTScriptVariableRealObject>
+		                <OTScriptVariableRealObject name="plant_species">
+		                	<reference>
+		                		<object refid="${plant-species}"/>
+		                	</reference>
+		                </OTScriptVariableRealObject>
+		              </variables>
+		              <scriptState />
+		            </OTScriptObject>
+		            <OTScriptObject local_id="testing-script" name="Testing script">
+		              <script>
+		                <OTJavascript src="scripts/gradated-sunlight/setup.js">
+		                  <script>importPackage(Packages.java.lang);
+							importPackage(Packages.java.awt);
+							importPackage(Packages.org.concord.biologica.environment);
+							importClass(Packages.javax.swing.JOptionPane);
+							
+							var hole
+							
+							function init() {
+									setup()
+									env.addChangeListener(resetListener)
+									env.addStepListener(stepListener)
+							        
+									return true;
+								}
+								
+								function setup(){
+									rabbit = rabbit_species.createAgent();
+									rabbit.setAge(5)
+									rabbit.setProperty("is immortal", true)
+									rabbit.setProperty("max offspring", 0)
+									rabbit.setProperty("vision distance", 40)
+									rabbit.setProperty("is selected", 0)
+									rabbit.setProperty("hunger bonus", -100)
+									loc = env.getRandomLocation()
+									rabbit.setEnvironment(env)
+									rabbit.setLocation(loc)
+							        env.addAgent(rabbit)
+							        
+							        fox = fox_species.createAgent();
+									fox.setAge(20)
+									fox.setProperty("speed", 8)
+									fox.setProperty("is immortal", true)
+									fox.setProperty("max offspring", 0)
+									fox.setProperty("vision distance", 40)
+									fox.setProperty("is selected", 0)
+									fox.setProperty("eating distance", 8)
+									fox.setProperty("calculate drives", false)
+									fox.setProperty("current behavior", "EATING")
+									loc = env.getRandomLocation()
+									fox.setEnvironment(env)
+									fox.setLocation(loc)
+							        env.addAgent(fox)
+							        
+							        hole = holes.createAgent();
+									loc = env.getRandomLocation()
+									hole.setEnvironment(env)
+									hole.setLocation(loc)
+							        env.addAgent(hole)
+							        
+							        env.step()
+								}
+								
+								var resetHandler= {
+									environmentChanged: function(evt){
+										if (evt.getType() == EnvironmentChangeEvent.RESET){
+											setup()
+										}
+									}
+								}
+											
+								var resetListener = new EnvironmentChangeListener(resetHandler)
+								
+							var addNextStep = false;
+								var stepHandler =
+							{
+							
+							environmentStepped: function()
+								{
+									if (addNextStep){
+										env.removeAgent(hole)
+										
+										rabbit = rabbit_species.createAgent();
+										rabbit.setAge(5)
+										rabbit.setProperty("is immortal", true)
+										rabbit.setProperty("max offspring", 0)
+										rabbit.setProperty("vision distance", 40)
+										rabbit.setProperty("is selected", 0)
+										rabbit.setProperty("hunger bonus", -100)
+										loc = env.getRandomLocation()
+										rabbit.setEnvironment(env)
+										rabbit.setLocation(loc)
+								        env.addAgent(rabbit)
+								        
+								        hole = holes.createAgent();
+										loc = env.getRandomLocation()
+										hole.setEnvironment(env)
+										hole.setLocation(loc)
+								        env.addAgent(hole)
+								        
+								        addNextStep = false;
+									}
+									if (env.getAllAgents().size() &lt; 3){
+										addNextStep = true;
+									}
+								}
+							}
+							var stepListener = new EnvironmentStepListener(stepHandler)
+						
+						function save() {
+							return true;
+						}</script>
+		                  <scripts>
+		                    <OTJavascript src="scripts/common/message.js" />
+		                  </scripts>
+		                </OTJavascript>
+		              </script>
+		              <variables>
+		                <OTScriptVariableRealObject name="env">
+		                  <reference>
+		                    <object refid="${environment}" />
+		                  </reference>
+		                </OTScriptVariableRealObject>
+		                <OTScriptVariableRealObject name="envHolder">
+		                  <reference>
+		                    <object refid="${env-holder}" />
+		                  </reference>
+		                </OTScriptVariableRealObject>
+		                <OTScriptVariableRealObject name="fox_species">
+		                	<reference>
+		                		<object refid="${fox-species}"/>
+		                	</reference>
+		                </OTScriptVariableRealObject>
+		                <OTScriptVariableRealObject name="rabbit_species">
+		                	<reference>
+		                		<object refid="${rabbit-species}"/>
+		                	</reference>
+		                </OTScriptVariableRealObject>
+		                <OTScriptVariableRealObject name="holes">
+		                	<reference>
+		                		<object refid="${holes}"/>
+		                	</reference>
+		                </OTScriptVariableRealObject>
+		              </variables>
+		              <scriptState />
+		            </OTScriptObject>
+		            <OTScriptObject local_id="setup-species-script" name="Setup species">
+		              <script>
+		                <OTJavascript>
+		                  <script>function init()
+			      				{
+			      					species.setMutationChance(0)
+			      				}</script>
+		                </OTJavascript>
+		              </script>
+		              <variables>
+		                <OTScriptVariableRealObject name="species">
+		                  <reference>
+		                    <object refid="f5732706-c9c2-4e29-8c99-4c668dda89b0" />
+		                  </reference>
+		                </OTScriptVariableRealObject>
+		              </variables>
+		              <scriptState />
+		            </OTScriptObject>
+		          </scripts>
+		        </OTEnvironmentHolder>
+      		</documentRefs>
+      	</OTCompoundDoc>
+        
+      </root>
+    </OTSystem>
+  </objects>
+</otrunk>
