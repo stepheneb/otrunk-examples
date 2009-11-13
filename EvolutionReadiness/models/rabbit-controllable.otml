@@ -201,10 +201,13 @@
 							importPackage(Packages.java.awt);
 							importPackage(Packages.java.awt.event);
 							importPackage(Packages.java.swing);
+							importPackage(Packages.java.util);
 							importPackage(Packages.org.concord.biologica.environment);
 							importClass(Packages.javax.swing.JOptionPane);
 							
 							var rabbit
+							var timer
+							var timerTask
 							  			
 							function init() {
 						        setup()
@@ -228,6 +231,18 @@
 								rabbit.setEnvironment(env)
 								rabbit.setLocation(loc)
 						        env.addAgent(rabbit)
+						        
+						        timer = new Timer();
+						        timerTask = null;
+						        
+							}
+							
+							var timerTaskHandler =
+							{
+								run: function()
+								{
+									showMessageWithoutPausing("Hooray, your rabbit lived for 30 seconds!", envHolder)
+								}
 							}
 							
 							
@@ -281,15 +296,28 @@
 							}
 							var stepListener = new EnvironmentStepListener(stepHandler)
 							
-							var resetHandler= {
+							var timeRemaining = 0
+							var resetRunHandler= {
 									environmentChanged: function(evt){
 										if (evt.getType() == EnvironmentChangeEvent.RESET){
 											setup()
+										} else if (evt.getType() == EnvironmentChangeEvent.RUN){
+											if (timerTask == null){
+												timerTask = new TimerTask(timerTaskHandler)
+						        				timer.schedule(timerTask, 30000);
+						        			} else {
+						        				timer.schedule(timerTask, timeRemaining);
+						        			}
+										} else if (evt.getType() == EnvironmentChangeEvent.PAUSE){
+											timeRemaining = timerTask.scheduledExecutionTime() - System.currentTimeMillis()
+											timer.cancel()
+											timer = new Timer();
+											timerTask = new TimerTask(timerTaskHandler)
 										}
 									}
 								}
 											
-							var resetListener = new EnvironmentChangeListener(resetHandler)
+							var resetListener = new EnvironmentChangeListener(resetRunHandler)
 						
 						function save() {
 							return true;
