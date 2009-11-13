@@ -77,7 +77,7 @@
       		<documentRefs>
 		      	<OTEnvironmentHolder local_id="env-holder" width="590" height="460" toolbar="run,cursor,reset" useSpeedSlider="true">
 		          <environment>
-		            <OTEnvironment local_id="environment" environmentWidth="10" environmentHeight="10" showRunButton="false" winterLength="5" summerLength="50" showWinterImage="false" orgSizeMultiplier="2.5" backgroundImageSrc="images/mountains1.png">
+		            <OTEnvironment local_id="environment" environmentWidth="11" environmentHeight="11" showRunButton="false" winterLength="5" summerLength="50" showWinterImage="false" orgSizeMultiplier="2.8" backgroundImageSrc="images/mountains1.png">
 		              <world>
 		                <OTWorld local_id="peasimple_world" speciesPath="org/concord/biologica/worlds/peasimple.xml" />
 		              </world>
@@ -133,12 +133,10 @@
 									env.setStepCount(0)
 									envHolder.pauseAction()
 									var world = env.getWorld();
-									env.setColumns(10);
-									env.setRows(10);
 									env.setWrapNorthSouth(false);
 									env.setWrapEastWest(false);
-									for (var i = 0; i &lt; 10; i++) {
-								        for (var j = 0; j &lt; 10; j++) {
+									for (var i = 0; i &lt; 11; i++) {
+								        for (var j = 0; j &lt; 11; j++) {
 								        	var envUnit = new EnvironmentUnit(env, null, i, j)
 								        	env.setEnvironmentUnit(envUnit, i, j)
 								        	envUnit.setProperty("sunlight", new Float((j+1)/10))
@@ -148,9 +146,10 @@
 							            }
 							        }
 							        
-							        for (var i = 0; i &lt; 20; i++) {
+							        for (var i = 0; i &lt; 22; i++) {
 							        	var plant = plant_species.createAgent();
 										plant.setAge(i*2)
+										plant.setProperty("food quantity",100)
 										env.addAgent(plant)
 							        }
 							        
@@ -208,6 +207,8 @@
 							var rabbit
 							var timer
 							var timerTask
+							var isRunning = false
+							var addedRabbits = false
 							  			
 							function init() {
 						        setup()
@@ -232,6 +233,8 @@
 								rabbit.setEnvironment(env)
 								rabbit.setLocation(loc)
 						        env.addAgent(rabbit)
+						          
+								addedRabbits = false
 						        
 						        timer = new Timer();
 						        timerTask = null;
@@ -242,9 +245,43 @@
 							{
 								run: function()
 								{
-									envHolder.getEnvironmentView().pause()
-									showMessageWithoutPausing("Hooray, your rabbit lived for 30 seconds!", envHolder)
+									if (!addedRabbits){
+										envHolder.getEnvironmentView().pause()
+										showMessageWithoutPausing("Hooray, your rabbit lived for 30 seconds!", envHolder)
+										addMoreRabbits()
+									} else {
+										envHolder.pauseAction()
+										showMessageWithoutPausing("Hooray, all your rabbits lived for another 30 seconds!\nNow you can go on to the next page.", envHolder)
+									}
 								}
+							}
+							
+							function addMoreRabbits(){
+								System.out.println("adding rabbits")
+								for (var i = 0; i &lt; 5; i++){
+									System.out.println("added rabbit")
+									var newRabbit = rabbit_species.createAgent();
+							        newRabbit.setAge(i * 3)
+									newRabbit.setProperty("is immortal", true)
+									newRabbit.setProperty("max offspring", 0)
+									newRabbit.setProperty("mating bonus", -1000)
+									newRabbit.setProperty("hunger bonus", -50)
+									newRabbit.setProperty("is selected", 0)
+									var loc = env.getRandomLocation()
+									newRabbit.setEnvironment(env)
+									newRabbit.setLocation(loc)
+							        env.addAgent(newRabbit)
+								}
+								showMessage("Now the rest of the rabbit population is here. Will you be able to\neat enough food to stay alive?", envHolder, envHolder)
+								
+								timerTask = null
+								if (timer != null)
+									timer.cancel()
+								timer = new Timer();
+								timerTask = new TimerTask(timerTaskHandler)
+								timer.schedule(timerTask, 30000);
+								
+								addedRabbits = true
 							}
 							
 							
@@ -252,7 +289,7 @@
 							{
 							    keyPressed: function(evt)
 							    {
-							    	if (rabbit != null) {
+							    	if (rabbit != null &amp;&amp; isRunning) {
 								    	var keyCode = evt.getKeyCode()
 								    	var loc = rabbit.getLocation()
 								    	var newLoc
@@ -302,17 +339,21 @@
 							var resetRunHandler= {
 									environmentChanged: function(evt){
 										if (evt.getType() == EnvironmentChangeEvent.RESET){
+											isRunning = false
 											setup()
 										} else if (evt.getType() == EnvironmentChangeEvent.RUN){
+											isRunning = true
 											if (timerTask == null){
 												timerTask = new TimerTask(timerTaskHandler)
-						        				timer.schedule(timerTask, 30000);
+						        				timer.schedule(timerTask, 10000);
 						        			} else {
 						        				timer.schedule(timerTask, timeRemaining);
 						        			}
 										} else if (evt.getType() == EnvironmentChangeEvent.PAUSE){
+											isRunning = false
 											timeRemaining = timerTask.scheduledExecutionTime() - System.currentTimeMillis()
-											timer.cancel()
+											if (timer != null)
+												timer.cancel()
 											timer = new Timer();
 											timerTask = new TimerTask(timerTaskHandler)
 										}
