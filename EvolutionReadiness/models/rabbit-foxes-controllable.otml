@@ -230,22 +230,8 @@
 							}
 							
 							function setup(){
-								rabbit = rabbit_species.createAgent();
-						        rabbit.setAge(20)
-								rabbit.setProperty("Speed", 0)
-								rabbit.setProperty("is immortal", true)
-								rabbit.setProperty("max offspring", 0)
-								rabbit.setProperty("calculate drives", false)
-								rabbit.setProperty("current behavior", "WANDERING")
-								rabbit.setProperty("is selected", 1)
-								var loc = env.getRandomLocation(10,10,80,80)
-								rabbit.setEnvironment(env)
-								rabbit.setLocation(loc)
-						        env.addAgent(rabbit)
-						        
-						        addMoreRabbits()
-						        addFoxes()
-						        addHoles()
+							
+								addHoles()
 						        
 						        timer = new Timer();
 						        timerTask = null;
@@ -264,7 +250,7 @@
 							function addMoreRabbits(){
 								for (var i = 0; i &lt; 5; i++){
 									var newRabbit = rabbit_species.createAgent();
-							        newRabbit.setAge(i * 3)
+							        newRabbit.setAge(20)
 									newRabbit.setProperty("is immortal", true)
 									newRabbit.setProperty("max offspring", 0)
 									newRabbit.setProperty("mating bonus", -1000)
@@ -312,17 +298,20 @@
 							    keyPressed: function(evt)
 							    {
 							    	if (rabbit != null &amp;&amp; isRunning) {
+							    		var speed = 3
+							    		if (rabbit.getProperty("type").equalsIgnoreCase("fast"))
+							    			speed = 7
 								    	var keyCode = evt.getKeyCode()
 								    	var loc = rabbit.getLocation()
 								    	var newLoc
 								    	if (keyCode == evt.VK_UP){
-								    		newLoc = new Point(loc.x, loc.y - 3)
+								    		newLoc = new Point(loc.x, loc.y - speed)
 								    	} else if (keyCode == evt.VK_DOWN){
-								    		newLoc = new Point(loc.x, loc.y + 3)
+								    		newLoc = new Point(loc.x, loc.y + speed)
 								    	} else if (keyCode == evt.VK_LEFT){
-								    		newLoc = new Point(loc.x - 3, loc.y)
+								    		newLoc = new Point(loc.x - speed, loc.y)
 								    	} else if (keyCode == evt.VK_RIGHT){
-								    		newLoc = new Point(loc.x + 3, loc.y)
+								    		newLoc = new Point(loc.x + speed, loc.y)
 								    	}
 								    	rabbit.setLocation(newLoc)
 							    	}
@@ -382,6 +371,32 @@
 												timer.cancel()
 											timer = new Timer();
 											timerTask = new TimerTask(timerTaskHandler)
+										} else if (evt.getType() == EnvironmentChangeEvent.USER_ADDED_AGENTS){
+											rabbit = evt.getValue()
+											rabbit.setAge(20)
+											rabbit.setProperty("Speed", 0)
+											rabbit.setProperty("is immortal", true)
+											rabbit.setProperty("max offspring", 0)
+											rabbit.setProperty("calculate drives", false)
+											rabbit.setProperty("current behavior", "WANDERING")
+											rabbit.setProperty("is selected", 1)
+											var loc = env.getRandomLocation(10,10,80,80)
+											rabbit.setEnvironment(env)
+											rabbit.setLocation(loc)
+									        env.addAgent(rabbit) 
+									        
+									        
+									        addMoreRabbits()
+									        addFoxes()
+									        
+									        System.out.println("x = "+envHolder)
+									        System.out.println("x = "+envHolder.getToolbar())
+									        System.out.println("x = "+envHolder.getToolbar().getAddAgentsButtons())
+									        
+									        var buttons = envHolder.getToolbar().getAddAgentsButtons()
+									        for (var i = 0; i &lt; buttons.size(); i++){
+									        	buttons.get(i).setEnabled(false)
+									        }
 										}
 									}
 								}
@@ -454,57 +469,40 @@
 		              <scriptState />
 		            </OTScriptObject>
 		          </scripts>
+		          <addAgentsButtons>
+		          	<OTAddAgentButton text="Add Small Rabbit" quantity="1" click="false" limit="1" annotation="small">
+	                    <species>
+	                      <object refid="${rabbit-species}" />
+	                    </species>
+	                    <agentTraits>
+	                    	<OTAgentTrait property="type">
+	                    		<possibleValues>
+	                    			<string>slow</string>
+	                    		</possibleValues>
+	                    	</OTAgentTrait>
+	                    </agentTraits>
+	                  </OTAddAgentButton>
+	                  <OTAddAgentButton text="Add Fast Rabbit" quantity="1" click="false" limit="1" annotation="fast">
+	                    <species>
+	                      <object refid="${rabbit-species}" />
+	                    </species>
+	                    <agentTraits>
+	                    	<OTAgentTrait property="type">
+	                    		<possibleValues>
+	                    			<string>fast</string>
+	                    		</possibleValues>
+	                    	</OTAgentTrait>
+	                    	<OTAgentTrait property="hiding place" name="">
+				              <possibleValues>
+				                <string></string>
+				              </possibleValues>
+				            </OTAgentTrait>
+	                    </agentTraits>
+	                  </OTAddAgentButton>
+		          </addAgentsButtons>
 		          <traitsToShow>
 		            <string>size of leaves</string>
 		          </traitsToShow>
-		          <addAgentsButtons>
-		          <!-- 
-		          	<OTAddAgentButton text="Add Rabbit" quantity="1" click="false" limit="20">
-	                  <species>
-	                    <object refid="${rabbit-species}" />
-	                  </species>
-	                  <agentTraits>
-	                    <OTAgentTrait property="max offspring">
-	                      <defaultValues>
-	                        <int>2</int>
-	                      </defaultValues>
-	                    </OTAgentTrait>
-	                    <OTAgentTrait property="hunger limit">
-	                      <defaultValues>
-	                        <float>300</float>
-	                      </defaultValues>
-	                    </OTAgentTrait>
-	                    <OTAgentTrait property="age limit">
-	                      <defaultValues>
-	                        <float>1000</float>
-	                      </defaultValues>
-	                    </OTAgentTrait>
-	                  </agentTraits>
-	                </OTAddAgentButton>
-	                <OTAddAgentButton text="Add fox" quantity="1" click="false" limit="20">
-	                  <species>
-	                    <object refid="${fox-species}" />
-	                  </species>
-	                  <agentTraits>
-	                    <OTAgentTrait property="max offspring">
-	                      <defaultValues>
-	                        <int>2</int>
-	                      </defaultValues>
-	                    </OTAgentTrait>
-	                    <OTAgentTrait property="hunger limit">
-	                      <defaultValues>
-	                        <float>50</float>
-	                      </defaultValues>
-	                    </OTAgentTrait>
-	                    <OTAgentTrait property="age limit">
-	                      <defaultValues>
-	                        <float>1000</float>
-	                      </defaultValues>
-	                    </OTAgentTrait>
-	                  </agentTraits>
-	                </OTAddAgentButton>
-	                -->
-		          </addAgentsButtons>
 		          <logAddedAgentProperties>
 		          	<string>size of leaves</string>
 		          </logAddedAgentProperties>
