@@ -137,7 +137,7 @@
 							            }
 							        }
 							        
-							        for (var i = 0; i &lt; 22; i++) {
+							        for (var i = 0; i &lt; 23; i++) {
 							        	var plant = plant_species.createAgent();
 										plant.setAge(i*2)
 										plant.setProperty("food quantity",100)
@@ -224,12 +224,26 @@
 						        
 							}
 							
+							var timesWon = 0
+							var lastTimeUsedFast = false
+							
 							var timerTaskHandler =
 							{
 								run: function()
 								{
 									envHolder.getEnvironmentView().pause()
-									showMessageWithoutPausing("Hooray, your rabbit lived for 30 seconds!", envHolder)
+									var usedFast = rabbit.getProperty("type").equalsIgnoreCase("fast")
+									if (timesWon == 0 || usedFast != lastTimeUsedFast){
+										timesWon++
+										lastTimeUsedFast = usedFast
+										}
+										
+									if (timesWon &lt; 3){
+										var otherType = usedFast ? "small" : "fast"
+										showMessageWithoutPausing("Hooray, your rabbit lived for 30 seconds!\nNow try the game using the "+otherType+" rabbit.\nHit Reset to start again.", envHolder)
+									} else {
+										showMessageWithoutPausing("Hooray, your rabbit lived for 30 seconds!\nYou've survived many times! Go on to the next page now.", envHolder)
+									}
 								}
 							}
 							
@@ -382,10 +396,6 @@
 									        
 									        addMoreRabbits()
 									        addFoxes()
-									        
-									        System.out.println("x = "+envHolder)
-									        System.out.println("x = "+envHolder.getToolbar())
-									        System.out.println("x = "+envHolder.getToolbar().getAddAgentsButtons())
 									        
 									        var buttons = envHolder.getToolbar().getAddAgentsButtons()
 									        for (var i = 0; i &lt; buttons.size(); i++){
