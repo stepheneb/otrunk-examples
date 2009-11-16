@@ -68,7 +68,7 @@ class FlowerPotModelReporter
               @total_incorrect += 1
             end
           end
-          @types_planted_per_box[box_ix] = box.select{ |e| e != nil }.length
+          @types_planted_per_box[box_ix] = box.length
         end
       end
     end
