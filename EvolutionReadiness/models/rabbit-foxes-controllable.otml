@@ -244,6 +244,7 @@
 									} else {
 										showMessageWithoutPausing("Hooray, your rabbit lived for 30 seconds!\nYou've survived many times! Go on to the next page now.", envHolder)
 									}
+									rabbit = null
 								}
 							}
 							
@@ -333,6 +334,12 @@
 								environmentStepped: function()
 								{
 									if (rabbit != null){
+										if (rabbit.getEnvironment() == null &amp;&amp; env.getStepCount() &gt; 1){
+											showEatenMessage()
+											rabbit = null
+											return;
+										}
+									
 										var hidingPlaceType = rabbit.getProperty(BasicAnimal.PROPERTY_HIDING_PLACE);
 										var hidingPlace = rabbit.getClosestAgent(rabbit, hidingPlaceType);
 										if (hidingPlace != null &amp;&amp; hidingPlace.distanceSq &lt; 9){
@@ -358,11 +365,17 @@
 							}
 							var stepListener = new EnvironmentStepListener(stepHandler)
 							
+							function showEatenMessage(){
+								envHolder.getEnvironmentView().pause()
+								showMessageWithoutPausing("Oh no, your rabbit got eaten by a fox!.\nTry again by pressing the Restart button.", envHolder)
+							}
+							
 							var timeRemaining = 0
 							var resetRunHandler= {
 									environmentChanged: function(evt){
 										if (evt.getType() == EnvironmentChangeEvent.RESET){
 											isRunning = false
+											rabbit = null
 											setup()
 										} else if (evt.getType() == EnvironmentChangeEvent.RUN){
 											isRunning = true
