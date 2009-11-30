@@ -1,0 +1,769 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<otrunk id="2767fe20-6c7d-11dc-8314-0800200c9a66">
+  <imports>
+    <import class="org.concord.data.state.OTDataStore" />
+    <import class="org.concord.data.state.OTDataChannelDescription" />
+    <import class="org.concord.data.state.OTDataField" />
+    <import class="org.concord.data.state.OTDataTable" />
+    <import class="org.concord.datagraph.state.OTDataGraph" />
+    <import class="org.concord.datagraph.state.OTDataAxis" />
+    <import class="org.concord.datagraph.state.OTDataGraphable" />
+    <import class="org.concord.datagraph.state.OTDataCollector" />
+    <import class="org.concord.datagraph.state.OTMultiDataGraph" />
+    <import class="org.concord.datagraph.state.OTPluginView" />
+    <import class="org.concord.datagraph.state.OTDataBarGraphable" />
+    <import class="org.concord.framework.otrunk.view.OTFrame" />
+    <import class="org.concord.framework.otrunk.wrapper.OTBlob" />
+    <import class="org.concord.graph.util.state.OTDrawingTool" />
+    <import class="org.concord.graph.util.state.OTDrawingStamp" />
+    <import class="org.concord.graph.util.state.OTDrawingImageIcon" />
+    <import class="org.concord.graph.util.state.OTDrawingShape" />
+    <import class="org.concord.graph.util.state.OTDrawingTool2" />
+    <import class="org.concord.graph.util.state.OTPointTextLabel" />
+    <import class="org.concord.otrunk.OTInclude" />
+    <import class="org.concord.otrunk.OTSystem" />
+    <import class="org.concord.otrunk.browser.mozswing.OTMozSwing" />
+    <import class="org.concord.otrunk.overlay.OTOverlay" />
+    <import class="org.concord.otrunk.script.ui.OTScriptObject" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariable" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariableComponent" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariableView" />
+    <import class="org.concord.otrunk.script.js.OTJavascript" />
+    <import class="org.concord.otrunk.script.OTScriptEngineBundle" />
+    <import class="org.concord.otrunk.script.OTScriptEngineEntry" />
+    <import class="org.concord.otrunk.udl.OTAuthorNote" />
+    <import class="org.concord.otrunk.udl.OTUDLLabPage" />
+    <import class="org.concord.otrunk.udl.coach.OTUDLCoach" />
+    <import class="org.concord.otrunk.udl.coach.OTUDLCoachGroup" />
+    <import class="org.concord.otrunk.udl.coach.OTUDLCoachStatement" />
+    <import class="org.concord.otrunk.udl.OTUDLMenuRule" />
+    <import class="org.concord.otrunk.udl.document.OTDefinition" />
+    <import class="org.concord.otrunk.udl.document.OTDefinitionList" />
+    <import class="org.concord.otrunk.udl.document.OTDefinitionManager" />
+    <import class="org.concord.otrunk.udl.document.OTGlossary" />
+    <import class="org.concord.otrunk.udl.document.OTUDLCompoundDoc" />
+    <import class="org.concord.otrunk.udl.document.OTUDLDocumentViewConfig" />
+    <import class="org.concord.otrunk.udl.OTUDLNavBar" />
+    <import class="org.concord.otrunk.graph.OTDataCollectorViewConfig" />
+    <import class="org.concord.otrunk.udl.question.OTUDLQuestion" />
+    <import class="org.concord.otrunk.udl.question.OTUDLLeveledQuestions" />
+    <import class="org.concord.otrunk.udl.question.OTUDLQuestionViewConfig" />
+    <import class="org.concord.otrunk.udl3.OTUDLMenu" />
+    <import class="org.concord.otrunk.udl3.OTUDLContainer" />
+    <import class="org.concord.otrunk.udl3.OTUDLSection" />
+    <import class="org.concord.otrunk.ui.OTButton" />
+    <import class="org.concord.otrunk.ui.OTCardContainer" />
+    <import class="org.concord.otrunk.ui.OTChoice" />
+    <import class="org.concord.otrunk.ui.OTChoiceMultiple" />
+    <import class="org.concord.otrunk.ui.OTCurriculumUnit" />
+    <import class="org.concord.otrunk.ui.OTImage" />
+    <import class="org.concord.otrunk.ui.OTImageMap" />
+    <import class="org.concord.otrunk.ui.OTLayerContainer" />
+    <import class="org.concord.otrunk.ui.OTModeSwitcher" />
+    <import class="org.concord.otrunk.ui.OTText" />
+    <import class="org.concord.otrunk.ui.OTPlacement" />
+    <import class="org.concord.otrunk.ui.OTPlacementContainer" />
+    <import class="org.concord.otrunk.ui.snapshot.OTSnapshot" />
+    <import class="org.concord.otrunk.ui.snapshot.OTSnapshotButton" />
+    <import class="org.concord.otrunk.ui.snapshot.OTSnapshotAlbum" />
+    <import class="org.concord.otrunk.ui.snapshot.OTSnapshotChooser" />
+    <import class="org.concord.otrunk.ui.swing.OTChoiceViewConfig" />
+    <import class="org.concord.otrunk.util.OTSharingBundle" />
+    <import class="org.concord.otrunk.util.OTLabbookBundle" />
+    <import class="org.concord.otrunk.util.OTLabbookEntry" />
+    <import class="org.concord.otrunk.labbook.OTLabbookButton" />
+    <import class="org.concord.otrunk.labbook.OTLabbook" />
+    <import class="org.concord.otrunk.labbook.OTLabbookEntryChooser" />
+    <import class="org.concord.otrunk.view.OTObjectEditViewConfig" />
+    <import class="org.concord.otrunk.view.OTViewChild" />
+    <import class="org.concord.otrunk.view.OTViewEntry" />
+    <import class="org.concord.otrunk.view.OTViewBundle" />
+    <import class="org.concord.otrunk.view.OTViewMode" />
+    <import class="org.concord.otrunk.view.document.OTCompoundDoc" />
+    <import class="org.concord.otrunk.view.document.OTCssText" />
+    <import class="org.concord.otrunk.view.prototype.OTPrototypeViewEntry" />
+    <import class="org.concord.otrunk.view.prototype.OTPrototypeEventController" />
+    <import class="org.concord.otrunk.view.prototype.OTPrototypeMapEntry" />
+    <import class="org.concord.otrunknl4.OTNLogoModel" />
+    <import class="org.concord.sensor.state.OTDeviceConfig" />
+    <import class="org.concord.sensor.state.OTExperimentRequest" />
+    <import class="org.concord.sensor.state.OTInterfaceManager" />
+    <import class="org.concord.sensor.state.OTSensorDataProxy" />
+    <import class="org.concord.sensor.state.OTSensorRequest" />
+    <import class="org.concord.sensor.state.OTZeroSensor" />
+    <import class="org.concord.otrunk.ui.menu.OTNavBar" />
+    <import class="org.concord.datagraph.state.OTDataPointLabel" />
+    <import class="org.concord.otrunk.udl.OTZoom" />
+    <import class="org.concord.otrunk.udl.OTZoomTransform" />
+    <import class="org.concord.otrunkmw.OTModelerPage" />
+    <import class="org.concord.otrunkmw.OTMwDataProducer" />
+    <import class="org.concord.otrunkmw.OTMwChannelData" />
+    <import class="org.concord.otrunk.ui.OTSoundPlayer" />
+    <import class="org.concord.otrunk.util.OTReference" />
+    <import class="org.concord.smartgraph.OTSmartGraphTool" />
+    <import class="org.concord.otrunk.script.ui.OTScriptButton" />
+    <import class="org.concord.otrunk.script.jruby.OTJRuby" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariableRealObject" />
+    <import class="org.concord.framework.otrunk.wrapper.OTInt" />
+    <import class="org.concord.framework.otrunk.wrapper.OTBoolean" />
+    <import class="org.concord.otrunk.ui.question.OTQuestion" />
+    <import class="org.concord.otrunk.ui.OTObjectSet" />
+  </imports>
+  <objects>
+    <OTSystem local_id="system">
+      <includes>
+        <OTInclude href="http://otrunk.concord.org/examples/EvolutionReadiness/global-imports/er-view-bundle.otml" />
+        <OTInclude href="http://otrunk.concord.org/examples/EvolutionReadiness/models/five-sunlight-clickable-breed-true.otml" />
+        <OTInclude href="http://otrunk.concord.org/examples/EvolutionReadiness/models/five-sunlight-clickable-breed-true-limited-seeds.otml" />
+      </includes>
+      <bundles>
+        <object refid="8d880970-c22a-11dc-95ff-0800200c9a66" />
+        <OTScriptEngineBundle>
+          <engines>
+            <OTScriptEngineEntry objectClass="org.concord.otrunk.script.jruby.OTJRuby" engineClass="org.concord.otrunk.script.jruby.OTJRubyEngine" />
+            <OTScriptEngineEntry objectClass="org.concord.otrunk.script.js.OTJavascript" engineClass="org.concord.otrunk.script.js.OTJavascriptEngine" />
+          </engines>
+        </OTScriptEngineBundle>
+        <OTSharingBundle />
+        <OTInterfaceManager>
+          <deviceConfigs>
+            <OTDeviceConfig configString="none" deviceId="10" />
+          </deviceConfigs>
+        </OTInterfaceManager>
+        <OTLabbookBundle />
+      </bundles>
+      <overlays>
+        <object refid="6cc8e2b0-c44e-11dc-95ff-0800200c9a66" />
+        <object refid="b5d8b4a0-db35-11dc-95ff-0800200c9a66" />
+      </overlays>
+      <root>
+        <OTCurriculumUnit version="2" name="ER Activity">
+          <activity>
+            <OTUDLSection local_id="section_1">
+              <header>
+                <OTUDLCompoundDoc id="2767fe20-6c7d-11dc-8314-0800200c9a66!/section_1/header" showEditBar="false">
+                  <bodyText>
+                    <table width="100%">
+                      <tr>
+                        <td>
+                          <div class="title">Activity 1: The Virtual Greenhouse</div>
+                        </td>
+                        <td align="right">
+                          <div class="page-number">page 1</div>
+                        </td>
+                      </tr>
+                    </table>
+                  </bodyText>
+                </OTUDLCompoundDoc>
+              </header>
+              <content>
+                <OTCardContainer local_id="activity-card-container" contentsMayScroll="true" loadViewOnlyOnDemand="true">
+                  <cards>
+                    <OTUDLCompoundDoc local_id="page-1" name="1">
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <div class="subtitle">Introduction: Studying the natural world</div>
+                              Have you ever wondered about the different plants and animals living 
+          on earth? Scientists make discoveries about the wide variety of 
+          living things on the earth every day.
+                              <br />
+                              <br />
+                              <p align="center">
+                                <object refid="d438a821-a14d-11de-ab37-1b7f3c9b48e9" imgurl="http://er.concord.org/artwork/plants/pl_34_intro.png" />
+                              </p>
+                              <br />
+                              <br />
+                              In this activity, you will investigate Mystery Plants in the Virtual 
+          Greenhouse. You will learn how plants are adapted to live in 
+          different environments. Click the blue arrow below to get started!
+                              <br />
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                        <OTImage id="d438a821-a14d-11de-ab37-1b7f3c9b48e9" imageBytes="http://er.concord.org/artwork/plants/pl_34_intro.png" />
+                      </documentRefs>
+                    </OTUDLCompoundDoc>
+                    <OTUDLCompoundDoc id="b6f573dd-8058-11de-88c1-51478b11f317" name="%b6f573dd-8058-11de-88c1-51478b11f317" showEditBar="true">
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <div class="subtitle">Plants: Growing in the wild</div>
+                              Plants grow all over the world. The environment plays the most 
+          important role in where plants can live and what they look like.
+                              <br />
+                              <br />
+                              Some 
+          plants have large leaves that help them get the most amount of sun. 
+          They grow best in shaded areas. If they get too much sun, their 
+          leaves turn brown and eventually die. Other plants have very thin 
+          leaves and grow best in sunnier places. These plants do not survive 
+          in the shade. The plants below need different amounts of sunlight.
+                              <table width="100%">
+                                <tr />
+                                <tr>
+                                  <td>
+                                    <center />
+                                  </td>
+                                  <td>
+                                    <p align="center">
+                                      <b>Hosta</b>
+                                    </p>
+                                  </td>
+                                  <td>
+                                    <p align="center">
+                                      <b>Artemisia</b>
+                                    </p>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <center />
+                                  </td>
+                                  <td>
+                                    <object refid="d4409772-a14d-11de-ab37-1b7f3c9b48e9" imgurl="http://er.concord.org/artwork/plants/hosta.jpg" />
+                                  </td>
+                                  <td>
+                                    <object refid="d4409773-a14d-11de-ab37-1b7f3c9b48e9" imgurl="http://er.concord.org/artwork/plants/artemisia.jpg" />
+                                    <br />
+                                    <br />
+                                  </td>
+                                </tr>
+                              </table>
+                              <br />
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                        <OTImage id="d4409772-a14d-11de-ab37-1b7f3c9b48e9" imageBytes="http://er.concord.org/artwork/plants/hosta.jpg" />
+                        <OTImage id="d4409773-a14d-11de-ab37-1b7f3c9b48e9" imageBytes="http://er.concord.org/artwork/plants/artemisia.jpg" />
+                      </documentRefs>
+                    </OTUDLCompoundDoc>
+                    <OTUDLCompoundDoc id="b773b29f-4c79-11de-ae0b-29ea07303359" name="%b773b29f-4c79-11de-ae0b-29ea07303359" showEditBar="true">
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <div class="subtitle">The Virtual Greenhouse: Growing plants</div>
+                              It's time to grow plants in the Virtual Greenhouse. The flower boxes 
+          below all have different amounts of sunlight. The box at the top has 
+          the most light and the box at the bottom has the least light. There 
+          are three different types of plants that you can grow. A healthy 
+          plant grows a flower. A plant may grow, but wither if it is not in 
+          the right environment.
+                              <br />
+                              <br />
+                              <b>Instructions</b>
+                              <br />
+                              <br />
+                              1. Plant 
+          the seeds by clicking on a plant button and then clicking inside the 
+          flower boxes. The seed will be the same type of plant as the button. 
+          You can plant seeds wherever you want.
+                              <br />
+                              <br />
+                              2. Click the Play 
+          button
+                              <object refid="d441f704-a14d-11de-ab37-1b7f3c9b48e9" imgurl="jres:///org/concord/biologica/ui/play.png" />
+                              to 
+          start growing the plants. If the plants do not grow, click the Reset 
+          button
+                              <object refid="d441f705-a14d-11de-ab37-1b7f3c9b48e9" imgurl="jres:///org/concord/biologica/ui/reset.png" />
+                              and 
+          try again.
+                              <br />
+                              [Notes: remove information button from model. Add 
+          graph. Then add a question about the graph.]
+                              <br />
+                              <b>
+                                Your goal: Plant 
+          seeds until you have at least three flowering plants of each type. 
+          Then take a picture of your flower boxes using the picture button. 
+          Your picture will be saved in your Lab Book.
+                                <img src="http://er.concord.org/artwork/general/labbook.png" />
+                              </b>
+                              <br />
+                              <br />
+                              <table>
+                                <tr height="690">
+                                  <td>
+                                    <object refid="27968571-673f-11de-bb79-1f97355fd679" />
+                                    <br />
+                                    <object refid="13d3fb4f-123a-425f-9d60-d84e145c0678!/env-holder" />
+                                    <br />
+                                    <br />
+                                  </td>
+                                </tr>
+                              </table>
+                              <br />
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                        <OTImage id="d441f704-a14d-11de-ab37-1b7f3c9b48e9" imageBytes="jres:/org/concord/biologica/ui/play.png" width="20" />
+                        <OTImage id="d441f705-a14d-11de-ab37-1b7f3c9b48e9" imageBytes="jres:/org/concord/biologica/ui/reset.png" width="20" />
+                        <OTLabbookButton id="27968571-673f-11de-bb79-1f97355fd679" name="Labbook button">
+                          <target>
+                            <object refid="13d3fb4f-123a-425f-9d60-d84e145c0678!/env-holder" />
+                          </target>
+                        </OTLabbookButton>
+                        <object refid="13d3fb4f-123a-425f-9d60-d84e145c0678!/env-holder" />
+                      </documentRefs>
+                    </OTUDLCompoundDoc>
+                    <OTUDLCompoundDoc id="abaa9385-970f-11de-aeac-6d61b5756db5" name="%abaa9385-970f-11de-aeac-6d61b5756db5" showEditBar="true">
+                      <documentRefs>
+                        <OTImage id="d4424527-a14d-11de-ab37-1b7f3c9b48e9" imageBytes="http://er.concord.org/artwork/plants/flowerpotswlabels-sm.jpg" />
+                        <OTImage id="d4424528-a14d-11de-ab37-1b7f3c9b48e9" imageBytes="http://er.concord.org/artwork/plants/leaves2-crop.png" />
+                        <OTQuestion id="681af6e7-970d-11de-aeac-6d61b5756db5" name="Question" showImmediateFeedback="true" showCheckAnswersButton="false" incorrectAnswerFeedback="That's not correct.  Look at your Lab Book to see the snapshot you took.">
+                          <prompt>
+                            <OTUDLCompoundDoc>
+                              <bodyText>1. In which flower box does this plant grow best?</bodyText>
+                            </OTUDLCompoundDoc>
+                          </prompt>
+                          <input>
+                            <OTChoice name="Multiple choice" horizontal="false" alignContent="0">
+                              <choices>
+                                <OTUDLCompoundDoc name="A">
+                                  <bodyText>A</bodyText>
+                                </OTUDLCompoundDoc>
+                                <OTUDLCompoundDoc name="B">
+                                  <bodyText>B</bodyText>
+                                </OTUDLCompoundDoc>
+                                <OTUDLCompoundDoc name="C">
+                                  <bodyText>C</bodyText>
+                                </OTUDLCompoundDoc>
+                                <OTUDLCompoundDoc name="D">
+                                  <bodyText>D</bodyText>
+                                </OTUDLCompoundDoc>
+                                <OTUDLCompoundDoc id="681af6e7-970d-11de-aeac-6d61b5756db5/input/choices[4]" name="E">
+                                  <bodyText>E</bodyText>
+                                </OTUDLCompoundDoc>
+                              </choices>
+                            </OTChoice>
+                          </input>
+                          <correctAnswer>
+                            <OTObjectSet>
+                              <objects>
+                                <object refid="681af6e7-970d-11de-aeac-6d61b5756db5/input/choices[4]" />
+                              </objects>
+                            </OTObjectSet>
+                          </correctAnswer>
+                        </OTQuestion>
+                        <OTImage id="d4426c39-a14d-11de-ab37-1b7f3c9b48e9" imageBytes="http://er.concord.org/artwork/plants/leaves10-crop.png" />
+                        <OTQuestion id="60736e39-970d-11de-aeac-6d61b5756db5" name="Question" showImmediateFeedback="true" showCheckAnswersButton="false" incorrectAnswerFeedback="That's not correct.  Look at your Lab Book to see the snapshot you took.">
+                          <prompt>
+                            <OTUDLCompoundDoc>
+                              <bodyText>2. In which flower box does this plant grow best?</bodyText>
+                            </OTUDLCompoundDoc>
+                          </prompt>
+                          <input>
+                            <OTChoice name="Multiple choice" horizontal="false" alignContent="0">
+                              <choices>
+                                <OTUDLCompoundDoc id="60736e39-970d-11de-aeac-6d61b5756db5/input/choices[0]" name="A">
+                                  <bodyText>A</bodyText>
+                                </OTUDLCompoundDoc>
+                                <OTUDLCompoundDoc name="B">
+                                  <bodyText>B</bodyText>
+                                </OTUDLCompoundDoc>
+                                <OTUDLCompoundDoc name="C">
+                                  <bodyText>C</bodyText>
+                                </OTUDLCompoundDoc>
+                                <OTUDLCompoundDoc name="D">
+                                  <bodyText>D</bodyText>
+                                </OTUDLCompoundDoc>
+                                <OTUDLCompoundDoc name="E">
+                                  <bodyText>E</bodyText>
+                                </OTUDLCompoundDoc>
+                              </choices>
+                            </OTChoice>
+                          </input>
+                          <correctAnswer>
+                            <OTObjectSet>
+                              <objects>
+                                <object refid="60736e39-970d-11de-aeac-6d61b5756db5/input/choices[0]" />
+                              </objects>
+                            </OTObjectSet>
+                          </correctAnswer>
+                        </OTQuestion>
+                        <OTImage id="d4426c3a-a14d-11de-ab37-1b7f3c9b48e9" imageBytes="http://er.concord.org/artwork/plants/leaves6-crop.png" />
+                        <OTQuestion id="650d8fd0-970d-11de-aeac-6d61b5756db5" name="Question" showImmediateFeedback="true" showCheckAnswersButton="false" incorrectAnswerFeedback="That's not correct.  Look at your Lab Book to see the snapshot you took.">
+                          <prompt>
+                            <OTUDLCompoundDoc>
+                              <bodyText>3. In which flower box does this plant grow best?</bodyText>
+                            </OTUDLCompoundDoc>
+                          </prompt>
+                          <input>
+                            <OTChoice name="Multiple choice" horizontal="false" alignContent="0">
+                              <choices>
+                                <OTUDLCompoundDoc name="A">
+                                  <bodyText>A</bodyText>
+                                </OTUDLCompoundDoc>
+                                <OTUDLCompoundDoc name="B">
+                                  <bodyText>B</bodyText>
+                                </OTUDLCompoundDoc>
+                                <OTUDLCompoundDoc id="650d8fd0-970d-11de-aeac-6d61b5756db5/input/choices[2]" name="C">
+                                  <bodyText>C</bodyText>
+                                </OTUDLCompoundDoc>
+                                <OTUDLCompoundDoc name="D">
+                                  <bodyText>D</bodyText>
+                                </OTUDLCompoundDoc>
+                                <OTUDLCompoundDoc name="E">
+                                  <bodyText>E</bodyText>
+                                </OTUDLCompoundDoc>
+                              </choices>
+                            </OTChoice>
+                          </input>
+                          <correctAnswer>
+                            <OTObjectSet>
+                              <objects>
+                                <object refid="650d8fd0-970d-11de-aeac-6d61b5756db5/input/choices[2]" />
+                              </objects>
+                            </OTObjectSet>
+                          </correctAnswer>
+                        </OTQuestion>
+                        <OTQuestion id="6a60724e-9710-11de-aeac-6d61b5756db5" name="Question">
+                          <prompt>
+                            <OTUDLCompoundDoc>
+                              <bodyText>4. What happens to plants that are in flower boxes with the wrong light level?</bodyText>
+                            </OTUDLCompoundDoc>
+                          </prompt>
+                          <input>
+                            <OTText />
+                          </input>
+                        </OTQuestion>
+                      </documentRefs>
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <div class="subtitle">The Virtual Greenhouse: Where did the plants grow?</div>
+                              Did you notice that each type of plant grows best in a different 
+          flower box? Where does each type of plant grow best?
+                              <br />
+                              <br />
+                              <table>
+                                <tr>
+                                  <td>
+                                    <object refid="d4424527-a14d-11de-ab37-1b7f3c9b48e9" imgurl="http://er.concord.org/artwork/plants/flowerpotswlabels-sm.jpg" />
+                                  </td>
+                                  <td>
+                                    <object refid="d4424528-a14d-11de-ab37-1b7f3c9b48e9" imgurl="http://er.concord.org/artwork/plants/leaves2-crop.png" />
+                                    <object refid="681af6e7-970d-11de-aeac-6d61b5756db5" />
+                                    <br />
+                                    <br />
+                                    <object refid="d4426c39-a14d-11de-ab37-1b7f3c9b48e9" imgurl="http://er.concord.org/artwork/plants/leaves10-crop.png" />
+                                    <object refid="60736e39-970d-11de-aeac-6d61b5756db5" />
+                                    <br />
+                                    <br />
+                                    <object refid="d4426c3a-a14d-11de-ab37-1b7f3c9b48e9" imgurl="http://er.concord.org/artwork/plants/leaves6-crop.png" />
+                                    <object refid="650d8fd0-970d-11de-aeac-6d61b5756db5" />
+                                  </td>
+                                </tr>
+                              </table>
+                              <br />
+                              <br />
+                              <object refid="6a60724e-9710-11de-aeac-6d61b5756db5" />
+                              <br />
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                    </OTUDLCompoundDoc>
+                    <OTUDLCompoundDoc id="aa4dfe20-4c7b-11de-ae0b-29ea07303359" name="%aa4dfe20-4c7b-11de-ae0b-29ea07303359" showEditBar="true">
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <div class="subtitle">The Virtual Greenhouse: Flower box challenge</div>
+                              Test your theory of how much light each plant needs to be healthy 
+          and where each plant grows best. Remember that a healthy plant will 
+          flower. A plant will wither or die and disappear if planted in the 
+          flower box with the wrong amount of light.
+                              <br />
+                              <br />
+                              <b>Instructions</b>
+                              <br />
+                              <br />
+                              1. 
+          Plant just
+                              <b>one</b>
+                              seed of each type of plant by clicking on the 
+          plant button and then clicking inside a flower box.
+                              <br />
+                              <br />
+                              2. Click 
+          the Play button
+                              <object refid="d443087b-a14d-11de-ab37-1b7f3c9b48e9" imgurl="jres:///org/concord/biologica/ui/play.png" />
+                              to 
+          start growing the plants. If the plants do not grow, click the Reset 
+          button
+                              <object refid="d443087c-a14d-11de-ab37-1b7f3c9b48e9" imgurl="jres:///org/concord/biologica/ui/reset.png" />
+                              and 
+          try again.
+                              <br />
+                              <br />
+                              <b>
+                                Your goal: When your three plants have flowers, 
+          click the Information button
+                                <object refid="d441f706-a14d-11de-ab37-1b7f3c9b48e9" imgurl="jres:///org/concord/biologica/ui/info-arrow.png" />
+                                and 
+          then click on each plant.
+                              </b>
+                              <br />
+                              [Note: add flower to image below.]
+                              <br />
+                              <object refid="d4426c39-a14d-11de-ab37-1b7f3c9b48e9" imgurl="http://er.concord.org/artwork/plants/leaves10-crop.png" />
+                              <br />
+                              <object refid="263f2707-d5ea-11de-ba70-570d3e57d54b" />
+                              <br />
+                              <br />
+                              <br />
+                              <table>
+                                <tr height="690">
+                                  <td>
+                                    <object refid="${labbook-button}" />
+                                    <br />
+                                    <object refid="22d3fb4f-123a-425f-9d60-d84e145c0678!/env-holder" />
+                                    <br />
+                                  </td>
+                                </tr>
+                              </table>
+                              <br />
+                              <i>
+                                <br />
+                              </i>
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                        <OTImage id="d443087b-a14d-11de-ab37-1b7f3c9b48e9" imageBytes="jres:/org/concord/biologica/ui/play.png" width="20" />
+                        <OTImage id="d443087c-a14d-11de-ab37-1b7f3c9b48e9" imageBytes="jres:/org/concord/biologica/ui/reset.png" width="20" />
+                        <OTImage id="d441f706-a14d-11de-ab37-1b7f3c9b48e9" imageBytes="jres:/org/concord/biologica/ui/info-arrow.png" width="20" />
+                        <object refid="d4426c39-a14d-11de-ab37-1b7f3c9b48e9" />
+                        <OTQuestion id="263f2707-d5ea-11de-ba70-570d3e57d54b" name="Question" showImmediateFeedback="true" showCheckAnswersButton="false">
+                          <prompt>
+                            <OTCompoundDoc>
+                              <bodyText>5. What leaf size is this plant?</bodyText>
+                            </OTCompoundDoc>
+                          </prompt>
+                          <input>
+                            <OTChoice name="Multiple choice" horizontal="false" alignContent="0">
+                              <choices>
+                                <OTCompoundDoc id="5e74d7b5-d5eb-11de-ba70-570d3e57d54b" name="leaf size 1">
+                                  <bodyText>leaf size 1</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="leaf size 5">
+                                  <bodyText>leaf size 5</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="leaf size 9">
+                                  <bodyText>leaf size 9</bodyText>
+                                </OTCompoundDoc>
+                              </choices>
+                            </OTChoice>
+                          </input>
+                          <correctAnswer>
+                            <OTObjectSet>
+                              <objects>
+                                <object refid="5e74d7b5-d5eb-11de-ba70-570d3e57d54b" />
+                              </objects>
+                            </OTObjectSet>
+                          </correctAnswer>
+                        </OTQuestion>
+                        <OTLabbookButton local_id="labbook-button" name="Labbook button">
+                          <target>
+                            <object refid="22d3fb4f-123a-425f-9d60-d84e145c0678!/env-holder" />
+                          </target>
+                        </OTLabbookButton>
+                        <object refid="22d3fb4f-123a-425f-9d60-d84e145c0678!/env-holder" />
+                      </documentRefs>
+                    </OTUDLCompoundDoc>
+                    <OTUDLCompoundDoc id="ea71c284-7e0a-11de-9e5e-83ba3ad02e14" name="%ea71c284-7e0a-11de-9e5e-83ba3ad02e14" showEditBar="true">
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <div class="subtitle">
+                                The Virtual Greenhouse: Mystery Plants
+                                <br />
+                              </div>
+                              In the Virtual Greenhouse, you planted three Mystery Plants. These 
+          plants grew under different amounts of light.
+                              <br />
+                              <br />
+                              <p align="center">
+                                <object refid="d4432f8d-a14d-11de-ab37-1b7f3c9b48e9" imgurl="http://er.concord.org/artwork/plants/leaves2-crop.png" />
+                                <object refid="d443569e-a14d-11de-ab37-1b7f3c9b48e9" imgurl="http://er.concord.org/artwork/plants/leaves6-crop.png" />
+                                <object refid="d443569f-a14d-11de-ab37-1b7f3c9b48e9" imgurl="http://er.concord.org/artwork/plants/leaves10-crop.png" />
+                              </p>
+                              <br />
+                              <br />
+                              <object refid="fa36a4e7-9e2f-11de-8f91-2b8b2d1ca251" />
+                              <br />
+                              <br />
+                              <object refid="994452bb-81ec-11de-80d2-a9202c6441f7" />
+                              <br />
+                              <br />
+                              <br />
+                              <br />
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                        <OTImage id="d4432f8d-a14d-11de-ab37-1b7f3c9b48e9" imageBytes="http://er.concord.org/artwork/plants/leaves2-crop.png" />
+                        <OTImage id="d443569e-a14d-11de-ab37-1b7f3c9b48e9" imageBytes="http://er.concord.org/artwork/plants/leaves6-crop.png" />
+                        <OTImage id="d443569f-a14d-11de-ab37-1b7f3c9b48e9" imageBytes="http://er.concord.org/artwork/plants/leaves10-crop.png" />
+                        <OTQuestion id="fa36a4e7-9e2f-11de-8f91-2b8b2d1ca251" name="Question">
+                          <prompt>
+                            <OTUDLCompoundDoc>
+                              <bodyText>6.  What differences did you notice in the three types of plants?</bodyText>
+                            </OTUDLCompoundDoc>
+                          </prompt>
+                          <input>
+                            <OTText />
+                          </input>
+                        </OTQuestion>
+                        <OTQuestion id="994452bb-81ec-11de-80d2-a9202c6441f7" name="Question" showImmediateFeedback="true" showCheckAnswersButton="false" correctAnswerFeedback="That's right!  The plants cannot live in the same environment." incorrectAnswerFeedback="No.  The plants cannot live in the same environment.">
+                          <prompt>
+                            <OTUDLCompoundDoc>
+                              <bodyText>7. Can the three plants live in the same environment?</bodyText>
+                            </OTUDLCompoundDoc>
+                          </prompt>
+                          <input>
+                            <OTChoice name="Multiple choice" horizontal="false" alignContent="0">
+                              <choices>
+                                <OTUDLCompoundDoc name="Yes">
+                                  <bodyText>Yes</bodyText>
+                                </OTUDLCompoundDoc>
+                                <OTUDLCompoundDoc id="d4b31bc5-82b6-11de-a6f6-998be6929932" name="No">
+                                  <bodyText>No</bodyText>
+                                </OTUDLCompoundDoc>
+                              </choices>
+                            </OTChoice>
+                          </input>
+                          <correctAnswer>
+                            <OTObjectSet>
+                              <objects>
+                                <object refid="d4b31bc5-82b6-11de-a6f6-998be6929932" />
+                              </objects>
+                            </OTObjectSet>
+                          </correctAnswer>
+                        </OTQuestion>
+                      </documentRefs>
+                    </OTUDLCompoundDoc>
+                    <OTUDLCompoundDoc id="be5da091-4c82-11de-ae0b-29ea07303359" name="%be5da091-4c82-11de-ae0b-29ea07303359" showEditBar="true">
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <div class="subtitle">Conclusion</div>
+                              In the Virtual Greenhouse, you planted seeds and they grew to be 
+          healthy plants with flowers. But they never made new seeds, which 
+          means they did not have offspring. In the next activity, we'll 
+          explore what happens when plants have offspring. You will experiment 
+          more with Mystery Plants and learn about those offspring.  Will they 
+          all grow in the same amount of light?
+                              <p align="center">
+                                <object refid="d4437db0-a14d-11de-ab37-1b7f3c9b48e9" imgurl="http://er.concord.org/artwork/plants/floweranimation.gif" />
+                              </p>
+                              <br />
+                              <br />
+                              You have completed Activity 1. Good job! Click the X at the top of 
+          this window to close the activity and save your work.
+                              <br />
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                        <OTImage id="d4437db0-a14d-11de-ab37-1b7f3c9b48e9" imageBytes="http://er.concord.org/artwork/plants/floweranimation.gif" />
+                      </documentRefs>
+                    </OTUDLCompoundDoc>
+                  </cards>
+                  <currentCard>
+                    <object refid="${page-1}" />
+                  </currentCard>
+                  <viewedCards>
+                    <object refid="${page-1}" />
+                  </viewedCards>
+                </OTCardContainer>
+              </content>
+              <footer>
+                <object refid="${nav-bar}" />
+              </footer>
+              <north>
+                <object refid="2767fe20-6c7d-11dc-8314-0800200c9a66!/section_1/header" />
+              </north>
+              <south>
+                <object refid="${nav-bar}" />
+              </south>
+              <center>
+                <object refid="${activity-card-container}" />
+              </center>
+            </OTUDLSection>
+          </activity>
+          <script>
+            <object refid="${authoring-script}" />
+          </script>
+        </OTCurriculumUnit>
+      </root>
+      <library>
+        <OTUDLMenuRule local_id="page-rule" jumpToViewedCard="true" stepAhead="true" />
+        <OTJavascript local_id="authoring_script.js" src="http://otrunk.concord.org/examples/EvolutionReadiness/scripts/authoring_script.js" />
+        <OTScriptObject local_id="authoring-script">
+          <variables>
+            <OTScriptVariable name="cardContainer">
+              <reference>
+                <object refid="${activity-card-container}" />
+              </reference>
+            </OTScriptVariable>
+            <OTScriptVariable name="system">
+              <reference>
+                <object refid="${system}" />
+              </reference>
+            </OTScriptVariable>
+            <OTScriptVariable name="menuPageRule">
+              <reference>
+                <object refid="${page-rule}" />
+              </reference>
+            </OTScriptVariable>
+            <OTScriptVariable name="titleDoc">
+              <reference>
+                <object refid="2767fe20-6c7d-11dc-8314-0800200c9a66!/section_1/header" />
+              </reference>
+            </OTScriptVariable>
+          </variables>
+          <script>
+            <object refid="${authoring_script.js}" />
+          </script>
+          <scriptState />
+        </OTScriptObject>
+        <OTUDLNavBar local_id="nav-bar">
+          <menuView>
+            <object refid="29dc5ef0-c453-11dc-95ff-0800200c9a66" />
+          </menuView>
+          <cssColor>
+            <object refid="31193bb0-c44f-11dc-95ff-0800200c9a66" />
+          </cssColor>
+          <album>
+            <OTLabbook local_id="album" />
+          </album>
+          <glossary>
+            <object refid="71f887c8-fd36-47d6-a4fd-1c84f74c9334" />
+          </glossary>
+          <menuRule>
+            <object refid="${page-rule}" />
+          </menuRule>
+        </OTUDLNavBar>
+      </library>
+    </OTSystem>
+  </objects>
+</otrunk>
+
