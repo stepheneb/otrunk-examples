@@ -1,0 +1,1898 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<otrunk id="2767fe20-6c7d-11dc-8314-0800200c9a66">
+  <imports>
+    <import class="org.concord.data.state.OTDataStore" />
+    <import class="org.concord.data.state.OTDataChannelDescription" />
+    <import class="org.concord.data.state.OTDataField" />
+    <import class="org.concord.data.state.OTDataTable" />
+    <import class="org.concord.datagraph.state.OTDataGraph" />
+    <import class="org.concord.datagraph.state.OTDataAxis" />
+    <import class="org.concord.datagraph.state.OTDataGraphable" />
+    <import class="org.concord.datagraph.state.OTDataCollector" />
+    <import class="org.concord.datagraph.state.OTMultiDataGraph" />
+    <import class="org.concord.framework.otrunk.view.OTFrame" />
+    <import class="org.concord.graph.util.state.OTDrawingTool" />
+    <import class="org.concord.otrunk.OTInclude" />
+    <import class="org.concord.otrunk.OTSystem" />
+    <import class="org.concord.otrunk.overlay.OTOverlay" />
+    <import class="org.concord.otrunk.script.ui.OTScriptObject" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariable" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariableComponent" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariableRealObject" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariableView" />
+    <import class="org.concord.otrunk.script.ui.OTScriptButton" />
+    <import class="org.concord.otrunk.script.js.OTJavascript" />
+    <import class="org.concord.otrunk.script.jruby.OTJRuby" />
+    <import class="org.concord.otrunk.script.OTScriptEngineBundle" />
+    <import class="org.concord.otrunk.script.OTScriptEngineEntry" />
+    <import class="org.concord.otrunk.udl.OTUDLNavBar" />
+    <import class="org.concord.otrunk.udl.OTUDLMenuRule" />
+    <import class="org.concord.otrunk.udl.document.OTDefinition" />
+    <import class="org.concord.otrunk.udl.document.OTDefinitionList" />
+    <import class="org.concord.otrunk.udl.document.OTDefinitionManager" />
+    <import class="org.concord.otrunk.udl.document.OTUDLCompoundDoc" />
+    <import class="org.concord.otrunk.graph.OTDataCollectorViewConfig" />
+    <import class="org.concord.otrunk.udl3.OTUDLMenu" />
+    <import class="org.concord.otrunk.udl3.OTUDLContainer" />
+    <import class="org.concord.otrunk.udl3.OTUDLSection" />
+    <import class="org.concord.otrunk.ui.OTButton" />
+    <import class="org.concord.otrunk.ui.OTCardContainer" />
+    <import class="org.concord.otrunk.ui.OTChoice" />
+    <import class="org.concord.otrunk.ui.OTChoiceMultiple" />
+    <import class="org.concord.otrunk.ui.OTImage" />
+    <import class="org.concord.otrunk.ui.OTModeSwitcher" />
+    <import class="org.concord.otrunk.ui.OTText" />
+    <import class="org.concord.otrunk.ui.snapshot.OTSnapshot" />
+    <import class="org.concord.otrunk.ui.snapshot.OTSnapshotButton" />
+    <import class="org.concord.otrunk.ui.snapshot.OTSnapshotAlbum" />
+    <import class="org.concord.otrunk.ui.snapshot.OTSnapshotChooser" />
+    <import class="org.concord.otrunk.ui.swing.OTChoiceViewConfig" />
+    <import class="org.concord.otrunk.util.OTSharingBundle" />
+    <import class="org.concord.otrunk.view.OTViewChild" />
+    <import class="org.concord.otrunk.view.OTViewEntry" />
+    <import class="org.concord.otrunk.view.OTViewBundle" />
+    <import class="org.concord.otrunk.view.OTViewMode" />
+    <import class="org.concord.otrunk.view.document.OTCompoundDoc" />
+    <import class="org.concord.otrunk.view.document.OTCssText" />
+    <import class="org.concord.sensor.state.OTDeviceConfig" />
+    <import class="org.concord.otrunk.biologica.OTWorld" />
+    <import class="org.concord.otrunk.biologica.OTOrganism" />
+    <import class="org.concord.otrunk.biologica.OTStaticOrganism" />
+    <import class="org.concord.otrunk.biologica.OTChromosome" />
+    <import class="org.concord.otrunk.biologica.OTChromosomeZoom" />
+    <import class="org.concord.otrunk.biologica.OTBreedOffspring" />
+    <import class="org.concord.otrunk.biologica.OTPedigree" />
+    <import class="org.concord.otrunk.biologica.OTMultipleOrganism" />
+    <import class="org.concord.otrunk.biologica.OTFamily" />
+    <import class="org.concord.otrunk.biologica.qtl.OTQTLSimulation" />
+    <import class="org.concord.otrunk.biologica.qtl.OTQTL" />
+    <import class="org.concord.datagraph.state.OTDataGraph" />
+    <import class="org.concord.datagraph.state.OTDataAxis" />
+    <import class="org.concord.otrunk.udl.question.OTUDLQuestion" />
+    <import class="org.concord.otrunk.ui.OTObjectSet" />
+    <import class="org.concord.otrunk.biologica.OTSex" />
+    <import class="org.concord.otrunk.view.OTFrameDisplayAction" />
+    <import class="org.concord.datagraph.state.OTDataPointRuler" />
+    <import class="org.concord.datagraph.state.OTDataRegionLabel" />
+  </imports>
+  <objects>
+    <OTSystem local_id="system">
+      <includes>
+        <!--        <OTInclude href="imports/udl-view-bundle-mod.otml" /> -->
+        <OTInclude href="imports/geniquest-view-bundle.otml" />
+      </includes>
+      <bundles>
+        <OTSharingBundle>
+          <sharedObjects>
+            <OTOrganism local_id="maleStrainOrganism" chromosomesColor="-10066177">
+              <name>male</name>
+              <sex>0</sex>
+              <world>
+                <OTWorld local_id="dragon_world_strains" speciesPath="org/concord/biologica/worlds/dragonmarkers-plates.xml" />
+              </world>
+              <alleles>b:p,a:P,b:H,a:h,b:S,a:S,b:W,a:w,b:L,a:l,b:t,a:t,a:f,a:a,a:B</alleles>
+            </OTOrganism>
+            <OTSex local_id="meiosis-challenge-view" name="Meiosis" replayButtonEnabled="false">
+              <fatherOrganism>
+                <object refid="f87576ac-651c-11dd-bd45-d9d11cbf97e7" />
+              </fatherOrganism>
+              <motherOrganism>
+                <object refid="f87576ad-651c-11dd-bd45-d9d11cbf97e7" />
+              </motherOrganism>
+            </OTSex>
+            <OTSex local_id="meiosis-challenge-view-crossover" name="Meiosis" replayButtonEnabled="false" controlledCrossoverEnabled="true">
+              <fatherOrganism>
+                <object refid="f87576ac-651c-11dd-bd45-d9d11cbf97e7" />
+              </fatherOrganism>
+              <motherOrganism>
+                <object refid="f87576ad-651c-11dd-bd45-d9d11cbf97e7" />
+              </motherOrganism>
+            </OTSex>
+            <OTOrganism id="a8e20bf5-73a4-11dd-a769-cbc7ca7b3ef4" name="Tanada" sex="1" allowFatalCharacteristic="false" alleles="b:h,a:H,b:S,a:S,b:W,a:w,b:L,a:L,b:t,a:t,b:p,a:p,b:F,a:f,b:a,a:a,b:B,a:B">
+              <world>
+                <OTWorld speciesPath="org/concord/biologica/worlds/dragonmarkers-plates.xml" />
+              </world>
+            </OTOrganism>
+            <OTOrganism id="f87576ac-651c-11dd-bd45-d9d11cbf97e7" name="Landar" sex="0" alleles="b:h,a:h,b:S,a:S,b:w,a:w,b:l,a:l,b:t,a:t,a:p,a:f,a:a,a:B">
+              <world>
+                <object refid="f87576ae-651c-11dd-bd45-d9d11cbf97e7" />
+              </world>
+            </OTOrganism>
+            <OTSex id="f87576ab-651c-11dd-bd45-d9d11cbf97e7" name="Meiosis" replayButtonEnabled="false">
+              <fatherOrganism>
+                <object refid="f87576ac-651c-11dd-bd45-d9d11cbf97e7" />
+              </fatherOrganism>
+              <motherOrganism>
+                <object refid="f87576ad-651c-11dd-bd45-d9d11cbf97e7" />
+              </motherOrganism>
+            </OTSex>
+            <OTMultipleOrganism local_id="multipleOrganismViewTransfer" width="95" height="400" organismImageSize="2" />
+            <object refid="8d880970-c22a-11dc-95ff-0800200c9a66/modes[3]/map['${compound_doc_view}']/objectsToInsert[6]" />
+            <OTWorld id="433cea58-64fa-11dd-88f8-3390a456ed3b" speciesPath="org/concord/biologica/worlds/dragonmarkers-plates.xml" />
+            <OTWorld id="7850b6ea-64fa-11dd-88f8-3390a456ed3b" speciesPath="org/concord/biologica/worlds/dragonmarkers-plates.xml" />
+            <OTWorld id="9039c71c-64fa-11dd-88f8-3390a456ed3b" speciesPath="org/concord/biologica/worlds/dragonmarkers-plates.xml" />
+            <OTOrganism id="433cea57-64fa-11dd-88f8-3390a456ed3b" name="WingsEx2Female" alleles="b:W,a:W" sex="1" allowFatalCharacteristic="false">
+              <world>
+                <OTWorld speciesPath="org/concord/biologica/worlds/dragonmarkers-plates.xml" />
+              </world>
+            </OTOrganism>
+            <OTOrganism id="7850b6e9-64fa-11dd-88f8-3390a456ed3b" name="WingsEx2Male" alleles="b:w,a:w" sex="0" allowFatalCharacteristic="false">
+              <world>
+                <OTWorld speciesPath="org/concord/biologica/worlds/dragonmarkers-plates.xml" />
+              </world>
+            </OTOrganism>
+            <OTOrganism id="f9868606-64f9-11dd-88f8-3390a456ed3b" name="WingsEx1Male" alleles="b:W,a:w" sex="0" allowFatalCharacteristic="false">
+              <world>
+                <OTWorld speciesPath="org/concord/biologica/worlds/dragonmarkers-plates.xml" />
+              </world>
+            </OTOrganism>
+            <OTOrganism id="9039c71b-64fa-11dd-88f8-3390a456ed3b" name="WingsEx1Female" alleles="b:w,a:w" sex="1" allowFatalCharacteristic="false">
+              <world>
+                <OTWorld speciesPath="org/concord/biologica/worlds/dragonmarkers-plates.xml" />
+              </world>
+            </OTOrganism>
+            <object refid="${femaleOrganism}" />
+            <object refid="${maleOrganism}" />
+            <object refid="${femaleOrganism2}" />
+            <object refid="${maleOrganism2}" />
+            <object refid="${femaleOrganism3}" />
+            <object refid="${maleOrganism3}" />
+            <object refid="${femaleOrganism4}" />
+            <object refid="${maleOrganism4}" />
+            <object refid="ec63a7dd-6517-11dd-bd45-d9d11cbf97e7" />
+            <OTOrganism name="Lucenne" sex="1" allowFatalCharacteristic="false" alleles="b:h,a:H,b:S,a:S,b:W,a:w,b:l,a:L,b:t,a:t,b:p,a:p,b:f,a:f,b:A,a:a,b:B,a:B">
+              <world>
+                <OTWorld speciesPath="org/concord/biologica/worlds/dragonmarkers-plates.xml" />
+              </world>
+            </OTOrganism>
+            <OTOrganism name="Molthwan" sex="0" allowFatalCharacteristic="false" alleles="b:h,a:h,b:S,a:S,b:w,a:w,b:l,a:l,b:t,a:t,a:p,a:f,a:a,a:B">
+              <world>
+                <OTWorld speciesPath="org/concord/biologica/worlds/dragonmarkers-plates.xml" />
+              </world>
+            </OTOrganism>
+            <OTOrganism name="Lucenne" sex="1" allowFatalCharacteristic="false" alleles="b:h,a:H,b:S,a:S,b:W,a:w,b:L,a:L,b:t,a:t,b:p,a:p,b:F,a:f,b:a,a:a,b:B,a:B">
+              <world>
+                <OTWorld speciesPath="org/concord/biologica/worlds/dragonmarkers-plates.xml" />
+              </world>
+            </OTOrganism>
+            <OTOrganism name="Molthwan" sex="0" allowFatalCharacteristic="false" alleles="b:h,a:h,b:S,a:S,b:W,a:w,b:L,a:l,b:t,a:t,a:p,a:f,a:a,a:B">
+              <world>
+                <OTWorld speciesPath="org/concord/biologica/worlds/dragonmarkers-plates.xml" />
+              </world>
+            </OTOrganism>
+            <OTOrganism id="f87576ad-651c-11dd-bd45-d9d11cbf97e7" name="Tanada" sex="1" alleles="b:h,a:H,b:S,a:S,b:W,a:w,b:l,a:L,b:t,a:t,b:p,a:p,b:F,a:f,b:a,a:a,b:B,a:B">
+              <world>
+                <OTWorld id="f87576ae-651c-11dd-bd45-d9d11cbf97e7" speciesPath="org/concord/biologica/worlds/dragonmarkers-plates.xml" />
+              </world>
+            </OTOrganism>
+            <OTOrganism local_id="Lucenne_organism" name="Lucenne" sex="1" alleles="b:h,a:H,b:S,a:S,b:W,a:w,b:l,a:L,b:t,a:t,b:p,a:p,b:F,a:f,b:a,a:a,b:B,a:B">
+              <world>
+                <object refid="f87576ae-651c-11dd-bd45-d9d11cbf97e7" />
+              </world>
+            </OTOrganism>
+            <OTOrganism local_id="Molthwan_organism" name="Molthwan" sex="0" alleles="b:h,a:h,b:S,a:S,b:w,a:w,b:l,a:l,b:t,a:t,a:p,a:f,a:a,a:B">
+              <world>
+                <object refid="f87576ae-651c-11dd-bd45-d9d11cbf97e7" />
+              </world>
+            </OTOrganism>
+            <OTOrganism id="a8e20bf4-73a4-11dd-a769-cbc7ca7b3ef4" name="Molthwan" sex="0" allowFatalCharacteristic="false" alleles="b:h,a:h,b:S,a:S,b:W,a:w,b:L,a:l,b:t,a:t,a:p,a:f,a:a,a:B">
+              <world>
+                <OTWorld speciesPath="org/concord/biologica/worlds/dragonmarkers-plates.xml" />
+              </world>
+            </OTOrganism>
+            <object refid="680d6e4b-79cd-11dd-acfb-c58c080ea6e2/world" />
+            <object refid="619fc538-79cd-11dd-acfb-c58c080ea6e2/world" />
+            <OTOrganism id="3b6fe9db-7b46-11dd-8304-0bc503599a8b" name="Strain 1 Female" sex="1" allowFatalCharacteristic="false" alleles="b:h,a:H,b:S,a:S,b:W,a:w,b:L,a:l,b:t,a:t,b:P,a:P,b:F,a:f,b:a,a:a,b:B,a:B">
+              <world>
+                <OTWorld speciesPath="org/concord/biologica/worlds/dragonmarkers-plates.xml" />
+              </world>
+            </OTOrganism>
+            <OTOrganism id="4c5615de-7b46-11dd-8304-0bc503599a8b" name="Strain 2 Male" sex="0" allowFatalCharacteristic="false" alleles="b:h,a:h,b:S,a:S,b:W,a:w,b:L,a:l,b:t,a:t,a:p,a:f,a:a,a:B">
+              <world>
+                <OTWorld speciesPath="org/concord/biologica/worlds/dragonmarkers-plates.xml" />
+              </world>
+            </OTOrganism>
+            <OTOrganism id="3f49957e-7b50-11dd-8304-0bc503599a8b" name="Strain 1 Female" sex="1" allowFatalCharacteristic="false" alleles="b:h,a:H,b:S,a:S,b:W,a:w,b:L,a:l,b:t,a:t,b:P,a:P,b:F,a:f,b:a,a:a,b:B,a:B">
+              <world>
+                <OTWorld speciesPath="org/concord/biologica/worlds/dragonmarkers-plates.xml" />
+              </world>
+            </OTOrganism>
+            <OTOrganism id="3f49957f-7b50-11dd-8304-0bc503599a8b" name="Strain 2 Male" sex="0" allowFatalCharacteristic="false" alleles="b:h,a:h,b:S,a:S,b:W,a:w,b:L,a:l,b:t,a:t,a:p,a:f,a:a,a:B">
+              <world>
+                <OTWorld speciesPath="org/concord/biologica/worlds/dragonmarkers-plates.xml" />
+              </world>
+            </OTOrganism>
+            <object refid="${femaleStrainOrganism}" />
+            <object refid="${maleStrainOrganism}" />
+            <OTOrganism local_id="samplemale_strain">
+              <name>male</name>
+              <sex>0</sex>
+              <world>
+                <object refid="${dragon_world_strains}" />
+              </world>
+              <alleles>b:h,a:h,b:S,a:S,b:W,a:w,b:L,a:l,b:t,a:t,a:p,a:f,a:a,a:B</alleles>
+            </OTOrganism>
+            <OTOrganism local_id="samplemale_strain_plates">
+              <name>male</name>
+              <sex>0</sex>
+              <world>
+                <object refid="${dragon_world_strains}" />
+              </world>
+              <alleles>b:h,a:h,b:S,a:S,b:W,a:w,b:L,a:l,b:t,a:t,a:P,a:f,a:a,a:B</alleles>
+            </OTOrganism>
+            <OTOrganism local_id="samplefemale_strain">
+              <name>female</name>
+              <sex>1</sex>
+              <world>
+                <object refid="${dragon_world_strains}" />
+              </world>
+              <alleles>b:h,a:H,b:S,a:S,b:W,a:w,b:L,a:l,b:t,a:t,b:p,a:p,b:F,a:f,b:a,a:a,b:B,a:B</alleles>
+            </OTOrganism>
+            <OTOrganism local_id="samplefemale_strain_plates">
+              <name>female</name>
+              <sex>1</sex>
+              <world>
+                <object refid="${dragon_world_strains}" />
+              </world>
+              <alleles>b:h,a:H,b:S,a:S,b:W,a:w,b:L,a:l,b:t,a:t,b:p,a:P,b:F,a:f,b:a,a:a,b:B,a:B</alleles>
+            </OTOrganism>
+            <OTOrganism id="c1e77779-64f5-11dd-88f8-3390a456ed3b" name="Lucenne" sex="1" allowFatalCharacteristic="false" alleles="b:h,a:H,b:S,a:S,b:W,a:w,b:L,a:L,b:t,a:t,b:p,a:p,b:F,a:f,b:a,a:a,b:B,a:B">
+              <world>
+                <OTWorld speciesPath="org/concord/biologica/worlds/dragonmarkers-plates.xml" />
+              </world>
+            </OTOrganism>
+            <OTOrganism id="6b4c4b25-64f5-11dd-88f8-3390a456ed3b" name="Molthwan" sex="0" allowFatalCharacteristic="false" alleles="b:h,a:h,b:S,a:S,b:W,a:w,b:L,a:l,b:t,a:t,a:p,a:f,a:a,a:B">
+              <world>
+                <OTWorld local_id="dragonmarkers" speciesPath="org/concord/biologica/worlds/dragonmarkers-plates.xml" />
+              </world>
+            </OTOrganism>
+            <OTOrganism id="680d6e4b-79cd-11dd-acfb-c58c080ea6e2" name="Strain 2 Male" sex="0" allowFatalCharacteristic="false" alleles="b:p,a:p,b:h,a:H,b:S,a:S,b:W,a:w,b:L,a:l,b:t,a:t,a:f,a:a,a:B">
+              <world>
+                <OTWorld id="680d6e4b-79cd-11dd-acfb-c58c080ea6e2/world" speciesPath="org/concord/biologica/worlds/dragonmarkers-plates.xml" />
+              </world>
+            </OTOrganism>
+            <OTOrganism id="619fc538-79cd-11dd-acfb-c58c080ea6e2" name="Strain 1 Female" sex="1" allowFatalCharacteristic="false" alleles="b:P,a:P,b:h,a:h,b:S,a:S,b:W,a:w,b:L,a:l,b:t,a:T,b:F,a:f,b:a,a:a,b:B,a:B">
+              <world>
+                <OTWorld id="619fc538-79cd-11dd-acfb-c58c080ea6e2/world" speciesPath="org/concord/biologica/worlds/dragonmarkers-plates.xml" />
+              </world>
+            </OTOrganism>
+            <OTOrganism id="ec63a7dc-6517-11dd-bd45-d9d11cbf97e7" name="Lanthana" sex="1" allowFatalCharacteristic="false" alleles="b:h,a:H,b:S,a:S,b:W,a:w,b:L,a:l,b:t,a:t,a:a,a:B">
+              <world>
+                <OTWorld id="ec63a7dd-6517-11dd-bd45-d9d11cbf97e7" speciesPath="org/concord/biologica/worlds/dragonmarkers-plates.xml" />
+              </world>
+            </OTOrganism>
+          </sharedObjects>
+        </OTSharingBundle>
+        <object refid="8d880970-c22a-11dc-95ff-0800200c9a66" />
+        <OTScriptEngineBundle>
+          <engines>
+            <OTScriptEngineEntry objectClass="org.concord.otrunk.script.js.OTJavascript" engineClass="org.concord.otrunk.script.js.OTJavascriptEngine" />
+            <OTScriptEngineEntry objectClass="org.concord.otrunk.script.jruby.OTJRuby" engineClass="org.concord.otrunk.script.jruby.OTJRubyEngine" />
+          </engines>
+        </OTScriptEngineBundle>
+        <OTInterfaceManager>
+          <deviceConfigs>
+            <OTDeviceConfig configString="none" deviceId="10" />
+          </deviceConfigs>
+        </OTInterfaceManager>
+      </bundles>
+      <root>
+        <OTUDLContainer name="GENIQUEST">
+          <cssColor>
+            <object refid="31193bb0-c44f-11dc-95ff-0800200c9a66" />
+          </cssColor>
+          <title>
+            <OTCompoundDoc local_id="title" showEditBar="false">
+              <bodyText>
+                <div class="leftpanel">
+                  <img src="images/GENIQUEST-Logo.png" />
+                  <br />
+                  <div class="activity-title">Intro</div>
+                </div>
+              </bodyText>
+            </OTCompoundDoc>
+          </title>
+          <menu>
+            <OTViewChild useScrollPane="true" scrollPanelHasBorder="false">
+              <object>
+                <object refid="${menu}" />
+              </object>
+            </OTViewChild>
+          </menu>
+          <content>
+            <OTCardContainer local_id="section-card-container" loadViewOnlyOnDemand="true" width="50">
+              <cards>
+                <OTUDLSection local_id="section-1" name="Intro and Rules">
+                  <header>
+                    <OTCompoundDoc id="2767fe20-6c7d-11dc-8314-0800200c9a66!/section_1/header" showEditBar="false">
+                      <bodyText />
+                    </OTCompoundDoc>
+                  </header>
+                  <content>
+                    <OTCardContainer local_id="section-1-card-container" contentsMayScroll="true" loadViewOnlyOnDemand="true">
+                      <cards>
+                        <OTUDLCompoundDoc local_id="section-1-page-1" name="1" showDefinitions="false">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <table width="100%">
+                                    <tr>
+                                      <td>
+                                        <object refid="c1e77778-64f5-11dd-88f8-3390a456ed3b" />
+                                      </td>
+                                      <td>
+                                        <object refid="6b4c4b24-64f5-11dd-88f8-3390a456ed3b" />
+                                      </td>
+                                    </tr>
+                                  </table>
+                                  Today is a very exciting day on the island of Gandwar. Two dragons 
+          there are about to have a baby. Because it happens only about every 
+          500 years, the birth of a dragon is met with great anticipation. The 
+          lucky parents are Molthwan and Lucenne, two of the island’s most 
+          admired inhabitants.
+                                  <br />
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                          <documentRefs>
+                            <OTStaticOrganism id="c1e77778-64f5-11dd-88f8-3390a456ed3b" name="Static Organism">
+                              <organism>
+                                <object refid="c1e77779-64f5-11dd-88f8-3390a456ed3b" />
+                              </organism>
+                            </OTStaticOrganism>
+                            <OTStaticOrganism id="6b4c4b24-64f5-11dd-88f8-3390a456ed3b" name="Static Organism">
+                              <organism>
+                                <object refid="6b4c4b25-64f5-11dd-88f8-3390a456ed3b" />
+                              </organism>
+                            </OTStaticOrganism>
+                          </documentRefs>
+                        </OTUDLCompoundDoc>
+                        <OTUDLCompoundDoc local_id="section-1-page-2" name="2" showDefinitions="false">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <table width="100%">
+                                    <tr>
+                                      <td>
+                                        <object refid="c1e77778-64f5-11dd-88f8-3390a456ed3b" />
+                                      </td>
+                                      <td>
+                                        <object refid="6b4c4b24-64f5-11dd-88f8-3390a456ed3b" />
+                                      </td>
+                                    </tr>
+                                  </table>
+                                  Like all eager parents, Molthwan and Lucenne are anxious to know 
+          what their  baby will be like. Molthwan is especially interested in 
+          knowing whether the baby will be born with a fancy spiky or forked tail, a much-admired 
+          trait. Lucenne is hoping that the baby will have wings and be able 
+          to fly, something not many dragons on Gandwar are able to do.
+                                  <br />
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                        </OTUDLCompoundDoc>
+                        <OTUDLCompoundDoc local_id="section-1-page-3" name="3" showEditBar="true" showDefinitions="false">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <table>
+                                    <tr>
+                                      <td>Try breeding some dragons to see if you can figure out any 
+                rules that govern which dragons have a fancy tail. Click the "Breed 
+                Offspring" buttons as many times as you like.</td>
+                                    </tr>
+                                    <tr>
+                                      <td>
+                                        <object refid="${breedOffspringView}" editable="true" />
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>
+                                        <object refid="${breedOffspringView2}" editable="true" />
+                                        <br />
+                                        <object refid="3262387d-6511-11dd-ac85-bb6ebc537d22" />
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>
+                                        <br />
+                                      </td>
+                                    </tr>
+                                  </table>
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                          <documentRefs>
+                            <object refid="${breedOffspringView}" />
+                            <object refid="${breedOffspringView2}" />
+                            <OTUDLQuestion id="3262387d-6511-11dd-ac85-bb6ebc537d22" name="Question" showConvertButton="true" showCheckAnswersButton="true" showImmediateFeedback="false">
+                              <prompt>
+                                <OTCompoundDoc>
+                                  <bodyText>Based on these examples, what kind of a trait do you think a fancy tail is?</bodyText>
+                                </OTCompoundDoc>
+                              </prompt>
+                              <input>
+                                <OTChoice name="Multiple choice" alignContent="0">
+                                  <choices>
+                                    <OTCompoundDoc id="32623880-6511-11dd-ac85-bb6ebc537d22" name="Dominant">
+                                      <bodyText>Dominant</bodyText>
+                                    </OTCompoundDoc>
+                                    <OTCompoundDoc name="Recessive">
+                                      <bodyText>Recessive</bodyText>
+                                    </OTCompoundDoc>
+                                  </choices>
+                                </OTChoice>
+                              </input>
+                              <correctAnswer>
+                                <object refid="32623880-6511-11dd-ac85-bb6ebc537d22" />
+                              </correctAnswer>
+                            </OTUDLQuestion>
+                          </documentRefs>
+                        </OTUDLCompoundDoc>
+                        <OTUDLCompoundDoc local_id="section-1-page-4" name="4" showEditBar="true" showDefinitions="false">
+                          <bodyText>
+                            <table width="100%">
+                              <tr>
+                                <td>Now see if you can figure out any rules that govern which dragons 
+          have wings. Click the button as many times as you like to breed 
+          possible children from these pairs.</td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  <object refid="${breedOffspringView}" editable="false" />
+                                  <br />
+                                  <object refid="1615797e-6509-11dd-ac85-bb6ebc537d22" />
+                                  <br />
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  <object refid="${breedOffspringView2}" editable="false" />
+                                  <br />
+                                  <object refid="4cdb3c0b-6509-11dd-ac85-bb6ebc537d22" />
+                                </td>
+                              </tr>
+                            </table>
+                          </bodyText>
+                          <documentRefs>
+                            <OTBreedOffspring local_id="breedOffspringView">
+                              <fatherOrganism>
+                                <OTOrganism local_id="maleOrganism">
+                                  <name>male</name>
+                                  <sex>0</sex>
+                                  <world>
+                                    <OTWorld local_id="dragon_world" speciesPath="org/concord/biologica/worlds/dragonmarkers.xml" />
+                                  </world>
+                                  <alleles>b:H,a:H,b:S,a:S,b:w,a:w,b:l,a:L,b:t,a:t,a:p,a:f,a:a,a:B</alleles>
+                                </OTOrganism>
+                              </fatherOrganism>
+                              <motherOrganism>
+                                <OTOrganism local_id="femaleOrganism">
+                                  <name>female</name>
+                                  <sex>1</sex>
+                                  <world>
+                                    <object refid="${dragon_world}" />
+                                  </world>
+                                  <alleles>b:h,a:h,b:S,a:S,b:w,a:w,b:l,a:L,b:T,a:T,b:p,a:p,b:F,a:F,b:A,a:a,b:B,a:B</alleles>
+                                </OTOrganism>
+                              </motherOrganism>
+                            </OTBreedOffspring>
+                            <OTUDLQuestion id="1615797e-6509-11dd-ac85-bb6ebc537d22" name="Question" showConvertButton="true" showCheckAnswersButton="true">
+                              <prompt>
+                                <OTCompoundDoc>
+                                  <bodyText>If two dragons both have wings, what can you say about their offspring?</bodyText>
+                                </OTCompoundDoc>
+                              </prompt>
+                              <input>
+                                <OTText name="Open response" rows="3" />
+                              </input>
+                            </OTUDLQuestion>
+                            <OTBreedOffspring local_id="breedOffspringView2">
+                              <fatherOrganism>
+                                <OTOrganism local_id="maleOrganism2">
+                                  <name>male</name>
+                                  <sex>0</sex>
+                                  <world>
+                                    <object refid="${dragon_world}" />
+                                  </world>
+                                  <alleles>b:h,a:h,b:S,a:S,b:w,a:W,b:l,a:L,b:t,a:t,a:p,a:f,a:a,a:B</alleles>
+                                </OTOrganism>
+                              </fatherOrganism>
+                              <motherOrganism>
+                                <OTOrganism local_id="femaleOrganism2">
+                                  <name>female</name>
+                                  <sex>1</sex>
+                                  <world>
+                                    <object refid="${dragon_world}" />
+                                  </world>
+                                  <alleles>b:h,a:h,b:S,a:S,b:w,a:w,b:l,a:L,b:t,a:t,b:p,a:p,b:F,a:F,b:A,a:a,b:B,a:B</alleles>
+                                </OTOrganism>
+                              </motherOrganism>
+                            </OTBreedOffspring>
+                            <OTUDLQuestion id="4cdb3c0b-6509-11dd-ac85-bb6ebc537d22" name="Question" showConvertButton="true" showCheckAnswersButton="true" showImmediateFeedback="false">
+                              <prompt>
+                                <OTCompoundDoc>
+                                  <bodyText>If one parent has wings, does that guarantee that the child will have wings?</bodyText>
+                                </OTCompoundDoc>
+                              </prompt>
+                              <input>
+                                <OTChoice name="Multiple choice" alignContent="0">
+                                  <choices>
+                                    <OTCompoundDoc name="Yes">
+                                      <bodyText>Yes</bodyText>
+                                    </OTCompoundDoc>
+                                    <OTCompoundDoc id="4cdb3c0b-6509-11dd-ac85-bb6ebc537d22/input/choices[1]" name="No">
+                                      <bodyText>No</bodyText>
+                                    </OTCompoundDoc>
+                                  </choices>
+                                </OTChoice>
+                              </input>
+                              <correctAnswer>
+                                <object refid="4cdb3c0b-6509-11dd-ac85-bb6ebc537d22/input/choices[1]" />
+                              </correctAnswer>
+                            </OTUDLQuestion>
+                          </documentRefs>
+                        </OTUDLCompoundDoc>
+                        <OTUDLCompoundDoc local_id="section-1-page-5" name="5" showEditBar="true" showDefinitions="false">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <table>
+                                    <tr>
+                                      <td>Do you have an idea about how wings are inherited? Try the two 
+                scenarios below to see if they confirm your suspicions.</td>
+                                    </tr>
+                                    <tr>
+                                      <td>
+                                        <object refid="${breedOffspringView3}" editable="false" />
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>
+                                        <object refid="${breedOffspringView4}" editable="false" />
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>
+                                        <br />
+                                        <object refid="b611d402-650b-11dd-ac85-bb6ebc537d22" />
+                                        <br />
+                                      </td>
+                                    </tr>
+                                  </table>
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                          <documentRefs>
+                            <OTBreedOffspring local_id="breedOffspringView3">
+                              <fatherOrganism>
+                                <OTOrganism local_id="maleOrganism3">
+                                  <name>male</name>
+                                  <sex>0</sex>
+                                  <world>
+                                    <object refid="${dragon_world}" />
+                                  </world>
+                                  <alleles>b:h,a:h,b:S,a:S,b:w,a:w,b:l,a:L,b:t,a:t,a:p,a:f,a:a,a:B</alleles>
+                                </OTOrganism>
+                              </fatherOrganism>
+                              <motherOrganism>
+                                <OTOrganism local_id="femaleOrganism3">
+                                  <name>female</name>
+                                  <sex>1</sex>
+                                  <world>
+                                    <object refid="${dragon_world}" />
+                                  </world>
+                                  <alleles>b:h,a:h,b:S,a:S,b:W,a:W,b:l,a:L,b:t,a:t,b:p,a:p,b:F,a:F,b:A,a:a,b:B,a:B</alleles>
+                                </OTOrganism>
+                              </motherOrganism>
+                            </OTBreedOffspring>
+                            <OTBreedOffspring local_id="breedOffspringView4">
+                              <fatherOrganism>
+                                <OTOrganism local_id="maleOrganism4">
+                                  <name>male</name>
+                                  <sex>0</sex>
+                                  <world>
+                                    <object refid="${dragon_world}" />
+                                  </world>
+                                  <alleles>b:h,a:h,b:S,a:S,b:W,a:w,b:l,a:L,b:t,a:t,a:p,a:f,a:a,a:B</alleles>
+                                </OTOrganism>
+                              </fatherOrganism>
+                              <motherOrganism>
+                                <OTOrganism local_id="femaleOrganism4">
+                                  <name>female</name>
+                                  <sex>1</sex>
+                                  <world>
+                                    <object refid="${dragon_world}" />
+                                  </world>
+                                  <alleles>b:h,a:h,b:S,a:S,b:W,a:w,b:l,a:L,b:t,a:t,b:p,a:p,b:F,a:F,b:A,a:a,b:B,a:B</alleles>
+                                </OTOrganism>
+                              </motherOrganism>
+                            </OTBreedOffspring>
+                            <OTUDLQuestion id="b611d402-650b-11dd-ac85-bb6ebc537d22" name="Question" showConvertButton="true" showImmediateFeedback="false" showCheckAnswersButton="true">
+                              <prompt>
+                                <OTCompoundDoc>
+                                  <bodyText>What kind of trait do you think wings are?</bodyText>
+                                </OTCompoundDoc>
+                              </prompt>
+                              <input>
+                                <OTChoice name="Multiple choice" alignContent="0">
+                                  <choices>
+                                    <OTCompoundDoc name="Dominant">
+                                      <bodyText>Dominant</bodyText>
+                                    </OTCompoundDoc>
+                                    <OTCompoundDoc id="b611d402-650b-11dd-ac85-bb6ebc537d22/input/choices[1]" name="Recessive">
+                                      <bodyText>Recessive</bodyText>
+                                    </OTCompoundDoc>
+                                  </choices>
+                                </OTChoice>
+                              </input>
+                              <correctAnswer>
+                                <object refid="b611d402-650b-11dd-ac85-bb6ebc537d22/input/choices[1]" />
+                              </correctAnswer>
+                            </OTUDLQuestion>
+                          </documentRefs>
+                        </OTUDLCompoundDoc>
+                        <OTUDLCompoundDoc local_id="section-1-page-6" name="6" showDefinitions="false">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  Below is a dragon and its chromosomes. You can control and change 
+          the dragon's alleles. Try changing some using the pulldown menus and 
+          see what happens. Experiment with the alleles for tails and wings to 
+          see if you were correct.
+                                  <br />
+                                  <table>
+                                    <tr>
+                                      <td>
+                                        <table>
+                                          <tr>
+                                            <td>
+                                              <object refid="${Lanthana_static}" />
+                                            </td>
+                                          </tr>
+                                          <tr>
+                                            <td>
+                                              <object refid="94904970-6517-11dd-bd45-d9d11cbf97e7" />
+                                            </td>
+                                          </tr>
+                                          <tr>
+                                            <td>
+                                              <object refid="b42d1765-6517-11dd-bd45-d9d11cbf97e7" />
+                                            </td>
+                                          </tr>
+                                          <tr>
+                                            <td>
+                                              <object refid="${snapshot3}" />
+                                            </td>
+                                          </tr>
+                                        </table>
+                                      </td>
+                                      <td>
+                                        <object refid="ec63a7db-6517-11dd-bd45-d9d11cbf97e7" />
+                                      </td>
+                                      <td />
+                                    </tr>
+                                  </table>
+                                  What other traits can you change on this dragon? Find one trait you 
+          think is particularly interesting, and use the button above to take 
+          a snapshot for your lab notebook. Use the toolbar to point to or 
+          circle the trait, and write a note in your notebook describing how 
+          you caused that trait to be expressed. (Note: You can view your 
+          notebook at any time by clicking the notebook icon at the lower 
+          right.)
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                          <documentRefs>
+                            <OTStaticOrganism local_id="Lanthana_static" name="Lanthana">
+                              <organism>
+                                <object refid="ec63a7dc-6517-11dd-bd45-d9d11cbf97e7" />
+                              </organism>
+                            </OTStaticOrganism>
+                            <OTUDLQuestion id="94904970-6517-11dd-bd45-d9d11cbf97e7" name="Question" showConvertButton="true" showImmediateFeedback="false" showCheckAnswersButton="true">
+                              <prompt>
+                                <OTCompoundDoc>
+                                  <bodyText>Which gene combinations yield a fancy tail?</bodyText>
+                                </OTCompoundDoc>
+                              </prompt>
+                              <input>
+                                <OTChoiceMultiple name="Multiple choice (check boxes)" alignContent="0">
+                                  <choices>
+                                    <OTCompoundDoc id="d1564a7e-2fb6-11de-ab41-b92bc31d9e29" name="TT">
+                                      <bodyText>TT</bodyText>
+                                    </OTCompoundDoc>
+                                    <OTCompoundDoc id="d156718f-2fb6-11de-ab41-b92bc31d9e29" name="Tt">
+                                      <bodyText>Tt</bodyText>
+                                    </OTCompoundDoc>
+                                    <OTCompoundDoc name="tt">
+                                      <bodyText>tt</bodyText>
+                                    </OTCompoundDoc>
+                                  </choices>
+                                </OTChoiceMultiple>
+                              </input>
+                              <correctAnswer>
+                                <OTObjectSet>
+                                  <objects>
+                                    <object refid="d156718f-2fb6-11de-ab41-b92bc31d9e29" />
+                                    <object refid="d1564a7e-2fb6-11de-ab41-b92bc31d9e29" />
+                                  </objects>
+                                </OTObjectSet>
+                              </correctAnswer>
+                            </OTUDLQuestion>
+                            <OTUDLQuestion id="b42d1765-6517-11dd-bd45-d9d11cbf97e7" name="Question" showConvertButton="true" showImmediateFeedback="false" showCheckAnswersButton="true">
+                              <prompt>
+                                <OTCompoundDoc>
+                                  <bodyText>Which gene combinations yield wings?</bodyText>
+                                </OTCompoundDoc>
+                              </prompt>
+                              <input>
+                                <OTChoiceMultiple name="Multiple choice (check boxes)" alignContent="0">
+                                  <choices>
+                                    <OTCompoundDoc name="WW">
+                                      <bodyText>WW</bodyText>
+                                    </OTCompoundDoc>
+                                    <OTCompoundDoc name="Ww">
+                                      <bodyText>Ww</bodyText>
+                                    </OTCompoundDoc>
+                                    <OTCompoundDoc id="b42ddabb-6517-11dd-bd45-d9d11cbf97e7" name="ww">
+                                      <bodyText>ww</bodyText>
+                                    </OTCompoundDoc>
+                                  </choices>
+                                </OTChoiceMultiple>
+                              </input>
+                              <correctAnswer>
+                                <OTObjectSet>
+                                  <objects>
+                                    <object refid="b42ddabb-6517-11dd-bd45-d9d11cbf97e7" />
+                                  </objects>
+                                </OTObjectSet>
+                              </correctAnswer>
+                            </OTUDLQuestion>
+                            <OTSnapshotButton local_id="snapshot3">
+                              <snapshotAlbum>
+                                <object refid="${album}" />
+                              </snapshotAlbum>
+                              <target>
+                                <object refid="b42d1765-6517-11dd-bd45-d9d11cbf97e7" />
+                              </target>
+                            </OTSnapshotButton>
+                            <OTChromosome id="ec63a7db-6517-11dd-bd45-d9d11cbf97e7" name="Chromosome">
+                              <organism>
+                                <object refid="ec63a7dc-6517-11dd-bd45-d9d11cbf97e7" />
+                              </organism>
+                            </OTChromosome>
+                          </documentRefs>
+                        </OTUDLCompoundDoc>
+                        <OTUDLCompoundDoc local_id="section-1-page-7" name="7" showEditBar="true" showDefinitions="false">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle">Looking Deeper</div>
+                                  You have gained some ideas idea about how tails and wings are 
+          inherited in dragons. In the next section, you will look deeper into 
+          the genetics of dragons. Use the menu at left to move to the next 
+          section.
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                        </OTUDLCompoundDoc>
+                      </cards>
+                      <viewedCards>
+                        <object refid="${section-1-page-1}" />
+                      </viewedCards>
+                      <currentCard>
+                        <object refid="${section-1-page-1}" />
+                      </currentCard>
+                    </OTCardContainer>
+                  </content>
+                  <footer>
+                    <object refid="${nav-bar}" />
+                  </footer>
+                  <north>
+                    <object refid="2767fe20-6c7d-11dc-8314-0800200c9a66!/section_1/header" />
+                  </north>
+                  <center>
+                    <object refid="${section-1-card-container}" />
+                  </center>
+                  <south>
+                    <object refid="${nav-bar}" />
+                  </south>
+                </OTUDLSection>
+                <OTUDLSection local_id="section-2" name="Meiosis">
+                  <content>
+                    <OTCardContainer id="3bac2cb0-64f4-11dd-88f8-3390a456ed3b" contentsMayScroll="true" loadViewOnlyOnDemand="true">
+                      <cards>
+                        <OTUDLCompoundDoc local_id="section-2-page-2" name="2-2" showEditBar="true" showDefinitions="true">
+                          <bodyText>
+                            <br />
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <br />
+                                  <object refid="fa8552fb-73b1-11dd-a769-cbc7ca7b3ef4" />
+                                  <br />
+                                  <object refid="f87576ab-651c-11dd-bd45-d9d11cbf97e7" />
+                                  <object refid="${initial_meiosis_script}" />
+                                  <br />
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                          <documentRefs>
+                            <OTText id="fa8552fb-73b1-11dd-a769-cbc7ca7b3ef4" name="Text field!" text="Tanada and Landar also hope to be able to have a baby soon. This is a view of their cells as they undergo the process of meiosis. Click on the play button to start the process in the mother, Tanada." />
+                            <OTScriptObject local_id="initial_meiosis_script" name="Sex view script">
+                              <script>
+                                <OTJRuby src="scripts/meiosis_initial_investigation.rb" />
+                              </script>
+                              <variables>
+                                <OTScriptVariableComponent name="meiosisView">
+                                  <reference>
+                                    <object refid="f87576ab-651c-11dd-bd45-d9d11cbf97e7" />
+                                  </reference>
+                                </OTScriptVariableComponent>
+                                <OTScriptVariable name="textObject">
+                                  <reference>
+                                    <object refid="fa8552fb-73b1-11dd-a769-cbc7ca7b3ef4" />
+                                  </reference>
+                                </OTScriptVariable>
+                              </variables>
+                              <scriptState />
+                            </OTScriptObject>
+                          </documentRefs>
+                        </OTUDLCompoundDoc>
+                        <OTUDLCompoundDoc local_id="section-2-page-4" name="2-4" showEditBar="true" showDefinitions="true">
+                          <bodyText>
+                            <p>
+                              We've reset things now - are you ready for your challenge? Zoom in on 
+      our Daddy dragon.
+                              <br />
+                              <br />
+                              Your goal will be to create a child dragon with 
+      wings, but no legs. To inherit these traits, the child will need to have 
+      the gene combinations
+                              <em>ww</em>
+                              and
+                              <em>ll</em>
+                              .
+                              <br />
+                              <br />
+                              <object refid="6ffae657-2fba-11de-ab41-b92bc31d9e29" />
+                              <br />
+                            </p>
+                            <p />
+                            <object refid="${meiosis-challenge-view}" />
+                            <br />
+                          </bodyText>
+                          <documentRefs>
+                            <OTUDLQuestion id="6ffae657-2fba-11de-ab41-b92bc31d9e29" name="Question" showConvertButton="true" showImmediateFeedback="false" showCheckAnswersButton="true">
+                              <prompt>
+                                <OTCompoundDoc>
+                                  <bodyText>Can the father provide his half of these combinations?</bodyText>
+                                </OTCompoundDoc>
+                              </prompt>
+                              <input>
+                                <OTChoice name="Multiple choice" alignContent="0">
+                                  <choices>
+                                    <OTCompoundDoc id="7e5a4074-2fba-11de-ab41-b92bc31d9e29" name="Yes">
+                                      <bodyText>Yes</bodyText>
+                                    </OTCompoundDoc>
+                                    <OTCompoundDoc name="No">
+                                      <bodyText>No</bodyText>
+                                    </OTCompoundDoc>
+                                  </choices>
+                                </OTChoice>
+                              </input>
+                              <correctAnswer>
+                                <object refid="7e5a4074-2fba-11de-ab41-b92bc31d9e29" />
+                              </correctAnswer>
+                            </OTUDLQuestion>
+                            <object refid="${meiosis-challenge-view}" />
+                          </documentRefs>
+                        </OTUDLCompoundDoc>
+                        <OTUDLCompoundDoc local_id="section-2-page-5" name="2-5" showEditBar="true" showDefinitions="true">
+                          <bodyText>
+                            <p>
+                              Now reset the meiosis and zoom in on our expectant mother dragon. Run 
+      meiosis a few times. (Note that you will have to return to the un-zoomed 
+      view and hit "reset" to get a fresh run).
+                              <br />
+                              <br />
+                              <object refid="cc2569bc-2fba-11de-ab41-b92bc31d9e29" />
+                              <br />
+                            </p>
+                            <p />
+                            <object refid="${meiosis-challenge-view}" />
+                            <br />
+                          </bodyText>
+                          <documentRefs>
+                            <OTUDLQuestion id="cc2569bc-2fba-11de-ab41-b92bc31d9e29" name="Question" showConvertButton="true" showImmediateFeedback="false" showCheckAnswersButton="true">
+                              <prompt>
+                                <OTCompoundDoc>
+                                  <bodyText>
+                                    If we want to "design" a child dragon with the gene combinations
+                                    <em>ww</em>
+                                    and
+                                    <em>ll</em>
+                                    , can the mother carry through on her part of the bargain?
+                                  </bodyText>
+                                </OTCompoundDoc>
+                              </prompt>
+                              <input>
+                                <OTChoice name="Multiple choice" alignContent="0">
+                                  <choices>
+                                    <OTCompoundDoc name="Yes">
+                                      <bodyText>Yes</bodyText>
+                                    </OTCompoundDoc>
+                                    <OTCompoundDoc id="d83de11a-2fba-11de-ab41-b92bc31d9e29" name="No">
+                                      <bodyText>No</bodyText>
+                                    </OTCompoundDoc>
+                                  </choices>
+                                </OTChoice>
+                              </input>
+                              <correctAnswer>
+                                <object refid="d83de11a-2fba-11de-ab41-b92bc31d9e29" />
+                              </correctAnswer>
+                            </OTUDLQuestion>
+                            <object refid="${meiosis-challenge-view}" />
+                          </documentRefs>
+                        </OTUDLCompoundDoc>
+                        <OTUDLCompoundDoc local_id="section-2-page-6" name="2-6" showEditBar="true" showDefinitions="true">
+                          <bodyText>
+                            <p>
+                              If you looked closely, you noticed that we have a problem. The mother can only give chromosomes with 
+      the genes
+                              <em>Wl</em>
+                              or wL. And neither of these will help us in our 
+      quest. Fortunately, there's a catch… Zoom in on the mother and press 
+      the triangular "play" button again. The process will stop halfway 
+      through and wait for you. When it does, click on one chromosome with the 
+      tip of your mouse. See the flashing arrows? The arrows show places on 
+      other chromosomes you can click. Try it.
+                            </p>
+                            <object refid="${meiosis-challenge-view-crossover}" />
+                            <br />
+                            <object refid="${snapshot2}" />
+                            <p>
+                              Congratulations, you just performed a crossover! (This 
+      is also called
+                              <em>genetic recombination</em>
+                              , by the way.) Zoom out to reset 
+      things, and try a few more times. Can you create our desired
+                              <em>ww</em>
+                              and
+                              <em>ll</em>
+                              dragon now? Give it a shot.
+                            </p>
+                            <p>
+                              When you think you've succeeded (and
+                              <strong>before</strong>
+                              you proceed to breed the child!), zoom in on the chromosomes you crossed over and take a snapshot for your lab notebook. Write a note to go along with the snapshot describing what you did and why you think it will make the correct child dragon.
+                            </p>
+                          </bodyText>
+                          <documentRefs>
+                            <OTSnapshotButton local_id="snapshot2">
+                              <snapshotAlbum>
+                                <object refid="${album}" />
+                              </snapshotAlbum>
+                              <target>
+                                <object refid="${meiosis-challenge-view-crossover}" />
+                              </target>
+                            </OTSnapshotButton>
+                            <object refid="8d880970-c22a-11dc-95ff-0800200c9a66/modes[3]/map['${compound_doc_view}']/objectsToInsert[5]" />
+                          </documentRefs>
+                        </OTUDLCompoundDoc>
+                      </cards>
+                      <currentCard>
+                        <object refid="${section-2-page-2}" />
+                      </currentCard>
+                      <viewedCards>
+                        <object refid="${section-2-page-2}" />
+                      </viewedCards>
+                    </OTCardContainer>
+                  </content>
+                  <header>
+                    <OTUDLCompoundDoc id="3bac2cb1-64f4-11dd-88f8-3390a456ed3b" name="%3bac2cb1-64f4-11dd-88f8-3390a456ed3b" showEditBar="false">
+                      <bodyText />
+                    </OTUDLCompoundDoc>
+                  </header>
+                  <footer>
+                    <object refid="${nav-bar}" />
+                  </footer>
+                  <north>
+                    <object refid="3bac2cb1-64f4-11dd-88f8-3390a456ed3b" />
+                  </north>
+                  <center>
+                    <object refid="3bac2cb0-64f4-11dd-88f8-3390a456ed3b" />
+                  </center>
+                  <south>
+                    <object refid="${nav-bar}" />
+                  </south>
+                </OTUDLSection>
+                <OTUDLSection local_id="section-3" name="Pedigree and Genes">
+                  <content>
+                    <OTCardContainer id="5fdbdad4-6517-11dd-bd45-d9d11cbf97e7" contentsMayScroll="true" loadViewOnlyOnDemand="true">
+                      <cards>
+                        <OTUDLCompoundDoc local_id="section-3-page-1" showDefinitions="true">
+                          <bodyText>
+                            Now that you know how to breed dragons, let's try some selective breeding. 
+    This is the pedigree view.
+                            <br />
+                            <p>Use the cross tool to breed a new generation of dragons. Then breed two of the 
+      dragons from this new (F1) generation together. 
+      Repeat this as far as you wish. What do you notice about the dragons as you continue to breed more generations this way?</p>
+                            <p>Use the chromosome tool to examine the genes of the dragons more closely. Can you find any genes that are different among 
+      the members of your F8 generation? How many generations do you have to breed until all the dragons are exactly the same?</p>
+                            <!--                            <a href="${pedigreeErbScript}" target="2767fe20-6c7d-11dc-8314-0800200c9a66!/popup_frame">Click Me.</a>
+                            <object refid="${pedigreeTextObject}" />-->
+                            <br />
+                            <object refid="${firstPedigreeView}" />
+                            <!--                              <object refid="3ff1c0b5-652b-11dd-bd45-d9d11cbf97e7" /> -->
+                            <object refid="${pedigreeInitialInvestigation}" />
+                            <br />
+                            <!--><object refid="${multipleOrganismView}" />
+                            <br />
+                            <object refid="${savePedigreeOrganismsButton}" />
+                            <object refid="${clearPedigreeOrganismsButton}" />-->
+                            <object refid="${resetPedigreeOrganismsButton}" />
+                            <object refid="${snapshot1}" />
+                            <p>
+                              You are creating an
+                              <em>inbred strain</em>
+                              of dragons in the last generations of this process. When you think you have succeeded in creating a strain, use the button above to take a snapshot of your strain for your lab notebook. Along with the snapshot, write a note describing your strain, and explain what is special about all individuals in an inbred strain of organisms. Then proceed to the next section.
+                            </p>
+                          </bodyText>
+                          <documentRefs>
+                            <OTSnapshotButton local_id="snapshot1">
+                              <snapshotAlbum>
+                                <object refid="${album}" />
+                              </snapshotAlbum>
+                              <target>
+                                <object refid="${firstPedigreeView}" />
+                              </target>
+                            </OTSnapshotButton>
+                            <OTText local_id="pedigreeTextObject" text="This is a text placeholder!" />
+                            <OTOrganism local_id="samplefemale" name="female" sex="1" allowFatalCharacteristic="false">
+                              <world>
+                                <OTWorld id="8a4637f5-651c-11dd-bd45-d9d11cbf97e7" speciesPath="org/concord/biologica/worlds/dragonmarkers.xml" />
+                              </world>
+                            </OTOrganism>
+                            <OTOrganism local_id="samplemale" name="male" sex="0" allowFatalCharacteristic="false">
+                              <world>
+                                <object refid="8a4637f5-651c-11dd-bd45-d9d11cbf97e7" />
+                              </world>
+                            </OTOrganism>
+                            <OTPedigree local_id="firstPedigreeView" height="400" width="400" organismImagesVisible="true" organismImageSize="2" sexTextVisible="true" minimumNumberChildren="3" maximumNumberChildren="3">
+                              <organisms>
+                                <object refid="${samplemale}" />
+                                <object refid="${samplefemale}" />
+                              </organisms>
+                            </OTPedigree>
+                            <OTMultipleOrganism local_id="multipleOrganismView" width="300" height="100">
+                              <organisms>
+                                <object refid="${samplemale}" />
+                                <object refid="${samplefemale}" />
+                              </organisms>
+                            </OTMultipleOrganism>
+                            <OTScriptObject local_id="pedigreeInitialInvestigation">
+                              <script>
+                                <OTJRuby src="scripts/pedigree_initial_investigation.rb" />
+                              </script>
+                              <variables>
+                                <OTScriptVariableComponent name="pedigreeView">
+                                  <reference>
+                                    <object refid="${firstPedigreeView}" />
+                                  </reference>
+                                </OTScriptVariableComponent>
+                                <OTScriptVariable name="textField">
+                                  <reference>
+                                    <object refid="${pedigreeTextObject}" />
+                                  </reference>
+                                </OTScriptVariable>
+                              </variables>
+                              <scriptState />
+                            </OTScriptObject>
+                            <OTScriptButton local_id="resetPedigreeOrganismsButton" text="Reset pedigree view" alwaysReload="true">
+                              <script>
+                                <OTJRuby src="scripts/pedigree_reset_organisms.rb" />
+                              </script>
+                              <scriptVariables>
+                                <OTScriptVariableComponent name="pedigreeView">
+                                  <reference>
+                                    <object refid="${firstPedigreeView}" />
+                                  </reference>
+                                </OTScriptVariableComponent>
+                                <OTScriptVariableRealObject name="startingMale">
+                                  <reference>
+                                    <object refid="${samplemale}" />
+                                  </reference>
+                                </OTScriptVariableRealObject>
+                                <OTScriptVariableRealObject name="startingFemale">
+                                  <reference>
+                                    <object refid="${samplefemale}" />
+                                  </reference>
+                                </OTScriptVariableRealObject>
+                              </scriptVariables>
+                            </OTScriptButton>
+                            <OTScriptButton local_id="savePedigreeOrganismsButton" text="Save selected" alwaysReload="true">
+                              <script>
+                                <OTJRuby src="scripts/multi_org_save_pedigree_organisms.rb" />
+                              </script>
+                              <scriptVariables>
+                                <OTScriptVariableComponent name="pedigreeView">
+                                  <reference>
+                                    <object refid="${firstPedigreeView}" />
+                                  </reference>
+                                </OTScriptVariableComponent>
+                                <OTScriptVariableComponent name="multiOrgView">
+                                  <reference>
+                                    <object refid="${multipleOrganismView}" />
+                                  </reference>
+                                </OTScriptVariableComponent>
+                              </scriptVariables>
+                            </OTScriptButton>
+                            <OTScriptButton local_id="clearPedigreeOrganismsButton" text="Clear all" alwaysReload="false">
+                              <script>
+                                <OTJRuby src="scripts/multi_org_clear_button.rb" />
+                              </script>
+                              <scriptVariables>
+                                <OTScriptVariableComponent name="multiOrgView">
+                                  <reference>
+                                    <object refid="${multipleOrganismView}" />
+                                  </reference>
+                                </OTScriptVariableComponent>
+                              </scriptVariables>
+                            </OTScriptButton>
+                            <OTButton local_id="pedigreeButton" text="Show Pedigree View">
+                              <action>
+                                <object refid="${show_pedigree_frame}" />
+                              </action>
+                            </OTButton>
+                            <OTFrameDisplayAction local_id="show_pedigree_frame">
+                              <frame>
+                                <OTFrame local_id="popup_frame" width="500" height="500" />
+                              </frame>
+                              <objectToDisplay>
+                                <object refid="${multipleOrganismView}" />
+                              </objectToDisplay>
+                            </OTFrameDisplayAction>
+                            <OTUDLQuestion id="3ff1c0b5-652b-11dd-bd45-d9d11cbf97e7" name="Question" showConvertButton="true">
+                              <prompt>
+                                <OTCompoundDoc>
+                                  <bodyText>Describe what a dragon from your F8 generation would look like.</bodyText>
+                                </OTCompoundDoc>
+                              </prompt>
+                              <input>
+                                <OTText name="Open response" rows="3" />
+                              </input>
+                            </OTUDLQuestion>
+                          </documentRefs>
+                        </OTUDLCompoundDoc>
+                      </cards>
+                      <currentCard>
+                        <object refid="${section-3-page-1}" />
+                      </currentCard>
+                      <viewedCards>
+                        <object refid="${section-3-page-1}" />
+                      </viewedCards>
+                    </OTCardContainer>
+                  </content>
+                  <header>
+                    <OTUDLCompoundDoc id="5fdbdad5-6517-11dd-bd45-d9d11cbf97e7" name="%5fdbdad5-6517-11dd-bd45-d9d11cbf97e7" showEditBar="false">
+                      <bodyText />
+                    </OTUDLCompoundDoc>
+                  </header>
+                  <footer>
+                    <object refid="${nav-bar}" />
+                  </footer>
+                  <north>
+                    <object refid="5fdbdad5-6517-11dd-bd45-d9d11cbf97e7" />
+                  </north>
+                  <center>
+                    <object refid="5fdbdad4-6517-11dd-bd45-d9d11cbf97e7" />
+                  </center>
+                  <south>
+                    <object refid="${nav-bar}" />
+                  </south>
+                </OTUDLSection>
+                <OTUDLSection local_id="section-4" name="The Plates Problem">
+                  <content>
+                    <OTCardContainer id="f69b9732-79bb-11dd-b6e3-bdb383ed1215" contentsMayScroll="true" loadViewOnlyOnDemand="true">
+                      <cards>
+                        <OTUDLCompoundDoc local_id="section-4-page-1" name="4-1" showDefinitions="false">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  Some traits are less obvious than others. Here is a dragon with 
+          spiky plates on her upper neck. Try changing the chromosomes and see 
+          what happens.
+                                  <table>
+                                    <tr>
+                                      <td width="20%">
+                                        <table>
+                                          <tr>
+                                            <td>
+                                              <object refid="619fc537-79cd-11dd-acfb-c58c080ea6e2" />
+                                            </td>
+                                          </tr>
+                                          <tr>
+                                            <td>
+                                              <object refid="7777339c-20df-11de-ae68-b1ebca619c39" />
+                                            </td>
+                                          </tr>
+                                        </table>
+                                      </td>
+                                      <td>
+                                        <object refid="4c5615dd-7b46-11dd-8304-0bc503599a8b" />
+                                      </td>
+                                    </tr>
+                                  </table>
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                          <documentRefs>
+                            <OTStaticOrganism id="619fc537-79cd-11dd-acfb-c58c080ea6e2" name="Static Organism">
+                              <organism>
+                                <object refid="619fc538-79cd-11dd-acfb-c58c080ea6e2" />
+                              </organism>
+                            </OTStaticOrganism>
+                            <OTUDLQuestion id="7777339c-20df-11de-ae68-b1ebca619c39" name="Question" showConvertButton="true" showImmediateFeedback="false" showCheckAnswersButton="true" incorrectAnswerFeedback="Are you sure? Look again – I dont think it's possible." correctAnswerFeedback="You're right. Looks as if it's the gene isn't one we know about yet! Move to the next page to find out more.">
+                              <prompt>
+                                <OTCompoundDoc>
+                                  <bodyText>Is it possible to tell what controls the plates on the dragon's neck by just changing the alleles?</bodyText>
+                                </OTCompoundDoc>
+                              </prompt>
+                              <input>
+                                <OTChoice name="Multiple choice" alignContent="0">
+                                  <choices>
+                                    <OTCompoundDoc name="Yes">
+                                      <bodyText>Yes</bodyText>
+                                    </OTCompoundDoc>
+                                    <OTCompoundDoc id="8582051a-20df-11de-ae68-b1ebca619c39" name="No">
+                                      <bodyText>No</bodyText>
+                                    </OTCompoundDoc>
+                                  </choices>
+                                </OTChoice>
+                              </input>
+                              <correctAnswer>
+                                <object refid="8582051a-20df-11de-ae68-b1ebca619c39" />
+                              </correctAnswer>
+                            </OTUDLQuestion>
+                            <OTChromosome id="4c5615dd-7b46-11dd-8304-0bc503599a8b" name="Chromosome">
+                              <organism>
+                                <object refid="619fc538-79cd-11dd-acfb-c58c080ea6e2" />
+                              </organism>
+                            </OTChromosome>
+                          </documentRefs>
+                        </OTUDLCompoundDoc>
+                        <OTUDLCompoundDoc local_id="section-4-page-2" name="4-2" showEditBar="true" showDefinitions="false">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle">Breeding Test Area</div>
+                                  Try breeding some offspring to see what crosses between these strains produce. Does the inheritance of the plates tell you anything useful?
+                                  <br />
+                                  <table>
+                                    <tr>
+                                      <td>
+                                        <table>
+                                          <tr>
+                                            <td align="left">
+                                              <object refid="${breedOffspringViewForStrains}" editable="true" />
+                                            </td>
+                                          </tr>
+                                          <tr>
+                                            <td>
+                                              <object refid="${multipleOrganismViewForStrains}" />
+                                              <br />
+                                              <object refid="${strainMultipleOrganismScript}" />
+                                              <object refid="${multiOrgClearButton}" />
+                                              <br />
+                                            </td>
+                                          </tr>
+                                        </table>
+                                      </td>
+                                      <td>
+                                        <table>
+                                          <tr>
+                                            <td>
+                                              <object refid="${multipleOrganismViewTransfer}" />
+                                              <br />
+                                              <object refid="${multiOrgSaveFamilyButton}" />
+                                            </td>
+                                          </tr>
+                                        </table>
+                                      </td>
+                                    </tr>
+                                  </table>
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                          <documentRefs>
+                            <OTScriptObject local_id="strainMultipleOrganismScript">
+                              <script>
+                                <OTJRuby src="scripts/strain_multiple_organism.rb" />
+                              </script>
+                              <variables>
+                                <OTScriptVariableComponent name="breedOffspringView">
+                                  <reference>
+                                    <object refid="${breedOffspringViewForStrains}" />
+                                  </reference>
+                                </OTScriptVariableComponent>
+                                <OTScriptVariableComponent name="multiOrgView">
+                                  <reference>
+                                    <object refid="${multipleOrganismViewForStrains}" />
+                                  </reference>
+                                </OTScriptVariableComponent>
+                              </variables>
+                              <scriptState />
+                            </OTScriptObject>
+                            <OTScriptButton local_id="multiOrgClearButton" text="Clear all organisms" alwaysReload="false">
+                              <script>
+                                <OTJRuby src="scripts/multi_org_clear_button.rb" />
+                              </script>
+                              <scriptVariables>
+                                <OTScriptVariableComponent name="multiOrgView">
+                                  <reference>
+                                    <object refid="${multipleOrganismViewForStrains}" />
+                                  </reference>
+                                </OTScriptVariableComponent>
+                              </scriptVariables>
+                            </OTScriptButton>
+                            <OTMultipleOrganism local_id="multipleOrganismViewForStrains" width="300" height="150" organismImageSize="2" />
+                            <OTBreedOffspring local_id="breedOffspringViewForStrains">
+                              <fatherOrganism>
+                                <OTOrganism local_id="maleStrainOrganism-plates" chromosomesColor="-10066177">
+                                  <name>male</name>
+                                  <sex>0</sex>
+                                  <world>
+                                    <object refid="${dragon_world_strains}" />
+                                  </world>
+                                  <alleles>b:P,a:p,b:h,a:H,b:S,a:S,b:W,a:w,b:L,a:l,b:t,a:t,a:f,a:A,a:B</alleles>
+                                </OTOrganism>
+                              </fatherOrganism>
+                              <motherOrganism>
+                                <OTOrganism local_id="femaleStrainOrganism" chromosomesColor="-39322">
+                                  <name>female</name>
+                                  <sex>1</sex>
+                                  <world>
+                                    <object refid="${dragon_world_strains}" />
+                                  </world>
+                                  <alleles>b:P,a:P,b:h,a:h,b:S,a:S,b:W,a:w,b:L,a:l,b:t,a:t,b:F,a:f,b:a,a:a,b:B,a:B</alleles>
+                                </OTOrganism>
+                              </motherOrganism>
+                            </OTBreedOffspring>
+                            <OTBreedOffspring local_id="strain_breedoffspring">
+                              <motherOrganism>
+                                <OTOrganism local_id="strain_1_female_breedoffspring" name="Strain 1 Female" sex="1" allowFatalCharacteristic="false" alleles="b:h,a:H,b:S,a:S,b:W,a:w,b:L,a:l,b:t,a:t,b:P,a:P,b:F,a:f,b:a,a:a,b:B,a:B">
+                                  <world>
+                                    <OTWorld speciesPath="org/concord/biologica/worlds/dragonmarkers-plates.xml" />
+                                  </world>
+                                </OTOrganism>
+                              </motherOrganism>
+                              <fatherOrganism>
+                                <OTOrganism local_id="strain_2_male_breedoffspring" name="Strain 2 Male" sex="0" allowFatalCharacteristic="false" alleles="b:h,a:h,b:S,a:S,b:W,a:w,b:L,a:l,b:t,a:t,a:p,a:f,a:a,a:B">
+                                  <world>
+                                    <OTWorld speciesPath="org/concord/biologica/worlds/dragonmarkers-plates.xml" />
+                                  </world>
+                                </OTOrganism>
+                              </fatherOrganism>
+                            </OTBreedOffspring>
+                            <OTFamily local_id="strainFamily">
+                              <father>
+                                <object refid="${maleStrainOrganism}" />
+                              </father>
+                              <mother>
+                                <object refid="${femaleStrainOrganism}" />
+                              </mother>
+                            </OTFamily>
+                            <OTScriptButton local_id="multiOrgSaveFamilyButton" text="Save" alwaysReload="false">
+                              <script>
+                                <OTJRuby src="scripts/multi_org_save_family_button.rb" />
+                              </script>
+                              <scriptVariables>
+                                <OTScriptVariableComponent name="strainFamily">
+                                  <reference>
+                                    <object refid="${strainFamily}" />
+                                  </reference>
+                                </OTScriptVariableComponent>
+                                <OTScriptVariableComponent name="breedOffspringView">
+                                  <reference>
+                                    <object refid="${breedOffspringViewForStrains}" />
+                                  </reference>
+                                </OTScriptVariableComponent>
+                                <OTScriptVariableComponent name="multiOrgView">
+                                  <reference>
+                                    <object refid="${multipleOrganismViewForStrains}" />
+                                  </reference>
+                                </OTScriptVariableComponent>
+                                <OTScriptVariableComponent name="multiOrgView2">
+                                  <reference>
+                                    <object refid="${multipleOrganismViewTransfer}" />
+                                  </reference>
+                                </OTScriptVariableComponent>
+                              </scriptVariables>
+                            </OTScriptButton>
+                            <OTScriptButton local_id="moveUp" text="/\" alwaysReload="false">
+                              <script>
+                                <OTJRuby src="scripts/multi_org_move_up_button.rb" />
+                              </script>
+                              <scriptVariables>
+                                <OTScriptVariableComponent name="multiOrgView">
+                                  <reference>
+                                    <object refid="${multipleOrganismViewTransfer}" />
+                                  </reference>
+                                </OTScriptVariableComponent>
+                              </scriptVariables>
+                            </OTScriptButton>
+                            <OTScriptButton local_id="moveDown" text="\/" alwaysReload="false">
+                              <script>
+                                <OTJRuby src="scripts/multi_org_move_down_button.rb" />
+                              </script>
+                              <scriptVariables>
+                                <OTScriptVariableComponent name="multiOrgView">
+                                  <reference>
+                                    <object refid="${multipleOrganismViewTransfer}" />
+                                  </reference>
+                                </OTScriptVariableComponent>
+                              </scriptVariables>
+                            </OTScriptButton>
+                          </documentRefs>
+                        </OTUDLCompoundDoc>
+                        <OTUDLCompoundDoc id="e55a0614-1d8d-11de-8216-8348550e42a0" name="%e55a0614-1d8d-11de-8216-8348550e42a0" showEditBar="true" showDefinitions="false">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle">
+                                    <br />
+                                    <object refid="c7014a32-1e79-11de-a8de-e53ab23ee3e2" />
+                                    <br />
+                                    <br />
+                                    <object refid="0949da57-1d8e-11de-8216-8348550e42a0" />
+                                    <br />
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                          <documentRefs>
+                            <OTUDLQuestion id="c7014a32-1e79-11de-a8de-e53ab23ee3e2" name="Question" showConvertButton="true">
+                              <prompt>
+                                <OTCompoundDoc>
+                                  <bodyText>Try breeding some more dragons here. Based on breeding this pair, what pattern or patterns do you notice in dragons that have plates?</bodyText>
+                                </OTCompoundDoc>
+                              </prompt>
+                              <input>
+                                <OTText rows="3" />
+                              </input>
+                            </OTUDLQuestion>
+                            <OTPedigree id="0949da57-1d8e-11de-8216-8348550e42a0" name="Pedigree" width="600" height="400" crossoverEnabled="true" organismImagesVisible="true" organismImageSize="2" sexTextVisible="true" minimumNumberChildren="3" maximumNumberChildren="3">
+                              <organisms>
+                                <object refid="${maleStrainOrganism}" />
+                                <object refid="${femaleStrainOrganism}" />
+                              </organisms>
+                            </OTPedigree>
+                          </documentRefs>
+                        </OTUDLCompoundDoc>
+                        <OTUDLCompoundDoc name="%3a63b632-1e7a-11de-a8de-e53ab23ee3e2" showEditBar="true" showDefinitions="false">
+                          <bodyText>
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  The gene for plates is still undiscovered, but your experiments may 
+          have helped you narrow down its location.
+                                  <br />
+                                  <br />
+                                  <object refid="0949da57-1d8e-11de-8216-8348550e42a0" />
+                                  <br />
+                                  <object refid="b9e688b9-1e7a-11de-a8de-e53ab23ee3e2" />
+                                  <br />
+                                  <br />
+                                  <object refid="0ccff6e0-1e7b-11de-a8de-e53ab23ee3e2" />
+                                  <br />
+                                  <br />
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                          <documentRefs>
+                            <object refid="0949da57-1d8e-11de-8216-8348550e42a0" />
+                            <OTUDLQuestion id="b9e688b9-1e7a-11de-a8de-e53ab23ee3e2" name="Question" showConvertButton="true">
+                              <prompt>
+                                <OTCompoundDoc>
+                                  <bodyText>Based on your breeding experiments, where do you think the gene for plates is located? (Hint: If you don't have a snapshot of the dragon chromosomes, you can use the chromosome tool to examine one of the dragons above.)</bodyText>
+                                </OTCompoundDoc>
+                              </prompt>
+                              <input>
+                                <OTChoice name="Multiple choice" alignContent="0">
+                                  <choices>
+                                    <OTCompoundDoc id="e8a95c0d-1e7a-11de-a8de-e53ab23ee3e2" name="Chromosome 1">
+                                      <bodyText>Chromosome 1</bodyText>
+                                    </OTCompoundDoc>
+                                    <OTCompoundDoc name="Chromosome 2">
+                                      <bodyText>Chromosome 2</bodyText>
+                                    </OTCompoundDoc>
+                                    <OTCompoundDoc name="X Chromosome">
+                                      <bodyText>X Chromosome</bodyText>
+                                    </OTCompoundDoc>
+                                    <OTCompoundDoc name="Y Chromosome">
+                                      <bodyText>Y Chromosome</bodyText>
+                                    </OTCompoundDoc>
+                                  </choices>
+                                </OTChoice>
+                              </input>
+                              <correctAnswer>
+                                <object refid="e8a95c0d-1e7a-11de-a8de-e53ab23ee3e2" />
+                              </correctAnswer>
+                            </OTUDLQuestion>
+                            <OTUDLQuestion id="0ccff6e0-1e7b-11de-a8de-e53ab23ee3e2" name="Question" showConvertButton="true">
+                              <prompt>
+                                <OTCompoundDoc>
+                                  <bodyText>Why do you think this?</bodyText>
+                                </OTCompoundDoc>
+                              </prompt>
+                              <input>
+                                <OTText rows="2" />
+                              </input>
+                            </OTUDLQuestion>
+                          </documentRefs>
+                        </OTUDLCompoundDoc>
+                        <OTUDLCompoundDoc id="1d89bbb7-1e7b-11de-a8de-e53ab23ee3e2" name="%1d89bbb7-1e7b-11de-a8de-e53ab23ee3e2" showEditBar="true" showDefinitions="false">
+                          <bodyText>
+                            <br />
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <div class="subtitle">
+                                    The Power of Prediction
+                                    <br />
+                                    <br />
+                                    <object refid="28d768f8-1e7b-11de-a8de-e53ab23ee3e2" />
+                                    <br />
+                                    <object refid="3cd6784a-1e7c-11de-a8de-e53ab23ee3e2" />
+                                    <br />
+                                    <br />
+                                    <br />
+                                    <br />
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                          <documentRefs>
+                            <OTStaticOrganism id="28d768f8-1e7b-11de-a8de-e53ab23ee3e2" name="Static Organism">
+                              <organism>
+                                <object refid="619fc538-79cd-11dd-acfb-c58c080ea6e2" />
+                              </organism>
+                            </OTStaticOrganism>
+                            <OTUDLQuestion id="3cd6784a-1e7c-11de-a8de-e53ab23ee3e2" name="Question" showConvertButton="true" showImmediateFeedback="false" showCheckAnswersButton="true" correctAnswerFeedback="That's right! From our examples so far, dragons with plates seem to have horns, too.">
+                              <prompt>
+                                <OTCompoundDoc>
+                                  <bodyText>Dragons that grow plates usually do so quite late in their life, so dragons that have a new baby don't know right away whether or not it will grow plates. Which of the following traits shown by a baby could help a parent dragon guess whether her baby would grow up to have plates?</bodyText>
+                                </OTCompoundDoc>
+                              </prompt>
+                              <input>
+                                <OTChoice name="Multiple choice" alignContent="0">
+                                  <choices>
+                                    <OTCompoundDoc name="Fancy tail">
+                                      <bodyText>Fancy tail</bodyText>
+                                    </OTCompoundDoc>
+                                    <OTCompoundDoc name="Fire breathing">
+                                      <bodyText>Fire breathing</bodyText>
+                                    </OTCompoundDoc>
+                                    <OTCompoundDoc id="3cd6784a-1e7c-11de-a8de-e53ab23ee3e2/input/choices[2]" name="Horns">
+                                      <bodyText>Horns</bodyText>
+                                    </OTCompoundDoc>
+                                    <OTCompoundDoc name="Four legs">
+                                      <bodyText>Four legs</bodyText>
+                                    </OTCompoundDoc>
+                                  </choices>
+                                </OTChoice>
+                              </input>
+                              <correctAnswer>
+                                <object refid="3cd6784a-1e7c-11de-a8de-e53ab23ee3e2/input/choices[2]" />
+                              </correctAnswer>
+                            </OTUDLQuestion>
+                          </documentRefs>
+                        </OTUDLCompoundDoc>
+                        <OTUDLCompoundDoc id="29302605-1e7d-11de-a8de-e53ab23ee3e2" name="%29302605-1e7d-11de-a8de-e53ab23ee3e2" showEditBar="true" showDefinitions="false">
+                          <bodyText>
+                            <br />
+                            <div class="buffer">
+                              <div class="border">
+                                <div class="body">
+                                  <object refid="09a9db86-1e7f-11de-a8de-e53ab23ee3e2" />
+                                  <object refid="47c3d6a3-1e7f-11de-a8de-e53ab23ee3e2" />
+                                  <br />
+                                  The existence of horns on a dragon can be a genetic
+                                  <i>marker</i>
+                                  for 
+          the tendency to grow plates. This means that the gene for horns is 
+          an indicator of where the gene for plates is located.
+                                  <br />
+                                  <br />
+                                  Plates 
+          are a trait that grow in and become visible after a while. Diseases 
+          may not be obvious until it's too late, however. Narrowing the gene 
+          location for a genetic disease down to a chromosome and then 
+          pinpointing its precise location can be serious business, as you 
+          will soon learn.
+                                  <br />
+                                  <br />
+                                  Continue to the next activity to find out more…
+                                  <br />
+                                </div>
+                              </div>
+                            </div>
+                          </bodyText>
+                          <documentRefs>
+                            <OTStaticOrganism id="09a9db86-1e7f-11de-a8de-e53ab23ee3e2" name="Static Organism">
+                              <organism>
+                                <object refid="619fc538-79cd-11dd-acfb-c58c080ea6e2" />
+                              </organism>
+                            </OTStaticOrganism>
+                            <OTStaticOrganism id="47c3d6a3-1e7f-11de-a8de-e53ab23ee3e2" name="Static Organism">
+                              <organism>
+                                <object refid="680d6e4b-79cd-11dd-acfb-c58c080ea6e2" />
+                              </organism>
+                            </OTStaticOrganism>
+                          </documentRefs>
+                        </OTUDLCompoundDoc>
+                      </cards>
+                      <currentCard>
+                        <object refid="${section-4-page-1}" />
+                      </currentCard>
+                      <viewedCards>
+                        <object refid="${section-4-page-1}" />
+                      </viewedCards>
+                    </OTCardContainer>
+                  </content>
+                  <header>
+                    <OTUDLCompoundDoc id="f69b9733-79bb-11dd-b6e3-bdb383ed1215" name="%f69b9733-79bb-11dd-b6e3-bdb383ed1215" showEditBar="false">
+                      <bodyText>
+                        <div class="title">Section 4</div>
+                      </bodyText>
+                    </OTUDLCompoundDoc>
+                  </header>
+                  <footer>
+                    <object refid="${nav-bar}" />
+                  </footer>
+                  <north>
+                    <object refid="f69b9733-79bb-11dd-b6e3-bdb383ed1215" />
+                  </north>
+                  <center>
+                    <object refid="f69b9732-79bb-11dd-b6e3-bdb383ed1215" />
+                  </center>
+                  <south>
+                    <object refid="${nav-bar}" />
+                  </south>
+                </OTUDLSection>
+              </cards>
+              <currentCard>
+                <object refid="${section-1}" />
+              </currentCard>
+              <viewedCards>
+                <object refid="${section-1}" />
+                <object refid="${section-1}" />
+                <object refid="${section-4}" />
+                <object refid="${section-4}" />
+                <object refid="${section-4}" />
+                <object refid="${section-4}" />
+                <object refid="${section-4}" />
+                <object refid="${section-4}" />
+                <object refid="${section-4}" />
+                <object refid="${section-4}" />
+                <object refid="${section-4}" />
+                <object refid="${section-4}" />
+                <object refid="${section-4}" />
+                <object refid="${section-4}" />
+                <object refid="${section-4}" />
+                <object refid="${section-4}" />
+                <object refid="${section-4}" />
+                <object refid="${section-4}" />
+                <object refid="${section-4}" />
+                <object refid="${section-4}" />
+                <object refid="${section-4}" />
+                <object refid="${section-4}" />
+                <object refid="${section-4}" />
+                <object refid="${section-4}" />
+                <object refid="${section-4}" />
+                <object refid="${section-4}" />
+                <object refid="${section-4}" />
+                <object refid="${section-4}" />
+                <object refid="${section-4}" />
+                <object refid="${section-4}" />
+                <object refid="${section-4}" />
+                <object refid="${section-4}" />
+                <object refid="${section-4}" />
+                <object refid="${section-1}" />
+                <object refid="${section-1}" />
+                <object refid="${section-1}" />
+                <object refid="${section-1}" />
+                <object refid="${section-1}" />
+                <object refid="${section-1}" />
+                <object refid="${section-1}" />
+                <object refid="${section-1}" />
+                <object refid="${section-1}" />
+                <object refid="${section-1}" />
+                <object refid="${section-1}" />
+                <object refid="${section-1}" />
+                <object refid="${section-1}" />
+                <object refid="${section-1}" />
+                <object refid="${section-1}" />
+                <object refid="${section-1}" />
+                <object refid="${section-1}" />
+                <object refid="${section-1}" />
+                <object refid="${section-1}" />
+                <object refid="${section-4}" />
+                <object refid="${section-4}" />
+                <object refid="${section-4}" />
+                <object refid="${section-4}" />
+                <object refid="${section-4}" />
+                <object refid="${section-4}" />
+                <object refid="${section-4}" />
+                <object refid="${section-4}" />
+                <object refid="${section-4}" />
+                <object refid="${section-4}" />
+                <object refid="${section-4}" />
+                <object refid="${section-4}" />
+                <object refid="${section-4}" />
+                <object refid="${section-4}" />
+                <object refid="${section-4}" />
+                <object refid="${section-4}" />
+                <object refid="${section-1}" />
+                <object refid="${section-1}" />
+                <object refid="${section-1}" />
+                <object refid="${section-1}" />
+                <object refid="${section-1}" />
+                <object refid="${section-2}" />
+                <object refid="${section-4}" />
+                <object refid="${section-4}" />
+                <object refid="${section-4}" />
+                <object refid="${section-4}" />
+                <object refid="${section-3}" />
+                <object refid="${section-3}" />
+                <object refid="${section-3}" />
+                <object refid="${section-2}" />
+                <object refid="${section-2}" />
+                <object refid="${section-2}" />
+                <object refid="${section-2}" />
+                <object refid="${section-1}" />
+                <object refid="${section-1}" />
+                <object refid="${section-1}" />
+                <object refid="${section-1}" />
+                <object refid="${section-1}" />
+              </viewedCards>
+            </OTCardContainer>
+          </content>
+          <script>
+            <OTScriptObject>
+              <variables>
+                <OTScriptVariable name="cardContainer">
+                  <reference>
+                    <object refid="${section-card-container}" />
+                  </reference>
+                </OTScriptVariable>
+                <OTScriptVariable name="system">
+                  <reference>
+                    <object refid="${system}" />
+                  </reference>
+                </OTScriptVariable>
+                <OTScriptVariable name="menuPageRule">
+                  <reference>
+                    <object refid="${page-rule}" />
+                  </reference>
+                </OTScriptVariable>
+                <OTScriptVariable name="sampleMenu">
+                  <reference>
+                    <object refid="${menu}" />
+                  </reference>
+                </OTScriptVariable>
+                <OTScriptVariable name="menuHorizontalView">
+                  <reference>
+                    <object refid="29dc5ef0-c453-11dc-95ff-0800200c9a66" />
+                  </reference>
+                </OTScriptVariable>
+                <OTScriptVariable name="album">
+                  <reference>
+                    <object refid="${album}" />
+                  </reference>
+                </OTScriptVariable>
+              </variables>
+              <script>
+                <object refid="${authoring_script.js}" />
+              </script>
+              <scriptState />
+            </OTScriptObject>
+          </script>
+        </OTUDLContainer>
+      </root>
+      <library>
+        <OTUDLNavBar local_id="nav-bar">
+          <album>
+            <object refid="${album}" />
+          </album>
+          <menuView>
+            <object refid="29dc5ef0-c453-11dc-95ff-0800200c9a66" />
+          </menuView>
+          <menuRule>
+            <object refid="${page-rule}" />
+          </menuRule>
+          <cssColor>
+            <object refid="31193bb0-c44f-11dc-95ff-0800200c9a66" />
+          </cssColor>
+        </OTUDLNavBar>
+        <OTUDLMenu local_id="menu">
+          <cardContainer>
+            <object refid="${section-card-container}" />
+          </cardContainer>
+          <menuRule>
+            <object refid="${section-rule}" />
+          </menuRule>
+          <css>
+            <object refid="31193bb0-c44f-11dc-95ff-0800200c9a66" />
+          </css>
+        </OTUDLMenu>
+        <OTUDLMenu local_id="section-1-menu">
+          <cardContainer>
+            <object refid="${section-1-card-container}" />
+          </cardContainer>
+          <menuRule>
+            <object refid="${page-rule}" />
+          </menuRule>
+        </OTUDLMenu>
+        <OTSnapshotAlbum local_id="album" />
+        <OTDefinitionManager local_id="definition-manager">
+          <definitions>
+            <OTDefinitionList src="../LOOPS/glossary/common-glossary.txt" />
+          </definitions>
+          <frame>
+            <OTFrame local_id="definition_frame" width="300" height="190" borderlessPopup="true" />
+          </frame>
+        </OTDefinitionManager>
+        <OTUDLMenuRule local_id="page-rule" jumpToViewedCard="true" stepAhead="true" />
+        <OTUDLMenuRule local_id="section-rule" jumpToAnyCard="true" />
+        <OTJavascript local_id="change_page.js" src="../LOOPS/scripts/change_page.js" />
+        <OTJavascript local_id="show_message.js" src="../LOOPS/scripts/show_message.js" />
+        <OTJavascript local_id="authoring_script.js" src="../LOOPS/scripts/authoring_script.js" />
+      </library>
+    </OTSystem>
+  </objects>
+</otrunk>
+
