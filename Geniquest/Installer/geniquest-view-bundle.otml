@@ -26,20 +26,19 @@
     <import class="org.concord.otrunk.script.jruby.OTJRuby"/>
     <import class="org.concord.otrunk.script.OTScriptEngineBundle" />
     <import class="org.concord.otrunk.script.OTScriptEngineEntry" />
-    <import class="org.concord.otrunk.udl.OTUDLNavBar" />
-    <import class="org.concord.otrunk.udl.OTTeacherNote" />
-    <import class="org.concord.otrunk.udl.OTUDLMenuRule" />
-    <import class="org.concord.otrunk.udl.document.OTDefinition" />
-    <import class="org.concord.otrunk.udl.document.OTDefinitionList" />
-    <import class="org.concord.otrunk.udl.document.OTDefinitionManager" />
-    <import class="org.concord.otrunk.udl.document.OTUDLCompoundDoc" />
-    <import class="org.concord.otrunk.udl.document.OTUDLDocumentViewConfig" />
-    <import class="org.concord.otrunk.udl.question.OTUDLQuestion" />
-    <import class="org.concord.otrunk.udl.question.OTUDLLeveledQuestions" />
-    <import class="org.concord.otrunk.udl.question.OTUDLQuestionViewConfig" />
-    <import class="org.concord.otrunk.udl3.OTUDLMenu" />
-    <import class="org.concord.otrunk.udl3.OTUDLContainer" />
-    <import class="org.concord.otrunk.udl3.OTUDLSection" />
+    
+    <import class="org.concord.otrunk.ui.menu.OTNavBar" />
+    <import class="org.concord.otrunk.ui.menu.OTMenuRule" />
+    <import class="org.concord.otrunk.ui.menu.OTMenu" />
+    <import class="org.concord.otrunk.ui.OTSection" />
+    <import class="org.concord.otrunk.view.document.OTCompoundDoc" />
+    <import class="org.concord.otrunk.ui.question.OTQuestion" />
+    <import class="org.concord.otrunk.view.document.OTDocumentViewConfig" />
+    <import class="org.concord.otrunk.ui.question.OTLeveledQuestions" />
+    
+    <import class="org.concord.otrunk.ui.OTUDLContainer" />
+    <import class="org.concord.otrunk.ui.question.OTQuestionViewConfig" />
+
     <import class="org.concord.otrunk.ui.OTButton" />
     <import class="org.concord.otrunk.ui.OTCardContainer" />
     <import class="org.concord.otrunk.ui.OTChoice" />
@@ -117,23 +116,17 @@
             <OTViewMode name="reporting">
               <map>
                 <entry key="${menu-vertical}">
-                  <OTViewEntry objectClass="org.concord.otrunk.udl3.OTUDLMenu" viewClass="org.concord.otrunk.udl.ui.OTUDLMenuSectionReportView" />
+                  <OTViewEntry objectClass="org.concord.otrunk.ui.menu.OTMenu" viewClass="org.concord.otrunk.ui.menu.OTMenuSectionReportView" />
                 </entry>
               </map>
             </OTViewMode>
             <OTViewMode name="teacher">
             	<map>
-            		<entry key="${lab-page-view}">
-	              		<OTViewEntry objectClass="org.concord.otrunk.udl.OTUDLLabPage" viewClass="org.concord.otrunk.udl.ui.OTUDLLabPageTeacherView"/>
-	              	</entry>
-            		<entry key="${teacher-note-view}">
-            			<OTViewEntry objectClass="org.concord.otrunk.udl.OTTeacherNote" viewClass="org.concord.otrunk.udl.OTTeacherNoteTeacherView" />
-            		</entry>
             		<entry key="${menu-vertical}">
-	                  <OTViewEntry objectClass="org.concord.otrunk.udl3.OTUDLMenu" viewClass="org.concord.otrunk.udl.ui.OTUDLMenuSectionReportView" />
+	                  <OTViewEntry objectClass="org.concord.otrunk.ui.menu.OTMenu" viewClass="org.concord.otrunk.ui.menu.OTMenuSectionReportView" />
 	                </entry>
 	                <entry key="${question-view}">
-	                  <OTViewEntry objectClass="org.concord.otrunk.udl.question.OTUDLQuestion" viewClass="org.concord.otrunk.udl.question.OTUDLQuestionTeacherView" />
+	                  <OTViewEntry objectClass="org.concord.otrunk.ui.question.OTQuestion" viewClass="org.concord.otrunk.ui.question.OTQuestionTeacherView" />
 	                </entry>
             	</map>
             </OTViewMode>
@@ -174,17 +167,11 @@
 								<entry key="${world-view}">
 									<OTViewEntry objectClass="org.concord.otrunk.biologica.OTWorld" viewClass="org.concord.otrunk.biologica.ui.OTWorldEditView" />
 								</entry>
-              	<entry key="${lab-page-view}">
-              		<OTViewEntry objectClass="org.concord.otrunk.udl.OTUDLLabPage" viewClass="org.concord.otrunk.udl.ui.OTUDLLabPageEditView"/>
-              	</entry>
               	<entry key="${mode-switcher-view}">
               		<OTViewEntry objectClass="org.concord.otrunk.ui.OTModeSwitcher" viewClass="org.concord.otrunk.ui.swing.OTModeSwitcherView" />
               	</entry>
                 <entry key="${snapshot_button_view}">
                   <OTViewEntry objectClass="org.concord.otrunk.ui.snapshot.OTSnapshotButton" viewClass="org.concord.otrunk.ui.snapshot.OTSnapshotButtonEditView" />
-                </entry>
-                <entry key="${container_view}">
-                  <OTViewEntry objectClass="org.concord.otrunk.udl3.OTUDLContainer" viewClass="org.concord.otrunk.udl3.OTUDLContainerEditView" />
                 </entry>
                 <entry key="${choice-radio-view}">
                   <OTChoiceViewConfig objectClass="org.concord.otrunk.ui.OTChoice" viewClass="org.concord.otrunk.ui.swing.OTChoiceComboBoxEditView" useViewsAsChoices="true" />
@@ -193,16 +180,16 @@
                   <OTChoiceViewConfig objectClass="org.concord.otrunk.ui.OTChoiceMultiple" viewClass="org.concord.otrunk.ui.swing.OTChoiceComboBoxEditView" useViewsAsChoices="true" />
                 </entry>
                 <entry key="${menu-horizontal-circle}">
-                  <OTViewEntry objectClass="org.concord.otrunk.udl3.OTUDLMenu" viewClass="org.concord.otrunk.udl.ui.OTUDLMenuPageEditView" />
+                  <OTViewEntry objectClass="org.concord.otrunk.ui.menu.OTMenu" viewClass="org.concord.otrunk.ui.menu.OTMenuPageEditView" />
                 </entry>
                 <entry key="${menu-horizontal-book}">
-                  <OTViewEntry objectClass="org.concord.otrunk.udl3.OTUDLMenu" viewClass="org.concord.otrunk.udl.ui.OTUDLMenuPageEditView" />
+                  <OTViewEntry objectClass="org.concord.otrunk.ui.menu.OTMenu" viewClass="org.concord.otrunk.ui.menu.OTMenuPageEditView" />
                 </entry>
                 <entry key="${question-view}">
-                  <OTViewEntry objectClass="org.concord.otrunk.udl.question.OTUDLQuestion" viewClass="org.concord.otrunk.udl.question.OTUDLQuestionEditView" />
+                  <OTViewEntry objectClass="org.concord.otrunk.ui.question.OTQuestion" viewClass="org.concord.otrunk.ui.question.OTQuestionEditView" />
                 </entry>
                 <entry key="${menu-vertical}">
-                  <OTViewEntry objectClass="org.concord.otrunk.udl3.OTUDLMenu" viewClass="org.concord.otrunk.udl.ui.OTUDLMenuSectionEditView" />
+                  <OTViewEntry objectClass="org.concord.otrunk.ui.menu.OTMenu" viewClass="org.concord.otrunk.ui.menu.OTMenuSectionEditView" />
                 </entry>
                 <entry key="${data-table-view}">
                   <OTViewEntry objectClass="org.concord.data.state.OTDataTable" viewClass="org.concord.otrunk.ui.swing.OTDataTableEditView" />
@@ -222,13 +209,13 @@
                         <documentRefs>
                           <OTCardContainer>
                             <cards>
-                              <OTUDLCompoundDoc bodyText=""/>
+                              <OTCompoundDoc bodyText=""/>
                             </cards>
                           </OTCardContainer>
-                          <OTUDLMenu showBorder="false">
+                          <OTMenu showBorder="false">
                             <menuRule>
                 </menuRule>
-                          </OTUDLMenu>
+                          </OTMenu>
                         </documentRefs>
                       </OTCompoundDoc>
 											<!-- <OTOrganism name="Organism" /> -->
@@ -247,8 +234,8 @@
                       <OTDrawingTool2 name="Draw tool" />
                       <!--  <OTChoice name="Multiple-choice (single answer)" />
                       <OTChoiceMultiple name="Multiple-choice (check boxes)" /> -->
-                      <OTUDLQuestion name="Question" showConvertButton="true" />
-                      <OTUDLLeveledQuestions name="Leveled questions"/>
+                      <OTQuestion name="Question" />
+                      <OTLeveledQuestions name="Leveled questions"/>
                       <OTDataTable name="Data table" showLastRowForAddingNew="true">
                         <dataStore>
                           <OTDataStore numberChannels="2" />
@@ -286,10 +273,10 @@
                   </OTDocumentEditViewConfig>
                 </entry>
                 <entry key="${questions-card-view}">
-                  <OTUDLQuestionViewConfig objectClass="org.concord.otrunk.udl.question.OTUDLLeveledQuestions" viewClass="org.concord.otrunk.udl.question.OTUDLLeveledQuestionsEditView" />
+                  <OTQuestionViewConfig objectClass="org.concord.otrunk.ui.question.OTLeveledQuestions" viewClass="org.concord.otrunk.ui.question.OTLeveledQuestionsEditView" />
                 </entry>
                 <entry key="${questions-on-off-view}">
-                  <OTUDLQuestionViewConfig objectClass="org.concord.otrunk.udl.question.OTUDLLeveledQuestions" viewClass="org.concord.otrunk.udl.question.OTUDLLeveledQuestionsEditView" />
+                  <OTQuestionViewConfig objectClass="org.concord.otrunk.ui.question.OTLeveledQuestions" viewClass="org.concord.otrunk.ui.question.OTLeveledQuestionsEditView" />
                 </entry>
                 <entry key="${data-collector-view}">
                   <OTDataCollectorViewConfig viewClass="org.concord.otrunk.graph.OTDataCollectorEditView" objectClass="org.concord.datagraph.state.OTDataCollector">
@@ -297,9 +284,6 @@
                 </entry>
                 <entry key="${drawing-view}">
                   <OTViewEntry viewClass="org.concord.otrunk.graph.OTDataDrawingToolEditView" objectClass="org.concord.graph.util.state.OTDrawingTool" />
-                </entry>
-                <entry key="${teacher-note-view}">
-                  <OTViewEntry objectClass="org.concord.otrunk.udl.OTTeacherNote" viewClass="org.concord.otrunk.udl.OTTeacherNoteEditView" />
                 </entry>
                 <entry key="${author-note-view}">
                   <OTViewEntry objectClass="org.concord.otrunk.udl.OTAuthorNote" viewClass="org.concord.otrunk.udl.OTAuthorNoteEditView" />
@@ -341,22 +325,19 @@ viewClass="org.concord.otrunk.biologica.ui.OTPedigreeView" />
 
 
 <!-- GENIQUEST VIEWS -->  
-            <!-- The OTUDLQuestionViewConfig can be used to set the default scaffolding level, and whether the student can navigate through the levels.
-						  The default scaffolding level just uses the order of the items inside OTUDLLeveledQuestions/questions. It is not aware of the names
+            <!-- The OTQuestionViewConfig can be used to set the default scaffolding level, and whether the student can navigate through the levels.
+						  The default scaffolding level just uses the order of the items inside OTLeveledQuestions/questions. It is not aware of the names
 						  such as "L1", "L2", etc. -->
-            <OTUDLQuestionViewConfig id="c0e33320-e611-11dc-95ff-0800200c9a66" isLevelFrozen="false" defaultScaffoldLevel="0" objectClass="org.concord.otrunk.udl.question.OTUDLLeveledQuestions" viewClass="org.concord.otrunk.udl.question.OTUDLLeveledQuestionsCardView" />
+            <OTQuestionViewConfig id="c0e33320-e611-11dc-95ff-0800200c9a66" isLevelFrozen="false" defaultScaffoldLevel="0" objectClass="org.concord.otrunk.ui.question.OTLeveledQuestions" viewClass="org.concord.otrunk.ui.question.OTLeveledQuestionsCardView" />
             <OTViewEntry objectClass="org.concord.otrunk.ui.OTObjectSet" viewClass="org.concord.otrunk.ui.swing.OTObjectSetView"/>
             <OTViewEntry local_id="script-button-view" objectClass="org.concord.otrunk.script.ui.OTScriptButton" viewClass="org.concord.otrunk.script.ui.OTScriptButtonView"/>
-            <OTViewEntry objectClass="org.concord.otrunk.udl.document.OTDefinition" viewClass="org.concord.otrunk.udl.document.OTDefinitionView"/>
-            <OTViewEntry objectClass="org.concord.otrunk.udl.OTUDLNavBar" viewClass="org.concord.otrunk.udl.ui.OTUDLNavBarView"/>
-            <OTViewEntry local_id="lab-page-view" objectClass="org.concord.otrunk.udl.OTUDLLabPage" viewClass="org.concord.otrunk.udl.ui.OTUDLLabPageView"/>
+            <OTViewEntry objectClass="org.concord.otrunk.ui.menu.OTNavBar" viewClass="org.concord.otrunk.ui.menu.OTNavBarView"/>
             <OTViewEntry objectClass="org.concord.otrunk.OTIncludeRootObject" viewClass="org.concord.otrunk.OTIncludeRootObjectView" />
-            <OTViewEntry local_id="teacher-note-view" objectClass="org.concord.otrunk.udl.OTTeacherNote" viewClass="org.concord.otrunk.ui.swing.OTNullView" />
             <OTViewEntry local_id="author-note-view" objectClass="org.concord.otrunk.udl.OTAuthorNote" viewClass="org.concord.otrunk.ui.swing.OTNullView" />
             <OTViewEntry local_id="mode-switcher-view" objectClass="org.concord.otrunk.ui.OTModeSwitcher" viewClass="org.concord.otrunk.ui.swing.OTModeSwitcherBypassView" />
             <OTViewEntry objectClass="org.concord.otrunk.ui.OTImage" viewClass="org.concord.otrunk.ui.swing.OTImageView" />
             <OTViewEntry objectClass="org.concord.otrunk.ui.OTModeSwitcher" viewClass="org.concord.otrunk.ui.swing.OTModeSwitcherView" />
-            <OTUDLQuestionViewConfig local_id="questions-on-off-view" isLevelFrozen="false" defaultScaffoldLevel="1" objectClass="org.concord.otrunk.udl.question.OTUDLLeveledQuestions" viewClass="org.concord.otrunk.udl.question.OTUDLLeveledQuestionsOnOffView" />
+            <OTQuestionViewConfig local_id="questions-on-off-view" isLevelFrozen="false" defaultScaffoldLevel="1" objectClass="org.concord.otrunk.ui.question.OTLeveledQuestions" viewClass="org.concord.otrunk.ui.question.OTLeveledQuestionsCardView" />
             <OTViewEntry local_id="snapshot_button_view" objectClass="org.concord.otrunk.ui.snapshot.OTSnapshotButton" viewClass="org.concord.otrunk.ui.snapshot.OTSnapshotButtonView" />
             <OTViewEntry local_id="snapshot-chooser-view" objectClass="org.concord.otrunk.ui.snapshot.OTSnapshotChooser" viewClass="org.concord.otrunk.ui.snapshot.OTSnapshotChooserView" />
             <OTViewEntry objectClass="org.concord.otrunk.ui.snapshot.OTSnapshotAlbum" viewClass="org.concord.otrunk.ui.snapshot.OTSnapshotAlbumView" />
@@ -364,12 +345,12 @@ viewClass="org.concord.otrunk.biologica.ui.OTPedigreeView" />
             <OTViewEntry objectClass="org.concord.otrunk.ui.OTButton" viewClass="org.concord.otrunk.ui.swing.OTButtonView" />
             <OTViewEntry local_id="script-view" objectClass="org.concord.otrunk.script.ui.OTScriptObject" viewClass="org.concord.otrunk.script.ui.OTScriptObjectView" />
             <OTViewEntry objectClass="org.concord.otrunk.ui.OTButton" viewClass="org.concord.otrunk.ui.swing.OTButtonView" />
-            <OTViewEntry local_id="question-view" objectClass="org.concord.otrunk.udl.question.OTUDLQuestion" viewClass="org.concord.otrunk.udl.question.OTUDLQuestionView" />
-            <OTViewEntry objectClass="org.concord.otrunk.udl3.OTUDLSection" viewClass="org.concord.otrunk.udl3.OTUDLSectionView" />
-            <OTViewEntry local_id="container_view" objectClass="org.concord.otrunk.udl3.OTUDLContainer" viewClass="org.concord.otrunk.udl3.OTUDLContainerView" />
-            <OTViewEntry id="1b0cb6e0-c453-11dc-95ff-0800200c9a66" objectClass="org.concord.otrunk.udl3.OTUDLMenu" viewClass="org.concord.otrunk.udl.ui.OTUDLMenuSectionView" />
-            <OTViewEntry id="29dc5ef0-c453-11dc-95ff-0800200c9a66" objectClass="org.concord.otrunk.udl3.OTUDLMenu" viewClass="org.concord.otrunk.udl.ui.OTUDLMenuPageExpandView" />
-            <OTViewEntry id="416eeab0-c453-11dc-95ff-0800200c9a66" objectClass="org.concord.otrunk.udl3.OTUDLMenu" viewClass="org.concord.otrunk.udl.ui.OTUDLMenuPageBookView" />
+            <OTViewEntry local_id="question-view" objectClass="org.concord.otrunk.ui.question.OTQuestion" viewClass="org.concord.otrunk.ui.question.OTQuestionView" />
+            <OTViewEntry objectClass="org.concord.otrunk.ui.OTSection" viewClass="org.concord.otrunk.ui.swing.OTSectionView" />
+            <OTViewEntry local_id="container_view" objectClass="org.concord.otrunk.ui.OTUDLContainer" viewClass="org.concord.otrunk.ui.OTUDLContainerView" />
+            <OTViewEntry id="1b0cb6e0-c453-11dc-95ff-0800200c9a66" objectClass="org.concord.otrunk.ui.menu.OTMenu" viewClass="org.concord.otrunk.ui.menu.OTMenuSectionView" />
+            <OTViewEntry id="29dc5ef0-c453-11dc-95ff-0800200c9a66" objectClass="org.concord.otrunk.ui.menu.OTMenu" viewClass="org.concord.otrunk.ui.menu.OTMenuPageExpandView" />
+            <OTViewEntry id="416eeab0-c453-11dc-95ff-0800200c9a66" objectClass="org.concord.otrunk.ui.menu.OTMenu" viewClass="org.concord.otrunk.ui.menu.OTMenuPageView" />
             <OTChoiceViewConfig local_id="choice-checkbox-view" objectClass="org.concord.otrunk.ui.OTChoiceMultiple" viewClass="org.concord.otrunk.ui.swing.OTChoiceCheckBoxView" useViewsAsChoices="true" />
             <OTChoiceViewConfig local_id="choice-radio-view" objectClass="org.concord.otrunk.ui.OTChoice" viewClass="org.concord.otrunk.ui.swing.OTChoiceRadioButtonView" useViewsAsChoices="true" />
             <OTViewEntry id="453a61b0-e18b-11dc-95ff-0800200c9a66" objectClass="org.concord.otrunk.ui.OTChoice" viewClass="org.concord.otrunk.ui.swing.OTChoiceComboBoxView" />
@@ -386,43 +367,32 @@ viewClass="org.concord.otrunk.biologica.ui.OTPedigreeView" />
             <OTViewEntry local_id="drawing-view" viewClass="org.concord.datagraph.state.OTDataDrawingToolView" objectClass="org.concord.graph.util.state.OTDrawingTool" />
             <OTViewEntry viewClass="org.concord.datagraph.state.OTMultiDataGraphView" objectClass="org.concord.datagraph.state.OTMultiDataGraph" />
             <OTViewEntry local_id="data-table-view" objectClass="org.concord.data.state.OTDataTable" viewClass="org.concord.data.state.OTDataTableView" />
-            <OTUDLDocumentViewConfig id="0d03b9c0-e48a-11dc-95ff-0800200c9a66" objectClass="org.concord.otrunk.view.document.OTCompoundDoc" viewClass="org.concord.otrunk.udl.document.OTUDLDocumentView">
-              <definitionManager>
-                <object refid="b6350a20-e3b4-11dc-95ff-0800200c9a66" />
-              </definitionManager>
+            <OTDocumentViewConfig id="0d03b9c0-e48a-11dc-95ff-0800200c9a66" objectClass="org.concord.otrunk.view.document.OTCompoundDoc" viewClass="org.concord.otrunk.view.document.OTDocumentView">
               <cssBlocks>
-                <OTCssText id="23cc14f0-c44f-11dc-95ff-0800200c9a66" src="../css/GENIQUEST-normal-font.css" />
-                <OTCssText id="31193bb0-c44f-11dc-95ff-0800200c9a66" src="../css/GENIQUEST-color.css" />
-                <OTCssText id="3cefc800-c44f-11dc-95ff-0800200c9a66" src="../css/GENIQUEST-normal-layout.css" />
+                <OTCssText id="23cc14f0-c44f-11dc-95ff-0800200c9a66" src="css/GENIQUEST-normal-font.css" />
+                <OTCssText id="31193bb0-c44f-11dc-95ff-0800200c9a66" src="css/GENIQUEST-color.css" />
+                <OTCssText id="3cefc800-c44f-11dc-95ff-0800200c9a66" src="css/GENIQUEST-normal-layout.css" />
               </cssBlocks>
-            </OTUDLDocumentViewConfig>
-<OTViewEntry objectClass="org.concord.graph.util.state.OTDrawingTool2" viewClass="org.concord.datagraph.state.OTDataDrawingToolView" />
+            </OTDocumentViewConfig>
+            <OTViewEntry objectClass="org.concord.graph.util.state.OTDrawingTool2" viewClass="org.concord.datagraph.state.OTDataDrawingToolView" />
           </views>
         </OTViewBundle>
       </bundles>
       <library>
-      	<OTDefinitionManager id="b6350a20-e3b4-11dc-95ff-0800200c9a66">
-          <definitions>
-          	<OTDefinitionList src="../../UDL/glossary/common-glossary.txt"/>
-          </definitions>
-          <frame>
-            <OTFrame local_id="definition_frame" width="300" height="190" borderlessPopup="true" />
-          </frame>
-        </OTDefinitionManager>
         <OTCompoundDoc id="234e6400-c450-11dc-95ff-0800200c9a66" name="overlays-pulldown-menus"  showEditBar="false">
         	<bodyText />
         </OTCompoundDoc>
         <OTOverlay id="bfc60e90-db35-11dc-95ff-0800200c9a66">
           <deltaObjectMap>
             <entry key="${css-color}">
-              <OTCssText src="../css/GENIQUEST-color.css" />
+              <OTCssText src="css/GENIQUEST-color.css" />
             </entry>
           </deltaObjectMap>
         </OTOverlay>
         <OTOverlay id="b5d8b4a0-db35-11dc-95ff-0800200c9a66">
           <deltaObjectMap>
             <entry key="${css-color}">
-              <OTCssText src="../css/GENIQUEST-color.css" />
+              <OTCssText src="css/GENIQUEST-color.css" />
             </entry>
           </deltaObjectMap>
         </OTOverlay>
