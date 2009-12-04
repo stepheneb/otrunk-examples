@@ -209,6 +209,96 @@
 							</variables>
 							<scriptState />
 						</OTScriptObject>
+						<OTScriptObject local_id="message-script" name="Message script">
+							<script>
+								<OTJavascript>
+									<script>importPackage(Packages.java.lang);
+										importPackage(Packages.java.awt);
+										importPackage(Packages.org.concord.biologica.environment);
+										
+										
+										
+										function init() {
+											env.addStepListener(stepListener)
+											env.addChangeListener(changeListener)
+										}
+
+										var numPlants = 0
+										
+										var changeHandler = {
+											environmentChanged: function(evt){
+												if (evt.getType() == EnvironmentChangeEvent.USER_ADDED_AGENTS){
+													numPlants++
+												}
+												if (numPlants == 20){
+													showMessage("You ran out of seeds! \nEach seed packet only has 20 seeds. \nPress play to start the model and watch your plants grow.", env)
+												}
+											}		
+										}
+										
+										
+										var changeListener = new EnvironmentChangeListener(changeHandler)
+										
+										var shownMessage1 = false
+										
+										var stepHandler = {
+											environmentStepped: function(){
+												if (numPlants &lt; 20){		// this is a count of clicks
+													return;	
+												}
+												
+												if (!shownMessage1){
+													var allPlants = env.getAllAgents()
+													var ageOfFlowering = parseInt(allPlants.get(0).getProperty("age of maturity")) + 5
+													for (var i = 0; i &lt; allPlants.size(); i++){
+														var plant = allPlants.get(i)
+														if (plant.getAge() &lt; (ageOfFlowering)){
+															return;				// not all plants are adult
+														}
+														if (plant.getPropertyValueAsBoolean("has flower")){
+															return;				// we have at least one flower
+														}
+													}
+													
+													// all plants are adult and none have flowers
+													showMessage("You planted all the seeds but your plants did not grow a flower.\nClick the reset button to start over and get more seeds.\nTry planting one seed of each type in all the flower boxes.", env)
+													shownMessage1 = true
+												}
+											}		
+										}
+										
+										
+										var stepListener = new EnvironmentStepListener(stepHandler)
+										
+										
+										function save() {
+											return true;
+										}
+										</script>
+				                  <scripts>
+				                    <OTJavascript src="scripts/common/message.js" />
+				                  </scripts>
+								</OTJavascript>
+							</script>
+							<variables>
+								<OTScriptVariableRealObject name="env">
+									<reference>
+										<object refid="${environment}" />
+									</reference>
+								</OTScriptVariableRealObject>
+								<OTScriptVariableRealObject name="envHolder">
+									<reference>
+										<object refid="${env-holder}" />
+									</reference>
+								</OTScriptVariableRealObject>
+								<OTScriptVariableRealObject name="holder">
+									<reference>
+										<object refid="${env-holder}" />
+									</reference>
+								</OTScriptVariableRealObject>
+							</variables>
+							<scriptState />
+						</OTScriptObject>
 					</scripts>
 		          <logAddedAgentProperties>
 		          	<string>size of leaves</string>
