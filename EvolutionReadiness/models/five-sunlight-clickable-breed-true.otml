@@ -216,22 +216,63 @@
 										importPackage(Packages.java.awt);
 										importPackage(Packages.org.concord.biologica.environment);
 										
+										var numPlants
+										var plantedBox1
+										var plantedBox2
+										var plantedBox3
+										var plantedBox4
+										var plantedBox5
 										
+										var shownRunOutMessage
+										var shownNoFlowersMessage
+										var shownAllBoxesMessage
 										
 										function init() {
 											env.addStepListener(stepListener)
 											env.addChangeListener(changeListener)
+											setup()
+										}
+										
+										function setup(){
+											numPlants = 0
+											plantedBox1 = false
+											plantedBox2 = false
+											plantedBox3 = false
+											plantedBox4 = false
+											plantedBox5 = false
+											
+											shownRunOutMessage = false
+											shownNoFlowersMessage = false
+											shownAllBoxesMessage = false
 										}
 
-										var numPlants = 0
+										
+										
 										
 										var changeHandler = {
 											environmentChanged: function(evt){
 												if (evt.getType() == EnvironmentChangeEvent.USER_ADDED_AGENTS){
 													numPlants++
-												}
-												if (numPlants == 20){
-													showMessage("You ran out of seeds! \nEach seed packet only has 20 seeds. \nPress play to start the model and watch your plants grow.", env)
+													
+													var agent = evt.getValue()
+													var y = agent.getLocation().y
+												    if (y &lt; 30)
+												      plantedBox1 = true
+												    else if (y &lt; 60)
+												       plantedBox2 = true
+												    else if (y &lt; 80)
+												       plantedBox3 = true
+												    else if (y &lt; 110)
+												       plantedBox4 = true
+												    else if (y &lt; 140)
+												       plantedBox5 = true
+												       
+												    if (!shownRunOutMessage &amp;&amp;numPlants == 20){
+														showMessage("You ran out of seeds! \nEach seed packet only has 20 seeds. \nPress play to start the model and watch your plants grow.", env)
+														shownRunOutMessage = true
+													}
+												} else if (evt.getType() == EnvironmentChangeEvent.RESET){
+													setup()
 												}
 											}		
 										}
@@ -239,36 +280,54 @@
 										
 										var changeListener = new EnvironmentChangeListener(changeHandler)
 										
-										var shownMessage1 = false
-										
 										var stepHandler = {
 											environmentStepped: function(){
 												if (numPlants &lt; 20){		// this is a count of clicks
 													return;	
 												}
 												
-												if (!shownMessage1){
-													var allPlants = env.getAllAgents()
-													var ageOfFlowering = parseInt(allPlants.get(0).getProperty("age of maturity")) + 5
-													for (var i = 0; i &lt; allPlants.size(); i++){
-														var plant = allPlants.get(i)
-														if (plant.getAge() &lt; (ageOfFlowering)){
-															return;				// not all plants are adult
-														}
-														if (plant.getPropertyValueAsBoolean("has flower")){
-															return;				// we have at least one flower
-														}
-													}
-													
-													// all plants are adult and none have flowers
-													showMessage("You planted all 20 seeds but your plants did not grow a flower.  \nClick the reset button to start over and get more seeds.  \nTry planting one seed in each flower box.", env)
-													shownMessage1 = true
-												}
+												var keepgoing = checkNoFlowers()
+												
+												if (keepgoing)		// we know we have at least one flower
+													keepgoing = checkPlantedAllBoxes()
+												
 											}		
 										}
 										
 										
 										var stepListener = new EnvironmentStepListener(stepHandler)
+										
+										function checkNoFlowers() {
+											var allPlants = env.getAllAgents()
+											var ageOfFlowering = parseInt(allPlants.get(0).getProperty("age of maturity")) + 5
+											for (var i = 0; i &lt; allPlants.size(); i++){
+												var plant = allPlants.get(i)
+												if (plant.getAge() &lt; (ageOfFlowering)){
+													return false;				// not all plants are adult
+												}
+											}
+											
+											for (var i = 0; i &lt; allPlants.size(); i++){
+												var plant = allPlants.get(i)	
+												if (plant.getPropertyValueAsBoolean("has flower")){
+													return true;				// we have at least one flower
+												}
+											}
+											
+											if (!shownNoFlowersMessage){
+												// all plants are adult and none have flowers
+												showMessage("You planted all 20 seeds but your plants did not grow a flower.  \nClick the reset button to start over and get more seeds.  \nTry planting one seed in each flower box.", env)
+												shownNoFlowersMessage = true
+											}
+											return false
+										}
+										
+										function checkPlantedAllBoxes() {
+											if (!shownAllBoxesMessage &amp;&amp; !(plantedBox1 &amp;&amp; plantedBox2 &amp;&amp; plantedBox3 &amp;&amp; plantedBox4 &amp;&amp; plantedBox5)){
+												showMessage("Great!  You found the right flower box for the plant. \nWhat happens if you plant in the other flower boxes? \nTry planting in all the boxes.", env)
+												shownAllBoxesMessage = true
+											}
+										}
 										
 										
 										function save() {
