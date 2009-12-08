@@ -471,7 +471,8 @@
                                   </td>
                                   <td>
                                   	<object refid="${graph-button}"/><br/><br/>
-                                  	<object refid="375b2fbe-e47c-4547-82f3-7951fc8c6d37"/>
+                                  	<object refid="375b2fbe-e47c-4547-82f3-7951fc8c6d37" type="graph"/><br/>
+                                  	<object refid="b353586a-22fb-45d1-a80d-afa9ba18e19b" type="script"/>
                                   </td>
                                 </tr>
                               </table>
@@ -499,19 +500,9 @@
                         <object refid="22d3fb4f-123a-425f-9d60-d84e145c0678!/env-holder" />
                         <OTDataCollector id="375b2fbe-e47c-4547-82f3-7951fc8c6d37" name="Number of plants" title="Number of healthy plants" showLabelCoordinates="true" labelDecimalPlaces="2" showControlBar="false" useDefaultToolBar="false" displayButtons="">
                           <source>
-                            <OTDataBarGraphable showSampleLimit="1" name="Number of organisms" connectPoints="true" drawMarks="false" lineWidth="10.0" color="192" yColumn="11" xColumn="0" showAllChannels="true" showControlButtons="true" showToolButtons="true" visible="true">
+                            <OTDataBarGraphable id="c146eab5-55e8-4bdf-a0c6-b421fe5ddff1" showSampleLimit="1" name="Number of organisms" connectPoints="true" drawMarks="false" lineWidth="10.0" color="192" yColumn="11" xColumn="0" showAllChannels="true" showControlButtons="true" showToolButtons="true" visible="true">
                               <dataProducer>
-                                <OTBiologicaModelDataProducer>
-                                  <modelHolder>
-                                    <object refid="22d3fb4f-123a-425f-9d60-d84e145c0678!/env-holder" />
-                                  </modelHolder>
-                                  <categories>
-                                    <string>Plants</string>
-                                  </categories>
-                                  <conditions>
-                                    <OTRuleCondition property="Has flower" equals="true" />
-                                  </conditions>
-                                </OTBiologicaModelDataProducer>
+                                
                               </dataProducer>
                               <dataStore>
                                 <OTDataStore sampleKeepLimit="10" dt="1.0" numberChannels="11">
@@ -539,11 +530,69 @@
                             </OTDataAxis>
                           </xDataAxis>
                           <yDataAxis>
-                            <OTDataAxis max="50.0" min="-0.0" label="Flowers" labelFormat="Engineering">
+                            <OTDataAxis max="20.0" min="-0.0" label="Flowers" labelFormat="Engineering">
                               <customGridLabels />
                             </OTDataAxis>
                           </yDataAxis>
                         </OTDataCollector>
+                        <OTScriptObject id="b353586a-22fb-45d1-a80d-afa9ba18e19b">
+                        	<script>
+                        		<OTJavascript src="scripts/gradated-sunlight-five-blocks/setup.js">
+				                  <script>importPackage(Packages.java.lang);
+				importPackage(Packages.java.awt);
+				importPackage(Packages.org.concord.biologica.environment);
+				importClass(Packages.java.awt.event.ActionListener);
+				  			
+				function init() {
+					button.addActionListener(actionListener)            
+					return true;
+				}
+				
+				var set = false
+				
+				var actionHandler = {
+					actionPerformed: function(evt){
+						if (!set){
+				           bar_graphable.setDataProducer(data_producer) 
+				           set = true
+				          }
+					}
+				}
+				var actionListener = new ActionListener(actionHandler);
+				
+				function save() {
+					return true;
+				}</script>
+				                </OTJavascript>
+                        	</script>
+                        	<variables>
+                        		<OTScriptVariableComponent name="button">
+                        			<reference>
+                        				<object refid="${graph-button}"/>
+                        			</reference>
+                        		</OTScriptVariableComponent>
+                        		<OTScriptVariable name="bar_graphable">
+                        			<reference>
+                        				<object refid="c146eab5-55e8-4bdf-a0c6-b421fe5ddff1"/>
+                        			</reference>
+                        		</OTScriptVariable>
+                        		<OTScriptVariable name="data_producer">
+                        			<reference>
+                        				<OTBiologicaModelDataProducer>
+		                                  <modelHolder>
+		                                    <object refid="22d3fb4f-123a-425f-9d60-d84e145c0678!/env-holder" />
+		                                  </modelHolder>
+		                                  <categories>
+		                                    <string>Plants</string>
+		                                  </categories>
+		                                  <conditions>
+		                                    <OTRuleCondition property="Has flower" equals="true" />
+		                                  </conditions>
+		                                </OTBiologicaModelDataProducer>
+                        			</reference>
+                        		</OTScriptVariable>
+                        	</variables>
+                        </OTScriptObject>
                       </documentRefs>
                     </OTUDLCompoundDoc>
                     <OTUDLCompoundDoc id="493e9f98-ddea-11de-8a38-abdf8e420e8c" name="%493e9f98-ddea-11de-8a38-abdf8e420e8c" showEditBar="true">
