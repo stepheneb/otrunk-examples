@@ -83,7 +83,7 @@
                 
                 <OTRule description="Health of future generations">
                   <conditions>
-                    <OTRuleCondition property="gen" minValue="3.0" maxValue="100.0" />
+                    <OTRuleCondition property="gen" minValue="2.0" maxValue="100.0" />
                   </conditions>
                   <consequences>
                     <OTRuleConsequence property="Health" ruleScript="var diff = Math.abs((11 - size_of_leaves) - (sunlight*10)); return 1 - (diff /  20)">
@@ -92,43 +92,6 @@
                         <string>sunlight</string>
                       </propertyVariables>
                     </OTRuleConsequence>
-                  </consequences>
-                </OTRule>
-                
-                <OTRule description="Gen 2. Health in spring">
-                  <conditions>
-                    <OTRuleCondition property="gen" equalsValue="2.0" />
-                    <OTRuleCondition property="Season" equals="spring" />
-                  </conditions>
-                  <consequences>
-                    <OTRuleConsequence property="Health" newValueFloat="1.0" />
-                    <OTRuleConsequence property="Chance of flowering" newValueFloat="0.0" />
-                  </consequences>
-                </OTRule>
-                
-                <OTRule description="Gen 2. Health in summer">
-                  <conditions>
-                    <OTRuleCondition property="gen" equalsValue="2.0" />
-                    <OTRuleCondition property="Season" equals="summer" />
-                  </conditions>
-                  <consequences>
-                    <OTRuleConsequence property="Health" newValueFloat="1.0" />
-                    <OTRuleConsequence property="Chance of flowering" newValueFloat="0" />
-                  </consequences>
-                </OTRule>
-                
-                <OTRule description="Gen 2. Health in fall">
-                  <conditions>
-                    <OTRuleCondition property="gen" equalsValue="2.0" />
-                    <OTRuleCondition property="Season" equals="fall" />
-                  </conditions>
-                  <consequences>
-                    <OTRuleConsequence property="Health" ruleScript="var diff = Math.abs((11 - size_of_leaves) - (sunlight*10)); return 1 - (diff /  20)" >
-                    	<propertyVariables>
-                        <string>size of leaves</string>
-                        <string>sunlight</string>
-                      </propertyVariables>
-                     </OTRuleConsequence>
                   </consequences>
                 </OTRule>
                
@@ -382,12 +345,10 @@ var changeHandler = {
 				}
 				else if (firstAgent.getProperty("gen") == 2){						// second generation
 					if (season == "spring"){
-						setPropertyOnAllAgents("Health", 1.0)
 						setPropertyOnAllAgents("Chance of flowering", 0.0)
 						
 					}
 					if (season == "summer"){
-						setPropertyOnAllAgents("Health", 1.0)
 						setPropertyOnAllAgents("Chance of flowering", 0.0)
 						waitingForMessage1 = true;
 					}
