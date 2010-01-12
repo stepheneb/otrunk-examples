@@ -1,22 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <otrunk id="33754150-b594-11d9-9669-0800200c9a66" >
   <imports>
-    <import class="org.concord.otrunk.OTSystem"/>
     <import class="org.concord.otrunk.view.OTFolderObject"/>
-    <import class="org.concord.otrunk.view.OTViewEntry"/>
-    <import class="org.concord.otrunk.view.OTViewService"/>
+    <import class="org.concord.data.state.OTAlphaDataProducer" />
+    <import class="org.concord.data.state.OTDataChannelDescription" />
+    <import class="org.concord.data.state.OTDataField" />
+    <import class="org.concord.data.state.OTDataProducer"/>
+    <import class="org.concord.data.state.OTDataStore" />
+    <import class="org.concord.data.state.OTDataTable" />
+    <import class="org.concord.datagraph.state.OTDataAxis" />
+    <import class="org.concord.datagraph.state.OTDataBarGraphable" />
+    <import class="org.concord.datagraph.state.OTDataCollector" />
+    <import class="org.concord.datagraph.state.OTDataGraph" />
+    <import class="org.concord.datagraph.state.OTDataGraphable" />
+    <import class="org.concord.datagraph.state.OTDataPointLabel" />
+    <import class="org.concord.datagraph.state.OTMultiDataGraph" />
+    <import class="org.concord.datagraph.state.OTPluginView" />
+    <import class="org.concord.otrunk.OTInclude" />
+    <import class="org.concord.otrunk.OTSystem" />
+    <import class="org.concord.otrunk.graph.OTDataCollectorViewConfig" />
+    <import class="org.concord.otrunk.intrasession.OTMultiUserPollingGraph"/>
+    <import class="org.concord.otrunk.script.OTScriptEngineBundle" />
+    <import class="org.concord.otrunk.script.OTScriptEngineEntry" />
+    <import class="org.concord.otrunk.script.js.OTJavascript" />
+    <import class="org.concord.otrunk.script.ui.OTScriptButton" />
+    <import class="org.concord.otrunk.script.ui.OTScriptObject" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariable" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariableComponent" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariableRealObject" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariableView" />
+    <import class="org.concord.otrunk.ui.OTButton" />
+    <import class="org.concord.otrunk.ui.OTChoice" />
+    <import class="org.concord.otrunk.ui.OTText" />
+    <import class="org.concord.otrunk.ui.question.OTQuestion" />
+    <import class="org.concord.otrunk.view.OTViewBundle" />
+    <import class="org.concord.otrunk.view.OTViewChild" />
+    <import class="org.concord.otrunk.view.OTViewEntry" />
+    <import class="org.concord.otrunk.view.OTViewMode" />
+    <import class="org.concord.otrunk.view.document.OTCompoundDoc" />
+    <import class="org.concord.otrunk.view.document.OTCssText" />
+        <import class="org.concord.otrunk.OTSystem"/>
     <import class="org.concord.framework.otrunk.view.OTFrame"/>
-    <import class="org.concord.data.state.OTDataStore"/>
-    <import class="org.concord.data.state.OTDataChannelDescription"/>
-    <import class="org.concord.data.state.OTDataField"/>
     <import class="org.concord.data.state.OTWaveGenerator"/>
     <import class="org.concord.data.state.OTMultiWaveGenerator"/>
     <import class="org.concord.data.state.OTWave"/>
-    <import class="org.concord.datagraph.state.OTDataGraph"/>
-    <import class="org.concord.datagraph.state.OTDataAxis"/>
-    <import class="org.concord.datagraph.state.OTDataGraphable"/>
-    <import class="org.concord.datagraph.state.OTDataCollector"/>
-    <import class="org.concord.datagraph.state.OTMultiDataGraph"/>
     <import class="org.concord.datagraph.state.OTDataPointLabel"/>
     <import class="org.concord.datagraph.state.OTDataPointRuler"/>
     <import class="org.concord.graph.util.state.OTDrawingTool"/>
@@ -27,19 +54,24 @@
     <import class="org.concord.data.state.OTTimeLimitDataProducerFilter"/>
   </imports>
   <objects>
-    <OTSystem>
-      <services>
-        <OTViewService>
-          <viewEntries>
-            <OTViewEntry 
-              objectClass="org.concord.datagraph.state.OTDataGraph" 
-              viewClass="org.concord.datagraph.state.OTDataGraphView"/>
+    <OTSystem local_id="system">
+      <bundles>
+        <OTScriptEngineBundle>
+          <engines>
+            <OTScriptEngineEntry objectClass="org.concord.otrunk.script.js.OTJavascript" engineClass="org.concord.otrunk.script.js.OTJavascriptEngine" />
+          </engines>
+        </OTScriptEngineBundle>
+        <OTViewBundle showLeftPanel="true">
+          <views>
+            <OTViewEntry objectClass="org.concord.datagraph.state.OTDataCollector" viewClass="org.concord.datagraph.state.OTDataCollectorView"/>
+            <OTViewEntry objectClass="org.concord.datagraph.state.OTDataGraph" viewClass="org.concord.datagraph.state.OTDataGraphView"/>
+            <OTViewEntry objectClass="org.concord.otrunk.intrasession.OTMultiUserPollingGraph" viewClass="org.concord.otrunk.intrasession.ui.OTMultiUserPollingGraphTeacherView" />
+            <OTViewEntry objectClass="org.concord.otrunk.script.ui.OTScriptObject" viewClass="org.concord.otrunk.script.ui.OTScriptObjectView" />
+            <OTViewEntry objectClass="org.concord.otrunk.ui.OTButton" viewClass="org.concord.otrunk.ui.swing.OTButtonView"/>
+            <OTViewEntry objectClass="org.concord.otrunk.view.document.OTDocument" viewClass="org.concord.otrunk.view.document.OTDocumentView" />
             <OTViewEntry 
               objectClass="org.concord.data.state.OTDataField" 
               viewClass="org.concord.data.state.OTDataFieldView"/>
-            <OTViewEntry
-              objectClass="org.concord.datagraph.state.OTDataCollector" 
-              viewClass="org.concord.datagraph.state.OTDataCollectorView"/>
             <OTViewEntry
               objectClass="org.concord.graph.util.state.OTDrawingTool" 
               viewClass="org.concord.datagraph.state.OTDataDrawingToolView"/>
@@ -49,9 +81,9 @@
             <OTViewEntry
               objectClass="org.concord.otrunk.view.OTFolderObject"
               viewClass="org.concord.otrunk.view.OTFolderObjectView"/>
-          </viewEntries>
-        </OTViewService>
-      </services>
+          </views>
+        </OTViewBundle>
+      </bundles>
       <root>
         <OTFolderObject name="graphs">
           <children>
@@ -583,6 +615,81 @@
                 </OTDataCollector>
               </graphs>
             </OTMultiDataGraph>
+            <OTDataCollector local_id="simple-multi-data-collector" 
+	            name="Multicolored bar chart" title="Title" 
+	            showLabelCoordinates="true" labelDecimalPlaces="2" 
+	            showControlBar="false" useDefaultToolBar="false" 
+	            displayButtons="">
+	          <source>
+	            <OTDataBarGraphable showSampleLimit="1" name="Number of organisms" connectPoints="true" drawMarks="false" lineWidth="20.0" color="192" yColumn="11" xColumn="0" showAllChannels="true" showControlButtons="true" showToolButtons="true" visible="true">
+	              <dataStore>
+	                <OTDataStore sampleKeepLimit="10" dt="1.0" numberChannels="3">
+	                  <channelDescriptions>
+	                    <OTDataChannelDescription name="#0" numericData="true" color="0x0000FF00"/>
+	                    <OTDataChannelDescription name="#1" numericData="true" color="0x0000FFFF"/>
+	                    <OTDataChannelDescription name="#2" numericData="true" color="0x00FF00FF"/>
+	                  </channelDescriptions>
+	                  <values>
+	                  	<float>1</float>
+	                  	<float>2</float>
+	                  	<float>3</float>
+	                  </values>
+	                </OTDataStore>
+	              </dataStore>
+	            </OTDataBarGraphable>
+	          </source>
+	          <xDataAxis>
+	            <OTDataAxis max="4.0" min="0.0" label="X Axis" labelFormat="Engineering">
+	              <customGridLabels />
+	            </OTDataAxis>
+	          </xDataAxis>
+	          <yDataAxis>
+	            <OTDataAxis max="5.0" min="-0.0" label="Y Axis" labelFormat="Engineering">
+	              <customGridLabels />
+	            </OTDataAxis>
+	          </yDataAxis>
+	        </OTDataCollector>
+	        <OTDataCollector 
+	            name="Axis image labels" title="Title" 
+	            showLabelCoordinates="true" labelDecimalPlaces="2" 
+	            showControlBar="false" useDefaultToolBar="false" 
+	            displayButtons="">
+	          <source>
+	            <OTDataBarGraphable showSampleLimit="1" name="Number of organisms" connectPoints="true" drawMarks="false" lineWidth="20.0" color="192" yColumn="11" xColumn="0" showAllChannels="true" showControlButtons="true" showToolButtons="true" visible="true">
+	              <dataStore>
+	                <OTDataStore sampleKeepLimit="10" dt="1.0" numberChannels="6">
+	                  <channelDescriptions>
+	                    <OTDataChannelDescription name="#0" numericData="true" color="0x0000FF00"/>
+	                    <OTDataChannelDescription name="#1" numericData="true" color="0x0000FFFF"/>
+	                    <OTDataChannelDescription name="#2" numericData="true" color="0x00FF00FF"/>
+	                  </channelDescriptions>
+	                  <values>
+	                  	<float>1</float>
+	                  	<float>2</float>
+	                  	<float>3</float>
+	                  	<float>2</float>
+	                  	<float>1</float>
+	                  	<float>2</float>
+	                  </values>
+	                </OTDataStore>
+	              </dataStore>
+	            </OTDataBarGraphable>
+	          </source>
+	          <xDataAxis>
+	            <OTDataAxis max="12.0" min="0.0" label="X Axis" labelFormat="Engineering">
+	              <customGridLabels>
+                  	<entry key="1.0"><string>http://otrunk.concord.org/examples/EvolutionReadiness/models/species/images/plants/varied-plants/flower10cropped.png</string></entry>
+                  	<entry key="3.0"><string>http://otrunk.concord.org/examples/EvolutionReadiness/models/species/images/plants/varied-plants/flower5cropped.png</string></entry>
+                  	<entry key="5.0"><string>http://otrunk.concord.org/examples/EvolutionReadiness/models/species/images/plants/varied-plants/flower1cropped.png</string></entry>
+                  </customGridLabels>
+	            </OTDataAxis>
+	          </xDataAxis>
+	          <yDataAxis>
+	            <OTDataAxis max="5.0" min="-0.0" label="Y Axis" labelFormat="Engineering">
+	              <customGridLabels />
+	            </OTDataAxis>
+	          </yDataAxis>
+	        </OTDataCollector>
           </children>
         </OTFolderObject>
       </root>
