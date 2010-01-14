@@ -67,22 +67,9 @@
                 <OTPlacement x="24" y="124" width="117" height="22" />
               </barriers>
               <rules>
-                <OTRule description="Gen 1. Health">
+                <OTRule description="Health">
                   <conditions>
-                    <OTRuleCondition property="gen" equalsValue="1.0" />
-                  </conditions>
-                  <consequences>
-                    <OTRuleConsequence property="Health" ruleScript="var diff = Math.abs((11 - size_of_leaves) - (sunlight*10)); return 1 - (diff /  20)">
-                      <propertyVariables>
-                        <string>size of leaves</string>
-                        <string>sunlight</string>
-                      </propertyVariables>
-                    </OTRuleConsequence>
-                  </consequences>
-                </OTRule>
-                <OTRule description="Health of future generations">
-                  <conditions>
-                    <OTRuleCondition property="gen" minValue="2.0" maxValue="100.0" />
+                    <OTRuleCondition always="true" />
                   </conditions>
                   <consequences>
                     <OTRuleConsequence property="Health" ruleScript="var diff = Math.abs((11 - size_of_leaves) - (sunlight*10)); return 1 - (diff /  20)">
@@ -148,13 +135,23 @@
                     <OTRuleConsequence property="is immortal" newValueBoolean="false" />
                   </consequences>
                 </OTRule>
-                <OTRule description="Die in winter">
+                <OTRule description="Gen 1 Die in winter">
                   <conditions>
+                    <OTRuleCondition property="gen" equalsValue="1.0" />
                     <OTRuleCondition property="Season" equals="winter" />
                   </conditions>
                   <consequences>
                     <OTRuleConsequence property="Health" newValueFloat="0.0" />
                     <OTRuleConsequence property="is immortal" newValueBoolean="false" />
+                  </consequences>
+                </OTRule>
+                <OTRule description="If completed can reflower">
+                  <conditions>
+                    <OTRuleCondition property="complete" equalsValue="1.0" />
+                    <OTRuleCondition property="Health" equalsValue="1.0" />
+                  </conditions>
+                  <consequences>
+                    <OTRuleConsequence property="Has flower" newValueBoolean="true" />
                   </consequences>
                 </OTRule>
               </rules>
@@ -177,6 +174,11 @@
                 <OTAgentTrait property="gen">
                   <defaultValues>
                     <int>1</int>
+                  </defaultValues>
+                </OTAgentTrait>
+                <OTAgentTrait property="complete">
+                  <defaultValues>
+                    <int>0</int>
                   </defaultValues>
                 </OTAgentTrait>
               </agentTraits>
@@ -470,6 +472,7 @@ var stepHandler = {
 				else
 					showMessage("Each of your plants is in an environment that makes it healthy!\nHowever, some of your plants were dropped between flower boxes.\nIf you want to try again to make all six plants healthy, you can reset the model.", env)
 				waitingForMessage4 = false;
+				setPropertyOnAllAgents("complete", 1.0)
 			}	
 		}
 	}		
@@ -570,6 +573,10 @@ function save() {
           <logAddedAgentProperties>
             <string>size of leaves</string>
           </logAddedAgentProperties>
+          <traitsToShow>
+            <string>complete</string>
+            <string>chance of flowering</string>
+          </traitsToShow>
         </OTEnvironmentHolder>
       </root>
     </OTSystem>
