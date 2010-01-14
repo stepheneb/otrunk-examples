@@ -299,6 +299,7 @@ var changeHandler = {
 					}
 					if (season == "fall"){
 						waitingForMessage2 = true;
+						waitingForMessage4 = true
 					}
 				}
 			}
@@ -368,8 +369,7 @@ var stepHandler = {
 			message1StepCount++;
 			if (message1StepCount == 15){
 				var season = env.getSeason()
-				showMessage("Take a look at the new plants that are growing.\nDo they all look exactly the same?\nYou can use the information tool to look at the plants closely.\nPRESS PLAY to restart the model when you are done looking.", env)
-				envHolder.pauseAction()
+				showMessage("Two of the new plants are wilted.\nUse the Information Tool to look at the plants more closely.\nDo all the plants have the same leaf size?", env)
 				message1StepCount = 0
 				waitingForMessage1 = false
 			}	
@@ -377,12 +377,21 @@ var stepHandler = {
 		
 		if(waitingForMessage2 == true){
 			message2StepCount++
-			if (message2StepCount == 7){
-				showMessage("Two of your plants have wilted! Why do you think this happened?\n" +
-				"Try moving them to a different flowerbox and see what happens.", env)
+			if (message2StepCount == 50){
+				var allAgentsAreHealthy = true
+				for (var i = 0; i &lt; agents.size(); i++) {
+					var agent = agents.get(i)
+					var health = agent.getProperty("Health")
+					if (health &lt; 0.99) {
+						allAgentsAreHealthy = false
+						break
+					}
+				}
+				if (!allAgentsAreHealthy){
+					showMessage("Try moving your wilted plants to different flowerboxes and see what happens.", env)
+				}
 				message2StepCount = 0
 				waitingForMessage2 = false
-				waitingForMessage4 = true
 				
 				env.setWinterLength(-1)
 			}	
