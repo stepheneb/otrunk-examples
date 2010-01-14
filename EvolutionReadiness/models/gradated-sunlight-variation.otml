@@ -91,15 +91,6 @@
                     <OTRuleConsequence property="Chance of flowering" newValueFloat="0.0" />
                   </consequences>
                 </OTRule>
-                <OTRule description="withered plants die in summer">
-                  <conditions>
-                    <OTRuleCondition property="Health" minValue="0.9" maxValue="0.99" />
-                    <OTRuleCondition property="Season" equals="summer" />
-                  </conditions>
-                  <consequences>
-                    <OTRuleConsequence property="is immortal" newValueBoolean="true" />
-                  </consequences>
-                </OTRule>
                 <OTRule description="Withered plants immortal in spring">
                   <conditions>
                     <OTRuleCondition property="Health" minValue="0.85" maxValue="0.99" />
@@ -109,13 +100,21 @@
                     <OTRuleConsequence property="is immortal" newValueBoolean="true" />
                   </consequences>
                 </OTRule>
-                <OTRule description="Withered plants die in fall">
+                <OTRule description="no plants immortal in summer">
                   <conditions>
-                    <OTRuleCondition property="Health" minValue="0.85" maxValue="0.99" />
-                    <OTRuleCondition property="Season" equals="fall" />
+                    <OTRuleCondition property="Season" equals="summer" />
                   </conditions>
                   <consequences>
                     <OTRuleConsequence property="is immortal" newValueBoolean="false" />
+                  </consequences>
+                </OTRule>
+                <OTRule description="Withered plants die in fall">
+                  <conditions>
+                    <OTRuleCondition property="Health" maxValue="0.99" />
+                    <OTRuleCondition property="Season" equals="fall" />
+                  </conditions>
+                  <consequences>
+                    <OTRuleConsequence property="Health" newValueFloat="0.8" />
                   </consequences>
                 </OTRule>
               </rules>
@@ -149,32 +148,8 @@
 					        	envUnit.setTerrain(terrain)
 				            }
 				        }
-					env.addStepListener(stepListener)
 					return true;
 					}
-				var winterCounter = 0;
-				var waitingFor = "winter";
-				var stepHandler = {
-					environmentStepped: function(){
-						var firstSquare = env.getEnvironmentUnit(0, 0);
-						var currentSeason = firstSquare.getProperty("Season");
-						if (waitingFor == currentSeason) {
-							if (waitingFor == "winter"){
-								winterCounter ++; 								
-								waitingFor = "spring";
-								envHolder.snowCover(1.0);	
-							return;					
-							}
-							if (waitingFor == "spring"){
-								waitingFor = "winter";
-								envHolder.snowCover(0.0);
-							}
-						} 
-						return;
-					}		
-				}
-				
-				var stepListener = new EnvironmentStepListener(stepHandler)	
 				
 				function save() {
 					return true;
