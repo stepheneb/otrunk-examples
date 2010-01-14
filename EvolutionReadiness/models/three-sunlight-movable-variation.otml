@@ -109,15 +109,6 @@
                     <OTRuleConsequence property="is immortal" newValueBoolean="true" />
                   </consequences>
                 </OTRule>
-                <OTRule description="Flower health is 1">
-                  <conditions>
-                    <OTRuleCondition property="Has flower" equals="true" />
-                    <OTRuleCondition property="sunlight" equalsValue="6.0" />
-                  </conditions>
-                  <consequences>
-                    <OTRuleConsequence property="Health" newValueFloat="1.0" />
-                  </consequences>
-                </OTRule>
                 <OTRule description="Gen 1. Flowering">
                   <conditions>
                     <OTRuleCondition property="gen" equalsValue="1.0" />
@@ -128,9 +119,8 @@
                     <OTRuleConsequence property="Chance of flowering" newValueFloat="0.5" />
                   </consequences>
                 </OTRule>
-                <OTRule description="Gen 1. Losing the flower">
+                <OTRule description="Losing the flower">
                   <conditions>
-                    <OTRuleCondition property="gen" equalsValue="1.0" />
                     <OTRuleCondition property="Has flower" equals="true" />
                     <OTRuleCondition property="Health" maxValue="0.99" />
                   </conditions>
@@ -268,6 +258,23 @@ importPackage(Packages.org.concord.biologica.environment);
 importPackage(Packages.org.concord.biologica.agent);
 
 var rand;
+var yearCount;
+var message1StepCount;
+var message2StepCount;
+var message3StepCount;
+var message4StepCount;
+var waitingForMessage1;
+var waitingForMessage2;
+var waitingForMessage3;
+var waitingForMessage4;
+var makeSeedsCount;
+var readyToMakeSeeds;
+var popSize
+var generation
+var previousHealth
+var shownNoMorePlantsMessage
+var shownWiltedMessage
+var atLeastOneAgentAdded
   			
 function init() {
 	env.addChangeListener(changeListener)
@@ -276,24 +283,32 @@ function init() {
 	
 	rand = new Random()
 	
+	initializeVariables();
+	
 	return true;
 }
-var yearCount = 0;
-var message1StepCount = 0;
-var message2StepCount = 0;
-var message3StepCount = 0;
-var message4StepCount = 0;
-var waitingForMessage1 = false;
-var waitingForMessage2 = false;
-var waitingForMessage3 = false;
-var waitingForMessage4 = false;
-var makeSeedsCount = 0;
-var readyToMakeSeeds = false;
-var popSize = -1
-var generation = 1
-var previousHealth = -1
-var shownNoMorePlantsMessage = false
-var shownWiltedMessage = false
+
+function initializeVariables() {
+	env.setWinterLength(20)
+	yearCount = 0;
+	message1StepCount = 0;
+	message2StepCount = 0;
+	message3StepCount = 0;
+	message4StepCount = 0;
+	waitingForMessage1 = false;
+	waitingForMessage2 = false;
+	waitingForMessage3 = false;
+	waitingForMessage4 = false;
+	makeSeedsCount = 0;
+	readyToMakeSeeds = false;
+	popSize = -1
+	generation = 1
+	previousHealth = -1
+	shownNoMorePlantsMessage = false
+	shownWiltedMessage = false
+	atLeastOneAgentAdded = false
+}
+
 
 
 var changeHandler = {
@@ -360,7 +375,6 @@ function setPropertyOnAllAgents(property, value){
 	}
 }
 
-var atLeastOneAgentAdded = false
 
 var stepHandler = {
 	environmentStepped: function(){
@@ -518,24 +532,7 @@ function onTopOfSomeone(agent){
 var resetHandler= {
 	environmentChanged: function(evt){
 		if (evt.getType() == EnvironmentChangeEvent.RESET){
-			env.setWinterLength(20)
-	 		yearCount = 0;
- 			message1StepCount = 0;
- 			message2StepCount = 0;
- 			message3StepCount = 0;
- 			message4StepCount = 0;
- 			waitingForMessage1 = false;
- 			waitingForMessage2 = false;
- 			waitingForMessage3 = false;
- 			waitingForMessage4 = false;
-			makeSeedsCount = 0;
-			readyToMakeSeeds = false;
-			popSize = -1
-			generation = 1
-			previousHealth = -1
-			shownNoMorePlantsMessage = false
-			shownWiltedMessage = false
-			atLeastOneAgentAdded = false
+	 		initializeVariables()
 		}
 	}
 }
