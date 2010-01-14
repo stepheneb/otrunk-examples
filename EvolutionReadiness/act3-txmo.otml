@@ -22,6 +22,10 @@
     <import class="org.concord.graph.util.state.OTPointTextLabel" />
     <import class="org.concord.otrunk.OTInclude" />
     <import class="org.concord.otrunk.OTSystem" />
+    <import class="org.concord.otrunk.biologica.data.OTBiologicaModelDataProducer" />
+    <import class="org.concord.otrunk.biologica.rules.OTRule" />
+    <import class="org.concord.otrunk.biologica.rules.OTRuleCondition" />
+    <import class="org.concord.otrunk.biologica.rules.OTRuleConsequence" />
     <import class="org.concord.otrunk.browser.mozswing.OTMozSwing" />
     <import class="org.concord.otrunk.overlay.OTOverlay" />
     <import class="org.concord.otrunk.script.ui.OTScriptObject" />
@@ -43,11 +47,11 @@
     <import class="org.concord.otrunk.udl.document.OTGlossary" />
     <import class="org.concord.otrunk.udl.document.OTUDLCompoundDoc" />
     <import class="org.concord.otrunk.udl.document.OTUDLDocumentViewConfig" />
-    <import class="org.concord.otrunk.udl.OTUDLNavBar" />
     <import class="org.concord.otrunk.graph.OTDataCollectorViewConfig" />
     <import class="org.concord.otrunk.udl.question.OTUDLQuestion" />
     <import class="org.concord.otrunk.udl.question.OTUDLLeveledQuestions" />
     <import class="org.concord.otrunk.udl.question.OTUDLQuestionViewConfig" />
+    <import class="org.concord.otrunk.udl.OTUDLNavBar" />
     <import class="org.concord.otrunk.udl3.OTUDLMenu" />
     <import class="org.concord.otrunk.udl3.OTUDLContainer" />
     <import class="org.concord.otrunk.udl3.OTUDLSection" />
@@ -79,7 +83,7 @@
     <import class="org.concord.otrunk.view.OTViewEntry" />
     <import class="org.concord.otrunk.view.OTViewBundle" />
     <import class="org.concord.otrunk.view.OTViewMode" />
-    <import class="org.concord.otrunk.view.document.OTCompoundDoc" />
+    <import class="org.concord.otrunk.view.document.OTUDLCompoundDoc" />
     <import class="org.concord.otrunk.view.document.OTCssText" />
     <import class="org.concord.otrunk.view.prototype.OTPrototypeViewEntry" />
     <import class="org.concord.otrunk.view.prototype.OTPrototypeEventController" />
@@ -108,14 +112,14 @@
     <import class="org.concord.framework.otrunk.wrapper.OTBoolean" />
     <import class="org.concord.otrunk.ui.question.OTQuestion" />
     <import class="org.concord.otrunk.ui.OTObjectSet" />
+    <import class="org.concord.otrunk.view.document.OTCompoundDoc" />
   </imports>
   <objects>
     <OTSystem local_id="system">
       <includes>
         <OTInclude href="global-imports/er-view-bundle.otml" />
         <OTInclude href="models/three-sunlight-movable-variation-plant-2.otml" />
-        <OTInclude href="models/five-sunlight-breed-true-one-plant.otml" />
-        <OTInclude href="models/five-sunlight-breed-true-three-plants.otml" />
+        <OTInclude href="models/gradated-sunlight-variation.otml" />
       </includes>
       <bundles>
         <object refid="8d880970-c22a-11dc-95ff-0800200c9a66" />
@@ -404,13 +408,89 @@
           full of plants.</b>
                               <br />
                               <br />
-                              [Add model.]
+                               <table>
+                                <tr height="690">
+                                  <td>
+                                    <object refid="ac3fddb8-ece5-4c22-980b-29a2eb70e234" />
+                                    <br />
+                                    <object refid="1A3FE8564-9198-11DE-B4A8-78BC55D89593!/env-holder" />
+                                    <br />
+                                  </td>
+                                  <td width="350">
+                                    <object refid="12e0df55-23d0-4455-a406-1678866b0646" />
+                                    <br />
+                                  </td>
+                                </tr>
+                              </table>
                               <br />
                             </div>
                           </div>
                         </div>
                       </bodyText>
                       <documentRefs>
+                      	<OTLabbookButton id="ac3fddb8-ece5-4c22-980b-29a2eb70e234" name="Labbook button">
+                          <target>
+                            <object refid="1A3FE8564-9198-11DE-B4A8-78BC55D89593!/env-holder" />
+                          </target>
+                        </OTLabbookButton>
+                        <OTDataCollector id="12e0df55-23d0-4455-a406-1678866b0646" name="Number of plants" title="Number of flowers" showLabelCoordinates="true" labelDecimalPlaces="2" showControlBar="false" useDefaultToolBar="false" displayButtons="">
+                          <source>
+                            <OTDataBarGraphable showSampleLimit="1" name="Number of organisms" connectPoints="true" drawMarks="false" lineWidth="10.0" color="192" yColumn="11" xColumn="0" showAllChannels="true" showControlButtons="true" showToolButtons="true" visible="true">
+                              <dataProducer>
+                                <OTBiologicaModelDataProducer>
+                                  <modelHolder>
+                                    <object refid="1A3FE8564-9198-11DE-B4A8-78BC55D89593!/env-holder" />
+                                  </modelHolder>
+                                  <seasonTriggers>
+                                    <string>fall</string>
+                                  </seasonTriggers>
+                                  <categories>
+                                    <string>Plants</string>
+                                  </categories>
+                                  <conditions>
+                                    <OTRuleCondition property="Has flower" equals="true" />
+                                  </conditions>
+                                  <channelDescriptions>
+                                    <OTDataChannelDescription name="#1" numericData="true" color="5912564" />
+                                    <OTDataChannelDescription name="#2" numericData="true" color="0x6839E1" />
+                                    <OTDataChannelDescription name="#3" numericData="true" color="0x733DC5" />
+                                    <OTDataChannelDescription name="#4" numericData="true" color="0x813EB3" />
+                                    <OTDataChannelDescription name="#5" numericData="true" color="0x973FA7" />
+                                    <OTDataChannelDescription name="#6" numericData="true" color="10699155" />
+                                    <OTDataChannelDescription name="#7" numericData="true" color="0xB44481" />
+                                    <OTDataChannelDescription name="#8" numericData="true" color="0xD24861" />
+                                    <OTDataChannelDescription name="#9" numericData="true" color="0xE24B4C" />
+                                    <OTDataChannelDescription name="#10" numericData="true" color="0xC94450" />
+                                    <OTDataChannelDescription name="#10" numericData="true" color="0xF54C37" />
+                                  </channelDescriptions>
+                                </OTBiologicaModelDataProducer>
+                              </dataProducer>
+                              <dataStore>
+                                <OTDataStore sampleKeepLimit="10" dt="1.0" numberChannels="10"/>
+                              </dataStore>
+                            </OTDataBarGraphable>
+                          </source>
+                          <xDataAxis>
+                            <OTDataAxis max="10.5" min="0.0" label="Plant Type" units="Leaf Size" labelFormat="Engineering" locked="true" intervalWorld="1">
+                              <customGridLabels>
+                                <entry key="1.0">
+                                  <string>http://otrunk.concord.org/examples/EvolutionReadiness/models/species/images/plants/varied-plants/flower10cropped.png</string>
+                                </entry>
+                                <entry key="5.0">
+                                  <string>http://otrunk.concord.org/examples/EvolutionReadiness/models/species/images/plants/varied-plants/flower5cropped.png</string>
+                                </entry>
+                                <entry key="9.0">
+                                  <string>http://otrunk.concord.org/examples/EvolutionReadiness/models/species/images/plants/varied-plants/flower1cropped.png</string>
+                                </entry>
+                              </customGridLabels>
+                            </OTDataAxis>
+                          </xDataAxis>
+                          <yDataAxis>
+                            <OTDataAxis max="50.0" min="-0.0" label="Flowers" units="" labelFormat="Engineering" locked="true">
+                              <customGridLabels />
+                            </OTDataAxis>
+                          </yDataAxis>
+                        </OTDataCollector>
                         <OTQuestion id="e31d5f20-d85b-11de-ab1e-0da695291186" name="Question">
                           <prompt>
                             <OTCompoundDoc>
