@@ -22,6 +22,11 @@
     <import class="org.concord.graph.util.state.OTPointTextLabel" />
     <import class="org.concord.otrunk.OTInclude" />
     <import class="org.concord.otrunk.OTSystem" />
+    <import class="org.concord.otrunk.biologica.data.OTBiologicaModelDataProducer" />
+    <import class="org.concord.otrunk.biologica.rules.OTRule" />
+    <import class="org.concord.otrunk.biologica.rules.OTRuleCondition" />
+    <import class="org.concord.otrunk.biologica.rules.OTRuleConsequence" />
+    <import class="org.concord.otrunk.biologica.ui.OTBiologicaModelContainer" />
     <import class="org.concord.otrunk.browser.mozswing.OTMozSwing" />
     <import class="org.concord.otrunk.overlay.OTOverlay" />
     <import class="org.concord.otrunk.script.ui.OTScriptObject" />
@@ -68,6 +73,11 @@
     <import class="org.concord.otrunk.ui.snapshot.OTSnapshotChooser" />
     <import class="org.concord.otrunk.ui.swing.OTChoiceViewConfig" />
     <import class="org.concord.otrunk.util.OTSharingBundle" />
+    <import class="org.concord.otrunk.util.OTLabbookBundle" />
+    <import class="org.concord.otrunk.util.OTLabbookEntry" />
+    <import class="org.concord.otrunk.labbook.OTLabbookButton" />
+    <import class="org.concord.otrunk.labbook.OTLabbook" />
+    <import class="org.concord.otrunk.labbook.OTLabbookEntryChooser" />
     <import class="org.concord.otrunk.view.OTObjectEditViewConfig" />
     <import class="org.concord.otrunk.view.OTViewChild" />
     <import class="org.concord.otrunk.view.OTViewEntry" />
@@ -85,7 +95,7 @@
     <import class="org.concord.sensor.state.OTSensorDataProxy" />
     <import class="org.concord.sensor.state.OTSensorRequest" />
     <import class="org.concord.sensor.state.OTZeroSensor" />
-    <import class="org.concord.otrunk.udl.OTUDLNavBar" />
+    <import class="org.concord.otrunk.ui.menu.OTNavBar" />
     <import class="org.concord.datagraph.state.OTDataPointLabel" />
     <import class="org.concord.otrunk.udl.OTZoom" />
     <import class="org.concord.otrunk.udl.OTZoomTransform" />
@@ -100,11 +110,16 @@
     <import class="org.concord.otrunk.script.ui.OTScriptVariableRealObject" />
     <import class="org.concord.framework.otrunk.wrapper.OTInt" />
     <import class="org.concord.framework.otrunk.wrapper.OTBoolean" />
+    <import class="org.concord.otrunk.ui.question.OTQuestion" />
+    <import class="org.concord.otrunk.ui.OTObjectSet" />
   </imports>
   <objects>
     <OTSystem local_id="system">
       <includes>
-        <OTInclude href="http://continuum.concord.org/otrunk/examples/LOOPS/global-imports/loops-view-bundle.otml" />
+        <OTInclude href="global-imports/er-view-bundle.otml" />
+        <OTInclude href="models/gradated-sunlight-clickable-breed-true.otml" />
+        <OTInclude href="models/three-sunlight-movable-variation.otml" />
+        <OTInclude href="models/gradated-sunlight-variation.otml" />
       </includes>
       <bundles>
         <object refid="8d880970-c22a-11dc-95ff-0800200c9a66" />
@@ -120,6 +135,7 @@
             <OTDeviceConfig configString="none" deviceId="10" />
           </deviceConfigs>
         </OTInterfaceManager>
+        <OTLabbookBundle />
       </bundles>
       <overlays>
         <object refid="6cc8e2b0-c44e-11dc-95ff-0800200c9a66" />
@@ -133,13 +149,13 @@
         </OTOverlay>
       </overlays>
       <root>
-        <OTCurriculumUnit version="2" name="LOOPS Activity">
+        <OTCurriculumUnit version="2" name="ER Activity">
           <activity>
             <OTUDLSection local_id="section_1">
               <header>
                 <OTCompoundDoc id="2767fe20-6c7d-11dc-8314-0800200c9a66!/section_1/header" showEditBar="false">
                   <bodyText>
-                    <div class="title">What is Variation?</div>
+                    <div class="title">Activity 2: The Virtual Field</div>
                   </bodyText>
                 </OTCompoundDoc>
               </header>
@@ -151,23 +167,89 @@
                         <div class="buffer">
                           <div class="border">
                             <div class="body">
-                              <div class="subtitle" />
-                              Think about this. You are walking down a street and you see a dog. 
-          How do you know it is a dog?
-                              <br />
-                              Dogs have enough characteristics in common that when you see a dog you know it 
-          is a dog. Look at the picture.
+                              <div class="subtitle">Introduction: Studying plants in a field</div>
+                              Scientists do experiments in labs like the Virtual Greenhouse and 
+          outside in the field. In this activity, you will grow Mystery Plants 
+          in the Virtual Field.
                               <br />
                               <br />
-                              <img src="http://er.concord.org/images/ActivityOne/Dog-Breeds-poster.jpg" border="1" />
+                              <center>
+                                <img border="0" src="http://er.concord.org/artwork/plants/pl_34_maria_watering_plant.png" />
+                              </center>
                               <br />
                               <br />
-                              <object refid="ebc9ee19-f39c-11dd-85ca-d75847cd2f0b" />
+                              Mystery Plants can only live where the environment is right for 
+          them. And, just like in the Virtual Greenhouse, the plants that are 
+          healthy will have flowers. In this activity those flowers will go on 
+          to produce seeds.
                               <br />
                               <br />
+                              You will start by figuring out where plants grow best in the Virtual Field. 
+          You will use new tools to examine the plants more closely. You will 
+          also have the chance to speed up time and see how plants grow over 
+          many generations -- something you can't do in real life!
                               <br />
-                              <object refid="30a41653-f13a-11dd-90ae-373118468e1c" />
                               <br />
+                              Get 
+          started by clicking the blue arrow below.
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                    </OTCompoundDoc>
+                    <OTCompoundDoc id="d76f21f7-4f86-11de-aa53-2bc376578157" name="%d76f21f7-4f86-11de-aa53-2bc376578157" showEditBar="true">
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <div class="subtitle">The Virtual Field: Growing seeds in a field</div>
+                              The field below is a little unusual. The top of this field doesn't 
+          get much light and the bottom of the field gets a lot of light. The 
+          rest of the field is somewhere in the middle.
+                              <br />
+                              <br />
+                              <b>Your 
+          challenge:</b>
+                              Find out where each type of Mystery Plant grows best 
+          in the field. Once you have all three plants growing and making 
+          flowers in the field, take a picture using the snapshot button. If 
+          you notice anything interesting about the plants, write it it your 
+          lab book.
+                              <br />
+                              <br />
+                              <b>Instructions:</b>
+                              Plant the seeds where you 
+          think they will grow best. To plant, click one of the plant buttons 
+          and then click anywhere in the field. Each time you click you will 
+          plant one seed. Click the Play button
+                              <img width="20" height="20" src="jres:///org/concord/biologica/ui/play.png" />
+                              to start growing the plants. Experiment until you have figured out 
+          which seeds grow best in which location. Click the Reset button
+                              <img width="20" height="20" src="jres:///org/concord/biologica/ui/reset.png" />
+                              to clear all your plants and start over. Run the model as many times 
+          as you want. Try to get all three types of plant to grow and make 
+          flowers.
+                              <br />
+                              <br />
+                              <b>Graph:</b>
+                              Notice that there is a graph to keep track of the number of 
+          flowering plants of each type.
+                              <br />
+                              <br />
+                              <table>
+                                <tr height="690">
+                                  <td>
+                                    <object refid="74b44c32-6749-11de-bcf3-1dd54fefde48" />
+                                    <br />
+                                    <object refid="13d3fb4f-123a-425f-9d60-d84e145c0678!/env-holder" />
+                                    <br />
+                                  </td>
+                                  <td width="250">
+                                    <object refid="0c9660fd-81e1-11de-bbc8-4fb62548ece1" />
+                                    <br />
+                                  </td>
+                                </tr>
+                              </table>
                               <br />
                               <br />
                             </div>
@@ -175,145 +257,95 @@
                         </div>
                       </bodyText>
                       <documentRefs>
-                        <OTAuthorNote id="ebc9ee19-f39c-11dd-85ca-d75847cd2f0b" name="Author's note">
-                          <note>
-                            <OTText text="Obviously need illustrate this, need fewer variations...." rows="1" />
-                          </note>
-                        </OTAuthorNote>
-                        <OTUDLQuestion id="30a41653-f13a-11dd-90ae-373118468e1c" name="Question" showConvertButton="false">
-                          <prompt>
-                            <OTCompoundDoc>
-                              <bodyText>List three ways in which the dogs in the picture are the same. (Hint: How they look, sound, behave.)</bodyText>
-                            </OTCompoundDoc>
-                          </prompt>
-                          <input>
-                            <OTText rows="1" />
-                          </input>
-                          <correctAnswer>
-                            <OTCompoundDoc>
-                              <bodyText>Answers can vary...they all bark, they all have fur, they all have four legs etc.</bodyText>
-                            </OTCompoundDoc>
-                          </correctAnswer>
-                        </OTUDLQuestion>
+                        <OTLabbookButton id="74b44c32-6749-11de-bcf3-1dd54fefde48" name="Labbook button">
+                          <target>
+                            <object refid="13d3fb4f-123a-425f-9d60-d84e145c0678!/env-holder" />
+                          </target>
+                        </OTLabbookButton>
+                        <object refid="13d3fb4f-123a-425f-9d60-d84e145c0678!/env-holder" />
+                        <OTDataCollector id="0c9660fd-81e1-11de-bbc8-4fb62548ece1" name="Number of plants" title="Number of plants" showLabelCoordinates="true" labelDecimalPlaces="2" showControlBar="false" useDefaultToolBar="false" displayButtons="7,">
+                          <source>
+                            <OTDataBarGraphable name="Number of organisms" connectPoints="true" drawMarks="false" lineWidth="10.0" color="192" yColumn="1" xColumn="0" showAllChannels="true" showControlButtons="true" showToolButtons="true" visible="true">
+                              <dataProducer>
+                                <OTBiologicaModelDataProducer>
+                                  <modelHolder>
+                                    <object refid="13d3fb4f-123a-425f-9d60-d84e145c0678!/env-holder" />
+                                  </modelHolder>
+                                  <seasonTriggers>
+                                  	<string>fall</string>
+                                  </seasonTriggers>
+                                  <categories>
+                                    <string>Plants</string>
+                                  </categories>
+                                  <conditions>
+                                    <OTRuleCondition property="Has flower" equals="true" />
+                                  </conditions>
+                                </OTBiologicaModelDataProducer>
+                              </dataProducer>
+                              <dataStore>
+                                <OTDataStore sampleKeepLimit="10" dt="1.0" numberChannels="11">
+                                  <channelDescriptions>
+                                    <OTDataChannelDescription name="dt" precision="2" numericData="true" />
+                                    <OTDataChannelDescription name="#0" numericData="true" />
+                                    <OTDataChannelDescription name="#1" numericData="true" />
+                                    <OTDataChannelDescription name="#2" numericData="true" />
+                                    <OTDataChannelDescription name="#3" numericData="true" />
+                                    <OTDataChannelDescription name="#4" numericData="true" />
+                                    <OTDataChannelDescription name="#5" numericData="true" />
+                                    <OTDataChannelDescription name="#6" numericData="true" />
+                                    <OTDataChannelDescription name="#7" numericData="true" />
+                                    <OTDataChannelDescription name="#8" numericData="true" />
+                                    <OTDataChannelDescription name="#9" numericData="true" />
+                                    <OTDataChannelDescription name="#10" numericData="true" />
+                                  </channelDescriptions>
+                                </OTDataStore>
+                              </dataStore>
+                            </OTDataBarGraphable>
+                          </source>
+                          <xDataAxis>
+                            <OTDataAxis max="12.0" min="0.0" label="Leaf Type" units="" labelFormat="Engineering">
+                              <customGridLabels />
+                            </OTDataAxis>
+                          </xDataAxis>
+                          <yDataAxis>
+                            <OTDataAxis max="50.0" min="-0.0" label="Plants" units="" labelFormat="Engineering">
+                              <customGridLabels />
+                            </OTDataAxis>
+                          </yDataAxis>
+                        </OTDataCollector>
                       </documentRefs>
                     </OTCompoundDoc>
-                    <OTCompoundDoc id="957c20b0-f13a-11dd-90ae-373118468e1c" name="%957c20b0-f13a-11dd-90ae-373118468e1c" showEditBar="true">
+                    <OTCompoundDoc id="68e84608-4f89-11de-aa53-2bc376578157" name="%68e84608-4f89-11de-aa53-2bc376578157" showEditBar="true">
                       <bodyText>
                         <div class="buffer">
                           <div class="border">
                             <div class="body">
                               <div class="subtitle">
+                                The Virtual Field: Differences in Mystery Plants
                                 <br />
                               </div>
-                              Now look at the picture and think about how they are different from 
-          each other.
+                              The three types of Mystery Plants look different. Did you also 
+          notice that they grow in different places on the field? When the 
+          Mystery Plants are planted in the best place for them, they produce 
+          a flower. The flower drops seeds before the winter and new plants 
+          grow during the following season.
                               <br />
                               <br />
+                              Do you have any new clues about whether or not the Mystery Plants are the same 
+          or different species? Remember that a group of plants or animals 
+          that can have babies together, share similar features, and live in 
+          the same environment is a species.
                               <br />
-                              <img border="1" src="http://er.concord.org/images/ActivityOne/Dog-Breeds-poster.jpg" />
-                              <object refid="aaeb5745-f13a-11dd-90ae-373118468e1c" />
+                              <center>
+                                <img border="0" src="http://er.concord.org/artwork/plants/leaves1-w150.png" />
+                                <img border="0" src="http://er.concord.org/artwork/plants/leaves5-w150.png" />
+                                <img border="0" src="http://er.concord.org/artwork/plants/leaves10-w150.png" />
+                              </center>
                               <br />
-                            </div>
-                          </div>
-                        </div>
-                      </bodyText>
-                      <documentRefs>
-                        <OTUDLQuestion id="aaeb5745-f13a-11dd-90ae-373118468e1c" name="Question" showConvertButton="false">
-                          <prompt>
-                            <OTCompoundDoc>
-                              <bodyText>List three ways in which these dogs vary (differ) from one another.</bodyText>
-                            </OTCompoundDoc>
-                          </prompt>
-                          <input>
-                            <OTText />
-                          </input>
-                          <correctAnswer>
-                            <OTCompoundDoc>
-                              <bodyText>Size, shape, fur color, fur length, etc.</bodyText>
-                            </OTCompoundDoc>
-                          </correctAnswer>
-                        </OTUDLQuestion>
-                      </documentRefs>
-                    </OTCompoundDoc>
-                    <OTCompoundDoc id="16df24f9-f13b-11dd-90ae-373118468e1c" name="%16df24f9-f13b-11dd-90ae-373118468e1c" showEditBar="true">
-                      <bodyText>
-                        <div class="buffer">
-                          <div class="border">
-                            <div class="body">
-                              <div class="subtitle" />
-                              Even dogs that have same parents differ from each other. Look at the 
-          picture of the puppies below. They are all one litter and have the 
-          same mother and father.
+                              <object refid="5d29f06a-82b3-11de-8486-f97852f11c05" />
                               <br />
                               <br />
-                              <img border="1" src="http://er.concord.org/images/ActivityOne/puppies_002.jpg" />
-                              <br />
-                              <br />
-                              <br />
-                              <object refid="377b887e-f13b-11dd-90ae-373118468e1c" />
-                              <br />
-                              <br />
-                              <object refid="44fda1f9-f13b-11dd-90ae-373118468e1c" />
-                              <br />
-                              <br />
-                              <object refid="5459f9b4-f13b-11dd-90ae-373118468e1c" />
-                              <br />
-                            </div>
-                          </div>
-                        </div>
-                      </bodyText>
-                      <documentRefs>
-                        <OTUDLQuestion id="377b887e-f13b-11dd-90ae-373118468e1c" name="Question" showConvertButton="false">
-                          <prompt>
-                            <OTCompoundDoc>
-                              <bodyText>How are these puppies the same and how do they differ?</bodyText>
-                            </OTCompoundDoc>
-                          </prompt>
-                          <input>
-                            <OTText />
-                          </input>
-                        </OTUDLQuestion>
-                        <OTUDLQuestion id="44fda1f9-f13b-11dd-90ae-373118468e1c" name="Question" showConvertButton="false">
-                          <prompt>
-                            <OTCompoundDoc>
-                              <bodyText>Why do you think they might not look exactly the same?</bodyText>
-                            </OTCompoundDoc>
-                          </prompt>
-                          <input>
-                            <OTText />
-                          </input>
-                        </OTUDLQuestion>
-                        <OTUDLQuestion id="5459f9b4-f13b-11dd-90ae-373118468e1c" name="Question" showConvertButton="false">
-                          <prompt>
-                            <OTCompoundDoc>
-                              <bodyText>What do you think their parents look like?</bodyText>
-                            </OTCompoundDoc>
-                          </prompt>
-                          <input>
-                            <OTText />
-                          </input>
-                        </OTUDLQuestion>
-                      </documentRefs>
-                    </OTCompoundDoc>
-                    <OTCompoundDoc id="7cd1790b-f13b-11dd-90ae-373118468e1c" name="%7cd1790b-f13b-11dd-90ae-373118468e1c" showEditBar="true">
-                      <bodyText>
-                        <div class="buffer">
-                          <div class="border">
-                            <div class="body">
-                              <div class="subtitle" />
-                              Plants vary also.
-                              <br />
-                              <br />
-                              <img src="http://er.concord.org/images/ActivityOne/plantsvary.jpg" border="1" />
-                              <br />
-                              <br />
-                              Your job as a Junior Scientist is to gather data about these plants.  First, 
-          observe and record three variations in the individual plants in this 
-          species.
-                              <br />
-                              <br />
-                              <object refid="8ccc7618-f145-11dd-91df-25a89b3dbdc9" />
-                              <br />
+                              <object refid="5ee3b99f-8766-11de-968d-9f8c30bdf7e7" />
                               <br />
                               <br />
                             </div>
@@ -321,290 +353,893 @@
                         </div>
                       </bodyText>
                       <documentRefs>
-                        <OTUDLQuestion id="8ccc7618-f145-11dd-91df-25a89b3dbdc9" name="Question" showConvertButton="false">
+                        <OTQuestion id="5d29f06a-82b3-11de-8486-f97852f11c05" name="Question">
                           <prompt>
                             <OTCompoundDoc>
-                              <bodyText>List three ways in which the plants differ.</bodyText>
+                              <bodyText>What differences do you notice about the plants?</bodyText>
                             </OTCompoundDoc>
                           </prompt>
                           <input>
                             <OTText />
                           </input>
-                        </OTUDLQuestion>
-                      </documentRefs>
-                    </OTCompoundDoc>
-                    <OTCompoundDoc id="afd0ffff-f145-11dd-91df-25a89b3dbdc9" name="%afd0ffff-f145-11dd-91df-25a89b3dbdc9" showEditBar="true">
-                      <bodyText>
-                        <div class="buffer">
-                          <div class="border">
-                            <div class="body">
-                              <div class="subtitle">Plants Vary</div>
-                              <br />
-                              <img src="http://er.concord.org/images/ActivityOne/plantsvary.jpg" border="1" />
-                              <br />
-                              <br />
-                              <object refid="492776f5-f396-11dd-85ca-d75847cd2f0b" />
-                              <br />
-                              <br />
-                              <br />
-                              <br />
-                              <object refid="8ccc7618-f145-11dd-91df-25a89b3dbdc9" />
-                              <br />
-                              <br />
-                              <br />
-                            </div>
-                          </div>
-                        </div>
-                      </bodyText>
-                      <documentRefs>
-                        <OTAuthorNote id="492776f5-f396-11dd-85ca-d75847cd2f0b" name="Author's note">
-                          <note>
-                            <OTText text="We will need to get a different set of plants for the next several pages. I included these plants to show a varitey. Note, I don't think we want to use a cactus....but we can talk about it." rows="2" />
-                          </note>
-                        </OTAuthorNote>
-                        <object refid="8ccc7618-f145-11dd-91df-25a89b3dbdc9" />
-                      </documentRefs>
-                    </OTCompoundDoc>
-                    <OTCompoundDoc id="e379b1d0-f3bb-11dd-b8dc-2df2d77e4c70" name="%e379b1d0-f3bb-11dd-b8dc-2df2d77e4c70" showEditBar="true">
-                      <bodyText>
-                        Here are several different kinds of lettuce.
-                        <br />
-                        <img src="http://udl.concord.org/ER/lettuce-var1.jpg" />
-                        <br />
-                        <br />
-                        <object refid="76a5837b-f3bd-11dd-b8dc-2df2d77e4c70" />
-                        <br />
-                        <br />
-                        <object refid="810d3d96-f3bd-11dd-b8dc-2df2d77e4c70" />
-                        <br />
-                      </bodyText>
-                      <documentRefs>
-                        <OTUDLQuestion id="76a5837b-f3bd-11dd-b8dc-2df2d77e4c70" name="Question" showConvertButton="false">
+                        </OTQuestion>
+                        <OTQuestion id="5ee3b99f-8766-11de-968d-9f8c30bdf7e7" name="Question" showImmediateFeedback="true" showCheckAnswersButton="false" correctAnswerFeedback="That's right!  They are different species.  They are adapted to live in different environments." incorrectAnswerFeedback="They are three different species.  They are adapted to live in different environments.">
                           <prompt>
                             <OTCompoundDoc>
-                              <bodyText>Describe three ways these leaves are all the same.</bodyText>
+                              <bodyText>Do you think the three Mystery Plants are the same species?</bodyText>
                             </OTCompoundDoc>
                           </prompt>
                           <input>
-                            <OTText />
-                          </input>
-                        </OTUDLQuestion>
-                        <OTUDLQuestion id="810d3d96-f3bd-11dd-b8dc-2df2d77e4c70" name="Question" showConvertButton="false">
-                          <prompt>
-                            <OTCompoundDoc>
-                              <bodyText>Describe three ways these leaves vary (are different) from each other.</bodyText>
-                            </OTCompoundDoc>
-                          </prompt>
-                          <input>
-                            <OTText />
-                          </input>
-                        </OTUDLQuestion>
-                      </documentRefs>
-                    </OTCompoundDoc>
-                    <OTCompoundDoc id="d3df4704-f147-11dd-91df-25a89b3dbdc9" name="%d3df4704-f147-11dd-91df-25a89b3dbdc9" showEditBar="true">
-                      <bodyText>
-                        <div class="buffer">
-                          <div class="border">
-                            <div class="body">
-                              <div class="subtitle" />
-                              On this page you will need to sort the plants looking carefully at 
-          the leaves and how they vary.
-                              <br />
-                              <br />
-                              <img border="1" src="http://er.concord.org/images/ActivityOne/sortleafsize.jpg" />
-                              <br />
-                              <br />
-                              <br />
-                              <object refid="801c86a7-f396-11dd-85ca-d75847cd2f0b" />
-                              <br />
-                              <br />
-                              Sort 
-          the plants by leaf size by placing each plant in a pot in the 
-          correct order.
-Click and drag each plant into a flower pot.
-                              <br />
-                            </div>
-                          </div>
-                        </div>
-                      </bodyText>
-                      <documentRefs>
-                        <OTAuthorNote id="801c86a7-f396-11dd-85ca-d75847cd2f0b" name="Author's note">
-                          <note>
-                            <OTText rows="3">
-                              <text>Need to be able to fit more plants per window, perhaps 8-10. Want to be able to sort by size of leaf.
-Also, I did not include the "Good job page" But that page would need to include a try again if they didn not get them in a good order. This is not a static image unlike the last few pages....these next few pages need students to be able to move the plants and for teh computer
-to be able to determine if the plants are in a reasonable order.</text>
-                            </OTText>
-                          </note>
-                        </OTAuthorNote>
-                      </documentRefs>
-                    </OTCompoundDoc>
-                    <OTCompoundDoc id="c42e7146-f148-11dd-91df-25a89b3dbdc9" name="%c42e7146-f148-11dd-91df-25a89b3dbdc9" showEditBar="true">
-                      <bodyText>
-                        <div class="buffer">
-                          <div class="border">
-                            <div class="body">
-                              <div class="subtitle" />
-                              Sort the plants by root shape.
-                              <br />
-                              <br />
-                              <img border="1" src="http://er.concord.org/images/ActivityOne/root_order.jpg" />
-                              <br />
-                              <br />
-                              <object refid="4955c809-f398-11dd-85ca-d75847cd2f0b" />
-                              <br />
-                              <br />
-                              <object refid="bd6f00da-f398-11dd-85ca-d75847cd2f0b" />
-                              <br />
-                              <br />
-                              <br />
-                            </div>
-                          </div>
-                        </div>
-                      </bodyText>
-                      <documentRefs>
-                        <OTText id="4955c809-f398-11dd-85ca-d75847cd2f0b" name="Text field">
-                          <text>Sort the plants by root shape by placing each plant ina pot in the correct order from deep roots to shallow roots.
-Click and drag each plant into a flower pot.</text>
-                        </OTText>
-                        <OTAuthorNote id="bd6f00da-f398-11dd-85ca-d75847cd2f0b" name="Author's note">
-                          <note>
-                            <OTText text="Once again need to have model work that once placed in certain order a message would pop up and give students feedback on success or have them try again." rows="2" />
-                          </note>
-                        </OTAuthorNote>
-                      </documentRefs>
-                    </OTCompoundDoc>
-                    <OTCompoundDoc id="dafc017c-f398-11dd-85ca-d75847cd2f0b" name="%dafc017c-f398-11dd-85ca-d75847cd2f0b" showEditBar="true">
-                      <bodyText>
-                        <div class="buffer">
-                          <div class="border">
-                            <div class="body">
-                              <div class="subtitle" />
-                              Why is variation important?
-                              <br />
-                              <br />
-                              Let's look at one example. 
-Roots are important. They absorb water and nutrients, they anchor plants and 
-          hold them upright. You have observed that root shapes vary. Plants 
-          with different root shapes live better in different environments. 
-Plants with deep roots can reach water even if it doesn't rain very often.
-                              <br />
-                              <br />
-                              <br />
-                              <img border="1" src="http://er.concord.org/images/ActivityOne/root_mc.jpg" />
-                              <br />
-                              <br />
-                              <object refid="1c7999b4-f399-11dd-85ca-d75847cd2f0b" />
-                              <br />
-                            </div>
-                          </div>
-                        </div>
-                      </bodyText>
-                      <documentRefs>
-                        <OTUDLQuestion id="1c7999b4-f399-11dd-85ca-d75847cd2f0b" name="Question" showConvertButton="false">
-                          <prompt>
-                            <OTCompoundDoc>
-                              <bodyText>Which plant would have the easiest time surviving in a hot dry environment?</bodyText>
-                            </OTCompoundDoc>
-                          </prompt>
-                          <input>
-                            <OTChoice name="Multiple choice" alignContent="0">
+                            <OTChoice name="Multiple choice" horizontal="false" alignContent="0">
                               <choices>
-                                <OTCompoundDoc name="Plant A">
-                                  <bodyText>Plant A</bodyText>
+                                <OTCompoundDoc id="6c4e2c6e-8766-11de-968d-9f8c30bdf7e7" name="Yes">
+                                  <bodyText>Yes</bodyText>
                                 </OTCompoundDoc>
-                                <OTCompoundDoc name="Plant B">
-                                  <bodyText>Plant B</bodyText>
+                                <OTCompoundDoc id="5ee3b99f-8766-11de-968d-9f8c30bdf7e7/input/choices[1]" name="No">
+                                  <bodyText>No</bodyText>
                                 </OTCompoundDoc>
-                                <OTCompoundDoc name="Plant C">
-                                  <bodyText>Plant C</bodyText>
-                                </OTCompoundDoc>
-                                <OTCompoundDoc name="Plant D">
-                                  <bodyText>Plant D</bodyText>
+                                <OTCompoundDoc name="Not sure">
+                                  <bodyText>Not sure</bodyText>
                                 </OTCompoundDoc>
                               </choices>
                             </OTChoice>
                           </input>
-                        </OTUDLQuestion>
+                          <correctAnswer>
+                            <OTObjectSet>
+                              <objects>
+                                <object refid="5ee3b99f-8766-11de-968d-9f8c30bdf7e7/input/choices[1]" />
+                              </objects>
+                            </OTObjectSet>
+                          </correctAnswer>
+                        </OTQuestion>
                       </documentRefs>
                     </OTCompoundDoc>
-                    <OTCompoundDoc id="07180262-f39a-11dd-85ca-d75847cd2f0b" name="%07180262-f39a-11dd-85ca-d75847cd2f0b" showEditBar="true">
+                    <OTCompoundDoc name="%79076c69-82b3-11de-8486-f97852f11c05" showEditBar="true">
                       <bodyText>
                         <div class="buffer">
                           <div class="border">
                             <div class="body">
-                              <div class="subtitle" />
-                              Here is one last challenge.
+                              <div class="subtitle">
+                                Variations: Animals
+                                <br />
+                              </div>
+                              When you grew the plants, their babies all looked like the parent 
+          plants. The seeds from the large leaf plants all grew into plants 
+          that looked exactly like the original one. The same thing happened 
+          with the thin leaf plants and the medium leaf plants -- all the baby 
+          plants of a given kind looked exactly alike.
                               <br />
                               <br />
-                              Variation in plants and animals can be described as how one  differs from 
-          others of the same group. You have observed variations in dogs and 
-          plants. You also began to think about how the variations might help  
-          them survive.
+                              But in the real 
+          world that doesn't always happen. For instance, take a look at these 
+          puppies:
+                              <br />
+                              <br />
+                              <center>
+                                <img src="http://er.concord.org/artwork/plants/puppies.jpg" border="0" />
+                              </center>
+                              <br />
+                              <br />
+                              They're cute, aren't they? But did you notice something else? Even 
+          though these puppies had the same mother and father, they look 
+          different.
                               <br />
                               <br />
                               <br />
+                              <object refid="f0c3b16f-8691-11de-9a99-219c846f6620" />
                               <br />
-                              <img border="1" src="http://er.concord.org/images/ActivityOne/birdbeaks.jpg.png" />
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                        <OTQuestion id="f0c3b16f-8691-11de-9a99-219c846f6620" name="Question">
+                          <prompt>
+                            <OTCompoundDoc>
+                              <bodyText>Describe some of the ways these puppies are different from one another.</bodyText>
+                            </OTCompoundDoc>
+                          </prompt>
+                          <input>
+                            <OTText />
+                          </input>
+                        </OTQuestion>
+                      </documentRefs>
+                    </OTCompoundDoc>
+                    <OTCompoundDoc name="%d3a5e7d6-8767-11de-968d-9f8c30bdf7e7" showEditBar="true">
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <div class="subtitle">
+                                Variations: Plants
+                                <br />
+                              </div>
+                              Plant babies are not much different from puppies -- the babies don't 
+          always look exactly the same as their parents. These differences are 
+          called
+                              <b>variations</b>
+                              . People use the natural variations in dogs 
+          to make different breeds. People do the same thing with plants.
+                              <br />
+                              <br />
+                              Over 
+          long periods of time, farmers grew plants, looked at the baby plants 
+          and kept the ones with the features they liked. You can imagine that 
+          one farmer noticed that some of the leaves on his lettuce plants 
+          were redder than others. He really liked the red lettuce, so each 
+          time one of his lettuce plants was red, he saved the seeds and grew 
+          them. This is how red leaf lettuce was bred.
+                              <br />
+                              <br />
+                              <br />
+                              <img border="0" src="http://er.concord.org/artwork/plants/lettuce1.jpg" />
+                              <img border="0" src="http://er.concord.org/artwork/plants/lettuce3.jpg" />
+                              <img border="0" src="http://er.concord.org/artwork/plants/lettuce4.jpg" />
+                              <img border="0" src="http://er.concord.org/artwork/plants/lettuce2.jpg" />
+                              <img border="0" src="http://er.concord.org/artwork/plants/lettuce5.jpg" />
+                              <br />
+                              <br />
+                              <br />
+                              There 
+          are many varieties of lettuce. Their leaves have different sizes, 
+          shapes, and colors. They are all the same species. Some species of 
+          lettuce grow better in different climates. Most like cooler 
+          climates, but some lettuce plants can grow well in hot places.
+                              <br />
+                              <br />
+                              You 
+          may be wondering:
+                              <b>In nature, when do variations in a plant or 
+          animal get so different that they become a new species?</b>
+                              Think 
+          about this question as you run the next model.
+                              <br />
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                    </OTCompoundDoc>
+                    <OTCompoundDoc id="0f054c49-4f8a-11de-aa53-2bc376578157" name="%0f054c49-4f8a-11de-aa53-2bc376578157" showEditBar="true">
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <div class="subtitle">The Virtual Greenhouse</div>
+                              In this model, you're in the Virtual Greenhouse again. Notice that 
+          there are only three flower boxes this time. And you have only one 
+          seed!
+                              <br />
+                              <br />
+                              <b>Your challenge:</b>
+                              Plant your seed where it will 
+          grow best. Watch what happens to the plant's babies.
+                              <br />
+                              <object refid="${three-flowerpots-container}"/>
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                      	<OTBiologicaModelContainer local_id="three-flowerpots-container">
+                      		<environmentHolder>
+                              <object refid="23d3fb4f-123a-425f-9d60-d84e145c0678!/env-holder" />
+                      		</environmentHolder>
+                      		<pages>
+                      			<OTCardContainer>
+                      				<cards>
+                      					<OTCompoundDoc>
+                      						<bodyText>
+                      							<b>Instructions:</b>
+									                              Plant the seed by clicking on the plant button and then clicking 
+									          inside a flower box. Click the Play button
+									                              <img src="jres:///org/concord/biologica/ui/play.png" height="20" width="20" />
+									                              to start growing the plant. If the plant is healthy, it will grow a 
+									          flower, then produce seeds, then new baby plants!
+                      						</bodyText>
+                      					</OTCompoundDoc>
+                      					<OTCompoundDoc>
+                      						<bodyText>
+                      							If it is wilted 
+									          and does not flower, click the Carry button, then click on your 
+									          plant. You can now pick it up out of the soil and replant it in 
+									          another flower box so that it grows a flower. Once you get baby 
+									          plants, click the Information button
+									                              <img src="jres:///org/concord/biologica/ui/info-arrow.png" height="20" width="20" />
+									                              then click on a plant to read more about it.
+                      						</bodyText>
+                      					</OTCompoundDoc>
+                      					<OTCompoundDoc>
+                      						<bodyText>
+                      							<object refid="4d3e781b-966b-11de-a440-19d10b96ec73" />
+                      						</bodyText>
+                      						<documentRefs>
+						                        <OTQuestion id="4d3e781b-966b-11de-a440-19d10b96ec73" name="Question">
+						                          <prompt>
+						                            <OTCompoundDoc>
+						                              <bodyText>Click on at least five plants, then describe what you notice.</bodyText>
+						                            </OTCompoundDoc>
+						                          </prompt>
+						                          <input>
+						                            <OTText />
+						                          </input>
+						                        </OTQuestion>
+                      						</documentRefs>
+                      					</OTCompoundDoc>
+                      				</cards>
+                      			</OTCardContainer>
+                      		</pages>
+                      		<scripts>
+                      			<OTScriptObject name="Make offspring script">
+					              <script>
+					                <OTJavascript>
+                  <script>importPackage(Packages.java.lang);
+importPackage(Packages.java.awt);
+importPackage(Packages.java.util);
+importPackage(Packages.org.concord.biologica.environment);
+importPackage(Packages.org.concord.biologica.agent);
+
+var rand;
+var env = envHolder.getEnvironment()
+  			
+function init() {
+	env.addChangeListener(changeListener)
+	env.addStepListener(stepListener)
+	env.addChangeListener(resetListener)
+	
+	rand = new Random()
+	
+	return true;
+}
+var yearCount = 0;
+var message1StepCount = 0;
+var message2StepCount = 0;
+var message3StepCount = 0;
+var waitingForMessage1 = false;
+var waitingForMessage2 = false;
+var waitingForMessage3 = false;
+var makeSeedsCount = 0;
+var readyToMakeSeeds = false;
+
+
+var changeHandler = {
+	environmentChanged: function(evt){
+		var agents = env.getAllAgents()
+		if (agents.size() &gt; 0) {
+			var firstAgent = agents.get(0)
+			firstAgent.setProperty("Seed mid-Fall", false)
+			firstAgent.setProperty("Days to seed", 1000)		
+			if (evt.getType() == EnvironmentChangeEvent.SEASON_CHANGE){
+				var season = evt.getValue()
+				if (season == "summer"){
+					yearCount ++
+				}	
+				if (firstAgent.getProperty("gen") == 1){			//first generation
+					if(firstAgent.getPropertyValueAsFloat("Health") &lt; 1.0){		//seed planted in the wrong place
+						setPropertyOnAllAgents("Chance of flowering", 0.0)
+						if (season == "summer"){
+							showMessage("You planted your seed in a flowerbox where the light level is wrong for it.\n" +
+							"It won't make a flower and it won't drop any seeds.", env)
+							firstAgent.setProperty("is immortal",false)
+							firstAgent.setProperty("Health",0.1)
+							waitingForMessage3 = true
+						}
+					}
+					else if	(season == "spring"){			//seed planted in the right place		
+						setPropertyOnAllAgents("Chance of flowering", 0.0)
+					}
+					
+					else if	(season == "summer" ){	
+						setPropertyOnAllAgents("Chance of flowering", 0.2)
+					}
+					
+					else if (season == "fall"){
+						showMessage("Congratulations! Your plant has grown a flower!\nSoon it will drop seeds that will grow into baby plants!", env)
+						readyToMakeSeeds = true
+					}
+				}
+				else if (firstAgent.getProperty("gen") == 2){						// second generation
+					if (season == "spring"){
+						setPropertyOnAllAgents("Health", 1.0)
+						setPropertyOnAllAgents("Chance of flowering", 0.0)
+						
+					}
+					if (season == "summer"){
+						setPropertyOnAllAgents("Health", 1.0)
+						setPropertyOnAllAgents("Chance of flowering", 0.0)
+						waitingForMessage1 = true;
+					}
+					if (season == "fall"){
+						waitingForMessage2 = true;
+					}
+				}
+			}
+		}
+	}
+}
+				
+var changeListener = new EnvironmentChangeListener(changeHandler)	
+
+function setPropertyOnAllAgents(property, value){
+	var agents = env.getAllAgents()
+	for (var i = 0; i &lt; agents.size(); i++) {
+		var agent = agents.get(i)
+		agent.setProperty(property, value)
+	}
+}
+
+var stepHandler = {
+	environmentStepped: function(){
+		var agents = env.getAllAgents()
+		if (agents.size() == 1){
+			firstAgent = agents.get(0)
+			if (readyToMakeSeeds){
+				makeSeedsCount++
+				if (makeSeedsCount == 16){
+					makeSeeds(firstAgent)
+				}
+			}
+		}
+		
+		if (waitingForMessage1 == true){
+			message1StepCount++;
+			if (message1StepCount == 15){
+				var season = env.getSeason()
+				System.out.println("season = " + season)
+				showMessage("Take a look at the new plants that are growing.\nDo they all look exactly the same?\nYou can use the information tool to look at the plants closely.", env)
+				message1StepCount = 0
+				waitingForMessage1 = false
+			}	
+		}
+		
+		if(waitingForMessage2 == true){
+			message2StepCount++
+			if (message2StepCount == 7){
+				showMessage("Two of your plants have wilted! Why do you think this happened?\n" +
+				"Try moving them to a different flowerbox and see what happens.", env)
+				envHolder.pauseAction()
+				message2StepCount = 0
+				waitingForMessage2 = false
+			}	
+		}
+	
+				
+		if (waitingForMessage3 == true){
+			message3StepCount++;
+			if	(message3StepCount == 16){
+				showMessage("Your plant has died and left no seeds so no new plants will grow.\n Hit 'reset' and try again.", env)
+				message3StepCount = 0
+				waitingForMessage3 = false;
+			}	
+		}
+	}		
+}
+			
+var stepListener = new EnvironmentStepListener(stepHandler)	
+
+function makeSeeds(agent){
+	agent.setProperty("Has flower", false)
+	
+	for (var i = 0; i &lt; 4; i++){
+		var agentTrait = new AgentTrait()
+		agentTrait.setProperty("leaves", null, 5.0)
+		var child = agent.cloneSelf(agentTrait)
+		child.setProperty("gen", 2)
+		setLocation(agent, child)
+		env.addAgent(child)
+	}
+	agentTrait = new AgentTrait()
+	agentTrait.setProperty("leaves", null, 3.0)
+	var child =  agent.cloneSelf(agentTrait)
+	child.setProperty("gen", 2)
+	setLocation(agent, child)
+	env.addAgent(child)
+	
+	agentTrait = new AgentTrait()
+	agentTrait.setProperty("leaves", null, 7.0)
+	child =  agent.cloneSelf(agentTrait)
+	child.setProperty("gen", 2)
+	setLocation(agent, child)
+	env.addAgent(child)
+}
+
+function setLocation(parent, child){
+	var xLocParent = parent.getLocation().x;
+	var yLocParent = parent.getLocation().y;
+	
+	do {
+		var xLocChild = xLocParent - 50 + (rand.nextInt(100))
+		var yLocChild = yLocParent - 5 + (rand.nextInt(10))
+		child.setLocation(new Point(xLocChild, yLocChild))
+	} while (env.isInBarrier(child) || onTopOfSomeone(child))
+}
+
+function onTopOfSomeone(agent){
+	var x1 = agent.getLocation().x
+	var y1 = agent.getLocation().y
+	var agents = env.getAllAgents()
+	for (var i = 0; i &lt; agents.size(); i++) {
+		var otherAgent = agents.get(i)
+		var x2 = otherAgent.getLocation().x
+		var y2 = otherAgent.getLocation().y
+		if (Math.abs(x1 - x2) &lt; 5 &amp;&amp; Math.abs(y1 - y2) &lt; 9)
+			return true
+	}
+	return false
+}
+				
+var resetHandler= {
+	environmentChanged: function(evt){
+		if (evt.getType() == EnvironmentChangeEvent.RESET){
+		System.out.println("In reset handler")
+			yearCount = 0;
+			message1StepCount = 0;
+			message2StepCount = 0;
+			message3StepCount = 0;
+			waitingForMessage1 = false;
+			waitingForMessage2 = false;
+			waitingForMessage3 = false;
+			makeSeedsCount = 0;
+			readyToMakeSeeds = false;
+//			envHolder.getAgentCreator.reset()
+		}
+	}
+}
+			
+var resetListener = new EnvironmentChangeListener(resetHandler)
+
+function save() {
+	return true;
+}</script>
+					                  <scripts>
+					                    <OTJavascript src="models/scripts/common/message.js" />
+					                  </scripts>
+					                </OTJavascript>
+					              </script>
+					              <variables>
+					                <OTScriptVariableRealObject name="envHolder">
+					                  <reference>
+					                    <object refid="23d3fb4f-123a-425f-9d60-d84e145c0678!/env-holder" />
+					                  </reference>
+					                </OTScriptVariableRealObject>
+					                <OTScriptVariableRealObject name="holder">
+					                  <reference>
+					                    <object refid="23d3fb4f-123a-425f-9d60-d84e145c0678!/env-holder" />
+					                  </reference>
+					                </OTScriptVariableRealObject>
+					              </variables>
+					              <scriptState />
+					            </OTScriptObject>
+                      		</scripts>
+                      	</OTBiologicaModelContainer>
+                        <object refid="23d3fb4f-123a-425f-9d60-d84e145c0678!/env-holder" />
+                      </documentRefs>
+                    </OTCompoundDoc>
+                    <OTCompoundDoc name="%9d18ddaa-8766-11de-968d-9f8c30bdf7e7" showEditBar="true">
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <div class="subtitle">
+                                Adaptations: Plants
+                                <br />
+                              </div>
+                              The Mystery Plants with large, bushy leaves live in places where 
+          there isn't much light. They need big leaves to gather as much of 
+          the light as they can. We say the bushy plants are
+                              <b>adapted</b>
+                              to 
+          low light. Many of the plants in the rainforest have large leaves 
+          because they live in the shade of the tall trees. The plants with 
+          thin leaves are adapted to an environment where there is a lot of 
+          sunlight. They can survive with thin leaves because there is so much 
+          light. The medium plants have medium leaves and are adapted to mixed 
+          light conditions.
+                              <br />
+                              <br />
+                              Look around your school and your home for 
+          different types of plant leaves. What do you notice? Leaves are 
+          adapted to their environments. Plant leaves can have many different 
+          kinds of adaptations. Cactus plants live in the dry desert. They 
+          have thick leaves that store water. They also have spines, which are 
+          an adaptation to keep animals away. Venus Fly Traps, which live in 
+          swamps where there are lots of bugs, have leaves that close when a 
+          bug lands on them. Venus Fly Traps eat bugs!
                               <br />
                               <br />
                               <table width="100%">
                                 <tr>
-                                  <td width="50%">
-                                    <object refid="57ea1828-f39c-11dd-85ca-d75847cd2f0b" />
-                                    <br />
+                                  <td>
+                                    <center />
                                   </td>
-                                  <td width="50%">
-                                    <img border="1" padding-left="40px" src="http://er.concord.org/images/ActivityOne/kingfisher.jpg" />
+                                  <td>
+                                    <b>Cactus</b>
+                                  </td>
+                                  <td>
+                                    <b>Venus Fly Trap</b>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <center />
+                                  </td>
+                                  <td>
+                                    <img border="0" src="http://er.concord.org/artwork/plants/bigcactus.jpg" />
+                                  </td>
+                                  <td>
+                                    <img border="0" src="http://er.concord.org/artwork/plants/flytrap.jpg" />
                                   </td>
                                 </tr>
                               </table>
+                              <br />
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                    </OTCompoundDoc>
+                    <OTCompoundDoc name="%490a973f-8769-11de-968d-9f8c30bdf7e7" showEditBar="true">
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <div class="subtitle">
+                                Adaptations: Animals
+                                <br />
+                              </div>
+                              <br />
+                              Charles Darwin observed many birds, called finches, on the Galapagos 
+          Islands. On each of the ten different islands, the shape of the 
+          finches' beaks were shaped differently and the foods they ate were 
+          different, too. He studied the birds closely and found that the 
+          large beak birds were able to crush bigger seeds and nuts. Other 
+          birds had pointy beaks, adapted for eating cactus plants, or smaller 
+          beaks, adapted for pulling berries off branches. Each species of 
+          bird had a beak that was adapted to eat the food available in its 
+          environment.
+                              <br />
+                              <br />
+                              Mr. Darwin guessed that one species of bird flew 
+          over to the islands thousands of years ago. Depending on which 
+          island they landed on, different food was available. The birds 
+          developed a taste for different foods. Over a long, long time, the 
+          birds evolved into different species.
+                              <br />
+                              <br />
+                              <b>Finches</b>
+                              <table width="100%">
+                                <tr>
+                                  <td>
+                                    <img border="0" src="http://er.concord.org/artwork/plants/bigbeak.jpg" />
+                                  </td>
+                                  <td>
+                                    <img border="0" src="http://er.concord.org/artwork/plants/medbeak.jpg" />
+                                  </td>
+                                  <td>
+                                    <img border="0" src="http://er.concord.org/artwork/plants/smallbeak.jpg" />
+                                  </td>
+                                </tr>
+                              </table>
+                              <br />
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                    </OTCompoundDoc>
+                    <OTCompoundDoc name="%dfd9cb31-82b4-11de-8486-f97852f11c05" showEditBar="true">
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <div class="subtitle">
+                                Variation: Some babies can survive in different environments
+                                <br />
+                              </div>
+                              This is the same field as before, but this time you only have seeds 
+          for the medium leaf plant.
+                              <br />
+                              <br />
+                              <b>Your challenge:</b>
+                              You need to 
+          grow plants with bushy leaves
+                              <b>and</b>
+                              plants with thin leaves. 
+          See if you can grow plants all over the field, then take a snapshot 
+          when you're done to prove you did it.
+                              <br />
+                              <br />
+                              <b>Instructions:</b>
+                              Plant seeds by clicking on the plant button and then clicking inside 
+          the field. Click the Play button
+                              <img src="jres:///org/concord/biologica/ui/play.png" height="20" width="20" />
+                              to start growing the plants. Healthy plants will grow a flower, then 
+          produce seeds, then new baby plants!
+                              <br />
+                              <br />
+                              <b>Note:</b>
+                              The medium 
+          leaf plant is number 5 on the bar graph, but remember, it can have 
+          seeds that are different. Plant a few number 5 plants where you 
+          think they'll grow best. Then let a few winters go by and see what 
+          happens.
+                              <br />
+                              <br />
+                              <object refid="18571e39-86a2-11de-9a99-219c846f6620" />
+                              <br />
+                              <br />
+                              <br />
+                              <br />
+                              <table>
+                                <tr height="690">
+                                  <td>
+                                    <object refid="684b5d22-919c-11de-95e6-04e055d89593" />
+                                    <br />
+                                    <object refid="1A3FE8564-9198-11DE-B4A8-78BC55D89593!/env-holder" />
+                                    <br />
+                                  </td>
+                                  <td width="250">
+                                    <object refid="d9ee0a36-9199-11de-8757-12c855d89593" />
+                                    <br />
+                                  </td>
+                                </tr>
+                              </table>
+                              <br />
+                              <br />
                             </div>
                           </div>
                         </div>
                       </bodyText>
                       <documentRefs>
-                        <OTUDLQuestion id="57ea1828-f39c-11dd-85ca-d75847cd2f0b" name="Question" showConvertButton="false">
+                        <OTQuestion id="18571e39-86a2-11de-9a99-219c846f6620" name="Question">
                           <prompt>
                             <OTCompoundDoc>
-                              <bodyText>Look at the beak of this grey and white bird. Compare it to the beaks above. What type of food do you think it is most likely to eat?</bodyText>
+                              <bodyText>What's your plan to grow plants</bodyText>
                             </OTCompoundDoc>
                           </prompt>
                           <input>
-                            <OTChoice name="Multiple choice" alignContent="0">
-                              <choices>
-                                <OTCompoundDoc name="Nectar">
-                                  <bodyText>Nectar</bodyText>
-                                </OTCompoundDoc>
-                                <OTCompoundDoc name="insects">
-                                  <bodyText>insects</bodyText>
-                                </OTCompoundDoc>
-                                <OTCompoundDoc name="grains">
-                                  <bodyText>grains</bodyText>
-                                </OTCompoundDoc>
-                                <OTCompoundDoc name="seeds">
-                                  <bodyText>seeds</bodyText>
-                                </OTCompoundDoc>
-                                <OTCompoundDoc name="fish">
-                                  <bodyText>fish</bodyText>
-                                </OTCompoundDoc>
-                              </choices>
-                            </OTChoice>
+                            <OTText />
                           </input>
-                        </OTUDLQuestion>
+                        </OTQuestion>
+                        <OTLabbookButton id="684b5d22-919c-11de-95e6-04e055d89593" name="Labbook button">
+                          <target>
+                            <object refid="1A3FE8564-9198-11DE-B4A8-78BC55D89593!/env-holder" />
+                          </target>
+                        </OTLabbookButton>
+                        <OTDataCollector id="d9ee0a36-9199-11de-8757-12c855d89593" name="Number of plants" title="Number of plants" showLabelCoordinates="true" labelDecimalPlaces="2" showControlBar="false" useDefaultToolBar="false" displayButtons="7,">
+                          <source>
+                            <OTDataBarGraphable name="Number of organisms" connectPoints="true" drawMarks="false" lineWidth="10.0" color="192" yColumn="11" xColumn="0" showAllChannels="true" showControlButtons="true" showToolButtons="true" visible="true">
+                              <dataProducer>
+                                <OTBiologicaModelDataProducer>
+                                  <modelHolder>
+                                    <object refid="1A3FE8564-9198-11DE-B4A8-78BC55D89593!/env-holder" />
+                                  </modelHolder>
+                                  <seasonTriggers>
+                                  	<string>fall</string>
+                                  </seasonTriggers>
+                                  <categories>
+                                    <string>Plants</string>
+                                  </categories>
+                                  <conditions>
+                                    <OTRuleCondition property="Has flower" equals="true" />
+                                  </conditions>
+                                </OTBiologicaModelDataProducer>
+                              </dataProducer>
+                              <dataStore>
+                                <OTDataStore sampleKeepLimit="10" dt="1.0" numberChannels="11">
+                                  <channelDescriptions>
+                                    <OTDataChannelDescription name="dt" precision="2" numericData="true" />
+                                    <OTDataChannelDescription name="#0" numericData="true" />
+                                    <OTDataChannelDescription name="#1" numericData="true" />
+                                    <OTDataChannelDescription name="#2" numericData="true" />
+                                    <OTDataChannelDescription name="#3" numericData="true" />
+                                    <OTDataChannelDescription name="#4" numericData="true" />
+                                    <OTDataChannelDescription name="#5" numericData="true" />
+                                    <OTDataChannelDescription name="#6" numericData="true" />
+                                    <OTDataChannelDescription name="#7" numericData="true" />
+                                    <OTDataChannelDescription name="#8" numericData="true" />
+                                    <OTDataChannelDescription name="#9" numericData="true" />
+                                    <OTDataChannelDescription name="#10" numericData="true" />
+                                  </channelDescriptions>
+                                  <values>
+                                    <float>0.0</float>
+                                    <float>0.0</float>
+                                    <float>0.0</float>
+                                    <float>0.0</float>
+                                    <float>1.0</float>
+                                    <float>3.0</float>
+                                    <float>1.0</float>
+                                    <float>0.0</float>
+                                    <float>0.0</float>
+                                    <float>0.0</float>
+                                    <float>0.0</float>
+                                    <float>0.0</float>
+                                    <float>0.0</float>
+                                    <float>0.0</float>
+                                    <float>0.0</float>
+                                    <float>1.0</float>
+                                    <float>3.0</float>
+                                    <float>1.0</float>
+                                    <float>0.0</float>
+                                    <float>0.0</float>
+                                    <float>0.0</float>
+                                    <float>0.0</float>
+                                    <float>0.0</float>
+                                    <float>0.0</float>
+                                    <float>0.0</float>
+                                    <float>0.0</float>
+                                    <float>0.0</float>
+                                    <float>3.0</float>
+                                    <float>1.0</float>
+                                    <float>0.0</float>
+                                    <float>0.0</float>
+                                    <float>0.0</float>
+                                    <float>0.0</float>
+                                    <float>0.0</float>
+                                    <float>0.0</float>
+                                    <float>0.0</float>
+                                    <float>0.0</float>
+                                    <float>0.0</float>
+                                    <float>3.0</float>
+                                    <float>1.0</float>
+                                    <float>0.0</float>
+                                    <float>0.0</float>
+                                    <float>0.0</float>
+                                    <float>0.0</float>
+                                    <float>0.0</float>
+                                    <float>0.0</float>
+                                    <float>0.0</float>
+                                    <float>0.0</float>
+                                    <float>0.0</float>
+                                    <float>2.0</float>
+                                    <float>1.0</float>
+                                    <float>0.0</float>
+                                    <float>0.0</float>
+                                    <float>0.0</float>
+                                    <float>0.0</float>
+                                    <float>0.0</float>
+                                    <float>0.0</float>
+                                    <float>0.0</float>
+                                    <float>0.0</float>
+                                    <float>0.0</float>
+                                    <float>2.0</float>
+                                    <float>1.0</float>
+                                    <float>0.0</float>
+                                    <float>0.0</float>
+                                    <float>0.0</float>
+                                    <float>0.0</float>
+                                    <float>0.0</float>
+                                    <float>0.0</float>
+                                    <float>0.0</float>
+                                    <float>0.0</float>
+                                    <float>0.0</float>
+                                    <float>1.0</float>
+                                    <float>1.0</float>
+                                    <float>0.0</float>
+                                    <float>0.0</float>
+                                    <float>0.0</float>
+                                    <float>0.0</float>
+                                    <float>0.0</float>
+                                    <float>0.0</float>
+                                    <float>0.0</float>
+                                    <float>0.0</float>
+                                    <float>0.0</float>
+                                    <float>1.0</float>
+                                    <float>1.0</float>
+                                    <float>0.0</float>
+                                    <float>0.0</float>
+                                    <float>0.0</float>
+                                    <float>0.0</float>
+                                    <float>0.0</float>
+                                    <float>0.0</float>
+                                    <float>0.0</float>
+                                    <float>0.0</float>
+                                    <float>0.0</float>
+                                    <float>0.0</float>
+                                    <float>0.0</float>
+                                    <float>0.0</float>
+                                    <float>0.0</float>
+                                    <float>0.0</float>
+                                    <float>0.0</float>
+                                    <float>0.0</float>
+                                    <float>0.0</float>
+                                    <float>0.0</float>
+                                    <float>0.0</float>
+                                    <float>0.0</float>
+                                    <float>0.0</float>
+                                    <float>0.0</float>
+                                    <float>0.0</float>
+                                    <float>0.0</float>
+                                    <float>0.0</float>
+                                    <float>0.0</float>
+                                  </values>
+                                </OTDataStore>
+                              </dataStore>
+                            </OTDataBarGraphable>
+                          </source>
+                          <xDataAxis>
+                            <OTDataAxis max="12.0" min="0.0" label="Leaf Type" units="" labelFormat="Engineering">
+                              <customGridLabels />
+                            </OTDataAxis>
+                          </xDataAxis>
+                          <yDataAxis>
+                            <OTDataAxis max="50.0" min="-0.0" label="Plants" units="" labelFormat="Engineering">
+                              <customGridLabels />
+                            </OTDataAxis>
+                          </yDataAxis>
+                        </OTDataCollector>
                       </documentRefs>
                     </OTCompoundDoc>
-                    <OTCompoundDoc id="b0be6bbc-f39c-11dd-85ca-d75847cd2f0b" name="%b0be6bbc-f39c-11dd-85ca-d75847cd2f0b" showEditBar="true">
+                    <OTCompoundDoc name="%099160d0-82b4-11de-8486-f97852f11c05" showEditBar="true">
                       <bodyText>
                         <div class="buffer">
                           <div class="border">
                             <div class="body">
-                              <div class="subtitle" />
-                              Congratulations! You have completed this activity.
+                              <div class="subtitle">
+                                Conclusion
+                                <br />
+                              </div>
+                              Because of variation in the plant babies, some plant babies were 
+          able to survive under a different amount of sunlight than the parent 
+          plant. It took a while for lots of different plants to grow. Over 
+          time, these variations can lead to a different species of plant! 
+          When the environment changes, variations in one species can help the 
+          plant to adapt to a different environment.
+                              <br />
+                              <br />
+                              <object refid="bd5d29d6-966b-11de-a440-19d10b96ec73" />
+                              <br />
+                              <br />
+                              <br />
+                              <object refid="63e53354-86a3-11de-9a99-219c846f6620" />
+                              <br />
+                              <br />
+                              You 
+          have completed Activity 2! Close this window to save your work.
+                              <br />
                             </div>
+                            <br />
                           </div>
                         </div>
                       </bodyText>
+                      <documentRefs>
+                        <OTQuestion id="bd5d29d6-966b-11de-a440-19d10b96ec73" name="Question">
+                          <prompt>
+                            <OTCompoundDoc>
+                              <bodyText>What might explain how you ended up with plants all over the field?</bodyText>
+                            </OTCompoundDoc>
+                          </prompt>
+                          <input>
+                            <OTChoice name="Multiple choice" horizontal="false" alignContent="0">
+                              <choices>
+                                <OTCompoundDoc id="d537bb25-966b-11de-a440-19d10b96ec73" name="a. All the seedlings are not exactly the same as the parents. The ones that vary can live in slightly different regions of the field.">
+                                  <bodyText>a. All the seedlings are not exactly the same as the parents. The ones that vary can live in slightly different regions of the field.</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="b. As the plants grow they change so they can live in a different part of the field.">
+                                  <bodyText>b. As the plants grow they change so they can live in a different part of the field.</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="c. Seedlings that are different fall only in the area where they can grow the best.">
+                                  <bodyText>c. Seedlings that are different fall only in the area where they can grow the best.</bodyText>
+                                </OTCompoundDoc>
+                              </choices>
+                            </OTChoice>
+                          </input>
+                          <correctAnswer>
+                            <OTObjectSet>
+                              <objects>
+                                <object refid="d537bb25-966b-11de-a440-19d10b96ec73" />
+                              </objects>
+                            </OTObjectSet>
+                          </correctAnswer>
+                        </OTQuestion>
+                        <OTQuestion id="63e53354-86a3-11de-9a99-219c846f6620" name="Question">
+                          <prompt>
+                            <OTCompoundDoc>
+                              <bodyText>You grew lots of plants starting from just one type. Can you explain how you did it?</bodyText>
+                            </OTCompoundDoc>
+                          </prompt>
+                          <input>
+                            <OTText />
+                          </input>
+                        </OTQuestion>
+                      </documentRefs>
                     </OTCompoundDoc>
                   </cards>
                   <currentCard>
@@ -612,17 +1247,6 @@ Plants with deep roots can reach water even if it doesn't rain very often.
                   </currentCard>
                   <viewedCards>
                     <object refid="${page-1}" />
-                    <object refid="957c20b0-f13a-11dd-90ae-373118468e1c" />
-                    <object refid="16df24f9-f13b-11dd-90ae-373118468e1c" />
-                    <object refid="7cd1790b-f13b-11dd-90ae-373118468e1c" />
-                    <object refid="afd0ffff-f145-11dd-91df-25a89b3dbdc9" />
-                    <object refid="d3df4704-f147-11dd-91df-25a89b3dbdc9" />
-                    <object refid="c42e7146-f148-11dd-91df-25a89b3dbdc9" />
-                    <object refid="dafc017c-f398-11dd-85ca-d75847cd2f0b" />
-                    <object refid="07180262-f39a-11dd-85ca-d75847cd2f0b" />
-                    <object refid="b0be6bbc-f39c-11dd-85ca-d75847cd2f0b" />
-                    <OTCompoundDoc id="e0cd2f6f-f3bb-11dd-b8dc-2df2d77e4c70" name="%e0cd2f6f-f3bb-11dd-b8dc-2df2d77e4c70" showEditBar="true" />
-                    <object refid="e379b1d0-f3bb-11dd-b8dc-2df2d77e4c70" />
                   </viewedCards>
                 </OTCardContainer>
               </content>
@@ -655,11 +1279,10 @@ Plants with deep roots can reach water even if it doesn't rain very often.
             <object refid="${page-rule}" />
           </menuRule>
         </OTUDLMenu>
-        <OTSnapshotAlbum local_id="album" />
         <OTUDLMenuRule local_id="page-rule" jumpToViewedCard="true" stepAhead="true" />
-        <OTJavascript local_id="change_page.js" src="http://continuum.concord.org/otrunk/examples/LOOPS/scripts/change_page.js" />
-        <OTJavascript local_id="show_message.js" src="http://continuum.concord.org/otrunk/examples/LOOPS/scripts/show_message.js" />
-        <OTJavascript local_id="loops_authoring_script.js" src="http://continuum.concord.org/otrunk/examples/LOOPS/scripts/loops_authoring_script.js" />
+        <OTJavascript local_id="change_page.js" src="http://otrunk.concord.org/examples/EvolutionReadiness/scripts/change_page.js" />
+        <OTJavascript local_id="show_message.js" src="http://otrunk.concord.org/examples/EvolutionReadiness/scripts/show_message.js" />
+        <OTJavascript local_id="authoring_script.js" src="http://otrunk.concord.org/examples/EvolutionReadiness/scripts/authoring_script.js" />
         <OTScriptObject local_id="authoring-script">
           <variables>
             <OTScriptVariable name="cardContainer">
@@ -679,20 +1302,22 @@ Plants with deep roots can reach water even if it doesn't rain very often.
             </OTScriptVariable>
           </variables>
           <script>
-            <object refid="${loops_authoring_script.js}" />
+            <object refid="${authoring_script.js}" />
           </script>
           <scriptState />
         </OTScriptObject>
-        <OTUDLNavBar local_id="nav-bar">
+        <OTNavBar local_id="nav-bar">
           <menuView>
             <object refid="29dc5ef0-c453-11dc-95ff-0800200c9a66" />
           </menuView>
           <cssColor>
             <object refid="31193bb0-c44f-11dc-95ff-0800200c9a66" />
           </cssColor>
-        </OTUDLNavBar>
+          <album>
+            <OTLabbook local_id="album" />
+          </album>
+        </OTNavBar>
       </library>
     </OTSystem>
   </objects>
 </otrunk>
-
