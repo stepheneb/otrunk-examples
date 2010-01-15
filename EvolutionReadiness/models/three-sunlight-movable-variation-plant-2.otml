@@ -215,6 +215,7 @@ var generation
 var previousHealth
 var shownNoMorePlantsMessage
 var shownWiltedMessage
+var shownTwoWiltedMessage
 var atLeastOneAgentAdded
   			
 function init() {
@@ -247,6 +248,7 @@ function initializeVariables() {
 	previousHealth = -1
 	shownNoMorePlantsMessage = false
 	shownWiltedMessage = false
+	shownTwoWiltedMessage = false
 	atLeastOneAgentAdded = false
 }
 
@@ -288,14 +290,15 @@ var changeHandler = {
 						setPropertyOnAllAgents("is immortal", true)
 					}
 				}
-				else if (firstAgent.getProperty("gen") == 2){						// second generation
+				else if (firstAgent.getProperty("gen") == 2 &amp;&amp; firstAgent.getProperty("complete") != 1.0){						// second generation
 					if (season == "spring"){
 						setPropertyOnAllAgents("Chance of flowering", 0.0)
 						
 					}
 					if (season == "summer"){
 						setPropertyOnAllAgents("Chance of flowering", 0.0)
-						waitingForMessage1 = true;
+						if (!shownTwoWiltedMessage)
+							waitingForMessage1 = true;
 					}
 					if (season == "fall"){
 						waitingForMessage2 = true;
@@ -359,7 +362,8 @@ var stepHandler = {
 			if (readyToMakeSeeds){
 				makeSeedsCount++
 				if (makeSeedsCount == 10){
-					setPropertyOnAllAgents("is immortal", false)
+					firstAgent.setProperty("is immortal", false)
+					firstAgent.setProperty("Has flower", false)
 					makeSeeds(firstAgent)
 				}
 			}
@@ -372,6 +376,7 @@ var stepHandler = {
 				showMessage("Two of the new plants are wilted.\nUse the Information Tool to look at the plants more closely.\nDo all the plants have the same leaf size?", env)
 				message1StepCount = 0
 				waitingForMessage1 = false
+				shownTwoWiltedMessage = true
 			}	
 		}
 		
