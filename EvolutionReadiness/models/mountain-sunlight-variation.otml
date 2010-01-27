@@ -82,7 +82,7 @@
           <documentRefs>
             <OTEnvironmentHolder local_id="env-holder" toolbar="run,cursor,reset" useSpeedSlider="true" width="590" height="460" logAddAgents="false">
               <environment>
-                <OTEnvironment local_id="environment" environmentWidth="15" environmentHeight="15" showRunButton="false" winterLength="2" summerLength="80" orgSizeMultiplier="1.5" backgroundImageSrc="images/mountains1.png">
+                <OTEnvironment local_id="environment" environmentWidth="15" environmentHeight="15" showRunButton="false" winterLength="2" summerLength="80" orgSizeMultiplier="1.5" backgroundImageSrc="images/mountains1.jpg">
                   <world>
                     <OTWorld local_id="peasimple_world" speciesPath="org/concord/biologica/worlds/peasimple.xml" />
                   </world>
@@ -104,6 +104,9 @@
                     <OTPlacement x="47" y="102" width="45" height="10" />
                     <OTPlacement x="44" y="111" width="45" height="27" />
                     <OTPlacement x="36" y="137" width="47" height="13" />
+                    <OTPlacement x="56" y="51" width="46" height="1" />
+                    <OTPlacement x="140" y="0" width="11" height="150" />
+                    <OTPlacement x="0" y="0" width="10" height="150" />
                   </barriers>
                   <rules>
                     <OTRule description="Health depends on leaves and sunlight">
@@ -162,7 +165,7 @@
                         <OTRuleCondition property="Season" equals="winter" />
                       </conditions>
                       <consequences>
-                        <OTRuleConsequence property="health" newValueFloat="0.2"/>
+                        <OTRuleConsequence property="health" newValueFloat="0.2" />
                       </consequences>
                     </OTRule>
                     <OTRule description="Reduce number of offspring">
@@ -291,14 +294,17 @@ importPackage(Packages.org.concord.framework.otrunk);
 importPackage(Packages.org.concord.biologica.environment);
 
 var barriers
+var emptyBarriers
 var env = envHolder.getEnvironment()
+var emptyEnv = emptyEnvHolder.getEnvironment()
 var baseUrl = otEnvHolder.getOTObjectService().getCodebase(otEnvHolder)
              
 function init() {
 	radio.getCurrentChoices().set(0, choice_0)
 	radio.addOTChangeListener(radioChangeListener)
 	barriers = env.getBarriers()
-	env.setBarriers(new Area())
+	emptyBarriers = emptyEnv.getBarriers()
+	env.setBarriers(emptyBarriers)
 	
 	var url = new URL(baseUrl, "images/mountains1.png")
 	envHolder.getEnvironmentView().addBackgroundImageUrl(url)
@@ -326,23 +332,23 @@ var radioChangeHandler =
         var height = currChoice.getName()
         var url
         if (height == "0"){
-        	url = new URL(baseUrl, "images/mountains1.png")
+        	url = new URL(baseUrl, "images/mountains1.jpg")
         	setSunlight(0.6,0.6)
-			env.setBarriers(new Area())
+			env.setBarriers(emptyBarriers)
         } else if (height == "1"){
-        	url = new URL(baseUrl, "images/mountains2flipped.png")
+        	url = new URL(baseUrl, "images/mountains2flipped.jpg")
         	setSunlight(0.7,0.5)
         	env.setBarriers(barriers)
         } else if (height == "2"){
-        	url = new URL(baseUrl, "images/mountains3flipped.png")
+        	url = new URL(baseUrl, "images/mountains3flipped.jpg")
         	setSunlight(0.8,0.4)
         	env.setBarriers(barriers)
         } else if (height == "3"){
-        	url = new URL(baseUrl, "images/mountains4flipped.png")
+        	url = new URL(baseUrl, "images/mountains4flipped.jpg")
         	setSunlight(0.9,0.3)
         	env.setBarriers(barriers)
         } else {
-        	url = new URL(baseUrl, "images/mountains5flipped.png")
+        	url = new URL(baseUrl, "images/mountains5flipped.jpg")
         	setSunlight(1.0,0.2)
         	env.setBarriers(barriers)
         }
@@ -386,8 +392,7 @@ function save() {
 // src="images/mountains2flipped.png"
 // src="images/mountains3flipped.png"
 // src="images/mountains4flipped.png"
-// src="images/mountains5flipped.png"
-</script>
+// src="images/mountains5flipped.png"</script>
                   <scripts>
                     <OTJavascript src="scripts/common/message.js" />
                   </scripts>
@@ -402,6 +407,23 @@ function save() {
                 <OTScriptVariableRealObject name="envHolder">
                   <reference>
                     <object refid="${env-holder}" />
+                  </reference>
+                </OTScriptVariableRealObject>
+                <OTScriptVariableRealObject name="emptyEnvHolder">
+                  <reference>
+                    <OTEnvironmentHolder width="1" height="1">
+                    	<environment>
+                    		<OTEnvironment environmentWidth="1" environmentHeight="1">
+				                  <world>
+				                    <object refid="${peasimple_world}"/>
+				                  </world>
+                    			<barriers>
+				                    <OTPlacement x="140" y="0" width="11" height="150" />
+				                    <OTPlacement x="0" y="0" width="10" height="150" />
+                    			</barriers>
+                    		</OTEnvironment>
+                    	</environment>
+                    </OTEnvironmentHolder>
                   </reference>
                 </OTScriptVariableRealObject>
                 <OTScriptVariable name="radio">
