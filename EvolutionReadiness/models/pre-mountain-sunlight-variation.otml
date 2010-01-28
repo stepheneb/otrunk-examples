@@ -67,7 +67,7 @@
           <documentRefs>
             <OTEnvironmentHolder local_id="env-holder" toolbar="run,cursor,reset" useSpeedSlider="true" width="590" height="460" logAddAgents="false">
               <environment>
-                <OTEnvironment local_id="environment" environmentWidth="15" environmentHeight="15" showRunButton="false" winterLength="10" summerLength="80" orgSizeMultiplier="1.5" backgroundImageSrc="images/mountains1.png">
+                <OTEnvironment local_id="environment" environmentWidth="15" environmentHeight="15" showRunButton="false" winterLength="14" summerLength="80" orgSizeMultiplier="1.5" backgroundImageSrc="images/mountains1.png">
                   <world>
                     <OTWorld local_id="peasimple_world" speciesPath="org/concord/biologica/worlds/peasimple.xml" />
                   </world>
@@ -139,6 +139,7 @@
                         <OTRuleCondition property="Season" equals="winter" />
                       </conditions>
                       <consequences>
+                        <OTRuleConsequence property="Is immortal" newValueBoolean="false" />
                         <OTRuleConsequence property="health" newValueFloat="0.0" />
                       </consequences>
                     </OTRule>
@@ -267,6 +268,7 @@
 						var yearCount = 0
 						var startWaiting = false
 						var wait = 0
+						var userAddedAgents = false
 						  			
 						function init() {
 							env.addChangeListener(changeListener)
@@ -288,6 +290,8 @@
 										env.setWinterLength(-1)
 										startWaiting = true
 									}
+								} else if (evt.getType() == EnvironmentChangeEvent.USER_ADDED_AGENTS){
+									userAddedAgents = true
 								}
 							}
 						}
@@ -296,6 +300,10 @@
 						
 						var stepHandler = {
 							environmentStepped: function(){
+								if (!userAddedAgents){
+									env.setStepCount(0) 	// don't start counting days until a seed is planted
+									return
+								}
 								if (startWaiting){
 									wait++;
 									if (wait == 15) {
@@ -326,6 +334,7 @@
 							 		yearCount = 0
 									startWaiting = false
 									wait = 0
+									userAddedAgents = false
 									env.setSummerLength(80)
 									env.setWinterLength(10)
 								}
