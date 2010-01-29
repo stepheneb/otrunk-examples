@@ -298,6 +298,7 @@ var emptyBarriers
 var env = envHolder.getEnvironment()
 var emptyEnv = emptyEnvHolder.getEnvironment()
 var baseUrl = otEnvHolder.getOTObjectService().getCodebase(otEnvHolder)
+var otEnvHolderController
              
 function init() {
 	radio.getCurrentChoices().set(0, choice_0)
@@ -316,6 +317,14 @@ function init() {
 	envHolder.getEnvironmentView().addBackgroundImageUrl(url)
 	url = new URL(baseUrl, "images/mountains5flipped.png")
 	envHolder.getEnvironmentView().addBackgroundImageUrl(url)
+	
+	otEnvHolderController = controllerService.getController(otEnvHolder)
+	
+	if (radio.getName().equalsIgnoreCase("Radio2")) {			// this is the 2nd instance of the model
+        otEnvHolderController.log("Model instance",2,null,null)
+	} else {
+		otEnvHolderController.log("Model instance",1,null,null)
+	}
 	
 	env.addChangeListener(resetListener)
 }
@@ -354,7 +363,6 @@ var radioChangeHandler =
         }
         envHolder.getEnvironmentView().setBackgroundImageUrl(url)
         
-        var otEnvHolderController = controllerService.getController(otEnvHolder)
         var numAgents = env.getAllAgents().size()
         otEnvHolderController.log("Mountain height changed, Num agents alive",height,numAgents,null)
         
@@ -469,7 +477,7 @@ function save() {
         </OTCompoundDoc>
       </root>
       <library>
-        <OTChoice local_id="mountain-height-radio2" name="Multiple choice" horizontal="false" alignContent="0">
+        <OTChoice local_id="mountain-height-radio2" name="Radio2" horizontal="false" alignContent="0">
           <choices>
             <OTCompoundDoc name="4">
               <bodyText />
