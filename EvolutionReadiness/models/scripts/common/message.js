@@ -17,3 +17,11 @@ function showMessage(message, environment, component){
 		
 	environment.getEnvironmentView().run()
 }
+
+// show message, pause model, log message
+function showMessageAndLog(message, environment, component, otEnvHolder){
+	showMessage(message, environment, component)
+	
+	var otEnvHolderController = controllerService.getController(otEnvHolder);
+    otEnvHolderController.log("Message shown",message,null,null)
+}
