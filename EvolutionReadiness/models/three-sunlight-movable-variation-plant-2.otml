@@ -271,7 +271,7 @@ var changeHandler = {
 						if (season == "summer"){
 							if (!shownWiltedMessage){
 								showMessage("You planted your seed in a flowerbox where the light level is wrong for it.\n" +
-								"It won't make a flower and it won't drop any seeds.", env)
+								"It won't make a flower and it won't drop any seeds.", env,envHolder)
 								shownWiltedMessage = true
 							}
 							waitingForMessage3 = true
@@ -335,9 +335,9 @@ var stepHandler = {
 			}
 			if (!shownNoMorePlantsMessage &amp;&amp; atLeastOneAgentAdded) {
 				if (waitingForMessage3)
-					showMessageAndLog("Your plant wilted and died, and left no seeds so no new plants will grow.\n Hit 'reset' and try again.", env, null, otEnvHolder)
+					showMessageAndLog("Your plant wilted and died, and left no seeds so no new plants will grow.\n Hit 'reset' and try again.", env, envHolder, otEnvHolder)
 				else
-					showMessageAndLog("You have no more plants!\n If you want to restart, click the Restart button.", env, null, otEnvHolder)
+					showMessageAndLog("You have no more plants!\n If you want to restart, click the Restart button.", env, envHolder, otEnvHolder)
 				shownNoMorePlantsMessage = true
 			}
 			return
@@ -345,7 +345,7 @@ var stepHandler = {
 		
 		
 		if (agents.size() &lt; popSize &amp;&amp; agents.size() &lt; 6){
-			showMessage("Uh oh, you dropped a plant in between the flower boxes and it died!\n If you want to restart, click the Restart button.", env)
+			showMessage("Uh oh, you dropped a plant in between the flower boxes and it died!\n If you want to restart, click the Restart button.", env, envHolder)
 			popSize = agents.size()
 			return
 		}
@@ -357,7 +357,7 @@ var stepHandler = {
 			
 			var health = firstAgent.getPropertyValueAsFloat("Health")
 			if (health &lt; previousHealth &amp;&amp; !shownWiltedMessage){
-				showMessage("Careful! You moved your plant to a flowerbox that made it wilted.", env)
+				showMessage("Careful! You moved your plant to a flowerbox that made it wilted.", env, envHolder)
 				shownWiltedMessage = true
 				waitingForMessage3 = true
 			}
@@ -377,7 +377,7 @@ var stepHandler = {
 			message1StepCount++;
 			if (message1StepCount == 15){
 				var season = env.getSeason()
-				showMessage("Two of the new plants are wilted.\nUse the Information Tool to look at the plants more closely.\nDo all the plants have the same leaf size?", env)
+				showMessage("Two of the new plants are wilted.\nUse the Information Tool to look at the plants more closely.\nDo all the plants have the same leaf size?", env, envHolder)
 				message1StepCount = 0
 				waitingForMessage1 = false
 				shownTwoWiltedMessage = true
@@ -397,7 +397,7 @@ var stepHandler = {
 					}
 				}
 				if (!allAgentsAreHealthy){
-					showMessage("Try moving your wilted plants to different flowerboxes and see what happens.", env)
+					showMessage("Try moving your wilted plants to different flowerboxes and see what happens.", env, envHolder)
 				}
 				message2StepCount = 0
 				waitingForMessage2 = false
@@ -425,9 +425,9 @@ var stepHandler = {
 			}
 			if	(message4StepCount == 16){
 				if (agents.size() == 6)
-					showMessageAndLog("Good job! Each of your plants is in an environment that makes it healthy!\nIf you want to experiment again, you can reset the model,\nor you can continue to the next page.", env, null, otEnvHolder)
+					showMessageAndLog("Good job! Each of your plants is in an environment that makes it healthy!\nIf you want to experiment again, you can reset the model,\nor you can continue to the next page.", env, envHolder, otEnvHolder)
 				else
-					showMessage("Each of your plants is in an environment that makes it healthy!\nHowever, some of your plants were dropped between flower boxes.\nIf you want to try again to make all six plants healthy, you can reset the model.", env)
+					showMessage("Each of your plants is in an environment that makes it healthy!\nHowever, some of your plants were dropped between flower boxes.\nIf you want to try again to make all six plants healthy, you can reset the model.", env, envHolder)
 				waitingForMessage4 = false;
 				setPropertyOnAllAgents("complete", 1.0)
 			}	
