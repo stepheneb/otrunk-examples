@@ -123,6 +123,8 @@
                         <OTRuleConsequence property="Seed mid-Fall" newValueBoolean="true" />
                         <OTRuleConsequence property="min offspring distance" newValueFloat="5" />
                         <OTRuleConsequence property="max offspring distance" newValueFloat="25" />
+                        <OTRuleConsequence property="Min offspring" newValueFloat="3.0" />
+                        <OTRuleConsequence property="MAx offspring" newValueFloat="5.0" />
                       </consequences>
                     </OTRule>
                     <OTRule description="No flowers on withered plants!">
@@ -173,22 +175,13 @@
                         <OTRuleConsequence property="chance of survival" newValueFloat="0"/>
                       </consequences>
                     </OTRule>
-                    <OTRule description="Reduce number of offspring">
-                      <conditions>
-                        <OTRuleCondition always="true" />
-                      </conditions>
-                      <consequences>
-                        <OTRuleConsequence property="Min offspring" newValueFloat="2.0" />
-                        <OTRuleConsequence property="MAx offspring" newValueFloat="4.0" />
-                      </consequences>
-                    </OTRule>
                     <OTRule description="If resources low, lower reproduction rate">
                     	<conditions>
                     		<OTRuleCondition property="food" maxValue="50" />
                     	</conditions>
                     	<consequences>
 	                      <OTRuleConsequence property="Min offspring" newValueFloat="0.0" />
-                        	<OTRuleConsequence property="MAx offspring" newValueFloat="2.0" />
+                        	<OTRuleConsequence property="MAx offspring" newValueFloat="1.0" />
                     	</consequences>
                     </OTRule>
                     <OTRule description="If resources low, lower reproduction rate">
@@ -197,7 +190,7 @@
                     	</conditions>
                     	<consequences>
 	                      <OTRuleConsequence property="Min offspring" newValueFloat="0.0" />
-                        	<OTRuleConsequence property="MAx offspring" newValueFloat="1.0" />
+                        	<OTRuleConsequence property="MAx offspring" newValueFloat="0.0" />
                     	</consequences>
                     </OTRule>
                   </rules>
@@ -259,7 +252,7 @@
                     <OTJavascript>
                       <script>function init()
 		      				{
-		      					species.setMutationChance(0.2)
+		      					species.setMutationChance(0.21)
 		      				}</script>
                     </OTJavascript>
                   </script>
@@ -281,6 +274,9 @@
 						importClass(Packages.javax.swing.JOptionPane);
 						
 						var userAddedAgents
+						var extinctionCount = 0 	// this does NOT reset between runs
+						var allAgents
+						var shownMessage
 						  			
 						function init() {
 							setup()
@@ -292,17 +288,126 @@
 						
 						function setup() {
 							userAddedAgents = false
+							shownMessage = false
 						}
 						
 						var changeHandler = {
 							environmentChanged: function(evt){	
 								if (evt.getType() == EnvironmentChangeEvent.USER_ADDED_AGENTS){
 									userAddedAgents = true
-								}
+								} else if (evt.getType() == EnvironmentChangeEvent.SEASON_CHANGE &amp;&amp; !shownMessage){
+									allAgents = env.getAllAgents()
+									var allExtinct = false
+									var halfExtinct = false
+									var willAnyoneSurvive = false			// if half extinct but no one will survive (all wilted) wait until all are extinct
+									if (allAgents.size() == 0){
+										allExtinct = true
+									} else {
+										var sunlightTopLeft = parseInt((env.getEnvironmentUnit(0,0).getProperty("sunlight") * 10)+0.5)   // stupid javascript, Float(0.7)*10 != 6.999...
+										var mountainHeight = sunlightTopLeft - 6
+										if (mountainHeight == 0)
+											return;
+											
+										halfExtinct = getSideIsExtinct()
+										if (halfExtinct)
+											willAnyoneSurvive = getWillAnyoneSurvive()
+										}
+										
+										var extinction = allExtinct || halfExtinct
+										
+										if (extinction){
+											if (extinctionCount == 0){
+												if (allExtinct) {
+													showMessage("Your plants went extinct. Click reset and try again.", env, envHolder)
+													envHolder.pauseAction()
+													extinctionCount++
+												} else if (willAnyoneSurvive) {
+													showMessage("Your plants went extinct on one side. Remember, the challenge is to have flowering plants\ngrowing on both sides of the mountains. Click reset and try again.", env, envHolder)
+													envHolder.pauseAction()
+													extinctionCount++
+												}
+											} else {
+												if (allExtinct) {
+													showMessage("Your plants went extinct again. The environment changed too quickly.\nWait a few seasons before you change the mountain height.", env, envHolder)
+													envHolder.pauseAction()
+													extinctionCount++
+												} else if (willAnyoneSurvive) {
+													showMessage("Half your plants went extinct again. The environment changed too quickly.\nWait a few seasons before you change the mountain height.", env, envHolder)
+													envHolder.pauseAction()
+													extinctionCount++
+												}
+											}
+											shownMessage = true
+											return;
+										}
+										
+										// not extinct
+										if (mountainHeight == 4) {			// end
+											if (atLeastThreePlantsHealthyOnBothSides()) {
+													showMessage("Great job! The mountains grew slowly enough so that the plants could evolve.\nGo on to the next page.", env, envHolder)
+													envHolder.pauseAction()
+													shownMessage = true
+											}
+										}
+									}
 							}
 						}
 										
 						var changeListener = new EnvironmentChangeListener(changeHandler)
+						
+						function getSideIsExtinct(){
+							var eastAlive = false
+							var westAlive = false
+							
+							for (var i = 0; i &lt; allAgents.size(); i++) {
+								var agent = allAgents.get(i)
+								var x = agent.getLocation().x
+								if (x &lt; (env.getColumns() / 2) * env.getUnitSize().getWidth()){
+									eastAlive = true
+								} else {
+									westAlive = true
+								}
+						
+								if (eastAlive &amp;&amp; westAlive){
+									return false
+								}
+							}
+							
+							return true
+						}
+						
+						function getWillAnyoneSurvive(){
+							for (var i = 0; i &lt; allAgents.size(); i++) {
+								var agent = allAgents.get(i)
+								var healthy = agent.getProperty("health") &gt; 0.99
+								if (healthy){
+									return true
+								}
+							}
+							return false
+						}
+						
+						function atLeastThreePlantsHealthyOnBothSides(){
+							var eastHealthyCount = 0
+							var westHealthyCount = 0
+							
+							for (var i = 0; i &lt; allAgents.size(); i++) {
+								var agent = allAgents.get(i)
+								if (agent.getProperty("health") &gt; 0.99 &amp;&amp; !agent.getProperty("is seed").equals(true)) {
+									var x = agent.getLocation().x
+									if (x &lt; (env.getColumns() / 2) * env.getUnitSize().getWidth()){
+										eastHealthyCount++
+									} else {
+										westHealthyCount++
+									}
+								}
+						
+								if (eastHealthyCount &gt;= 3 &amp;&amp; westHealthyCount &gt;= 3){
+									return true
+								}
+							}
+							return false
+						}
 						
 						var stepHandler = {
 							environmentStepped: function(){
@@ -310,7 +415,6 @@
 									env.setStepCount(0) 	// don't start counting days until a seed is planted
 									return
 								}
-								
 							}		
 						}
 									
