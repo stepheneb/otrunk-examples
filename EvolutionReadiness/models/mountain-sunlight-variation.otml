@@ -124,7 +124,7 @@
                         <OTRuleConsequence property="min offspring distance" newValueFloat="5" />
                         <OTRuleConsequence property="max offspring distance" newValueFloat="25" />
                         <OTRuleConsequence property="Min offspring" newValueFloat="3.0" />
-                        <OTRuleConsequence property="MAx offspring" newValueFloat="5.0" />
+                        <OTRuleConsequence property="Max offspring" newValueFloat="5.0" />
                       </consequences>
                     </OTRule>
                     <OTRule description="No flowers on withered plants!">
@@ -180,8 +180,8 @@
                     		<OTRuleCondition property="food" maxValue="50" />
                     	</conditions>
                     	<consequences>
-	                      <OTRuleConsequence property="Min offspring" newValueFloat="0.0" />
-                        	<OTRuleConsequence property="MAx offspring" newValueFloat="1.0" />
+	                      <OTRuleConsequence property="Min offspring" newValueFloat="1.0" />
+                        	<OTRuleConsequence property="MAx offspring" newValueFloat="2.0" />
                     	</consequences>
                     </OTRule>
                     <OTRule description="If resources low, lower reproduction rate">
@@ -190,7 +190,7 @@
                     	</conditions>
                     	<consequences>
 	                      <OTRuleConsequence property="Min offspring" newValueFloat="0.0" />
-                        	<OTRuleConsequence property="MAx offspring" newValueFloat="0.0" />
+                        	<OTRuleConsequence property="MAx offspring" newValueFloat="1.0" />
                     	</consequences>
                     </OTRule>
                   </rules>
@@ -275,6 +275,8 @@
 						
 						var userAddedAgents
 						var extinctionCount = 0 	// this does NOT reset between runs
+						var successful = false		// this does NOT reset between runs
+						var yearsSuccessful		// don't win until final plants liev at least one year
 						var allAgents
 						var shownMessage
 						  			
@@ -289,6 +291,7 @@
 						function setup() {
 							userAddedAgents = false
 							shownMessage = false
+							yearsSuccessful = 0
 						}
 						
 						var changeHandler = {
@@ -296,6 +299,8 @@
 								if (evt.getType() == EnvironmentChangeEvent.USER_ADDED_AGENTS){
 									userAddedAgents = true
 								} else if (evt.getType() == EnvironmentChangeEvent.SEASON_CHANGE &amp;&amp; !shownMessage){
+									if (evt.getValue().equalsIgnoreCase("winter") || evt.getValue().equalsIgnoreCase("spring"))
+										return						// don't check on winter or spring, because it's hard for user to see what's happening
 									allAgents = env.getAllAgents()
 									var allExtinct = false
 									var halfExtinct = false
@@ -316,23 +321,30 @@
 										var extinction = allExtinct || halfExtinct
 										
 										if (extinction){
-											if (extinctionCount == 0){
+											if (successful &amp;&amp; (allExtinct || willAnyoneSurvive)){
+												// case 2
+												showMessageAndLog("The plants went extinct. Why did the plants go\nextinct when the mountains changed quickly?\nGo on to the next page to answer this question.", env, envHolder, otEnvHolder)
+												envHolder.pauseAction()
+												extinctionCount++
+											} else if (extinctionCount == 0){
+												// case 1, first time
 												if (allExtinct) {
-													showMessage("Your plants went extinct. Click reset and try again.", env, envHolder)
+													showMessageAndLog("Your plants went extinct. Click reset and try again.", env, envHolder, otEnvHolder)
 													envHolder.pauseAction()
 													extinctionCount++
 												} else if (willAnyoneSurvive) {
-													showMessage("Your plants went extinct on one side. Remember, the challenge is to have flowering plants\ngrowing on both sides of the mountains. Click reset and try again.", env, envHolder)
+													showMessageAndLog("Your plants went extinct on one side. Remember, the challenge is to have flowering plants\ngrowing on both sides of the mountains. Click reset and try again.", env, envHolder, otEnvHolder)
 													envHolder.pauseAction()
 													extinctionCount++
 												}
 											} else {
+												// case 1, next times
 												if (allExtinct) {
-													showMessage("Your plants went extinct again. The environment changed too quickly.\nWait a few seasons before you change the mountain height.", env, envHolder)
+													showMessageAndLog("Your plants went extinct again. The environment changed too quickly.\nWait a few seasons before you change the mountain height.", env, envHolder, otEnvHolder)
 													envHolder.pauseAction()
 													extinctionCount++
 												} else if (willAnyoneSurvive) {
-													showMessage("Half your plants went extinct again. The environment changed too quickly.\nWait a few seasons before you change the mountain height.", env, envHolder)
+													showMessageAndLog("Half your plants went extinct again. The environment changed too quickly.\nWait a few seasons before you change the mountain height.", env, envHolder, otEnvHolder)
 													envHolder.pauseAction()
 													extinctionCount++
 												}
@@ -343,10 +355,24 @@
 										
 										// not extinct
 										if (mountainHeight == 4) {			// end
-											if (atLeastThreePlantsHealthyOnBothSides()) {
-													showMessage("Great job! The mountains grew slowly enough so that the plants could evolve.\nGo on to the next page.", env, envHolder)
-													envHolder.pauseAction()
-													shownMessage = true
+											if (evt.getValue().equalsIgnoreCase("fall")) {			// only end on fall so we can see flowers
+												if (atLeastThreePlantsHealthyOnBothSides()) {
+													yearsSuccessful++
+													if (yearsSuccessful &gt; 1) {
+														successful = true
+														if (extinctionCount &gt; 0) {
+															// case 1 success
+															showMessageAndLog("Great job! The mountains grew slowly enough so that the plants could evolve.\nGo on to the next page.", env, envHolder, otEnvHolder)
+															envHolder.pauseAction()
+															shownMessage = true
+														} else {
+															// case 2 success
+															showMessageAndLog("Congratulations! The mountains grew slowly and the plants had time to evolve.\nWhat do you think would happen if the mountains grew faster?\nClick reset and try changing the environment quickly.", env, envHolder, otEnvHolder)
+															envHolder.pauseAction()
+															shownMessage = true
+														}
+													}
+												}
 											}
 										}
 									}
@@ -401,7 +427,7 @@
 										westHealthyCount++
 									}
 								}
-						
+								
 								if (eastHealthyCount &gt;= 3 &amp;&amp; westHealthyCount &gt;= 3){
 									return true
 								}
