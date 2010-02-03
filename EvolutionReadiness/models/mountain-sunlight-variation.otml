@@ -80,7 +80,7 @@
             <object refid="${slider-script}" />
           </bodyText>
           <documentRefs>
-            <OTEnvironmentHolder local_id="env-holder" toolbar="run,cursor,reset" useSpeedSlider="true" width="590" height="460" logAddAgents="false">
+            <OTEnvironmentHolder local_id="env-holder" toolbar="run,info,reset" useSpeedSlider="true" width="590" height="460" logAddAgents="false">
               <environment>
                 <OTEnvironment local_id="environment" environmentWidth="15" environmentHeight="15" showRunButton="false" winterLength="2" summerLength="80" orgSizeMultiplier="1.5" backgroundImageSrc="images/mountains1.jpg">
                   <world>
@@ -120,6 +120,9 @@
                             <string>sunlight</string>
                           </propertyVariables>
                         </OTRuleConsequence>
+                        <OTRuleConsequence property="Seed mid-Fall" newValueBoolean="true" />
+                        <OTRuleConsequence property="min offspring distance" newValueFloat="5" />
+                        <OTRuleConsequence property="max offspring distance" newValueFloat="25" />
                       </consequences>
                     </OTRule>
                     <OTRule description="No flowers on withered plants!">
@@ -130,42 +133,44 @@
                         <OTRuleConsequence property="Chance of flowering" newValueFloat="0.0" />
                       </consequences>
                     </OTRule>
-                    <OTRule description="Healthy and withered plants live through spring">
-                      <conditions>
-                        <OTRuleCondition property="Season" equals="spring" />
-                        <OTRuleCondition property="Health" minValue="0.8" maxValue="1.1" />
-                      </conditions>
-                      <consequences>
-                        <OTRuleConsequence property="Is immortal" newValueBoolean="true" />
-                        <OTRuleConsequence property="Days to seed" newValueFloat="100.0" />
-                      </consequences>
-                    </OTRule>
                     <OTRule description="Healthy plants live through summer and flower">
                       <conditions>
                         <OTRuleCondition property="Season" equals="summer" />
-                        <OTRuleCondition property="Health" minValue="0.98" maxValue="1.1" />
+                        <OTRuleCondition property="Health" minValue="0.99"/>
                       </conditions>
                       <consequences>
                         <OTRuleConsequence property="Is immortal" newValueBoolean="true" />
                         <OTRuleConsequence property="chance of flowering" newValueFloat="0.2" />
-                        <OTRuleConsequence property="days to seed" newValueFloat="100.0" />
+                      </consequences>
+                    </OTRule>
+                    <OTRule description="Flowering plants live until they seed">
+                      <conditions>
+                        <OTRuleCondition property="Has flower" equals="true" />
+                      </conditions>
+                      <consequences>
+                        <OTRuleConsequence property="Is immortal" newValueBoolean="true" />
                       </consequences>
                     </OTRule>
                     <OTRule description="Plants die in fall">
                       <conditions>
                         <OTRuleCondition property="Season" equals="fall" />
+                        <OTRuleCondition property="Has flower" equals="false" />
+                        <OTRuleCondition property="Is seed" equals="false" />
                       </conditions>
                       <consequences>
                         <OTRuleConsequence property="Is immortal" newValueBoolean="false" />
-                        <OTRuleConsequence property="Days to Seed" newValueFloat="8.0" />
+                        <OTRuleConsequence property="use default survival calculation" newValueBoolean="false" />
+                        <OTRuleConsequence property="chance of survival" newValueFloat="0.8"/>
                       </consequences>
                     </OTRule>
                     <OTRule description="All plants die in winter">
                       <conditions>
                         <OTRuleCondition property="Season" equals="winter" />
+                        <OTRuleCondition property="Is seed" equals="false" />
                       </conditions>
                       <consequences>
-                        <OTRuleConsequence property="health" newValueFloat="0.2" />
+                        <OTRuleConsequence property="use default survival calculation" newValueBoolean="false" />
+                        <OTRuleConsequence property="chance of survival" newValueFloat="0"/>
                       </consequences>
                     </OTRule>
                     <OTRule description="Reduce number of offspring">
@@ -176,6 +181,24 @@
                         <OTRuleConsequence property="Min offspring" newValueFloat="2.0" />
                         <OTRuleConsequence property="MAx offspring" newValueFloat="4.0" />
                       </consequences>
+                    </OTRule>
+                    <OTRule description="If resources low, lower reproduction rate">
+                    	<conditions>
+                    		<OTRuleCondition property="food" maxValue="50" />
+                    	</conditions>
+                    	<consequences>
+	                      <OTRuleConsequence property="Min offspring" newValueFloat="0.0" />
+                        	<OTRuleConsequence property="MAx offspring" newValueFloat="2.0" />
+                    	</consequences>
+                    </OTRule>
+                    <OTRule description="If resources low, lower reproduction rate">
+                    	<conditions>
+                    		<OTRuleCondition property="food" maxValue="5" />
+                    	</conditions>
+                    	<consequences>
+	                      <OTRuleConsequence property="Min offspring" newValueFloat="0.0" />
+                        	<OTRuleConsequence property="MAx offspring" newValueFloat="1.0" />
+                    	</consequences>
                     </OTRule>
                   </rules>
                 </OTEnvironment>
@@ -249,8 +272,96 @@
                   </variables>
                   <scriptState />
                 </OTScriptObject>
+                <OTScriptObject local_id="runtime-script" name="Runtime">
+                  <script>
+                    <OTJavascript src="scripts/gradated-sunlight/setup.js">
+                      <script>importPackage(Packages.java.lang);
+						importPackage(Packages.java.awt);
+						importPackage(Packages.org.concord.biologica.environment);
+						importClass(Packages.javax.swing.JOptionPane);
+						
+						var userAddedAgents
+						  			
+						function init() {
+							setup()
+							env.addChangeListener(changeListener)
+							env.addStepListener(stepListener)
+							env.addChangeListener(resetListener)
+							return true;
+						}
+						
+						function setup() {
+							userAddedAgents = false
+						}
+						
+						var changeHandler = {
+							environmentChanged: function(evt){	
+								if (evt.getType() == EnvironmentChangeEvent.USER_ADDED_AGENTS){
+									userAddedAgents = true
+								}
+							}
+						}
+										
+						var changeListener = new EnvironmentChangeListener(changeHandler)
+						
+						var stepHandler = {
+							environmentStepped: function(){
+								if (!userAddedAgents){
+									env.setStepCount(0) 	// don't start counting days until a seed is planted
+									return
+								}
+								
+							}		
+						}
+									
+						var stepListener = new EnvironmentStepListener(stepHandler)	
+						
+						
+						var resetHandler= {
+							environmentChanged: function(evt){
+								if (evt.getType() == EnvironmentChangeEvent.RESET){
+							 		setup()
+								}
+							}
+						}
+									
+						var resetListener = new EnvironmentChangeListener(resetHandler)
+					
+					function save() {
+						return true;
+					}</script>
+                      <scripts>
+                        <OTJavascript src="scripts/common/message.js" />
+                      </scripts>
+                    </OTJavascript>
+                  </script>
+                  <variables>
+                    <OTScriptVariableRealObject name="env">
+                      <reference>
+                        <object refid="${environment}" />
+                      </reference>
+                    </OTScriptVariableRealObject>
+                    <OTScriptVariableRealObject name="envHolder">
+                      <reference>
+                        <object refid="${env-holder}" />
+                      </reference>
+                    </OTScriptVariableRealObject>
+                    <OTScriptVariable name="otEnvHolder">
+                      <reference>
+                        <object refid="${env-holder}" />
+                      </reference>
+                    </OTScriptVariable>
+                  </variables>
+                  <scriptState />
+                </OTScriptObject>
               </scripts>
               <traitsToShow>
+                <string>size of leaves</string>
+                <string>health</string>
+                <string>chance of survival</string>
+                <string>season</string>
+                <string>use default survival calculation</string>
+                <string>size of leaves</string>
                 <string>size of leaves</string>
               </traitsToShow>
               <addAgentsButtons>
