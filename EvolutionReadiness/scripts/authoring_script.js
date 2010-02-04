@@ -139,10 +139,15 @@ function setPageNumber(cardContainer){
 		}
 	}
 	
+	if (pageString != null){
+		var page = pageString.getText()
+	} else {
+		var page = "page"
+	}
 	
 	var titlePattern = Pattern.compile("class=\"page-number\">([^>]*)<")
 	var matcher = titlePattern.matcher(new java.lang.StringBuffer(text))
-	titleDoc.setBodyText(matcher.replaceAll("class=\"page-number\">page "+(cardNumber+1)+"<"))
+	titleDoc.setBodyText(matcher.replaceAll("class=\"page-number\">"+page+" "+(cardNumber+1)+"<"))
 }
 
 var sections = [];

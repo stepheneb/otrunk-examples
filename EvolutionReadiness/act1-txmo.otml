@@ -27,7 +27,10 @@
     <import class="org.concord.otrunk.OTInclude" />
     <import class="org.concord.otrunk.OTSystem" />
     <import class="org.concord.otrunk.browser.mozswing.OTMozSwing" />
+    <import class="org.concord.otrunk.overlay.OTAddOverlayAction" />
     <import class="org.concord.otrunk.overlay.OTOverlay" />
+    <import class="org.concord.otrunk.overlay.OTOverlayGroup" />
+    <import class="org.concord.otrunk.overlay.OTOverlayWrapper" />
     <import class="org.concord.otrunk.script.ui.OTScriptObject" />
     <import class="org.concord.otrunk.script.ui.OTScriptVariable" />
     <import class="org.concord.otrunk.script.ui.OTScriptVariableComponent" />
@@ -116,9 +119,10 @@
   <objects>
     <OTSystem local_id="system">
       <includes>
-        <OTInclude href="http://otrunk.concord.org/examples/EvolutionReadiness/global-imports/er-view-bundle.otml" />
-        <OTInclude href="http://otrunk.concord.org/examples/EvolutionReadiness/models/five-sunlight-breed-true-one-plant.otml" />
-        <OTInclude href="http://otrunk.concord.org/examples/EvolutionReadiness/models/five-sunlight-breed-true-three-plants.otml" />
+        <OTInclude href="global-imports/er-view-bundle.otml" />
+        <OTInclude href="models/five-sunlight-breed-true-one-plant.otml" />
+        <OTInclude href="models/five-sunlight-breed-true-three-plants.otml" />
+        <OTInclude href="translations/act1-spanish.otml" />
       </includes>
       <bundles>
         <object refid="8d880970-c22a-11dc-95ff-0800200c9a66" />
@@ -137,6 +141,11 @@
         <OTLabbookBundle />
       </bundles>
       <overlays>
+      	<OTOverlayGroup name="Language group" local_id="language-overlay-group">
+      		<overlays>
+      			<object refid="${english-overlay}"/>
+      		</overlays>
+      	</OTOverlayGroup>
         <object refid="6cc8e2b0-c44e-11dc-95ff-0800200c9a66" />
         <object refid="b5d8b4a0-db35-11dc-95ff-0800200c9a66" />
       </overlays>
@@ -150,14 +159,18 @@
                     <table width="100%">
                       <tr>
                         <td>
-                          <div class="title">Activity 1: The Virtual Greenhouse</div>
+                          <div class="title"><object refid="d1f6dfca-bb85-4abc-baaa-c299badf253d" /></div>
                         </td>
-                        <td align="right">
+                        <td width="5%" align="right">
+                          <div text-align="right"><object refid="${language-choice}" viewid="bd4234c3-4808-4a99-8e1a-031dbcfedb44" /></div>
                           <div class="page-number">page 1</div>
                         </td>
                       </tr>
                     </table>
                   </bodyText>
+                  <documentRefs>
+                  	<OTUDLCompoundDoc bodyText="Activity 1: The Virtual Greenhouse" id="d1f6dfca-bb85-4abc-baaa-c299badf253d"/>
+                  </documentRefs>
                 </OTUDLCompoundDoc>
               </header>
               <content>
@@ -535,13 +548,13 @@
                             <OTDataAxis max="10.5" min="0.0" label="Plant Type" units="Leaf Size" labelFormat="Engineering" locked="true" intervalWorld="1">
                               <customGridLabels>
                                 <entry key="1.0">
-                                  <string>http://otrunk.concord.org/examples/EvolutionReadiness/models/species/images/plants/varied-plants/flower10cropped.png</string>
+                                  <string>models/species/images/plants/varied-plants/flower10cropped.png</string>
                                 </entry>
                                 <entry key="5.0">
-                                  <string>http://otrunk.concord.org/examples/EvolutionReadiness/models/species/images/plants/varied-plants/flower5cropped.png</string>
+                                  <string>models/species/images/plants/varied-plants/flower5cropped.png</string>
                                 </entry>
                                 <entry key="9.0">
-                                  <string>http://otrunk.concord.org/examples/EvolutionReadiness/models/species/images/plants/varied-plants/flower1cropped.png</string>
+                                  <string>models/species/images/plants/varied-plants/flower1cropped.png</string>
                                 </entry>
                               </customGridLabels>
                             </OTDataAxis>
@@ -554,7 +567,7 @@
                         </OTDataCollector>
                         <OTScriptObject id="b353586a-22fb-45d1-a80d-afa9ba18e19b">
                           <script>
-                            <OTJavascript src="http://otrunk.concord.org/examples/EvolutionReadiness/scripts/gradated-sunlight-five-blocks/setup.js">
+                            <OTJavascript src="scripts/gradated-sunlight-five-blocks/setup.js">
                               <script>importPackage(Packages.java.lang);
 				importPackage(Packages.java.awt);
 				importPackage(Packages.org.concord.biologica.environment);
@@ -993,7 +1006,7 @@
       </root>
       <library>
         <OTUDLMenuRule local_id="page-rule" jumpToViewedCard="true" stepAhead="true" />
-        <OTJavascript local_id="authoring_script.js" src="http://otrunk.concord.org/examples/EvolutionReadiness/scripts/authoring_script.js" />
+        <OTJavascript local_id="authoring_script.js" src="scripts/authoring_script.js" />
         <OTScriptObject local_id="authoring-script">
           <variables>
             <OTScriptVariable name="cardContainer">
@@ -1014,6 +1027,11 @@
             <OTScriptVariable name="titleDoc">
               <reference>
                 <object refid="2767fe20-6c7d-11dc-8314-0800200c9a66!/section_1/header" />
+              </reference>
+            </OTScriptVariable>
+            <OTScriptVariable name="pageString">
+              <reference>
+                <OTText id="9ff37e10-6bb0-476f-bb33-cbcf337f6662" text="page"/>
               </reference>
             </OTScriptVariable>
           </variables>
@@ -1039,6 +1057,20 @@
             <object refid="${page-rule}" />
           </menuRule>
         </OTUDLNavBar>
+        <OTChoice name="Language" local_id="language-choice" id="a495d0dd-7804-48f0-b0e2-b03a36a49e3b">
+			<choices>
+				<OTAddOverlayAction name="English" overlayGroup="${language-overlay-group}">
+					<overlay>
+						<OTOverlay local_id="english-overlay"/>
+					</overlay>
+				</OTAddOverlayAction>
+				<OTAddOverlayAction name="Español" overlayGroup="${language-overlay-group}">
+					<overlay>
+						<object refid="e622349a-ed2b-4bca-bda9-89de9cd1992e"/>
+					</overlay>
+				</OTAddOverlayAction>
+			</choices>
+       	</OTChoice>
       </library>
     </OTSystem>
   </objects>
