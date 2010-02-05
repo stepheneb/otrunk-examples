@@ -13,11 +13,14 @@ importClass(Packages.java.lang.StringBuffer);
 importClass(Packages.java.util.HashMap);
 importClass(Packages.java.util.regex.Matcher);
 importClass(Packages.java.util.regex.Pattern);
+importClass(Packages.javax.swing.JOptionPane);
 importClass(Packages.org.concord.framework.otrunk.OTChangeEvent);
 importClass(Packages.org.concord.framework.otrunk.OTChangeListener);
 importClass(Packages.org.concord.framework.otrunk.view.OTLabbookManagerProvider);
 importClass(Packages.org.concord.otrunk.ui.OTCurriculumUnitHelper)
 importClass(Packages.org.concord.otrunk.udl.ui.OTUDLLabPageView)
+
+var MAX_SNAPSHOTS = 5
   			
 var questionInputHandler = 
 {
@@ -80,6 +83,56 @@ function addListenerToInput(input, question, q){
 	inputs[q] = realInput
 	questionMap.put(inputs[q], question)
 	inputs[q].addOTChangeListener(inputListener)
+}
+
+var labbookDuplicatesHandler = 
+{
+	stateChanged: function(evt)
+	{
+		if (evt.getProperty().equalsIgnoreCase("entries") && evt.getOperation().equals(OTChangeEvent.OP_ADD)){
+			var parentObj = evt.getValue().getOriginalObject()
+			var allEntries = labbook.getAllEntries()
+			var totalEntriesForObject = 0
+			
+			for (var i=0; i<allEntries.size(); i++){
+				var parentOfEntry = allEntries.get(i).getOriginalObject()
+				if (parentOfEntry == parentObj)
+					totalEntriesForObject++
+			}
+			
+			var className = parentObj.otClass().getName()
+			var simpleName = "model"
+			if (className.indexOf("Drawing") > -1)
+				simpleName = "drawing"
+			else if (className.indexOf("Collector") > -1 || className.indexOf("Graph") > -1)
+				simpleName = "graph"
+			
+			
+			if (totalEntriesForObject == MAX_SNAPSHOTS-1){
+				JOptionPane.showMessageDialog(null, "Be careful, you have now taken "+totalEntriesForObject+" snapshots of this "+simpleName+".\nYou can only take one more snapshot of this!")
+			} else if (totalEntriesForObject == MAX_SNAPSHOTS){
+				JOptionPane.showMessageDialog(null, "You have now taken "+totalEntriesForObject+" snapshots of this "+simpleName+". That's the limit!\nIf you want to take more snapshots of this "+simpleName+", you will need to delete some in your lab book.")
+			} else if (totalEntriesForObject > MAX_SNAPSHOTS){
+				JOptionPane.showMessageDialog(null, "Oops, you already took "+MAX_SNAPSHOTS+" snapshots of this "+simpleName+". That was the limit!\nIf you want to take more snapshots of this "+simpleName+", you will need to delete some in your lab book.")
+			}
+			
+			if (totalEntriesForObject > MAX_SNAPSHOTS){
+				labbook.remove(evt.getValue())
+				// this is a hack: the change event is already on its way to the lab book view; even after we
+				// delete the snapshot from the bundle, the lab book will see the change event and add
+				// an entry. In order to prevent that without changing Java code, we instead modify the
+				// change event, so that when the lab book view sees it it is no longer an ADD event, so
+				// it won't add an entry.
+				evt.setOperation(OTChangeEvent.OP_CHANGE)
+			}
+		}
+	}
+	
+}
+var labbookDuplicatesListener = new OTChangeListener(labbookDuplicatesHandler);
+
+function setupLabbookDuplicatesListener(){
+	labbook.addLabbookListener(labbookDuplicatesListener)
 }
 
 function turnOffDefinitions(){
@@ -252,6 +305,7 @@ function init() {
 	turnOffDefinitions()
 	setupLabbookQuestionListeners()
 	checkActivityEnabling()
+	setupLabbookDuplicatesListener()
 }
 
 function save() {
