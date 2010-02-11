@@ -53,112 +53,104 @@
         <OTInclude href="species/annual-varied-plants-roots.otml" />
       </includes>
       <root>
-      	<OTCompoundDoc>
-      		<bodyText>
-      			<table>
-      				<tr>
-      					<td>
-      						<object refid="${env-holder}"/>
-      					</td>
-      					<td>
-      						<table border="1">
-                              <tr>
-                                <td>
-                                	Money remaining:<br/>
-                                  <object refid="${money-text}" viewid="c93a7460-e18a-11dc-95ff-0800200c9a66" />
-                                </td>
-                              </tr>
-                            </table>
-      					</td>
-      				</tr>
-      			</table>
-      		</bodyText>
-      		<documentRefs>
-      			<OTText local_id="money-text" text="$20" fontSize="25"/>
-		      	<OTEnvironmentHolder local_id="env-holder" width="590" height="460" toolbar="run,cursor,reset" useSpeedSlider="true">
-		          <environment>
-		            <OTEnvironment local_id="environment" environmentWidth="11" environmentHeight="4" showRunButton="true" winterLength="15" summerLength="50" orgSizeMultiplier="1.5" backgroundImageSrc="images/water10levels.png">
-		              <world>
-		                <OTWorld local_id="peasimple_world" speciesPath="org/concord/biologica/worlds/peasimple.xml" />
-		              </world>
-		              <rules>
-		                <OTRule description="Health depends on roots and water">
-		                  <conditions>
-		                    <OTRuleCondition always="true" />
-		                  </conditions>
-		                  <consequences>
-		                    <OTRuleConsequence property="Health" ruleScript=" 
-		                    var diff = Math.abs(size_of_roots - (water*10));
-		                    var healthAtOneUnitDiff = 0.983; 
-		                    var a = 0.2 - 0.25*healthAtOneUnitDiff;  
-							var b =1.25*healthAtOneUnitDiff -1.2;
-							var c = 1;
-							var h = a*diff*diff + b*diff + c;
-							if (h &gt; 0) return h;
-							else return 0;">
-		                      <propertyVariables>
-		                        <string>size of roots</string>
-		                        <string>water</string>
-		                      </propertyVariables>
-		                    </OTRuleConsequence>
-		                  </consequences>
-		                </OTRule>
-		                <OTRule description="No flowers on withered plants!">
-		                  <conditions>
-		                    <OTRuleCondition property="Health" minValue="0.0" maxValue="0.99" />
-		                  </conditions>
-		                  <consequences>
-		                    <OTRuleConsequence property="Chance of flowering" newValueFloat="0.0" />
-		                  </consequences>
-		                </OTRule>
-		                <OTRule description="Healthy plants flower in summer!">
-		                  <conditions>
-		                    <OTRuleCondition property="Health" minValue="0.99" maxValue="1.01" />
-		                     <OTRuleCondition property="Season" equals="summer" />
-		                  </conditions>
-		                  <consequences>
-		                    <OTRuleConsequence property="Chance of flowering" newValueFloat="1.0" />
-		                  </consequences>
-		                </OTRule>
-		                <OTRule description="Some withered plants die in summer">
-		                  <conditions>
-		                    <OTRuleCondition property="Health" minValue="0.95" maxValue="0.99" />
-		                    <OTRuleCondition property="Season" equals="summer" />
-		                  </conditions>
-		                  <consequences>
-		                    <OTRuleConsequence property="is immortal" newValueBoolean="true" />
-		                  </consequences>
-		                </OTRule>
-		                <OTRule description="Withered plants immortal in spring">
-		                  <conditions>
-		                    <OTRuleCondition property="Health" minValue="0.85" maxValue="0.99" />
-		                    <OTRuleCondition property="Season" equals="spring" />
-		                  </conditions>
-		                  <consequences>
-		                    <OTRuleConsequence property="is immortal" newValueBoolean="true" />
-		                  </consequences>
-		                </OTRule>
-		                <OTRule description="Withered plants die in fall">
-		                  <conditions>
-		                    <OTRuleCondition property="Health" minValue="0.85" maxValue="0.99" />
-		                    <OTRuleCondition property="Season" equals="fall" />
-		                  </conditions>
-		                  <consequences>
-		                    <OTRuleConsequence property="is immortal" newValueBoolean="false" />
-		                  </consequences>
-		                </OTRule>
-		              </rules>
-		              <barriers>
-		                <OTPlacement x="0" y="0" width="10" height="40" />
-		                <OTPlacement x="10" y="36" width="100" height="4" />
-		              </barriers>
-		            </OTEnvironment>
-		          </environment>
-		          <scripts>
-		            <OTScriptObject local_id="setup-script" name="Setup world">
-		              <script>
-		                <OTJavascript src="scripts/gradated-sunlight/setup.js">
-		                  <script>importPackage(Packages.java.lang);
+        <OTCompoundDoc>
+          <bodyText>
+            <table>
+              <tr>
+                <td>
+                  <object refid="${env-holder}" />
+                </td>
+                <td>
+                  <table border="1">
+                    <tr>
+                      <td>
+                        Money remaining:
+                        <br />
+                        <object refid="${money-text}" viewid="c93a7460-e18a-11dc-95ff-0800200c9a66" />
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </table>
+          </bodyText>
+          <documentRefs>
+            <OTText local_id="money-text" text="$20" fontSize="25" />
+            <OTEnvironmentHolder local_id="env-holder" width="590" height="460" toolbar="run,cursor,reset" useSpeedSlider="true">
+              <environment>
+                <OTEnvironment local_id="environment" environmentWidth="10" environmentHeight="4" showRunButton="true" winterLength="15" summerLength="50" orgSizeMultiplier="1.5" backgroundImageSrc="images/water10levels.png">
+                  <world>
+                    <OTWorld local_id="peasimple_world" speciesPath="org/concord/biologica/worlds/peasimple.xml" />
+                  </world>
+                  <rules>
+                    <OTRule description="Health depends on roots and water">
+                      <conditions>
+                        <OTRuleCondition always="true" />
+                      </conditions>
+                      <consequences>
+                        <OTRuleConsequence property="Health" ruleScript="                        var diff = Math.abs(size_of_roots - (water*10));                       var healthAtOneUnitDiff = 0.983;                        var a = 0.2 - 0.25*healthAtOneUnitDiff;          var b =1.25*healthAtOneUnitDiff -1.2;        var c = 1;        var h = a*diff*diff + b*diff + c;        if (h &gt; 0) return h;        else return 0;">
+                          <propertyVariables>
+                            <string>size of roots</string>
+                            <string>water</string>
+                          </propertyVariables>
+                        </OTRuleConsequence>
+                      </consequences>
+                    </OTRule>
+                    <OTRule description="No flowers on withered plants!">
+                      <conditions>
+                        <OTRuleCondition property="Health" minValue="0.0" maxValue="0.99" />
+                      </conditions>
+                      <consequences>
+                        <OTRuleConsequence property="Chance of flowering" newValueFloat="0.0" />
+                      </consequences>
+                    </OTRule>
+                    <OTRule description="Healthy plants flower in summer!">
+                      <conditions>
+                        <OTRuleCondition property="Health" minValue="0.99" maxValue="1.01" />
+                        <OTRuleCondition property="Season" equals="summer" />
+                      </conditions>
+                      <consequences>
+                        <OTRuleConsequence property="Chance of flowering" newValueFloat="1.0" />
+                      </consequences>
+                    </OTRule>
+                    <OTRule description="Some withered plants die in summer">
+                      <conditions>
+                        <OTRuleCondition property="Health" minValue="0.95" maxValue="0.99" />
+                        <OTRuleCondition property="Season" equals="summer" />
+                      </conditions>
+                      <consequences>
+                        <OTRuleConsequence property="is immortal" newValueBoolean="true" />
+                      </consequences>
+                    </OTRule>
+                    <OTRule description="Withered plants immortal in spring">
+                      <conditions>
+                        <OTRuleCondition property="Health" minValue="0.85" maxValue="0.99" />
+                        <OTRuleCondition property="Season" equals="spring" />
+                      </conditions>
+                      <consequences>
+                        <OTRuleConsequence property="is immortal" newValueBoolean="true" />
+                      </consequences>
+                    </OTRule>
+                    <OTRule description="Withered plants die in fall">
+                      <conditions>
+                        <OTRuleCondition property="Health" minValue="0.85" maxValue="0.99" />
+                        <OTRuleCondition property="Season" equals="fall" />
+                      </conditions>
+                      <consequences>
+                        <OTRuleConsequence property="is immortal" newValueBoolean="false" />
+                      </consequences>
+                    </OTRule>
+                  </rules>
+                  <barriers>
+                    <OTPlacement x="0" y="36" width="102" height="5" />
+                  </barriers>
+                </OTEnvironment>
+              </environment>
+              <scripts>
+                <OTScriptObject local_id="setup-script" name="Setup world">
+                  <script>
+                    <OTJavascript src="scripts/gradated-sunlight/setup.js">
+                      <script>importPackage(Packages.java.lang);
 							importPackage(Packages.java.awt);
 							importPackage(Packages.org.concord.biologica.environment);
 							importClass(Packages.javax.swing.JOptionPane);
@@ -176,7 +168,7 @@
 							        for (var j = 0; j &lt; rows; j++) {
 							        	var envUnit = new EnvironmentUnit(env, null, i, j)
 							        	env.setEnvironmentUnit(envUnit, i, j)
-							        	envUnit.setProperty("water", new Float(i/10))
+							        	envUnit.setProperty("water", new Float((i+1)/10))
 							        	var color = new Color(0.3, 0.2, 0.1)
 							        	var terrain = new Terrain(world, "terrain", color)
 							        	envUnit.setTerrain(terrain)
@@ -212,29 +204,29 @@
 						function save() {
 							return true;
 						}</script>
-		                  <scripts>
-		                    <OTJavascript src="scripts/common/message.js" />
-		                  </scripts>
-		                </OTJavascript>
-		              </script>
-		              <variables>
-		                <OTScriptVariableRealObject name="env">
-		                  <reference>
-		                    <object refid="${environment}" />
-		                  </reference>
-		                </OTScriptVariableRealObject>
-		                <OTScriptVariableRealObject name="envHolder">
-		                  <reference>
-		                    <object refid="${env-holder}" />
-		                  </reference>
-		                </OTScriptVariableRealObject>
-		              </variables>
-		              <scriptState />
-		            </OTScriptObject>
-		            <OTScriptObject local_id="money-script" name="Money script">
-		              <script>
-		                <OTJavascript src="scripts/gradated-sunlight/setup.js">
-		                  <script>importPackage(Packages.java.lang);
+                      <scripts>
+                        <OTJavascript src="scripts/common/message.js" />
+                      </scripts>
+                    </OTJavascript>
+                  </script>
+                  <variables>
+                    <OTScriptVariableRealObject name="env">
+                      <reference>
+                        <object refid="${environment}" />
+                      </reference>
+                    </OTScriptVariableRealObject>
+                    <OTScriptVariableRealObject name="envHolder">
+                      <reference>
+                        <object refid="${env-holder}" />
+                      </reference>
+                    </OTScriptVariableRealObject>
+                  </variables>
+                  <scriptState />
+                </OTScriptObject>
+                <OTScriptObject local_id="money-script" name="Money script">
+                  <script>
+                    <OTJavascript src="scripts/gradated-sunlight/setup.js">
+                      <script>importPackage(Packages.java.lang);
 							importPackage(Packages.java.awt);
 							importPackage(Packages.org.concord.biologica.environment);
 							importClass(Packages.javax.swing.JOptionPane);
@@ -270,77 +262,76 @@
 						
 							function save() {
 								return true;
-							}
-							</script>
-		                  <scripts>
-		                    <OTJavascript src="scripts/common/message.js" />
-		                  </scripts>
-		                </OTJavascript>
-		              </script>
-		              <variables>
-		                <OTScriptVariableRealObject name="env">
-		                  <reference>
-		                    <object refid="${environment}" />
-		                  </reference>
-		                </OTScriptVariableRealObject>
-		                <OTScriptVariableRealObject name="envHolder">
-		                  <reference>
-		                    <object refid="${env-holder}" />
-		                  </reference>
-		                </OTScriptVariableRealObject>
-		                <OTScriptVariable name="moneyText">
-		                	<reference>
-		                		<object refid="${money-text}"/>
-		                	</reference>
-		                </OTScriptVariable>
-		              </variables>
-		              <scriptState />
-		            </OTScriptObject>
-		            <OTScriptObject local_id="setup-species-script" name="Setup species">
-		              <script>
-		                <OTJavascript>
-		                  <script>function init()
+							}</script>
+                      <scripts>
+                        <OTJavascript src="scripts/common/message.js" />
+                      </scripts>
+                    </OTJavascript>
+                  </script>
+                  <variables>
+                    <OTScriptVariableRealObject name="env">
+                      <reference>
+                        <object refid="${environment}" />
+                      </reference>
+                    </OTScriptVariableRealObject>
+                    <OTScriptVariableRealObject name="envHolder">
+                      <reference>
+                        <object refid="${env-holder}" />
+                      </reference>
+                    </OTScriptVariableRealObject>
+                    <OTScriptVariable name="moneyText">
+                      <reference>
+                        <object refid="${money-text}" />
+                      </reference>
+                    </OTScriptVariable>
+                  </variables>
+                  <scriptState />
+                </OTScriptObject>
+                <OTScriptObject local_id="setup-species-script" name="Setup species">
+                  <script>
+                    <OTJavascript>
+                      <script>function init()
 			      				{
 			      					species.setMutationChance(0.3)
 			      				}</script>
-		                </OTJavascript>
-		              </script>
-		              <variables>
-		                <OTScriptVariableRealObject name="species">
-		                  <reference>
-		                    <object refid="ad89cbed-b580-4345-9896-5af9a9588fc2" />
-		                  </reference>
-		                </OTScriptVariableRealObject>
-		              </variables>
-		              <scriptState />
-		            </OTScriptObject>
-		          </scripts>
-		          <traitsToShow>
-		            <string>size of roots</string>
-            		<string>size of leaves</string>
-		          </traitsToShow>
-		          <addAgentsButtons>
-		            <OTAddAgentButton text="Add Plant Z" limit="20">
-		              <species>
-		                <object refid="ad89cbed-b580-4345-9896-5af9a9588fc2" />
-		              </species>
-		              <agentTraits>
-		                <OTAgentTrait property="size of leaves">
-		                  <defaultValues>
-		                    <float>5.0</float>
-		                  </defaultValues>
-		                </OTAgentTrait>
-		                <OTAgentTrait property="size of roots">
-		                  <defaultValues>
-		                    <float>1.0</float>
-		                  </defaultValues>
-		                </OTAgentTrait>
-		              </agentTraits>
-		            </OTAddAgentButton>
-		          </addAgentsButtons>
-		        </OTEnvironmentHolder>
-      		</documentRefs>
-      	</OTCompoundDoc>
+                    </OTJavascript>
+                  </script>
+                  <variables>
+                    <OTScriptVariableRealObject name="species">
+                      <reference>
+                        <object refid="ad89cbed-b580-4345-9896-5af9a9588fc2" />
+                      </reference>
+                    </OTScriptVariableRealObject>
+                  </variables>
+                  <scriptState />
+                </OTScriptObject>
+              </scripts>
+              <traitsToShow>
+                <string>size of roots</string>
+                <string>size of leaves</string>
+              </traitsToShow>
+              <addAgentsButtons>
+                <OTAddAgentButton text="Add Plant Z" limit="20">
+                  <species>
+                    <object refid="ad89cbed-b580-4345-9896-5af9a9588fc2" />
+                  </species>
+                  <agentTraits>
+                    <OTAgentTrait property="size of leaves">
+                      <defaultValues>
+                        <float>5.0</float>
+                      </defaultValues>
+                    </OTAgentTrait>
+                    <OTAgentTrait property="size of roots">
+                      <defaultValues>
+                        <float>1.0</float>
+                      </defaultValues>
+                    </OTAgentTrait>
+                  </agentTraits>
+                </OTAddAgentButton>
+              </addAgentsButtons>
+            </OTEnvironmentHolder>
+          </documentRefs>
+        </OTCompoundDoc>
       </root>
     </OTSystem>
   </objects>
