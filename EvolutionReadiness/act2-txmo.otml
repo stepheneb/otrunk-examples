@@ -27,7 +27,10 @@
     <import class="org.concord.otrunk.biologica.rules.OTRuleCondition" />
     <import class="org.concord.otrunk.biologica.rules.OTRuleConsequence" />
     <import class="org.concord.otrunk.browser.mozswing.OTMozSwing" />
+    <import class="org.concord.otrunk.overlay.OTAddOverlayAction" />
     <import class="org.concord.otrunk.overlay.OTOverlay" />
+    <import class="org.concord.otrunk.overlay.OTOverlayGroup" />
+    <import class="org.concord.otrunk.overlay.OTOverlayWrapper" />
     <import class="org.concord.otrunk.script.ui.OTScriptObject" />
     <import class="org.concord.otrunk.script.ui.OTScriptVariable" />
     <import class="org.concord.otrunk.script.ui.OTScriptVariableComponent" />
@@ -120,6 +123,7 @@
         <OTInclude href="http://otrunk.concord.org/examples/EvolutionReadiness/global-imports/er-view-bundle.otml" />
         <OTInclude href="http://otrunk.concord.org/examples/EvolutionReadiness/models/gradated-sunlight-breed-true.otml" />
         <OTInclude href="http://otrunk.concord.org/examples/EvolutionReadiness/models/three-sunlight-movable-variation.otml" />
+        <OTInclude href="translations/act2-spanish.otml" />
       </includes>
       <bundles>
         <object refid="8d880970-c22a-11dc-95ff-0800200c9a66" />
@@ -138,6 +142,11 @@
         <OTLabbookBundle limitEntries="true" limit="10" snapshotFiletype="JPG"/>
       </bundles>
       <overlays>
+      	<OTOverlayGroup name="Language group" local_id="language-overlay-group">
+      		<overlays>
+      			<object refid="${english-overlay}"/>
+      		</overlays>
+      	</OTOverlayGroup>
         <object refid="6cc8e2b0-c44e-11dc-95ff-0800200c9a66" />
         <object refid="b5d8b4a0-db35-11dc-95ff-0800200c9a66" />
       </overlays>
@@ -151,14 +160,18 @@
                     <table width="100%">
                       <tr>
                         <td>
-                          <div class="title">Activity 2: The Virtual Field</div>
+                          <div class="title"><object refid="9db7cfae-4e7c-4d64-9993-b456db6cfd00" /></div>
                         </td>
-                        <td align="right">
+                        <td width="5%" align="right">
+                          <div text-align="right"><object refid="${language-choice}" viewid="bd4234c3-4808-4a99-8e1a-031dbcfedb44" /></div>
                           <div class="page-number">page 1</div>
                         </td>
                       </tr>
                     </table>
                   </bodyText>
+                  <documentRefs>
+                  	<OTUDLCompoundDoc bodyText="Activity 2: The Virtual Field" id="9db7cfae-4e7c-4d64-9993-b456db6cfd00"/>
+                  </documentRefs>
                 </OTUDLCompoundDoc>
               </header>
               <content>
@@ -943,6 +956,20 @@
             <object refid="${page-rule}" />
           </menuRule>
         </OTUDLNavBar>
+        <OTChoice name="Language" local_id="language-choice" id="69585091-4577-4fd5-84c1-b4ac44020a27">
+			<choices>
+				<OTAddOverlayAction name="English" overlayGroup="${language-overlay-group}">
+					<overlay>
+						<OTOverlay local_id="english-overlay"/>
+					</overlay>
+				</OTAddOverlayAction>
+				<OTAddOverlayAction name="Español" overlayGroup="${language-overlay-group}">
+					<overlay>
+						<object refid="94c52823-d350-4da3-8c03-7096ced6b1c1"/>
+					</overlay>
+				</OTAddOverlayAction>
+			</choices>
+       	</OTChoice>
       </library>
     </OTSystem>
   </objects>
