@@ -313,6 +313,7 @@
 									if (wait == 30) {
 										envHolder.pauseAction()
 										showMessage("What's going on? Use the Information Tool to find out why some plants in the field are wilted.\nThen reset the model to plant more seeds or continue to the next page.", env, envHolder)
+										envHolder.getToolbar().getButton("Run").setEnabled(false)
 									}
 								}
 							}		
@@ -331,6 +332,8 @@
 						var resetHandler= {
 							environmentChanged: function(evt){
 								if (evt.getType() == EnvironmentChangeEvent.RESET){
+									envHolder.getToolbar().getButton("Run").setEnabled(true)
+									envHolder.stop()
 							 		yearCount = 0
 									startWaiting = false
 									wait = 0
