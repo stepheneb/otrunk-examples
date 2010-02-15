@@ -213,9 +213,9 @@
 										var plantedBox5
 										
 										var shownRunOutMessage
-										var shownNoFlowersMessage
-										var shownAllBoxesMessage
-										var shownVictoryMessage
+										
+										var triedAllBoxes
+										var shownAMessage
 										
 										function init() {
 											env.addStepListener(stepListener)
@@ -232,9 +232,10 @@
 											plantedBox5 = false
 											
 											shownRunOutMessage = false
-											shownNoFlowersMessage = false
-											shownAllBoxesMessage = false
-											shownVictoryMessage = false
+											
+											triedAllBoxes = false
+											shownAMessage = false
+											timeOfLastAction = System.currentTimeMillis()
 										}
 
 										
@@ -258,10 +259,16 @@
 												    else if (y &lt; 140)
 												       plantedBox5 = true
 												       
+												    if (plantedBox1 &amp;&amp; plantedBox2 &amp;&amp; plantedBox3 &amp;&amp; plantedBox4 &amp;&amp; plantedBox5)
+												    	triedAllBoxes = true
+												       
 												    if (!shownRunOutMessage &amp;&amp; numPlants == 20){
 														showMessage("You ran out of seeds! \nEach seed packet only has 20 seeds. \nPress play to start the model and watch your plants grow.", env, envHolder)
 														shownRunOutMessage = true
 													}
+													
+													timeOfLastAction = System.currentTimeMillis()
+													shownAMessage = false
 												} else if (evt.getType() == EnvironmentChangeEvent.RESET){
 													setup()
 												}
@@ -273,22 +280,52 @@
 										
 										var stepHandler = {
 											environmentStepped: function(){
-												if (numPlants &lt; 20){		// this is a count of clicks
-													return;	
+												if (shownAMessage)
+													return
+													
+												if (madeAFlower() &amp;&amp; triedAllBoxes &amp;&amp; allPlantsAreAdults()) {
+													// full-success
+													showMessage("4", env, envHolder)
+													shownAMessage = true
 												}
-												
-												var keepgoing = checkNoFlowers()
-												
-												if (keepgoing)		// we know we have at least one flower
-													keepgoing = checkPlantedAllBoxes()
-												
+													
+													
+												if (numPlants == 20 &amp;&amp; allPlantsAreAdults()){
+													if (madeAFlower()) {
+														if (triedAllBoxes) {
+															// full-success
+															showMessage("1", env, envHolder)
+														} else {
+															// yay but not all boxes planted
+															showMessage("2", env, envHolder)
+														}
+													} else {
+														// no flower and not all boxes planted
+														showMessage("3", env, envHolder)
+													}
+													shownAMessage = true
+												} else if (System.currentTimeMillis() &gt; (timeOfLastAction + 10000)){
+													if (madeAFlower()) {
+														if (triedAllBoxes) {
+															// full-success
+															showMessage("4", env, envHolder)
+														} else {
+															// yay but not all boxes planted
+															showMessage("5", env, envHolder)
+														}
+													} else {
+														// no flower and not all boxes planted
+														showMessage("6", env, envHolder)
+													}
+													shownAMessage = true
+												}
 											}		
 										}
 										
 										
 										var stepListener = new EnvironmentStepListener(stepHandler)
 										
-										function checkNoFlowers() {
+										function allPlantsAreAdults(){
 											var allPlants = env.getAllAgents()
 											var ageOfFlowering = parseInt(allPlants.get(0).getProperty("age of maturity")) + 5
 											for (var i = 0; i &lt; allPlants.size(); i++){
@@ -297,6 +334,11 @@
 													return false;				// not all plants are adult
 												}
 											}
+											return true
+										}
+										
+										function madeAFlower(){
+											var allPlants = env.getAllAgents()
 											
 											for (var i = 0; i &lt; allPlants.size(); i++){
 												var plant = allPlants.get(i)	
@@ -304,28 +346,8 @@
 													return true;				// we have at least one flower
 												}
 											}
-											
-											if (!shownNoFlowersMessage){
-												// all plants are adult and none have flowers
-												showMessageAndLog("You planted all 20 seeds but your plants did not grow a flower.  \nClick the reset button to start over and get more seeds.  \nTry planting one seed in each flower box.", env, envHolder, otEnvHolder)
-												shownNoFlowersMessage = true
-											}
 											return false
 										}
-										
-										function checkPlantedAllBoxes() {
-											if (!shownAllBoxesMessage &amp;&amp; !(plantedBox1 &amp;&amp; plantedBox2 &amp;&amp; plantedBox3 &amp;&amp; plantedBox4 &amp;&amp; plantedBox5)){
-												showMessageAndLog("Great!  You found the right flower box for the plant. \nWhat happens if you plant in the other flower boxes? \nTry planting in all the boxes.", env, envHolder, otEnvHolder)
-												shownAllBoxesMessage = true
-												return false
-											}
-											
-											if (!shownVictoryMessage &amp;&amp; (plantedBox1 &amp;&amp; plantedBox2 &amp;&amp; plantedBox3 &amp;&amp; plantedBox4 &amp;&amp; plantedBox5)){
-												showMessageAndLog("Great!  You found the right flower box for the plant. \nLook to see how much sun the plant needs to grow a flower. \nTake a picture and then go to the next page.", env, envHolder, otEnvHolder)
-												shownVictoryMessage = true
-											}
-										}
-										
 										
 										function save() {
 											return true;
