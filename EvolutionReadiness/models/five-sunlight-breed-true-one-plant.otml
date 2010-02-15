@@ -217,6 +217,13 @@
 										var triedAllBoxes
 										var shownAMessage
 										
+										//messages
+										var fullVictory = "Great! You found the right flower box for the plant.\nLook to see how much sun the plant needs to grow a flower.\nTake a picture and then go to the next page."
+										var noFlower20 = "You planted all 20 seeds but your plants did not grow a flower.\nClick the reset button to start over and get more seeds.\nTry planting one seed in each flower box."
+										var noFlowerTime = "You haven't yet found out which flower box is right for your plant.\nTry planting the rest of your seeds in the other boxes."
+										var notAllBoxes20 = "Great! You found the right flower box for the plant.\nWhat happens if you plant in the other flower boxes?\nTry planting in all the boxes. Click the reset button to start over and get more seeds."
+										var notAllBoxesTime = "Great!  You found the right flower box for the plant.\nWhat happens if you plant in the other flower boxes?\nTry planting the rest of your seeds in the other boxes."
+										
 										function init() {
 											env.addStepListener(stepListener)
 											env.addChangeListener(changeListener)
@@ -285,7 +292,7 @@
 													
 												if (madeAFlower() &amp;&amp; triedAllBoxes &amp;&amp; allPlantsAreAdults()) {
 													// full-success
-													showMessage("4", env, envHolder)
+													showMessageAndLog(fullVictory, env, envHolder, otEnvHolder)
 													shownAMessage = true
 												}
 													
@@ -294,30 +301,32 @@
 													if (madeAFlower()) {
 														if (triedAllBoxes) {
 															// full-success
-															showMessage("1", env, envHolder)
+															showMessageAndLog(fullVictory, env, envHolder, otEnvHolder)
 														} else {
 															// yay but not all boxes planted
-															showMessage("2", env, envHolder)
+															showMessageAndLog(notAllBoxes20, env, envHolder, otEnvHolder)
 														}
 													} else {
 														// no flower and not all boxes planted
-														showMessage("3", env, envHolder)
+														showMessageAndLog(noFlower20, env, envHolder, otEnvHolder)
 													}
 													shownAMessage = true
 												} else if (System.currentTimeMillis() &gt; (timeOfLastAction + 10000)){
-													if (madeAFlower()) {
-														if (triedAllBoxes) {
-															// full-success
-															showMessage("4", env, envHolder)
+													if (numPlants > 0) {
+														if (madeAFlower()) {
+															if (triedAllBoxes) {
+																// full-success
+																showMessageAndLog(fullVictory, env, envHolder, otEnvHolder)
+															} else {
+																// yay but not all boxes planted
+																showMessageAndLog(notAllBoxesTime, env, envHolder, otEnvHolder)
+															}
 														} else {
-															// yay but not all boxes planted
-															showMessage("5", env, envHolder)
+															// no flower and not all boxes planted
+															showMessageAndLog(noFlowerTime, env, envHolder, otEnvHolder)
 														}
-													} else {
-														// no flower and not all boxes planted
-														showMessage("6", env, envHolder)
+														shownAMessage = true
 													}
-													shownAMessage = true
 												}
 											}		
 										}
