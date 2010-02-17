@@ -92,7 +92,7 @@ class QuestionHelper
   def questionAnswer(question)
     answer = questionAnswerRaw(question)
     
-    answer = "No Answer" if answer == nil
+    answer = "-" if answer == nil
     return answer
   end
   
