@@ -87,7 +87,7 @@
       <root>
         <OTMultiUserRoot local_id="multi_user_root"
           groupOverlayURL="http://rails.dev.concord.org/webdav/test/udl-teacher-dashboard-0001.otml"
-          reportTemplateViewEntry="${report_section_view}">
+          reportTemplateViewEntry="${report_section_first_choice_view}">
           <userList>
             <!--
               the local_id is so this can be used as a report template in the
@@ -102,13 +102,13 @@
               local_id="external_activity_url
             -->
             <OTIncludeRootObject local_id="external_user_list_url"
-              href="http://er.diy.concord.org/external_otrunk_activities/30/ot_learner_data?users=327,328,342" />
+              href="http://er.diy.concord.org/external_otrunk_activities/35/ot_learner_data?users=342" />
           </userList>
           <reportTemplate>
             <!-- <OTIncludeRootObject local_id="external_activity_url"
               href="http://otrunk.concord.org/examples/EvolutionReadiness/plants-1.otml" />-->
             <OTIncludeRootObject local_id="external_activity_url"
-              href="http://svn.concord.org/svn/projects/tags/common/java/otrunk/otrunk-examples/ER-20100205.0/act1-txmo.otml" />
+              href="http://svn.concord.org/svn/projects/tags/common/java/otrunk/otrunk-examples/ER-20100217.0/act1-txmo.otml" />
           </reportTemplate>
         </OTMultiUserRoot>
       </root>
@@ -119,6 +119,7 @@
             <OTJRuby local_id="erb_controller" src="scripts/er-multipage-report.rb" />
           </script>
           <variables>
+            <OTScriptVariable name="section_first_choice_view" reference="${report_section_first_choice_view}" />
             <OTScriptVariable name="section_view" reference="${report_section_view}" />
             <OTScriptVariable name="user_view" reference="${report_user_view}" />
             <OTScriptVariable name="question_popup_view"
@@ -168,6 +169,17 @@
                     <OTJRuby local_id="print_button_script" src="scripts/print-page.rb" />
                   </script>
                 </OTScriptButton>
+              </reference>
+            </OTScriptVariable>
+          </variables>
+        </OTXHTMLScriptViewEntry>
+        <OTXHTMLScriptViewEntry local_id="report_section_first_choice_view"
+          template="${template_report_view}" objectClass="org.concord.framework.otrunk.OTObject"
+          viewClass="org.concord.otrunk.script.ui.OTXHTMLScriptView">
+          <variables>
+            <OTScriptVariable name="template">
+              <reference>
+                <OTBlob src="templates/section-first-choice.html.erb" />
               </reference>
             </OTScriptVariable>
           </variables>

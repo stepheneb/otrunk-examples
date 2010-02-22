@@ -5,10 +5,10 @@
     	<% unless $printing %>
 		    <%= @erbHelper.embedObject $printButton %>
 		  <% end %>
-		</td>
-		<td>
-			<%= @erbHelper.linkToObject "Show original answers", activityRoot(), $section_view %><br/>
-		 	Showing final answers<br/>  
+		 </td>
+		 <td>
+		 	Showing original answers<br/>
+		 	<%= @erbHelper.linkToObject "Show final answers", activityRoot(), $section_view %><br/>    
 		 </td>
     </tr>
   </table>
@@ -42,7 +42,7 @@
         <% user_correct = 0; user_answered = 0 %>
         <% questions.each do |question| %>
           <% userQuestion = @otrunkHelper.userObject(question, user) %>
-          <% if @questionHelper.questionCorrect(userQuestion) 
+          <% if @questionHelper.questionFirstChoiceCorrect(userQuestion) 
                user_correct += 1 
                question_correct[question] += 1
              end 
@@ -52,7 +52,7 @@
                question_answered[question] += 1
              end
              %>
-          <td><%= @questionHelper.questionAnswerHtml(userQuestion) %></td>
+          <td><%= @questionHelper.questionFirstAnswerHtml(userQuestion) %></td>
         <% end %>        
         <td><img src="http://chart.apis.google.com/chart?cht=p&chd=t:<%= "#{user_correct},#{gradable_questions - user_correct}" %>&chs=40&40"/><br/>
            <%= "#{user_correct}/#{gradable_questions}" %></td>
@@ -72,6 +72,4 @@
         <% end %>        
       </tr>      
   </table>
-  <p/>
-  <font color="ff0000"><sup>*</sup></font> Answer was corrected after feedback was shown
 </div>

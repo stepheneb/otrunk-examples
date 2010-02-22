@@ -55,6 +55,20 @@ class QuestionHelper
     answer
   end
   
+  def questionFirstAnswerRaw(question)
+    input = question.incorrectAnswers.size > 0 ? question.incorrectAnswers.get(0) : question.input
+    answer = nil
+    if input.is_a? org.concord.otrunk.ui.OTText
+      answer = input.text.gsub(/\s/," ") if input.text
+    elsif input.is_a? org.concord.otrunk.view.document.OTCompoundDoc
+      answer = input.bodyText.gsub(/\s/," ") if input.bodyText
+    elsif input.is_a? org.concord.otrunk.ui.OTChoice
+      answer = currentChoiceText input
+    end
+    
+    answer
+  end
+  
   def currentChoiceText(chooser)
     answer = chooser.getCurrentChoices.get(0)
     return nil if answer == nil
@@ -96,10 +110,35 @@ class QuestionHelper
     return answer
   end
   
+    # this takes a userQuestion
+  def questionFirstAnswer(question)
+    answer = questionFirstAnswerRaw(question)
+    
+    answer = "-" if answer == nil
+    return answer
+  end
+  
   # this takes a userQuestion
   def questionAnswerHtml(question)
     correct = questionCorrect question
     text = questionAnswer question
+    
+    return '' if text == nil
+    
+    shortText = Util.truncate(text, 30)
+    
+    if correct
+    	shortText += "<font color=\"ff0000\"><sup>*</sup></font>" unless questionFirstChoiceCorrect question
+    end
+  
+    return text if correct == nil
+    return "<font color=\"ff0000\">#{shortText}</font>" unless correct
+    return "<font color=\"009900\">#{shortText}</font>"    
+  end
+  
+  def questionFirstAnswerHtml(question)
+    correct = questionFirstChoiceCorrect question
+    text = questionFirstAnswer question
     return '' if text == nil
     
     shortText = Util.truncate(text, 30)
@@ -123,6 +162,29 @@ class QuestionHelper
        question.input.currentChoices.size > 0
     then
       return question.correctAnswer.objects.get(0) == question.input.currentChoices.get(0)
+    end
+    nil
+  end
+  
+  ## PARAMS:
+  ##   question: a userQuestion
+  ## RETURNS:
+  ##   true: correct answer and no incorrect answers
+  ##   false: any incorrect answers
+  ##   nil: question is not gradable or no correct answer is defined
+  def questionFirstChoiceCorrect(question)
+    if question.correctAnswer &&
+       question.correctAnswer.is_a?(OTObjectSet) &&
+       question.input.is_a?(OTChoice) &&
+       question.input.currentChoices &&
+       question.input.currentChoices.size > 0
+    then
+    	puts question.prompt.bodyText + " incorrectAnswers.size = "+question.incorrectAnswers.size.to_s
+    	if question.incorrectAnswers.size > 0
+    		return false
+    	else
+      		return question.correctAnswer.objects.get(0) == question.input.currentChoices.get(0)
+      	end
     end
     nil
   end
