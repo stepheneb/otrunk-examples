@@ -5,7 +5,7 @@ breed [flames flame]
 breed [rockets rocket]
 
 
-rockets-own [x-pos y-pos x-vel y-vel mass fuel fire-countdown blasts-remaining r-score shuttle-count ]
+rockets-own [x-pos y-pos y-vel mass fuel fire-countdown blasts-remaining r-score shuttle-count ]
 ; fuel is the amount of fuel remaining. Right now, the fuel is massless. 
 ; fire-countdown is the number of seconds remaining in one firing cycle. 
 ; blasts-remaining is the number of blasts remaining to be delivered during the current firing cycle. 
@@ -21,7 +21,7 @@ shuttles-own [sx-pos sy-pos sx-vel sy-vel time-to-live towed? by-whom value] ; e
 ; towed? asks whether the shuttle is being towed by a rocket
 ; by-whom contains the "who" of the towing rocket. 
 
-globals [t shuttle-mass fuel-remaining] 
+globals [t shuttle-mass fuel-remaining x-vel] 
 ; the following globals that define the motor are defined in the UI
 ; the user cannot fire a rocket a second time for "fire-duration" seconds. Any fire commands within that time are ignored.
 ; the total impulse delivered for each command is given by the global "impluse"
@@ -38,7 +38,6 @@ to setup
   setup-stars                     ; sprinkle some stars at random
   setup-border       ; if the border switch is set, draw a border
   setup-shuttles                  ; place the starting number of free shuttles 
-  update-graph
 end
 
 To setup-globals
@@ -138,7 +137,6 @@ to go
       set color (color - .2)                      ; fade all puffs and kill them off when they become black
       if color > 10 [die]]                       ; note: color below 0 becomes very large!
     ask flames [ht]]                                 ; turn off the flames if they happen to be on
-    every .5 [update-graph ]          
 end
 
 to move-rockets
@@ -193,14 +191,6 @@ to pickup-shuttle ; picks up a shuttle if a rocket is near it and sufficiently n
         set by-whom w]]    ]                              ; the shuttle is now being towed
     set mass m                           
     ]
-end
-
-to update-graph
-  if count rockets > 0 [
-    set-current-plot-pen "Rocket Velocity"
-    plot first [x-vel] of rockets 
-    set-current-plot-pen "Shuttle Velocity"
-    plot first [sx-vel] of shuttles ]
 end
  
 ; some supporting functions-----------------------------------------------------------
@@ -352,24 +342,6 @@ Time left
 1
 1
 14
-
-PLOT
-224
-180
-820
-425
-velocity graph
-time
-velocity
-0.0
-41.0
--25.0
-25.0
-true
-true
-PENS
-"Rocket Velocity" 0.5 0 -2674135 true
-"Shuttle Velocity" 0.5 0 -13345367 true
 
 MONITOR
 101
