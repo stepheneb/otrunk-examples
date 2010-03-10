@@ -10,6 +10,9 @@ include_class 'org.concord.otrunk.view.document.OTCompoundDoc'
 
 ## Helper for questions and grading
 class QuestionHelper
+  
+  RED = 'ff0000'
+  GREEN = '009900'
 
   def initialize(otrunkHelper)
     @otrunkHelper = otrunkHelper
@@ -128,12 +131,12 @@ class QuestionHelper
     shortText = Util.truncate(text, 30)
     
     if correct
-    	shortText += "<font color=\"ff0000\"><sup>*</sup></font>" unless questionFirstChoiceCorrect question
+    	shortText += wrapWrong('<sup>*</sup>') unless questionFirstChoiceCorrect question
     end
   
     return text if correct == nil
-    return "<font color=\"ff0000\">#{shortText}</font>" unless correct
-    return "<font color=\"009900\">#{shortText}</font>"    
+    return wrapWrong(shortText) unless correct
+    return wrapRight(shortText)
   end
   
   def questionFirstAnswerHtml(question)
@@ -144,8 +147,8 @@ class QuestionHelper
     shortText = Util.truncate(text, 30)
   
     return text if correct == nil
-    return "<font color=\"ff0000\">#{shortText}</font>" unless correct
-    return "<font color=\"009900\">#{shortText}</font>"    
+    return wrapWrong(shortText) unless correct
+    return wrapRight(shortText)
   end
   
   ## PARAMS:
@@ -209,6 +212,16 @@ class QuestionHelper
   
   def isChoiceQuestion(question)
     return question.input.is_a? org.concord.otrunk.ui.OTChoice
+  end
+  
+  ## Embellish the wrong answer with additional html tags
+  def wrapWrong(str)
+    %Q[<font color="#{RED}"><i>#{str}</i></font>]
+  end
+  
+  ## Embellish the right answer with additional html tags
+  def wrapRight(str)
+    %Q[<font color="#{GREEN}">#{str}</font>]
   end
   
 end
