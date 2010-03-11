@@ -1,3 +1,4 @@
+importClass(Packages.java.lang.System);
 importClass(Packages.javax.swing.JOptionPane);
 
 function showMessageWithoutPausing(message, component){
@@ -23,5 +24,11 @@ function showMessageAndLog(message, environment, component, otEnvHolder){
 	showMessage(message, environment, component)
 	
 	var otEnvHolderController = controllerService.getController(otEnvHolder);
-    otEnvHolderController.log("Message shown",message,null,null)
+	otEnvHolderController.log("Message shown",message,null,null)
+}
+
+// log success
+function logSuccess(otEnvHolder){
+    var otEnvHolderController = controllerService.getController(otEnvHolder);
+    otEnvHolderController.logSuccess();
 }
