@@ -138,8 +138,9 @@
                               <br />
                               <object refid="da6fbb40-5b45-11de-914d-6b8ca6afb695" />
                               <br />
-                              <object refid="${datagraph}"/><br/>
-                              <object refid="${button-script}"/>
+                              <object refid="${datagraph}" />
+                              <br />
+                              <object refid="${button-script}" />
                               <br />
                               When 
           you rescue the Shuttle, go on to the next page.
@@ -150,31 +151,45 @@
                         </div>
                       </bodyText>
                       <documentRefs>
-                        <OTNLogoModel id="da6fbb40-5b45-11de-914d-6b8ca6afb695" name="NetLogo model" authoredDataURL="../LOOPS/models/SpaceRescue.Practice1.nlogo" startButtonName="Start/stop" resetButtonName="Setup">
-                        	<variables>
-                        		<string>x-vel</string>
-                        	</variables>
+                        <OTNLogoModel id="da6fbb40-5b45-11de-914d-6b8ca6afb695" name="NetLogo model" authoredDataURL="../LOOPS/models/SpaceShip.1D.Docking.nlogo" startButtonName="Start/stop" resetButtonName="Setup">
+                          <variables>
+                            <string>rocket-x-vel</string>
+                          </variables>
                         </OTNLogoModel>
-                      	<OTDataCollector local_id="datagraph" name="Velocity" title="Velocity Graph" autoScaleEnabled="true" showControlBar="false">
+                        <OTDataCollector local_id="datagraph" name="Velocity" title="Velocity Graph" autoScaleEnabled="true" showControlBar="false">
                           <source>
-                            <OTDataGraphable name="Sensor" connectPoints="true" yColumn="1" drawMarks="false" color="255" xColumn="0" id="08baa804-2f22-4a06-8243-13b3c608e3d8">
+                            <OTDataGraphable id="08baa804-2f22-4a06-8243-13b3c608e3d8" name="Sensor" connectPoints="true" yColumn="1" drawMarks="false" color="255" xColumn="0" lineWidth="2.0" showAllChannels="false" visible="true">
                               <dataProducer>
                                 <object refid="da6fbb40-5b45-11de-914d-6b8ca6afb695" />
                               </dataProducer>
+                              <dataStore>
+                                <OTDataStore dt="0.01" numberChannels="1">
+                                  <channelDescriptions>
+                                    <OTDataChannelDescription name="time" unit="s" precision="2" numericData="true" />
+                                    <OTDataChannelDescription numericData="true" />
+                                  </channelDescriptions>
+                                </OTDataStore>
+                              </dataStore>
                             </OTDataGraphable>
                           </source>
                           <xDataAxis>
-                            <OTDataAxis max="15.0" min="0.0" label="Time" id="9b846778-f27f-4151-a51d-3cb42ff4d644"/>
+                            <OTDataAxis id="9b846778-f27f-4151-a51d-3cb42ff4d644" max="17.314041" min="0.0" label="Time">
+                              <customGridLabels />
+                            </OTDataAxis>
                           </xDataAxis>
                           <yDataAxis>
-                            <OTDataAxis max="30.0" min="-30.0" label="Velocity" />
+                            <OTDataAxis max="30.0" min="-30.0" label="Velocity">
+                              <customGridLabels />
+                            </OTDataAxis>
                           </yDataAxis>
+                          <labels>
+                            <OTDataPointLabel x="Infinity" y="Infinity" color="0xffffbe" fontSize="10" text="Data Point" />
+                          </labels>
                         </OTDataCollector>
                         <OTScriptObject local_id="button-script">
-                        	<script>
-                        		<OTJavascript>
-                        			<script>
-importPackage(Packages.java.lang);
+                          <script>
+                            <OTJavascript>
+                              <script>importPackage(Packages.java.lang);
 importPackage(Packages.org.concord.otrunknl41);
 
 var buttonHandler = {
@@ -186,7 +201,7 @@ var buttonHandler = {
 		var cause = evt.cause						// e.g. "user", "once"
 		
 		// uncomment next line for debugging:
-		// System.out.println("Button event:  name = "+buttonName+"; action = "+action+"; cause = "+cause);
+		// System.out.println("Button event:  name = "+buttonName+"; action = "+action+"; cause = "+cause+");
 		
 		if (cause.equalsIgnoreCase("user")){
 			if (buttonName.equalsIgnoreCase("right") || buttonName.equalsIgnoreCase("left")){
@@ -207,24 +222,37 @@ function addLabelAtEnd(text){
 function init() {
 	nlogo_model.addButtonListener(buttonListener);        
 	return true;
-}
-                        			</script>
-                        		</OTJavascript>
-                        	</script>
-                        	<variables>
-                        		<OTScriptVariableRealObject name="nlogo_model" reference="da6fbb40-5b45-11de-914d-6b8ca6afb695" />
-                        		<OTScriptVariableRealObject name="graphable" reference="08baa804-2f22-4a06-8243-13b3c608e3d8" />
-                        		<OTScriptVariableView name="graph_view" reference="${datagraph}"/>
-                        	</variables>
+}</script>
+                            </OTJavascript>
+                          </script>
+                          <variables>
+                            <OTScriptVariableRealObject name="nlogo_model">
+                              <reference>
+                                <object refid="da6fbb40-5b45-11de-914d-6b8ca6afb695" />
+                              </reference>
+                            </OTScriptVariableRealObject>
+                            <OTScriptVariableRealObject name="graphable">
+                              <reference>
+                                <object refid="08baa804-2f22-4a06-8243-13b3c608e3d8" />
+                              </reference>
+                            </OTScriptVariableRealObject>
+                            <OTScriptVariableView name="graph_view">
+                              <reference>
+                                <object refid="${datagraph}" />
+                              </reference>
+                            </OTScriptVariableView>
+                          </variables>
+                          <scriptState />
                         </OTScriptObject>
                       </documentRefs>
                     </OTCompoundDoc>
                   </cards>
                   <currentCard>
-                    <object refid="77f3fc95-77c3-11de-8181-fb1fceaa9d84" />
+                    <object refid="${page-1}" />
                   </currentCard>
                   <viewedCards>
                     <object refid="77f3fc95-77c3-11de-8181-fb1fceaa9d84" />
+                    <object refid="${page-1}" />
                   </viewedCards>
                 </OTCardContainer>
               </content>
