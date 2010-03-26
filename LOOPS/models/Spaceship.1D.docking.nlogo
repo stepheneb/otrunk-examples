@@ -157,7 +157,8 @@ to move-shuttles
   ask shuttles [
     ifelse towed? 
        [set sx-pos [x-pos] of rocket by-whom  ; if towed, set shuttle at rocket's position
-          set sy-pos [y-pos] of rocket by-whom ]
+          set sy-pos [y-pos] of rocket by-whom 
+          set shuttle-x-vel rocket-x-vel]
        [set sx-pos (sx-pos + .05 * shuttle-x-vel)     ; if not towed advance the shuttle using its current velocity
           set sy-pos (sy-pos + .05 * sy-vel)]
     ifelse on-screen? sx-pos sy-pos        ; if the shuttle is on-screen
