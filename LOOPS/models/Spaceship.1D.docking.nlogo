@@ -93,8 +93,8 @@ end
 
 to setup-shuttles  ; these are the blue shuttles that are not onboard rockets at the start of the game.
   ; the owned variables are value position, velocity, and time-to-live
-  create-shuttles 1 
-    [ set sx-pos ( 0 )  set sy-pos 0 ]  ; bob;'s original value for sx-pos = max-pxcor - 5
+  create-shuttles 1 ; 
+    [ set sx-pos ( max-pxcor - 5 )  set sy-pos 0 ]  ; bob;'s original value for sx-pos = max-pxcor - 5 //the center position is 0
   ask shuttles [
     set size 8
     set shape "ufo side"
