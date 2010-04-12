@@ -36,6 +36,7 @@
     <import class="org.concord.otrunk.script.ui.OTScriptVariableView" />
     <import class="org.concord.otrunk.script.ui.OTScriptButton" />
     <import class="org.concord.otrunk.ui.OTSlider" />
+    <import class="org.concord.otrunk.ui.OTText" />
     <import class="org.concord.framework.otrunk.view.OTFrame" />
   </imports>
   <idMap> 
@@ -74,6 +75,9 @@
       					</td>
       					<td width="5%"></td>
       					<td>
+      					Time Remaining:<br/>
+      					<object refid="${timer}"/> seconds
+      					<br/><br/>
       					Hunger:<br/><br/>
       						<object refid="${slider}"/>
       					</td>
@@ -81,6 +85,7 @@
       			</table>
       		</bodyText>
       		<documentRefs>
+      			<OTText local_id="timer" text="30" columns="2"/>
 		      	<OTEnvironmentHolder local_id="env-holder" width="590" height="460" toolbar="run,reset" useSpeedSlider="false">
 		          <environment>
 		            <OTEnvironment local_id="environment" environmentWidth="5" environmentHeight="5" showRunButton="false" winterLength="5" summerLength="50" showWinterImage="false" orgSizeMultiplier="2.8" backgroundImageSrc="images/grass.jpg">
@@ -363,6 +368,15 @@
 						        			} else {
 						        				timer.schedule(timerTask, timeRemaining);
 						        			}
+						        			
+						        			if (timerCountdownTask == null){
+						        				updateEndTime(30000)
+												timerCountdownTask = new TimerTask(timerTaskCountdownHandler)
+						        				timer.schedule(timerCountdownTask, 0, 100);
+						        			} else {
+						        				updateEndTime(timeRemaining)
+						        				timer.schedule(timerCountdownTask, 0, 100);
+						        			}
 										} else if (evt.getType() == EnvironmentChangeEvent.PAUSE){
 											isRunning = false
 											timeRemaining = timerTask.scheduledExecutionTime() - System.currentTimeMillis()
@@ -370,11 +384,39 @@
 												timer.cancel()
 											timer = new Timer();
 											timerTask = new TimerTask(timerTaskHandler)
+											timerCountdownTask = new TimerTask(timerTaskCountdownHandler)
 										}
 									}
 								}
 											
 							var resetListener = new EnvironmentChangeListener(resetRunHandler)
+							
+							var endTime
+							
+							function updateEndTime(timeRemaining){
+								endTime = System.currentTimeMillis() + timeRemaining;
+								System.out.println("timeRemaining = "+timeRemaining);
+								System.out.println("System.currentTimeMillis() = "+System.currentTimeMillis())
+								System.out.println("endTime = "+endTime)
+							}
+							
+							function updateTimer(){
+								timeRemaining = endTime - System.currentTimeMillis();
+								
+								System.out.println("timeRemaining = "+timeRemaining)
+								timeRemaining = (timeRemaining &lt; 0) ? 0 : Math.floor(timeRemaining / 1000);
+								timerText.text = timeRemaining;
+							}
+							
+							var timerCountdownTask;
+							
+							var timerTaskCountdownHandler =
+							{
+								run: function()
+								{
+									updateTimer();
+								}
+							}
 						
 						function save() {
 							return true;
@@ -408,6 +450,11 @@
 		                <OTScriptVariable name="slider">
 		                	<reference>
 		                		<object refid="${slider}"/>
+		                	</reference>
+		                </OTScriptVariable>
+		                <OTScriptVariable name="timerText">
+		                	<reference>
+		                		<object refid="${timer}"/>
 		                	</reference>
 		                </OTScriptVariable>
 		              </variables>
