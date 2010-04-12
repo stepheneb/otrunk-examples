@@ -59,7 +59,8 @@
       </bundles>
       <includes>
         <OTInclude href="../global-imports/er-view-bundle.otml" />
-        <OTInclude href="species/annual-varied-plants.otml" />
+        <OTInclude href="species/fast-plants.otml" />
+        <OTInclude href="species/fast-plants-thin.otml" />
         <OTInclude href="species/white-rabbits.otml" />
         <OTInclude href="species/foxes.otml" />
       </includes>
@@ -80,9 +81,9 @@
       			</table>
       		</bodyText>
       		<documentRefs>
-		      	<OTEnvironmentHolder local_id="env-holder" width="590" height="460" toolbar="run,reset" useSpeedSlider="true">
+		      	<OTEnvironmentHolder local_id="env-holder" width="590" height="460" toolbar="run,reset" useSpeedSlider="false">
 		          <environment>
-		            <OTEnvironment local_id="environment" environmentWidth="11" environmentHeight="11" showRunButton="false" winterLength="5" summerLength="50" showWinterImage="false" orgSizeMultiplier="2.8" backgroundImageSrc="images/grass.jpg">
+		            <OTEnvironment local_id="environment" environmentWidth="5" environmentHeight="5" showRunButton="false" winterLength="5" summerLength="50" showWinterImage="false" orgSizeMultiplier="2.8" backgroundImageSrc="images/grass.jpg">
 		              <world>
 		                <OTWorld local_id="peasimple_world" speciesPath="org/concord/biologica/worlds/peasimple.xml" />
 		              </world>
@@ -124,8 +125,8 @@
 									var world = env.getWorld();
 									env.setWrapNorthSouth(false);
 									env.setWrapEastWest(false);
-									for (var i = 0; i &lt; 11; i++) {
-								        for (var j = 0; j &lt; 11; j++) {
+									for (var i = 0; i &lt; 10; i++) {
+								        for (var j = 0; j &lt; 10; j++) {
 								        	var envUnit = new EnvironmentUnit(env, null, i, j)
 								        	env.setEnvironmentUnit(envUnit, i, j)
 								        	envUnit.setProperty("sunlight", new Float((j+1)/10))
@@ -135,9 +136,8 @@
 							            }
 							        }
 							        
-							        for (var i = 0; i &lt; 22; i++) {
+							        for (var i = 0; i &lt; 100; i++) {
 							        	var plant = plant_species.createAgent();
-										plant.setAge(i*2)
 										plant.setProperty("food quantity",100)
 										plant.setProperty("max offspring distance", 20)
 										plant.setProperty("min offspring", 1)
@@ -179,7 +179,7 @@
 		                </OTScriptVariableRealObject>
 		                <OTScriptVariableRealObject name="plant_species">
 		                	<reference>
-		                		<object refid="f5732706-c9c2-4e29-8c99-4c668dda89b0"/>
+		                		<object refid="8a6918a9-a82b-4627-977f-2215d41395be"/>
 		                	</reference>
 		                </OTScriptVariableRealObject>
 		              </variables>
@@ -230,6 +230,8 @@
 						        
 						        timer = new Timer();
 						        timerTask = null;
+						        if (envHolder.getToolbar().getButton("Run") != null)
+						        	envHolder.getToolbar().getButton("Run").setEnabled(true)
 						        
 							}
 							
@@ -238,9 +240,10 @@
 								run: function()
 								{
 									if (!addedRabbits){
-										envHolder.getEnvironmentView().pause()
-										showMessageWithoutPausing("Hooray, your rabbit lived for 30 seconds!", envHolder)
-										addMoreRabbits()
+										envHolder.pauseAction()
+											envHolder.getToolbar().getButton("Run").setEnabled(false)
+										showMessageWithoutPausing("Congratulations!\nYour bunny was able to find enough food to live!", envHolder)
+									//	addMoreRabbits()
 									} else {
 										envHolder.pauseAction()
 										showMessageWithoutPausing("Hooray, all your rabbits lived for another 30 seconds!\nNow you can go on to the next page.", envHolder)
@@ -269,7 +272,6 @@
 								if (numMore &gt; 0)
 								for (var i = 0; i &lt; numMore; i++){
 									var plant = plant_species.createAgent();
-									plant.setAge(i*2)
 									plant.setProperty("food quantity",100)
 									plant.setProperty("max offspring distance", 20)
 									plant.setProperty("min offspring", 1)
@@ -337,7 +339,8 @@
 											env.removeAgent(rabbit)
 											envHolder.pauseAction()
 											rabbit.setProperty("Hunger", 0)
-											showMessageWithoutPausing("Oh no! Your rabbit died of hunger.\nTry again by pressing the Restart button.", envHolder)
+											envHolder.getToolbar().getButton("Run").setEnabled(false)
+											showMessageWithoutPausing("The bunny died because it was not able to find enough food to live.\nClick Reset and try again!", envHolder)
 											rabbit = null
 										}
 									}
@@ -394,7 +397,7 @@
 		                </OTScriptVariableRealObject>
 		                <OTScriptVariableRealObject name="plant_species">
 		                	<reference>
-		                		<object refid="f5732706-c9c2-4e29-8c99-4c668dda89b0"/>
+		                		<object refid="8a6918a9-a82b-4627-977f-2215d41395be"/>
 		                	</reference>
 		                </OTScriptVariableRealObject>
 		                <OTScriptVariableRealObject name="rabbit_species">
@@ -407,24 +410,6 @@
 		                		<object refid="${slider}"/>
 		                	</reference>
 		                </OTScriptVariable>
-		              </variables>
-		              <scriptState />
-		            </OTScriptObject>
-		            --><OTScriptObject local_id="setup-species-script" name="Setup species">
-		              <script>
-		                <OTJavascript>
-		                  <script>function init()
-			      				{
-			      					species.setMutationChance(0)
-			      				}</script>
-		                </OTJavascript>
-		              </script>
-		              <variables>
-		                <OTScriptVariableRealObject name="species">
-		                  <reference>
-		                    <object refid="f5732706-c9c2-4e29-8c99-4c668dda89b0" />
-		                  </reference>
-		                </OTScriptVariableRealObject>
 		              </variables>
 		              <scriptState />
 		            </OTScriptObject>
