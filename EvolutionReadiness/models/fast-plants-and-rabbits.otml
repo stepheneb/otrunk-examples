@@ -50,25 +50,17 @@
       <includes>
         <OTInclude href="../global-imports/er-view-bundle.otml" />
         <OTInclude href="species/fast-plants.otml" />
+        <OTInclude href="species/white-rabbits.otml" />
       </includes>
       <root>
-        <OTEnvironmentHolder local_id="env-holder" width="590" height="460" toolbar="run,info cursor,carry,reset">
+        <OTEnvironmentHolder local_id="env-holder" width="590" height="460" toolbar="run,info cursor,carry,reset" useSpeedSlider="true">
           <environment>
-            <OTEnvironment local_id="environment" environmentWidth="15" environmentHeight="15" width="580" height="445" showRunButton="false" winterLength="2" summerLength="50" showWinterImage="false" orgSizeMultiplier="3.0" backgroundImageSrc="images/sun3levels-5-white.png">
+            <OTEnvironment local_id="environment" environmentWidth="10" environmentHeight="10" width="580" height="445" showRunButton="false" winterLength="2" summerLength="50" showWinterImage="false" orgSizeMultiplier="3.0" backgroundImageSrc="images/mountains1.png">
               <world>
                 <OTWorld local_id="peasimple_world" speciesPath="org/concord/biologica/worlds/peasimple.xml" />
               </world>
-              <barriers>
-                <OTPlacement x="0" y="0" width="24" height="148" />
-                <OTPlacement x="24" y="0" width="117" height="21" />
-                <OTPlacement x="24" y="42" width="117" height="20" />
-                <OTPlacement x="24" y="82" width="117" height="21" />
-                <OTPlacement x="146" y="46" width="0" height="0" />
-                <OTPlacement x="141" y="0" width="12" height="150" />
-                <OTPlacement x="24" y="126" width="117" height="24" />
-              </barriers>
               <rules>
-                
+               	
               </rules>
             </OTEnvironment>
           </environment>
@@ -78,26 +70,84 @@
                 <object refid="9fdc762d-1011-4900-9c27-f36f923bd53e" />
               </species>
             </OTAddAgentButton>
+            <OTAddAgentButton text="Add Rabbit" limit="20">
+              <species>
+                <object refid="f05fc1b1-ea0e-4d6e-a21e-7d089860445a" />
+              </species>
+            </OTAddAgentButton>
           </addAgentsButtons>
           <scripts>
-            <OTScriptObject local_id="setup-script" name="Setup script">
+            <!--<OTScriptObject local_id="setup-script" name="Setup script">
               <script>
                 <OTJavascript src="scripts/gradated-sunlight-five-blocks/setup.js">
                   <script>importPackage(Packages.java.lang);
 importPackage(Packages.java.awt);
+importPackage(Packages.java.net);
+importPackage(Packages.org.concord.biologica.agent);
 importPackage(Packages.org.concord.biologica.environment);
+importPackage(Packages.org.concord.biologica.rules);
 
 function init() {
-    env.removeAllAgents()
-    env.setStepCount(0)
-    envHolder.pauseAction()
-	var world = env.getWorld()
-	env.setColumns(15)
-	env.setRows(15)
-	env.setWrapNorthSouth(false)
-	env.setWrapEastWest(false)
+    fillWorld(10, 1, true, null);
+	runModel(50);
+	//System.out.println(env.getAllAgents().size());
+	fillWorld(20, 2, false, null);
+	System.out.println(env.getAllAgents().size());
+	
+	runModel(10);
 	return true;
 }
+
+function runModel(steps){
+		for (var i = 0; i &lt; steps; i++) {
+			env.step();
+		}
+	}
+	
+function fillWorld(numAgents, clazz, clear){
+		if (clear){
+			env.removeAllAgents();
+		}
+
+		s = new BasicSpecies();
+		s.setAgentClass(clazz);
+		
+		if (clazz == 2){
+			var map = new AgentPropertiesImageMap();
+				map.setImageUrl(new URL("http://t1.gstatic.com/images?q=tbn:jMvxEQlD3iWrvM:http://besenretail.files.wordpress.com/2010/03/rabbit.jpg"));
+
+			map.setVisibleInEnvironment(true);
+			var r = new RuleCondition(true);
+			map.addCondition(r);
+			s.addAgentPropertiesImageMap(map);
+		} else {
+			var map = new AgentPropertiesImageMap();
+				map.setImageUrl(new URL("http://t1.gstatic.com/images?q=tbn:R43FNPD3UnQhOM:http://library.thinkquest.org/3715/plant1.gif"));
+
+			map.setVisibleInEnvironment(true);
+			var r = new RuleCondition(true);
+			map.addCondition(r);
+			s.addAgentPropertiesImageMap(map);
+		}
+		
+		for (var i = 0; i &lt; numAgents; i++) {
+			var a = s.createAgent();
+			
+			if (clazz == 1){
+				a.getSpecies().setName("Fast Plants");
+			} else if (clazz == 2){
+				a.setProperty("prey", "Fast Plants");
+				a.setProperty("vision distance", new Integer(30));
+				a.setProperty("max offspring", new Integer(3));
+				a.setProperty("eating distance", new Integer(5));
+				a.setProperty("Resource Consumption Rate", new Integer(15));
+			}
+			
+			a.setWorld(env.getWorld());
+			a.setSpecies(s);
+			env.addAgent(a);
+		}
+	}
 
 function save() {
 	return true;
@@ -123,7 +173,7 @@ function save() {
               </variables>
               <scriptState />
             </OTScriptObject>
-          </scripts>
+          --></scripts>
         </OTEnvironmentHolder>
       </root>
     </OTSystem>
