@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <otrunk id="13d3fb4f-123a-425f-9d60-d84e145c0678">
   <imports>
+    <import class="org.concord.data.state.OTDataStore" />
+    <import class="org.concord.data.state.OTDataChannelDescription" />
+    <import class="org.concord.data.state.OTDataField" />
+    <import class="org.concord.data.state.OTDataTable" />
+    <import class="org.concord.datagraph.state.OTDataGraph" />
+    <import class="org.concord.datagraph.state.OTDataAxis" />
+    <import class="org.concord.datagraph.state.OTDataGraphable" />
+    <import class="org.concord.datagraph.state.OTDataCollector" />
+    <import class="org.concord.datagraph.state.OTMultiDataGraph" />
+    <import class="org.concord.datagraph.state.OTPluginView" />
+    <import class="org.concord.datagraph.state.OTDataBarGraphable" />
     <import class="org.concord.otrunk.OTIncludeRootObject" />
     <import class="org.concord.otrunk.OTInclude" />
     <import class="org.concord.otrunk.OTSystem" />
@@ -13,6 +24,7 @@
     <import class="org.concord.otrunk.biologica.agent.OTAgentPropertyImageMap" />
     <import class="org.concord.otrunk.biologica.environment.OTAddAgentButton" />
     <import class="org.concord.otrunk.biologica.environment.OTEnvironmentHolder" />
+    <import class="org.concord.otrunk.biologica.data.OTBiologicaModelDataProducer" />
     <import class="org.concord.otrunk.biologica.rules.OTRule" />
     <import class="org.concord.otrunk.biologica.rules.OTRuleCondition" />
     <import class="org.concord.otrunk.biologica.rules.OTRuleConsequence" />
@@ -85,10 +97,41 @@
       			</table>
       		</bodyText>
       		<documentRefs>
+      			<OTDataCollector local_id="graph" name="Number of plants" title="Number of flowers" showLabelCoordinates="true" labelDecimalPlaces="2" showControlBar="false" useDefaultToolBar="false" displayButtons="">
+                          <source>
+                            <OTDataGraphable showSampleLimit="1" name="Number of organisms" connectPoints="true" drawMarks="false" lineWidth="10.0" color="192" xColumn="0" showControlButtons="true" showToolButtons="true" visible="true">
+                              <dataProducer>
+                                <OTBiologicaModelDataProducer>
+                                  <modelHolder>
+                                    <object refid="${env-holder}" />
+                                  </modelHolder>
+                                  <seasonTriggers>
+                                    <string>fall</string>
+                                  </seasonTriggers>
+                                  <categories>
+                                    <string>Fast Plants</string>
+                                  </categories>
+                                  <conditions>
+                                    <OTRuleCondition property="Has flower" equals="false" />
+                                  </conditions>
+                                </OTBiologicaModelDataProducer>
+                              </dataProducer>
+                            </OTDataGraphable>
+                          </source>
+                          <xDataAxis>
+                            <OTDataAxis max="10.5" min="0.0" label="Plant Type" units="Leaf Size" labelFormat="Engineering" locked="true" intervalWorld="1">
+                            </OTDataAxis>
+                          </xDataAxis>
+                          <yDataAxis>
+                            <OTDataAxis max="50.0" min="-0.0" label="Flowers" units="" labelFormat="Engineering" locked="true">
+                              <customGridLabels />
+                            </OTDataAxis>
+                          </yDataAxis>
+                        </OTDataCollector>
       			<OTText local_id="timer" text="30" columns="2"/>
 		      	<OTEnvironmentHolder local_id="env-holder" width="590" height="460" toolbar="run,reset" useSpeedSlider="false">
 		          <environment>
-		            <OTEnvironment local_id="environment" environmentWidth="5" environmentHeight="5" showRunButton="false" winterLength="5" summerLength="50" showWinterImage="false" orgSizeMultiplier="2.8" backgroundImageSrc="images/grass.jpg">
+		            <OTEnvironment local_id="environment" environmentWidth="5" environmentHeight="5" showRunButton="false" winterLength="5" summerLength="50" showWinterImage="false" orgSizeMultiplier="1.5" backgroundImageSrc="images/grass.jpg">
 		              <world>
 		                <OTWorld local_id="peasimple_world" speciesPath="org/concord/biologica/worlds/peasimple.xml" />
 		              </world>
