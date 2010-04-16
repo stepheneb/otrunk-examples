@@ -63,7 +63,7 @@
                 <td>
                   <table>
                     <tr>
-                      <td valign="top" align="right">Amount of water</td>
+                      <td valign="top" align="right">Amount of rain</td>
                       <td align="center">
                         High
                         <br />
@@ -91,15 +91,15 @@
                 <OTPlacement x="139" y="0" width="21" height="150" />
               </barriers>
               <rules>
-                <OTRule description="Water affects chance of survival briefly after env change">
+                <OTRule description="rain affects chance of survival briefly after env change">
                   <conditions>
                     <OTRuleCondition property="last environment change" maxValue="5" />
                   </conditions>
                   <consequences>
-                  	<!-- water ranges from 0.0-1.0. CoS should range from 0.2-1.0. We want max CoS at water: 0.8 -->
-                    <OTRuleConsequence property="chance of survival" ruleScript="var distFrom8 = Math.abs(0.8-water); return 1 - (distFrom8 / 2)">
+                  	<!-- rain ranges from 0.0-1.0. CoS should range from 0.2-1.0. We want max CoS at rain: 0.8 -->
+                    <OTRuleConsequence property="chance of survival" ruleScript="var distFrom8 = Math.abs(0.8-rain); return 1 - (distFrom8 / 2)">
                       <propertyVariables>
-                        <string>water</string>
+                        <string>rain</string>
                       </propertyVariables>
                     </OTRuleConsequence>
                   </consequences>
@@ -112,28 +112,28 @@
                     <OTRuleConsequence property="chance of survival" newValueFloat="1.0"/>
                   </consequences>
                 </OTRule>
-                <OTRule description="Water affects growth rate">
+                <OTRule description="rain affects growth rate">
                   <conditions>
                     <OTRuleCondition always="true" />
                   </conditions>
                   <consequences>
-                  	<!-- water ranges from 0.0-1.0. GR should range from 5-50. We want max CoS at water: 0.8 -->
-                    <OTRuleConsequence property="growth rate" ruleScript="var distFrom8 = Math.abs(0.8-water); return 50 - (distFrom8  * 50)">
+                  	<!-- rain ranges from 0.0-1.0. GR should range from 5-50. We want max CoS at rain: 0.8 -->
+                    <OTRuleConsequence property="growth rate" ruleScript="var distFrom8 = Math.abs(0.8-rain); return 50 - (distFrom8  * 50)">
                       <propertyVariables>
-                        <string>water</string>
+                        <string>rain</string>
                       </propertyVariables>
                     </OTRuleConsequence>
                   </consequences>
                 </OTRule>
-                <OTRule description="Water affects resource consumption">
+                <OTRule description="rain affects resource consumption">
                   <conditions>
                     <OTRuleCondition always="true" />
                   </conditions>
                   <consequences>
-                  	<!-- water ranges from 0.0-1.0. RC should range between 2-20. We want max CoS at water: 0.8 -->
-                    <OTRuleConsequence property="resource consumption rate" ruleScript="var distFrom8 = Math.abs(0.8-water); return 5 + (distFrom8  * 15)">
+                  	<!-- rain ranges from 0.0-1.0. RC should range between 2-20. We want max CoS at rain: 0.8 -->
+                    <OTRuleConsequence property="resource consumption rate" ruleScript="var distFrom8 = Math.abs(0.8-rain); return 5 + (distFrom8  * 15)">
                       <propertyVariables>
-                        <string>water</string>
+                        <string>rain</string>
                       </propertyVariables>
                     </OTRuleConsequence>
                   </consequences>
@@ -161,7 +161,6 @@
 						        for (var j = 0; j &lt; 15; j++) {
 						        	var envUnit = new EnvironmentUnit(env, null, i, j)
 						        	env.setEnvironmentUnit(envUnit, i, j)
-						        	envUnit.setProperty("water", new Float(0.8))
 						        	var color = new Color(0.3, 0.2, 0.1)
 					        		var terrain = new Terrain(world, "terrain", color)
 					        		envUnit.setTerrain(terrain)
@@ -201,6 +200,7 @@
                 <string>resource consumption rate</string>
                 <string>food</string>
                 <string>food regrowth rate</string>
+                <string>rain</string>
               </traitsToShow>
               <addAgentsButtons>
                 <OTAddAgentButton text="Add Plant A" quantity="3" click="false" limit="40">
@@ -221,15 +221,17 @@ importPackage(Packages.org.concord.framework.otrunk);
 importPackage(Packages.org.concord.biologica.environment);
 
 var env = envHolder.getEnvironment()
-var emptyEnv = emptyEnvHolder.getEnvironment()
 var otEnvHolderController
-var lastEnvChange = 0
+var lastEnvChange = 10
              
 function init() {
 	radio.getCurrentChoices().set(0, choice_0)
 	radio.addOTChangeListener(radioChangeListener)
 	
 	otEnvHolderController = controllerService.getController(otEnvHolder)
+	
+	var lastEnvChange = 10
+	setProperty("rain", 0.0)
 	
 	env.addChangeListener(resetListener)
 	env.addStepListener(stepListener)
@@ -242,41 +244,41 @@ var radioChangeHandler =
     {
     	if (radio.getCurrentChoices().size() &lt; 1)
     		return;
-    	var prevWater = env.getEnvironmentUnit(0,0).getProperty("water")
+    	var prevrain = env.getEnvironmentUnit(0,0).getProperty("rain")
     	
         var currChoice = radio.getCurrentChoices().get(0)
-        var water = currChoice.getName()
+        var rain = currChoice.getName()
         var url
-        if (water == "0"){
-        	setProperty("water", 0.0)
-        } else if (water == "1"){
-        	setProperty("water", 0.3)
-        } else if (water == "2"){
-        	setProperty("water", 0.6)
-        } else if (water == "3"){
-        	setProperty("water", 0.8)
+        if (rain == "0"){
+        	setProperty("rain", 0.0)
+        } else if (rain == "1"){
+        	setProperty("rain", 0.3)
+        } else if (rain == "2"){
+        	setProperty("rain", 0.6)
+        } else if (rain == "3"){
+        	setProperty("rain", 0.8)
         } else {
-        	setProperty("water", 1.0)
+        	setProperty("rain", 1.0)
         }
         
-    	var currWater = env.getEnvironmentUnit(0,0).getProperty("water")
-        if (Math.abs(0.8 - currWater) &gt; Math.abs(0.8 - prevWater)){
+    	var currrain = env.getEnvironmentUnit(0,0).getProperty("rain")
+        if (Math.abs(0.8 - currrain) &gt; Math.abs(0.8 - prevrain) &amp;&amp; env.getAllAgents().size() &gt; 0){
         	lastEnvChange = 0
         	setProperty("last environment change", 0)
         }
         
         var numAgents = env.getAllAgents().size()
-        otEnvHolderController.log("Mountain height changed, Num agents alive",water,numAgents,null)
+        otEnvHolderController.log("Mountain height changed, Num agents alive",rain,numAgents,null)
         
     }
 
 }
 var radioChangeListener = new OTChangeListener(radioChangeHandler)
 
-function setProperty(prop, water){
+function setProperty(prop, val){
 		for (var i = 0; i &lt; 15; i++) {
 			for (var j = 0; j &lt; 15; j++) {
-				env.getEnvironmentUnit(i,j).setProperty(prop, new Float(water))
+				env.getEnvironmentUnit(i,j).setProperty(prop, new Float(val))
 			}
 		}
 }
@@ -284,7 +286,7 @@ function setProperty(prop, water){
 var resetHandler= {
 	environmentChanged: function(evt){
 		if (evt.getType() == EnvironmentChangeEvent.RESET){
-			radio.getCurrentChoices().set(0, choice_0)
+			init();
 		}
 	}
 }
@@ -328,23 +330,6 @@ function save() {
                 <OTScriptVariableRealObject name="envHolder">
                   <reference>
                     <object refid="${env-holder}" />
-                  </reference>
-                </OTScriptVariableRealObject>
-                <OTScriptVariableRealObject name="emptyEnvHolder" local_id="empty-env-holder">
-                  <reference>
-                    <OTEnvironmentHolder width="1" height="1">
-                    	<environment>
-                    		<OTEnvironment environmentWidth="1" environmentHeight="1">
-				                  <world>
-				                    <object refid="${peasimple_world}"/>
-				                  </world>
-                    			<barriers>
-				                    <OTPlacement x="140" y="0" width="11" height="150" />
-				                    <OTPlacement x="0" y="0" width="10" height="150" />
-                    			</barriers>
-                    		</OTEnvironment>
-                    	</environment>
-                    </OTEnvironmentHolder>
                   </reference>
                 </OTScriptVariableRealObject>
                 <OTScriptVariable name="radio">
