@@ -92,27 +92,6 @@
                 <OTPlacement x="139" y="0" width="21" height="150" />
               </barriers>
               <rules>
-                <OTRule description="rain affects chance of survival briefly after env change">
-                  <conditions>
-                    <OTRuleCondition property="last environment change" maxValue="5" />
-                  </conditions>
-                  <consequences>
-                  	<!-- rain ranges from 0.0-1.0. CoS should range from 0.2-1.0. We want max CoS at rain: 0.8 -->
-                    <OTRuleConsequence property="chance of survival" ruleScript="var distFrom8 = Math.abs(0.8-rain); return 1 - (distFrom8 / 2)">
-                      <propertyVariables>
-                        <string>rain</string>
-                      </propertyVariables>
-                    </OTRuleConsequence>
-                  </consequences>
-                </OTRule>
-                <OTRule description="Chance of survival is normally 1">
-                  <conditions>
-                    <OTRuleCondition property="last environment change" minValue="6" />
-                  </conditions>
-                  <consequences>
-                    <OTRuleConsequence property="chance of survival" newValueFloat="1.0"/>
-                  </consequences>
-                </OTRule>
                 <OTRule description="rain affects growth rate">
                   <conditions>
                     <OTRuleCondition property="species name" equals="Fast Plants"/>
@@ -256,7 +235,6 @@ function init() {
 	setProperty("rain", 0.0)
 	
 	env.addChangeListener(resetListener)
-	env.addStepListener(stepListener)
 }
 
 
@@ -281,12 +259,6 @@ var radioChangeHandler =
         	setProperty("rain", 0.8)
         } else {
         	setProperty("rain", 1.0)
-        }
-        
-    	var currrain = env.getEnvironmentUnit(0,0).getProperty("rain")
-        if (Math.abs(0.8 - currrain) &gt; Math.abs(0.8 - prevrain) &amp;&amp; env.getAllAgents().size() &gt; 0){
-        	lastEnvChange = 0
-        	setProperty("last environment change", 0)
         }
         
         var numAgents = env.getAllAgents().size()
@@ -315,16 +287,6 @@ var resetHandler= {
 			
 var resetListener = new EnvironmentChangeListener(resetHandler)
 
-var stepHandler= {
-	environmentStepped: function(evt){
-		lastEnvChange++
-		if (lastEnvChange &lt; 10){
-        	setProperty("last environment change", lastEnvChange)
-        }
-	}
-}
-			
-var stepListener = new EnvironmentStepListener(stepHandler)
 
 function save() {
   if (radio != null)
