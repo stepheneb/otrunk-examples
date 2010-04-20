@@ -87,7 +87,7 @@
                 </td>
                 <td width="5%" />
                 <td>
-                  Time Remaining:
+                  Time:
                   <br />
                   <object refid="${timer}" />
                   seconds
@@ -137,7 +137,7 @@
                 </OTDataAxis>
               </yDataAxis>
             </OTDataCollector>
-            <OTText local_id="timer" text="30" columns="2" rows="1" />
+            <OTText local_id="timer" text="0" columns="2" rows="1" />
             <OTEnvironmentHolder local_id="env-holder" width="590" height="460" toolbar="run,reset" useSpeedSlider="false">
               <environment>
                 <OTEnvironment local_id="environment" environmentWidth="5" environmentHeight="5" showRunButton="false" winterLength="5" summerLength="50" showWinterImage="false" orgSizeMultiplier="1.5" backgroundImageSrc="images/grass.jpg">
@@ -274,6 +274,8 @@
 						        env.addAgent(rabbit)
 						          
 								addedRabbits = false
+								
+								timerText.text = 0
 						        
 						        timer = new Timer();
 						        timerTask = null;
@@ -402,6 +404,8 @@
 										if (evt.getType() == EnvironmentChangeEvent.RESET){
 											isRunning = false
 											setup()
+											timerTask = null
+											timerCountdownTask = null
 										} else if (evt.getType() == EnvironmentChangeEvent.RUN){
 											isRunning = true
 											if (timerTask == null){
@@ -443,7 +447,7 @@
 								timeRemaining = endTime - System.currentTimeMillis();
 								
 								timeRemaining = (timeRemaining &lt; 0) ? 0 : Math.floor(timeRemaining / 1000);
-								timerText.text = timeRemaining;
+								timerText.text = 30 - timeRemaining;
 							}
 							
 							var timerCountdownTask;
