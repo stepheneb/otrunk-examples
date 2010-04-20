@@ -75,7 +75,7 @@
                 </td>
                 <td width="5%" />
                 <td>
-                  Time Remaining:
+                  Time:
                   <br />
                   <object refid="${timer}" />
                   seconds
@@ -228,6 +228,8 @@
 						          
 								addedRabbits = true
 								addMoreRabbits()
+								
+								timerText.text = 0
 						        
 						        timer = new Timer();
 						        timerTask = null;
@@ -348,6 +350,8 @@
 										if (evt.getType() == EnvironmentChangeEvent.RESET){
 											isRunning = false
 											setup()
+											timerTask = null
+											timerCountdownTask = null
 										} else if (evt.getType() == EnvironmentChangeEvent.RUN){
 											isRunning = true
 											if (timerTask == null){
@@ -389,7 +393,7 @@
 								timeRemaining = endTime - System.currentTimeMillis();
 								
 								timeRemaining = (timeRemaining &lt; 0) ? 0 : Math.floor(timeRemaining / 1000);
-								timerText.text = timeRemaining;
+								timerText.text = 30 - timeRemaining;
 							}
 							
 							var timerCountdownTask;
