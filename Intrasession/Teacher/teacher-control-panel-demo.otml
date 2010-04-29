@@ -11,13 +11,19 @@
     <import class="org.concord.otrunk.view.OTGroupListManager" />
     <import class="org.concord.otrunk.view.OTGroupMember" />
     <import class="org.concord.otrunk.user.OTUserObject" />
+    <import class="org.concord.otrunk.ui.OTChoice" />
     <import class="org.concord.otrunk.ui.OTText" />
     <import class="org.concord.otrunk.ui.OTTabContainer" />
+    <import class="org.concord.otrunk.ui.question.OTQuestion" />
     <import class="org.concord.otrunk.intrasession.OTMultiUserPickN" />
+    <import class="org.concord.otrunk.intrasession.OTMultiUserPollingGraph" />
+    <import class="org.concord.datagraph.state.OTDataGraph"/>
+    <import class="org.concord.otrunk.intrasession.OTIntrasessionService" />
   </imports>
   <objects>
     <OTSystem local_id="system">
       <bundles>
+      <OTIntrasessionService />
       <OTViewBundle showLeftPanel="false" currentMode="student" id="8d880970-c22a-11dc-95ff-0800200c9a66">
           <modes>
             <OTViewMode name="student">
@@ -28,6 +34,9 @@
                 <entry key="${pickn}">
                   <OTViewEntry objectClass="org.concord.otrunk.intrasession.OTMultiUserPickN" viewClass="org.concord.otrunk.intrasession.ui.OTMultiUserConcatTeacherView" />
                 </entry>
+                <entry key="${graph}">
+                  <OTViewEntry objectClass="org.concord.otrunk.intrasession.OTMultiUserPollingGraph" viewClass="org.concord.otrunk.intrasession.ui.OTMultiUserPollingGraphTeacherView" />
+                </entry>
               </map>
             </OTViewMode>
           </modes>
@@ -35,9 +44,13 @@
             <OTFrame useScrollPane="false" width="850" height="600" />
           </frame>
           <viewEntries>
+          	<OTViewEntry objectClass="org.concord.datagraph.state.OTDataGraph" viewClass="org.concord.datagraph.state.OTDataGraphView"/>
+            <OTViewEntry objectClass="org.concord.otrunk.ui.OTChoice" viewClass="org.concord.otrunk.ui.swing.OTChoiceRadioButtonView" />
+            <OTViewEntry objectClass="org.concord.otrunk.ui.question.OTQuestion" viewClass="org.concord.otrunk.ui.question.OTQuestionView" />
             <OTViewEntry objectClass="org.concord.otrunk.ui.OTText" viewClass="org.concord.otrunk.ui.swing.OTTextEditView" />
             <OTViewEntry objectClass="org.concord.otrunk.view.document.OTDocument" viewClass="org.concord.otrunk.view.document.OTDocumentView" />
             <OTViewEntry local_id="pickn" objectClass="org.concord.otrunk.intrasession.OTMultiUserPickN" viewClass="org.concord.otrunk.intrasession.ui.OTMultiUserConcatStudentView" />
+            <OTViewEntry local_id="graph" objectClass="org.concord.otrunk.intrasession.OTMultiUserPollingGraph" viewClass="org.concord.otrunk.intrasession.ui.OTMultiUserPollingGraphStudentView" />
             <OTViewEntry objectClass="org.concord.otrunk.ui.OTTabContainer" viewClass="org.concord.otrunk.ui.swing.OTTabContainerView" />
           </viewEntries>
         </OTViewBundle>
@@ -212,6 +225,23 @@
                       </OTText>
                     </object>
                   </OTMultiUserPickN>
+                </entry>
+                <entry key="three">
+                  <OTMultiUserPollingGraph>
+                    <object>
+                      <OTQuestion local_id="dfg" name="text_two">
+                        <prompt><OTText><text>Question</text></OTText></prompt>
+                        <input>
+                        	<OTChoice>
+                        		<choices>
+                        			<OTText><text>1</text></OTText>
+                        			<OTText><text>2</text></OTText>
+                        		</choices>
+                        	</OTChoice>
+                        </input>
+                      </OTQuestion>
+                    </object>
+                  </OTMultiUserPollingGraph>
                 </entry>
               </tabs>
             </OTTabContainer>
