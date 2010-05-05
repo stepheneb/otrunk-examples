@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<otrunk id="13d3fb4f-123a-425f-9d60-d84e145c0678">
+<otrunk id="aef0e5a0-7812-431f-aef1-3f01a6d16a6c">
   <imports>
     <import class="org.concord.otrunk.OTIncludeRootObject" />
     <import class="org.concord.otrunk.OTInclude" />
@@ -41,7 +41,6 @@
   </imports>
   <idMap> 
   	<idMapping local_id="rabbit-species" id="f05fc1b1-ea0e-4d6e-a21e-7d089860445a"/>
-  	<idMapping local_id="fox-species" id="c59a7a17-5585-4860-b6a5-803e74ea2dbd"/>
   </idMap> 
   <objects>
     <OTSystem>
@@ -97,18 +96,15 @@
                   <world>
                     <OTWorld local_id="peasimple_world" speciesPath="org/concord/biologica/worlds/peasimple.xml" />
                   </world>
-                  <barriers>
-                    <OTPlacement x="0" y="0" width="10" height="150" />
-                  </barriers>
                   <rules>
-                    <OTRule description="All plants healthy">
-                      <conditions>
-                        <OTRuleCondition property="species name" equals="Plants" />
-                      </conditions>
-                      <consequences>
-                        <OTRuleConsequence property="Health" newValueFloat="0.99" />
-                      </consequences>
-                    </OTRule>
+                    <OTRule description="lower growth rate">
+                  <conditions>
+                    <OTRuleCondition property="species name" equals="Fast Plants"/>
+                  </conditions>
+                  <consequences>
+                    <OTRuleConsequence property="resource consumption rate" newValueFloat="5"/>
+                  </consequences>
+                </OTRule>
                   </rules>
                 </OTEnvironment>
               </environment>
@@ -201,6 +197,7 @@
 							var timerTask
 							var isRunning = false
 							var addedRabbits = false
+							var NUM_RABBITS = 7
 							  			
 							function init() {
 						        setup()
@@ -256,7 +253,7 @@
 							}
 							
 							function addMoreRabbits(){
-								for (var i = 0; i &lt; 5; i++){
+								for (var i = 0; i &lt; NUM_RABBITS; i++){
 									var newRabbit = rabbit_species.createAgent();
 							        newRabbit.setAge(i * 3)
 									newRabbit.setProperty("is immortal", true)
