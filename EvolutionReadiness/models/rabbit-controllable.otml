@@ -100,45 +100,47 @@
                 </td>
               </tr>
             </table>
+            <object refid="${graph}"/>
           </bodyText>
           <documentRefs>
-            <OTDataCollector local_id="graph" name="Number of plants" title="Number of flowers" showLabelCoordinates="true" labelDecimalPlaces="2" showControlBar="false" useDefaultToolBar="false" displayButtons="">
-              <source>
-                <OTDataGraphable showSampleLimit="1" name="Number of plants" connectPoints="true" drawMarks="false" lineWidth="1.0" color="192" xColumn="0" showControlButtons="true" showToolButtons="true" visible="true">
-                  <dataProducer>
-                    <OTBiologicaModelDataProducer measurement="NUM_ORGANISMS">
-                      <modelHolder>
-                        <object refid="${env-holder}" />
-                      </modelHolder>
-                      <categories>
-                        <string>Fast Plants</string>
-                      </categories>
-                      <conditions>
-                        <OTRuleCondition property="Has flower" equals="false" />
-                      </conditions>
-                    </OTBiologicaModelDataProducer>
-                  </dataProducer>
-                  <dataStore>
-                    <OTDataStore sampleKeepLimit="10" dt="1.0">
-                      <channelDescriptions>
-                        <OTDataChannelDescription name="dt" precision="2" numericData="true" />
-                        <OTDataChannelDescription name="#1" numericData="true" />
-                      </channelDescriptions>
-                    </OTDataStore>
-                  </dataStore>
-                </OTDataGraphable>
-              </source>
-              <xDataAxis>
-                <OTDataAxis max="10.5" min="0.0" label="Plant Type" units="Leaf Size" labelFormat="Engineering" locked="true" intervalWorld="1" />
-              </xDataAxis>
-              <yDataAxis>
-                <OTDataAxis max="50.0" min="-0.0" label="Flowers" units="" labelFormat="Engineering" locked="true">
-                  <customGridLabels />
-                </OTDataAxis>
-              </yDataAxis>
-            </OTDataCollector>
+          	<OTDataCollector name="Model Data"
+							local_id="graph" multipleGraphableEnabled="false"
+							autoScaleEnabled="false">
+							<source>
+								<OTDataGraphable connectPoints="true"
+									color="0xff0000" drawMarks="false" name="Number of plants"
+									xColumn="0" yColumn="1">
+									<dataProducer>
+										<OTBiologicaModelDataProducer local_id="dp" lineGraph="true">
+											<modelHolder>
+                                    			<object refid="${env-holder}" />
+                                  			</modelHolder>
+                                  	</OTBiologicaModelDataProducer>
+									</dataProducer>
+								</OTDataGraphable>
+							</source>
+							<!--<graphables>
+								<OTDataGraphable connectPoints="true"
+									color="0x0000ff" drawMarks="false" name="Temperature"
+									xColumn="0" yColumn="2">
+									<dataProducer>
+										<object refid="${dp}" />
+									</dataProducer>
+								</OTDataGraphable>
+							</graphables>
+							--><xDataAxis>
+								<OTDataAxis min="0" max="30"
+									label="Time" units="s" local_id="xAxis">
+								</OTDataAxis>
+							</xDataAxis>
+							<yDataAxis>
+								<OTDataAxis min="0" max="70"
+									label="Number of plants" local_id="yAxis">
+								</OTDataAxis>
+							</yDataAxis>
+						</OTDataCollector>
             <OTText local_id="timer" text="0" columns="2" rows="1" />
-            <OTEnvironmentHolder local_id="env-holder" width="590" height="460" toolbar="run,reset" useSpeedSlider="false">
+            <OTEnvironmentHolder local_id="env-holder" width="590" height="460" toolbar="run,reset" useSpeedSlider="true">
               <environment>
                 <OTEnvironment local_id="environment" environmentWidth="4" environmentHeight="4" showRunButton="false" winterLength="5" summerLength="50" showWinterImage="false" orgSizeMultiplier="1.5" backgroundImageSrc="images/grass.jpg">
                   <world>
