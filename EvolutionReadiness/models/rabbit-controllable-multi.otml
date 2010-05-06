@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <otrunk id="aef0e5a0-7812-431f-aef1-3f01a6d16a6c">
   <imports>
+    <import class="org.concord.data.state.OTDataStore" />
+    <import class="org.concord.data.state.OTDataChannelDescription" />
+    <import class="org.concord.data.state.OTDataField" />
+    <import class="org.concord.data.state.OTDataTable" />
+    <import class="org.concord.datagraph.state.OTDataGraph" />
+    <import class="org.concord.datagraph.state.OTDataAxis" />
+    <import class="org.concord.datagraph.state.OTDataGraphable" />
+    <import class="org.concord.datagraph.state.OTDataCollector" />
+    <import class="org.concord.datagraph.state.OTMultiDataGraph" />
+    <import class="org.concord.datagraph.state.OTPluginView" />
+    <import class="org.concord.datagraph.state.OTDataBarGraphable" />
     <import class="org.concord.otrunk.OTIncludeRootObject" />
     <import class="org.concord.otrunk.OTInclude" />
     <import class="org.concord.otrunk.OTSystem" />
@@ -13,6 +24,7 @@
     <import class="org.concord.otrunk.biologica.agent.OTAgentPropertyImageMap" />
     <import class="org.concord.otrunk.biologica.environment.OTAddAgentButton" />
     <import class="org.concord.otrunk.biologica.environment.OTEnvironmentHolder" />
+    <import class="org.concord.otrunk.biologica.data.OTBiologicaModelDataProducer" />
     <import class="org.concord.otrunk.biologica.rules.OTRule" />
     <import class="org.concord.otrunk.biologica.rules.OTRuleCondition" />
     <import class="org.concord.otrunk.biologica.rules.OTRuleConsequence" />
@@ -87,9 +99,46 @@
                 </td>
               </tr>
             </table>
+            <object refid="${graph}"/>
           </bodyText>
           <documentRefs>
-            <OTText local_id="timer" text="30" columns="2" />
+          <OTDataCollector name="Model Data"
+							local_id="graph" multipleGraphableEnabled="false"
+							autoScaleEnabled="false" showControlBar="false">
+							<source>
+								<OTDataGraphable connectPoints="true"
+									color="0xff0000" drawMarks="false" name="Number of plants"
+									xColumn="0" yColumn="1">
+									<dataProducer>
+										<OTBiologicaModelDataProducer local_id="dp" lineGraph="true">
+											<modelHolder>
+                                    			<object refid="${env-holder}" />
+                                  			</modelHolder>
+                                  	</OTBiologicaModelDataProducer>
+									</dataProducer>
+								</OTDataGraphable>
+							</source>
+							<!--<graphables>
+								<OTDataGraphable connectPoints="true"
+									color="0x0000ff" drawMarks="false" name="Temperature"
+									xColumn="0" yColumn="2">
+									<dataProducer>
+										<object refid="${dp}" />
+									</dataProducer>
+								</OTDataGraphable>
+							</graphables>
+							--><xDataAxis>
+								<OTDataAxis min="0" max="30"
+									label="Time" units="s" local_id="xAxis">
+								</OTDataAxis>
+							</xDataAxis>
+							<yDataAxis>
+								<OTDataAxis min="0" max="130"
+									label="Number of plants" local_id="yAxis">
+								</OTDataAxis>
+							</yDataAxis>
+						</OTDataCollector>
+            <OTText local_id="timer" text="0" columns="2" />
             <OTEnvironmentHolder local_id="env-holder" width="590" height="460" toolbar="run,reset" useSpeedSlider="false">
               <environment>
                 <OTEnvironment local_id="environment" environmentWidth="5" environmentHeight="5" showRunButton="false" winterLength="5" summerLength="50" showWinterImage="false" orgSizeMultiplier="1.5" backgroundImageSrc="images/grass.jpg">
