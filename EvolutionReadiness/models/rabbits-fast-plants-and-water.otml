@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <otrunk id="5f772b8a-e74a-4e0b-885c-af0b348fd6cb">
   <imports>
+    <import class="org.concord.data.state.OTDataStore" />
+    <import class="org.concord.data.state.OTDataChannelDescription" />
+    <import class="org.concord.data.state.OTDataField" />
+    <import class="org.concord.data.state.OTDataTable" />
+    <import class="org.concord.datagraph.state.OTDataGraph" />
+    <import class="org.concord.datagraph.state.OTDataAxis" />
+    <import class="org.concord.datagraph.state.OTDataGraphable" />
+    <import class="org.concord.datagraph.state.OTDataCollector" />
+    <import class="org.concord.datagraph.state.OTMultiDataGraph" />
+    <import class="org.concord.datagraph.state.OTPluginView" />
+    <import class="org.concord.datagraph.state.OTDataBarGraphable" />
     <import class="org.concord.otrunk.OTIncludeRootObject" />
     <import class="org.concord.otrunk.OTInclude" />
     <import class="org.concord.otrunk.OTSystem" />
@@ -13,6 +24,7 @@
     <import class="org.concord.otrunk.biologica.agent.OTAgentPropertyImageMap" />
     <import class="org.concord.otrunk.biologica.environment.OTAddAgentButton" />
     <import class="org.concord.otrunk.biologica.environment.OTEnvironmentHolder" />
+    <import class="org.concord.otrunk.biologica.data.OTBiologicaModelDataProducer" />
     <import class="org.concord.otrunk.biologica.rules.OTRule" />
     <import class="org.concord.otrunk.biologica.rules.OTRuleCondition" />
     <import class="org.concord.otrunk.biologica.rules.OTRuleConsequence" />
@@ -56,7 +68,7 @@
       <root>
         <OTCompoundDoc local_id="mountain-model">
           <bodyText>
-            <table>
+            <table width="100%">
               <tr>
                 <td>
                   <object refid="${env-holder}" />
@@ -76,11 +88,54 @@
                     </tr>
                   </table>
                 </td>
+                <td width="50%">
+                	<object refid="${graph}"/>
+                </td>
               </tr>
             </table>
             <object refid="${slider-script}" />
           </bodyText>
           <documentRefs>
+          <OTDataCollector name="Model Data"
+							local_id="graph" multipleGraphableEnabled="false"
+							autoScaleEnabled="false" showControlBar="false">
+							<source>
+								<OTDataGraphable connectPoints="true"
+									color="0xff0000" drawMarks="false" name="Number of organisms"
+									xColumn="0" yColumn="1">
+									<dataProducer>
+										<OTBiologicaModelDataProducer local_id="dp" lineGraph="true">
+											<modelHolder>
+                                    			<object refid="${env-holder}" />
+                                  			</modelHolder>
+                                  			<species>
+                                  				<string>Fast Plants</string>
+                                  				<string>Rabbits</string>
+                                  			</species>
+                                  	</OTBiologicaModelDataProducer>
+									</dataProducer>
+								</OTDataGraphable>
+							</source>
+							<graphables>
+								<OTDataGraphable connectPoints="true"
+									color="0x0000ff" drawMarks="false" name="Temperature"
+									xColumn="0" yColumn="2">
+									<dataProducer>
+										<object refid="${dp}" />
+									</dataProducer>
+								</OTDataGraphable>
+							</graphables>
+							<xDataAxis>
+								<OTDataAxis min="0" max="30"
+									label="Time" units="s" local_id="xAxis">
+								</OTDataAxis>
+							</xDataAxis>
+							<yDataAxis>
+								<OTDataAxis min="0" max="200"
+									label="Number of organisms" local_id="yAxis">
+								</OTDataAxis>
+							</yDataAxis>
+						</OTDataCollector>
              <OTEnvironmentHolder local_id="env-holder" width="640" height="460" toolbar="run,info cursor,carry,reset" useSpeedSlider="true">
           <environment>
             <OTEnvironment local_id="environment" environmentWidth="15" environmentHeight="15" width="570" height="445" showRunButton="false" winterLength="2" summerLength="50" showWinterImage="false" orgSizeMultiplier="3.0" backgroundImageSrc="images/mountains1.png">
