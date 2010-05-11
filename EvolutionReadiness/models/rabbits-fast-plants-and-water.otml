@@ -138,7 +138,7 @@
 						</OTDataCollector>
              <OTEnvironmentHolder local_id="env-holder" width="640" height="460" toolbar="run,info cursor,carry,reset" useSpeedSlider="true">
           <environment>
-            <OTEnvironment local_id="environment" environmentWidth="15" environmentHeight="15" width="570" height="445" showRunButton="false" winterLength="2" summerLength="50" showWinterImage="false" orgSizeMultiplier="3.0" backgroundImageSrc="images/mountains1.png">
+            <OTEnvironment local_id="environment" environmentWidth="10" environmentHeight="10" width="570" height="445" showRunButton="false" winterLength="2" summerLength="50" showWinterImage="false" orgSizeMultiplier="3.0" backgroundImageSrc="images/mountains1.png">
               <world>
                 <OTWorld local_id="peasimple_world" speciesPath="org/concord/biologica/worlds/peasimple.xml" />
               </world>
@@ -152,20 +152,20 @@
                     <OTRuleCondition property="species name" equals="Fast Plants"/>
                   </conditions>
                   <consequences>
-                  	<!-- rain ranges from 0.0-1.0. GR should range from 5-50. We want max CoS at rain: 0.8 -->
-                    <OTRuleConsequence property="growth rate" ruleScript="var distFrom8 = Math.abs(0.8-rain); return 0.5 - (distFrom8  / 2)">
+                  	 rain ranges from 0.0-1.0. GR should range from 5-50. We want max CoS at rain: 0.8 
+                    <OTRuleConsequence property="growth rate" ruleScript="var distFrom8 = Math.abs(0.8-rain); return 0.15 - (distFrom8  / 20)">
                       <propertyVariables>
                         <string>rain</string>
                       </propertyVariables>
                     </OTRuleConsequence>
                   </consequences>
                 </OTRule>
-                <OTRule description="rain affects resource consumption">
+                <!--<OTRule description="rain affects resource consumption">
                   <conditions>
                     <OTRuleCondition property="species name" equals="Fast Plants"/>
                   </conditions>
                   <consequences>
-                  	<!-- rain ranges from 0.0-1.0. RC should range between 2-20. We want max CoS at rain: 0.8 -->
+                  	 rain ranges from 0.0-1.0. RC should range between 2-20. We want max CoS at rain: 0.8 
                     <OTRuleConsequence property="resource consumption rate" ruleScript="var distFrom8 = Math.abs(0.8-rain); return 4 + (distFrom8  * 20)">
                       <propertyVariables>
                         <string>rain</string>
@@ -178,7 +178,7 @@
                     <OTRuleCondition property="species name" equals="Rabbits"/>
                   </conditions>
                   <consequences>
-                  	<OTRuleConsequence property="resource consumption rate" newValueFloat="20" />
+                  	<OTRuleConsequence property="resource consumption rate" newValueFloat="17" />
                   </consequences>
                 </OTRule>
                 <OTRule description="rabbits die earlier if low on food">
@@ -186,7 +186,7 @@
                     <OTRuleCondition property="species name" equals="Rabbits"/>
                   </conditions>
                   <consequences>
-                  	<OTRuleConsequence property="metabolism" newValueFloat="6" />
+                  	<OTRuleConsequence property="metabolism" newValueFloat="5" />
                   </consequences>
                 </OTRule>
                 <OTRule description="rabbits are near-sighted">
@@ -197,7 +197,7 @@
                   	<OTRuleConsequence property="vision distance" newValueFloat="20" />
                   </consequences>
                 </OTRule>
-              </rules>
+              --></rules>
             </OTEnvironment>
           </environment>
               <scripts>
@@ -216,16 +216,16 @@
 							var world = env.getWorld();
 							env.setWrapNorthSouth(false);
 							env.setWrapEastWest(false);
-							for (var i = 0; i &lt; 15; i++) {
-						        for (var j = 0; j &lt; 15; j++) {
+							for (var i = 0; i &lt; 10; i++) {
+						        for (var j = 0; j &lt; 10; j++) {
 						        	var envUnit = new EnvironmentUnit(env, null, i, j)
 						        	env.setEnvironmentUnit(envUnit, i, j)
 						        	var color = new Color(0.3, 0.2, 0.1)
 					        		var terrain = new Terrain(world, "terrain", color)
 					        		envUnit.setTerrain(terrain)
-					        		envUnit.setProperty("food", 20)
-					        		envUnit.setProperty("food full", 20)
-					        		envUnit.setProperty("food regrowth rate", 20)
+					        		//envUnit.setProperty("food", 20)
+					        		//envUnit.setProperty("food full", 20)
+					        		envUnit.setProperty("food regrowth rate", 5)
 					            }
 					        }
 						return true;
@@ -255,11 +255,10 @@
                 </OTScriptObject>
                </scripts>
               <traitsToShow>
-                <string>growth rate</string>
-                <string>resource consumption rate</string>
-                <string>food</string>
-                <string>food regrowth rate</string>
-                <string>rain</string>
+                <string>mating desire bonus</string>
+                <string>wander threshold</string>
+                <string>age limit</string>
+                <string>current behavior</string>
               </traitsToShow>
               <addAgentsButtons>
                 <OTAddAgentButton text="Add Plant A" quantity="3" click="false" limit="-1">
@@ -298,6 +297,46 @@ function init() {
 	setProperty("rain", 0.0)
 	
 	env.addChangeListener(resetListener)
+	env.addStepListener(stepListener)
+}
+
+var stepHandler = 
+{
+	environmentStepped: function(evt)
+	{
+		setMatingRate();
+	}
+}
+var stepListener = new EnvironmentStepListener(stepHandler);
+
+function setMatingRate()
+{
+	var allRabbits = env.getAgents(rabbitspecies); 
+	var rabbitSize = allRabbits.size();
+	var matingBonus = 3;
+	var wanderThreshold = 10;
+	var ageLimit = 450;
+	var resourceConsumption = 15;
+	if (rabbitSize &lt; 11) {
+		matingBonus = 15;
+		wanderThreshold = 1;
+		ageLimit = 10000;
+		resourceConsumption = 1;
+	} else if (rabbitSize &gt; 25) {
+		matingBonus = -10;
+		wanderThreshold = 20;
+		ageLimit = 200;
+	} else if (rabbitSize &gt; 20) {
+		matingBonus = -5;
+		wanderThreshold = 15;
+	}
+	
+	for (var i = 0; i &lt; allRabbits.size(); i++){
+		allRabbits.get(i).setProperty("mating desire bonus", new Integer(matingBonus));
+		allRabbits.get(i).setProperty("wander threshold", new Integer(wanderThreshold));
+		allRabbits.get(i).setProperty("age limit", new Integer(ageLimit));
+		allRabbits.get(i).setProperty("resource consumption rate", new Integer(resourceConsumption));
+	}
 }
 
 
@@ -313,17 +352,21 @@ var radioChangeHandler =
         var rain = currChoice.getName()
         var url
         if (rain == "0"){
+        	setProperty("food regrowth rate", 2)
         	setProperty("rain", 0.0)
         } else if (rain == "1"){
+        	setProperty("food regrowth rate", 2)
         	setProperty("rain", 0.3)
         } else if (rain == "2"){
+        	setProperty("food regrowth rate", 3)
         	setProperty("rain", 0.6)
         } else if (rain == "3"){
+        	setProperty("food regrowth rate", 5)
         	setProperty("rain", 0.8)
         } else {
+        	setProperty("food regrowth rate", 3)
         	setProperty("rain", 1.0)
         }
-        
         var numAgents = env.getAllAgents().size()
         otEnvHolderController.log("Mountain height changed, Num agents alive",rain,numAgents,null)
         
@@ -333,8 +376,8 @@ var radioChangeHandler =
 var radioChangeListener = new OTChangeListener(radioChangeHandler)
 
 function setProperty(prop, val){
-		for (var i = 0; i &lt; 15; i++) {
-			for (var j = 0; j &lt; 15; j++) {
+		for (var i = 0; i &lt; 10; i++) {
+			for (var j = 0; j &lt; 10; j++) {
 				env.getEnvironmentUnit(i,j).setProperty(prop, new Float(val))
 			}
 		}
