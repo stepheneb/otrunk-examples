@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<otrunk id="d1272d84-92cb-43c4-b372-6301f2d15602">
+<otrunk id="2767fe20-6c7d-11dc-8314-0800200c9a66">
   <imports>
     <import class="org.concord.otrunk.OTSystem" />
     <import class="org.concord.otrunk.OTInclude" />
@@ -53,7 +53,7 @@
         </OTScriptEngineBundle>
         <OTSharingBundle>
           <sharedObjects>
-            <OTDataCollector id="936de3b9-3562-41ce-9fa7-3175edea8e1d" name="My Train Trip Graph" title="Position Graph" autoScaleEnabled="true" showControlBar="true" useDefaultToolBar="true">
+            <OTDataCollector id="cf5dd914-fc45-11dd-91fe-7db590c6d8f2" name="My Train Trip Graph" title="Position Graph" autoScaleEnabled="true" showControlBar="true" useDefaultToolBar="true">
               <source>
                 <OTDataGraphable name="" connectPoints="true" yColumn="1" drawMarks="false" color="255" xColumn="0" lineWidth="2.0" visible="true">
                   <dataProducer>
@@ -97,7 +97,7 @@
               </yDataAxis>
             </OTDataCollector>
             <object refid="3f402f91-1007-11de-aaa0-11f6f031d6ce" />
-            <OTDataCollector id="fcbb9a26-d02e-472a-aede-e0262d008614" name="My Try-to-match Graph" title="Position Graph " autoScaleEnabled="true" showControlBar="true" useDefaultToolBar="true" multipleGraphableEnabled="true">
+            <OTDataCollector id="1fbcccc7-fc6b-11dd-8036-d7df917ab6ce" name="My Try-to-match Graph" title="Position Graph " autoScaleEnabled="true" showControlBar="true" useDefaultToolBar="true" multipleGraphableEnabled="true">
               <source>
                 <OTDataGraphable name="Matching Graph" connectPoints="true" yColumn="1" drawMarks="false" color="16711680" xColumn="0" lineWidth="2.0" visible="true">
                   <dataProducer>
@@ -107,7 +107,7 @@
                           <source>
                             <OTSensorDataProxy name="dataproducer">
                               <request>
-                                <OTExperimentRequest id="eade22ec-53ec-4707-b4cd-5e19b732bf20" period="0.1">
+                                <OTExperimentRequest id="408b6b19-093c-11de-ba38-5d7d4603ee1f" period="0.1">
                                   <sensorRequests>
                                     <OTSensorRequest stepSize="0.1" type="13" unit="m" port="0" requiredMax="4.0" displayPrecision="-2" requiredMin="-4.0" />
                                   </sensorRequests>
@@ -148,7 +148,7 @@
               </graphables>
             </OTDataCollector>
             <object refid="3f402f91-1007-11de-aaa0-11f6f031d6ce" />
-            <OTDataCollector id="02f5448f-f7ca-42fe-9501-f62b377114e1" name="Movie Theater Trip" title="Position Graph" autoScaleEnabled="true" showControlBar="true" useDefaultToolBar="true">
+            <OTDataCollector id="76e832ef-1325-11de-8daf-13a6245619a0" name="Movie Theater Trip" title="Position Graph" autoScaleEnabled="true" showControlBar="true" useDefaultToolBar="true">
               <source>
                 <OTDataGraphable name="" connectPoints="true" yColumn="1" drawMarks="false" color="255" xColumn="0" lineWidth="2.0" visible="true">
                   <dataProducer>
@@ -191,21 +191,41 @@
                 </OTDataAxis>
               </yDataAxis>
             </OTDataCollector>
-            <OTDataCollector id="df9bdcc1-b810-4558-bab0-46ad87840ca5" name="My Prediction Graph" title="Position Graph" showControlBar="true" useDefaultToolBar="false" showLabelCoordinates="true" labelDecimalPlaces="2" displayButtons="4,">
+            <OTDataCollector id="9693176f-08f7-11de-8291-9b621571c4a0" name="TryItOutGraph" title="Motion Sensor Graph" showControlBar="true" useDefaultToolBar="false" showLabelCoordinates="true" labelDecimalPlaces="2" displayButtons="4," autoScaleEnabled="true" autoFitMode="0">
               <source>
-                <OTDataGraphable name="Prediction Graph" connectPoints="true" controllable="true" yColumn="1" drawMarks="false" color="16711680" xColumn="0" lineWidth="2.0" visible="true" showAllChannels="false">
+                <OTDataGraphable name="Position" connectPoints="true" yColumn="1" drawMarks="false" color="255" xColumn="0" lineWidth="2.0" showAllChannels="false" visible="true">
+                  <dataProducer>
+                    <OTTimeLimitDataProducerFilter name="TimeLimit" timeLimit="20000" sourceChannel="1">
+                      <source>
+                        <OTSensorDataProxy name="dataproducer">
+                          <request>
+                            <OTExperimentRequest period="0.1">
+                              <sensorRequests>
+                                <OTSensorRequest stepSize="0.1" type="13" unit="m" port="0" requiredMax="4.0" displayPrecision="-2" requiredMin="-4.0" />
+                              </sensorRequests>
+                            </OTExperimentRequest>
+                          </request>
+                        </OTSensorDataProxy>
+                      </source>
+                    </OTTimeLimitDataProducerFilter>
+                  </dataProducer>
                   <dataStore>
-                    <OTDataStore numberChannels="2" />
+                    <OTDataStore dt="0.1" numberChannels="1">
+                      <channelDescriptions>
+                        <OTDataChannelDescription name="dt" precision="2" numericData="true" />
+                        <OTDataChannelDescription name="" numericData="true" />
+                      </channelDescriptions>
+                    </OTDataStore>
                   </dataStore>
                 </OTDataGraphable>
               </source>
               <xDataAxis>
-                <OTDataAxis max="20.0" units="Minutes" min="0.0" label="Time" labelFormat="Engineering">
+                <OTDataAxis max="20.0" units="s" min="0.0" label="Time" labelFormat="Engineering" locked="true">
                   <customGridLabels />
                 </OTDataAxis>
               </xDataAxis>
               <yDataAxis>
-                <OTDataAxis max="8000.0" units="m" min="-0.0" label="Position" labelFormat="Engineering">
+                <OTDataAxis max="2.0" units="m" min="-2.0" label="Motion" labelFormat="Engineering" locked="false">
                   <customGridLabels />
                 </OTDataAxis>
               </yDataAxis>
@@ -232,9 +252,9 @@
       <root>
         <OTCurriculumUnit version="2" name="LOOPS Activity">
           <activity>
-            <OTSection local_id="section_1" name="The Missing Manual">
+            <OTSection local_id="section_1" name="Let's Graph With Probes">
               <header>
-                <OTCompoundDoc id="65e63651-0000-40b5-9646-5004f60dbe47" showEditBar="false">
+                <OTCompoundDoc id="2767fe20-6c7d-11dc-8314-0800200c9a66!/section_1/header" showEditBar="false">
                   <bodyText>
                     <div class="title">The Missing Manual</div>
                   </bodyText>
@@ -243,47 +263,49 @@
               <content>
                 <OTCardContainer local_id="activity-card-container" contentsMayScroll="true" loadViewOnlyOnDemand="true" closeViewOnExit="true">
                   <cards>
-                    <OTCompoundDoc id="6da79bc4-9479-4623-8c50-36b0adb29160" name="%6da79bc4-9479-4623-8c50-36b0adb29160" showEditBar="true">
+                    <OTCompoundDoc id="9e61a484-0e82-11de-87e7-2f8c138c15b4" name="%9e61a484-0e82-11de-87e7-2f8c138c15b4" showEditBar="true">
                       <bodyText>
                         <div class="buffer">
                           <div class="border">
                             <div class="body">
                               <div class="subtitle">A New Tool for Measuring</div>
-                              In this activity you will graph motion as it changes over time using 
-          a motion probe that can measure and graph your motion automatically. 
-          It's fun!
-                              <br />
                               <table width="100%">
                                 <tr>
-                                  <td style="padding-top: 12px; padding-right: 12px; padding-left: 10px; padding-bottom: 12px">
-                                    <img border="0" src="images/walking_track_oppo.png" />
+                                  <td style="padding-right: 12px; padding-bottom: 12px; padding-top: 12px; padding-left: 10px">
+                                    <img src="images/walking_track_oppo.png" border="0" />
                                   </td>
-                                  <td style="padding-top: 20px; padding-right: 20px; padding-left: 10px; padding-bottom: 20px">
-                                    The motion you will study is the trip made by Vijay from the 
-                “Hanging with Friends” story. You will construct a model of 
-                the street where Vijay travelled from the Library to the 
-                Cinema then back to the Library. Then, you will be Vijay and 
-                walk his trip.
+                                  <td style="padding-right: 20px; padding-bottom: 20px; padding-top: 20px; padding-left: 10px">
+                                    You have to make some measurements, and you are given a new 
+                tool for making them.
                                     <br />
                                     <br />
-                                    <br />
-                                    Remember from the story that the 
-                Cinema is 7400 meters from the Library. Don’t worry though, 
-                with your model you won’t have to move that far!
-                                    <br />
+                                    The only problem is that the 
+                manual for the measurement tool is missing. You need to 
+                discover how to use it by experimenting on your own!
                                     <br />
                                     <br />
-                                    You 
-                will lay out a “street” on the floor with masking tape and 
-                find and mark the locations of the Library and the Cinema. You 
-                will create Vijay’s trip by walking on the street while the 
-                probe tracks your motion and the computer creates the graph.
+                                    The 
+                tool is like an automatic ruler, because it can measure 
+                distance instantly. But it also can measure time as it 
+                elapses. The tool is called a motion probe, and it reports its 
+                measurements on a graph.
+                                    <br />
+                                    <br />
+                                    To get started, be sure your 
+                motion probe is plugged into a USB port on your computer. Then 
+                set the probe on a flat surface. It can stand up or lay flat. 
+                The round, gold circle should face in the direction that you 
+                want to measure. You should be able to see the computer screen 
+                while standing in front of the motion probe. The first motions 
+                you will be measuring are the motions of you, walking, 
+                standing, shuffling, inching, ambling, sliding, stepping, or 
+                sauntering along.
+                                    <br />
+                                    <br />
+                                    Please go on to the next page.
                                   </td>
                                 </tr>
                               </table>
-                              Before you get started with the model, you will think about what a 
-          graph of motion means and draw a graph that tells the story of 
-          Vijay's trip.
                               <br />
                               <br />
                             </div>
@@ -291,50 +313,114 @@
                         </div>
                       </bodyText>
                     </OTCompoundDoc>
-                    <OTCompoundDoc id="ca979939-fdc3-4ca0-98a8-352fec04565f" name="%ca979939-fdc3-4ca0-98a8-352fec04565f" showEditBar="true">
+                    <OTCompoundDoc id="bcdfc592-0032-11de-a3ee-43c60806869b" name="%bcdfc592-0032-11de-a3ee-43c60806869b" showEditBar="true">
                       <bodyText>
                         <div class="buffer">
                           <div class="border">
                             <div class="body">
-                              <div class="subtitle">Prediction</div>
-                              One way to graph motion is to plot "position" versus time. Position is 
-          the distance of a location measured from a definate reference point.  The reference point
-could be any location that we choose. We define it as position 0 and give it the special name of “origin.”  Once we
-define the origin, it is fixed.
+                              <div class="subtitle">Try It Out</div>
+                              Now, experiment with the motion probe to see how it works. Work in 
+          teams. Take turns. One person is the “computer operator” who starts, 
+          stops, and clears the graph. Another person is the “mover” who 
+          stands in front of the probe and moves. If all goes well, the graph 
+          displays the motion of the mover.
                               <br />
                               <br />
-                              But 
-          first, in order to understand what the graph means, draw a line on 
-          the graph below that that you think represents Vijay’s motion. This 
-          is your prediction of his motion. Click on the pencil tool at the 
-          right to draw your prediction line on the graph. Here are your 
-          assumptions:
+                              Try it out! Try to figure 
+          out what motions the motion probe “sees,” that is, what it can 
+          detect. Move slowly at first to notice how the motions of your body 
+          are recorded on the graph. Try to control the line on the graph by 
+          the way you move, so that you always know what it will do.
                               <br />
                               <br />
-                              • The origin, position 0, is located at the 
-          Library.
-                              <br />
-                              • The distance between the Library and Cinema is 7400 
-          meters.
-                              <br />
-                              • Vijay travels from the Library to the Cinema and back 
-          to the Library.
+                              After 
+          you have had some time to experiment, answer the questions below, 
+          clicking the Submit button when done. You may always Submit more 
+          than once if you wish to update your submission. These questions 
+          will help you share what you have discovered with your class.
                               <br />
                               <br />
-                              After you have drawn your prediction, use the 
-          label tool (just below the pencil tool) to mark the positions of the 
-          Library and the Cinema on the graph.
+                              <object refid="82ae3ca0-5dfd-11df-8db2-cb376cfdcdcc" />
+                              <br />
+                              <br />
+                              <object refid="881a8fa9-5e0a-11df-a1cd-d973855c6ef6" />
+                              <br />
+                              <br />
+                              <object refid="dab2834c-5e0a-11df-a1cd-d973855c6ef6" />
+                              <br />
+                              <br />
+                              <br />
+                              <br />
                             </div>
-                            <object refid="a025f29b-d2ac-4945-8ce2-c563377f31f7" />
-                            <br />
-                            <br />
                           </div>
                         </div>
                       </bodyText>
                       <documentRefs>
-                        <OTOverlayWrapper id="a025f29b-d2ac-4945-8ce2-c563377f31f7" name="Prediction Graph">
+                        <OTDataCollector id="82ae3ca0-5dfd-11df-8db2-cb376cfdcdcc" name="TryItOutGraph" title="Motion Sensor Graph" autoScaleEnabled="true" autoFitMode="0" showLabelCoordinates="true" labelDecimalPlaces="2" showControlBar="true" useDefaultToolBar="false" displayButtons="">
+                          <source>
+                            <OTDataGraphable name="Position" connectPoints="true" yColumn="1" drawMarks="false" color="255" xColumn="0" lineWidth="2.0" showAllChannels="false" visible="true">
+                              <dataProducer>
+                                <OTLinearProducerFilter name="DataOffset-Direction" k1="1.0" k0="-1.0" sourceChannel="1">
+                                  <source>
+                                    <OTTimeLimitDataProducerFilter name="DataLimit1" timeLimit="15000" sourceChannel="1">
+                                      <source>
+                                        <OTSensorDataProxy name="dataproducer">
+                                          <request>
+                                            <OTExperimentRequest period="0.1">
+                                              <sensorRequests>
+                                                <OTSensorRequest stepSize="0.1" type="13" unit="m" port="0" requiredMax="4.0" displayPrecision="-2" requiredMin="-4.0" />
+                                              </sensorRequests>
+                                            </OTExperimentRequest>
+                                          </request>
+                                        </OTSensorDataProxy>
+                                      </source>
+                                    </OTTimeLimitDataProducerFilter>
+                                  </source>
+                                </OTLinearProducerFilter>
+                              </dataProducer>
+                              <dataStore>
+                                <OTDataStore dt="0.1" numberChannels="1">
+                                  <channelDescriptions>
+                                    <OTDataChannelDescription name="dt" precision="2" numericData="true" />
+                                    <OTDataChannelDescription name="" numericData="true" />
+                                  </channelDescriptions>
+                                </OTDataStore>
+                              </dataStore>
+                            </OTDataGraphable>
+                          </source>
+                          <xDataAxis>
+                            <OTDataAxis max="15.0" units="s" min="0.0" label="Time" labelFormat="Engineering" locked="true">
+                              <customGridLabels />
+                            </OTDataAxis>
+                          </xDataAxis>
+                          <yDataAxis>
+                            <OTDataAxis max="3.0" units="m" min="-2.0" label="Position" labelFormat="Engineering" locked="false">
+                              <customGridLabels />
+                            </OTDataAxis>
+                          </yDataAxis>
+                        </OTDataCollector>
+                        <OTQuestion id="881a8fa9-5e0a-11df-a1cd-d973855c6ef6" name="TryItOut1_1">
+                          <prompt>
+                            <OTCompoundDoc>
+                              <bodyText>Do you think you can control the line on the graph by the way you move?</bodyText>
+                            </OTCompoundDoc>
+                          </prompt>
+                          <input>
+                            <OTChoice name="Multiple choice" horizontal="false" alignContent="0">
+                              <choices>
+                                <OTCompoundDoc id="c7f5c285-5e0a-11df-a1cd-d973855c6ef6" name="Yes">
+                                  <bodyText>Yes</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc id="3e0bdbf2-5e0b-11df-a1cd-d973855c6ef6" name="No">
+                                  <bodyText>No</bodyText>
+                                </OTCompoundDoc>
+                              </choices>
+                            </OTChoice>
+                          </input>
+                        </OTQuestion>
+                        <OTOverlayWrapper id="dab2834c-5e0a-11df-a1cd-d973855c6ef6" name="TryItOut1_1Submit" embedWrappedObject="false">
                           <wrappedObject>
-                            <object refid="df9bdcc1-b810-4558-bab0-46ad87840ca5" />
+                            <object refid="881a8fa9-5e0a-11df-a1cd-d973855c6ef6" />
                           </wrappedObject>
                         </OTOverlayWrapper>
                       </documentRefs>
@@ -345,33 +431,21 @@ define the origin, it is fixed.
                           <div class="border">
                             <div class="body">
                               <div class="subtitle">
-                                Demonstration
+                                Discussion and Response
                                 <br />
                               </div>
-                              Your teacher will now demonstrate the use of the motion probe, 
-          showing you how to find the location of the Library, which we will 
-          define as position 0. This position has the special name of “origin.”
-                              <br />
-                              <br />
-                              Other 
-          positions, such as the location of the Cinema, are measured from the 
-          origin. In this activity, the position is positive if you're closer 
-          to the motion probe than to the origin and negative if you're 
-          further away from the origin.
-                              <br />
-                              <br />
-                              Watch the graph during the 
-          demonstration.
+                              Skip to the next page until you have discussed the questions on the previous page with 
+your teacher and / or class.
                               <br />
                               <br />
                               <table width="100%">
                                 <tr>
                                   <td width="70%">
-                                    <object refid="3fb67f07-ca9a-4d63-bcca-f37282100cf6" />
+                                    <object refid="26482efa-fc9e-11dd-93a6-0745b9c9fb5e" />
                                   </td>
                                   <td width="30%">
                                     <br />
-                                    <img src="images/Vernier-Go-Motion.jpg" align="center" />
+                                    <img align="center" src="images/Vernier-Go-Motion.jpg" />
                                     <br />
                                   </td>
                                 </tr>
@@ -381,34 +455,19 @@ define the origin, it is fixed.
                         </div>
                       </bodyText>
                       <documentRefs>
-                        <OTQuestion id="3fb67f07-ca9a-4d63-bcca-f37282100cf6" name="Question">
+                        <OTQuestion id="26482efa-fc9e-11dd-93a6-0745b9c9fb5e" name="Question">
                           <prompt>
                             <OTCompoundDoc>
-                              <bodyText>What do you see on the graph when your teacher moves in front of the probe?</bodyText>
+                              <bodyText>Describe one “tip” about how to use the motion probe for the missing manual that you learned from the discussion of questions on the previous page.</bodyText>
                             </OTCompoundDoc>
                           </prompt>
                           <input>
-                            <OTChoice name="Multiple choice" alignContent="0" horizontal="false">
-                              <choices>
-                                <OTCompoundDoc name="Nothing changes.">
-                                  <bodyText>Nothing changes.</bodyText>
-                                </OTCompoundDoc>
-                                <OTCompoundDoc name="Lines and dots jump around on the screen.">
-                                  <bodyText>Lines and dots jump around on the screen.</bodyText>
-                                </OTCompoundDoc>
-                                <OTCompoundDoc name="A line appears on the screen at the end of the movement.">
-                                  <bodyText>A line appears on the screen at the end of the movement.</bodyText>
-                                </OTCompoundDoc>
-                                <OTCompoundDoc name="A line is slowly drawn across the screen from left to right.">
-                                  <bodyText>A line is slowly drawn across the screen from left to right.</bodyText>
-                                </OTCompoundDoc>
-                              </choices>
-                            </OTChoice>
+                            <OTText name="Open response" />
                           </input>
                         </OTQuestion>
                       </documentRefs>
                     </OTCompoundDoc>
-                    <OTCompoundDoc id="e49f609c-951c-452b-8f5c-6bd97c58df05" name="%e49f609c-951c-452b-8f5c-6bd97c58df05" showEditBar="true">
+                    <OTCompoundDoc id="def511f2-351d-11de-bc93-ed0a535bafdb" name="%def511f2-351d-11de-bc93-ed0a535bafdb" showEditBar="true">
                       <bodyText>
                         <div class="buffer">
                           <div class="border">
@@ -420,21 +479,17 @@ define the origin, it is fixed.
           Refresh button.
                               <br />
                               <br />
-                              <object refid="8124d525-de79-45fc-90e0-949f4238bfbf" />
+                              <object refid="06908913-351e-11de-bc93-ed0a535bafdb" />
                               <br />
                             </div>
                           </div>
                         </div>
                       </bodyText>
                       <documentRefs>
-                        <OTMultiUserPickN id="8124d525-de79-45fc-90e0-949f4238bfbf" name="Pick N Results View" refreshButtonLabel="Refresh">
-                          <object>
-                            <object refid="df9bdcc1-b810-4558-bab0-46ad87840ca5" />
-                          </object>
-                        </OTMultiUserPickN>
+                        <null />
                       </documentRefs>
                     </OTCompoundDoc>
-                    <OTCompoundDoc id="984b5871-04ab-4dd2-a42a-d8af3c96c673" name="%984b5871-04ab-4dd2-a42a-d8af3c96c673" showEditBar="true">
+                    <OTCompoundDoc id="582317f9-08f8-11de-8291-9b621571c4a0" name="%582317f9-08f8-11de-8291-9b621571c4a0" showEditBar="true">
                       <bodyText>
                         <div class="buffer">
                           <div class="border">
@@ -470,7 +525,7 @@ define the origin, it is fixed.
                         </div>
                       </bodyText>
                     </OTCompoundDoc>
-                    <OTCompoundDoc id="7c530ea5-ce13-4546-baa7-a31739e1c26e" name="%7c530ea5-ce13-4546-baa7-a31739e1c26e" showEditBar="true">
+                    <OTCompoundDoc id="f3570343-fa01-11dd-a9f2-9149542af672" name="%f3570343-fa01-11dd-a9f2-9149542af672" showEditBar="true">
                       <bodyText>
                         <div class="buffer">
                           <div class="border">
@@ -500,13 +555,13 @@ define the origin, it is fixed.
                                   <td width="40%">
                                     <div style="border-color: black; padding-right: 2px; border-bottom-width: 1px; border-top-width: 1px; padding-bottom: 2px; border-left-width: 1px; padding-left: 2px; margin-top: 5px; margin-right: 5px; border-style: solid; margin-bottom: 5px; margin-left: 5px; border-right-width: 1px; padding-top: 2px">
                                       <br />
-                                      <object refid="df77c9e9-7e43-4eac-a598-780407c6531c" />
+                                      <object refid="0f8b3c2b-f938-48fe-b0ba-eea731632a0c" />
                                       <br />
                                     </div>
                                     <br />
                                   </td>
                                   <td width="60%">
-                                    <object refid="c24640b2-d0b3-4069-8167-1723ea57b58a" />
+                                    <object refid="99a08f00-fa10-11dd-a9f2-9149542af672" />
                                     <br />
                                     <br />
                                     <br />
@@ -519,45 +574,8 @@ define the origin, it is fixed.
                         </div>
                       </bodyText>
                       <documentRefs>
-                        <OTOverlayWrapper id="df77c9e9-7e43-4eac-a598-780407c6531c" name="Library Location Poll">
-                          <wrappedObject>
-                            <OTQuestion id="6e3084ad-a77f-4a7e-b155-b9a0dd236493" name="Library Location">
-                              <prompt>
-                                <OTCompoundDoc>
-                                  <bodyText>How far is the Library from the motion probe?</bodyText>
-                                </OTCompoundDoc>
-                              </prompt>
-                              <input>
-                                <OTChoice name="Multiple choice" alignContent="0" horizontal="false">
-                                  <choices>
-                                    <OTCompoundDoc name="0 meters">
-                                      <bodyText>0 meters</bodyText>
-                                    </OTCompoundDoc>
-                                    <OTCompoundDoc name=".25 to .5 meter">
-                                      <bodyText>.25 to .5 meter</bodyText>
-                                    </OTCompoundDoc>
-                                    <OTCompoundDoc name=".5 to 1 meter">
-                                      <bodyText>.5 to 1 meter</bodyText>
-                                    </OTCompoundDoc>
-                                    <OTCompoundDoc name="1 to 1.5 meters">
-                                      <bodyText>1 to 1.5 meters</bodyText>
-                                    </OTCompoundDoc>
-                                    <OTCompoundDoc name="1.5 to 2 meters">
-                                      <bodyText>1.5 to 2 meters</bodyText>
-                                    </OTCompoundDoc>
-                                    <OTCompoundDoc name="2 to 2.5 meters">
-                                      <bodyText>2 to 2.5 meters</bodyText>
-                                    </OTCompoundDoc>
-                                    <OTCompoundDoc name="2.5 to 3 meters">
-                                      <bodyText>2.5 to 3 meters</bodyText>
-                                    </OTCompoundDoc>
-                                  </choices>
-                                </OTChoice>
-                              </input>
-                            </OTQuestion>
-                          </wrappedObject>
-                        </OTOverlayWrapper>
-                        <OTDataCollector id="c24640b2-d0b3-4069-8167-1723ea57b58a" name="Motion" title="Position Graph" autoScaleEnabled="true" showControlBar="true" useDefaultToolBar="true">
+                        <null />
+                        <OTDataCollector id="99a08f00-fa10-11dd-a9f2-9149542af672" name="Motion" title="Position Graph" autoScaleEnabled="true" showControlBar="true" useDefaultToolBar="true">
                           <source>
                             <OTDataGraphable name="Sensor" connectPoints="true" yColumn="1" drawMarks="false" color="255" xColumn="0" lineWidth="2.0" visible="true">
                               <dataProducer>
@@ -602,7 +620,7 @@ define the origin, it is fixed.
                         </OTDataCollector>
                       </documentRefs>
                     </OTCompoundDoc>
-                    <OTCompoundDoc id="1fe8654e-cce0-4571-af99-23bf5bb8f053" name="%1fe8654e-cce0-4571-af99-23bf5bb8f053" showEditBar="true">
+                    <OTCompoundDoc id="b01ddd67-3526-11de-89df-7d86ca8328f8" name="%b01ddd67-3526-11de-89df-7d86ca8328f8" showEditBar="true">
                       <bodyText>
                         <div class="buffer">
                           <div class="border">
@@ -612,89 +630,34 @@ define the origin, it is fixed.
           not visible yet, click the Refresh button.
                               <br />
                               <br />
-                              <object refid="16b5458b-0c93-463c-b6bf-7ca3708949ed" />
+                              <object refid="d30d0a88-3526-11de-89df-7d86ca8328f8" />
                               <br />
                             </div>
                           </div>
                         </div>
                       </bodyText>
                       <documentRefs>
-                        <OTMultiUserPollingGraph id="16b5458b-0c93-463c-b6bf-7ca3708949ed" name="Library Location Results View" refreshButtonLabel="Refresh">
-                          <object>
-                            <object refid="6e3084ad-a77f-4a7e-b155-b9a0dd236493" />
-                          </object>
-                        </OTMultiUserPollingGraph>
+                        <null />
                       </documentRefs>
                     </OTCompoundDoc>
-                    <OTCompoundDoc id="11fe66f5-4051-4be6-9d6e-4a07469bb62c" name="%11fe66f5-4051-4be6-9d6e-4a07469bb62c" showEditBar="true">
+                    <OTCompoundDoc id="63b4aa2b-0933-11de-87d8-9d62335fe4bb" name="%63b4aa2b-0933-11de-87d8-9d62335fe4bb" showEditBar="true">
                       <documentRefs>
-                        <OTCardContainer id="329d6b66-e1bf-4f18-a6fa-c8f871248f68" contentsMayScroll="false" loadViewOnlyOnDemand="true" closeViewOnExit="true">
+                        <OTCardContainer id="a3336ce6-fa10-11dd-a9f2-9149542af672" contentsMayScroll="false" loadViewOnlyOnDemand="true" closeViewOnExit="true">
                           <cards>
-                            <OTCompoundDoc id="1a25f0cd-9935-45ed-aba5-6ccb1a1b6b3f">
+                            <OTCompoundDoc id="a335dde8-fa10-11dd-a9f2-9149542af672">
                               <bodyText>
-                                <object refid="b585a1f4-c6bc-4aed-9be8-881b1c8e36fb" />
+                                <object refid="4d8ae369-4ee3-46c2-b07a-ae4812bf7743" />
                                 <br />
                               </bodyText>
                               <documentRefs>
-                                <OTOverlayWrapper id="b585a1f4-c6bc-4aed-9be8-881b1c8e36fb" name="Playing with probes">
-                                  <wrappedObject>
-                                    <OTQuestion id="624c5255-66d2-429c-9180-83b78d2dd817" name="at Library">
-                                      <prompt>
-                                        <OTCompoundDoc>
-                                          <bodyText>What do you see on the graph when standing at the Library?</bodyText>
-                                        </OTCompoundDoc>
-                                      </prompt>
-                                      <input>
-                                        <OTChoice name="Multiple choice" alignContent="0" horizontal="false">
-                                          <choices>
-                                            <OTCompoundDoc name="Nothing changes.">
-                                              <bodyText>Nothing changes.</bodyText>
-                                            </OTCompoundDoc>
-                                            <OTCompoundDoc name="Lines and dots jump around on the screen.">
-                                              <bodyText>Lines and dots jump around on the screen.</bodyText>
-                                            </OTCompoundDoc>
-                                            <OTCompoundDoc name="A line appears on the screen at the end of the movement.">
-                                              <bodyText>A line appears on the screen at the end of the movement.</bodyText>
-                                            </OTCompoundDoc>
-                                            <OTCompoundDoc name="A line is slowly drawn across the screen from left to right.">
-                                              <bodyText>A line is slowly drawn across the screen from left to right.</bodyText>
-                                            </OTCompoundDoc>
-                                          </choices>
-                                          <currentChoice>
-                                            <OTCompoundDoc name="4. A line is slowly drawn across the screen from left to right">
-                                              <bodyText>4. A line is slowly drawn across the screen from left to right</bodyText>
-                                            </OTCompoundDoc>
-                                          </currentChoice>
-                                        </OTChoice>
-                                      </input>
-                                    </OTQuestion>
-                                  </wrappedObject>
-                                  <resultsObject>
-                                    <OTMultiUserPollingGraph id="771f0f5f-6ff6-4699-aecc-131f497d0c27">
-                                      <object>
-                                        <object refid="624c5255-66d2-429c-9180-83b78d2dd817" />
-                                      </object>
-                                    </OTMultiUserPollingGraph>
-                                  </resultsObject>
-                                </OTOverlayWrapper>
+                                <null />
                               </documentRefs>
                             </OTCompoundDoc>
-                            <OTCompoundDoc id="1d8211ae-37f5-4a3f-b8e5-ef0d25f3185d" name="%1d8211ae-37f5-4a3f-b8e5-ef0d25f3185d" showEditBar="true">
+                            <OTCompoundDoc id="8eff68c3-0e96-11de-87e7-2f8c138c15b4" name="%8eff68c3-0e96-11de-87e7-2f8c138c15b4" showEditBar="true">
                               <documentRefs>
-                                <OTOverlayWrapper id="952031da-01ed-49d4-9b8c-71c4a73687a1">
-                                  <wrappedObject>
-                                    <object refid="9acc543c-cc5b-4444-9618-3ddf8fa657b8" />
-                                  </wrappedObject>
-                                  <resultsObject>
-                                    <object refid="d6f5fbb9-711d-4db6-977c-cd7697cce721" />
-                                  </resultsObject>
-                                </OTOverlayWrapper>
-                                <OTMultiUserPickN id="d6f5fbb9-711d-4db6-977c-cd7697cce721">
-                                  <object>
-                                    <object refid="9acc543c-cc5b-4444-9618-3ddf8fa657b8" />
-                                  </object>
-                                </OTMultiUserPickN>
-                                <OTQuestion id="9acc543c-cc5b-4444-9618-3ddf8fa657b8" name="at  Theater">
+                                <null />
+                                <null />
+                                <OTQuestion id="9278b104-0e96-11de-87e7-2f8c138c15b4" name="at  Theater">
                                   <prompt>
                                     <OTCompoundDoc>
                                       <bodyText>What do you see when standing at the Movie Theater?</bodyText>
@@ -706,26 +669,15 @@ define the origin, it is fixed.
                                 </OTQuestion>
                               </documentRefs>
                               <bodyText>
-                                <object refid="952031da-01ed-49d4-9b8c-71c4a73687a1" />
+                                <object refid="d1987700-994c-4e9d-a286-03f4fa55700a" />
                                 <br />
                               </bodyText>
                             </OTCompoundDoc>
-                            <OTCompoundDoc id="02659a2f-7c52-481d-a4b8-9a15424e0b78" name="%02659a2f-7c52-481d-a4b8-9a15424e0b78" showEditBar="true">
+                            <OTCompoundDoc id="d3f8ba77-0e96-11de-87e7-2f8c138c15b4" name="%d3f8ba77-0e96-11de-87e7-2f8c138c15b4" showEditBar="true">
                               <documentRefs>
-                                <OTOverlayWrapper id="05cbb1e1-9a16-44b7-8381-20159a469c5b">
-                                  <wrappedObject>
-                                    <object refid="669cd5cd-c1ad-4455-a711-8f5b8a368e2b" />
-                                  </wrappedObject>
-                                  <resultsObject>
-                                    <object refid="d08af9b8-56f6-4840-8e3f-f6f2004a5fe7" />
-                                  </resultsObject>
-                                </OTOverlayWrapper>
-                                <OTMultiUserPickN id="d08af9b8-56f6-4840-8e3f-f6f2004a5fe7">
-                                  <object>
-                                    <object refid="669cd5cd-c1ad-4455-a711-8f5b8a368e2b" />
-                                  </object>
-                                </OTMultiUserPickN>
-                                <OTQuestion id="669cd5cd-c1ad-4455-a711-8f5b8a368e2b" name="Moving back and forth">
+                                <null />
+                                <null />
+                                <OTQuestion id="d7175f98-0e96-11de-87e7-2f8c138c15b4" name="Moving back and forth">
                                   <prompt>
                                     <OTCompoundDoc>
                                       <bodyText>What do you see when moving back and forth?</bodyText>
@@ -737,26 +689,15 @@ define the origin, it is fixed.
                                 </OTQuestion>
                               </documentRefs>
                               <bodyText>
-                                <object refid="05cbb1e1-9a16-44b7-8381-20159a469c5b" />
+                                <object refid="8e5589bd-63f2-4975-b626-338bc8404b7e" />
                                 <br />
                               </bodyText>
                             </OTCompoundDoc>
-                            <OTCompoundDoc id="c35487f1-b0bf-41c2-8cc6-27e8067fc69d" name="%c35487f1-b0bf-41c2-8cc6-27e8067fc69d" showEditBar="true">
+                            <OTCompoundDoc id="68ea9c45-11cc-11de-86b5-33c002e3cc17" name="%68ea9c45-11cc-11de-86b5-33c002e3cc17" showEditBar="true">
                               <documentRefs>
-                                <OTOverlayWrapper id="cb46108f-b037-48b3-8f12-2d23c65b3efd">
-                                  <wrappedObject>
-                                    <object refid="56518f33-a294-4fcb-a480-a39ea4933845" />
-                                  </wrappedObject>
-                                  <resultsObject>
-                                    <object refid="51ceae71-098b-4b03-84c8-e8c5ce8dde4b" />
-                                  </resultsObject>
-                                </OTOverlayWrapper>
-                                <OTMultiUserPickN id="51ceae71-098b-4b03-84c8-e8c5ce8dde4b">
-                                  <object>
-                                    <object refid="56518f33-a294-4fcb-a480-a39ea4933845" />
-                                  </object>
-                                </OTMultiUserPickN>
-                                <OTQuestion id="56518f33-a294-4fcb-a480-a39ea4933845" name="Graph differences">
+                                <null />
+                                <null />
+                                <OTQuestion id="6c49a5c6-11cc-11de-86b5-33c002e3cc17" name="Graph differences">
                                   <prompt>
                                     <OTCompoundDoc>
                                       <bodyText>How is the graph different when moving more rapidly vs. more slowly?</bodyText>
@@ -768,31 +709,31 @@ define the origin, it is fixed.
                                 </OTQuestion>
                               </documentRefs>
                               <bodyText>
-                                <object refid="cb46108f-b037-48b3-8f12-2d23c65b3efd" />
+                                <object refid="bb9ceaa0-97cc-4a3a-af74-814951958207" />
                                 <br />
                               </bodyText>
                             </OTCompoundDoc>
                           </cards>
                           <currentCard>
-                            <object refid="c35487f1-b0bf-41c2-8cc6-27e8067fc69d" />
+                            <object refid="68ea9c45-11cc-11de-86b5-33c002e3cc17" />
                           </currentCard>
                           <viewedCards>
-                            <object refid="1a25f0cd-9935-45ed-aba5-6ccb1a1b6b3f" />
-                            <object refid="1d8211ae-37f5-4a3f-b8e5-ef0d25f3185d" />
-                            <object refid="02659a2f-7c52-481d-a4b8-9a15424e0b78" />
-                            <object refid="c35487f1-b0bf-41c2-8cc6-27e8067fc69d" />
+                            <object refid="a335dde8-fa10-11dd-a9f2-9149542af672" />
+                            <object refid="8eff68c3-0e96-11de-87e7-2f8c138c15b4" />
+                            <object refid="d3f8ba77-0e96-11de-87e7-2f8c138c15b4" />
+                            <object refid="68ea9c45-11cc-11de-86b5-33c002e3cc17" />
                           </viewedCards>
                         </OTCardContainer>
                         <object refid="d937d590-14fd-11de-8c30-0800200c9a66" />
-                        <OTMenu id="f3dc4808-efa7-4334-b25b-7d8c377f5e08" showBorder="false">
+                        <OTMenu id="a3336ce7-fa10-11dd-a9f2-9149542af672" showBorder="false">
                           <cardContainer>
-                            <object refid="329d6b66-e1bf-4f18-a6fa-c8f871248f68" />
+                            <object refid="a3336ce6-fa10-11dd-a9f2-9149542af672" />
                           </cardContainer>
                           <menuRule>
                             <OTMenuRule jumpToViewedCard="true" stepAhead="true" />
                           </menuRule>
                         </OTMenu>
-                        <OTDataCollector id="cac8a19f-355d-4900-9ac6-d5dd810392c8" name="Motion" title="Position Graph" autoScaleEnabled="true" showControlBar="true" useDefaultToolBar="true">
+                        <OTDataCollector id="7c2d1f83-2b7a-11de-9d76-b392396f84c9" name="Motion" title="Position Graph" autoScaleEnabled="true" showControlBar="true" useDefaultToolBar="true">
                           <source>
                             <OTDataGraphable name="Sensor" connectPoints="true" yColumn="1" drawMarks="false" color="255" xColumn="0" lineWidth="2.0" visible="true">
                               <dataProducer>
@@ -871,17 +812,17 @@ define the origin, it is fixed.
                                 <tr>
                                   <td width="40%">
                                     <div style="border-color: black; padding-right: 2px; border-bottom-width: 1px; border-top-width: 1px; padding-bottom: 2px; border-left-width: 1px; padding-left: 2px; margin-top: 5px; margin-right: 5px; border-style: solid; margin-bottom: 5px; margin-left: 5px; border-right-width: 1px; padding-top: 2px">
-                                      <object refid="329d6b66-e1bf-4f18-a6fa-c8f871248f68" />
+                                      <object refid="a3336ce6-fa10-11dd-a9f2-9149542af672" />
                                       <br />
                                       <br />
                                       <br />
                                       <br />
                                       <br />
-                                      <object viewid="d937d590-14fd-11de-8c30-0800200c9a66" refid="f3dc4808-efa7-4334-b25b-7d8c377f5e08" />
+                                      <object viewid="d937d590-14fd-11de-8c30-0800200c9a66" refid="a3336ce7-fa10-11dd-a9f2-9149542af672" />
                                     </div>
                                   </td>
                                   <td width="60%">
-                                    <object refid="cac8a19f-355d-4900-9ac6-d5dd810392c8" />
+                                    <object refid="7c2d1f83-2b7a-11de-9d76-b392396f84c9" />
                                   </td>
                                 </tr>
                               </table>
@@ -891,7 +832,7 @@ define the origin, it is fixed.
                         </div>
                       </bodyText>
                     </OTCompoundDoc>
-                    <OTCompoundDoc id="c6f436e1-cc5d-48e1-8d0a-4902a9d94fa6" name="%c6f436e1-cc5d-48e1-8d0a-4902a9d94fa6" showEditBar="true">
+                    <OTCompoundDoc id="691b9068-fc45-11dd-91fe-7db590c6d8f2" name="%691b9068-fc45-11dd-91fe-7db590c6d8f2" showEditBar="true">
                       <bodyText>
                         <div class="buffer">
                           <div class="border">
@@ -918,7 +859,7 @@ define the origin, it is fixed.
                               <br />
                               <br />
                               <br />
-                              <object refid="4dd3180a-3b98-457c-89e5-8cc2c6077d71" />
+                              <object refid="0a09458b-675e-4f6d-b3d5-2731341ba232" />
                               <br />
                               <br />
                             </div>
@@ -926,14 +867,10 @@ define the origin, it is fixed.
                         </div>
                       </bodyText>
                       <documentRefs>
-                        <OTOverlayWrapper id="4dd3180a-3b98-457c-89e5-8cc2c6077d71" name="Position Graph">
-                          <wrappedObject>
-                            <object refid="02f5448f-f7ca-42fe-9501-f62b377114e1" />
-                          </wrappedObject>
-                        </OTOverlayWrapper>
+                        <null />
                       </documentRefs>
                     </OTCompoundDoc>
-                    <OTCompoundDoc id="97a20e47-7f96-4e84-8e0a-28252eaf8f03" name="%97a20e47-7f96-4e84-8e0a-28252eaf8f03" showEditBar="true">
+                    <OTCompoundDoc id="db336ae9-3527-11de-89df-7d86ca8328f8" name="%db336ae9-3527-11de-89df-7d86ca8328f8" showEditBar="true">
                       <bodyText>
                         <div class="buffer">
                           <div class="border">
@@ -945,21 +882,17 @@ define the origin, it is fixed.
           visible yet, click the Refresh button.
                               <br />
                               <br />
-                              <object refid="dae01fe9-edf7-4d53-bbb8-6260e5e86f06" />
+                              <object refid="89becb82-3528-11de-89df-7d86ca8328f8" />
                               <br />
                             </div>
                           </div>
                         </div>
                       </bodyText>
                       <documentRefs>
-                        <OTMultiUserPickN id="dae01fe9-edf7-4d53-bbb8-6260e5e86f06" name="Pick N Results View">
-                          <object>
-                            <object refid="02f5448f-f7ca-42fe-9501-f62b377114e1" />
-                          </object>
-                        </OTMultiUserPickN>
+                        <null />
                       </documentRefs>
                     </OTCompoundDoc>
-                    <OTCompoundDoc id="d3ac3feb-b0ae-490c-b372-e97f56e2d9c4" name="%d3ac3feb-b0ae-490c-b372-e97f56e2d9c4" showEditBar="true">
+                    <OTCompoundDoc id="01bc85f9-fc48-11dd-91fe-7db590c6d8f2" name="%01bc85f9-fc48-11dd-91fe-7db590c6d8f2" showEditBar="true">
                       <bodyText>
                         <div class="buffer">
                           <div class="border">
@@ -973,73 +906,17 @@ define the origin, it is fixed.
                               <br />
                               <br />
                               <br />
-                              <object refid="b5c2c45c-2351-43e7-84d8-273d308a011f" />
+                              <object refid="e1604d9e-3697-11de-9d20-1f5c85b776ac" />
                               <br />
                             </div>
                           </div>
                         </div>
                       </bodyText>
                       <documentRefs>
-                        <OTOverlayWrapper id="b5c2c45c-2351-43e7-84d8-273d308a011f" name="Discussing graphs" buttonText="Submit All">
-                          <wrappedObject>
-                            <OTObjectSet id="f3dabf33-2b8b-40cd-a00b-a59a03710928" name="Discussing graphs (Set)">
-                              <objects>
-                                <OTQuestion id="3f68204f-8243-4f02-b855-0f9ff02dafe2" name="Q1">
-                                  <prompt>
-                                    <OTCompoundDoc>
-                                      <bodyText>1.  Are the graphs all the same?</bodyText>
-                                    </OTCompoundDoc>
-                                  </prompt>
-                                  <input>
-                                    <OTChoice name="Multiple choice" alignContent="0" horizontal="false">
-                                      <choices>
-                                        <OTCompoundDoc name="Yes">
-                                          <bodyText>Yes</bodyText>
-                                        </OTCompoundDoc>
-                                        <OTCompoundDoc name="No">
-                                          <bodyText>No</bodyText>
-                                        </OTCompoundDoc>
-                                      </choices>
-                                    </OTChoice>
-                                  </input>
-                                </OTQuestion>
-                                <OTQuestion id="df850a97-bd06-436b-be9d-cbce08a6c8aa" name="Q2">
-                                  <prompt>
-                                    <OTCompoundDoc>
-                                      <bodyText>2.  What is similar about the graphs?</bodyText>
-                                    </OTCompoundDoc>
-                                  </prompt>
-                                  <input>
-                                    <OTText text="" />
-                                  </input>
-                                </OTQuestion>
-                                <OTQuestion id="dcaed1c1-a57e-4c07-bf1a-c9d1b97a2d70" name="Q3">
-                                  <prompt>
-                                    <OTCompoundDoc>
-                                      <bodyText>3.  What is different about the graphs?</bodyText>
-                                    </OTCompoundDoc>
-                                  </prompt>
-                                  <input>
-                                    <OTText text="" />
-                                  </input>
-                                </OTQuestion>
-                                <OTQuestion id="963195e5-af0d-4653-8e00-ed04b814dd7c" name="Q4">
-                                  <prompt>
-                                    <OTCompoundDoc>
-                                      <bodyText>4.  If you want everyone's graphs to match, what does everyone have to change or agree on?</bodyText>
-                                    </OTCompoundDoc>
-                                  </prompt>
-                                  <input>
-                                    <OTText text="" />
-                                  </input>
-                                </OTQuestion>
-                              </objects>
-                            </OTObjectSet>
-                          </wrappedObject>
-                        </OTOverlayWrapper>
+                        <null />
                       </documentRefs>
                     </OTCompoundDoc>
-                    <OTCompoundDoc id="46a44116-071a-4bfa-8933-8726d549b4f9" name="%46a44116-071a-4bfa-8933-8726d549b4f9" showEditBar="true">
+                    <OTCompoundDoc id="2e266318-3698-11de-9d20-1f5c85b776ac" name="%2e266318-3698-11de-9d20-1f5c85b776ac" showEditBar="true">
                       <bodyText>
                         <div class="buffer">
                           <div class="border">
@@ -1051,21 +928,17 @@ define the origin, it is fixed.
                               ...
                               <br />
                               <br />
-                              <object refid="e8a48f00-b1ad-4f20-a940-e3a305f9b245" />
+                              <object refid="3fc27199-3698-11de-9d20-1f5c85b776ac" />
                               <br />
                             </div>
                           </div>
                         </div>
                       </bodyText>
                       <documentRefs>
-                        <OTMultiUserPickN id="e8a48f00-b1ad-4f20-a940-e3a305f9b245" name="Pick N Results View">
-                          <object>
-                            <object refid="f3dabf33-2b8b-40cd-a00b-a59a03710928" />
-                          </object>
-                        </OTMultiUserPickN>
+                        <null />
                       </documentRefs>
                     </OTCompoundDoc>
-                    <OTCompoundDoc id="567c5202-769a-42f1-a729-361a5d15f9c6" name="%567c5202-769a-42f1-a729-361a5d15f9c6" showEditBar="true">
+                    <OTCompoundDoc id="aa97d9a3-1006-11de-aaa0-11f6f031d6ce" name="%aa97d9a3-1006-11de-aaa0-11f6f031d6ce" showEditBar="true">
                       <bodyText>
                         <div class="buffer">
                           <div class="border">
@@ -1082,22 +955,22 @@ define the origin, it is fixed.
                     </OTCompoundDoc>
                   </cards>
                   <currentCard>
-                    <object refid="6da79bc4-9479-4623-8c50-36b0adb29160" />
+                    <object refid="bcdfc592-0032-11de-a3ee-43c60806869b" />
                   </currentCard>
                   <viewedCards>
-                    <object refid="6da79bc4-9479-4623-8c50-36b0adb29160" />
-                    <object refid="11fe66f5-4051-4be6-9d6e-4a07469bb62c" />
-                    <object refid="1fe8654e-cce0-4571-af99-23bf5bb8f053" />
+                    <object refid="9e61a484-0e82-11de-87e7-2f8c138c15b4" />
+                    <object refid="63b4aa2b-0933-11de-87d8-9d62335fe4bb" />
+                    <object refid="b01ddd67-3526-11de-89df-7d86ca8328f8" />
                     <object refid="${page-1}" />
-                    <object refid="ca979939-fdc3-4ca0-98a8-352fec04565f" />
-                    <object refid="e49f609c-951c-452b-8f5c-6bd97c58df05" />
-                    <object refid="984b5871-04ab-4dd2-a42a-d8af3c96c673" />
-                    <object refid="7c530ea5-ce13-4546-baa7-a31739e1c26e" />
-                    <object refid="c6f436e1-cc5d-48e1-8d0a-4902a9d94fa6" />
-                    <object refid="97a20e47-7f96-4e84-8e0a-28252eaf8f03" />
-                    <object refid="d3ac3feb-b0ae-490c-b372-e97f56e2d9c4" />
-                    <object refid="46a44116-071a-4bfa-8933-8726d549b4f9" />
-                    <object refid="567c5202-769a-42f1-a729-361a5d15f9c6" />
+                    <object refid="bcdfc592-0032-11de-a3ee-43c60806869b" />
+                    <object refid="def511f2-351d-11de-bc93-ed0a535bafdb" />
+                    <object refid="582317f9-08f8-11de-8291-9b621571c4a0" />
+                    <object refid="f3570343-fa01-11dd-a9f2-9149542af672" />
+                    <object refid="691b9068-fc45-11dd-91fe-7db590c6d8f2" />
+                    <object refid="db336ae9-3527-11de-89df-7d86ca8328f8" />
+                    <object refid="01bc85f9-fc48-11dd-91fe-7db590c6d8f2" />
+                    <object refid="2e266318-3698-11de-9d20-1f5c85b776ac" />
+                    <object refid="aa97d9a3-1006-11de-aaa0-11f6f031d6ce" />
                   </viewedCards>
                 </OTCardContainer>
               </content>
@@ -1105,7 +978,7 @@ define the origin, it is fixed.
                 <object refid="${nav-bar}" />
               </footer>
               <north>
-                <object refid="65e63651-0000-40b5-9646-5004f60dbe47" />
+                <object refid="2767fe20-6c7d-11dc-8314-0800200c9a66!/section_1/header" />
               </north>
               <center>
                 <object refid="${activity-card-container}" />
