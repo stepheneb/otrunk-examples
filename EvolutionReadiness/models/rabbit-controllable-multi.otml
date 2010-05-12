@@ -144,7 +144,7 @@
             <OTText local_id="timer" text="0" columns="2" />
             <OTEnvironmentHolder local_id="env-holder" width="590" height="460" toolbar="run,reset" useSpeedSlider="false">
               <environment>
-                <OTEnvironment local_id="environment" environmentWidth="5" environmentHeight="5" showRunButton="false" winterLength="5" summerLength="50" showWinterImage="false" orgSizeMultiplier="1.5" backgroundImageSrc="images/grass.jpg">
+                <OTEnvironment local_id="environment" environmentWidth="5" environmentHeight="5" showRunButton="false" winterLength="5" summerLength="50" showWinterImage="false" orgSizeMultiplier="1.9" backgroundImageSrc="images/grass.jpg">
                   <world>
                     <OTWorld local_id="peasimple_world" speciesPath="org/concord/biologica/worlds/peasimple.xml" />
                   </world>
@@ -249,8 +249,7 @@
 							var time
 							var previousTime
 							var isRunning = false
-							var addedRabbits = false
-							var NUM_RABBITS = 7
+							var recentlyAddedRabbit = true			// added a rabbit this past second
 							
 							var ADD_RABBIT_RATE = 10;			// seconds before adding another rabbit
 							  			
@@ -277,9 +276,8 @@
 								rabbit.setEnvironment(env)
 								rabbit.setLocation(loc)
 						        env.addAgent(rabbit)
-						          
-								//addedRabbits = true
-								//addMoreRabbits()
+								
+								recentlyAddedRabbit = true
 								
 								
 								time = 0
@@ -331,6 +329,14 @@
 										} else {
 											rabbit.setProperty("current behavior", "WANDERING")
 										}
+										
+										if (hunger &gt; 70){
+											rabbit.setProperty("show food bubble", true);
+										} else {
+											rabbit.setProperty("show food bubble", false);
+										}
+										
+										
 										if (hunger &gt; 99){
 											env.removeAgent(rabbit)
 											envHolder.pauseAction()
@@ -369,7 +375,6 @@
 								timerText.text = Math.floor(time / 1000);
 							}
 							
-							var recentlyAddedRabbit = true;			// added a rabbit this past second
 							function checkRabbitAdding(){
 								seconds = Math.floor(time / 1000);
 								if (seconds % ADD_RABBIT_RATE == 0){
