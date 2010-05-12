@@ -267,16 +267,22 @@ var otEnvHolderController
 var lastEnvChange = 10
              
 function init() {
-	radio.getCurrentChoices().set(0, choice_0)
 	radio.addOTChangeListener(radioChangeListener)
+	
+	env.addChangeListener(resetListener)
+	env.addStepListener(stepListener)
+	
+	setup();
+}
+
+function setup() {
+
+	radio.getCurrentChoices().set(0, choice_0)
 	
 	otEnvHolderController = controllerService.getController(otEnvHolder)
 	
 	var lastEnvChange = 10
 	setProperty("rain", 0.0)
-	
-	env.addChangeListener(resetListener)
-	env.addStepListener(stepListener)
 }
 
 
@@ -310,7 +316,7 @@ var radioChangeHandler =
         }
         
         var numAgents = env.getAllAgents().size()
-        otEnvHolderController.log("Mountain height changed, Num agents alive",rain,numAgents,null)
+   //     otEnvHolderController.log("Mountain height changed, Num agents alive",rain,numAgents,null)
         
     }
 
@@ -328,7 +334,7 @@ function setProperty(prop, val){
 var resetHandler= {
 	environmentChanged: function(evt){
 		if (evt.getType() == EnvironmentChangeEvent.RESET){
-			init();
+			setup();
 		}
 	}
 }
