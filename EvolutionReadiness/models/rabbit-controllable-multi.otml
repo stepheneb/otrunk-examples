@@ -245,8 +245,9 @@
 							importClass(Packages.javax.swing.JOptionPane);
 							
 							var rabbit
-							var timer
-							var timerTask
+							var startTime
+							var time
+							var previousTime
 							var isRunning = false
 							var addedRabbits = false
 							var NUM_RABBITS = 7
@@ -278,30 +279,13 @@
 								addedRabbits = true
 								addMoreRabbits()
 								
+								time = 0
+								previousTime = 0
 								timerText.text = 0
 						        
-						        timer = new Timer();
-						        timerTask = null;
 						        if (envHolder.getToolbar().getButton("Run") != null)
 						        	envHolder.getToolbar().getButton("Run").setEnabled(true)
 						        
-							}
-							
-							var timerTaskHandler =
-							{
-								run: function()
-								{
-									if (!addedRabbits){
-										envHolder.pauseAction()
-											envHolder.getToolbar().getButton("Run").setEnabled(false)
-										showMessageWithoutPausing("Congratulations!\nYour bunny was able to find enough food to live!", envHolder)
-									//	addMoreRabbits()
-									} else {
-										envHolder.pauseAction()
-										envHolder.getToolbar().getButton("Run").setEnabled(false)
-										showMessageWithoutPausing("Hooray, all your rabbits lived for another 30 seconds!\nNow you can go on to the next page.", envHolder)
-									}
-								}
 							}
 							
 							function addMoreRabbits(){
@@ -370,6 +354,7 @@
 							{
 								environmentStepped: function()
 								{
+									updateTimer();
 									if (rabbit != null){
 										envHolder.getParent().getParent().requestFocus()
 										var hunger = 100 - rabbit.getProperty("energy").intValue()
@@ -393,66 +378,26 @@
 							}
 							var stepListener = new EnvironmentStepListener(stepHandler)
 							
-							var timeRemaining = 0
 							var resetRunHandler= {
 									environmentChanged: function(evt){
 										if (evt.getType() == EnvironmentChangeEvent.RESET){
 											isRunning = false
 											setup()
-											timerTask = null
-											timerCountdownTask = null
 										} else if (evt.getType() == EnvironmentChangeEvent.RUN){
 											isRunning = true
-											if (timerTask == null){
-												timerTask = new TimerTask(timerTaskHandler)
-						        				timer.schedule(timerTask, 30000);
-						        			} else {
-						        				timer.schedule(timerTask, timeRemaining);
-						        			}
-						        			
-						        			if (timerCountdownTask == null){
-						        				updateEndTime(30000)
-												timerCountdownTask = new TimerTask(timerTaskCountdownHandler)
-						        				timer.schedule(timerCountdownTask, 0, 100);
-						        			} else {
-						        				updateEndTime(timeRemaining)
-						        				timer.schedule(timerCountdownTask, 0, 100);
-						        			}
+											startTime = System.currentTimeMillis()
 										} else if (evt.getType() == EnvironmentChangeEvent.PAUSE){
-											isRunning = false
-											timeRemaining = timerTask.scheduledExecutionTime() - System.currentTimeMillis()
-											if (timer != null)
-												timer.cancel()
-											timer = new Timer();
-											timerTask = new TimerTask(timerTaskHandler)
-											timerCountdownTask = new TimerTask(timerTaskCountdownHandler)
+											previousTime = time;
 										}
 									}
 								}
 											
 							var resetListener = new EnvironmentChangeListener(resetRunHandler)
 							
-							var endTime
-							
-							function updateEndTime(timeRemaining){
-								endTime = System.currentTimeMillis() + timeRemaining;
-							}
-							
 							function updateTimer(){
-								timeRemaining = endTime - System.currentTimeMillis();
-								
-								timeRemaining = (timeRemaining &lt; 0) ? 0 : Math.floor(timeRemaining / 1000);
-								timerText.text = 30 - timeRemaining;
-							}
-							
-							var timerCountdownTask;
-							
-							var timerTaskCountdownHandler =
-							{
-								run: function()
-								{
-									updateTimer();
-								}
+								timeSinceLastStart = System.currentTimeMillis() - startTime;
+								time =  previousTime + timeSinceLastStart;
+								timerText.text = Math.floor(time / 1000);
 							}
 						
 						function save() {
