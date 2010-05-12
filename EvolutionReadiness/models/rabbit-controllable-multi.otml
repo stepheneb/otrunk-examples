@@ -251,6 +251,8 @@
 							var isRunning = false
 							var addedRabbits = false
 							var NUM_RABBITS = 7
+							
+							var ADD_RABBIT_RATE = 10;			// seconds before adding another rabbit
 							  			
 							function init() {
 						        setup()
@@ -276,8 +278,9 @@
 								rabbit.setLocation(loc)
 						        env.addAgent(rabbit)
 						          
-								addedRabbits = true
-								addMoreRabbits()
+								//addedRabbits = true
+								//addMoreRabbits()
+								
 								
 								time = 0
 								previousTime = 0
@@ -286,43 +289,6 @@
 						        if (envHolder.getToolbar().getButton("Run") != null)
 						        	envHolder.getToolbar().getButton("Run").setEnabled(true)
 						        
-							}
-							
-							function addMoreRabbits(){
-								for (var i = 0; i &lt; NUM_RABBITS; i++){
-									var newRabbit = rabbit_species.createAgent();
-							        newRabbit.setAge(50)
-									newRabbit.setProperty("is immortal", true)
-									newRabbit.setProperty("max offspring", 0)
-									newRabbit.setProperty("mating bonus", -1000)
-									newRabbit.setProperty("hunger bonus", -50)
-									newRabbit.setProperty("is selected", 0)
-									var loc = env.getRandomLocation()
-									newRabbit.setEnvironment(env)
-									newRabbit.setLocation(loc)
-							        env.addAgent(newRabbit)
-								}
-								
-								// add a few more plants
-								var allPlants = env.getAgents(plant_species)
-								var numMore = 30 - allPlants.size()
-								if (numMore &gt; 0)
-								for (var i = 0; i &lt; numMore; i++){
-									var plant = plant_species.createAgent();
-									plant.setProperty("food quantity",100)
-									plant.setProperty("max offspring distance", 20)
-									plant.setProperty("min offspring", 1)
-									env.addAgent(plant)
-								}
-								
-								// increase number of offspring
-								allPlants = env.getAgents(plant_species)
-								for (var i = 0; i &lt; allPlants.size(); i++){
-									var plant = allPlants.get(i)
-									plant.setProperty("max offspring", 5)
-								}
-								
-								
 							}
 							
 							
@@ -355,6 +321,7 @@
 								environmentStepped: function()
 								{
 									updateTimer();
+									
 									if (rabbit != null){
 										envHolder.getParent().getParent().requestFocus()
 										var hunger = 100 - rabbit.getProperty("energy").intValue()
@@ -369,10 +336,12 @@
 											envHolder.pauseAction()
 											rabbit.setProperty("Hunger", 0)
 											envHolder.getToolbar().getButton("Run").setEnabled(false)
-											showMessageWithoutPausing("The bunny died because it was not able to find enough food to live.\nClick Reset and try again!", envHolder)
+											showMessageWithoutPausing("The bunny died because it was not able to find enough food to live!\nHow long were you able to survive for?\nHow many rabbits are in the field?\nIf you'd like to try again, click Reset.", envHolder)
 											rabbit = null
 										}
 									}
+									
+									checkRabbitAdding();
 										
 								}
 							}
@@ -399,6 +368,33 @@
 								time =  previousTime + timeSinceLastStart;
 								timerText.text = Math.floor(time / 1000);
 							}
+							
+							var recentlyAddedRabbit = true;			// added a rabbit this past second
+							function checkRabbitAdding(){
+								seconds = Math.floor(time / 1000);
+								if (seconds % ADD_RABBIT_RATE == 0){
+									if (!recentlyAddedRabbit) {
+										recentlyAddedRabbit = true;
+										addRabbit();
+									}
+								} else {
+									recentlyAddedRabbit = false;
+								}
+							}
+							
+							function addRabbit(){
+								var newRabbit = rabbit_species.createAgent();
+							        newRabbit.setAge(50)
+									newRabbit.setProperty("is immortal", true)
+									newRabbit.setProperty("max offspring", 0)
+									newRabbit.setProperty("mating bonus", -1000)
+									newRabbit.setProperty("hunger bonus", -50)
+									newRabbit.setProperty("is selected", 0)
+									var loc = env.getRandomLocation()
+									newRabbit.setEnvironment(env)
+									newRabbit.setLocation(loc)
+							        env.addAgent(newRabbit)
+							  }
 						
 						function save() {
 							return true;
