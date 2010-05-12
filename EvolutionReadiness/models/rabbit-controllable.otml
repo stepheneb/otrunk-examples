@@ -136,7 +136,7 @@
             <OTText local_id="timer" text="0" columns="2" rows="1" />
             <OTEnvironmentHolder local_id="env-holder" width="590" height="460" toolbar="run,reset" useSpeedSlider="false">
               <environment>
-                <OTEnvironment local_id="environment" environmentWidth="4" environmentHeight="4" showRunButton="false" winterLength="5" summerLength="50" showWinterImage="false" orgSizeMultiplier="1.5" backgroundImageSrc="images/grass.jpg">
+                <OTEnvironment local_id="environment" environmentWidth="4" environmentHeight="4" showRunButton="false" winterLength="5" summerLength="50" showWinterImage="false" orgSizeMultiplier="1.5" backgroundImageSrc="images/soil_water_level10.png">
                   <world>
                     <OTWorld local_id="peasimple_world" speciesPath="org/concord/biologica/worlds/peasimple.xml" />
                   </world>
@@ -362,11 +362,19 @@
 										envHolder.getParent().getParent().requestFocus()
 										var hunger = 100 - rabbit.getProperty("energy").intValue()
 										slider.setValue(hunger)
+										
 										if (hunger &gt; 5){
 											rabbit.setProperty("current behavior", "EATING")
 										} else {
 											rabbit.setProperty("current behavior", "WANDERING")
 										}
+										
+										if (hunger &gt; 70){
+											rabbit.setProperty("show food bubble", true);
+										} else {
+											rabbit.setProperty("show food bubble", false);
+										}
+										
 										if (hunger &gt; 99){
 											env.removeAgent(rabbit)
 											envHolder.pauseAction()
