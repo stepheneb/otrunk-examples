@@ -246,10 +246,10 @@
 					            }
 					        }
 					        
-					        for (var i = 0; i &lt; 80; i++) {
-							        	var plant = plantspecies.createAgent();
-										env.addAgent(plant)
-							        }
+					    //    for (var i = 0; i &lt; 80; i++) {
+						//	        	var plant = plantspecies.createAgent();
+						//				env.addAgent(plant)
+						//	        }
 						return true;
 						}
 					
@@ -288,12 +288,12 @@
                 <string>current behavior</string>
               </traitsToShow>
               <addAgentsButtons>
-                <OTAddAgentButton text="Add Plant A" quantity="3" click="false" limit="-1">
+                <OTAddAgentButton text="Add Plant A" quantity="100" click="false" limit="100">
                   <species>
                     <object refid="9fdc762d-1011-4900-9c27-f36f923bd53e" />
                   </species>
                 </OTAddAgentButton>
-                <OTAddAgentButton text="Add Rabbit" quantity="10"  click="false" limit="-1">
+                <OTAddAgentButton text="Add Rabbit" quantity="10"  click="false" limit="10">
 	              <species>
 	                <object refid="f05fc1b1-ea0e-4d6e-a21e-7d089860445a" />
 	              </species>
@@ -315,6 +315,13 @@ var otEnvHolderController
 var lastEnvChange = 10
              
 function init() {
+	env.addChangeListener(resetListener)
+	env.addStepListener(stepListener)
+	setup()
+}
+
+function setup() {
+	
 	radio.getCurrentChoices().set(0, choice_0)
 	radio.addOTChangeListener(radioChangeListener)
 	
@@ -322,9 +329,6 @@ function init() {
 	
 	var lastEnvChange = 10
 	setProperty("rain", 0.0)
-	
-	env.addChangeListener(resetListener)
-	env.addStepListener(stepListener)
 }
 
 var stepHandler = 
@@ -422,7 +426,7 @@ function setProperty(prop, val){
 var resetHandler= {
 	environmentChanged: function(evt){
 		if (evt.getType() == EnvironmentChangeEvent.RESET){
-			init();
+			setup();
 		}
 	}
 }
