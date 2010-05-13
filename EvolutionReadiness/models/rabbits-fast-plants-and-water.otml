@@ -138,7 +138,7 @@
 						</OTDataCollector>
              <OTEnvironmentHolder local_id="env-holder" width="640" height="460" toolbar="run,reset" useSpeedSlider="true">
           <environment>
-            <OTEnvironment local_id="environment" environmentWidth="10" environmentHeight="10" width="570" height="445" showRunButton="false" winterLength="2" summerLength="50" showWinterImage="false" orgSizeMultiplier="3.0" backgroundImageSrc="images/soil_water_level10.png">
+            <OTEnvironment local_id="environment" environmentWidth="10" environmentHeight="10" width="570" height="445" showRunButton="false" winterLength="2" summerLength="50" showWinterImage="false" orgSizeMultiplier="3.0" backgroundImageSrc="images/soil_water_level1.png">
               <world>
                 <OTWorld local_id="peasimple_world" speciesPath="org/concord/biologica/worlds/peasimple.xml" />
               </world>
@@ -313,6 +313,7 @@ importPackage(Packages.org.concord.biologica.environment);
 var env = envHolder.getEnvironment()
 var otEnvHolderController
 var lastEnvChange = 10
+var baseUrl = otEnvHolder.getOTObjectService().getCodebase(otEnvHolder)
              
 function init() {
 	env.addChangeListener(resetListener)
@@ -326,6 +327,17 @@ function setup() {
 	radio.addOTChangeListener(radioChangeListener)
 	
 	otEnvHolderController = controllerService.getController(otEnvHolder)
+	
+	var url = new URL(baseUrl, "images/soil_water_level1.png")
+	envHolder.getEnvironmentView().addBackgroundImageUrl(url)
+	var url = new URL(baseUrl, "images/soil_water_level2.png")
+	envHolder.getEnvironmentView().addBackgroundImageUrl(url)
+	url = new URL(baseUrl, "images/soil_water_level4")
+	envHolder.getEnvironmentView().addBackgroundImageUrl(url)
+	url = new URL(baseUrl, "images/soil_water_level7")
+	envHolder.getEnvironmentView().addBackgroundImageUrl(url)
+	url = new URL(baseUrl, "images/soil_water_level10")
+	envHolder.getEnvironmentView().addBackgroundImageUrl(url)
 	
 	var lastEnvChange = 10
 	setProperty("rain", 0.0)
@@ -388,21 +400,27 @@ var radioChangeHandler =
         var rain = currChoice.getName()
         var url
         if (rain == "0"){
+        	var url = new URL(baseUrl, "images/soil_water_level1.png")
         	setProperty("food regrowth rate", 0)
         	setProperty("rain", 0.0)
         } else if (rain == "1"){
+        	var url = new URL(baseUrl, "images/soil_water_level2.png")
         	setProperty("food regrowth rate", 1)
         	setProperty("rain", 0.3)
         } else if (rain == "2"){
+        	var url = new URL(baseUrl, "images/soil_water_level4.png")
         	setProperty("food regrowth rate", 2)
         	setProperty("rain", 0.6)
         } else if (rain == "3"){
+        	var url = new URL(baseUrl, "images/soil_water_level7.png")
         	setProperty("food regrowth rate", 3)
         	setProperty("rain", 0.8)
         } else {
+        	var url = new URL(baseUrl, "images/soil_water_level10.png")
         	setProperty("food regrowth rate", 2)
         	setProperty("rain", 1.0)
         }
+        envHolder.getEnvironmentView().setBackgroundImageUrl(url)
         
         var currrain = env.getEnvironmentUnit(0,0).getProperty("rain")
         if (Math.abs(0.8 - currrain) &gt; Math.abs(0.8 - prevrain) &amp;&amp; env.getAllAgents().size() &gt; 0){
