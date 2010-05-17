@@ -314,17 +314,20 @@ var env = envHolder.getEnvironment()
 var otEnvHolderController
 var lastEnvChange = 10
 var baseUrl = otEnvHolder.getOTObjectService().getCodebase(otEnvHolder)
+var addedRabbits = false;
              
 function init() {
 	env.addChangeListener(resetListener)
 	env.addStepListener(stepListener)
+	
+	radio.getCurrentChoices().set(0, choice_0)
+	radio.addOTChangeListener(radioChangeListener)
+	
 	setup()
 }
 
 function setup() {
 	
-	radio.getCurrentChoices().set(0, choice_0)
-	radio.addOTChangeListener(radioChangeListener)
 	
 	otEnvHolderController = controllerService.getController(otEnvHolder)
 	
@@ -341,12 +344,16 @@ function setup() {
 	
 	var lastEnvChange = 10
 	setProperty("rain", 0.0)
+	addedRabbits = false;
 }
 
 var stepHandler = 
 {
 	environmentStepped: function(evt)
 	{
+		if (checkForExtinction()){
+			return;
+		}
 		setMatingRate();
 		
 		lastEnvChange++
@@ -356,6 +363,17 @@ var stepHandler =
 	}
 }
 var stepListener = new EnvironmentStepListener(stepHandler);
+
+function checkForExtinction()
+{
+	if(addedRabbits &amp;&amp; env.getAgents(rabbitspecies).size() &lt; 1) {
+		showMessageAndLog("The level of rainfall you chose did not support\nthe plants and animals living in the ecosystem.\nReset the model and try again with a different rainfall level.", env, envHolder, otEnvHolder)
+		addedRabbits = false;
+		envHolder.pauseAction()
+	} else if (!addedRabbits &amp;&amp; env.getAgents(rabbitspecies).size() &gt; 0) {
+		addedRabbits = true;
+	}
+}
 
 function setMatingRate()
 {
