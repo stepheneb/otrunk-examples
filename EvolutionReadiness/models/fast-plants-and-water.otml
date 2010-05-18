@@ -266,6 +266,13 @@ var env = envHolder.getEnvironment()
 var otEnvHolderController
 var lastEnvChange = 10
 var baseUrl = otEnvHolder.getOTObjectService().getCodebase(otEnvHolder)
+
+							var startTime
+							var time
+							var previousTime
+							var shownMessage
+							var currChoice
+							var doneChoices
              
 function init() {
 	radio.addOTChangeListener(radioChangeListener)
@@ -283,19 +290,24 @@ function init() {
 	url = new URL(baseUrl, "images/soil_water_level10.png")
 	envHolder.getEnvironmentView().addBackgroundImageUrl(url)
 	
+	currChoice = radio.getCurrentChoices().get(0)
+	doneChoices = [false, false, false, false, false];
+	
+	setProperty("rain", 0.0)
 	setup();
 }
 
 function setup() {
-
-	radio.getCurrentChoices().set(0, choice_0)
 	
 	otEnvHolderController = controllerService.getController(otEnvHolder)
 	
 	var lastEnvChange = 10
-	setProperty("rain", 0.0)
+	setProperty("last environment change", 10)
+	
+	time = 0
+	previousTime = 0
+	shownMessage = false;
 }
-
 
 var radioChangeHandler =
 {
@@ -305,7 +317,7 @@ var radioChangeHandler =
     		return;
     	var prevrain = env.getEnvironmentUnit(0,0).getProperty("rain")
     	
-        var currChoice = radio.getCurrentChoices().get(0)
+        currChoice = radio.getCurrentChoices().get(0)
         var rain = currChoice.getName()
         var url
         if (rain == "0"){
@@ -352,8 +364,17 @@ var resetHandler= {
 	environmentChanged: function(evt){
 		if (evt.getType() == EnvironmentChangeEvent.RESET){
 			setup();
+		} else if (evt.getType() == EnvironmentChangeEvent.RUN){
+			startTime = System.currentTimeMillis()
+		} else if (evt.getType() == EnvironmentChangeEvent.PAUSE){
+			previousTime = time;
 		}
 	}
+}
+
+function updateTime(){
+	timeSinceLastStart = System.currentTimeMillis() - startTime;
+	time =  previousTime + timeSinceLastStart;
 }
 			
 var resetListener = new EnvironmentChangeListener(resetHandler)
@@ -363,6 +384,26 @@ var stepHandler= {
 		lastEnvChange++
 		if (lastEnvChange &lt; 10){
         	setProperty("last environment change", lastEnvChange)
+        }
+        updateTime();
+        if (!shownMessage &amp;&amp; time &gt; 20000){
+        	doneChoices[parseInt(currChoice.getName())] = true;
+				
+        	var doneAll = true
+        	for (var i = 0; i &lt; 5; i++){
+        		if (!doneChoices[i])
+        			doneAll = false;
+        	}
+        	
+        	if (doneAll){
+				showMessageAndLog( "Good job! You have experimented with all five rainfall levels.\nRecord the number of plants, then go to the next page.", env, envHolder, otEnvHolder);
+        		shownMessage = true;
+				envHolder.pauseAction()
+        	} else {
+        		showMessageAndLog( "Look at the graph. Record how many plants\nthere are and record that number in the data table above.\nThen run the experiment again with a different rainfall level.", env, envHolder, otEnvHolder)
+				shownMessage = true;
+				envHolder.pauseAction()
+			}
         }
 	}
 }
