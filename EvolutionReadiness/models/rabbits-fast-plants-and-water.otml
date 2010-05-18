@@ -136,7 +136,7 @@
 								</OTDataAxis>
 							</yDataAxis>
 						</OTDataCollector>
-             <OTEnvironmentHolder local_id="env-holder" width="640" height="460" toolbar="run,reset" useSpeedSlider="true">
+             <OTEnvironmentHolder local_id="env-holder" width="640" height="460" toolbar="run,reset,info cursor" useSpeedSlider="true">
           <environment>
             <OTEnvironment local_id="environment" environmentWidth="10" environmentHeight="10" width="570" height="445" showRunButton="false" winterLength="2" summerLength="50" showWinterImage="false" orgSizeMultiplier="3.0" backgroundImageSrc="images/soil_water_level1.png">
               <world>
@@ -149,11 +149,19 @@
                   </conditions>
                   <consequences>
                   	 rain ranges from 0.0-1.0. GR should range from 5-50. We want max CoS at rain: 0.8 
-                    <OTRuleConsequence property="growth rate" ruleScript="var distFrom8 = Math.abs(0.8-rain); return 0.1 - (distFrom8  / 20)">
+                    <OTRuleConsequence property="growth rate" ruleScript="var distFrom8 = Math.abs(0.8-rain); return 0.1 - (distFrom8  / 10)">
                       <propertyVariables>
                         <string>rain</string>
                       </propertyVariables>
                     </OTRuleConsequence>
+                  </consequences>
+                </OTRule>
+                <OTRule description="Chance of survival is normally 1">
+                  <conditions>
+                    <OTRuleCondition property="last environment change" minValue="6" />
+                  </conditions>
+                  <consequences>
+                    <OTRuleConsequence property="chance of survival" newValueFloat="1.0"/>
                   </consequences>
                 </OTRule>
                 <OTRule description="rain affects chance of survival briefly after env change">
@@ -167,14 +175,6 @@
                         <string>rain</string>
                       </propertyVariables>
                     </OTRuleConsequence>
-                  </consequences>
-                </OTRule>
-                <OTRule description="Chance of survival is normally 1">
-                  <conditions>
-                    <OTRuleCondition property="last environment change" minValue="6" />
-                  </conditions>
-                  <consequences>
-                    <OTRuleConsequence property="chance of survival" newValueFloat="1.0"/>
                   </consequences>
                 </OTRule>
                 <!--<OTRule description="rain affects resource consumption">
@@ -218,77 +218,13 @@
             </OTEnvironment>
           </environment>
               <scripts>
-                <OTScriptObject local_id="setup-script" name="Setup world">
-                  <script>
-                    <OTJavascript src="scripts/gradated-sunlight/setup.js">
-                      <script>importPackage(Packages.java.lang);
-						importPackage(Packages.java.awt);
-						importPackage(Packages.org.concord.biologica.environment);
-						importClass(Packages.javax.swing.JOptionPane);
-						  			
-						function init() {
-							env.removeAllAgents()
-							env.setStepCount(0)
-							envHolder.pauseAction()
-							var world = env.getWorld();
-							env.setWrapNorthSouth(false);
-							env.setWrapEastWest(false);
-							for (var i = 0; i &lt; 10; i++) {
-						        for (var j = 0; j &lt; 10; j++) {
-						        	var envUnit = new EnvironmentUnit(env, null, i, j)
-						        	env.setEnvironmentUnit(envUnit, i, j)
-						        	var color = new Color(0.3, 0.2, 0.1)
-					        		var terrain = new Terrain(world, "terrain", color)
-					        		envUnit.setTerrain(terrain)
-					        		//envUnit.setProperty("food", 20)
-					        		//envUnit.setProperty("food full", 20)
-					        		envUnit.setProperty("food regrowth rate", 5)
-					            }
-					        }
-					        
-					    //    for (var i = 0; i &lt; 80; i++) {
-						//	        	var plant = plantspecies.createAgent();
-						//				env.addAgent(plant)
-						//	        }
-						return true;
-						}
-					
-					function save() {
-						return true;
-					}</script>
-                      <scripts>
-                        <OTJavascript src="scripts/common/message.js" />
-                      </scripts>
-                    </OTJavascript>
-                  </script>
-                  <variables>
-                    <OTScriptVariableRealObject name="env">
-                      <reference>
-                        <object refid="${environment}" />
-                      </reference>
-                    </OTScriptVariableRealObject>
-                    <OTScriptVariableRealObject name="envHolder">
-                      <reference>
-                        <object refid="${env-holder}" />
-                      </reference>
-                    </OTScriptVariableRealObject>
-                    <OTScriptVariableRealObject name="plantspecies">
-	                  <reference>
-	                    <object refid="9fdc762d-1011-4900-9c27-f36f923bd53e" />
-	                  </reference>
-	                </OTScriptVariableRealObject>
-                  </variables>
-                  <scriptState />
-                </OTScriptObject>
                </scripts>
               <traitsToShow>
-                <string>mating desire bonus</string>
-                <string>wander threshold</string>
-                <string>age limit</string>
-                <string>current behavior</string>
+                <string>rain</string>
+                <string>last environment change</string>
               </traitsToShow>
               <addAgentsButtons>
-                <OTAddAgentButton text="Add Plant A" quantity="100" click="false" limit="100">
+                <OTAddAgentButton text="Add Plant A" quantity="150" click="false" limit="150">
                   <species>
                     <object refid="9fdc762d-1011-4900-9c27-f36f923bd53e" />
                   </species>
@@ -323,13 +259,13 @@ function init() {
 	radio.getCurrentChoices().set(0, choice_0)
 	radio.addOTChangeListener(radioChangeListener)
 	
+	setProperty("rain", 0.0)
+	setProperty("food regrowth rate", 5)
+	
 	setup()
 }
 
 function setup() {
-	
-	
-	otEnvHolderController = controllerService.getController(otEnvHolder)
 	
 	var url = new URL(baseUrl, "images/soil_water_level1.png")
 	envHolder.getEnvironmentView().addBackgroundImageUrl(url)
@@ -343,7 +279,7 @@ function setup() {
 	envHolder.getEnvironmentView().addBackgroundImageUrl(url)
 	
 	var lastEnvChange = 10
-	setProperty("rain", 0.0)
+	setProperty("last environment change", 10)
 	addedRabbits = false;
 }
 
