@@ -216,11 +216,11 @@ end
 # return current choice: deal with new and old choice data model
 def currentChoice(input)
   # handle old case first
-  choice = chooser.currentChoice
+  choice = input.currentChoice
   return choice if choice != nil
   
   begin
-    choices = chooser.currentChoices.vector
+    choices = input.currentChoices.vector
     return nil if choices.size == 0
     
     return choices[0]
