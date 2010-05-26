@@ -213,10 +213,26 @@ def choiceLabel(chooser, answer)
   return '-'
 end
 
+# return current choice: deal with new and old choice data model
+def currentChoice(input)
+  # handle old case first
+  choice = chooser.currentChoice
+  return choice if choice != nil
+  
+  begin
+    choices = chooser.currentChoices.vector
+    return nil if choices.size == 0
+    
+    return choices[0]
+  rescue
+    return nil
+  end    
+end
+
 # Return user answer for a multi-choice question as a label (a, b, c, etc.)
 def answerLabel(question) 
   if question.input.is_a? org.concord.otrunk.ui.OTChoice
-  	return choiceLabel(question.input, question.input.currentChoice)
+  	return choiceLabel(question.input, currentChoice(question.input))
   else
   	return questionAnswer(question)
   end
@@ -232,7 +248,7 @@ def correctAnswerLabel(question)
 end
 
 def currentChoiceText(chooser)
-  answer = chooser.currentChoice
+  answer = currentChoice(chooser)
   return nil if answer == nil
   
   return toPlainText(answer)
@@ -267,10 +283,11 @@ def questionCorrect (question)
   return nil if question.input.is_a? org.concord.otrunk.ui.OTText
 
   if question.input.is_a? org.concord.otrunk.ui.OTChoice
-    if question.input.currentChoice == nil
+    choice = currentChoice(question.input)
+    if choice == nil
       return nil
     else
-	    return question.correctAnswer == question.input.currentChoice
+	    return question.correctAnswer == choice
     end
   end
 end
