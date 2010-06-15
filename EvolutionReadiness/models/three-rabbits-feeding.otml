@@ -51,7 +51,7 @@
 		<import class="org.concord.otrunk.ui.OTSlider" />
 		<import class="org.concord.otrunk.ui.OTText" />
 		<import class="org.concord.framework.otrunk.view.OTFrame" />
-		<import class="org.concord.framework.otrunk.wrapper.OTObjectSet"/>
+		<import class="org.concord.framework.otrunk.wrapper.OTObjectSet" />
 	</imports>
 	<idMap>
 		<idMapping local_id="rabbit-species" id="8b5a6e28-684f-4673-b1d2-19a0c9b044be" />
@@ -96,6 +96,25 @@
 										<OTWorld local_id="peasimple_world"
 											speciesPath="org/concord/biologica/worlds/peasimple.xml" />
 									</world>
+									<rules>
+		               <OTRule description="don't show food bubble normally">
+		                  <conditions>
+		                    <OTRuleCondition always="true"/>
+		                  </conditions>
+		                  <consequences>
+		                    <OTRuleConsequence property="show food bubble" newValueBoolean="false" />
+		                  </consequences>
+		                </OTRule>
+		                <OTRule description="show food bubble when hungry">
+		                  <conditions>
+		                    <OTRuleCondition property="species name" equals="Rabbits"/>
+		                    <OTRuleCondition property="energy" maxValue="20" />
+		                  </conditions>
+		                  <consequences>
+		                    <OTRuleConsequence property="show food bubble" newValueBoolean="true" />
+		                  </consequences>
+		                </OTRule>
+		              </rules>
 								</OTEnvironment>
 							</environment>
 							<scripts>
@@ -103,55 +122,55 @@
 									<script>
 										<OTJavascript src="scripts/gradated-sunlight-five-blocks/setup.js">
 											<script>
-importPackage(Packages.java.lang);
-importPackage(Packages.java.awt);
-importPackage(Packages.org.concord.biologica.environment);
+												importPackage(Packages.java.lang);
+												importPackage(Packages.java.awt);
+												importPackage(Packages.org.concord.biologica.environment);
 
-function init() {
-	env.removeAllAgents()
-	env.setStepCount(0)
-	envHolder.pauseAction()
-	env.setWrapNorthSouth(false)
-	env.setWrapEastWest(false)
-	
-	var smallRabbit = createRabbit();
-	smallRabbit.setProperty("prey variety", prefer_small_roots.getMap());
-	env.addAgent(smallRabbit)
-	
-	var medRabbit = createRabbit();
-  medRabbit.setProperty("prey variety", prefer_med_roots.getMap());
-  env.addAgent(medRabbit)
-  
-  var bigRabbit = createRabbit();
-  bigRabbit.setProperty("prey variety", prefer_big_roots.getMap());
-  env.addAgent(bigRabbit)
-	
-	return true;
-}
+												function init() {
+												env.removeAllAgents()
+												env.setStepCount(0)
+												envHolder.pauseAction()
+												env.setWrapNorthSouth(false)
+												env.setWrapEastWest(false)
 
-function createRabbit() {
-	var newRabbit = rabbit_species.createAgent();
-	newRabbit.setAge(50)
-	newRabbit.setProperty("is immortal", true)
-	newRabbit.setProperty("max offspring", 0)
-	newRabbit.setProperty("mating bonus", -1000)
-	newRabbit.setProperty("hunger bonus", 50)
-	newRabbit.setProperty("is selected", 0)
-	newRabbit.setProperty("eating distance", 2)
-	newRabbit.setProperty("speed", 3)
-	var loc = env.getRandomLocation()
-	newRabbit.setEnvironment(env)
-	newRabbit.setLocation(loc)
-	return newRabbit;
-}
+												var smallRabbit = createRabbit();
+												smallRabbit.setProperty("prey variety", prefer_small_roots.getMap());
+												env.addAgent(smallRabbit)
 
-function createMap(trait, value) {
-  OTResourceMap
-}
+												var medRabbit = createRabbit();
+												medRabbit.setProperty("prey variety", prefer_med_roots.getMap());
+												env.addAgent(medRabbit)
 
-function save() {
-	return true;
-}
+												var bigRabbit = createRabbit();
+												bigRabbit.setProperty("prey variety", prefer_big_roots.getMap());
+												env.addAgent(bigRabbit)
+
+												return true;
+												}
+
+												function createRabbit() {
+												var newRabbit = rabbit_species.createAgent();
+												newRabbit.setAge(50)
+												newRabbit.setProperty("is immortal", true)
+												newRabbit.setProperty("max offspring", 0)
+												newRabbit.setProperty("mating bonus", -1000)
+												newRabbit.setProperty("hunger bonus", 50)
+												newRabbit.setProperty("is selected", 0)
+												newRabbit.setProperty("eating distance", 2)
+												newRabbit.setProperty("speed", 3)
+												var loc = env.getRandomLocation()
+												newRabbit.setEnvironment(env)
+												newRabbit.setLocation(loc)
+												return newRabbit;
+												}
+
+												function createMap(trait, value) {
+												OTResourceMap
+												}
+
+												function save() {
+												return true;
+												}
 												</script>
 										</OTJavascript>
 									</script>
@@ -177,38 +196,38 @@ function save() {
 											</reference>
 										</OTScriptVariableRealObject>
 										<OTScriptVariable name="prefer_small_roots">
-										  <reference>
-										    <OTObjectSet>
-										      <map>
-										        <entry key="roots">
-						                  <float>1</float>
-						                </entry>
-										      </map>
-										    </OTObjectSet>
-										  </reference>
+											<reference>
+												<OTObjectSet>
+													<map>
+														<entry key="roots">
+															<float>1</float>
+														</entry>
+													</map>
+												</OTObjectSet>
+											</reference>
 										</OTScriptVariable>
 										<OTScriptVariable name="prefer_med_roots">
-                      <reference>
-                        <OTObjectSet>
-                          <map>
-                            <entry key="roots">
-                              <float>2</float>
-                            </entry>
-                          </map>
-                        </OTObjectSet>
-                      </reference>
-                    </OTScriptVariable>
-                    <OTScriptVariable name="prefer_big_roots">
-                      <reference>
-                        <OTObjectSet>
-                          <map>
-                            <entry key="roots">
-                              <float>3</float>
-                            </entry>
-                          </map>
-                        </OTObjectSet>
-                      </reference>
-                    </OTScriptVariable>
+											<reference>
+												<OTObjectSet>
+													<map>
+														<entry key="roots">
+															<float>2</float>
+														</entry>
+													</map>
+												</OTObjectSet>
+											</reference>
+										</OTScriptVariable>
+										<OTScriptVariable name="prefer_big_roots">
+											<reference>
+												<OTObjectSet>
+													<map>
+														<entry key="roots">
+															<float>3</float>
+														</entry>
+													</map>
+												</OTObjectSet>
+											</reference>
+										</OTScriptVariable>
 									</variables>
 									<scriptState />
 								</OTScriptObject>
@@ -229,6 +248,11 @@ function save() {
 												<float>0</float>
 											</defaultValues>
 										</OTAgentTrait>
+										<OTAgentTrait property="age of maturity">
+											<defaultValues>
+												<int>15</int>
+											</defaultValues>
+										</OTAgentTrait>
 									</agentTraits>
 								</OTAddAgentButton>
 								<OTAddAgentButton text="Add Plant B" limit="-1">
@@ -244,6 +268,11 @@ function save() {
 										<OTAgentTrait property="growth rate">
 											<defaultValues>
 												<float>0</float>
+											</defaultValues>
+										</OTAgentTrait>
+										<OTAgentTrait property="age of maturity">
+											<defaultValues>
+												<int>15</int>
 											</defaultValues>
 										</OTAgentTrait>
 									</agentTraits>
@@ -263,12 +292,17 @@ function save() {
 												<float>0</float>
 											</defaultValues>
 										</OTAgentTrait>
+										<OTAgentTrait property="age of maturity">
+											<defaultValues>
+												<int>15</int>
+											</defaultValues>
+										</OTAgentTrait>
 									</agentTraits>
 								</OTAddAgentButton>
 							</addAgentsButtons>
 							<traitsToShow>
-				        <string>roots</string>
-				      </traitsToShow>
+								<string>energy</string>
+							</traitsToShow>
 						</OTEnvironmentHolder>
 					</documentRefs>
 				</OTCompoundDoc>
