@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<otrunk id="0f1473c0-7200-11dc-8314-0800200c9a66">
+
+  <imports>
+    <import class="org.concord.otrunk.OTSystem"/>
+    <import class="org.concord.otrunk.view.OTViewBundle"/>
+    <import class="org.concord.otrunk.view.OTViewEntry"/>
+    <import class="org.concord.otrunk.view.document.OTCompoundDoc"/>
+    
+    <import class="org.concord.otrunk.biologica.OTChromosome" />
+    <import class="org.concord.otrunk.biologica.OTStaticOrganism" />
+    <import class="org.concord.otrunk.biologica.OTOrganism" />
+    <import class="org.concord.otrunk.biologica.OTWorld" />
+    
+    <import class="org.concord.otrunk.ui.OTText"/>
+    <import class="org.concord.otrunk.ui.OTChoice"/>
+    
+	<import class="org.concord.otrunk.script.ui.OTScriptObject"/>
+	<import class="org.concord.otrunk.script.ui.OTScriptVariable"/>
+	<import class="org.concord.otrunk.script.js.OTJavascript" />
+	<import class="org.concord.otrunk.script.OTScriptEngineBundle"/>
+	<import class="org.concord.otrunk.script.OTScriptEngineEntry"/>
+  </imports>
+  
+  <objects>
+    <OTSystem>
+      <bundles>
+        <OTViewBundle showLeftPanel="false">
+          <views>
+            <OTViewEntry
+              objectClass="org.concord.otrunk.ui.OTText" 
+              viewClass="org.concord.otrunk.ui.swing.OTTextView"/>
+			<OTViewEntry
+				objectClass="org.concord.otrunk.script.ui.OTScriptObject"
+				viewClass="org.concord.otrunk.script.ui.OTScriptObjectView"/>
+			<OTViewEntry
+				objectClass="org.concord.otrunk.view.document.OTDocument"
+				viewClass="org.concord.otrunk.view.document.OTDocumentView" />
+			
+			<OTViewEntry
+              objectClass="org.concord.otrunk.biologica.OTChromosome"
+              viewClass="org.concord.otrunk.biologica.ui.OTChromosomeView" />
+            <OTViewEntry
+              objectClass="org.concord.otrunk.biologica.OTStaticOrganism"
+              viewClass="org.concord.otrunk.biologica.ui.OTStaticOrganismView" />
+              	
+			<OTViewEntry objectClass="org.concord.otrunk.ui.OTChoice"
+            	viewClass="org.concord.otrunk.ui.swing.OTChoiceRadioButtonView" local_id="choice_radio_view" />
+          </views>
+        </OTViewBundle>
+ 		<OTScriptEngineBundle>
+          <engines>
+            <OTScriptEngineEntry
+              objectClass="org.concord.otrunk.script.js.OTJavascript"
+              engineClass="org.concord.otrunk.script.js.OTJavascriptEngine" />
+          </engines>
+        </OTScriptEngineBundle>
+      </bundles>
+      
+      <root>
+        <OTCompoundDoc>
+        	<bodyText>
+        		
+        		<object refid="${script_object}"/>
+        		<table border="0">
+        			<tr>
+        				<td>
+        					<object refid="${static_organism}" /><br/>
+        					<hr/>
+                			<object refid="${normal_choice}"/>
+        				</td>
+        				
+        				<td>
+        					<object refid="${chromosome}" />
+        				</td>
+        			</tr>
+        		</table>
+
+                
+        	</bodyText>
+        </OTCompoundDoc>
+      </root>
+      <library>
+    
+      		<OTChoice local_id="normal_choice">
+              <choices>
+                <OTText local_id="choice_1" name="Male"/>
+                <OTText local_id="choice_2" name="Female"/> 
+              </choices>
+              <currentChoice>
+              	<object refid="${choice_2}" />
+              </currentChoice>
+        	</OTChoice>
+
+
+			<OTWorld speciesPath="org/concord/biologica/worlds/dragon.xml" local_id="dragon_world" />
+			<OTStaticOrganism local_id="static_organism" name="static_organism">
+                <organism>
+                  <object refid="${female_dragon}" />
+                </organism>
+            </OTStaticOrganism>
+            
+            <OTChromosome local_id="chromosome" name="chromosome" width="630" height="440">
+            
+              <organism>
+                  <object refid="${female_dragon}" />
+              </organism>
+            </OTChromosome>
+            
+            <OTOrganism local_id="male_dragon">
+              <name>male</name>
+              <alleles>a:H,b:h,a:W,b:w,a:L,b:l,a:T,b:t,a:f,a:a,a:B</alleles>
+              <sex>0</sex>
+              <world><object refid="${dragon_world}" /></world>
+            </OTOrganism>
+            
+            <OTOrganism local_id="female_dragon">
+              <name>female</name>
+              <alleles>a:h,b:h,a:w,b:W,a:L,b:l,a:t,b:t,a:F,b:f,a:a,b:a,a:B,b:B</alleles>
+              <sex>1</sex>
+              <world><object refid="${dragon_world}" /></world>
+            </OTOrganism>
+            
+            <OTText local_id="ot_console" text="testing" />
+            
+
+			<OTScriptObject local_id="script_object">
+				<variables> 
+					<OTScriptVariable name="normal_choice" reference="${normal_choice}" />
+					<OTScriptVariable name="static_organism" reference="${static_organism}" />
+					<OTScriptVariable name="male_dragon" reference="${male_dragon}" />
+					<OTScriptVariable name="female_dragon" reference="${female_dragon}" />
+					<!--   OTScriptVariable name="ot_console" reference="${ot_console}" / -->
+					<OTScriptVariable name="chromosome" reference="${chromosome}" />
+				</variables>
+				<script>
+					<OTJavascript src="scripts/biologica-combined-scripted.js" />
+				</script>
+			</OTScriptObject>
+
+      </library>
+      
+    </OTSystem>
+  </objects>
+</otrunk>
