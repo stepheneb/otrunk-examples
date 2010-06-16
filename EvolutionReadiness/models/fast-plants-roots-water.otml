@@ -48,6 +48,7 @@
 		<import class="org.concord.otrunk.script.ui.OTScriptVariableView" />
 		<import class="org.concord.otrunk.script.ui.OTScriptButton" />
 		<import class="org.concord.otrunk.ui.OTSlider" />
+    <import class="org.concord.otrunk.ui.OTSliderLabel" />
 		<import class="org.concord.otrunk.ui.OTText" />
 		<import class="org.concord.framework.otrunk.view.OTFrame" />
 		<import class="org.concord.framework.otrunk.wrapper.OTObjectSet" />
@@ -81,7 +82,30 @@
 			<root>
 				<OTCompoundDoc>
 					<bodyText>
-						<object refid="${env-holder}" />
+						<table>
+              <tr>
+                <td>
+                  <object refid="${env-holder}" />
+                </td>
+                <td>
+                  <table>
+                    <tr>
+                      <td align="center">Water in the soil</td>
+                    </tr>
+                    <tr>
+                      <td align="center">
+                        <br />
+                        <br />
+                        <object refid="${water-slider}" />
+                        <br />
+                        <br />
+                      </td>
+                     </tr>
+                  </table>
+                  <object refid="${script}"/>
+                </td>
+              </tr>
+            </table>
 					</bodyText>
 					<documentRefs>
 						<OTEnvironmentHolder local_id="env-holder"
@@ -139,169 +163,6 @@
 		              </rules>
 								</OTEnvironment>
 							</environment>
-							<scripts>
-								<OTScriptObject local_id="setup-script" name="Setup script">
-									<script>
-										<OTJavascript src="scripts/gradated-sunlight-five-blocks/setup.js">
-											<script>
-												importPackage(Packages.java.lang);
-												importPackage(Packages.java.awt);
-                        importPackage(Packages.java.net);
-												importPackage(Packages.org.concord.biologica.environment);
-												
-												var startTime
-					              var time
-					              var previousTime
-					              var isRunning = false
-                        var recentlyChangedWater = true      // added a rabbit this past second
-              
-                        var CHANGE_WATER_RATE = 10;     // seconds before drying out environment
-                        var currentWater = 1.0;
-                        
-                        
-                        var baseUrl = otEnvHolder.getOTObjectService().getCodebase(otEnvHolder)
-
-												function init() {
-													env.removeAllAgents()
-													env.setStepCount(0)
-													envHolder.pauseAction()
-													env.setWrapNorthSouth(false)
-													env.setWrapEastWest(false)
-													
-													
-													var url = new URL(baseUrl, "images/soil_water_level1.png")
-												  envHolder.getEnvironmentView().addBackgroundImageUrl(url)
-												  url = new URL(baseUrl, "images/soil_water_level2.png")
-												  envHolder.getEnvironmentView().addBackgroundImageUrl(url)
-												  url = new URL(baseUrl, "images/soil_water_level4.png")
-												  envHolder.getEnvironmentView().addBackgroundImageUrl(url)
-												  url = new URL(baseUrl, "images/soil_water_level7.png")
-												  envHolder.getEnvironmentView().addBackgroundImageUrl(url)
-												  url = new URL(baseUrl, "images/soil_water_level10.png")
-												  envHolder.getEnvironmentView().addBackgroundImageUrl(url)
-													
-													
-                          env.addStepListener(stepListener)
-                          env.addChangeListener(resetListener)
-													
-													setup();
-	
-													return true;
-												}
-												
-												function setup() {
-												  var url = new URL(baseUrl, "images/soil_water_level10.png");
-                          envHolder.getEnvironmentView().setBackgroundImageUrl(url);
-												  recentlyChangedWater = true
-                          time = 0
-                          previousTime = 0
-                          
-                          setPropertyOnEnvironment("water", 1.0)
-                          currentWater = 1.0
-												}
-												
-							var stepHandler =
-              {
-                environmentStepped: function()
-                {
-                  updateTimer();
-                  checkWaterUpdating();
-                }
-              }
-              var stepListener = new EnvironmentStepListener(stepHandler)
-              
-              var resetRunHandler= {
-                  environmentChanged: function(evt){
-                    if (evt.getType() == EnvironmentChangeEvent.RESET){
-                      isRunning = false
-                      setup()
-                    } else if (evt.getType() == EnvironmentChangeEvent.RUN){
-                      isRunning = true
-                      startTime = System.currentTimeMillis()
-                    } else if (evt.getType() == EnvironmentChangeEvent.PAUSE){
-                      previousTime = time;
-                    }
-                  }
-                }
-                      
-              var resetListener = new EnvironmentChangeListener(resetRunHandler)
-              
-              function updateTimer(){
-                timeSinceLastStart = System.currentTimeMillis() - startTime;
-                time =  previousTime + timeSinceLastStart;
-              }
-              
-              function checkWaterUpdating(){
-                seconds = Math.floor(time / 1000);
-                if (seconds % CHANGE_WATER_RATE == 0){
-                  if (!recentlyChangedWater) {
-                    recentlyChangedWater = true;
-                    makeDrier();
-                  }
-                } else {
-                  recentlyChangedWater = false;
-                }
-              }
-              
-              function makeDrier() {
-                if (currentWater &gt; 0){
-                  currentWater -= 0.1;
-                }
-                setPropertyOnEnvironment("water", currentWater);
-                
-                if (currentWater == 1.0){
-				          var url = new URL(baseUrl, "images/soil_water_level10.png")
-				        } else if (currentWater &gt; 0.69){
-				          var url = new URL(baseUrl, "images/soil_water_level7.png")
-				        } else if (currentWater &gt; 0.39){
-				          var url = new URL(baseUrl, "images/soil_water_level4.png")
-				        } else if (currentWater == 0.29){
-				          var url = new URL(baseUrl, "images/soil_water_level3.png")
-				        } else {
-				          var url = new URL(baseUrl, "images/soil_water_level1.png")
-				        }
-				        envHolder.getEnvironmentView().setBackgroundImageUrl(url)
-              }
-												
-												function setPropertyOnEnvironment(prop, val){
-												    for (var i = 0; i &lt; env.getColumns(); i++) {
-												      for (var j = 0; j &lt; env.getRows(); j++) {
-												        env.getEnvironmentUnit(i,j).setProperty(prop, new Float(val))
-												      }
-												    }
-												}
-
-												function save() {
-												  return true;
-												}
-												</script>
-										</OTJavascript>
-									</script>
-									<variables>
-										<OTScriptVariableRealObject name="env">
-											<reference>
-												<object refid="${environment}" />
-											</reference>
-										</OTScriptVariableRealObject>
-										<OTScriptVariableRealObject name="envHolder">
-											<reference>
-												<object refid="${env-holder}" />
-											</reference>
-										</OTScriptVariableRealObject>
-                    <OTScriptVariable name="otEnvHolder">
-                      <reference>
-                        <object refid="${env-holder}" />
-                      </reference>
-                    </OTScriptVariable>
-										<OTScriptVariableRealObject name="holder">
-											<reference>
-												<object refid="${env-holder}" />
-											</reference>
-										</OTScriptVariableRealObject>
-									</variables>
-									<scriptState />
-								</OTScriptObject>
-							</scripts>
 							<addAgentsButtons>
 								<OTAddAgentButton text="Add Plant A" limit="-1">
 									<species>
@@ -374,6 +235,180 @@
 								<string>energy</string>
 							</traitsToShow>
 						</OTEnvironmentHolder>
+						<OTScriptObject local_id="script" name="Setup script">
+                  <script>
+                    <OTJavascript src="scripts/gradated-sunlight-five-blocks/setup.js">
+                      <script>
+                        importPackage(Packages.java.lang);
+                        importPackage(Packages.java.awt);
+                        importPackage(Packages.java.net);
+                        importPackage(Packages.org.concord.biologica.environment);
+                        
+                        var startTime
+                        var time
+                        var previousTime
+                        var isRunning = false
+                        var recentlyChangedWater = true      // added a rabbit this past second
+              
+                        var CHANGE_WATER_RATE = 2;     // seconds before drying out environment
+                        var currentWater = 1.0;
+                        
+                        
+                        var baseUrl = otEnvHolder.getOTObjectService().getCodebase(otEnvHolder)
+
+                        function init() {
+                          env.removeAllAgents()
+                          env.setStepCount(0)
+                          envHolder.pauseAction()
+                          env.setWrapNorthSouth(false)
+                          env.setWrapEastWest(false)
+                          
+                          
+                          var url = new URL(baseUrl, "images/soil_water_level1.png")
+                          envHolder.getEnvironmentView().addBackgroundImageUrl(url)
+                          url = new URL(baseUrl, "images/soil_water_level2.png")
+                          envHolder.getEnvironmentView().addBackgroundImageUrl(url)
+                          url = new URL(baseUrl, "images/soil_water_level4.png")
+                          envHolder.getEnvironmentView().addBackgroundImageUrl(url)
+                          url = new URL(baseUrl, "images/soil_water_level7.png")
+                          envHolder.getEnvironmentView().addBackgroundImageUrl(url)
+                          url = new URL(baseUrl, "images/soil_water_level10.png")
+                          envHolder.getEnvironmentView().addBackgroundImageUrl(url)
+                          
+                          
+                          env.addStepListener(stepListener)
+                          env.addChangeListener(resetListener)
+                          
+                          setup();
+  
+                          return true;
+                        }
+                        
+                        function setup() {
+                          var url = new URL(baseUrl, "images/soil_water_level10.png");
+                          envHolder.getEnvironmentView().setBackgroundImageUrl(url);
+                          recentlyChangedWater = true
+                          time = 0
+                          previousTime = 0
+                          
+                          setPropertyOnEnvironment("water", 1.0)
+                          currentWater = 1.0
+                          slider.setValue(100)
+                        }
+                        
+              var stepHandler =
+              {
+                environmentStepped: function()
+                {
+                  updateTimer();
+                  checkWaterUpdating();
+                }
+              }
+              var stepListener = new EnvironmentStepListener(stepHandler)
+              
+              var resetRunHandler= {
+                  environmentChanged: function(evt){
+                    if (evt.getType() == EnvironmentChangeEvent.RESET){
+                      isRunning = false
+                      setup()
+                    } else if (evt.getType() == EnvironmentChangeEvent.RUN){
+                      isRunning = true
+                      startTime = System.currentTimeMillis()
+                    } else if (evt.getType() == EnvironmentChangeEvent.PAUSE){
+                      previousTime = time;
+                    }
+                  }
+                }
+                      
+              var resetListener = new EnvironmentChangeListener(resetRunHandler)
+              
+              function updateTimer(){
+                timeSinceLastStart = System.currentTimeMillis() - startTime;
+                time =  previousTime + timeSinceLastStart;
+              }
+              
+              function checkWaterUpdating(){
+                seconds = Math.floor(time / 1000);
+                if (seconds % CHANGE_WATER_RATE == 0){
+                  if (!recentlyChangedWater) {
+                    recentlyChangedWater = true;
+                    makeDrier();
+                  }
+                } else {
+                  recentlyChangedWater = false;
+                }
+              }
+              
+              function makeDrier() {
+                if (currentWater &gt; 0){
+                  currentWater -= 0.02;
+                }
+                setPropertyOnEnvironment("water", currentWater);
+                slider.setValue(currentWater * 100);
+                
+                if (currentWater &gt; 0.9){
+                  var url = new URL(baseUrl, "images/soil_water_level10.png")
+                } else if (currentWater &gt; 0.69){
+                  var url = new URL(baseUrl, "images/soil_water_level7.png")
+                } else if (currentWater &gt; 0.39){
+                  var url = new URL(baseUrl, "images/soil_water_level4.png")
+                } else if (currentWater == 0.29){
+                  var url = new URL(baseUrl, "images/soil_water_level3.png")
+                } else {
+                  var url = new URL(baseUrl, "images/soil_water_level1.png")
+                }
+                envHolder.getEnvironmentView().setBackgroundImageUrl(url)
+              }
+                        
+                        function setPropertyOnEnvironment(prop, val){
+                            for (var i = 0; i &lt; env.getColumns(); i++) {
+                              for (var j = 0; j &lt; env.getRows(); j++) {
+                                env.getEnvironmentUnit(i,j).setProperty(prop, new Float(val))
+                              }
+                            }
+                        }
+
+                        function save() {
+                          return true;
+                        }
+                        </script>
+                    </OTJavascript>
+                  </script>
+                  <variables>
+                    <OTScriptVariableRealObject name="env">
+                      <reference>
+                        <object refid="${environment}" />
+                      </reference>
+                    </OTScriptVariableRealObject>
+                    <OTScriptVariableRealObject name="envHolder">
+                      <reference>
+                        <object refid="${env-holder}" />
+                      </reference>
+                    </OTScriptVariableRealObject>
+                    <OTScriptVariable name="otEnvHolder">
+                      <reference>
+                        <object refid="${env-holder}" />
+                      </reference>
+                    </OTScriptVariable>
+                    <OTScriptVariableRealObject name="holder">
+                      <reference>
+                        <object refid="${env-holder}" />
+                      </reference>
+                    </OTScriptVariableRealObject>
+                    <OTScriptVariable name="slider">
+                      <reference>
+                        <object refid="${water-slider}"/>
+                      </reference>
+                    </OTScriptVariable>
+                  </variables>
+                  <scriptState />
+                </OTScriptObject>
+						<OTSlider local_id="water-slider" minimum="30" maximum="100" value="100" numMajorTicks="2" snapToMarks="false" precision="1" length="200" numTicks="0" showTickMarks="false">
+                  <labels>
+                    <OTSliderLabel value="30" label="Little water" />
+                    <OTSliderLabel value="100" label="Lots of water" />
+                  </labels>
+             </OTSlider>
 					</documentRefs>
 				</OTCompoundDoc>
 			</root>
