@@ -258,6 +258,8 @@
                         var year;
                         var recentlyChangedYear;
                         
+                        var lastBkgdUrl;
+                        
                         
                         var baseUrl = otEnvHolder.getOTObjectService().getCodebase(otEnvHolder)
 
@@ -303,6 +305,7 @@
                         function setup() {
                           var url = new URL(baseUrl, "images/dam-year0.jpg");
                           envHolder.getEnvironmentView().setBackgroundImageUrl(url);
+                          lastBkgdUrl = url;
                           damCreated = false
                           damButton.setEnabled(true);
                           
@@ -433,7 +436,11 @@
                 }else {
                   var url = new URL(baseUrl, "images/dam-year10.jpg")
                 }
-                envHolder.getEnvironmentView().setBackgroundImageUrl(url)
+                
+                if (!url.equals(lastBkgdUrl)) {
+                  envHolder.getEnvironmentView().setBackgroundImageUrl(url)
+                  lastBkgdUrl = url;
+                 }
               }
                         
                         function setPropertyOnEnvironment(prop, val, halfOnly){
