@@ -88,9 +88,10 @@
                   <object refid="${env-holder}" />
                 </td>
                 <td>
+                  <b>Year: </b><br/><object refid="${year-text}" viewid="c93a7460-e18a-11dc-95ff-0800200c9a66"/>
+                  <br/>
+                  <br/>
                   <object refid="${dam-button}" />
-                  <br />
-                  <br />
                   <table>
                     <tr>
                       <td align="center">
@@ -254,6 +255,9 @@
                         var CHANGE_WATER_RATE = 2;     // seconds before drying out environment
                         var currentWater = 1.0;
                         
+                        var year;
+                        var recentlyChangedYear;
+                        
                         
                         var baseUrl = otEnvHolder.getOTObjectService().getCodebase(otEnvHolder)
 
@@ -302,6 +306,9 @@
                           damCreated = false
                           damButton.setEnabled(true);
                           
+                          year = 2010;
+                          recentlyChangedYear = true;
+                          
                           recentlyChangedWater = true
                           time = 0
                           previousTime = 0
@@ -340,6 +347,7 @@
                   if (damCreated) {
                     updateTimer();
                     checkWaterUpdating();
+                    checkYear();
                    }
                    setPlantGrowthRate();
                    graphRabbits();
@@ -369,6 +377,19 @@
               function updateTimer(){
                 timeSinceLastStart = System.currentTimeMillis() - startTime;
                 time =  previousTime + timeSinceLastStart;
+              }
+              
+              function checkYear(){
+                seconds = Math.floor(time / 1000);
+                if (seconds % 4 == 0){
+                  if (!recentlyChangedYear){
+                    year++;
+                    yearText.setText(year);
+                    recentlyChangedYear = true;
+                  }
+                } else {
+                  recentlyChangedYear = false;
+                }
               }
               
               function checkWaterUpdating(){
@@ -538,6 +559,11 @@ function setGrowthRateForVariety(plants)
                     <object refid="${datastore2}" />
                   </reference>
                 </OTScriptVariableRealObject>
+                <OTScriptVariable name="yearText">
+                  <reference>
+                    <object refid="${year-text}" />
+                  </reference>
+                </OTScriptVariable>
               </variables>
               <scriptState />
             </OTScriptObject>
@@ -597,6 +623,7 @@ function setGrowthRateForVariety(plants)
                 <OTDataAxis min="0" max="50" label="Number of rabbits"/>
               </yDataAxis>
             </OTDataGraph>
+            <OTText local_id="year-text" text="2010"/>
           </documentRefs>
         </OTCompoundDoc>
       </root>
