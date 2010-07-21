@@ -137,7 +137,7 @@
             <OTText local_id="timer" text="0" columns="2" rows="1" />
             <OTEnvironmentHolder local_id="env-holder" width="590" height="460" toolbar="run,reset" useSpeedSlider="false">
               <environment>
-                <OTEnvironment local_id="environment" environmentWidth="4" environmentHeight="4" showRunButton="false" winterLength="5" summerLength="50" showWinterImage="false" orgSizeMultiplier="1.5" backgroundImageSrc="images/soil_water_level10.png">
+                <OTEnvironment local_id="environment" environmentWidth="4" environmentHeight="4" showRunButton="false" winterLength="5" summerLength="50" showWinterImage="false" orgSizeMultiplier="1.5" backgroundImageSrc="images/grass.jpg">
                   <world>
                     <OTWorld local_id="peasimple_world" speciesPath="org/concord/biologica/worlds/peasimple.xml" />
                   </world>
@@ -173,10 +173,9 @@
 										plant.setProperty("max offspring distance", 20)
 										plant.setProperty("min offspring", 1)
 										plant.setProperty("max offspring", 4)
+                    plant.setProperty("age of maturity", 14)
 										env.addAgent(plant)
 							        }
-							        
-							        env.step()
 								}
 								
 								var resetHandler= {
@@ -272,62 +271,10 @@
 							{
 								run: function()
 								{
-									if (!addedRabbits){
-										envHolder.pauseAction()
-											envHolder.getToolbar().getButton("Run").setEnabled(false)
-										showMessageWithoutPausing("Congratulations!\nYour bunny was able to find enough food to live!", envHolder)
-									//	addMoreRabbits()
-									} else {
-										envHolder.pauseAction()
-										showMessageWithoutPausing("Hooray, all your rabbits lived for another 30 seconds!\nNow you can go on to the next page.", envHolder)
-									}
+										showMessageAndLog("Congratulations!\nYour bunny was able to find enough food to live!", env, envHolder, otEnvHolder)
+                    envHolder.pauseAction()
+                    envHolder.getToolbar().getButton("Run").setEnabled(false)
 								}
-							}
-							
-							function addMoreRabbits(){
-								for (var i = 0; i &lt; 5; i++){
-									var newRabbit = rabbit_species.createAgent();
-							        newRabbit.setAge(i * 3)
-									newRabbit.setProperty("is immortal", true)
-									newRabbit.setProperty("max offspring", 0)
-									newRabbit.setProperty("mating bonus", -1000)
-									newRabbit.setProperty("hunger bonus", -50)
-									newRabbit.setProperty("is selected", 0)
-									var loc = env.getRandomLocation()
-									newRabbit.setEnvironment(env)
-									newRabbit.setLocation(loc)
-							        env.addAgent(newRabbit)
-								}
-								
-								// add a few more plants
-								var allPlants = env.getAgents(plant_species)
-								var numMore = 30 - allPlants.size()
-								if (numMore &gt; 0)
-								for (var i = 0; i &lt; numMore; i++){
-									var plant = plant_species.createAgent();
-									plant.setProperty("food quantity",100)
-									plant.setProperty("max offspring distance", 20)
-									plant.setProperty("min offspring", 1)
-									env.addAgent(plant)
-								}
-								
-								// increase number of offspring
-								allPlants = env.getAgents(plant_species)
-								for (var i = 0; i &lt; allPlants.size(); i++){
-									var plant = allPlants.get(i)
-									plant.setProperty("max offspring", 5)
-								}
-								
-								showMessage("Now the rest of the rabbit population is here. Will you be able to\neat enough food to stay alive?", envHolder, envHolder)
-								
-								timerTask = null
-								if (timer != null)
-									timer.cancel()
-								timer = new Timer();
-								timerTask = new TimerTask(timerTaskHandler)
-								timer.schedule(timerTask, 30000);
-								
-								addedRabbits = true
 							}
 							
 							
@@ -377,12 +324,11 @@
 										}
 										
 										if (hunger &gt; 99){
-											env.removeAgent(rabbit)
-											envHolder.pauseAction()
-											rabbit.setProperty("Hunger", 0)
-											envHolder.getToolbar().getButton("Run").setEnabled(false)
-											showMessageWithoutPausing("The bunny died because it was not able to find enough food to live.\nClick Reset and try again!", envHolder)
-											rabbit = null
+										  env.removeAgent(rabbit)
+											showMessageAndLog("The bunny died because it was not able to find enough food to live.\nClick Reset and try again!", env, envHolder, otEnvHolder)
+                      envHolder.pauseAction()
+                      envHolder.getToolbar().getButton("Run").setEnabled(false)
+                      rabbit = null;
 										}
 									}
 										
@@ -395,9 +341,9 @@
 									environmentChanged: function(evt){
 										if (evt.getType() == EnvironmentChangeEvent.RESET){
 											isRunning = false
+                      timerTask = null
+                      timerCountdownTask = null
 											setup()
-											timerTask = null
-											timerCountdownTask = null
 										} else if (evt.getType() == EnvironmentChangeEvent.RUN){
 											isRunning = true
 											if (timerTask == null){
@@ -471,6 +417,11 @@
                         <object refid="${env-holder}" />
                       </reference>
                     </OTScriptVariableRealObject>
+                    <OTScriptVariable name="otEnvHolder">
+                      <reference>
+                        <object refid="${env-holder}" />
+                      </reference>
+                    </OTScriptVariable>
                     <OTScriptVariableRealObject name="plant_species">
                       <reference>
                         <object refid="8a6918a9-a82b-4627-977f-2215d41395be" />

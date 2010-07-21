@@ -130,7 +130,7 @@
 								</OTDataGraphable>
 							</graphables>
 							--><xDataAxis>
-								<OTDataAxis min="0" max="30"
+								<OTDataAxis min="0" max="100"
 									label="Time" units="s" local_id="xAxis">
 								</OTDataAxis>
 							</xDataAxis>
@@ -140,10 +140,10 @@
 								</OTDataAxis>
 							</yDataAxis>
 						</OTDataCollector>
-            <OTText local_id="timer" text="0" columns="2" />
+            <OTText local_id="timer" text="0" columns="3" />
             <OTEnvironmentHolder local_id="env-holder" width="590" height="460" toolbar="run,reset" useSpeedSlider="false">
               <environment>
-                <OTEnvironment local_id="environment" environmentWidth="5" environmentHeight="5" showRunButton="false" winterLength="5" summerLength="50" showWinterImage="false" orgSizeMultiplier="1.9" backgroundImageSrc="images/soil_water_level10.png">
+                <OTEnvironment local_id="environment" environmentWidth="5" environmentHeight="5" showRunButton="false" winterLength="5" summerLength="50" showWinterImage="false" orgSizeMultiplier="1.9" backgroundImageSrc="images/grass.jpg">
                   <world>
                     <OTWorld local_id="peasimple_world" speciesPath="org/concord/biologica/worlds/peasimple.xml" />
                   </world>
@@ -189,10 +189,9 @@
 										plant.setProperty("max offspring distance", 20)
 										plant.setProperty("min offspring", 1)
 										plant.setProperty("max offspring", 4)
+                    plant.setProperty("age of maturity", 14)
 										env.addAgent(plant)
 							        }
-							        
-							        env.step()
 								}
 								
 								var resetHandler= {
@@ -319,6 +318,14 @@
 								{
 									updateTimer();
 									
+									if (time &gt; 100000){
+                      showMessageAndLog("Congratulations! Your rabbit survived for 100 seconds.\nGo on to the next page, or if you'd like to try again, click Reset.", env, envHolder, otEnvHolder)    
+                      logSuccess(otEnvHolder);
+                      envHolder.pauseAction()
+                      envHolder.getToolbar().getButton("Run").setEnabled(false)
+                      return;
+									}
+									
 									if (rabbit != null){
 										envHolder.getParent().getParent().requestFocus()
 										var hunger = 100 - rabbit.getProperty("energy").intValue()
@@ -338,11 +345,9 @@
 										
 										if (hunger &gt; 99){
 											env.removeAgent(rabbit)
+											showMessageAndLog("The bunny died because it was not able to find enough food to live!\nHow long were you able to survive for?\nHow many rabbits are in the field?\nIf you'd like to try again, click Reset.", env, envHolder, otEnvHolder)
 											envHolder.pauseAction()
-											rabbit.setProperty("Hunger", 0)
-											envHolder.getToolbar().getButton("Run").setEnabled(false)
-											showMessageWithoutPausing("The bunny died because it was not able to find enough food to live!\nHow long were you able to survive for?\nHow many rabbits are in the field?\nIf you'd like to try again, click Reset.", envHolder)
-											rabbit = null
+                      envHolder.getToolbar().getButton("Run").setEnabled(false)
 										}
 									}
 									
@@ -419,6 +424,11 @@
                         <object refid="${env-holder}" />
                       </reference>
                     </OTScriptVariableRealObject>
+                    <OTScriptVariable name="otEnvHolder">
+                      <reference>
+                        <object refid="${env-holder}" />
+                      </reference>
+                    </OTScriptVariable>
                     <OTScriptVariableRealObject name="plant_species">
                       <reference>
                         <object refid="8a6918a9-a82b-4627-977f-2215d41395be" />
