@@ -29,6 +29,7 @@
     <import class="org.concord.otrunk.biologica.rules.OTRuleCondition" />
     <import class="org.concord.otrunk.biologica.rules.OTRuleConsequence" />
     <import class="org.concord.otrunk.ui.OTCurriculumUnit" />
+    <import class="org.concord.otrunk.ui.OTImage" />
     <import class="org.concord.otrunk.ui.OTPlacement" />
     <import class="org.concord.otrunk.ui.snapshot.OTSnapshot" />
     <import class="org.concord.otrunk.ui.snapshot.OTSnapshotButton" />
@@ -62,7 +63,7 @@
       </bundles>
       <includes>
         <OTInclude href="../global-imports/er-view-bundle.otml" />
-        <OTInclude href="species/fast-plants.otml" />
+        <OTInclude href="species/fast-plants-roots.otml" />
       </includes>
       <root>
         <OTCompoundDoc local_id="mountain-model">
@@ -96,88 +97,102 @@
 							local_id="graph" multipleGraphableEnabled="false"
 							autoScaleEnabled="false" showControlBar="false">
 							<source>
-								<OTDataGraphable connectPoints="true"
-									color="0x00aa00" drawMarks="false" name="Number of plants"
-									xColumn="0" yColumn="1">
-									<dataProducer>
-										<OTBiologicaModelDataProducer local_id="dp" lineGraph="true">
-											<modelHolder>
-                                    			<object refid="${env-holder}" />
-                                  			</modelHolder>
-                                  			<species>
-                                  				<string>Fast Plants</string>
-                                  			</species>
-                                  	</OTBiologicaModelDataProducer>
-									</dataProducer>
-								</OTDataGraphable>
+								<OTDataBarGraphable name="Number of organisms" connectPoints="true" drawMarks="false" lineWidth="10.0" color="192" yColumn="11" xColumn="0" showAllChannels="true" showControlButtons="true" showToolButtons="true" visible="true" showSampleLimit="1">
+                              <dataProducer>
+                                <OTBiologicaModelDataProducer trait="roots">
+                                  <modelHolder>
+                                    <object refid="${env-holder}" />
+                                  </modelHolder>
+                                  <categories>
+                                    <string>Fast Plants</string>
+                                  </categories>
+                                  <channelDescriptions>
+                                    <OTDataChannelDescription name="#1" numericData="true" color="5912564" />
+                                    <OTDataChannelDescription name="#2" numericData="true" color="6830561" />
+                                    <OTDataChannelDescription name="#3" numericData="true" color="7552453" />
+                                  </channelDescriptions>
+                                </OTBiologicaModelDataProducer>
+                              </dataProducer>
+                              <dataStore>
+                                <OTDataStore sampleKeepLimit="10" dt="1.0" numberChannels="11">
+                                  <channelDescriptions>
+                                    <OTDataChannelDescription name="dt" precision="2" numericData="true" />
+                                    <OTDataChannelDescription name="#1" numericData="true" />
+                                    <OTDataChannelDescription name="#2" numericData="true" />
+                                    <OTDataChannelDescription name="#3" numericData="true" />
+                                  </channelDescriptions>
+                                </OTDataStore>
+                              </dataStore>
+                            </OTDataBarGraphable>
 							</source>
 							<xDataAxis>
-								<OTDataAxis min="0" max="30"
-									label="Time" units="s" local_id="xAxis">
-								</OTDataAxis>
+								<OTDataAxis max="3.5" min="0.0" label="Plant Type" units="Grass Size" labelFormat="Engineering" locked="true" intervalWorld="1">
+                              <customGridLabels>
+                                <entry key="1.0">
+                                  <string>http://otrunk.concord.org/examples/EvolutionReadiness/models/species/images/plants/grass/smallgrass.png</string>
+                                </entry>
+                                <entry key="2.0">
+                                  <string>http://otrunk.concord.org/examples/EvolutionReadiness/models/species/images/plants/grass/medgrass.png</string>
+                                </entry>
+                                <entry key="3.0">
+                                  <string>http://otrunk.concord.org/examples/EvolutionReadiness/models/species/images/plants/grass/tallgrass.png</string>
+                                </entry>
+                              </customGridLabels>
+                            </OTDataAxis>
 							</xDataAxis>
 							<yDataAxis>
-								<OTDataAxis min="0" max="800"
+								<OTDataAxis min="0" max="160"
 									label="Number of plants" local_id="yAxis">
 								</OTDataAxis>
 							</yDataAxis>
 						</OTDataCollector>
              <OTEnvironmentHolder local_id="env-holder" width="590" height="460" toolbar="run,reset">
           <environment>
-            <OTEnvironment local_id="environment" environmentWidth="9" environmentHeight="9" showRunButton="false" winterLength="2" summerLength="50" showWinterImage="false" orgSizeMultiplier="3.0" backgroundImageSrc="images/soil_water_level1.png">
+            <OTEnvironment local_id="environment" environmentWidth="9" environmentHeight="9" showRunButton="false" winterLength="2" summerLength="50" showWinterImage="false" orgSizeMultiplier="3.0" backgroundImageSrc="images/soil_water_level10.png">
               <world>
                 <OTWorld local_id="peasimple_world" speciesPath="org/concord/biologica/worlds/peasimple.xml" />
               </world>
-              <barriers>
-                <OTPlacement x="-7" y="0" width="17" height="157" />
-                <OTPlacement x="139" y="0" width="21" height="150" />
-              </barriers>
               <rules>
-                <OTRule description="rain affects chance of survival briefly after env change">
+                <OTRule description="everyone starts out happy">
                   <conditions>
-                    <OTRuleCondition property="last environment change" maxValue="5" />
+                    <OTRuleCondition property="species name" equals="Fast Plants" />
                   </conditions>
                   <consequences>
-                  	<!-- rain ranges from 0.0-1.0. CoS should range from 0.2-1.0. We want max CoS at rain: 0.8 -->
-                    <OTRuleConsequence property="chance of survival" ruleScript="var distFrom8 = Math.abs(0.8-rain); return 1 - (distFrom8 / 2)">
-                      <propertyVariables>
-                        <string>rain</string>
-                      </propertyVariables>
-                    </OTRuleConsequence>
+                    <OTRuleConsequence property="chance of survival" newValueFloat="0.999" />
+                    <OTRuleConsequence property="growth rate" newValueFloat="0.04" />
                   </consequences>
                 </OTRule>
-                <OTRule description="Chance of survival is normally 1">
+                <OTRule description="roots 1 do poorly with medium water">
                   <conditions>
-                    <OTRuleCondition property="last environment change" minValue="6" />
+                    <OTRuleCondition property="species name" equals="Fast Plants" />
+                    <OTRuleCondition property="roots" equalsValue="1.0" />
+                    <OTRuleCondition property="rain" maxValue="0.9" />
                   </conditions>
                   <consequences>
-                    <OTRuleConsequence property="chance of survival" newValueFloat="1.0"/>
+                    <OTRuleConsequence property="chance of survival" newValueFloat="0.99" />
+                    <OTRuleConsequence property="growth rate" newValueFloat="0.02" />
                   </consequences>
                 </OTRule>
-                <OTRule description="rain affects growth rate">
+                <OTRule description="roots 1 die with little water">
                   <conditions>
-                    <OTRuleCondition always="true" />
+                    <OTRuleCondition property="species name" equals="Fast Plants" />
+                    <OTRuleCondition property="roots" equalsValue="1.0" />
+                    <OTRuleCondition property="rain" maxValue="0.5" />
                   </conditions>
                   <consequences>
-                  	<!-- rain ranges from 0.0-1.0. GR should range from 5-50. We want max CoS at rain: 0.8 -->
-                    <OTRuleConsequence property="growth rate" ruleScript="var distFrom8 = Math.abs(0.8-rain); return 0.2 - (distFrom8  / 5)">
-                      <propertyVariables>
-                        <string>rain</string>
-                      </propertyVariables>
-                    </OTRuleConsequence>
+                    <OTRuleConsequence property="chance of survival" newValueFloat="0.95" />
+                    <OTRuleConsequence property="growth rate" newValueFloat="0.01" />
                   </consequences>
                 </OTRule>
-                <OTRule description="rain affects resource consumption">
+                <OTRule description="roots 2 do poorly with little water">
                   <conditions>
-                    <OTRuleCondition always="true" />
+                    <OTRuleCondition property="species name" equals="Fast Plants" />
+                    <OTRuleCondition property="roots" equalsValue="2.0" />
+                    <OTRuleCondition property="rain" maxValue="0.5" />
                   </conditions>
                   <consequences>
-                  	<!-- rain ranges from 0.0-1.0. RC should range between 2-20. We want max CoS at rain: 0.8 -->
-                    <OTRuleConsequence property="resource consumption rate" ruleScript="var distFrom8 = Math.abs(0.8-rain); return 6 + (distFrom8  * 15)">
-                      <propertyVariables>
-                        <string>rain</string>
-                      </propertyVariables>
-                    </OTRuleConsequence>
+                    <OTRuleConsequence property="chance of survival" newValueFloat="0.99" />
+                    <OTRuleConsequence property="growth rate" newValueFloat="0.02" />
                   </consequences>
                 </OTRule>
               </rules>
@@ -244,10 +259,32 @@
                 <string>rain</string>
               </traitsToShow>
               <addAgentsButtons>
-                <OTAddAgentButton text="Add Plant A" quantity="3" click="false" limit="40">
+                <OTAddAgentButton text="Add Plants" quantity="30" click="false" limit="90">
                   <species>
-                    <object refid="9fdc762d-1011-4900-9c27-f36f923bd53e" />
+                    <object refid="6904840c-03f6-4f2d-b822-bc85aebe70db" />
                   </species>
+                  <agentTraits>
+                    <OTAgentTrait property="roots">
+                      <possibleValues>
+                        <int>1</int>
+                        <int>2</int>
+                        <int>3</int>
+                      </possibleValues>
+                    </OTAgentTrait>
+                    <OTAgentTrait property="age of maturity">
+                      <defaultValues>
+                        <int>14</int>
+                      </defaultValues>
+                    </OTAgentTrait>
+                    <OTAgentTrait property="resource consumption rate">
+			                 <possibleValues>
+			                   <float>5</float>
+			                 </possibleValues>
+			              </OTAgentTrait>
+                  </agentTraits>
+                  <buttonImage>
+                    <OTImage imageBytes="species/images/plants/grass/multigrass.png"/>
+                  </buttonImage>
                 </OTAddAgentButton>
               </addAgentsButtons>
             </OTEnvironmentHolder>
@@ -280,19 +317,15 @@ function init() {
 	
 	var url = new URL(baseUrl, "images/soil_water_level1.png")
 	envHolder.getEnvironmentView().addBackgroundImageUrl(url)
-	url = new URL(baseUrl, "images/soil_water_level2.png")
-	envHolder.getEnvironmentView().addBackgroundImageUrl(url)
 	url = new URL(baseUrl, "images/soil_water_level4.png")
-	envHolder.getEnvironmentView().addBackgroundImageUrl(url)
-	url = new URL(baseUrl, "images/soil_water_level7.png")
 	envHolder.getEnvironmentView().addBackgroundImageUrl(url)
 	url = new URL(baseUrl, "images/soil_water_level10.png")
 	envHolder.getEnvironmentView().addBackgroundImageUrl(url)
 	
 	currChoice = radio.getCurrentChoices().get(0)
-	doneChoices = [false, false, false, false, false];
+	doneChoices = [false, false, false];
 	
-	setProperty("rain", 0.0)
+	setProperty("rain", 1.0)
 	setup();
 }
 
@@ -306,6 +339,7 @@ function setup() {
 	time = 0
 	previousTime = 0
 	shownMessage = false;
+	envHolder.getToolbar().getButton("Run").setEnabled(true)
 }
 
 var radioChangeHandler =
@@ -323,14 +357,8 @@ var radioChangeHandler =
         	var url = new URL(baseUrl, "images/soil_water_level1.png")
         	setProperty("rain", 0.0)
         } else if (rain == "1"){
-        	var url = new URL(baseUrl, "images/soil_water_level2.png")
-        	setProperty("rain", 0.3)
-        } else if (rain == "2"){
         	var url = new URL(baseUrl, "images/soil_water_level4.png")
         	setProperty("rain", 0.6)
-        } else if (rain == "3"){
-        	var url = new URL(baseUrl, "images/soil_water_level7.png")
-        	setProperty("rain", 0.8)
         } else {
         	var url = new URL(baseUrl, "images/soil_water_level10.png")
         	setProperty("rain", 1.0)
@@ -344,7 +372,6 @@ var radioChangeHandler =
         }
         
         var numAgents = env.getAllAgents().size()
-   //     otEnvHolderController.log("Mountain height changed, Num agents alive",rain,numAgents,null)
         
     }
 
@@ -389,19 +416,21 @@ var stepHandler= {
         	doneChoices[parseInt(currChoice.getName())] = true;
 				
         	var doneAll = true
-        	for (var i = 0; i &lt; 5; i++){
+        	for (var i = 0; i &lt; 3; i++){
         		if (!doneChoices[i])
         			doneAll = false;
         	}
         	
         	if (doneAll){
-				showMessageAndLog( "Good job! You have experimented with all five rainfall levels.\nRecord the number of plants, then go to the next page.", env, envHolder, otEnvHolder);
+				showMessageAndLog( "Good job! You have experimented with all three rainfall levels.\nRecord the number of plants, then go to the next page.", env, envHolder, otEnvHolder);
         		shownMessage = true;
 				envHolder.pauseAction()
+                      envHolder.getToolbar().getButton("Run").setEnabled(false)
         	} else {
-        		showMessageAndLog( "Look at the graph. Record how many plants\nthere are and record that number in the data table above.\nThen run the experiment again with a different rainfall level.", env, envHolder, otEnvHolder)
+        		showMessageAndLog( "Look at the graph. Record the amounts of Grass A, B, and C in the data table above.\nThen run the experiment again with a different rainfall level.", env, envHolder, otEnvHolder)
 				shownMessage = true;
 				envHolder.pauseAction()
+                      envHolder.getToolbar().getButton("Run").setEnabled(false)
 			}
         }
 	}
@@ -418,9 +447,7 @@ function save() {
 // by putting these urls after "src" we can ensure that the installer will cache
 // the images:
 // src="images/soil_water_level1.png"
-// src="images/soil_water_level2.png"
 // src="images/soil_water_level4.png"
-// src="images/soil_water_level7.png"
 // src="images/soil_water_level10.png"</script>
                   <scripts>
                     <OTJavascript src="scripts/common/message.js" />
@@ -452,14 +479,8 @@ function save() {
             </OTScriptObject>
             <OTChoice local_id="mountain-height-radio" name="Multiple choice" horizontal="false" alignContent="0">
               <choices>
-                <OTCompoundDoc name="4">
-                  <bodyText>5 (Most rain)</bodyText>
-                </OTCompoundDoc>
-                <OTCompoundDoc name="3">
-                  <bodyText>4</bodyText>
-                </OTCompoundDoc>
-                <OTCompoundDoc name="2">
-                  <bodyText>3</bodyText>
+                <OTCompoundDoc id="12fa28cb-0a4b-40d9-af31-1582a057b78e"  name="2">
+                  <bodyText>3 (Most rain)</bodyText>
                 </OTCompoundDoc>
                 <OTCompoundDoc name="1">
                   <bodyText>2</bodyText>
@@ -469,7 +490,7 @@ function save() {
                 </OTCompoundDoc>
               </choices>
               <currentChoices>
-                <object refid="f8f30d75-f5b3-4451-a1d8-76d660b77e8a" />
+                <object refid="12fa28cb-0a4b-40d9-af31-1582a057b78e" />
               </currentChoices>
             </OTChoice>
           </documentRefs>
