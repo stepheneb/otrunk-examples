@@ -246,7 +246,7 @@
                         importPackage(Packages.org.concord.biologica.environment);
                         importPackage(Packages.org.concord.framework.otrunk);
                         
-                        var damCreated = false;
+                        var damRemoved = false;
                         var startTime
                         var time
                         var previousTime
@@ -307,7 +307,7 @@
                           var url = new URL(baseUrl, "images/dam-year10.jpg");
                           envHolder.getEnvironmentView().setBackgroundImageUrl(url);
                           lastBkgdUrl = url;
-                          damCreated = false
+                          damRemoved = false
                           damButton.setEnabled(true);
                           
                           addPlants();
@@ -367,7 +367,7 @@
                         
                         function createRabbit(size, north) {
                           var newRabbit = rabbitspecies.createAgent();
-                          newRabbit.setAge(50)
+                          newRabbit.setAge(100)
                           newRabbit.setProperty("prey variety value", size)
                           var loc
                           if (north) {
@@ -385,19 +385,19 @@
 												    stateChanged: function(evt)
 												    {
 												      if (damButton.getClicked()){
-												        createDam();
+												        removeDam();
 												      }
 												    }
 												
 												}
 												var damButtonListener = new OTChangeListener(damButtonHandler)
                         
-              function createDam() {
-                if (!damCreated) {
-                  damCreated = true;
+              function removeDam() {
+                if (!damRemoved) {
+                  damRemoved = true;
                   startTime = System.currentTimeMillis();
                   damButton.setEnabled(false);
-                  makeDrier();
+                  makeWetter();
                   env.removeBarriers();
                 }
               }
@@ -406,7 +406,7 @@
               {
                 environmentStepped: function()
                 {
-                  if (damCreated) {
+                  if (damRemoved) {
                     updateTimer();
                     checkWaterUpdating();
                     checkYear();
@@ -425,7 +425,7 @@
                       setup()
                     } else if (evt.getType() == EnvironmentChangeEvent.RUN){
                       isRunning = true
-                      if (damCreated) { 
+                      if (damRemoved) { 
                         startTime = System.currentTimeMillis()
                        }
                     } else if (evt.getType() == EnvironmentChangeEvent.PAUSE){
@@ -459,14 +459,14 @@
                 if (seconds % CHANGE_WATER_RATE == 0){
                   if (!recentlyChangedWater) {
                     recentlyChangedWater = true;
-                    makeDrier();
+                    makeWetter();
                   }
                 } else {
                   recentlyChangedWater = false;
                 }
               }
               
-              function makeDrier() {
+              function makeWetter() {
                 if (currentWater &lt; 1.0){
                   currentWater += 0.02;
                 }
