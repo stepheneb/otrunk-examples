@@ -125,6 +125,11 @@
                         var lastEnergy;
                         var points;
                         
+                        var startTime
+                        var time
+                        var previousTime
+                        var isRunning = false
+                        
 												function init() {
 													env.removeAllAgents()
 													env.setStepCount(0)
@@ -146,6 +151,9 @@
                           
                           points = 0;
                           pointsText.setText("0");
+                          
+                          time = 0
+                          previousTime = 0
                           
                           envHolder.getGlassPanel().requestFocus();
                           envHolder.getGlassPanel().addMouseListener(mouseListener)
@@ -206,6 +214,14 @@
 					                     pointsText.setText(points);
 					                  }
 					                  lastEnergy = energy;
+					                  updateTimer();
+					                  if (time / 1000 &gt; 20){
+					                   showMessage("Good job! You caught "+points+" rabbits!", env, envHolder);
+                             showMessage("How many white rabbits and how many brown rabbits are left?\nWrite down the number in the table.", env, envHolder);
+                             envHolder.pauseAction()
+                             envHolder.getToolbar().getButton("Run").setEnabled(false)
+					                   
+					                  }
 					                }
 					              }
 					              var stepListener = new EnvironmentStepListener(stepHandler)
@@ -213,17 +229,30 @@
 					              var resetRunHandler= {
 					                  environmentChanged: function(evt){
 					                    if (evt.getType() == EnvironmentChangeEvent.RESET){
+                                isRunning = false
 					                      setup()
+					                    }else if (evt.getType() == EnvironmentChangeEvent.RUN){
+					                      isRunning = true
+					                      startTime = System.currentTimeMillis()
+					                    } else if (evt.getType() == EnvironmentChangeEvent.PAUSE){
+					                      previousTime = time;
 					                    }
 					                  }
-					                }
-					                      
+					                }    
 					              var resetListener = new EnvironmentChangeListener(resetRunHandler)
+					              
+					              function updateTimer(){
+					                timeSinceLastStart = System.currentTimeMillis() - startTime;
+					                time =  previousTime + timeSinceLastStart;
+					              }
 
 												function save() {
 												  return true;
 												}
 												</script>
+												<scripts>
+                        <OTJavascript src="scripts/common/message.js" />
+                      </scripts>
 										</OTJavascript>
 									</script>
 									<variables>
