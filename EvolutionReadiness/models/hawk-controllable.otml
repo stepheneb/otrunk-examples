@@ -84,11 +84,21 @@
 			<root>
 				<OTCompoundDoc>
 					<bodyText>
-						<object refid="${env-holder}" />
+					 <table>
+					   <tr>
+					     <td>
+                  <object refid="${env-holder}" />
+					     </td>
+					     <td>
+					         <b>Rabbits caught:</b> <br/>
+					         <object refid="${points-text}" viewid="c93a7460-e18a-11dc-95ff-0800200c9a66"/>
+					     </td>
+					   </tr>
+					 </table>
 					</bodyText>
 					<documentRefs>
 						<OTEnvironmentHolder local_id="env-holder"
-							width="590" height="460" toolbar="run" useSpeedSlider="false">
+							width="590" height="460" toolbar="run,reset" useSpeedSlider="false">
 							<environment>
 								<OTEnvironment local_id="environment"
 									environmentWidth="10" environmentHeight="10" showRunButton="false"
@@ -98,25 +108,6 @@
 										<OTWorld local_id="peasimple_world"
 											speciesPath="org/concord/biologica/worlds/peasimple.xml" />
 									</world>
-									<rules>
-		               <OTRule description="don't show food bubble normally">
-		                  <conditions>
-		                    <OTRuleCondition always="true"/>
-		                  </conditions>
-		                  <consequences>
-		                    <OTRuleConsequence property="show food bubble" newValueBoolean="false" />
-		                  </consequences>
-		                </OTRule>
-		                <OTRule description="show food bubble when hungry">
-		                  <conditions>
-		                    <OTRuleCondition property="species name" equals="Rabbits"/>
-		                    <OTRuleCondition property="energy" maxValue="20" />
-		                  </conditions>
-		                  <consequences>
-		                    <OTRuleConsequence property="show food bubble" newValueBoolean="true" />
-		                  </consequences>
-		                </OTRule>
-		              </rules>
 								</OTEnvironment>
 							</environment>
 							<scripts>
@@ -131,6 +122,8 @@
                         importPackage(Packages.org.concord.biologica.ui);
  
                         var hawk;
+                        var lastEnergy;
+                        var points;
                         
 												function init() {
 													env.removeAllAgents()
@@ -138,18 +131,27 @@
 													envHolder.pauseAction()
 													env.setWrapNorthSouth(false)
 													env.setWrapEastWest(false)
-	
-													hawk = createHawk();
-													hawk.setProperty("prey variety value", 3);
-													env.addAgent(hawk)
-													
-													envHolder.getGlassPanel().requestFocus();
+                          
+                          env.addStepListener(stepListener)
+                          env.addChangeListener(resetListener)
+                          
+                          setup();
+                          
+													return true;
+												}
+												
+												function setup() {
+												  hawk = createHawk();
+                          env.addAgent(hawk);
+                          
+                          points = 0;
+                          pointsText.setText("0");
+                          
+                          envHolder.getGlassPanel().requestFocus();
                           envHolder.getGlassPanel().addMouseListener(mouseListener)
                           envHolder.getGlassPanel().addMouseMotionListener(mouseMotionListener)
                           
                           envHolder.setMouseMode(EnvironmentHolder.MOUSE_MODE_INVISIBLE);
-	
-													return true;
 												}
 
 												function createHawk() {
@@ -193,6 +195,30 @@
                         
                         }
                         var mouseMotionListener = new MouseMotionListener(mouseMotionHandler)
+                        
+                        var stepHandler =
+					              {
+					                environmentStepped: function()
+					                {
+					                  var energy = hawk.getProperty("energy");
+					                  if (energy &gt; lastEnergy){
+					                     points++;
+					                     pointsText.setText(points);
+					                  }
+					                  lastEnergy = energy;
+					                }
+					              }
+					              var stepListener = new EnvironmentStepListener(stepHandler)
+					              
+					              var resetRunHandler= {
+					                  environmentChanged: function(evt){
+					                    if (evt.getType() == EnvironmentChangeEvent.RESET){
+					                      setup()
+					                    }
+					                  }
+					                }
+					                      
+					              var resetListener = new EnvironmentChangeListener(resetRunHandler)
 
 												function save() {
 												  return true;
@@ -221,12 +247,17 @@
                         <object refid="${hawk-species}" />
                       </reference>
                     </OTScriptVariableRealObject>
+                    <OTScriptVariable name="pointsText">
+                      <reference>
+                        <object refid="${points-text}" />
+                      </reference>
+                    </OTScriptVariable>
 									</variables>
 									<scriptState />
 								</OTScriptObject>
 							</scripts>
 							<addAgentsButtons>
-								<OTAddAgentButton text="Add Rabbits" limit="-1" click="false" quantity="10">
+								<OTAddAgentButton text="Add Rabbits" limit="20" click="false" quantity="10">
 									<species>
 										<object refid="${rabbit-species}" />
 									</species>
@@ -253,7 +284,7 @@
                     </OTAgentTrait>
                   </agentTraits>
 								</OTAddAgentButton>
-								<OTAddAgentButton text="Add Plants" limit="-1" click="false" quantity="10">
+								<OTAddAgentButton text="Add Plants" limit="50" click="false" quantity="10">
                   <species>
                     <object refid="${plant-species}" />
                   </species>
@@ -270,6 +301,7 @@
 								<string>energy</string>
 							</traitsToShow>
 						</OTEnvironmentHolder>
+						<OTText local_id="points-text" text="0"/>
 					</documentRefs>
 				</OTCompoundDoc>
 			</root>
