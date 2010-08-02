@@ -91,7 +91,8 @@
 					     </td>
 					     <td>
 					         <b>Rabbits caught:</b> <br/>
-					         <object refid="${points-text}" viewid="c93a7460-e18a-11dc-95ff-0800200c9a66"/>
+					         <object refid="${points-text}" viewid="c93a7460-e18a-11dc-95ff-0800200c9a66"/><br/>
+					         <object refid="${graph}"/>
 					     </td>
 					   </tr>
 					 </table>
@@ -146,8 +147,16 @@
 												}
 												
 												function setup() {
-												  hawk = createHawk();
-                          env.addAgent(hawk);
+												  hawk = addHawk();
+                          
+                          for (var i = 0; i &lt; 10; i++){
+                            addRabbit("white");
+                            addRabbit("brown");
+                          }
+                          
+                          for (var i = 0; i &lt; 50; i++){
+                            addGrass();
+                          }
                           
                           points = 0;
                           pointsText.setText("0");
@@ -164,22 +173,43 @@
                           envHolder.getToolbar().getButton("Run").setEnabled(true)
 												}
 
-												function createHawk() {
+												function addHawk() {
 													var newHawk = hawk_species.createAgent();
 													newHawk.setAge(50)
 													newHawk.setProperty("is immortal", true)
                           newHawk.setProperty("speed", 0)
 													newHawk.setProperty("max offspring", 0)
-													newHawk.setProperty("mating bonus", -1000)
+													newHawk.setProperty("mating desire bonus", -1000)
 													newHawk.setProperty("hunger bonus", 50)
-													newHawk.setProperty("is selected", 0)
 													newHawk.setProperty("calculate drives", false);
                           newHawk.setProperty("current behavior", "WANDERING");
-													var loc = env.getRandomLocation()
-													newHawk.setEnvironment(env)
-													newHawk.setLocation(loc)
+													addAgent(newHawk);
 													return newHawk;
 												}
+												
+												function addRabbit(color) {
+                          var newRabbit = rabbit_species.createAgent();
+                          newRabbit.setAge(10);
+                          newRabbit.setProperty("mating desire bonus", -20);
+                          newRabbit.setProperty("hunger bonus", -10);
+                          newRabbit.setProperty("metabolism", 1);
+                          newRabbit.setProperty("resource consumption rate", 10);
+                          newRabbit.setProperty("color", color);
+                          addAgent(newRabbit);
+                        }
+                        
+                        function addGrass() {
+                          var newGrass = plant_species.createAgent();
+                          newGrass.setProperty("resource consumption rate", 2);
+                          addAgent(newGrass);
+                        }
+                        
+                        function addAgent(agent){
+                          var loc = env.getRandomLocation();
+                          agent.setEnvironment(env);
+                          agent.setLocation(loc);
+                          env.addAgent(agent);
+                        }
 												
 												var mouseHandler =
 					              {
@@ -218,7 +248,7 @@
 					                  }
 					                  lastEnergy = energy;
 					                  updateTimer();
-					                  if (time / 1000 &gt; 20){
+					                  if (time / 1000 &gt; 30){
 					                   showMessage("Good job! You caught "+points+" rabbits!", env, envHolder);
                              showMessage("How many white rabbits and how many brown rabbits are left?\nWrite down the number in the table.", env, envHolder);
                              envHolder.pauseAction()
@@ -279,6 +309,11 @@
                         <object refid="${hawk-species}" />
                       </reference>
                     </OTScriptVariableRealObject>
+                    <OTScriptVariableRealObject name="plant_species">
+                      <reference>
+                        <object refid="${plant-species}" />
+                      </reference>
+                    </OTScriptVariableRealObject>
                     <OTScriptVariable name="pointsText">
                       <reference>
                         <object refid="${points-text}" />
@@ -288,52 +323,58 @@
 									<scriptState />
 								</OTScriptObject>
 							</scripts>
-							<addAgentsButtons>
-								<OTAddAgentButton text="Add Rabbits" limit="20" click="false" quantity="10">
-									<species>
-										<object refid="${rabbit-species}" />
-									</species>
-									<agentTraits>
-                    <OTAgentTrait property="mating desire bonus">
-                      <possibleValues>
-                        <int>-20</int>
-                      </possibleValues>
-                    </OTAgentTrait>
-                    <OTAgentTrait property="hunger bonus">
-                      <possibleValues>
-                        <int>-10</int>
-                      </possibleValues>
-                    </OTAgentTrait>
-                    <OTAgentTrait property="metabolism">
-                      <possibleValues>
-                        <int>1</int>
-                      </possibleValues>
-                    </OTAgentTrait>
-                    <OTAgentTrait property="resource consumption rate">
-                      <possibleValues>
-                        <int>10</int>
-                      </possibleValues>
-                    </OTAgentTrait>
-                  </agentTraits>
-								</OTAddAgentButton>
-								<OTAddAgentButton text="Add Plants" limit="50" click="false" quantity="10">
-                  <species>
-                    <object refid="${plant-species}" />
-                  </species>
-                  <agentTraits>
-                    <OTAgentTrait property="resource consumption rate">
-                      <possibleValues>
-                        <int>2</int>
-                      </possibleValues>
-                    </OTAgentTrait>
-                  </agentTraits>
-                </OTAddAgentButton>
-							</addAgentsButtons>
-							<traitsToShow>
-								<string>energy</string>
-							</traitsToShow>
 						</OTEnvironmentHolder>
 						<OTText local_id="points-text" text="0"/>
+						<OTDataCollector name="Model Data"
+              local_id="graph" multipleGraphableEnabled="false"
+              autoScaleEnabled="false" showControlBar="false">
+              <source>
+                <OTDataGraphable connectPoints="true"
+                  color="0x999999" drawMarks="false" name="Number of rabbits"
+                  xColumn="0" yColumn="1">
+                  <dataProducer>
+                    <OTBiologicaModelDataProducer local_id="dp" lineGraph="true">
+                      <modelHolder>
+                        <object refid="${env-holder}" />
+                      </modelHolder>
+                      <lineRules>
+                        <OTRule name="white rabbits">
+                          <conditions>
+                            <OTRuleCondition property="species name" equals="Mixed Rabbits" />
+                            <OTRuleCondition property="color" equals="white" />
+                          </conditions>
+                        </OTRule>
+                        <OTRule name="brown rabbits">
+                          <conditions>
+                            <OTRuleCondition property="species name" equals="Mixed Rabbits" />
+                            <OTRuleCondition property="color" equals="brown" />
+                          </conditions>
+                        </OTRule>
+                      </lineRules>
+                  </OTBiologicaModelDataProducer>
+                  </dataProducer>
+                </OTDataGraphable>
+              </source>
+              <graphables>
+                <OTDataGraphable connectPoints="true"
+                  color="0x995500" drawMarks="false"
+                  xColumn="0" yColumn="2">
+                  <dataProducer>
+                    <object refid="${dp}" />
+                  </dataProducer>
+                </OTDataGraphable>
+              </graphables>
+              <xDataAxis>
+                <OTDataAxis min="0" max="30"
+                  label="Time" units="s" local_id="xAxis">
+                </OTDataAxis>
+              </xDataAxis>
+              <yDataAxis>
+                <OTDataAxis min="0" max="70"
+                  label="Number of rabbits" local_id="yAxis">
+                </OTDataAxis>
+              </yDataAxis>
+            </OTDataCollector>
 					</documentRefs>
 				</OTCompoundDoc>
 			</root>
