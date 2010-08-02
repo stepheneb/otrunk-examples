@@ -28,6 +28,7 @@
     <import class="org.concord.otrunk.biologica.rules.OTRule" />
     <import class="org.concord.otrunk.biologica.rules.OTRuleCondition" />
     <import class="org.concord.otrunk.biologica.rules.OTRuleConsequence" />
+    <import class="org.concord.otrunk.ui.OTChoice" />
     <import class="org.concord.otrunk.ui.OTCurriculumUnit" />
     <import class="org.concord.otrunk.ui.OTPlacement" />
     <import class="org.concord.otrunk.ui.snapshot.OTSnapshot" />
@@ -100,10 +101,14 @@
                         <br />
                         Lots of water
                         <br/>
-                        <object refid="${water-slider}" hello="world" />
+                        <object refid="${water-slider}" />
                         <br />
                         Little water
                         <br />
+                        <br/>
+                        Highlight:
+                        <br/>
+                        <object refid="${glow-choice}"/>
                       </td>
                       <td>
                         <table>
@@ -192,6 +197,7 @@
                     </OTRule>
                     <OTRule description="roots 1 are short">
                       <conditions>
+                        <OTRuleCondition property="species name" equals="Fast Plants" />
                         <OTRuleCondition property="roots" equalsValue="1.0" />
                       </conditions>
                       <consequences>
@@ -200,6 +206,7 @@
                     </OTRule>
                     <OTRule description="roots 2 are medium">
                       <conditions>
+                        <OTRuleCondition property="species name" equals="Fast Plants" />
                         <OTRuleCondition property="roots" equalsValue="2.0" />
                       </conditions>
                       <consequences>
@@ -208,6 +215,7 @@
                     </OTRule>
                     <OTRule description="roots 3 are big">
                       <conditions>
+                        <OTRuleCondition property="species name" equals="Fast Plants" />
                         <OTRuleCondition property="roots" equalsValue="3.0" />
                       </conditions>
                       <consequences>
@@ -216,6 +224,7 @@
                     </OTRule>
                     <OTRule description="small rabbits are small">
                       <conditions>
+                        <OTRuleCondition property="species name" equals="Rabbits" />
                         <OTRuleCondition property="prey variety value" equalsValue="1.0" />
                       </conditions>
                       <consequences>
@@ -224,6 +233,7 @@
                     </OTRule>
                     <OTRule description="medium rabbits are medium">
                       <conditions>
+                        <OTRuleCondition property="species name" equals="Rabbits" />
                         <OTRuleCondition property="prey variety value" equalsValue="2.0" />
                       </conditions>
                       <consequences>
@@ -232,10 +242,28 @@
                     </OTRule>
                     <OTRule description="big rabbits are big">
                       <conditions>
+                        <OTRuleCondition property="species name" equals="Rabbits" />
                         <OTRuleCondition property="prey variety value" equalsValue="3.0" />
                       </conditions>
                       <consequences>
                         <OTRuleConsequence property="variety" newValueString="Big rabbit" />
+                      </consequences>
+                    </OTRule>
+                    <OTRule description="generally no one glows">
+                      <conditions>
+                        <OTRuleCondition property="species name" equals="Rabbits" />
+                      </conditions>
+                      <consequences>
+                        <OTRuleConsequence property="glow" newValueBoolean="false" />
+                      </consequences>
+                    </OTRule>
+                    <OTRule description="but some varieties might glow if set by script">
+                      <conditions>
+                        <OTRuleCondition property="species name" equals="Rabbits" />
+                        <OTRuleCondition property="prey variety value" equalsValue="4.0" local_id="glow-condition" />
+                      </conditions>
+                      <consequences>
+                        <OTRuleConsequence property="glow" newValueBoolean="true" />
                       </consequences>
                     </OTRule>
                   </rules>
@@ -282,6 +310,7 @@
               </addAgentsButtons>
               <traitsToShow>
                 <string>variety</string>
+                <string>glow</string>
               </traitsToShow>
             </OTEnvironmentHolder>
             <OTScriptObject local_id="script" name="Setup script">
@@ -344,6 +373,7 @@
                           env.addStepListener(stepListener)
                           env.addChangeListener(resetListener)
                           damButton.addOTChangeListener(damButtonListener)
+                          glowChoice.addOTChangeListener(radioChangeListener)
                           
                           setup();
   
@@ -559,6 +589,30 @@ function setGrowthRateForVariety(plants)
   }
 }
 
+var radioChangeHandler =
+{
+    stateChanged: function(evt)
+    {
+      if (glowChoice.getCurrentChoices().size() &lt; 1)
+        return;
+      
+        var currChoice = glowChoice.getCurrentChoices().get(0)
+        var choice = currChoice.getName()
+        if (choice == "None"){
+          glowCondition.setEquals(4.0);
+        } else if (choice == "Big rabbits"){
+          glowCondition.setEquals(3.0);
+        } else if (choice == "Medium rabbits"){
+          glowCondition.setEquals(2.0);
+        } else if (choice == "Small rabbits"){
+          glowCondition.setEquals(1.0);
+        }
+        
+    }
+
+}
+var radioChangeListener = new OTChangeListener(radioChangeHandler)
+
                         function save() {
                           return true;
                         }</script>
@@ -620,6 +674,16 @@ function setGrowthRateForVariety(plants)
                     <object refid="${year-text}" />
                   </reference>
                 </OTScriptVariable>
+                <OTScriptVariable name="glowChoice">
+                  <reference>
+                    <object refid="${glow-choice}" />
+                  </reference>
+                </OTScriptVariable>
+                <OTScriptVariableRealObject name="glowCondition">
+                  <reference>
+                    <object refid="${glow-condition}"/>
+                  </reference>
+                </OTScriptVariableRealObject>
               </variables>
               <scriptState />
             </OTScriptObject>
@@ -680,6 +744,25 @@ function setGrowthRateForVariety(plants)
               </yDataAxis>
             </OTDataGraph>
             <OTText local_id="year-text" text="2010"/>
+            <OTChoice local_id="glow-choice" name="Multiple choice" horizontal="false" alignContent="0">
+              <choices>
+                <OTCompoundDoc name="None" id="3fbca408-d205-4f9b-83d5-564cd5680f37">
+                  <bodyText>None</bodyText>
+                </OTCompoundDoc>
+                <OTCompoundDoc name="Big rabbits">
+                  <bodyText>Big rabbits</bodyText>
+                </OTCompoundDoc>
+                <OTCompoundDoc name="Medium rabbits">
+                  <bodyText>Medium rabbits</bodyText>
+                </OTCompoundDoc>
+                <OTCompoundDoc name="Small rabbits">
+                  <bodyText>Small rabbits</bodyText>
+                </OTCompoundDoc>
+              </choices>
+              <currentChoices>
+                <object refid="3fbca408-d205-4f9b-83d5-564cd5680f37" />
+              </currentChoices>
+            </OTChoice>
           </documentRefs>
         </OTCompoundDoc>
       </root>
