@@ -135,25 +135,26 @@
 										<OTJavascript src="scripts/gradated-sunlight-five-blocks/setup.js">
 											<script>
 												importPackage(Packages.java.lang);
-												importPackage(Packages.java.awt);
+                        importPackage(Packages.java.awt);
                         importPackage(Packages.java.awt.event);
                         importPackage(Packages.java.net);
-												importPackage(Packages.org.concord.biologica.environment);
+                        importPackage(Packages.org.concord.biologica.environment);
                         importPackage(Packages.org.concord.biologica.ui);
                         
                         var isRunning = false;
                         var brownness = 0;
                         var lastBkgdUrl;
                         var addedHawks, addedRabbits;
+                        var numRabbits;
                         
                         var baseUrl = otEnvHolder.getOTObjectService().getCodebase(otEnvHolder);
                         
-												function init() {
-													env.removeAllAgents()
-													env.setStepCount(0)
-													envHolder.pauseAction()
-													env.setWrapNorthSouth(false)
-													env.setWrapEastWest(false)
+                        function init() {
+                          env.removeAllAgents()
+                          env.setStepCount(0)
+                          envHolder.pauseAction()
+                          env.setWrapNorthSouth(false)
+                          env.setWrapEastWest(false)
                           
                           env.addStepListener(stepListener)
                           env.addChangeListener(resetListener)
@@ -179,72 +180,104 @@
                           
                           setup();
                           
-													return true;
-												}
-												
-												function setup() {
+                          return true;
+                        }
+                        
+                        function setup() {
                           var url = new URL(baseUrl, "images/snow.png");
                           envHolder.getEnvironmentView().setBackgroundImageUrl(url);
                           
-                          brownness = 0
+                          brownness = 0;
                           addedHawks = addedRabbits = false;
-												}
+                          numRabbits = 0;
+                          
+                          
+                          envHolder.getToolbar().getButton("Run").setEnabled(true)
+                        }
                         
                         var stepHandler =
-					              {
-					                environmentStepped: function()
-					                {
-					                  checkHawks();
-					                  checkRabbits();
-					                  
-					                  updateTimer();
-					              //    if (time / 1000 &gt; 60){
-					              //     showMessage("How many white rabbits and how many brown rabbits are left?\nWrite down the number in the table.", env, envHolder);
+                        {
+                          environmentStepped: function()
+                          {
+                            checkRabbits();
+                            checkHawks();
+                            
+                            updateTimer();
+                        //    if (time / 1000 &gt; 60){
+                        //     showMessage("How many white rabbits and how many brown rabbits are left?\nWrite down the number in the table.", env, envHolder);
                         //     envHolder.pauseAction()
                         //     envHolder.getToolbar().getButton("Run").setEnabled(false)
-					              //    }
-					                }
-					              }
-					              var stepListener = new EnvironmentStepListener(stepHandler)
-					              
-					              function checkHawks(){
-					                 var allHawks = env.getAgents(hawk_species);
-					                 
-					                 if (!addedHawks &amp;&amp; allHawks.size() &gt; 0){
-					                   addedHawks = true;
-					                 }
-					                 
-					                 if (addedHawks &amp;&amp; allHawks.size() &lt; 2){
+                        //    }
+                          }
+                        }
+                        var stepListener = new EnvironmentStepListener(stepHandler)
+                        
+                        function checkHawks(){
+                           var allHawks = env.getAgents(hawk_species);
+                           
+                           var numHawks = allHawks.size();
+                           
+                           if (numHawks == 0){
+                            if (addedHawks) {
+	                             if (addedRabbits) {
+	                               showMessageAndLog("Uh oh, all the animals have died!\nWas there any food for the rabbits to eat? Reset the model and try it again.", env, envHolder, otEnvHolder);
+	                               envHolder.pauseAction()
+	                               envHolder.getToolbar().getButton("Run").setEnabled(false)
+	                             } else {
+	                               showMessageAndLog("Uh oh, all the hawks have died!\nWere there any rabbits for them to eat? Reset the model and try it again.", env, envHolder, otEnvHolder);
+	                               envHolder.pauseAction()
+                                 envHolder.getToolbar().getButton("Run").setEnabled(false)
+	                             }
+	                           }
+                             return;
+                           }
+                           
+                           if (!addedHawks &amp;&amp; numHawks &gt; 0){
+                             addedHawks = true;
+                           }
+                           
+                           if (addedHawks &amp;&amp; numRabbits &gt; 0 &amp;&amp; numHawks &lt; 2){
                             addAgent(hawk_species);
-					                 }
-					                 
-					                 if (allHawks.size() &lt; 3){
-					                   setProperty(allHawks, "is immortal", true);
+                           }
+                           
+                           if (numHawks &lt; 3 &amp;&amp; numRabbits &gt; 0){
+                             setProperty(allHawks, "is immortal", true);
                              setProperty(allHawks, "mating desire bonus", 0);
                              setProperty(allHawks, "hunger bonus", 5);
-					                 } else {
-					                   if (allHawks.get(0).getProperty("is immortal")){
+                           } else {
+                             if (allHawks.get(0).getProperty("is immortal")){
                               setProperty(allHawks, "is immortal", false);
-					                   }
-					                   
-					                   if (allHawks.size() &gt; 4){
+                             }
+                             
+                             if (numHawks &gt; 4){
                               setProperty(allHawks, "mating desire bonus", -30);
                               setProperty(allHawks, "hunger bonus", -40);
                              } else {
                               setProperty(allHawks, "mating desire bonus", -15);
                               setProperty(allHawks, "hunger bonus", -5);
                              }
-					                 }
-					              }
-					              
-					              function checkRabbits(){
+                           }
+                        }
+                        
+                        function checkRabbits(){
                            var allRabbits = env.getAgents(rabbit_species);
+                           numRabbits = allRabbits.size();
+                           if (numRabbits == 0){
+                            if (addedRabbits &amp;&amp; !addedHawks){
+	                            showMessageAndLog("Uh oh, all the rabbits have died!\nDid you add any plants? Reset the model and try it again.", env, envHolder, otEnvHolder);
+	                            envHolder.pauseAction()
+                              envHolder.getToolbar().getButton("Run").setEnabled(false)
+	                          }
+                            return;
+                           }
                            
-                           if (!addedRabbits &amp;&amp; allRabbits.size() &gt; 0){
+                           var numPlants = env.getAgents(plant_species).size();
+                           
+                           if (!addedRabbits &amp;&amp; numRabbits &gt; 0){
                              addedRabbits = true;
                            }
                            
-                           if (addedRabbits &amp;&amp; allRabbits.size() &lt; 9){
+                           if (addedRabbits &amp;&amp; numPlants &gt; 0 &amp;&amp; numRabbits &lt; 9){
                             addAgent(rabbit_species, [["resource consumption rate", 10]]);
                             addAgent(rabbit_species, [["resource consumption rate", 10]]);
                             // faking here
@@ -254,7 +287,7 @@
                             
                            } 
                            
-                           if (allRabbits.size() &lt; 16){
+                           if (numRabbits &lt; 16){
                            //  setProperty(allRabbits, "metabolism", 0);
                            //  setProperty(allRabbits, "mating desire bonus", 10);
                            //  setProperty(allRabbits, "hunger bonus", -10);
@@ -268,71 +301,71 @@
                              setProperty(allRabbits, "speed", 5);
                            }
                            
-                           if (allRabbits.size() &gt; 50){
+                           if (numRabbits &gt; 50){
                              setProperty(allRabbits, "mating desire bonus", -40);
                            }
                         }
-					              
-					              function setProperty(agents, property, value){
-					               for (var i = 0; i &lt; agents.size(); i++){
-					                 agents.get(i).setProperty(property, value);
-					               }
-					              }
-					              
-					              function addAgent(species, properties){
-					                var newAgent = species.createAgent();
-					                
-					                if (!!properties){
-					                 for (var i = 0; i &lt; properties.length; i++){
-					                   newAgent.setProperty(properties[i][0], properties[i][1]);
-					                 }
-					                }
-					                
+                        
+                        function setProperty(agents, property, value){
+                         for (var i = 0; i &lt; agents.size(); i++){
+                           agents.get(i).setProperty(property, value);
+                         }
+                        }
+                        
+                        function addAgent(species, properties){
+                          var newAgent = species.createAgent();
+                          
+                          if (!!properties){
+                           for (var i = 0; i &lt; properties.length; i++){
+                             newAgent.setProperty(properties[i][0], properties[i][1]);
+                           }
+                          }
+                          
                           var loc = env.getRandomLocation();
                           newAgent.setEnvironment(env);
                           newAgent.setLocation(loc);
                           env.addAgent(newAgent);
-					              }
-					              
-					              var resetRunHandler= {
-					                  environmentChanged: function(evt){
-					                    if (evt.getType() == EnvironmentChangeEvent.RESET){
+                        }
+                        
+                        var resetRunHandler= {
+                            environmentChanged: function(evt){
+                              if (evt.getType() == EnvironmentChangeEvent.RESET){
                                 isRunning = false
-					                      setup()
-					                    }else if (evt.getType() == EnvironmentChangeEvent.RUN){
-					                      isRunning = true
-					                    }
-					                  }
-					                }    
-					              var resetListener = new EnvironmentChangeListener(resetRunHandler)
-					              
-					              function updateTimer(){
-					                var step = env.getStepCount();
-					                if (step % 80 === 0){
-					                 updateColor();
-					                }
-					                
-					                if (step === 900){
-					                 showMessageAndLog("All the snow has gone away. Has the population of rabbits changed?\nLook at the numbers of white and brown rabbits using the graph. Then go on to the next page.", env, envHolder, otEnvHolder);
-					                 envHolder.pauseAction()
-					                }
-					              }
-					              
-					              function updateColor(){
-					               if (brownness &lt; 0.9) {
-					                 brownness += 0.1;
-					                 var brownVisibility = 0.4 - (brownness*0.4);
-					                 var whiteVisibility = 0 + (brownness*0.4);
-					                 
-					                 var brownConsequence = brownRule.getConsequences()[0];
+                                setup()
+                              }else if (evt.getType() == EnvironmentChangeEvent.RUN){
+                                isRunning = true
+                              }
+                            }
+                          }    
+                        var resetListener = new EnvironmentChangeListener(resetRunHandler)
+                        
+                        function updateTimer(){
+                          var step = env.getStepCount();
+                          if (step % 80 === 0){
+                           updateColor();
+                          }
+                          
+                          if (step === 900){
+                           showMessageAndLog("All the snow has gone away. Has the population of rabbits changed?\nLook at the numbers of white and brown rabbits using the graph. Then go on to the next page.", env, envHolder, otEnvHolder);
+                           envHolder.pauseAction()
+                          }
+                        }
+                        
+                        function updateColor(){
+                         if (brownness &lt; 0.9) {
+                           brownness += 0.1;
+                           var brownVisibility = 0.4 - (brownness*0.4);
+                           var whiteVisibility = 0 + (brownness*0.4);
+                           
+                           var brownConsequence = brownRule.getConsequences()[0];
                            brownConsequence.setConsequence("chance of being seen", brownVisibility);
-					                 
-					                 var whiteConsequence = whiteRule.getConsequences()[0];
-					                 whiteConsequence.setConsequence("chance of being seen", whiteVisibility);
-					                 
-					                  if (brownness &lt; 0.19){
-						                  var url = new URL(baseUrl, "images/snow-1.png")
-						                } else if (brownness &lt; 0.29){
+                           
+                           var whiteConsequence = whiteRule.getConsequences()[0];
+                           whiteConsequence.setConsequence("chance of being seen", whiteVisibility);
+                           
+                            if (brownness &lt; 0.19){
+                              var url = new URL(baseUrl, "images/snow-1.png")
+                            } else if (brownness &lt; 0.29){
                               var url = new URL(baseUrl, "images/snow-2.png")
                             } else if (brownness &lt; 0.39){
                               var url = new URL(baseUrl, "images/snow-3.png")
@@ -349,18 +382,18 @@
                             } else {
                               var url = new URL(baseUrl, "images/snow-9.png")
                             }
-						                
-						                
-						                if (!url.equals(lastBkgdUrl)) {
-						                  envHolder.getEnvironmentView().setBackgroundImageUrl(url)
-						                  lastBkgdUrl = url;
-						                 }
-					               }
-					              }
+                            
+                            
+                            if (!url.equals(lastBkgdUrl)) {
+                              envHolder.getEnvironmentView().setBackgroundImageUrl(url)
+                              lastBkgdUrl = url;
+                             }
+                         }
+                        }
 
-												function save() {
-												  return true;
-												}
+                        function save() {
+                          return true;
+                        }
 												</script>
 												<scripts>
                         <OTJavascript src="scripts/common/message.js" />
@@ -383,6 +416,11 @@
                         <object refid="${env-holder}" />
                       </reference>
                     </OTScriptVariable>
+                    <OTScriptVariableRealObject name="plant_species">
+                      <reference>
+                        <object refid="${plant-species}" />
+                      </reference>
+                    </OTScriptVariableRealObject>
 										<OTScriptVariableRealObject name="rabbit_species">
 											<reference>
 												<object refid="${rabbit-species}" />
