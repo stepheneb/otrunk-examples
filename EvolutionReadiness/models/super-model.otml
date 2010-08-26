@@ -90,8 +90,7 @@
 					 <table>
 					   <tr>
 					     <td>
-                  <object refid="${model-tabs}" />
-                  <object refid="${model-authoring-script}"/>
+                  <object refid="${env-holder}"/>
 					     </td>
 					     <td>
 					         <object refid="${graph}"/>
@@ -301,34 +300,19 @@
 	                                addedHawks = addedRabbits = false;
 	                                agentsRemoved = false;
 	                                
-	                    //            for (var i = 0; i &lt; 40; i++){
-                      //              addAgent(plant_species, [["resource consumption rate", 2]]);
-                      //            } 
-	                    //            
-	                    //            for (var i = 0; i &lt; 20; i++){
-                      //              addAgent(rabbit_species, [["resource consumption rate", 10]]);
-                      //            } 
-                                   
-                      //            for (var i = 0; i &lt; 4; i++){
-                      //              addAgent(hawk_species);
-                      //            }
+	                                var popupText = "&lt;p&gt;Now you get to run your own experiments so that you can answer your own hypotheses!&lt;br&gt;&lt;br&gt;&lt;/p&gt; \
+	                                               &lt;p&gt;&lt;b&gt;Your Question:&lt;/b&gt;What would happen to the [drop:hawk|rabbit|grass] population if the [drop:grass|rabbit|hawk] population [drop:died out|got too big]?&lt;br&gt;&lt;br&gt;&lt;/p&gt; \
+	                                                &lt;p&gt;&lt;b&gt;Your Hypothesis:&lt;/b&gt;I think that...&lt;br&gt; [text]&lt;/p&gt;"
+	                                               
+	                                
+	                                envHolder.showPopup(popupText);
 	                              }
 	                              
 	                              var stepHandler =
 	                              {
 	                                environmentStepped: function()
 	                                {
-	                                   if (!agentsRemoved) {
-	                                   checkHawks();
-	                                   checkRabbits();
-	                                  }
-	                                  
-	                             //     updateTimer();
-	                              //    if (time / 1000 &gt; 60){
-	                              //     showMessage("How many white rabbits and how many brown rabbits are left?\nWrite down the number in the table.", env, envHolder);
-	                              //     envHolder.pauseAction()
-	                              //     envHolder.getToolbar().getButton("Run").setEnabled(false)
-	                              //    }
+	                                   
 	                                }
 	                              }
 	                              var stepListener = new EnvironmentStepListener(stepHandler)
@@ -425,7 +409,11 @@
 	                                      startTime = System.currentTimeMillis()
 	                                    } else if (evt.getType() == EnvironmentChangeEvent.PAUSE){
 	                                      previousTime = time;
-	                                    }
+	                                    } else if (evt.getType() == EnvironmentChangeEvent.USER_CLOSED_POPUP){
+                                        var otEnvHolderController = controllerService.getController(otEnvHolder);
+                                        otEnvHolderController.log("User closed popup",evt.getValue().toArray());
+                                        System.out.println("otEnvHolderController = "+otEnvHolderController);
+                                      }
 	                                  }
 	                                }    
 	                              var resetListener = new EnvironmentChangeListener(resetRunHandler)
@@ -577,7 +565,7 @@
 	                      </OTScriptObject>
 	                    </scripts>
 	                    <addAgentsButtons>
-                        <OTAddAgentButton text="Add Plants" limit="75" click="false" quantity="25">
+                        <OTAddAgentButton text="Add Plants" limit="75" click="false" quantity="25" showRemoveButton="true">
                           <species>
                             <object refid="${plant-species}" />
                           </species>
@@ -589,7 +577,7 @@
                             </OTAgentTrait>
                           </agentTraits>
                         </OTAddAgentButton>
-	                      <OTAddAgentButton text="Add Rabbits" limit="30" click="false" quantity="30">
+	                      <OTAddAgentButton text="Add Rabbits" limit="30" click="false" quantity="30" showRemoveButton="true">
 	                        <species>
 	                          <object refid="${rabbit-species}" />
 	                        </species>
@@ -616,7 +604,7 @@
 	                          </OTAgentTrait>
 	                        </agentTraits>
 	                      </OTAddAgentButton>
-	                      <OTAddAgentButton text="Add Hawk" limit="2" click="false" quantity="2">
+	                      <OTAddAgentButton text="Add Hawk" limit="2" click="false" quantity="2" showRemoveButton="true">
 	                        <species>
 	                          <object refid="${hawk-species}" />
 	                        </species>
