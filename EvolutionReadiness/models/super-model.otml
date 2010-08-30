@@ -313,8 +313,8 @@
 	                              var stepListener = new EnvironmentStepListener(stepHandler)
 	                              
 	                              function showInitialPopups(){
-	                                 var popupText = "&lt;p&gt;Now you get to run your own experiments so that you can answer your own hypotheses!&lt;br&gt;&lt;br&gt;&lt;/p&gt; \
-                                                 &lt;p&gt;&lt;b&gt;Your Question:&lt;/b&gt;What would happen to the [drop:hawk|rabbit|grass] population if the [drop:grass|rabbit|hawk] population [drop:died out|got too big]?&lt;br&gt;&lt;br&gt;&lt;/p&gt;"
+	                                 var popupText = "Now you get to run your own experiments so that you can answer your own hypotheses!\n\n"+
+                                                 "Your Question: What would happen to the [drop:hawk|rabbit|grass] population if the [drop:grass|rabbit|hawk] population [drop:died out|got too big]?"
                                   
                                    
                                   envHolder.showPopup(popupText);
@@ -322,7 +322,6 @@
                                   var firstListener = new EnvironmentChangeListener({
                                     environmentChanged: function(evt){
                                       if (evt.getType() == EnvironmentChangeEvent.USER_CLOSED_POPUP){
-                                        System.out.println("popdown");
                                         var otEnvHolderController = controllerService.getController(otEnvHolder);
                                         env.removeListener(firstListener);
                                         showHypothesisPopup(evt.getValue().toArray());
@@ -334,18 +333,17 @@
 	                              }
 	                              
 	                              function showHypothesisPopup(choices){
-                                   var popupText = "&lt;p&gt;&lt;b&gt;Your Question:&lt;/b&gt;&lt;/p&gt; \
-                                                &lt;p&gt;What would happen to the "+choices[0]+" population if the "+choices[1]+" population "+choices[2]+"?&lt;br&gt;&lt;br&gt;&lt;/p&gt; \
-                                                &lt;p&gt;&lt;u&gt;What do you think will happen?&lt;/u&gt;&lt;/p&gt; \
-                                                &lt;p&gt;&lt;b&gt;Your Hypothesis:&lt;/b&gt;I think that if the "+choices[1]+" population "+choices[2]+" then the "+choices[0]+" population will [drop:stay the same|die out|get bigger] because&lt;/p&gt; \
-                                                &lt;p&gt;[text]&lt;/p&gt;"
+                                   var popupText = "Your Question:\n"+
+                                                "  What would happen to the "+choices[0]+" population if the "+choices[1]+" population "+choices[2]+"?\n\n"+
+                                                "What do you think will happen?\n\n"+
+                                                "Your Hypothesis: I think that if the "+choices[1]+" population "+choices[2]+" then the "+choices[0]+" population will [drop:stay the same|die out|get bigger] because\n"+
+                                                "[text]"
                                    
                                   envHolder.showPopup(popupText);
                                   
                                   var secondListener = new EnvironmentChangeListener({
                                     environmentChanged: function(evt){
                                       if (evt.getType() == EnvironmentChangeEvent.USER_CLOSED_POPUP){
-                                        System.out.println("popdown");
                                         var otEnvHolderController = controllerService.getController(otEnvHolder);
                                         env.removeListener(secondListener);
                                       }
