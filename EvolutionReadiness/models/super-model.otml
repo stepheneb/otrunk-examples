@@ -248,6 +248,8 @@
 	                              var agentsRemoved;
 	                              var envHolder;
 	                              
+	                              var dontShowPopup = false;
+	                              
 	                              var baseUrl = otEnvHolder.getOTObjectService().getCodebase(otEnvHolder);
 	                              
 	                              function init() {
@@ -300,7 +302,8 @@
 	                                addedHawks = addedRabbits = false;
 	                                agentsRemoved = false;
 	                                
-	                                showInitialPopups();
+	                                if (!dontShowPopup)
+	                                 showQuestionPopup();
 	                              }
 	                              
 	                              var stepHandler =
@@ -312,19 +315,22 @@
 	                              }
 	                              var stepListener = new EnvironmentStepListener(stepHandler)
 	                              
-	                              function showInitialPopups(){
+	                              var questionChoices, hypothesisChoices;
+	                              
+	                              function showQuestionPopup(){
 	                                 var popupText = "Now you get to run your own experiments so that you can answer your own hypotheses!\n\n"+
                                                  "Your Question: What would happen to the [drop:hawk|rabbit|grass] population if the [drop:grass|rabbit|hawk] population [drop:died out|got too big]?"
                                   
                                    
-                                  envHolder.showPopup(popupText);
+                                  envHolder.showPopup("Question", popupText);
                                   
                                   var firstListener = new EnvironmentChangeListener({
                                     environmentChanged: function(evt){
                                       if (evt.getType() == EnvironmentChangeEvent.USER_CLOSED_POPUP){
                                         var otEnvHolderController = controllerService.getController(otEnvHolder);
                                         env.removeListener(firstListener);
-                                        showHypothesisPopup(evt.getValue().toArray());
+                                        questionChoices = evt.getValue().toArray();
+                                        showHypothesisPopup();
                                       }
                                     }
                                   })
@@ -332,25 +338,80 @@
                                   env.addChangeListener(firstListener);
 	                              }
 	                              
-	                              function showHypothesisPopup(choices){
+	                              function showHypothesisPopup(){
                                    var popupText = "Your Question:\n"+
-                                                "  What would happen to the "+choices[0]+" population if the "+choices[1]+" population "+choices[2]+"?\n\n"+
+                                                "   \"What would happen to the "+questionChoices[1]+" population if the "+questionChoices[2]+" population "+questionChoices[3]+"?\"\n\n"+
                                                 "What do you think will happen?\n\n"+
-                                                "Your Hypothesis: I think that if the "+choices[1]+" population "+choices[2]+" then the "+choices[0]+" population will [drop:stay the same|die out|get bigger] because\n"+
-                                                "[text]"
+                                                "   Your Hypothesis: I think that if the "+questionChoices[2]+" population "+questionChoices[3]+" then the "+questionChoices[1]+" population will [drop:stay the same|die out|get bigger] because\n"+
+                                                "[text]";
                                    
-                                  envHolder.showPopup(popupText);
+                                  envHolder.showPopup("Hypothesis", popupText);
                                   
                                   var secondListener = new EnvironmentChangeListener({
                                     environmentChanged: function(evt){
                                       if (evt.getType() == EnvironmentChangeEvent.USER_CLOSED_POPUP){
                                         var otEnvHolderController = controllerService.getController(otEnvHolder);
+                                        hypothesisChoices = evt.getValue().toArray();
                                         env.removeListener(secondListener);
+                                        showEndMessage();
                                       }
                                     }
                                   })
                                   
                                   env.addChangeListener(secondListener);
+                                }
+                                
+                                function showEndMessage(){
+                                  var popupText = "Your question was:\n"+
+                                                  "  \"What would happen to the "+questionChoices[1]+" population if the "+questionChoices[2]+" population "+questionChoices[3]+"?\"\n\n"+
+                                                  "Were you able to discover what happens in the model?\n\n"+
+                                                  "[button:Yes] [button:No, run the model again]";
+                                   
+                                  envHolder.showPopup("Run complete?", popupText);
+                                  
+                                  var firstListener = new EnvironmentChangeListener({
+                                    environmentChanged: function(evt){
+                                      if (evt.getType() == EnvironmentChangeEvent.USER_CLOSED_POPUP){
+                                        var otEnvHolderController = controllerService.getController(otEnvHolder);
+                                        env.removeListener(firstListener);
+                                        var end = evt.getValue().toArray();
+                                        if (end[1].equalsIgnoreCase("Yes")){
+                                          showConclusionMessage();
+                                        } else {
+                                          dontShowPopup = true;
+                                          envHolder.reset();
+                                        }
+                                      }
+                                    }
+                                  })
+                                  
+                                  env.addChangeListener(firstListener);
+                                }
+                                
+                                function showConclusionMessage(){
+                                  var popupText = "Your hypothesis about what would happen was:\n"+
+                                                  "  \"I think that if the "+questionChoices[2]+" population "+questionChoices[3]+
+                                                  " then the "+questionChoices[1]+" population will "+hypothesisChoices[1]+" because "+hypothesisChoices[2]+".\"\n\n"+
+                                                  "Is that what happened?\n"+
+                                                  "[drop:Yes|No]\n"+
+                                                  "Write down your observations of this model:\n[text]";
+                                   
+                                  envHolder.showPopup("Conclusions", popupText);
+                                  
+                                  var firstListener = new EnvironmentChangeListener({
+                                    environmentChanged: function(evt){
+                                      if (evt.getType() == EnvironmentChangeEvent.USER_CLOSED_POPUP){
+                                        var otEnvHolderController = controllerService.getController(otEnvHolder);
+                                        env.removeListener(firstListener);
+                                        var end = evt.getValue().toArray();
+                                        if (end[0].equalsIgnoreCase("Yes")){
+                                          showConclusionMessage();
+                                        }
+                                      }
+                                    }
+                                  })
+                                  
+                                  env.addChangeListener(firstListener);
                                 }
 	                              
 	                              function checkHawks(){
@@ -601,7 +662,7 @@
 	                      </OTScriptObject>
 	                    </scripts>
 	                    <addAgentsButtons>
-                        <OTAddAgentButton text="Add Plants" limit="75" click="false" quantity="25" showRemoveButton="true">
+                        <OTAddAgentButton text="Add Plants" limit="-1" click="false" quantity="25" showRemoveButton="true">
                           <species>
                             <object refid="${plant-species}" />
                           </species>
@@ -613,7 +674,7 @@
                             </OTAgentTrait>
                           </agentTraits>
                         </OTAddAgentButton>
-	                      <OTAddAgentButton text="Add Rabbits" limit="30" click="false" quantity="30" showRemoveButton="true">
+	                      <OTAddAgentButton text="Add Rabbits" limit="-1" click="false" quantity="30" showRemoveButton="true">
 	                        <species>
 	                          <object refid="${rabbit-species}" />
 	                        </species>
@@ -640,7 +701,7 @@
 	                          </OTAgentTrait>
 	                        </agentTraits>
 	                      </OTAddAgentButton>
-	                      <OTAddAgentButton text="Add Hawk" limit="2" click="false" quantity="2" showRemoveButton="true">
+	                      <OTAddAgentButton text="Add Hawk" limit="-1" click="false" quantity="2" showRemoveButton="true">
 	                        <species>
 	                          <object refid="${hawk-species}" />
 	                        </species>
