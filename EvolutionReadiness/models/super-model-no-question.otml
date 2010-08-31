@@ -1,0 +1,911 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<otrunk id="c32d9e04-abc5-4c83-afcb-a90b0d2eb921">
+	<imports>
+		<import class="org.concord.data.state.OTDataStore" />
+		<import class="org.concord.data.state.OTDataChannelDescription" />
+		<import class="org.concord.data.state.OTDataField" />
+		<import class="org.concord.data.state.OTDataTable" />
+		<import class="org.concord.datagraph.state.OTDataGraph" />
+		<import class="org.concord.datagraph.state.OTDataAxis" />
+		<import class="org.concord.datagraph.state.OTDataGraphable" />
+		<import class="org.concord.datagraph.state.OTDataCollector" />
+		<import class="org.concord.datagraph.state.OTMultiDataGraph" />
+		<import class="org.concord.datagraph.state.OTPluginView" />
+		<import class="org.concord.datagraph.state.OTDataBarGraphable" />
+		<import class="org.concord.otrunk.OTIncludeRootObject" />
+		<import class="org.concord.otrunk.OTInclude" />
+		<import class="org.concord.otrunk.OTSystem" />
+		<import class="org.concord.otrunk.biologica.OTOrganismPlacement" />
+		<import class="org.concord.otrunk.biologica.OTEnvironment" />
+		<import class="org.concord.otrunk.biologica.OTOrganism" />
+		<import class="org.concord.otrunk.biologica.OTWorld" />
+		<import class="org.concord.otrunk.biologica.agent.OTAgentSpecies" />
+		<import class="org.concord.otrunk.biologica.agent.OTAgentTrait" />
+		<import class="org.concord.otrunk.biologica.agent.OTAgentPropertyImageMap" />
+		<import class="org.concord.otrunk.biologica.environment.OTAddAgentButton" />
+		<import class="org.concord.otrunk.biologica.environment.OTEnvironmentHolder" />
+		<import class="org.concord.otrunk.biologica.data.OTBiologicaModelDataProducer" />
+		<import class="org.concord.otrunk.biologica.rules.OTRule" />
+		<import class="org.concord.otrunk.biologica.rules.OTRuleCondition" />
+		<import class="org.concord.otrunk.biologica.rules.OTRuleConsequence" />
+    <import class="org.concord.otrunk.ui.OTButton" />
+    <import class="org.concord.otrunk.ui.OTChoice" />
+    <import class="org.concord.otrunk.ui.OTChoiceMultiple" />
+		<import class="org.concord.otrunk.ui.OTCurriculumUnit" />
+		<import class="org.concord.otrunk.ui.OTPlacement" />
+    <import class="org.concord.otrunk.ui.OTTabContainer" />
+		<import class="org.concord.otrunk.ui.snapshot.OTSnapshot" />
+		<import class="org.concord.otrunk.ui.snapshot.OTSnapshotButton" />
+		<import class="org.concord.otrunk.ui.snapshot.OTSnapshotAlbum" />
+		<import class="org.concord.otrunk.ui.snapshot.OTSnapshotChooser" />
+		<import class="org.concord.otrunk.view.OTViewEntry" />
+		<import class="org.concord.otrunk.view.OTViewBundle" />
+		<import class="org.concord.otrunk.view.OTViewMode" />
+		<import class="org.concord.otrunk.view.document.OTCompoundDoc" />
+		<import class="org.concord.otrunk.script.ui.OTScriptObject" />
+		<import class="org.concord.otrunk.script.js.OTJavascript" />
+		<import class="org.concord.otrunk.script.OTScriptEngineBundle" />
+		<import class="org.concord.otrunk.script.OTScriptEngineEntry" />
+		<import class="org.concord.otrunk.script.ui.OTScriptVariable" />
+		<import class="org.concord.otrunk.script.ui.OTScriptVariableComponent" />
+		<import class="org.concord.otrunk.script.ui.OTScriptVariableRealObject" />
+		<import class="org.concord.otrunk.script.ui.OTScriptVariableView" />
+		<import class="org.concord.otrunk.script.ui.OTScriptButton" />
+		<import class="org.concord.otrunk.ui.OTSlider" />
+		<import class="org.concord.otrunk.ui.OTText" />
+		<import class="org.concord.framework.otrunk.view.OTFrame" />
+		<import class="org.concord.framework.otrunk.wrapper.OTObjectSet" />
+	</imports>
+	<idMap>
+		<idMapping local_id="rabbit-species" id="eec525fc-4ca5-4fa9-be17-e3d9fa44ed24" />
+		<idMapping local_id="plant-species" id="6904840c-03f6-4f2d-b822-bc85aebe70db" />
+    <idMapping local_id="hawk-species" id="8cf33f49-8820-4c6f-9e5f-49fcca68acbd" />
+	</idMap>
+	<objects>
+		<OTSystem>
+			<bundles>
+				<object refid="8d880970-c22a-11dc-95ff-0800200c9a66" />
+				<OTViewBundle>
+					<frame>
+						<OTFrame useScrollPane="false" openMaximized="false"
+							width="900" height="500" />
+					</frame>
+				</OTViewBundle>
+				<OTScriptEngineBundle>
+					<engines>
+						<OTScriptEngineEntry objectClass="org.concord.otrunk.script.js.OTJavascript"
+							engineClass="org.concord.otrunk.script.js.OTJavascriptEngine" />
+					</engines>
+				</OTScriptEngineBundle>
+			</bundles>
+			<includes>
+				<OTInclude href="../global-imports/er-view-bundle.otml" />
+				<OTInclude href="species/fast-plants-roots.otml" />
+				<OTInclude href="species/white-brown-rabbits.otml" />
+        <OTInclude href="species/hawks.otml" />
+			</includes>
+			<root>
+				<OTCompoundDoc>
+					<bodyText>
+					 <table>
+					   <tr>
+					     <td>
+                  <object refid="${env-holder}"/>
+					     </td>
+					     <td>
+					         <object refid="${graph}"/>
+					     </td>
+					   </tr>
+					 </table>
+					</bodyText>
+					<documentRefs>
+					 <OTTabContainer local_id="model-tabs" closeViewOnExit="true" loadViewOnlyOnDemand="true">
+					   <tabs>
+					     <entry key="Set up the experiment">
+						     <OTCompoundDoc>
+						       <bodyText>
+						         Set up your experiment here by deciding what you want the model to do:<br/><br/>
+						         Do you want to see what happens if one of the species dies off?<br/>
+						         <object refid="${eliminate-choice}"/><br/><br/>
+						         Do you want to see what happens if the environment changes?<br/>
+						         <object refid="${environment-choice}"/><br/><br/>
+						         <object refid="${run-button}"/>
+						       </bodyText>
+						       <documentRefs>
+						        <OTChoiceMultiple local_id="eliminate-choice" name="Multiple choice" horizontal="false" alignContent="0">
+				              <choices>
+				                <OTCompoundDoc name="1">
+				                  <bodyText>Make <b>plants</b> die off during experiment</bodyText>
+				                </OTCompoundDoc>
+				                <OTCompoundDoc name="2">
+				                  <bodyText>Make <b>rabbits</b> die off during experiment</bodyText>
+				                </OTCompoundDoc>
+				                <OTCompoundDoc name="3">
+				                  <bodyText>Make <b>hawks</b> die off during experiment</bodyText>
+				                </OTCompoundDoc>
+				              </choices>
+				            </OTChoiceMultiple>
+				            <OTChoice local_id="environment-choice" name="Multiple choice" horizontal="false" alignContent="0">
+                      <choices>
+                        <OTCompoundDoc name="1">
+                          <bodyText>Don't change environment during experiment</bodyText>
+                        </OTCompoundDoc>
+                        <OTCompoundDoc name="2">
+                          <bodyText>
+                            Change water in environment during experiment<br/>
+                            <object refid="${water-choice}"/>
+                          </bodyText>
+                          <documentRefs>
+                            <OTChoice local_id="water-choice" name="Multiple choice" horizontal="false" alignContent="0">
+				                      <choices>
+				                        <OTCompoundDoc name="1">
+				                          <bodyText>Make environment drier over time</bodyText>
+				                        </OTCompoundDoc>
+				                        <OTCompoundDoc name="2">
+				                          <bodyText>
+				                            Make environment wetter over time
+				                          </bodyText>
+				                        </OTCompoundDoc>
+				                      </choices>
+				                    </OTChoice>
+                          </documentRefs>
+                        </OTCompoundDoc>
+                        <OTCompoundDoc name="3">
+                          <bodyText>
+                            Change snow in environment during experiment
+                            <object refid="${snow-choice}"/>
+                          </bodyText>
+                          <documentRefs>
+                            <OTChoice local_id="snow-choice" name="Multiple choice" horizontal="false" alignContent="0">
+                              <choices>
+                                <OTCompoundDoc name="1">
+                                  <bodyText>Make environment more snowy over time</bodyText>
+                                </OTCompoundDoc>
+                                <OTCompoundDoc name="2">
+                                  <bodyText>
+                                    Make environment less snowy over time
+                                  </bodyText>
+                                </OTCompoundDoc>
+                              </choices>
+                            </OTChoice>
+                          </documentRefs>
+                        </OTCompoundDoc>
+                      </choices>
+                    </OTChoice>
+                    <OTButton local_id="run-button" text="Run the model!"/>
+						       </documentRefs>
+						     </OTCompoundDoc>
+					     </entry>
+					     <entry key="Run the experiment">
+					       <OTCompoundDoc local_id="model-doc">
+					         <bodyText>
+					           <table>
+					             <tr>
+					               <td>
+					                 <object refid="${env-holder}"/>
+					               </td>
+					               <td>
+					                 <object refid="${remove-grass-button}" height="0" width="0"/><br/>
+                           <object refid="${remove-rabbits-button}" height="0" width="0"/><br/>
+                           <object refid="${remove-hawks-button}" height="0" width="0"/>
+					               </td>
+					             </tr>
+					           </table>
+					         </bodyText>
+					         <documentRefs>
+					           <OTEnvironmentHolder local_id="env-holder"
+	                    width="590" height="460" toolbar="run,info,reset" useSpeedSlider="false">
+	                    <environment>
+	                      <OTEnvironment local_id="environment"
+	                        environmentWidth="10" environmentHeight="10" showRunButton="false"
+	                        winterLength="5" summerLength="50" showWinterImage="false"
+	                        orgSizeMultiplier="1" backgroundImageSrc="images/grass.jpg">
+	                        <world>
+	                          <OTWorld local_id="peasimple_world"
+	                            speciesPath="org/concord/biologica/worlds/peasimple.xml" />
+	                        </world>
+	                        <rules>
+	                          <OTRule description="white rabbit visibility" local_id="white-rule">
+	                            <conditions>
+	                              <OTRuleCondition property="species name" equals="Mixed Rabbits" />
+	                              <OTRuleCondition property="color" equals="white" />
+	                            </conditions>
+	                            <consequences>
+	                              <OTRuleConsequence property="chance of being seen" newValueFloat="0.3" />
+	                            </consequences>
+	                          </OTRule>
+	                          <OTRule description="brown rabbit visibility" local_id="brown-rule">
+	                            <conditions>
+	                              <OTRuleCondition property="species name" equals="Mixed Rabbits" />
+	                              <OTRuleCondition property="color" equals="brown" />
+	                            </conditions>
+	                            <consequences>
+	                              <OTRuleConsequence property="chance of being seen" newValueFloat="0.3" />
+	                            </consequences>
+	                          </OTRule>
+	                        </rules>
+	                      </OTEnvironment>
+	                    </environment>
+	                    <scripts>
+	                      <OTScriptObject local_id="setup-script" name="Setup script">
+	                        <script>
+	                          <OTJavascript src="scripts/gradated-sunlight-five-blocks/setup.js">
+	                            <script>
+	                              importPackage(Packages.java.lang);
+	                              importPackage(Packages.java.awt);
+	                              importPackage(Packages.java.awt.event);
+	                              importPackage(Packages.java.net);
+	                              importPackage(Packages.org.concord.biologica.environment);
+	                              importPackage(Packages.org.concord.biologica.ui);
+                                importPackage(Packages.org.concord.framework.otrunk);
+	                              
+	                              var startTime, time, previousTime;
+	                              var isRunning = false;
+	                              var brownness = 0;
+	                              var colorChangedRecently = true;
+	                              var lastBkgdUrl;
+	                              var addedHawks, addedRabbits;
+                                var hawksAreDead, rabbitsAreDead;
+                                var hawksRemoved, rabbitsRemoved;
+                                var timeOfExtinction;
+	                              var agentsRemoved;
+	                              var envHolder;
+	                              var endMessageShown;
+	                              
+	                              var dontShowPopup = false;
+	                              
+	                              var baseUrl = otEnvHolder.getOTObjectService().getCodebase(otEnvHolder);
+	                              
+	                              function init() {
+                                  envHolder = controllerService.getRealObject(otEnvHolder);
+                                  
+	                                env.removeAllAgents()
+	                                env.setStepCount(0)
+	                                envHolder.pauseAction()
+	                                env.setWrapNorthSouth(false)
+	                                env.setWrapEastWest(false)
+	                                
+	                                env.addStepListener(stepListener)
+	                                env.addChangeListener(resetListener)
+	                                removeGrass.addOTChangeListener(removeGrassListener)
+                                  removeRabbits.addOTChangeListener(removeRabbitsListener)
+                                  removeHawks.addOTChangeListener(removeHawksListener)
+	                                
+	                                var url = new URL(baseUrl, "images/snow-1.png")
+	                                envHolder.getEnvironmentView().addBackgroundImageUrl(url)
+	                                var url2 = new URL(baseUrl, "images/snow-2.png")
+	                                envHolder.getEnvironmentView().addBackgroundImageUrl(url2)
+	                                var url3 = new URL(baseUrl, "images/snow-3.png")
+	                                envHolder.getEnvironmentView().addBackgroundImageUrl(url3)
+	                                var url4 = new URL(baseUrl, "images/snow-4.png")
+	                                envHolder.getEnvironmentView().addBackgroundImageUrl(url4)
+	                                var url5 = new URL(baseUrl, "images/snow-5.png")
+	                                envHolder.getEnvironmentView().addBackgroundImageUrl(url5)
+	                                var url6 = new URL(baseUrl, "images/snow-6.png")
+	                                envHolder.getEnvironmentView().addBackgroundImageUrl(url6)
+	                                var url7 = new URL(baseUrl, "images/snow-7.png")
+	                                envHolder.getEnvironmentView().addBackgroundImageUrl(url7)
+	                                var url8 = new URL(baseUrl, "images/snow-8.png")
+	                                envHolder.getEnvironmentView().addBackgroundImageUrl(url8)
+	                                var url9 = new URL(baseUrl, "images/snow-9.png")
+	                                envHolder.getEnvironmentView().addBackgroundImageUrl(url9)
+	                                
+	                                setup();
+	                                
+	                                return true;
+	                              }
+	                              
+	                              function setup() {
+	                                var url = new URL(baseUrl, "images/grass.jpg");
+	                                envHolder.getEnvironmentView().setBackgroundImageUrl(url);
+	                                
+	                                time = 0
+	                                previousTime = 0
+	                                brownness = 0
+	                                colorChangedRecently = true
+	                                addedHawks = addedRabbits = false;
+	                                hawksAreDead = rabbitsAreDead = false;
+                                  hawksRemoved = rabbitsRemoved = false;
+	                                agentsRemoved = false;
+	                                endMessageShown = false;
+	                                
+	                             //   if (!dontShowPopup)
+	                             //    showQuestionPopup();
+	                              }
+	                              
+	                              var stepHandler =
+	                              {
+	                                environmentStepped: function()
+	                                {
+	                                   checkExtinction();
+	                                   if (env.getStepCount() == 300) {
+                                       var otEnvHolderController = controllerService.getController(otEnvHolder);
+	                                     otEnvHolderController.log("Model ran for 300 steps",null);
+                                       envHolder.pauseAction();
+                                       showEndMessage();
+	                                   }
+	                                }
+	                              }
+	                              var stepListener = new EnvironmentStepListener(stepHandler)
+	                              
+	                              var questionChoices, hypothesisChoices;
+	                              
+	                              function showQuestionPopup(){
+	                                 var popupText = "Now you get to run your own experiments so that you can answer your own hypotheses!\n\n"+
+                                                 "Your Question: What would happen to the [drop:hawk|rabbit|grass] population if the [drop:grass|rabbit|hawk] population [drop:died out|got too big]?"
+                                  
+                                   
+                                  envHolder.showPopup("Question", popupText);
+                                  
+                                  var firstListener = new EnvironmentChangeListener({
+                                    environmentChanged: function(evt){
+                                      if (evt.getType() == EnvironmentChangeEvent.USER_CLOSED_POPUP){
+                                        var otEnvHolderController = controllerService.getController(otEnvHolder);
+                                        env.removeListener(firstListener);
+                                        questionChoices = evt.getValue().toArray();
+                                        showHypothesisPopup();
+                                      }
+                                    }
+                                  })
+                                  
+                                  env.addChangeListener(firstListener);
+	                              }
+	                              
+	                              function showHypothesisPopup(){
+                                   var popupText = "Your Question:\n"+
+                                                "   \"What would happen to the "+questionChoices[1]+" population if the "+questionChoices[2]+" population "+questionChoices[3]+"?\"\n\n"+
+                                                "What do you think will happen?\n\n"+
+                                                "   Your Hypothesis: I think that if the "+questionChoices[2]+" population "+questionChoices[3]+" then the "+questionChoices[1]+" population will [drop:stay the same|die out|get bigger] because\n"+
+                                                "[text]";
+                                   
+                                  envHolder.showPopup("Hypothesis", popupText);
+                                  
+                                  var secondListener = new EnvironmentChangeListener({
+                                    environmentChanged: function(evt){
+                                      if (evt.getType() == EnvironmentChangeEvent.USER_CLOSED_POPUP){
+                                        var otEnvHolderController = controllerService.getController(otEnvHolder);
+                                        hypothesisChoices = evt.getValue().toArray();
+                                        env.removeListener(secondListener);
+                                      }
+                                    }
+                                  })
+                                  
+                                  env.addChangeListener(secondListener);
+                                }
+                                
+                                function showEndMessage(){
+                                  var popupText = "Your question was:\n"+
+                                                  "  \"What would happen to the hawk population if all the grass died in the green field?\"\n\n"+
+                                                  "Were you able to discover what happens in the model?\n\n"+
+                                                  "[button:Yes] [button:No, run the model again]";
+                                   
+                                  envHolder.showPopup("Run complete?", popupText);
+                                  
+                                  endMessageShown = true;
+                                  
+                                  var firstListener = new EnvironmentChangeListener({
+                                    environmentChanged: function(evt){
+                                      if (evt.getType() == EnvironmentChangeEvent.USER_CLOSED_POPUP){
+                                        var otEnvHolderController = controllerService.getController(otEnvHolder);
+                                        env.removeListener(firstListener);
+                                        var end = evt.getValue().toArray();
+                                        if (end[1].equalsIgnoreCase("Yes")){
+                                          showConclusionMessage();
+                                        } else {
+                                          dontShowPopup = true;
+                                          envHolder.reset();
+                                        }
+                                      }
+                                    }
+                                  })
+                                  
+                                  env.addChangeListener(firstListener);
+                                }
+                                
+                                function showConclusionMessage(){
+                                  var popupText = "Your hypothesis about what would happen was:\n"+
+                                                  "  \"I think the hawks will die because the rabbits will not have grass to eat, so the rabbits will die, and there will be no rabbits for the hawk to eat.\"\n\n"+
+                                                  "Is that what happened?\n"+
+                                                  "[drop:Yes|No]\n"+
+                                                  "Write down your observations of this model:\n[text]\n\n";
+                                   
+                                  envHolder.showPopup("Conclusions", popupText);
+                                  
+                                  var firstListener = new EnvironmentChangeListener({
+                                    environmentChanged: function(evt){
+                                      if (evt.getType() == EnvironmentChangeEvent.USER_CLOSED_POPUP){
+                                        env.removeListener(firstListener);
+                                        envHolder.showPopup("Finish", "Good work! Move on to the next page.");
+                                      }
+                                    }
+                                  })
+                                  
+                                  env.addChangeListener(firstListener);
+                                }
+                                
+                                function checkExtinction() {
+                                  var allRabbits = env.getAgents(rabbit_species);
+                                  var allHawks = env.getAgents(hawk_species);
+                                   
+                                  if (!addedRabbits &amp;&amp; allRabbits.size() &gt; 0){
+                                     addedRabbits = true;
+                                  }
+                                  if (!addedHawks &amp;&amp; allHawks.size() &gt; 0){
+                                    addedHawks = true;
+                                  }
+                                  
+                                  if (hawksAreDead || rabbitsAreDead) {
+                                    if (env.getStepCount() === timeOfExtinction + 10) {
+                                      if (hawksAreDead &amp;&amp; !hawksRemoved || 
+                                            rabbitsAreDead &amp;&amp; !rabbitsRemoved){
+                                        var otEnvHolderController = controllerService.getController(otEnvHolder);
+                                        var message = hawksAreDead ? "Hawks went extinct" : "Rabbits went extinct";
+                                        otEnvHolderController.log(message,null);
+                                        envHolder.pauseAction();
+                                        showEndMessage();
+                                      }
+                                    }
+                                  } else if (addedHawks) {
+                                    if (allHawks.size() === 0){
+                                      hawksAreDead = true;
+                                      timeOfExtinction = env.getStepCount();
+                                    }
+                                  } else if (addedRabbits) {
+                                    if (allRabbits.size() === 0){
+                                      rabbitsAreDead = true;
+                                      timeOfExtinction = env.getStepCount();
+                                    }
+                                  }
+                                }
+	                              
+	                              function checkHawks(){
+	                                 var allHawks = env.getAgents(hawk_species);
+	                                 
+	                                 if (!addedHawks &amp;&amp; allHawks.size() &gt; 0){
+	                                   addedHawks = true;
+	                                 }
+	                                 
+	                                 if (addedHawks &amp;&amp; allHawks.size() &lt; 2){
+	                                  addAgent(hawk_species);
+	                                 }
+	                                 
+	                                 if (allHawks.size() &lt; 3){
+	                                   setProperty(allHawks, "is immortal", true);
+	                                   setProperty(allHawks, "mating desire bonus", 0);
+	                                   setProperty(allHawks, "hunger bonus", 5);
+	                                 } else {
+	                                   if (allHawks.get(0).getProperty("is immortal")){
+	                                    setProperty(allHawks, "is immortal", false);
+	                                   }
+	                                   
+	                                   if (allHawks.size() &gt; 4){
+	                                    setProperty(allHawks, "mating desire bonus", -30);
+	                                    setProperty(allHawks, "hunger bonus", -40);
+	                                   } else {
+	                                    setProperty(allHawks, "mating desire bonus", -15);
+	                                    setProperty(allHawks, "hunger bonus", -5);
+	                                   }
+	                                 }
+	                              }
+	                              
+	                              function checkRabbits(){
+	                                 var allRabbits = env.getAgents(rabbit_species);
+	                                 
+	                                 if (!addedRabbits &amp;&amp; allRabbits.size() &gt; 0){
+	                                   addedRabbits = true;
+	                                 }
+	                                 
+	                                 if (addedRabbits &amp;&amp; allRabbits.size() &lt; 8){
+	                                  addAgent(rabbit_species, [["resource consumption rate", 10]]);
+	                                  addAgent(rabbit_species, [["resource consumption rate", 10]]);
+	                                 } 
+	                                 
+	                                 if (allRabbits.size() &lt; 16){
+	                                   setProperty(allRabbits, "metabolism", 0);
+	                                   setProperty(allRabbits, "mating desire bonus", 50);
+	                                   setProperty(allRabbits, "hunger bonus", -50);
+	                                   setProperty(allRabbits, "min offspring", 5);
+	                                   setProperty(allRabbits, "speed", 7);
+	                                 } else {
+	                                   setProperty(allRabbits, "metabolism", 1);
+	                                   setProperty(allRabbits, "mating desire bonus", -20);
+	                                   setProperty(allRabbits, "hunger bonus", -10);
+	                                   setProperty(allRabbits, "min offspring", 1);
+	                                   setProperty(allRabbits, "speed", 5);
+	                                 }
+	                                 
+	                                 if (allRabbits.size() &gt; 50){
+	                                   setProperty(allRabbits, "mating desire bonus", -40);
+	                                 }
+	                              }
+	                              
+	                              function setProperty(agents, property, value){
+	                               for (var i = 0; i &lt; agents.size(); i++){
+	                                 agents.get(i).setProperty(property, value);
+	                               }
+	                              }
+	                              
+	                              function addAgent(species, properties){
+	                                var newAgent = species.createAgent();
+	                                
+	                                if (!!properties){
+	                                 for (var i = 0; i &lt; properties.length; i++){
+	                                   newAgent.setProperty(properties[i][0], properties[i][1]);
+	                                 }
+	                                }
+	                                
+	                                var loc = env.getRandomLocation();
+	                                newAgent.setEnvironment(env);
+	                                newAgent.setLocation(loc);
+	                                env.addAgent(newAgent);
+	                              }
+	                              
+	                              var resetRunHandler= {
+	                                  environmentChanged: function(evt){
+	                                    if (evt.getType() == EnvironmentChangeEvent.RESET){
+	                                      isRunning = false;
+	                                      if (!endMessageShown) {
+                                          showEndMessage();
+                                         } else {
+                                          setup();
+                                         }
+	                                    }else if (evt.getType() == EnvironmentChangeEvent.RUN){
+	                                      isRunning = true
+	                                      startTime = System.currentTimeMillis()
+	                                    } else if (evt.getType() == EnvironmentChangeEvent.PAUSE){
+	                                      previousTime = time;
+	                                    } else if (evt.getType() == EnvironmentChangeEvent.USER_CLOSED_POPUP){
+                                        var otEnvHolderController = controllerService.getController(otEnvHolder);
+                                        otEnvHolderController.log("User closed popup",evt.getValue().toArray());
+                                        System.out.println("otEnvHolderController = "+otEnvHolderController);
+                                      }
+	                                  }
+	                                }    
+	                              var resetListener = new EnvironmentChangeListener(resetRunHandler)
+	                              
+	                              function updateTimer(){
+	                                timeSinceLastStart = System.currentTimeMillis() - startTime;
+	                                time =  previousTime + timeSinceLastStart;
+	                                
+	                                var seconds = Math.floor(time / 1000);
+	                                if (seconds % 15 === 0){
+	                                 if (!colorChangedRecently) {
+	                                   updateColor();
+	                                   colorChangedRecently = true;
+	                                 }
+	                                } else {
+	                                 colorChangedRecently = false;
+	                                }
+	                              }
+	                              
+	                              function updateColor(){
+	                               if (brownness &lt; 0.9) {
+	                                 brownness += 0.1;
+	                                 var brownVisibility = 0.4 - (brownness*0.4);
+	                                 var whiteVisibility = 0 + (brownness*0.4);
+	                                 
+	                                 var brownConsequence = brownRule.getConsequences()[0];
+	                                 brownConsequence.setConsequence("chance of being seen", brownVisibility);
+	                                 
+	                                 var whiteConsequence = whiteRule.getConsequences()[0];
+	                                 whiteConsequence.setConsequence("chance of being seen", whiteVisibility);
+	                                 
+	                                  if (brownness &lt; 0.19){
+	                                    var url = new URL(baseUrl, "images/snow-1.png")
+	                                  } else if (brownness &lt; 0.29){
+	                                    var url = new URL(baseUrl, "images/snow-2.png")
+	                                  } else if (brownness &lt; 0.39){
+	                                    var url = new URL(baseUrl, "images/snow-3.png")
+	                                  } else if (brownness &lt; 0.49){
+	                                    var url = new URL(baseUrl, "images/snow-4.png")
+	                                  } else if (brownness &lt; 0.59){
+	                                    var url = new URL(baseUrl, "images/snow-5.png")
+	                                  } else if (brownness &lt; 0.69){
+	                                    var url = new URL(baseUrl, "images/snow-6.png")
+	                                  } else if (brownness &lt; 0.79){
+	                                    var url = new URL(baseUrl, "images/snow-7.png")
+	                                  } else if (brownness &lt; 0.89){
+	                                    var url = new URL(baseUrl, "images/snow-8.png")
+	                                  } else {
+	                                    var url = new URL(baseUrl, "images/snow-9.png")
+	                                  }
+	                                  
+	                                  
+	                                  if (!url.equals(lastBkgdUrl)) {
+	                                    envHolder.getEnvironmentView().setBackgroundImageUrl(url)
+	                                    lastBkgdUrl = url;
+	                                   }
+	                               }
+	                              }
+	                              
+	                              var removeGrassHandler= {
+                                    stateChanged: function(evt){
+                                      removeAgents(plant_species);
+                                    }
+                                  }    
+                                var removeGrassListener = new OTChangeListener(removeGrassHandler)
+                                
+                                var removeRabbitsHandler= {
+                                    stateChanged: function(evt){
+                                      removeAgents(rabbit_species);
+                                      removeAgents(rabbit_species);
+                                    }
+                                  }    
+                                var removeRabbitsListener = new OTChangeListener(removeRabbitsHandler)
+                                
+                                var removeHawksHandler= {
+                                    stateChanged: function(evt){
+                                      removeAgents(hawk_species);
+                                      removeAgents(hawk_species);
+                                    }
+                                  }    
+                                var removeHawksListener = new OTChangeListener(removeHawksHandler)
+                                
+                                function removeAgents(species){
+                                  agentsRemoved = true;
+                                  env.removeAgents(species);
+                                }
+	      
+	                              function save() {
+	                                return true;
+	                              }
+	                              </script>
+	                              <scripts>
+	                              <OTJavascript src="scripts/common/message.js" />
+	                            </scripts>
+	                          </OTJavascript>
+	                        </script>
+	                        <variables>
+	                          <OTScriptVariableRealObject name="env">
+	                            <reference>
+	                              <object refid="${environment}" />
+	                            </reference>
+	                          </OTScriptVariableRealObject>
+	                          <OTScriptVariable name="otEnvHolder">
+	                            <reference>
+	                              <object refid="${env-holder}" />
+	                            </reference>
+	                          </OTScriptVariable>
+	                          <OTScriptVariableRealObject name="plant_species">
+                              <reference>
+                                <object refid="${plant-species}" />
+                              </reference>
+                            </OTScriptVariableRealObject>
+	                          <OTScriptVariableRealObject name="rabbit_species">
+	                            <reference>
+	                              <object refid="${rabbit-species}" />
+	                            </reference>
+	                          </OTScriptVariableRealObject>
+	                          <OTScriptVariableRealObject name="hawk_species">
+	                            <reference>
+	                              <object refid="${hawk-species}" />
+	                            </reference>
+	                          </OTScriptVariableRealObject>
+	                          <OTScriptVariableRealObject name="whiteRule">
+	                            <reference>
+	                              <object refid="${white-rule}" />
+	                            </reference>
+	                          </OTScriptVariableRealObject>
+	                          <OTScriptVariableRealObject name="brownRule">
+	                            <reference>
+	                              <object refid="${brown-rule}" />
+	                            </reference>
+	                          </OTScriptVariableRealObject>
+	                          <OTScriptVariable name="removeGrass">
+                              <reference>
+                                <object refid="${remove-grass-button}" />
+                              </reference>
+                            </OTScriptVariable>
+                            <OTScriptVariable name="removeRabbits">
+                              <reference>
+                                <object refid="${remove-rabbits-button}" />
+                              </reference>
+                            </OTScriptVariable>
+                            <OTScriptVariable name="removeHawks">
+                              <reference>
+                                <object refid="${remove-hawks-button}" />
+                              </reference>
+                            </OTScriptVariable>
+	                        </variables>
+	                      </OTScriptObject>
+	                    </scripts>
+	                    <addAgentsButtons>
+                        <OTAddAgentButton text="Add Plants" limit="-1" click="false" quantity="25" showRemoveButton="true">
+                          <species>
+                            <object refid="${plant-species}" />
+                          </species>
+                          <agentTraits>
+                            <OTAgentTrait property="resource consumption rate">
+                              <possibleValues>
+                                <int>2</int>
+                              </possibleValues>
+                            </OTAgentTrait>
+                          </agentTraits>
+                        </OTAddAgentButton>
+	                      <OTAddAgentButton text="Add Rabbits" limit="-1" click="false" quantity="30" showRemoveButton="true">
+	                        <species>
+	                          <object refid="${rabbit-species}" />
+	                        </species>
+	                        <agentTraits>
+	                          <OTAgentTrait property="mating desire bonus">
+	                            <possibleValues>
+	                              <int>-20</int>
+	                            </possibleValues>
+	                          </OTAgentTrait>
+	                          <OTAgentTrait property="hunger bonus">
+	                            <possibleValues>
+	                              <int>-10</int>
+	                            </possibleValues>
+	                          </OTAgentTrait>
+	                          <OTAgentTrait property="metabolism">
+	                            <possibleValues>
+	                              <int>1</int>
+	                            </possibleValues>
+	                          </OTAgentTrait>
+	                          <OTAgentTrait property="resource consumption rate">
+	                            <possibleValues>
+	                              <int>10</int>
+	                            </possibleValues>
+	                          </OTAgentTrait>
+	                        </agentTraits>
+	                      </OTAddAgentButton>
+	                      <OTAddAgentButton text="Add Hawk" limit="-1" click="false" quantity="2" showRemoveButton="true">
+	                        <species>
+	                          <object refid="${hawk-species}" />
+	                        </species>
+	                        <agentTraits>
+	                          <OTAgentTrait property="mating desire bonus">
+	                            <possibleValues>
+	                              <int>-15</int>
+	                            </possibleValues>
+	                          </OTAgentTrait>
+	                        </agentTraits>
+	                      </OTAddAgentButton>
+	                    </addAgentsButtons>
+	                    <traitsToShow>
+	                      <string>color</string>
+	                      <string>chance of being seen</string>
+	                    </traitsToShow>
+	                  </OTEnvironmentHolder>
+					           <OTButton local_id="remove-grass-button" text="Remove grass"/>
+                     <OTButton local_id="remove-rabbits-button" text="Remove rabbits"/>
+                     <OTButton local_id="remove-hawks-button" text="Remove hawks"/>
+					         </documentRefs>
+					        </OTCompoundDoc>
+			           </entry>
+					   </tabs>
+					 </OTTabContainer>
+						<OTDataCollector name="Model Data"
+              local_id="graph" multipleGraphableEnabled="false"
+              autoScaleEnabled="false" showControlBar="false">
+              <source>
+                <OTDataGraphable connectPoints="true"
+                  color="0x999999" drawMarks="false" name="Number of rabbits"
+                  xColumn="0" yColumn="1">
+                  <dataProducer>
+                    <OTBiologicaModelDataProducer local_id="dp" lineGraph="true">
+                      <modelHolder>
+                        <object refid="${env-holder}" />
+                      </modelHolder>
+                      <lineRules>
+                        <OTRule name="white rabbits">
+                          <conditions>
+	                          <OTRuleCondition property="species name" equals="Mixed Rabbits" />
+	                          <OTRuleCondition property="color" equals="white" />
+                          </conditions>
+                        </OTRule>
+                        <OTRule name="brown rabbits">
+                          <conditions>
+	                          <OTRuleCondition property="species name" equals="Mixed Rabbits" />
+	                          <OTRuleCondition property="color" equals="brown" />
+                          </conditions>
+                        </OTRule>
+                      </lineRules>
+                  </OTBiologicaModelDataProducer>
+                  </dataProducer>
+                </OTDataGraphable>
+              </source>
+              <graphables>
+                <OTDataGraphable connectPoints="true"
+                  color="0x995500" drawMarks="false"
+                  xColumn="0" yColumn="2">
+                  <dataProducer>
+                    <object refid="${dp}" />
+                  </dataProducer>
+                </OTDataGraphable>
+              </graphables>
+              <xDataAxis>
+                <OTDataAxis min="0" max="170"
+                  label="Time" units="s" local_id="xAxis">
+                </OTDataAxis>
+              </xDataAxis>
+              <yDataAxis>
+                <OTDataAxis min="0" max="60"
+                  label="Number of rabbits" local_id="yAxis">
+                </OTDataAxis>
+              </yDataAxis>
+            </OTDataCollector>
+            <OTScriptObject local_id="model-authoring-script">
+              <script>
+                <OTJavascript>
+                  <script>
+                    importPackage(Packages.java.lang);
+                    importPackage(Packages.java.awt);
+                    importPackage(Packages.java.awt.event);
+                    importPackage(Packages.java.net);
+                    importPackage(Packages.org.concord.biologica.environment);
+                    importPackage(Packages.org.concord.biologica.ui);
+                    importPackage(Packages.org.concord.framework.otrunk);
+                    
+                    function init() {
+                      eliminateChoice.addOTChangeListener(eliminateChoiceListener);
+                    }
+                    
+                    var eliminateChoiceHandler= {
+                        stateChanged: function(evt){
+                          var choices = eliminateChoice.getCurrentChoices();
+                          var eliminateGrass, eliminateRabbits, eliminateHawks;
+                          eliminateGrass = eliminateRabbits = eliminateHakws = false;
+                          for (var i = 0; i &lt; choices.size(); i++){
+                            if (choices.get(i).getName().equalsIgnoreCase("1")){
+                              eliminateGrass = true;
+                            }
+                            if (choices.get(i).getName().equalsIgnoreCase("2")){
+                              eliminateRabbits = true;
+                            }
+                            if (choices.get(i).getName().equalsIgnoreCase("3")){
+                              eliminateHawks = true;
+                            }
+                          }
+                          
+                          
+                          var bodyText = modelDoc.getBodyText();
+                          if (eliminateGrass){
+                            bodyText = bodyText.replaceAll('remove-grass-button" height="0" width="0" /', 'remove-grass-button" /');
+                          } else {
+                            bodyText = bodyText.replaceAll('remove-grass-button" /', 'remove-grass-button" height="0" width="0" /');
+                          }
+                          
+                          if (eliminateRabbits){
+                            bodyText = bodyText.replaceAll('remove-rabbits-button" height="0" width="0" /', 'remove-rabbits-button" /');
+                          } else {
+                            bodyText = bodyText.replaceAll('remove-rabbits-button" /', 'remove-rabbits-button" height="0" width="0" /');
+                          }
+                          
+                          if (eliminateHawks){
+                            bodyText = bodyText.replaceAll('remove-hawks-button" height="0" width="0" /', 'remove-hawks-button" /');
+                          } else {
+                            bodyText = bodyText.replaceAll('remove-hawks-button" /', 'remove-hawks-button" height="0" width="0" /');
+                          }
+                          
+                            modelDoc.setBodyText(bodyText);
+                        }
+                      }    
+                    var eliminateChoiceListener = new OTChangeListener(eliminateChoiceHandler)
+                    
+                    function save() {
+                    
+                    }
+                  </script>
+                 </OTJavascript>
+               </script>
+               <variables>
+                 <OTScriptVariable name="eliminateChoice">
+                   <reference>
+                     <object refid="${eliminate-choice}" />
+                   </reference>
+                 </OTScriptVariable>
+                 <OTScriptVariable name="modelDoc">
+                  <reference>
+                    <object refid="${model-doc}"/>
+                  </reference>
+                 </OTScriptVariable>
+               </variables>
+            </OTScriptObject>
+					</documentRefs>
+				</OTCompoundDoc>
+			</root>
+		</OTSystem>
+	</objects>
+</otrunk>
+
