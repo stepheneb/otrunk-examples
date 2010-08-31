@@ -437,11 +437,15 @@
                                   var allRabbits = env.getAgents(rabbit_species);
                                   var allHawks = env.getAgents(hawk_species);
                                    
-                                  if (!addedRabbits &amp;&amp; allRabbits.size() &gt; 0){
+                                  if (allRabbits.size() &gt; 0){
                                      addedRabbits = true;
+                                     rabbitsRemoved = false;
+                                     rabbitsAreDead = false;
                                   }
-                                  if (!addedHawks &amp;&amp; allHawks.size() &gt; 0){
+                                  if (allHawks.size() &gt; 0){
                                     addedHawks = true;
+                                    hawksRemoved = false;
+                                    hawksAreDead = false;
                                   }
                                   
                                   if (hawksAreDead || rabbitsAreDead) {
@@ -455,7 +459,7 @@
                                         showEndMessage();
                                       }
                                     }
-                                  } else if (addedHawks) {
+                                  } else if (addedHawks &amp;&amp; !hawksRemoved) {
                                     if (allHawks.size() === 0){
                                       hawksAreDead = true;
                                       timeOfExtinction = env.getStepCount();
@@ -564,7 +568,14 @@
 	                                      startTime = System.currentTimeMillis()
 	                                    } else if (evt.getType() == EnvironmentChangeEvent.PAUSE){
 	                                      previousTime = time;
-	                                    } else if (evt.getType() == EnvironmentChangeEvent.USER_CLOSED_POPUP){
+	                                    } else if (evt.getType() == EnvironmentChangeEvent.USER_REMOVED_AGENTS){
+                                        var species = evt.getValue();
+                                        if (species === hawk_species){
+                                          hawksRemoved = true;
+                                        } else if (species === rabbit_species){
+                                          rabbitsRemoved = true;
+                                        }
+                                      } else if (evt.getType() == EnvironmentChangeEvent.USER_CLOSED_POPUP){
                                         var otEnvHolderController = controllerService.getController(otEnvHolder);
                                         otEnvHolderController.log("User closed popup",evt.getValue().toArray());
                                         System.out.println("otEnvHolderController = "+otEnvHolderController);
