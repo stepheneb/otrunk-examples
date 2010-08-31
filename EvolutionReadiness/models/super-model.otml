@@ -245,8 +245,12 @@
 	                              var colorChangedRecently = true;
 	                              var lastBkgdUrl;
 	                              var addedHawks, addedRabbits;
+                                var hawksAreDead, rabbitsAreDead;
+                                var hawksRemoved, rabbitsRemoved;
+                                var timeOfExtinction;
 	                              var agentsRemoved;
 	                              var envHolder;
+	                              var endMessageShown;
 	                              
 	                              var dontShowPopup = false;
 	                              
@@ -300,7 +304,10 @@
 	                                brownness = 0
 	                                colorChangedRecently = true
 	                                addedHawks = addedRabbits = false;
+	                                hawksAreDead = rabbitsAreDead = false;
+                                  hawksRemoved = rabbitsRemoved = false;
 	                                agentsRemoved = false;
+	                                endMessageShown = false;
 	                                
 	                                if (!dontShowPopup)
 	                                 showQuestionPopup();
@@ -310,7 +317,13 @@
 	                              {
 	                                environmentStepped: function()
 	                                {
-	                                   
+	                                   checkExtinction();
+	                                   if (env.getStepCount() == 300) {
+                                       var otEnvHolderController = controllerService.getController(otEnvHolder);
+	                                     otEnvHolderController.log("Model ran for 300 steps",null);
+                                       envHolder.pauseAction();
+                                       showEndMessage();
+	                                   }
 	                                }
 	                              }
 	                              var stepListener = new EnvironmentStepListener(stepHandler)
@@ -353,7 +366,6 @@
                                         var otEnvHolderController = controllerService.getController(otEnvHolder);
                                         hypothesisChoices = evt.getValue().toArray();
                                         env.removeListener(secondListener);
-                                        showEndMessage();
                                       }
                                     }
                                   })
@@ -368,6 +380,8 @@
                                                   "[button:Yes] [button:No, run the model again]";
                                    
                                   envHolder.showPopup("Run complete?", popupText);
+                                  
+                                  endMessageShown = true;
                                   
                                   var firstListener = new EnvironmentChangeListener({
                                     environmentChanged: function(evt){
@@ -394,7 +408,9 @@
                                                   " then the "+questionChoices[1]+" population will "+hypothesisChoices[1]+" because "+hypothesisChoices[2]+".\"\n\n"+
                                                   "Is that what happened?\n"+
                                                   "[drop:Yes|No]\n"+
-                                                  "Write down your observations of this model:\n[text]";
+                                                  "Write down your observations of this model:\n[text]\n\n"+
+                                                  "Do you want to try a new experiment?\n"+
+                                                  "[button:Yes][button:No]";
                                    
                                   envHolder.showPopup("Conclusions", popupText);
                                   
@@ -404,14 +420,52 @@
                                         var otEnvHolderController = controllerService.getController(otEnvHolder);
                                         env.removeListener(firstListener);
                                         var end = evt.getValue().toArray();
-                                        if (end[0].equalsIgnoreCase("Yes")){
-                                          showConclusionMessage();
+                                        if (end[1].equalsIgnoreCase("Yes")){
+                                          envHolder.reset();
+                                        } else {
+                                          var popupText2 = "Good work! Move on to the next page.";
+                                          envHolder.showPopup("Finish", popupText2);
                                         }
                                       }
                                     }
                                   })
                                   
                                   env.addChangeListener(firstListener);
+                                }
+                                
+                                function checkExtinction() {
+                                  var allRabbits = env.getAgents(rabbit_species);
+                                  var allHawks = env.getAgents(hawk_species);
+                                   
+                                  if (!addedRabbits &amp;&amp; allRabbits.size() &gt; 0){
+                                     addedRabbits = true;
+                                  }
+                                  if (!addedHawks &amp;&amp; allHawks.size() &gt; 0){
+                                    addedHawks = true;
+                                  }
+                                  
+                                  if (hawksAreDead || rabbitsAreDead) {
+                                    if (env.getStepCount() === timeOfExtinction + 10) {
+                                      if (hawksAreDead &amp;&amp; !hawksRemoved || 
+                                            rabbitsAreDead &amp;&amp; !rabbitsRemoved){
+                                        var otEnvHolderController = controllerService.getController(otEnvHolder);
+                                        var message = hawksAreDead ? "Hawks went extinct" : "Rabbits went extinct";
+                                        otEnvHolderController.log(message,null);
+                                        envHolder.pauseAction();
+                                        showEndMessage();
+                                      }
+                                    }
+                                  } else if (addedHawks) {
+                                    if (allHawks.size() === 0){
+                                      hawksAreDead = true;
+                                      timeOfExtinction = env.getStepCount();
+                                    }
+                                  } else if (addedRabbits) {
+                                    if (allRabbits.size() === 0){
+                                      rabbitsAreDead = true;
+                                      timeOfExtinction = env.getStepCount();
+                                    }
+                                  }
                                 }
 	                              
 	                              function checkHawks(){
@@ -499,8 +553,12 @@
 	                              var resetRunHandler= {
 	                                  environmentChanged: function(evt){
 	                                    if (evt.getType() == EnvironmentChangeEvent.RESET){
-	                                      isRunning = false
-	                                      setup()
+	                                      isRunning = false;
+	                                      if (!endMessageShown) {
+                                          showEndMessage();
+                                         } else {
+                                          setup();
+                                         }
 	                                    }else if (evt.getType() == EnvironmentChangeEvent.RUN){
 	                                      isRunning = true
 	                                      startTime = System.currentTimeMillis()
