@@ -342,10 +342,11 @@ function init() {
 	url = new URL(baseUrl, "images/green.jpg")
 	envHolder.getEnvironmentView().addBackgroundImageUrl(url)
 	
-	currChoice = radio.getCurrentChoices().get(0)
+	
 	doneChoices = [false, false, false];
 	
 	setProperty("rain", 1.0)
+	
 	setup();
 }
 
@@ -359,7 +360,11 @@ function setup() {
 	time = 0
 	previousTime = 0
 	shownMessage = false;
-	envHolder.getToolbar().getButton("Run").setEnabled(true)
+	
+  radio.getCurrentChoices().clear();
+  envHolder.getToolbar().getButton("Run").setEnabled(false);
+  
+  envHolder.showPopup("Set rain", "Select an amount of rain to test, and then run the experiment!", false, false);
 }
 
 var radioChangeHandler =
@@ -368,6 +373,11 @@ var radioChangeHandler =
     {
     	if (radio.getCurrentChoices().size() &lt; 1)
     		return;
+    		
+    	
+      envHolder.getToolbar().getButton("Run").setEnabled(true);
+      envHolder.hidePopup();
+      
     	var prevrain = env.getEnvironmentUnit(0,0).getProperty("rain")
     	
         currChoice = radio.getCurrentChoices().get(0)
@@ -509,9 +519,6 @@ function save() {
                   <bodyText>1 (Least rain)</bodyText>
                 </OTCompoundDoc>
               </choices>
-              <currentChoices>
-                <object refid="12fa28cb-0a4b-40d9-af31-1582a057b78e" />
-              </currentChoices>
             </OTChoice>
           </documentRefs>
         </OTCompoundDoc>
