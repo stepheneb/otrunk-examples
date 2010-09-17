@@ -197,7 +197,7 @@
 	                    width="590" height="460" toolbar="run,info,reset" useSpeedSlider="false">
 	                    <environment>
 	                      <OTEnvironment local_id="environment"
-	                        environmentWidth="10" environmentHeight="10" showRunButton="false"
+	                        environmentWidth="15" environmentHeight="15" showRunButton="false"
 	                        winterLength="5" summerLength="50" showWinterImage="false"
 	                        orgSizeMultiplier="1" backgroundImageSrc="images/grass.jpg">
 	                        <world>
@@ -267,28 +267,6 @@
 	                                
 	                                env.addStepListener(stepListener)
 	                                env.addChangeListener(resetListener)
-	                                removeGrass.addOTChangeListener(removeGrassListener)
-                                  removeRabbits.addOTChangeListener(removeRabbitsListener)
-                                  removeHawks.addOTChangeListener(removeHawksListener)
-	                                
-	                                var url = new URL(baseUrl, "images/snow-1.png")
-	                                envHolder.getEnvironmentView().addBackgroundImageUrl(url)
-	                                var url2 = new URL(baseUrl, "images/snow-2.png")
-	                                envHolder.getEnvironmentView().addBackgroundImageUrl(url2)
-	                                var url3 = new URL(baseUrl, "images/snow-3.png")
-	                                envHolder.getEnvironmentView().addBackgroundImageUrl(url3)
-	                                var url4 = new URL(baseUrl, "images/snow-4.png")
-	                                envHolder.getEnvironmentView().addBackgroundImageUrl(url4)
-	                                var url5 = new URL(baseUrl, "images/snow-5.png")
-	                                envHolder.getEnvironmentView().addBackgroundImageUrl(url5)
-	                                var url6 = new URL(baseUrl, "images/snow-6.png")
-	                                envHolder.getEnvironmentView().addBackgroundImageUrl(url6)
-	                                var url7 = new URL(baseUrl, "images/snow-7.png")
-	                                envHolder.getEnvironmentView().addBackgroundImageUrl(url7)
-	                                var url8 = new URL(baseUrl, "images/snow-8.png")
-	                                envHolder.getEnvironmentView().addBackgroundImageUrl(url8)
-	                                var url9 = new URL(baseUrl, "images/snow-9.png")
-	                                envHolder.getEnvironmentView().addBackgroundImageUrl(url9)
 	                                
 	                                setup();
 	                                
@@ -296,17 +274,13 @@
 	                              }
 	                              
 	                              function setup() {
-	                                var url = new URL(baseUrl, "images/grass.jpg");
-	                                envHolder.getEnvironmentView().setBackgroundImageUrl(url);
 	                                
 	                                time = 0
 	                                previousTime = 0
 	                                brownness = 0
-	                                colorChangedRecently = true
 	                                addedHawks = addedRabbits = false;
 	                                hawksAreDead = rabbitsAreDead = false;
                                   hawksRemoved = rabbitsRemoved = false;
-	                                agentsRemoved = false;
 	                                endMessageShown = false;
 	                                
 	                                if (!dontShowPopup)
@@ -472,88 +446,6 @@
                                   }
                                 }
 	                              
-	                              function checkHawks(){
-	                                 var allHawks = env.getAgents(hawk_species);
-	                                 
-	                                 if (!addedHawks &amp;&amp; allHawks.size() &gt; 0){
-	                                   addedHawks = true;
-	                                 }
-	                                 
-	                                 if (addedHawks &amp;&amp; allHawks.size() &lt; 2){
-	                                  addAgent(hawk_species);
-	                                 }
-	                                 
-	                                 if (allHawks.size() &lt; 3){
-	                                   setProperty(allHawks, "is immortal", true);
-	                                   setProperty(allHawks, "mating desire bonus", 0);
-	                                   setProperty(allHawks, "hunger bonus", 5);
-	                                 } else {
-	                                   if (allHawks.get(0).getProperty("is immortal")){
-	                                    setProperty(allHawks, "is immortal", false);
-	                                   }
-	                                   
-	                                   if (allHawks.size() &gt; 4){
-	                                    setProperty(allHawks, "mating desire bonus", -30);
-	                                    setProperty(allHawks, "hunger bonus", -40);
-	                                   } else {
-	                                    setProperty(allHawks, "mating desire bonus", -15);
-	                                    setProperty(allHawks, "hunger bonus", -5);
-	                                   }
-	                                 }
-	                              }
-	                              
-	                              function checkRabbits(){
-	                                 var allRabbits = env.getAgents(rabbit_species);
-	                                 
-	                                 if (!addedRabbits &amp;&amp; allRabbits.size() &gt; 0){
-	                                   addedRabbits = true;
-	                                 }
-	                                 
-	                                 if (addedRabbits &amp;&amp; allRabbits.size() &lt; 8){
-	                                  addAgent(rabbit_species, [["resource consumption rate", 10]]);
-	                                  addAgent(rabbit_species, [["resource consumption rate", 10]]);
-	                                 } 
-	                                 
-	                                 if (allRabbits.size() &lt; 16){
-	                                   setProperty(allRabbits, "metabolism", 0);
-	                                   setProperty(allRabbits, "mating desire bonus", 50);
-	                                   setProperty(allRabbits, "hunger bonus", -50);
-	                                   setProperty(allRabbits, "min offspring", 5);
-	                                   setProperty(allRabbits, "speed", 7);
-	                                 } else {
-	                                   setProperty(allRabbits, "metabolism", 1);
-	                                   setProperty(allRabbits, "mating desire bonus", -20);
-	                                   setProperty(allRabbits, "hunger bonus", -10);
-	                                   setProperty(allRabbits, "min offspring", 1);
-	                                   setProperty(allRabbits, "speed", 5);
-	                                 }
-	                                 
-	                                 if (allRabbits.size() &gt; 50){
-	                                   setProperty(allRabbits, "mating desire bonus", -40);
-	                                 }
-	                              }
-	                              
-	                              function setProperty(agents, property, value){
-	                               for (var i = 0; i &lt; agents.size(); i++){
-	                                 agents.get(i).setProperty(property, value);
-	                               }
-	                              }
-	                              
-	                              function addAgent(species, properties){
-	                                var newAgent = species.createAgent();
-	                                
-	                                if (!!properties){
-	                                 for (var i = 0; i &lt; properties.length; i++){
-	                                   newAgent.setProperty(properties[i][0], properties[i][1]);
-	                                 }
-	                                }
-	                                
-	                                var loc = env.getRandomLocation();
-	                                newAgent.setEnvironment(env);
-	                                newAgent.setLocation(loc);
-	                                env.addAgent(newAgent);
-	                              }
-	                              
 	                              var resetRunHandler= {
 	                                  environmentChanged: function(evt){
 	                                    if (evt.getType() == EnvironmentChangeEvent.RESET){
@@ -598,74 +490,6 @@
 	                                 colorChangedRecently = false;
 	                                }
 	                              }
-	                              
-	                              function updateColor(){
-	                               if (brownness &lt; 0.9) {
-	                                 brownness += 0.1;
-	                                 var brownVisibility = 0.4 - (brownness*0.4);
-	                                 var whiteVisibility = 0 + (brownness*0.4);
-	                                 
-	                                 var brownConsequence = brownRule.getConsequences()[0];
-	                                 brownConsequence.setConsequence("chance of being seen", brownVisibility);
-	                                 
-	                                 var whiteConsequence = whiteRule.getConsequences()[0];
-	                                 whiteConsequence.setConsequence("chance of being seen", whiteVisibility);
-	                                 
-	                                  if (brownness &lt; 0.19){
-	                                    var url = new URL(baseUrl, "images/snow-1.png")
-	                                  } else if (brownness &lt; 0.29){
-	                                    var url = new URL(baseUrl, "images/snow-2.png")
-	                                  } else if (brownness &lt; 0.39){
-	                                    var url = new URL(baseUrl, "images/snow-3.png")
-	                                  } else if (brownness &lt; 0.49){
-	                                    var url = new URL(baseUrl, "images/snow-4.png")
-	                                  } else if (brownness &lt; 0.59){
-	                                    var url = new URL(baseUrl, "images/snow-5.png")
-	                                  } else if (brownness &lt; 0.69){
-	                                    var url = new URL(baseUrl, "images/snow-6.png")
-	                                  } else if (brownness &lt; 0.79){
-	                                    var url = new URL(baseUrl, "images/snow-7.png")
-	                                  } else if (brownness &lt; 0.89){
-	                                    var url = new URL(baseUrl, "images/snow-8.png")
-	                                  } else {
-	                                    var url = new URL(baseUrl, "images/snow-9.png")
-	                                  }
-	                                  
-	                                  
-	                                  if (!url.equals(lastBkgdUrl)) {
-	                                    envHolder.getEnvironmentView().setBackgroundImageUrl(url)
-	                                    lastBkgdUrl = url;
-	                                   }
-	                               }
-	                              }
-	                              
-	                              var removeGrassHandler= {
-                                    stateChanged: function(evt){
-                                      removeAgents(plant_species);
-                                    }
-                                  }    
-                                var removeGrassListener = new OTChangeListener(removeGrassHandler)
-                                
-                                var removeRabbitsHandler= {
-                                    stateChanged: function(evt){
-                                      removeAgents(rabbit_species);
-                                      removeAgents(rabbit_species);
-                                    }
-                                  }    
-                                var removeRabbitsListener = new OTChangeListener(removeRabbitsHandler)
-                                
-                                var removeHawksHandler= {
-                                    stateChanged: function(evt){
-                                      removeAgents(hawk_species);
-                                      removeAgents(hawk_species);
-                                    }
-                                  }    
-                                var removeHawksListener = new OTChangeListener(removeHawksHandler)
-                                
-                                function removeAgents(species){
-                                  agentsRemoved = true;
-                                  env.removeAgents(species);
-                                }
 	      
 	                              function save() {
 	                                return true;
@@ -731,7 +555,7 @@
 	                      </OTScriptObject>
 	                    </scripts>
 	                    <addAgentsButtons>
-                        <OTAddAgentButton text="Add Plants" limit="-1" click="false" quantity="25" showRemoveButton="true">
+                        <OTAddAgentButton text="Add Plants" limit="-1" click="false" quantity="60" showRemoveButton="true">
                           <species>
                             <object refid="${plant-species}" />
                           </species>
@@ -743,7 +567,7 @@
                             </OTAgentTrait>
                           </agentTraits>
                         </OTAddAgentButton>
-	                      <OTAddAgentButton text="Add Rabbits" limit="-1" click="false" quantity="30" showRemoveButton="true">
+	                      <OTAddAgentButton text="Add Rabbits" limit="-1" click="false" quantity="40" showRemoveButton="true">
 	                        <species>
 	                          <object refid="${rabbit-species}" />
 	                        </species>
@@ -768,25 +592,36 @@
 	                              <int>10</int>
 	                            </possibleValues>
 	                          </OTAgentTrait>
+                            <OTAgentTrait property="chance of being seen">
+                              <possibleValues>
+                                <int>0.3</int>
+                              </possibleValues>
+                            </OTAgentTrait>
 	                        </agentTraits>
 	                      </OTAddAgentButton>
-	                      <OTAddAgentButton text="Add Hawk" limit="-1" click="false" quantity="2" showRemoveButton="true">
+	                      <OTAddAgentButton text="Add Hawk" limit="-1" click="false" quantity="5" showRemoveButton="true">
 	                        <species>
 	                          <object refid="${hawk-species}" />
 	                        </species>
 	                        <agentTraits>
 	                          <OTAgentTrait property="mating desire bonus">
 	                            <possibleValues>
-	                              <int>-15</int>
+	                              <int>-20</int>
 	                            </possibleValues>
 	                          </OTAgentTrait>
+	                          <OTAgentTrait property="max offspring" name="">
+								              <possibleValues>
+								                <int>1</int>
+								              </possibleValues>
+								            </OTAgentTrait>
+								            <OTAgentTrait property="eating distance" name="">
+								              <possibleValues>
+								                <int>6</int>
+								              </possibleValues>
+								            </OTAgentTrait>
 	                        </agentTraits>
 	                      </OTAddAgentButton>
 	                    </addAgentsButtons>
-	                    <traitsToShow>
-	                      <string>color</string>
-	                      <string>chance of being seen</string>
-	                    </traitsToShow>
 	                  </OTEnvironmentHolder>
 					           <OTButton local_id="remove-grass-button" text="Remove grass"/>
                      <OTButton local_id="remove-rabbits-button" text="Remove rabbits"/>
