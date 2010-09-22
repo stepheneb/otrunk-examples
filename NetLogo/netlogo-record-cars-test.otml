@@ -28,6 +28,9 @@
     <import class="org.concord.data.state.OTTimerDataStoreDataProducer" />
 
     <import class="org.concord.datagraph.log.OTEventLog" />
+    
+    <import class="org.concord.data.state.OTDataChannelProducerFilter" />
+    <import class="org.concord.data.state.OTSingleYPerXProducerFilter" />
   </imports>
   <objects>
     <OTSystem>
@@ -83,7 +86,16 @@
               <source>
                 <OTDataGraphable name="Car 1" connectPoints="true" controllable="false" yColumn="1" drawMarks="false" color="0x0000ff" xColumn="0" lineWidth="2.0" showAllChannels="false" visible="true">
                   <dataProducer>
-                    <object refid="${nl_model}" />
+                    <OTSingleYPerXProducerFilter>
+                      <source>
+                        <OTDataChannelProducerFilter source="${nl_model}">
+                          <channelsToDiscard>
+                            <int>2</int>
+                            <int>3</int>
+                          </channelsToDiscard>
+                        </OTDataChannelProducerFilter>
+                      </source>
+                    </OTSingleYPerXProducerFilter>
                   </dataProducer>
                   <dataStore>
                     <OTDataStore local_id="car1-ds" />
@@ -97,9 +109,18 @@
                 <OTDataAxis max="10.0" units="" min="-10.0" label="Position" />
               </yDataAxis>
               <graphables>
-                <OTDataGraphable name="Car 2" connectPoints="true" controllable="false" yColumn="3" drawMarks="false" color="0xff0000" xColumn="2" lineWidth="2.0" showAllChannels="false" visible="true">
+                <OTDataGraphable name="Car 2" connectPoints="true" controllable="false" yColumn="1" drawMarks="false" color="0xff0000" xColumn="0" lineWidth="2.0" showAllChannels="false" visible="true">
                   <dataProducer>
-                    <object refid="${nl_model}" />
+                  <OTSingleYPerXProducerFilter>
+                      <source>
+                        <OTDataChannelProducerFilter source="${nl_model}">
+                          <channelsToDiscard>
+                            <int>0</int>
+                            <int>1</int>
+                          </channelsToDiscard>
+                        </OTDataChannelProducerFilter>
+                      </source>
+                    </OTSingleYPerXProducerFilter>
                   </dataProducer>
                   <dataStore>
                     <OTDataStore local_id="car2-ds" />
