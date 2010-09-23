@@ -57,7 +57,7 @@
 		<import class="org.concord.framework.otrunk.wrapper.OTObjectSet" />
 	</imports>
 	<idMap>
-		<idMapping local_id="rabbit-species" id="eec525fc-4ca5-4fa9-be17-e3d9fa44ed24" />
+		<idMapping local_id="rabbit-species" id="f05fc1b1-ea0e-4d6e-a21e-7d089860445a" />
 		<idMapping local_id="plant-species" id="6904840c-03f6-4f2d-b822-bc85aebe70db" />
     <idMapping local_id="hawk-species" id="8cf33f49-8820-4c6f-9e5f-49fcca68acbd" />
     <idMapping local_id="fox-species" id="c59a7a17-5585-4860-b6a5-803e74ea2dbd" />
@@ -82,7 +82,7 @@
 			<includes>
 				<OTInclude href="../global-imports/er-view-bundle.otml" />
 				<OTInclude href="species/fast-plants-roots.otml" />
-				<OTInclude href="species/white-brown-rabbits.otml" />
+				<OTInclude href="species/white-rabbits.otml" />
         <OTInclude href="species/hawks.otml" />
         <OTInclude href="species/foxes.otml" />
 			</includes>
@@ -117,26 +117,6 @@
                             <OTWorld local_id="peasimple_world"
                               speciesPath="org/concord/biologica/worlds/peasimple.xml" />
                           </world>
-                          <rules>
-                            <OTRule description="white rabbit visibility" local_id="white-rule">
-                              <conditions>
-                                <OTRuleCondition property="species name" equals="Mixed Rabbits" />
-                                <OTRuleCondition property="color" equals="white" />
-                              </conditions>
-                              <consequences>
-                                <OTRuleConsequence property="chance of being seen" newValueFloat="0.3" />
-                              </consequences>
-                            </OTRule>
-                            <OTRule description="brown rabbit visibility" local_id="brown-rule">
-                              <conditions>
-                                <OTRuleCondition property="species name" equals="Mixed Rabbits" />
-                                <OTRuleCondition property="color" equals="brown" />
-                              </conditions>
-                              <consequences>
-                                <OTRuleConsequence property="chance of being seen" newValueFloat="0.3" />
-                              </consequences>
-                            </OTRule>
-                          </rules>
                         </OTEnvironment>
                       </environment>
                       <scripts>
@@ -205,9 +185,10 @@
                                   environmentStepped: function()
                                   {
                                      checkExtinction();
-                                     if (env.getStepCount() == 300) {
+                                     checkPredators();
+                                     if (env.getStepCount() == 350) {
                                        var otEnvHolderController = controllerService.getController(otEnvHolder);
-                                       otEnvHolderController.log("Model ran for 300 steps",null);
+                                       otEnvHolderController.log("Model ran for 350 steps",null);
                                        envHolder.pauseAction();
                                        showEndMessage();
                                      }
@@ -340,7 +321,7 @@
                                   }
                                   
                                   if (hawksAreDead || rabbitsAreDead) {
-                                    if (env.getStepCount() === timeOfExtinction + 10) {
+                                    if (env.getStepCount() === timeOfExtinction + 20) {
                                       if (hawksAreDead &amp;&amp; !hawksRemoved || 
                                             rabbitsAreDead &amp;&amp; !rabbitsRemoved){
                                         var otEnvHolderController = controllerService.getController(otEnvHolder);
@@ -360,6 +341,44 @@
                                       rabbitsAreDead = true;
                                       timeOfExtinction = env.getStepCount();
                                     }
+                                  }
+                                }
+                                
+                                function checkPredators(){
+                                  var allHawks = env.getAgents(hawk_species);
+                                  if (allHawks.size() &gt; 15){
+                                    setProperty(allHawks, "min offspring", 0);
+                                    setProperty(allHawks, "max offspring", 1);
+                                    setProperty(allHawks, "metabolism", 7);
+                                  } else if (allHawks.size() &lt; 8){
+                                    setProperty(allHawks, "min offspring", 3);
+                                    setProperty(allHawks, "max offspring", 4);
+                                    setProperty(allHawks, "metabolism", 3);
+                                  } else {
+                                    setProperty(allHawks, "min offspring", 2);
+                                    setProperty(allHawks, "max offspring", 3);
+                                    setProperty(allHawks, "metabolism", 6);
+                                  }
+                                  
+                                  var allFoxes = env.getAgents(fox_species);
+                                  if (allFoxes.size() &gt; 20){
+                                    setProperty(allFoxes, "min offspring", 0);
+                                    setProperty(allFoxes, "max offspring", 1);
+                                    setProperty(allFoxes, "metabolism", 5);
+                                  } else if (allFoxes.size() &lt; 15){
+                                    setProperty(allFoxes, "min offspring", 3);
+                                    setProperty(allFoxes, "max offspring", 4);
+                                    setProperty(allFoxes, "metabolism", 3);
+                                  } else {
+                                    setProperty(allFoxes, "min offspring", 1);
+                                    setProperty(allFoxes, "max offspring", 3);
+                                    setProperty(allFoxes, "metabolism", 4);
+                                  }
+                                }
+                                
+                                function setProperty(agents, property, value){
+                                  for(i = 0; i &lt; agents.size(); i++){
+                                    agents.get(i).setProperty(property, value);
                                   }
                                 }
                                 
@@ -441,6 +460,11 @@
                             <OTScriptVariableRealObject name="hawk_species">
                               <reference>
                                 <object refid="${hawk-species}" />
+                              </reference>
+                            </OTScriptVariableRealObject>
+                            <OTScriptVariableRealObject name="fox_species">
+                              <reference>
+                                <object refid="${fox-species}" />
                               </reference>
                             </OTScriptVariableRealObject>
                             <OTScriptVariableRealObject name="whiteRule">
@@ -525,12 +549,17 @@
                             </OTAgentTrait>
                             <OTAgentTrait property="chance of being seen">
                               <possibleValues>
-                                <int>0.26</int>
+                                <float>0.30</float>
                               </possibleValues>
                             </OTAgentTrait>
                             <OTAgentTrait property="mating distance" name="">
                               <possibleValues>
                                 <int>20</int>
+                              </possibleValues>
+                            </OTAgentTrait>
+                            <OTAgentTrait property="vision distance" name="">
+                              <possibleValues>
+                                <int>50</int>
                               </possibleValues>
                             </OTAgentTrait>
                           </agentTraits>
@@ -550,6 +579,11 @@
                                 <int>3</int>
                               </possibleValues>
                             </OTAgentTrait>
+                            <OTAgentTrait property="chance of being seen">
+                              <possibleValues>
+                                <float>0.80</float>
+                              </possibleValues>
+                            </OTAgentTrait>
                             <OTAgentTrait property="eating distance" name="">
                               <possibleValues>
                                 <int>6</int>
@@ -562,7 +596,7 @@
                             </OTAgentTrait>
                             <OTAgentTrait property="metabolism">
                               <possibleValues>
-                                <int>5</int>
+                                <int>6</int>
                               </possibleValues>
                             </OTAgentTrait>
                             <OTAgentTrait property="vision distance">
@@ -572,7 +606,7 @@
                             </OTAgentTrait>
                           </agentTraits>
                         </OTAddAgentButton>
-                        <OTAddAgentButton text="Add Fox" limit="-1" click="false" quantity="15" showRemoveButton="true">
+                        <OTAddAgentButton text="Add Fox" limit="-1" click="false" quantity="14" showRemoveButton="true">
                           <species>
                             <object refid="${fox-species}" />
                           </species>
@@ -582,11 +616,6 @@
                                 <int>3</int>
                               </possibleValues>
                             </OTAgentTrait>
-                            <OTAgentTrait property="chance of being seen">
-                              <possibleValues>
-                                <float>0.9</float>
-                              </possibleValues>
-                            </OTAgentTrait>
                             <OTAgentTrait property="metabolism">
                               <possibleValues>
                                 <int>4</int>
@@ -594,23 +623,23 @@
                             </OTAgentTrait>
                             <OTAgentTrait property="eating distance" name="">
                               <possibleValues>
-                                <int>6</int>
+                                <int>4</int>
                               </possibleValues>
                             </OTAgentTrait>
                             <OTAgentTrait property="mating distance" name="">
                               <possibleValues>
-                                <int>12</int>
+                                <int>10</int>
                               </possibleValues>
                             </OTAgentTrait>
                           </agentTraits>
                         </OTAddAgentButton>
                       </addAgentsButtons>
                     </OTEnvironmentHolder>
-            <OTText local_id="question-text"/>
+            <OTText local_id="question-text" color="0x0000FF"/>
 						<OTDataCollector name="Model Data"
               local_id="graph" graphableListEditable="false"
               autoScaleEnabled="false" showControlBar="false" title="Number of organisms">
-              <source>
+              <graphables>
                 <OTDataGraphable connectPoints="true"
                   color="0x009900" drawMarks="false" name="Grass"
                   xColumn="0" yColumn="1">
@@ -628,8 +657,6 @@
                   </OTBiologicaModelDataProducer>
                   </dataProducer>
                 </OTDataGraphable>
-              </source>
-              <graphables>
                 <OTDataGraphable connectPoints="true"
                   color="0x998888" drawMarks="false" name="Rabbits"
                   xColumn="0" yColumn="2">
