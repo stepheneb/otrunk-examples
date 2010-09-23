@@ -49,7 +49,7 @@ to setup
   ca
   set y-track -1
   set mouse-was-up? true
-  set dt 0.001
+  set dt 0.1
   set t1 0
   set t2 0
   set car1-distance 100000
