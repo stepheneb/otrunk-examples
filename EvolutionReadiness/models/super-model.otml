@@ -57,7 +57,7 @@
 		<import class="org.concord.framework.otrunk.wrapper.OTObjectSet" />
 	</imports>
 	<idMap>
-		<idMapping local_id="rabbit-species" id="eec525fc-4ca5-4fa9-be17-e3d9fa44ed24" />
+		<idMapping local_id="rabbit-species" id="f05fc1b1-ea0e-4d6e-a21e-7d089860445a" />
 		<idMapping local_id="plant-species" id="6904840c-03f6-4f2d-b822-bc85aebe70db" />
     <idMapping local_id="hawk-species" id="8cf33f49-8820-4c6f-9e5f-49fcca68acbd" />
 	</idMap>
@@ -81,7 +81,7 @@
 			<includes>
 				<OTInclude href="../global-imports/er-view-bundle.otml" />
 				<OTInclude href="species/fast-plants-roots.otml" />
-				<OTInclude href="species/white-brown-rabbits.otml" />
+				<OTInclude href="species/white-rabbits.otml" />
         <OTInclude href="species/hawks.otml" />
 			</includes>
 			<root>
@@ -116,24 +116,6 @@
                               speciesPath="org/concord/biologica/worlds/peasimple.xml" />
                           </world>
                           <rules>
-                            <OTRule description="white rabbit visibility" local_id="white-rule">
-                              <conditions>
-                                <OTRuleCondition property="species name" equals="Mixed Rabbits" />
-                                <OTRuleCondition property="color" equals="white" />
-                              </conditions>
-                              <consequences>
-                                <OTRuleConsequence property="chance of being seen" newValueFloat="0.3" />
-                              </consequences>
-                            </OTRule>
-                            <OTRule description="brown rabbit visibility" local_id="brown-rule">
-                              <conditions>
-                                <OTRuleCondition property="species name" equals="Mixed Rabbits" />
-                                <OTRuleCondition property="color" equals="brown" />
-                              </conditions>
-                              <consequences>
-                                <OTRuleConsequence property="chance of being seen" newValueFloat="0.3" />
-                              </consequences>
-                            </OTRule>
                           </rules>
                         </OTEnvironment>
                       </environment>
@@ -203,9 +185,10 @@
                                   environmentStepped: function()
                                   {
                                      checkExtinction();
-                                     if (env.getStepCount() == 300) {
+                                     checkPredators();
+                                     if (env.getStepCount() == 350) {
                                        var otEnvHolderController = controllerService.getController(otEnvHolder);
-                                       otEnvHolderController.log("Model ran for 300 steps",null);
+                                       otEnvHolderController.log("Model ran for 350 steps",null);
                                        envHolder.pauseAction();
                                        showEndMessage();
                                      }
@@ -338,7 +321,7 @@
                                   }
                                   
                                   if (hawksAreDead || rabbitsAreDead) {
-                                    if (env.getStepCount() === timeOfExtinction + 10) {
+                                    if (env.getStepCount() === timeOfExtinction + 20) {
                                       if (hawksAreDead &amp;&amp; !hawksRemoved || 
                                             rabbitsAreDead &amp;&amp; !rabbitsRemoved){
                                         var otEnvHolderController = controllerService.getController(otEnvHolder);
@@ -358,6 +341,29 @@
                                       rabbitsAreDead = true;
                                       timeOfExtinction = env.getStepCount();
                                     }
+                                  }
+                                }
+                                
+                                function checkPredators(){
+                                  var allHawks = env.getAgents(hawk_species);
+                                  if (allHawks.size() &gt; 15){
+                                    setProperty(allHawks, "min offspring", 0);
+                                    setProperty(allHawks, "max offspring", 1);
+                                    setProperty(allHawks, "metabolism", 7);
+                                  } else if (allHawks.size() &lt; 8){
+                                    setProperty(allHawks, "min offspring", 3);
+                                    setProperty(allHawks, "max offspring", 4);
+                                    setProperty(allHawks, "metabolism", 3);
+                                  } else {
+                                    setProperty(allHawks, "min offspring", 2);
+                                    setProperty(allHawks, "max offspring", 3);
+                                    setProperty(allHawks, "metabolism", 6);
+                                  }
+                                }
+                                
+                                function setProperty(agents, property, value){
+                                  for(i = 0; i &lt; agents.size(); i++){
+                                    agents.get(i).setProperty(property, value);
                                   }
                                 }
                                 
@@ -523,12 +529,17 @@
                             </OTAgentTrait>
                             <OTAgentTrait property="chance of being seen">
                               <possibleValues>
-                                <int>0.26</int>
+                                <float>0.30</float>
                               </possibleValues>
                             </OTAgentTrait>
                             <OTAgentTrait property="mating distance" name="">
                               <possibleValues>
                                 <int>20</int>
+                              </possibleValues>
+                            </OTAgentTrait>
+                            <OTAgentTrait property="vision distance" name="">
+                              <possibleValues>
+                                <int>10</int>
                               </possibleValues>
                             </OTAgentTrait>
                           </agentTraits>
@@ -560,7 +571,7 @@
                             </OTAgentTrait>
                             <OTAgentTrait property="metabolism">
                               <possibleValues>
-                                <int>5</int>
+                                <int>6</int>
                               </possibleValues>
                             </OTAgentTrait>
                             <OTAgentTrait property="vision distance">
@@ -571,6 +582,10 @@
                           </agentTraits>
                         </OTAddAgentButton>
                       </addAgentsButtons>
+                      <traitsToShow>
+                <string>metabolism</string>
+                <string>chance of being seen</string>
+                  </traitsToShow>
                     </OTEnvironmentHolder>
             <OTText local_id="question-text"/>
 						<OTDataCollector name="Model Data"
