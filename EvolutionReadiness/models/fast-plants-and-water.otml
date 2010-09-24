@@ -31,6 +31,7 @@
     <import class="org.concord.otrunk.ui.OTCurriculumUnit" />
     <import class="org.concord.otrunk.ui.OTImage" />
     <import class="org.concord.otrunk.ui.OTPlacement" />
+    <import class="org.concord.otrunk.ui.OTProgressBar" />
     <import class="org.concord.otrunk.ui.snapshot.OTSnapshot" />
     <import class="org.concord.otrunk.ui.snapshot.OTSnapshotButton" />
     <import class="org.concord.otrunk.ui.snapshot.OTSnapshotAlbum" />
@@ -74,6 +75,20 @@
                   <object refid="${env-holder}" />
                 </td>
                 <td>
+                  <table>
+                    <tr>
+                      <td align="center">
+                      <b>Amount of rain</b>
+                      <br />
+                      <br/>
+                        Lots of rain
+                        <br/>
+                        <object refid="${water-slider}" />
+                        <br />
+                        Little rain
+                      </td>
+                    </tr>
+                  </table>
                   <object refid="${graph}"/>
                 </td>
               </tr>
@@ -372,14 +387,17 @@ function setRain(rain){
 	if (rain.equalsIgnoreCase("1 (least rain)")){
 	  var url = new URL(baseUrl, "images/green3.png");
 	  setProperty("rain", 0.0);
+	  waterBar.setValue(0);
 	  currChoice = 0;
 	} else if (rain.equalsIgnoreCase("2")){
 	  var url = new URL(baseUrl, "images/green2.png");
 	  setProperty("rain", 0.6);
+    waterBar.setValue(60);
     currChoice = 1;
 	} else {
 	  var url = new URL(baseUrl, "images/green.jpg");
 	  setProperty("rain", 1.0);
+    waterBar.setValue(100);
     currChoice = 2;
 	}
 	envHolder.getEnvironmentView().setBackgroundImageUrl(url)
@@ -475,8 +493,14 @@ function save() {
                     <object refid="f8f30d75-f5b3-4451-a1d8-76d660b77e8a" />
                   </reference>
                 </OTScriptVariable>
+                <OTScriptVariable name="waterBar">
+                  <reference>
+                    <object refid="${water-slider}" />
+                  </reference>
+                </OTScriptVariable>
               </variables>
             </OTScriptObject>
+            <OTProgressBar local_id="water-slider" minimum="-10" maximum="100" value="100" vertical="true" />
           </documentRefs>
         </OTCompoundDoc>
       </root>
