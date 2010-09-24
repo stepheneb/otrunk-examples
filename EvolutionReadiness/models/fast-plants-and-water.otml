@@ -74,18 +74,6 @@
                   <object refid="${env-holder}" />
                 </td>
                 <td>
-                  <table>
-                    <tr>
-                      <td valign="top" align="right">Amount of rain</td>
-                      <td align="center">
-                        <br />
-                        <br />
-                        <object refid="${mountain-height-radio}" />
-                        <br />
-                        <br />
-                      </td>
-                    </tr>
-                  </table>
                   <object refid="${graph}"/>
                 </td>
               </tr>
@@ -331,7 +319,6 @@ var baseUrl = otEnvHolder.getOTObjectService().getCodebase(otEnvHolder)
 							var doneChoices
              
 function init() {
-	radio.addOTChangeListener(radioChangeListener)
 	env.addChangeListener(resetListener)
 	env.addStepListener(stepListener)
 	
@@ -361,52 +348,44 @@ function setup() {
 	previousTime = 0
 	shownMessage = false;
 	
-  radio.getCurrentChoices().clear();
   envHolder.getToolbar().getButton("Run").setEnabled(false);
   
-  envHolder.showPopup("Set rain", "Select an amount of rain to test, and then run the experiment!", false, false);
+  envHolder.showPopup("Set rain", "Select an amount of rain to test, and then run the experiment!\n\n\n"+
+                                  "Amount of rain:\n[drop: |1 (least rain)|2|3 (most rain)]", false, true);
+                                  
+  var popListener = new EnvironmentChangeListener({
+	  environmentChanged: function(evt){
+	    if (evt.getType() == EnvironmentChangeEvent.USER_CLOSED_POPUP){
+	      env.removeListener(popListener);
+	      choices = evt.getValue().toArray();
+	      setRain(choices[1]);
+	    }
+	  }
+	})
+	
+	env.addChangeListener(popListener);
 }
 
-var radioChangeHandler =
-{
-    stateChanged: function(evt)
-    {
-    	if (radio.getCurrentChoices().size() &lt; 1)
-    		return;
-    		
-    	
-      envHolder.getToolbar().getButton("Run").setEnabled(true);
-      envHolder.hidePopup();
-      
-    	var prevrain = env.getEnvironmentUnit(0,0).getProperty("rain")
-    	
-        currChoice = radio.getCurrentChoices().get(0)
-        var rain = currChoice.getName()
-        var url
-        if (rain == "0"){
-        	var url = new URL(baseUrl, "images/green3.png")
-        	setProperty("rain", 0.0)
-        } else if (rain == "1"){
-        	var url = new URL(baseUrl, "images/green2.png")
-        	setProperty("rain", 0.6)
-        } else {
-        	var url = new URL(baseUrl, "images/green.jpg")
-        	setProperty("rain", 1.0)
-        }
-        envHolder.getEnvironmentView().setBackgroundImageUrl(url)
-        
-    	var currrain = env.getEnvironmentUnit(0,0).getProperty("rain")
-        if (Math.abs(0.8 - currrain) &gt; Math.abs(0.8 - prevrain) &amp;&amp; env.getAllAgents().size() &gt; 0){
-        	lastEnvChange = 0
-        	setProperty("last environment change", 0)
-        }
-        
-        var numAgents = env.getAllAgents().size()
-        
-    }
-
+function setRain(rain){
+  System.out.println(rain);
+  var url
+	if (rain.equalsIgnoreCase("1 (least rain)")){
+	  var url = new URL(baseUrl, "images/green3.png");
+	  setProperty("rain", 0.0);
+	  currChoice = 0;
+	} else if (rain.equalsIgnoreCase("2")){
+	  var url = new URL(baseUrl, "images/green2.png");
+	  setProperty("rain", 0.6);
+    currChoice = 1;
+	} else {
+	  var url = new URL(baseUrl, "images/green.jpg");
+	  setProperty("rain", 1.0);
+    currChoice = 2;
+	}
+	envHolder.getEnvironmentView().setBackgroundImageUrl(url)
 }
-var radioChangeListener = new OTChangeListener(radioChangeHandler)
+
+
 
 function setProperty(prop, val){
 		for (var i = 0; i &lt; 9; i++) {
@@ -443,7 +422,7 @@ var stepHandler= {
         }
         updateTime();
         if (!shownMessage &amp;&amp; time &gt; 20000){
-        	doneChoices[parseInt(currChoice.getName())] = true;
+        	doneChoices[currChoice] = true;
 				
         	var doneAll = true
         	for (var i = 0; i &lt; 3; i++){
@@ -452,16 +431,14 @@ var stepHandler= {
         	}
         	
         	if (doneAll){
-				showMessageAndLog( "Good job! You have experimented with all three rainfall levels.\nMake sure to complete the table above, then go to the next page.", env, envHolder, otEnvHolder);
+            envHolder.pauseAction()
+				    envHolder.showPopup("Done all", "Good job! You have experimented with all three rainfall levels.\n\nWhen you have completed the table above, go to the next page!", true);
         		shownMessage = true;
-				envHolder.pauseAction()
-                      envHolder.getToolbar().getButton("Run").setEnabled(false)
         	} else {
-        		showMessageAndLog( "Look at the graph. Did any types of grass grow more than 50 plants?\nIf so, check the box in the table above.\nRun the experiment again with a different rainfall level.", env, envHolder, otEnvHolder)
-				shownMessage = true;
-				envHolder.pauseAction()
-                      envHolder.getToolbar().getButton("Run").setEnabled(false)
-			}
+        	  envHolder.pauseAction()
+        		envHolder.showPopup("Done one", "Look at the graph. Did any types of grass grow more than 50 plants?\n\nIf so, check the box in the table above.\n\nThe RESET the model to run the experiment again with a different rainfall level.", true)
+				    shownMessage = true;
+			     }
         }
 	}
 }
@@ -469,8 +446,6 @@ var stepHandler= {
 var stepListener = new EnvironmentStepListener(stepHandler)
 
 function save() {
-  if (radio != null)
-    radio.removeOTChangeListener(radioChangeListener)
   return true;
 }
 
@@ -495,11 +470,6 @@ function save() {
                     <object refid="${env-holder}" />
                   </reference>
                 </OTScriptVariableRealObject>
-                <OTScriptVariable name="radio">
-                  <reference>
-                    <object refid="${mountain-height-radio}" />
-                  </reference>
-                </OTScriptVariable>
                 <OTScriptVariable name="choice_0">
                   <reference>
                     <object refid="f8f30d75-f5b3-4451-a1d8-76d660b77e8a" />
@@ -507,19 +477,6 @@ function save() {
                 </OTScriptVariable>
               </variables>
             </OTScriptObject>
-            <OTChoice local_id="mountain-height-radio" name="Multiple choice" horizontal="false" alignContent="0">
-              <choices>
-                <OTCompoundDoc id="12fa28cb-0a4b-40d9-af31-1582a057b78e"  name="2">
-                  <bodyText>3 (Most rain)</bodyText>
-                </OTCompoundDoc>
-                <OTCompoundDoc name="1">
-                  <bodyText>2</bodyText>
-                </OTCompoundDoc>
-                <OTCompoundDoc id="f8f30d75-f5b3-4451-a1d8-76d660b77e8a" name="0">
-                  <bodyText>1 (Least rain)</bodyText>
-                </OTCompoundDoc>
-              </choices>
-            </OTChoice>
           </documentRefs>
         </OTCompoundDoc>
       </root>
