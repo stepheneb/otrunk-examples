@@ -32,6 +32,7 @@
     <import class="org.concord.otrunk.ui.OTImage" />
     <import class="org.concord.otrunk.ui.OTPlacement" />
     <import class="org.concord.otrunk.ui.OTProgressBar" />
+    <import class="org.concord.otrunk.ui.OTText" />
     <import class="org.concord.otrunk.ui.snapshot.OTSnapshot" />
     <import class="org.concord.otrunk.ui.snapshot.OTSnapshotButton" />
     <import class="org.concord.otrunk.ui.snapshot.OTSnapshotAlbum" />
@@ -77,7 +78,7 @@
                 <td>
                   <table>
                     <tr>
-                      <td align="center">
+                      <td width="150px" align="center">
                       <b>Amount of rain</b>
                       <br />
                       <br/>
@@ -86,6 +87,9 @@
                         <object refid="${water-slider}" />
                         <br />
                         Little rain
+                      </td>
+                      <td width="80px" align="center">
+                        <b>Time: </b><br/><object refid="${time-text}" viewid="c93a7460-e18a-11dc-95ff-0800200c9a66"/>
                       </td>
                     </tr>
                   </table>
@@ -360,6 +364,7 @@ function setup() {
 	setProperty("last environment change", 10)
 	
 	time = 0
+	timeText.setText("0");
 	previousTime = 0
 	shownMessage = false;
 	
@@ -428,6 +433,8 @@ var resetHandler= {
 function updateTime(){
 	timeSinceLastStart = System.currentTimeMillis() - startTime;
 	time =  previousTime + timeSinceLastStart;
+	var sec = Math.floor(time / 1000);
+	timeText.setText(sec);
 }
 			
 var resetListener = new EnvironmentChangeListener(resetHandler)
@@ -498,9 +505,15 @@ function save() {
                     <object refid="${water-slider}" />
                   </reference>
                 </OTScriptVariable>
+                <OTScriptVariable name="timeText">
+                  <reference>
+                    <object refid="${time-text}" />
+                  </reference>
+                </OTScriptVariable>
               </variables>
             </OTScriptObject>
             <OTProgressBar local_id="water-slider" minimum="-10" maximum="100" value="100" vertical="true" />
+            <OTText local_id="time-text" text="2010"/>
           </documentRefs>
         </OTCompoundDoc>
       </root>
