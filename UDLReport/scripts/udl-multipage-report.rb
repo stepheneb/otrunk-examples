@@ -523,6 +523,14 @@ def pretest
   activitySections().each do |section|
     return section if section.getIsPretest()
   end
+  # fallback by compairing name
+  # Hack for when isPretest hasn't been set (intentionally)
+  # as in when we don't wish to stop student navigation
+  activitySections().each do |section|
+    if section.name && (section.name.strip =~ /\A(pre).*test.*/i)
+      return section
+    end
+  end
 end
 
 def labBookBundle
