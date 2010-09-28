@@ -133,11 +133,8 @@
                         var previousTime
                         var isRunning = false
                         
-                        var justEaten = false;
-                        var justEatenTime = 1000000;
-                        
-                        var plusOnes = [];
-                        var plusOneTimes = [];
+                        var plusOnes;
+                        var plusOneTimes;
                         
 												function init() {
 													env.removeAllAgents()
@@ -156,6 +153,7 @@
 												
 												function setup() {
 												  hawk = addHawk();
+												  lastEnergy = hawk.getProperty("energy");
                           
                           for (var i = 0; i &lt; 10; i++){
                             addRabbit("white");
@@ -168,6 +166,9 @@
                           
                           points = 0;
                           pointsText.setText("0");
+                          
+                          plusOnes = [];
+                          plusOneTimes = [];
                           
                           time = 0
                           previousTime = 0
@@ -256,7 +257,6 @@
 					                  if (energy &gt; lastEnergy){
 					                     points++;
 					                     pointsText.setText(points);
-					                     hawk.setProperty("just eaten", 1.0);
 					                     
 					                     var plusOne = plus_one.createAgent();
 					                     plusOne.setProperty("size", 1.2);
@@ -267,15 +267,11 @@
 					                     plusOnes.push(plusOne);
 					                     plusOneTimes.push(time);
 					                  }
-					                  if (plusOnes.length > 0 &amp;&amp; time > plusOneTimes[0] + 1500) {
-					                   env.removeAgent(plusOnes[0]);
-					                   plusOnes.shift();
-					                   plusOneTimes.shift();
-					                  }
 					                  
-					                  if (justEaten &amp;&amp; time &gt; justEatenTime + 1000) {
-					                     justEaten = false;
-					                     hawk.setProperty("just eaten", 0.0);
+					                  if (plusOnes.length > 0 &amp;&amp; time > plusOneTimes[0] + 1500) {
+					                     env.removeAgent(plusOnes[0]);
+					                     plusOnes.shift();
+					                     plusOneTimes.shift();
 					                  }
 					                  
 					                  
