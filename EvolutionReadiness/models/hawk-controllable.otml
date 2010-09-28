@@ -57,6 +57,7 @@
 		<idMapping local_id="rabbit-species" id="eec525fc-4ca5-4fa9-be17-e3d9fa44ed24" />
 		<idMapping local_id="plant-species" id="6904840c-03f6-4f2d-b822-bc85aebe70db" />
     <idMapping local_id="hawk-species" id="8cf33f49-8820-4c6f-9e5f-49fcca68acbd" />
+    <idMapping local_id="plus-one" id="a0b25a0c-9fb6-4bd9-b139-461072420103" />
 	</idMap>
 	<objects>
 		<OTSystem>
@@ -80,6 +81,7 @@
 				<OTInclude href="species/fast-plants-roots.otml" />
 				<OTInclude href="species/white-brown-rabbits.otml" />
         <OTInclude href="species/hawks.otml" />
+        <OTInclude href="species/plus-one.otml" />
 			</includes>
 			<root>
 				<OTCompoundDoc>
@@ -130,6 +132,12 @@
                         var time
                         var previousTime
                         var isRunning = false
+                        
+                        var justEaten = false;
+                        var justEatenTime = 1000000;
+                        
+                        var plusOnes = [];
+                        var plusOneTimes = [];
                         
 												function init() {
 													env.removeAllAgents()
@@ -241,13 +249,37 @@
 					              {
 					                environmentStepped: function()
 					                {
+					                
+                            updateTimer();
+                            
 					                  var energy = hawk.getProperty("energy");
 					                  if (energy &gt; lastEnergy){
 					                     points++;
 					                     pointsText.setText(points);
+					                     hawk.setProperty("just eaten", 1.0);
+					                     
+					                     var plusOne = plus_one.createAgent();
+					                     plusOne.setProperty("size", 1.2);
+                               plusOne.setEnvironment(env);
+					                     plusOne.setLocation(hawk.getLocation());
+					                     env.addAgent(plusOne);
+					                     
+					                     plusOnes.push(plusOne);
+					                     plusOneTimes.push(time);
 					                  }
+					                  if (plusOnes.length > 0 &amp;&amp; time > plusOneTimes[0] + 1500) {
+					                   env.removeAgent(plusOnes[0]);
+					                   plusOnes.shift();
+					                   plusOneTimes.shift();
+					                  }
+					                  
+					                  if (justEaten &amp;&amp; time &gt; justEatenTime + 1000) {
+					                     justEaten = false;
+					                     hawk.setProperty("just eaten", 0.0);
+					                  }
+					                  
+					                  
 					                  lastEnergy = energy;
-					                  updateTimer();
 					                  if (time / 1000 &gt; 30){
 					                   showMessage("Good job! You caught "+points+" rabbits!", env, envHolder);
                              showMessage("How many white rabbits and how many brown rabbits are left?\nWrite down the number in the table.", env, envHolder);
@@ -312,6 +344,11 @@
                     <OTScriptVariableRealObject name="plant_species">
                       <reference>
                         <object refid="${plant-species}" />
+                      </reference>
+                    </OTScriptVariableRealObject>
+                    <OTScriptVariableRealObject name="plus_one">
+                      <reference>
+                        <object refid="${plus-one}" />
                       </reference>
                     </OTScriptVariableRealObject>
                     <OTScriptVariable name="pointsText">
