@@ -332,12 +332,22 @@
                               if (evt.getType() == EnvironmentChangeEvent.RESET){
                                 isRunning = false
                                 setup()
-                              }else if (evt.getType() == EnvironmentChangeEvent.RUN){
+                              } else if (evt.getType() == EnvironmentChangeEvent.RUN){
                                 isRunning = true
+                              } else if (evt.getType() == EnvironmentChangeEvent.USER_ADDED_AGENTS &amp;&amp; evt.getValue() == rabbit_species){
+                                env.removeAgents(rabbit_species);
+                                addRabbits();
                               }
                             }
                           }    
-                        var resetListener = new EnvironmentChangeListener(resetRunHandler)
+                        var resetListener = new EnvironmentChangeListener(resetRunHandler);
+                        
+                        function addRabbits(){
+                          for (var i = 0; i &lt; 30; i++){
+                            var color = i % 2 == 0 ? "brown" : "white"
+                            addAgent(rabbit_species, [["resource consumption rate", 10],["metabolism", 1],["mating desire bonus", -20],["hunger bonus", -10],["color", color]]);
+                          }
+                        }
                         
                         function updateTimer(){
                           var step = env.getStepCount();
