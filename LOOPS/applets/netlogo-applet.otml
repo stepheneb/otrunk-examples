@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<otrunk id="33754150-b594-11d9-9669-0800200c9a66" >
+  <imports>
+    <import class="org.concord.otrunk.OTSystem"/>
+    <import class="org.concord.otrunk.view.OTViewEntry"/>
+    <import class="org.concord.otrunk.view.OTViewBundle"/>
+    <import class="org.concord.framework.otrunk.view.OTFrame" />
+    <import class="org.concord.otrunk.view.document.OTCompoundDoc"/>
+    <import class="org.concord.otrunk.view.document.OTTextObject"/>
+    <import class="org.concord.otrunknl41.OTNLogoModel"/>
+    
+    <import class="org.concord.data.state.OTDataInput"/>
+    
+    <import class="org.concord.datagraph.state.OTDataGraph" />
+	<import class="org.concord.datagraph.state.OTDataCollector" />
+	<import class="org.concord.datagraph.state.OTDataAxis" />
+	<import class="org.concord.datagraph.state.OTDataGraphable" />
+	<import class="org.concord.data.state.OTDataStore" />
+	<import class="org.concord.data.state.OTDataChannelDescription" />
+		
+    <import class="org.concord.sensor.state.OTDeviceConfig" />
+	<import class="org.concord.sensor.state.OTExperimentRequest" />
+	<import class="org.concord.sensor.state.OTInterfaceManager" />
+	<import class="org.concord.sensor.state.OTSensorDataProxy" />
+	<import class="org.concord.sensor.state.OTSensorRequest" />
+	<import class="org.concord.sensor.state.OTZeroSensor" />
+
+    <import class="org.concord.data.state.OTTimerDataStoreDataProducer" />
+
+    <import class="org.concord.datagraph.log.OTEventLog" />
+    
+    <import class="org.concord.data.state.OTDataChannelProducerFilter" />
+    <import class="org.concord.data.state.OTSingleYPerXProducerFilter" />
+  </imports>
+  <objects>
+    <OTSystem>
+      <bundles>
+        <OTViewBundle showLeftPanel="false">
+          <frame>
+            <OTFrame useScrollPane="false" width="1350" height="700" />
+          </frame>
+          <viewEntries>
+            <OTViewEntry
+              objectClass="org.concord.otrunknl41.OTNLogoModel" 
+              viewClass="org.concord.otrunknl41.OTNLogoModelView"/>
+            <OTViewEntry
+              objectClass="org.concord.otrunk.view.document.OTDocument" 
+              viewClass="org.concord.otrunk.view.document.OTDocumentView"/>
+            <OTViewEntry local_id="graph-view"
+				objectClass="org.concord.datagraph.state.OTDataCollector"
+				viewClass="org.concord.datagraph.state.OTDataCollectorView" />
+          </viewEntries>
+        </OTViewBundle>
+      </bundles>
+      <root>
+        <OTCompoundDoc>
+          <bodyText>
+            NetLogo test<br/>
+            <hr/>
+          <object refid="${nl_model}"/>
+            <hr/>
+            <object refid="cefe3fef-5501-11dd-9991-5952f2563061"/>
+          </bodyText>
+          <documentRefs>
+          	<OTNLogoModel local_id="nl_model"
+          		authoredDataURL="netlogo-applet-model.nlogo" startButtonName="Make a Graph" resetButtonName="Reset Cars and Road" useDt="false">
+              <variables>
+                <string>t1</string>
+                <string>x-car1-world</string>
+                <string>t2</string>
+                <string>x-car2-world</string>
+              </variables>
+          	</OTNLogoModel>
+            <OTDataCollector id="cefe3fef-5501-11dd-9991-5952f2563061" name="Data graph" title="Data graph" graphableListEditable="false">
+              <source>
+                <OTDataGraphable name="Car 1" connectPoints="true" controllable="false" yColumn="1" drawMarks="false" color="0x0000ff" xColumn="0" lineWidth="2.0" showAllChannels="false" visible="true">
+                  <dataProducer>
+                    <OTSingleYPerXProducerFilter>
+                      <source>
+                        <OTDataChannelProducerFilter source="${nl_model}">
+                          <channelsToDiscard>
+                            <int>2</int>
+                            <int>3</int>
+                          </channelsToDiscard>
+                        </OTDataChannelProducerFilter>
+                      </source>
+                    </OTSingleYPerXProducerFilter>
+                  </dataProducer>
+                  <dataStore>
+                    <OTDataStore local_id="car1-ds" />
+                  </dataStore>
+                </OTDataGraphable>
+              </source>
+              <xDataAxis>
+                <OTDataAxis max="30" units="s" min="0.0" label="Time" />
+              </xDataAxis>
+              <yDataAxis>
+                <OTDataAxis max="10.0" units="" min="-10.0" label="Position" />
+              </yDataAxis>
+              <graphables>
+                <OTDataGraphable name="Car 2" connectPoints="true" controllable="false" yColumn="1" drawMarks="false" color="0xff0000" xColumn="0" lineWidth="2.0" showAllChannels="false" visible="true">
+                  <dataProducer>
+                  <OTSingleYPerXProducerFilter>
+                      <source>
+                        <OTDataChannelProducerFilter source="${nl_model}">
+                          <channelsToDiscard>
+                            <int>0</int>
+                            <int>1</int>
+                          </channelsToDiscard>
+                        </OTDataChannelProducerFilter>
+                      </source>
+                    </OTSingleYPerXProducerFilter>
+                  </dataProducer>
+                  <dataStore>
+                    <OTDataStore local_id="car2-ds" />
+                  </dataStore>
+                </OTDataGraphable>
+              </graphables>
+              <eventLog>
+                <OTEventLog />
+              </eventLog>
+            </OTDataCollector>
+          </documentRefs>
+        </OTCompoundDoc>      
+      </root>
+    </OTSystem>
+  </objects>
+</otrunk>
