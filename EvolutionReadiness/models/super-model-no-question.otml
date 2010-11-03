@@ -87,6 +87,7 @@
 			<root>
 				<OTCompoundDoc>
 					<bodyText>
+					<object refid="${hypothesis-choice}"/>
 					 <table>
 					   <tr>
 					     <td>
@@ -99,6 +100,16 @@
 					 </table>
 					</bodyText>
 					<documentRefs>
+					<OTChoice local_id="hypothesis-choice" name="Multiple choice" horizontal="false" alignContent="0">
+             <choices>
+               <OTCompoundDoc id="2f02abd4-a853-48d4-9378-13ef7a39da8f" name="Hawks do NOT need grass to survive.">
+                 <bodyText>Hawks do NOT need grass to survive.</bodyText>
+               </OTCompoundDoc>
+               <OTCompoundDoc name="If grass is removed from the ecosystem, the hawks will not find enough food.">
+                 <bodyText>Hawks need grass to survive.</bodyText>
+               </OTCompoundDoc>
+             </choices>
+           </OTChoice>
 					 <OTEnvironmentHolder local_id="env-holder"
                       width="590" height="460" toolbar="run,info,reset" useSpeedSlider="false">
                       <environment>
@@ -132,13 +143,13 @@
                                 var brownness = 0;
                                 var colorChangedRecently = true;
                                 var lastBkgdUrl;
-                                var addedHawks, addedRabbits;
-                                var hawksAreDead, rabbitsAreDead;
-                                var hawksRemoved, rabbitsRemoved;
+                                var addedPlants, addedHawks, addedRabbits;
+                                var plantsAreDead, hawksAreDead, rabbitsAreDead;
+                                var plantsRemoved, hawksRemoved, rabbitsRemoved;
                                 var timeOfExtinction;
                                 var agentsRemoved;
                                 var envHolder;
-                                var endMessageShown;
+                                var endMessageShown, removePlantsMessageShown, balanceMessageShown;
                                 
                                 var dontShowPopup = false;
                                 
@@ -166,10 +177,10 @@
                                   time = 0
                                   previousTime = 0
                                   brownness = 0
-                                  addedHawks = addedRabbits = false;
-                                  hawksAreDead = rabbitsAreDead = false;
-                                  hawksRemoved = rabbitsRemoved = false;
-                                  endMessageShown = false;
+                                  addedPlants = addedHawks = addedRabbits = false;
+                                  plantsAreDead = hawksAreDead = rabbitsAreDead = false;
+                                  plantsRemoved = hawksRemoved = rabbitsRemoved = false;
+                                  removePlantsMessageShown = balanceMessageShown = endMessageShown = false;
                                   
                                //   if (!dontShowPopup)
                                //    showQuestionPopup();
@@ -181,6 +192,13 @@
                                   {
                                      checkExtinction();
                                      checkPredators();
+                                     updateTimer();
+                                     if (time / 1000 &gt; 20 &amp;&amp; !(addedPlants &amp;&amp; addedHawks &amp;&amp; addedRabbits) &amp;&amp; !balanceMessageShown){
+                                      showBalancedMessage();
+                                     }
+                                     if (time / 1000 &gt; 25 &amp;&amp; !plantsRemoved &amp;&amp; !removePlantsMessageShown){
+                                      showRemovePlantsMessage();
+                                     }
                                      if (env.getStepCount() == 350) {
                                        var otEnvHolderController = controllerService.getController(otEnvHolder);
                                        otEnvHolderController.log("Model ran for 350 steps",null);
@@ -191,58 +209,17 @@
                                 }
                                 var stepListener = new EnvironmentStepListener(stepHandler)
                                 
-                                var questionChoices, hypothesisChoices;
-                                
-                                function showQuestionPopup(){
-                                   var popupText = "Now you get to run your own experiments so that you can answer your own hypotheses!\n\n"+
-                                                 "Your Question: What would happen to the [drop:hawk|rabbit|grass] population if the [drop:grass|rabbit|hawk] population [drop:died out|got too big]?"
-                                  
-                                   
-                                  envHolder.showPopup("Question", popupText);
-                                  
-                                  var firstListener = new EnvironmentChangeListener({
-                                    environmentChanged: function(evt){
-                                      if (evt.getType() == EnvironmentChangeEvent.USER_CLOSED_POPUP){
-                                        var otEnvHolderController = controllerService.getController(otEnvHolder);
-                                        env.removeListener(firstListener);
-                                        questionChoices = evt.getValue().toArray();
-                                        showHypothesisPopup();
-                                      }
-                                    }
-                                  })
-                                  
-                                  env.addChangeListener(firstListener);
-                                }
-                                
-                                function showHypothesisPopup(){
-                                   var popupText = "Your Question:\n"+
-                                                "   \"What would happen to the "+questionChoices[1]+" population if the "+questionChoices[2]+" population "+questionChoices[3]+"?\"\n\n"+
-                                                "What do you think will happen?\n\n"+
-                                                "   Your Hypothesis: I think that if the "+questionChoices[2]+" population "+questionChoices[3]+" then the "+questionChoices[1]+" population will [drop:stay the same|die out|get bigger] because\n"+
-                                                "[text]";
-                                   
-                                  envHolder.showPopup("Hypothesis", popupText);
-                                  
-                                  var secondListener = new EnvironmentChangeListener({
-                                    environmentChanged: function(evt){
-                                      if (evt.getType() == EnvironmentChangeEvent.USER_CLOSED_POPUP){
-                                        var otEnvHolderController = controllerService.getController(otEnvHolder);
-                                        hypothesisChoices = evt.getValue().toArray();
-                                        env.removeListener(secondListener);
-                                      }
-                                    }
-                                  })
-                                  
-                                  env.addChangeListener(secondListener);
-                                }
                                 
                                 function showEndMessage(){
-                                  var popupText = "Your question was:\n"+
-                                                  "  \"What would happen to the hawk population if all the grass died in the green field?\"\n\n"+
-                                                  "Were you able to discover what happens in the model?\n\n"+
-                                                  "[button:Yes] [button:No, run the model again]";
+                                  var hypothesis = hypo_choice.getCurrentChoices().get(0).getBodyText();
+                                  var popupText = "Your hypothesis was:\n"+
+                                                  "  \""+hypothesis+"\"\n\n"+
+                                                  "Is that what happened in the model?\n\n"+
+                                                   "[drop: |Yes|No]         \n\n"+
+                                                  "If you want to run the model again, you can reset it.\n\n"+
+                                                  "If you have finished, go on to the next page!";
                                    
-                                  envHolder.showPopup("Run complete?", popupText);
+                                  envHolder.showPopup("Was hypothesis correct?", popupText);
                                   
                                   endMessageShown = true;
                                   
@@ -251,18 +228,56 @@
                                       if (evt.getType() == EnvironmentChangeEvent.USER_CLOSED_POPUP){
                                         var otEnvHolderController = controllerService.getController(otEnvHolder);
                                         env.removeListener(firstListener);
-                                        var end = evt.getValue().toArray();
-                                        if (end[1].equalsIgnoreCase("Yes")){
-                                          showConclusionMessage();
-                                        } else {
-                                          dontShowPopup = true;
-                                          envHolder.reset();
-                                        }
+                                        envHolder.reset();
                                       }
                                     }
                                   })
                                   
                                   env.addChangeListener(firstListener);
+                                }
+                                
+                                function showBalancedMessage(){
+                                  balanceMessageShown = true;
+                                  var popupText = "Please create a balanced ecosystem with grass, rabbits and hawks.\n\n"+
+                                                  "Then, remove the grass. What happens to the hawks?";
+                                   
+                                  envHolder.showPopup("Please balance message", popupText, true);
+                                }
+                                
+                                function showBalancedMessageExtinction(){
+                                  var popupText = "Oh no! A species died out because the ecosystem wasn't balanced!\n\n"+
+                                                  "Try to create a balanced ecosystem by just adding a small number of plants, rabbits and hawks.\n\n"+
+                                                  "Then, remove the grass. What happens to the hawks?";
+                                                  
+                                  
+                                  envHolder.showPopup("Premature extinction message", popupText, true);
+                                                  
+                                  var firstListener = new EnvironmentChangeListener({
+                                    environmentChanged: function(evt){
+                                      if (evt.getType() == EnvironmentChangeEvent.USER_CLOSED_POPUP){
+                                        env.removeListener(firstListener);
+                                        envHolder.reset();
+                                      }
+                                    }
+                                  })
+                                  
+                                  env.addChangeListener(firstListener);
+                                   
+                                }
+                                
+                                function showHypoMessage(){
+                                  var popupText = "Please pick a hypothesis for the question above!";
+                                     
+                                  envHolder.showPopup("Please pick a hypothesis", popupText);
+                                  envHolder.pauseAction();
+                                }
+                                
+                                function showRemovePlantsMessage(){
+                                  removePlantsMessageShown = true;
+                                  var popupText = "Great, you have the grass, rabbits and hawks living in the field.\n\n"+
+                                                  "Remove the grass and see what happens to the hawks!";
+                                   
+                                  envHolder.showPopup("Please remove grass message", popupText, true);
                                 }
                                 
                                 function showConclusionMessage(){
@@ -288,9 +303,15 @@
                                 }
                                 
                                 function checkExtinction() {
+                                  var allPlants = env.getAgents(plant_species);
                                   var allRabbits = env.getAgents(rabbit_species);
                                   var allHawks = env.getAgents(hawk_species);
-                                   
+                                  
+                                  if (allPlants.size() &gt; 0){
+                                     addedPlants = true;
+                                     plantsRemoved = false;
+                                     plantsAreDead = false;
+                                  }
                                   if (allRabbits.size() &gt; 0){
                                      addedRabbits = true;
                                      rabbitsRemoved = false;
@@ -307,10 +328,16 @@
                                       if (hawksAreDead &amp;&amp; !hawksRemoved || 
                                             rabbitsAreDead &amp;&amp; !rabbitsRemoved){
                                         var otEnvHolderController = controllerService.getController(otEnvHolder);
-                                        var message = hawksAreDead ? "Hawks went extinct" : "Rabbits went extinct";
-                                        otEnvHolderController.log(message,null);
-                                        envHolder.pauseAction();
-                                        showEndMessage();
+                                        if (!(plantsRemoved || rabbitsRemoved)) {
+                                          otEnvHolderController.log("Extinction due to unbalanced ecosystem",null);
+                                          envHolder.pauseAction();
+                                          showBalancedMessageExtinction();
+                                        } else {
+	                                        var message = hawksAreDead ? "Hawks went extinct" : "Rabbits went extinct";
+	                                        otEnvHolderController.log(message,null);
+	                                        envHolder.pauseAction();
+	                                        showEndMessage();
+                                        }
                                       }
                                     }
                                   } else if (addedHawks &amp;&amp; !hawksRemoved) {
@@ -353,14 +380,13 @@
                                     environmentChanged: function(evt){
                                       if (evt.getType() == EnvironmentChangeEvent.RESET){
                                         isRunning = false;
-                                        if (!endMessageShown) {
-                                          showEndMessage();
-                                         } else {
-                                          setup();
-                                         }
+                                        setup();
                                       }else if (evt.getType() == EnvironmentChangeEvent.RUN){
                                         isRunning = true
                                         startTime = System.currentTimeMillis()
+                                        if (hypo_choice.getCurrentChoices().size() &lt; 1) {
+                                          showHypoMessage();
+                                        }
                                       } else if (evt.getType() == EnvironmentChangeEvent.PAUSE){
                                         previousTime = time;
                                       } else if (evt.getType() == EnvironmentChangeEvent.USER_REMOVED_AGENTS){
@@ -369,6 +395,8 @@
                                           hawksRemoved = true;
                                         } else if (species === rabbit_species){
                                           rabbitsRemoved = true;
+                                        } else if (species === plant_species){
+                                          plantsRemoved = true;
                                         }
                                       } else if (evt.getType() == EnvironmentChangeEvent.USER_CLOSED_POPUP){
                                         var otEnvHolderController = controllerService.getController(otEnvHolder);
@@ -382,16 +410,6 @@
                                 function updateTimer(){
                                   timeSinceLastStart = System.currentTimeMillis() - startTime;
                                   time =  previousTime + timeSinceLastStart;
-                                  
-                                  var seconds = Math.floor(time / 1000);
-                                  if (seconds % 15 === 0){
-                                   if (!colorChangedRecently) {
-                                     updateColor();
-                                     colorChangedRecently = true;
-                                   }
-                                  } else {
-                                   colorChangedRecently = false;
-                                  }
                                 }
         
                                 function save() {
@@ -429,29 +447,9 @@
                                 <object refid="${hawk-species}" />
                               </reference>
                             </OTScriptVariableRealObject>
-                            <OTScriptVariableRealObject name="whiteRule">
+                            <OTScriptVariable name="hypo_choice">
                               <reference>
-                                <object refid="${white-rule}" />
-                              </reference>
-                            </OTScriptVariableRealObject>
-                            <OTScriptVariableRealObject name="brownRule">
-                              <reference>
-                                <object refid="${brown-rule}" />
-                              </reference>
-                            </OTScriptVariableRealObject>
-                            <OTScriptVariable name="removeGrass">
-                              <reference>
-                                <object refid="${remove-grass-button}" />
-                              </reference>
-                            </OTScriptVariable>
-                            <OTScriptVariable name="removeRabbits">
-                              <reference>
-                                <object refid="${remove-rabbits-button}" />
-                              </reference>
-                            </OTScriptVariable>
-                            <OTScriptVariable name="removeHawks">
-                              <reference>
-                                <object refid="${remove-hawks-button}" />
+                                <object refid="${hypothesis-choice}"/>
                               </reference>
                             </OTScriptVariable>
                           </variables>
