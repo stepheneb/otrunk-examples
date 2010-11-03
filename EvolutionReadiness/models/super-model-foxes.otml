@@ -89,6 +89,7 @@
 			<root>
 				<OTCompoundDoc>
 					<bodyText>
+          <object refid="${hypothesis-choice}"/>
 					 <table>
 					   <tr>
 					     <td colspan="2">
@@ -106,6 +107,16 @@
 					 </table>
 					</bodyText>
 					<documentRefs>
+					<OTChoice local_id="hypothesis-choice" name="Multiple choice" horizontal="false" alignContent="0">
+             <choices>
+               <OTCompoundDoc name="Hawks do NOT need grass to survive.">
+                 <bodyText>The foxes and hawks will NOT both be able to survive well.</bodyText>
+               </OTCompoundDoc>
+               <OTCompoundDoc name="If grass is removed from the ecosystem, the hawks will not find enough food.">
+                 <bodyText>The foxes and hawks will both be able to survive well.</bodyText>
+               </OTCompoundDoc>
+             </choices>
+           </OTChoice>
 					<OTEnvironmentHolder local_id="env-holder"
                       width="590" height="460" toolbar="run,info,reset" useSpeedSlider="false">
                       <environment>
@@ -176,8 +187,6 @@
                                   hawksRemoved = rabbitsRemoved = foxesRemoved = false;
                                   endMessageShown = false;
                                   
-                                  if (!dontShowPopup)
-                                   showQuestionPopup();
                                 }
                                 
                                 var stepHandler =
@@ -186,10 +195,9 @@
                                   {
                                      checkExtinction();
                                      checkPredators();
-                                     if (env.getStepCount() == 350) {
+                                     if ((env.getStepCount() + 1) % 350 === 0) {
                                        var otEnvHolderController = controllerService.getController(otEnvHolder);
                                        otEnvHolderController.log("Model ran for 350 steps",null);
-                                       envHolder.pauseAction();
                                        showEndMessage();
                                      }
                                   }
@@ -198,112 +206,26 @@
                                 
                                 var questionChoices, hypothesisChoices;
                                 
-                                function showQuestionPopup(){
-                                   var popupText = "Now you get to run your own experiments so that you can answer your own hypotheses!\n\n"+
-                                                 "Your Question: What would happen to the [drop: |fox|hawk|rabbit|grass] population if the [drop: |grass|rabbit|hawk|fox] population [drop: |died out|got too big]?"
-                                  
-                                   
-                                  envHolder.showPopup("Question", popupText);
-                                  
-                                  questionText.setText("");
-                                  
-                                  var firstListener = new EnvironmentChangeListener({
-                                    environmentChanged: function(evt){
-                                      if (evt.getType() == EnvironmentChangeEvent.USER_CLOSED_POPUP){
-                                        var otEnvHolderController = controllerService.getController(otEnvHolder);
-                                        env.removeListener(firstListener);
-                                        questionChoices = evt.getValue().toArray();
-                                        showHypothesisPopup();
-                                      }
-                                    }
-                                  })
-                                  
-                                  env.addChangeListener(firstListener);
-                                }
-                                
-                                function showHypothesisPopup(){
-                                   var popupText = "Your Question:\n"+
-                                                "   \"What would happen to the "+questionChoices[1]+" population if the "+questionChoices[2]+" population "+questionChoices[3]+"?\"\n\n"+
-                                                "What do you think will happen?\n\n"+
-                                                "   Your Hypothesis: I think that if the "+questionChoices[2]+" population "+questionChoices[3]+" then the "+questionChoices[1]+" population will [drop: |stay the same|die out|get bigger] because\n"+
-                                                "[text]";
-                                   
-                                  envHolder.showPopup("Hypothesis", popupText);
-                                  
-                                  var secondListener = new EnvironmentChangeListener({
-                                    environmentChanged: function(evt){
-                                      if (evt.getType() == EnvironmentChangeEvent.USER_CLOSED_POPUP){
-                                        var otEnvHolderController = controllerService.getController(otEnvHolder);
-                                        hypothesisChoices = evt.getValue().toArray();
-                                        env.removeListener(secondListener);
-                                        questionText.setText("What would happen to the "+questionChoices[1]+" population if the "+questionChoices[2]+" population "+questionChoices[3]+"?");
-                                      }
-                                    }
-                                  })
-                                  
-                                  env.addChangeListener(secondListener);
-                                }
                                 
                                 function showEndMessage(){
-                                  var popupText = "Your question was:\n"+
-                                                  "  \"What would happen to the "+questionChoices[1]+" population if the "+questionChoices[2]+" population "+questionChoices[3]+"?\"\n\n"+
-                                                  "Were you able to discover what happens in the model?\n\n"+
-                                                  "[button:Yes] [button:No, run the model again]";
+	                                
+                                  var hypothesis = hypo_choice.getCurrentChoices().get(0).getBodyText();
+                                  
+                                  var popupText = "Your hypothesis was:\n"+
+                                                  "  \""+hypothesis+"\"\n\n"+
+                                                  "If you've been able to discover what happens in the model, you can go on to the next page.\n\n"+
+                                                   "If not, you can keep running the model, or reset it if you want to run a new model.";
                                    
                                   envHolder.showPopup("Run complete?", popupText);
+                                  envHolder.pauseAction();
                                   
-                                  endMessageShown = true;
-                                  
-                                  var firstListener = new EnvironmentChangeListener({
-                                    environmentChanged: function(evt){
-                                      if (evt.getType() == EnvironmentChangeEvent.USER_CLOSED_POPUP){
-                                        var otEnvHolderController = controllerService.getController(otEnvHolder);
-                                        env.removeListener(firstListener);
-                                        var end = evt.getValue().toArray();
-                                        if (end[1].equalsIgnoreCase("Yes")){
-                                          showConclusionMessage();
-                                        } else {
-                                          dontShowPopup = true;
-                                          envHolder.reset();
-                                        }
-                                      }
-                                    }
-                                  })
-                                  
-                                  env.addChangeListener(firstListener);
                                 }
                                 
-                                function showConclusionMessage(){
-                                  var popupText = "Your hypothesis about what would happen was:\n"+
-                                                  "  \"I think that if the "+questionChoices[2]+" population "+questionChoices[3]+
-                                                  " then the "+questionChoices[1]+" population will "+hypothesisChoices[1]+" because "+hypothesisChoices[2]+".\"\n\n"+
-                                                  "Is that what happened?\n"+
-                                                  "[drop: |Yes|No]\n"+
-                                                  "Write down your observations of this model:\n[text]\n\n"+
-                                                  "Take a picture of the graph for your lab book using the 'Take a picture' button!\n\n"+
-                                                  "Do you want to try a new experiment?\n"+
-                                                  "[button:Yes][button:No]";
-                                   
-                                  envHolder.showPopup("Conclusions", popupText);
-                                  
-                                  var firstListener = new EnvironmentChangeListener({
-                                    environmentChanged: function(evt){
-                                      if (evt.getType() == EnvironmentChangeEvent.USER_CLOSED_POPUP){
-                                        var otEnvHolderController = controllerService.getController(otEnvHolder);
-                                        env.removeListener(firstListener);
-                                        var end = evt.getValue().toArray();
-                                        if (end[1].equalsIgnoreCase("Yes")){
-                                          dontShowPopup = false;
-                                          envHolder.reset();
-                                        } else {
-                                          var popupText2 = "Good work! Move on to the next page.";
-                                          envHolder.showPopup("Finish", popupText2);
-                                        }
-                                      }
-                                    }
-                                  })
-                                  
-                                  env.addChangeListener(firstListener);
+                                function showHypoMessage(){
+                                  var popupText = "Please pick a hypothesis for the question above!";
+                                     
+                                  envHolder.showPopup("Please pick a hypothesis", popupText);
+                                  envHolder.pauseAction();
                                 }
                                 
                                 function checkExtinction() {
@@ -334,8 +256,8 @@
                                     }
                                   } else if (addedHawks &amp;&amp; !hawksRemoved) {
                                     if (allHawks.size() === 0){
-                                      hawksAreDead = true;
-                                      timeOfExtinction = env.getStepCount();
+                              //        hawksAreDead = true;
+                              //        timeOfExtinction = env.getStepCount();
                                     }
                                   } else if (addedRabbits) {
                                     if (allRabbits.size() === 0){
@@ -347,14 +269,14 @@
                                 
                                 function checkPredators(){
                                   var allHawks = env.getAgents(hawk_species);
-                                  if (allHawks.size() &gt; 15){
+                                  if (allHawks.size() &gt; 16){
                                     setProperty(allHawks, "min offspring", 0);
                                     setProperty(allHawks, "max offspring", 1);
-                                    setProperty(allHawks, "metabolism", 7);
+                                    setProperty(allHawks, "metabolism", 8);
                                   } else if (allHawks.size() &lt; 8){
                                     setProperty(allHawks, "min offspring", 3);
                                     setProperty(allHawks, "max offspring", 4);
-                                    setProperty(allHawks, "metabolism", 3);
+                                    setProperty(allHawks, "metabolism", 4);
                                   } else {
                                     setProperty(allHawks, "min offspring", 2);
                                     setProperty(allHawks, "max offspring", 3);
@@ -362,11 +284,15 @@
                                   }
                                   
                                   var allFoxes = env.getAgents(fox_species);
-                                  if (allFoxes.size() &gt; 20){
+                                  if (allFoxes.size() &gt; 22){
                                     setProperty(allFoxes, "min offspring", 0);
                                     setProperty(allFoxes, "max offspring", 1);
-                                    setProperty(allFoxes, "metabolism", 5);
-                                  } else if (allFoxes.size() &lt; 15){
+                                    setProperty(allFoxes, "metabolism", 6);
+                                  } else if (allFoxes.size() &lt; 10){
+                                    setProperty(allFoxes, "min offspring", 3);
+                                    setProperty(allFoxes, "max offspring", 6);
+                                    setProperty(allFoxes, "metabolism", 2);
+                                  } else if (allFoxes.size() &lt; 16){
                                     setProperty(allFoxes, "min offspring", 3);
                                     setProperty(allFoxes, "max offspring", 4);
                                     setProperty(allFoxes, "metabolism", 3);
@@ -395,6 +321,9 @@
                                       }else if (evt.getType() == EnvironmentChangeEvent.RUN){
                                         isRunning = true
                                         startTime = System.currentTimeMillis()
+                                        if (hypo_choice.getCurrentChoices().size() &lt; 1) {
+                                          showHypoMessage();
+                                        }
                                       } else if (evt.getType() == EnvironmentChangeEvent.PAUSE){
                                         previousTime = time;
                                       } else if (evt.getType() == EnvironmentChangeEvent.USER_REMOVED_AGENTS){
@@ -418,14 +347,6 @@
                                   time =  previousTime + timeSinceLastStart;
                                   
                                   var seconds = Math.floor(time / 1000);
-                                  if (seconds % 15 === 0){
-                                   if (!colorChangedRecently) {
-                                     updateColor();
-                                     colorChangedRecently = true;
-                                   }
-                                  } else {
-                                   colorChangedRecently = false;
-                                  }
                                 }
         
                                 function save() {
@@ -498,6 +419,11 @@
                                 <object refid="${question-text}" />
                               </reference>
                             </OTScriptVariable>
+                            <OTScriptVariable name="hypo_choice">
+                              <reference>
+                                <object refid="${hypothesis-choice}"/>
+                              </reference>
+                            </OTScriptVariable>
                           </variables>
                         </OTScriptObject>
                       </scripts>
@@ -535,7 +461,7 @@
                             </OTAgentTrait>
                             <OTAgentTrait property="max offspring" name="">
                               <possibleValues>
-                                <int>8</int>
+                                <int>10</int>
                               </possibleValues>
                             </OTAgentTrait>
                             <OTAgentTrait property="hunger bonus">
@@ -555,12 +481,12 @@
                             </OTAgentTrait>
                             <OTAgentTrait property="chance of being seen">
                               <possibleValues>
-                                <float>0.30</float>
+                                <float>0.17</float>
                               </possibleValues>
                             </OTAgentTrait>
                             <OTAgentTrait property="mating distance" name="">
                               <possibleValues>
-                                <int>20</int>
+                                <int>25</int>
                               </possibleValues>
                             </OTAgentTrait>
                             <OTAgentTrait property="vision distance" name="">
@@ -570,7 +496,7 @@
                             </OTAgentTrait>
                           </agentTraits>
                         </OTAddAgentButton>
-                        <OTAddAgentButton text="Add Hawk" limit="150" click="false" quantity="15" showRemoveButton="true">
+                        <OTAddAgentButton text="Add Hawk" limit="150" click="false" quantity="6" showRemoveButton="true">
                           <species>
                             <object refid="${hawk-species}" />
                           </species>
@@ -582,22 +508,17 @@
                             </OTAgentTrait>
                             <OTAgentTrait property="max offspring" name="">
                               <possibleValues>
-                                <int>3</int>
-                              </possibleValues>
-                            </OTAgentTrait>
-                            <OTAgentTrait property="chance of being seen">
-                              <possibleValues>
-                                <float>0.80</float>
+                                <int>4</int>
                               </possibleValues>
                             </OTAgentTrait>
                             <OTAgentTrait property="eating distance" name="">
                               <possibleValues>
-                                <int>6</int>
+                                <int>5</int>
                               </possibleValues>
                             </OTAgentTrait>
                             <OTAgentTrait property="mating distance" name="">
                               <possibleValues>
-                                <int>8</int>
+                                <int>14</int>
                               </possibleValues>
                             </OTAgentTrait>
                             <OTAgentTrait property="metabolism">
@@ -607,12 +528,12 @@
                             </OTAgentTrait>
                             <OTAgentTrait property="vision distance">
                               <possibleValues>
-                                <int>40</int>
+                                <int>35</int>
                               </possibleValues>
                             </OTAgentTrait>
                           </agentTraits>
                         </OTAddAgentButton>
-                        <OTAddAgentButton text="Add Fox" limit="140" click="false" quantity="14" showRemoveButton="true">
+                        <OTAddAgentButton text="Add Fox" limit="140" click="false" quantity="6" showRemoveButton="true">
                           <species>
                             <object refid="${fox-species}" />
                           </species>
@@ -624,17 +545,17 @@
                             </OTAgentTrait>
                             <OTAgentTrait property="metabolism">
                               <possibleValues>
-                                <int>4</int>
+                                <int>3</int>
                               </possibleValues>
                             </OTAgentTrait>
                             <OTAgentTrait property="eating distance" name="">
                               <possibleValues>
-                                <int>4</int>
+                                <int>5</int>
                               </possibleValues>
                             </OTAgentTrait>
                             <OTAgentTrait property="mating distance" name="">
                               <possibleValues>
-                                <int>10</int>
+                                <int>22</int>
                               </possibleValues>
                             </OTAgentTrait>
                           </agentTraits>
@@ -686,7 +607,7 @@
                 </OTDataGraphable>
               </graphables>
               <xDataAxis>
-                <OTDataAxis min="0" max="60"
+                <OTDataAxis min="0" max="15"
                   label="Time" units="s" local_id="xAxis">
                 </OTDataAxis>
               </xDataAxis>
