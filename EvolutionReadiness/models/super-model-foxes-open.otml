@@ -1,0 +1,595 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<otrunk id="0154ad50-01d1-4585-a942-9b5a50754f1f">
+  <imports>
+    <import class="org.concord.data.state.OTDataStore" />
+    <import class="org.concord.data.state.OTDataChannelDescription" />
+    <import class="org.concord.data.state.OTDataField" />
+    <import class="org.concord.data.state.OTDataTable" /> 
+    <import class="org.concord.datagraph.state.OTDataGraph" />
+    <import class="org.concord.datagraph.state.OTDataAxis" />
+    <import class="org.concord.datagraph.state.OTDataGraphable" />
+    <import class="org.concord.datagraph.state.OTDataCollector" />
+    <import class="org.concord.datagraph.state.OTMultiDataGraph" />
+    <import class="org.concord.datagraph.state.OTPluginView" />
+    <import class="org.concord.datagraph.state.OTDataBarGraphable" />
+    <import class="org.concord.otrunk.OTIncludeRootObject" />
+    <import class="org.concord.otrunk.OTInclude" />
+    <import class="org.concord.otrunk.OTSystem" />
+    <import class="org.concord.otrunk.biologica.OTOrganismPlacement" />
+    <import class="org.concord.otrunk.biologica.OTEnvironment" />
+    <import class="org.concord.otrunk.biologica.OTOrganism" />
+    <import class="org.concord.otrunk.biologica.OTWorld" />
+    <import class="org.concord.otrunk.biologica.agent.OTAgentSpecies" />
+    <import class="org.concord.otrunk.biologica.agent.OTAgentTrait" />
+    <import class="org.concord.otrunk.biologica.agent.OTAgentPropertyImageMap" />
+    <import class="org.concord.otrunk.biologica.environment.OTAddAgentButton" />
+    <import class="org.concord.otrunk.biologica.environment.OTEnvironmentHolder" />
+    <import class="org.concord.otrunk.biologica.data.OTBiologicaModelDataProducer" />
+    <import class="org.concord.otrunk.biologica.rules.OTRule" />
+    <import class="org.concord.otrunk.biologica.rules.OTRuleCondition" />
+    <import class="org.concord.otrunk.biologica.rules.OTRuleConsequence" />
+    <import class="org.concord.otrunk.ui.OTButton" />
+    <import class="org.concord.otrunk.ui.OTChoice" />
+    <import class="org.concord.otrunk.ui.OTChoiceMultiple" />
+    <import class="org.concord.otrunk.ui.OTCurriculumUnit" />
+    <import class="org.concord.otrunk.ui.OTPlacement" />
+    <import class="org.concord.otrunk.ui.OTTabContainer" />
+    <import class="org.concord.otrunk.ui.snapshot.OTSnapshot" />
+    <import class="org.concord.otrunk.ui.snapshot.OTSnapshotButton" />
+    <import class="org.concord.otrunk.ui.snapshot.OTSnapshotAlbum" />
+    <import class="org.concord.otrunk.ui.snapshot.OTSnapshotChooser" />
+    <import class="org.concord.otrunk.view.OTViewEntry" />
+    <import class="org.concord.otrunk.view.OTViewBundle" />
+    <import class="org.concord.otrunk.view.OTViewMode" />
+    <import class="org.concord.otrunk.view.document.OTCompoundDoc" />
+    <import class="org.concord.otrunk.script.ui.OTScriptObject" />
+    <import class="org.concord.otrunk.script.js.OTJavascript" />
+    <import class="org.concord.otrunk.script.OTScriptEngineBundle" />
+    <import class="org.concord.otrunk.script.OTScriptEngineEntry" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariable" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariableComponent" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariableRealObject" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariableView" />
+    <import class="org.concord.otrunk.script.ui.OTScriptButton" />
+    <import class="org.concord.otrunk.ui.OTSlider" />
+    <import class="org.concord.otrunk.ui.OTText" />
+    <import class="org.concord.framework.otrunk.view.OTFrame" />
+    <import class="org.concord.framework.otrunk.wrapper.OTObjectSet" />
+  </imports>
+  <idMap>
+    <idMapping local_id="rabbit-species" id="f05fc1b1-ea0e-4d6e-a21e-7d089860445a" />
+    <idMapping local_id="plant-species" id="6904840c-03f6-4f2d-b822-bc85aebe70db" />
+    <idMapping local_id="hawk-species" id="8cf33f49-8820-4c6f-9e5f-49fcca68acbd" />
+    <idMapping local_id="fox-species" id="c59a7a17-5585-4860-b6a5-803e74ea2dbd" />
+  </idMap>
+  <objects>
+    <OTSystem>
+      <bundles>
+        <object refid="8d880970-c22a-11dc-95ff-0800200c9a66" />
+        <OTViewBundle>
+          <frame>
+            <OTFrame useScrollPane="false" openMaximized="false"
+              width="900" height="500" />
+          </frame>
+        </OTViewBundle>
+        <OTScriptEngineBundle>
+          <engines>
+            <OTScriptEngineEntry objectClass="org.concord.otrunk.script.js.OTJavascript"
+              engineClass="org.concord.otrunk.script.js.OTJavascriptEngine" />
+          </engines>
+        </OTScriptEngineBundle>
+      </bundles>
+      <includes>
+        <OTInclude href="../global-imports/er-view-bundle.otml" />
+        <OTInclude href="species/fast-plants-roots.otml" />
+        <OTInclude href="species/white-rabbits.otml" />
+        <OTInclude href="species/hawks.otml" />
+        <OTInclude href="species/foxes.otml" />
+      </includes>
+      <root>
+        <OTCompoundDoc>
+          <bodyText>
+           <table>
+             <tr>
+               <td colspan="2">
+                 <object refid="${question-text}" viewid="c93a7460-e18a-11dc-95ff-0800200c9a66"/>
+               </td>
+             </tr>
+             <tr>
+               <td>
+                  <object refid="${env-holder}"/>
+               </td>
+               <td>
+                   <object refid="${graph}"/>
+               </td>
+             </tr>
+           </table>
+          </bodyText>
+          <documentRefs>
+          <OTEnvironmentHolder local_id="env-holder"
+                      width="590" height="460" toolbar="run,info,reset" useSpeedSlider="false">
+                      <environment>
+                        <OTEnvironment local_id="environment"
+                          environmentWidth="17" environmentHeight="17" showRunButton="false"
+                          winterLength="5" summerLength="50" showWinterImage="false"
+                          orgSizeMultiplier="1" backgroundImageSrc="images/green2.png">
+                          <world>
+                            <OTWorld local_id="peasimple_world"
+                              speciesPath="org/concord/biologica/worlds/peasimple.xml" />
+                          </world>
+                        </OTEnvironment>
+                      </environment>
+                      <scripts>
+                        <OTScriptObject local_id="setup-script" name="Setup script">
+                          <script>
+                            <OTJavascript src="scripts/gradated-sunlight-five-blocks/setup.js">
+                              <script>
+                                importPackage(Packages.java.lang);
+                                importPackage(Packages.java.awt);
+                                importPackage(Packages.java.awt.event);
+                                importPackage(Packages.java.net);
+                                importPackage(Packages.org.concord.biologica.environment);
+                                importPackage(Packages.org.concord.biologica.ui);
+                                importPackage(Packages.org.concord.framework.otrunk);
+                                
+                                var startTime, time, previousTime;
+                                var isRunning = false;
+                                var brownness = 0;
+                                var colorChangedRecently = true;
+                                var lastBkgdUrl;
+                                var addedHawks, addedRabbits, addedFoxes;
+                                var hawksAreDead, rabbitsAreDead, foxesAreDead;
+                                var hawksRemoved, rabbitsRemoved, foxesRemoved;
+                                var timeOfExtinction;
+                                var agentsRemoved;
+                                var envHolder;
+                                var endMessageShown;
+                                
+                                var dontShowPopup = false;
+                                
+                                var baseUrl = otEnvHolder.getOTObjectService().getCodebase(otEnvHolder);
+                                
+                                function init() {
+                                  envHolder = controllerService.getRealObject(otEnvHolder);
+                                  
+                                  env.removeAllAgents()
+                                  env.setStepCount(0)
+                                  envHolder.pauseAction()
+                                  env.setWrapNorthSouth(false)
+                                  env.setWrapEastWest(false)
+                                  
+                                  env.addStepListener(stepListener)
+                                  env.addChangeListener(resetListener)
+                                  
+                                  setup();
+                                  
+                                  return true;
+                                }
+                                
+                                function setup() {
+                                  
+                                  time = 0
+                                  previousTime = 0
+                                  brownness = 0
+                                  addedHawks = addedRabbits = addedFoxes = false;
+                                  hawksAreDead = rabbitsAreDead = foxesAreDead = false;
+                                  hawksRemoved = rabbitsRemoved = foxesRemoved = false;
+                                  endMessageShown = false;
+                                  
+                                }
+                                
+                                var stepHandler =
+                                {
+                                  environmentStepped: function()
+                                  {
+                                     checkExtinction();
+                                     checkPredators();
+                                     if ((env.getStepCount() + 1) % 350 === 0) {
+                                       var otEnvHolderController = controllerService.getController(otEnvHolder);
+                                       otEnvHolderController.log("Model ran for 350 steps",null);
+                                       showEndMessage();
+                                     }
+                                  }
+                                }
+                                var stepListener = new EnvironmentStepListener(stepHandler)
+                                
+                                var questionChoices, hypothesisChoices;
+                                
+                                
+                                function showEndMessage(){
+                                  
+                                  var popupText = "If you've been able to discover what happens in the model, you can go on to the next page.\n\n"+
+                                                   "If not, you can keep running the model, or reset it if you want to run a new model.";
+                                   
+                                  envHolder.showPopup("Run complete?", popupText);
+                                  envHolder.pauseAction();
+                                  
+                                }
+                                
+                                function checkExtinction() {
+                                  var allRabbits = env.getAgents(rabbit_species);
+                                  var allHawks = env.getAgents(hawk_species);
+                                   
+                                  if (allRabbits.size() &gt; 0){
+                                     addedRabbits = true;
+                                     rabbitsRemoved = false;
+                                     rabbitsAreDead = false;
+                                  }
+                                  if (allHawks.size() &gt; 0){
+                                    addedHawks = true;
+                                    hawksRemoved = false;
+                                    hawksAreDead = false;
+                                  }
+                                  
+                                  if (hawksAreDead || rabbitsAreDead) {
+                                    if (env.getStepCount() === timeOfExtinction + 20) {
+                                      if (hawksAreDead &amp;&amp; !hawksRemoved || 
+                                            rabbitsAreDead &amp;&amp; !rabbitsRemoved){
+                                        var otEnvHolderController = controllerService.getController(otEnvHolder);
+                                        var message = hawksAreDead ? "Hawks went extinct" : "Rabbits went extinct";
+                                        otEnvHolderController.log(message,null);
+                                        envHolder.pauseAction();
+                                        showEndMessage();
+                                      }
+                                    }
+                                  } else if (addedHawks &amp;&amp; !hawksRemoved) {
+                                    if (allHawks.size() === 0){
+                              //        hawksAreDead = true;
+                              //        timeOfExtinction = env.getStepCount();
+                                    }
+                                  } else if (addedRabbits) {
+                                    if (allRabbits.size() === 0){
+                                      rabbitsAreDead = true;
+                                      timeOfExtinction = env.getStepCount();
+                                    }
+                                  }
+                                }
+                                
+                                function checkPredators(){
+                                  var allHawks = env.getAgents(hawk_species);
+                                  if (allHawks.size() &gt; 16){
+                                    setProperty(allHawks, "min offspring", 0);
+                                    setProperty(allHawks, "max offspring", 1);
+                                    setProperty(allHawks, "metabolism", 8);
+                                  } else if (allHawks.size() &lt; 8){
+                                    setProperty(allHawks, "min offspring", 3);
+                                    setProperty(allHawks, "max offspring", 4);
+                                    setProperty(allHawks, "metabolism", 4);
+                                  } else {
+                                    setProperty(allHawks, "min offspring", 2);
+                                    setProperty(allHawks, "max offspring", 3);
+                                    setProperty(allHawks, "metabolism", 6);
+                                  }
+                                  
+                                  var allFoxes = env.getAgents(fox_species);
+                                  if (allFoxes.size() &gt; 22){
+                                    setProperty(allFoxes, "min offspring", 0);
+                                    setProperty(allFoxes, "max offspring", 1);
+                                    setProperty(allFoxes, "metabolism", 6);
+                                  } else if (allFoxes.size() &lt; 10){
+                                    setProperty(allFoxes, "min offspring", 3);
+                                    setProperty(allFoxes, "max offspring", 6);
+                                    setProperty(allFoxes, "metabolism", 2);
+                                  } else if (allFoxes.size() &lt; 16){
+                                    setProperty(allFoxes, "min offspring", 3);
+                                    setProperty(allFoxes, "max offspring", 4);
+                                    setProperty(allFoxes, "metabolism", 3);
+                                  } else {
+                                    setProperty(allFoxes, "min offspring", 1);
+                                    setProperty(allFoxes, "max offspring", 3);
+                                    setProperty(allFoxes, "metabolism", 4);
+                                  }
+                                }
+                                
+                                function setProperty(agents, property, value){
+                                  for(i = 0; i &lt; agents.size(); i++){
+                                    agents.get(i).setProperty(property, value);
+                                  }
+                                }
+                                
+                                var resetRunHandler= {
+                                    environmentChanged: function(evt){
+                                      if (evt.getType() == EnvironmentChangeEvent.RESET){
+                                        isRunning = false;
+                                        if (!endMessageShown) {
+                                          showEndMessage();
+                                         } else {
+                                          setup();
+                                         }
+                                      }else if (evt.getType() == EnvironmentChangeEvent.RUN){
+                                        isRunning = true
+                                        startTime = System.currentTimeMillis()
+                                      } else if (evt.getType() == EnvironmentChangeEvent.PAUSE){
+                                        previousTime = time;
+                                      } else if (evt.getType() == EnvironmentChangeEvent.USER_REMOVED_AGENTS){
+                                        var species = evt.getValue();
+                                        if (species === hawk_species){
+                                          hawksRemoved = true;
+                                        } else if (species === rabbit_species){
+                                          rabbitsRemoved = true;
+                                        }
+                                      } else if (evt.getType() == EnvironmentChangeEvent.USER_CLOSED_POPUP){
+                                        var otEnvHolderController = controllerService.getController(otEnvHolder);
+                                        otEnvHolderController.log("User closed popup",evt.getValue().toArray());
+                                        System.out.println("otEnvHolderController = "+otEnvHolderController);
+                                      }
+                                    }
+                                  }    
+                                var resetListener = new EnvironmentChangeListener(resetRunHandler)
+                                
+                                function updateTimer(){
+                                  timeSinceLastStart = System.currentTimeMillis() - startTime;
+                                  time =  previousTime + timeSinceLastStart;
+                                  
+                                  var seconds = Math.floor(time / 1000);
+                                }
+        
+                                function save() {
+                                  return true;
+                                }
+                                </script>
+                                <scripts>
+                                <OTJavascript src="scripts/common/message.js" />
+                              </scripts>
+                            </OTJavascript>
+                          </script>
+                          <variables>
+                            <OTScriptVariableRealObject name="env">
+                              <reference>
+                                <object refid="${environment}" />
+                              </reference>
+                            </OTScriptVariableRealObject>
+                            <OTScriptVariable name="otEnvHolder">
+                              <reference>
+                                <object refid="${env-holder}" />
+                              </reference>
+                            </OTScriptVariable>
+                            <OTScriptVariableRealObject name="plant_species">
+                              <reference>
+                                <object refid="${plant-species}" />
+                              </reference>
+                            </OTScriptVariableRealObject>
+                            <OTScriptVariableRealObject name="rabbit_species">
+                              <reference>
+                                <object refid="${rabbit-species}" />
+                              </reference>
+                            </OTScriptVariableRealObject>
+                            <OTScriptVariableRealObject name="hawk_species">
+                              <reference>
+                                <object refid="${hawk-species}" />
+                              </reference>
+                            </OTScriptVariableRealObject>
+                            <OTScriptVariableRealObject name="fox_species">
+                              <reference>
+                                <object refid="${fox-species}" />
+                              </reference>
+                            </OTScriptVariableRealObject>
+                            <OTScriptVariableRealObject name="whiteRule">
+                              <reference>
+                                <object refid="${white-rule}" />
+                              </reference>
+                            </OTScriptVariableRealObject>
+                            <OTScriptVariableRealObject name="brownRule">
+                              <reference>
+                                <object refid="${brown-rule}" />
+                              </reference>
+                            </OTScriptVariableRealObject>
+                            <OTScriptVariable name="removeGrass">
+                              <reference>
+                                <object refid="${remove-grass-button}" />
+                              </reference>
+                            </OTScriptVariable>
+                            <OTScriptVariable name="removeRabbits">
+                              <reference>
+                                <object refid="${remove-rabbits-button}" />
+                              </reference>
+                            </OTScriptVariable>
+                            <OTScriptVariable name="removeHawks">
+                              <reference>
+                                <object refid="${remove-hawks-button}" />
+                              </reference>
+                            </OTScriptVariable>
+                            <OTScriptVariable name="questionText">
+                              <reference>
+                                <object refid="${question-text}" />
+                              </reference>
+                            </OTScriptVariable>
+                          </variables>
+                        </OTScriptObject>
+                      </scripts>
+                      <addAgentsButtons>
+                        <OTAddAgentButton text="Add Plants" limit="4000" click="false" quantity="400" showRemoveButton="true">
+                          <species>
+                            <object refid="${plant-species}" />
+                          </species>
+                          <agentTraits>
+                            <OTAgentTrait property="resource consumption rate">
+                              <possibleValues>
+                                <int>2</int>
+                              </possibleValues>
+                            </OTAgentTrait>
+                            <OTAgentTrait property="roots">
+                              <possibleValues>
+                                <int>2</int>
+                              </possibleValues>
+                            </OTAgentTrait>
+                          </agentTraits>
+                        </OTAddAgentButton>
+                        <OTAddAgentButton text="Add Rabbits" limit="700" click="false" quantity="70" showRemoveButton="true">
+                          <species>
+                            <object refid="${rabbit-species}" />
+                          </species>
+                          <agentTraits>
+                            <OTAgentTrait property="mating desire bonus">
+                              <possibleValues>
+                                <int>-20</int>
+                              </possibleValues>
+                            </OTAgentTrait><OTAgentTrait property="min offspring" name="">
+                              <possibleValues>
+                                <int>3</int>
+                              </possibleValues>
+                            </OTAgentTrait>
+                            <OTAgentTrait property="max offspring" name="">
+                              <possibleValues>
+                                <int>10</int>
+                              </possibleValues>
+                            </OTAgentTrait>
+                            <OTAgentTrait property="hunger bonus">
+                              <possibleValues>
+                                <int>-10</int>
+                              </possibleValues>
+                            </OTAgentTrait>
+                            <OTAgentTrait property="metabolism">
+                              <possibleValues>
+                                <int>1</int>
+                              </possibleValues>
+                            </OTAgentTrait>
+                            <OTAgentTrait property="resource consumption rate">
+                              <possibleValues>
+                                <int>10</int>
+                              </possibleValues>
+                            </OTAgentTrait>
+                            <OTAgentTrait property="chance of being seen">
+                              <possibleValues>
+                                <float>0.17</float>
+                              </possibleValues>
+                            </OTAgentTrait>
+                            <OTAgentTrait property="mating distance" name="">
+                              <possibleValues>
+                                <int>25</int>
+                              </possibleValues>
+                            </OTAgentTrait>
+                            <OTAgentTrait property="vision distance" name="">
+                              <possibleValues>
+                                <int>50</int>
+                              </possibleValues>
+                            </OTAgentTrait>
+                          </agentTraits>
+                        </OTAddAgentButton>
+                        <OTAddAgentButton text="Add Hawk" limit="150" click="false" quantity="6" showRemoveButton="true">
+                          <species>
+                            <object refid="${hawk-species}" />
+                          </species>
+                          <agentTraits>
+                           <OTAgentTrait property="min offspring" name="">
+                              <possibleValues>
+                                <int>2</int>
+                              </possibleValues>
+                            </OTAgentTrait>
+                            <OTAgentTrait property="max offspring" name="">
+                              <possibleValues>
+                                <int>4</int>
+                              </possibleValues>
+                            </OTAgentTrait>
+                            <OTAgentTrait property="eating distance" name="">
+                              <possibleValues>
+                                <int>5</int>
+                              </possibleValues>
+                            </OTAgentTrait>
+                            <OTAgentTrait property="mating distance" name="">
+                              <possibleValues>
+                                <int>14</int>
+                              </possibleValues>
+                            </OTAgentTrait>
+                            <OTAgentTrait property="metabolism">
+                              <possibleValues>
+                                <int>6</int>
+                              </possibleValues>
+                            </OTAgentTrait>
+                            <OTAgentTrait property="vision distance">
+                              <possibleValues>
+                                <int>35</int>
+                              </possibleValues>
+                            </OTAgentTrait>
+                          </agentTraits>
+                        </OTAddAgentButton>
+                        <OTAddAgentButton text="Add Fox" limit="140" click="false" quantity="6" showRemoveButton="true">
+                          <species>
+                            <object refid="${fox-species}" />
+                          </species>
+                          <agentTraits>
+                            <OTAgentTrait property="max offspring" name="">
+                              <possibleValues>
+                                <int>3</int>
+                              </possibleValues>
+                            </OTAgentTrait>
+                            <OTAgentTrait property="metabolism">
+                              <possibleValues>
+                                <int>3</int>
+                              </possibleValues>
+                            </OTAgentTrait>
+                            <OTAgentTrait property="eating distance" name="">
+                              <possibleValues>
+                                <int>5</int>
+                              </possibleValues>
+                            </OTAgentTrait>
+                            <OTAgentTrait property="mating distance" name="">
+                              <possibleValues>
+                                <int>22</int>
+                              </possibleValues>
+                            </OTAgentTrait>
+                          </agentTraits>
+                        </OTAddAgentButton>
+                      </addAgentsButtons>
+                    </OTEnvironmentHolder>
+            <OTText local_id="question-text" color="0x0000FF"/>
+            <OTDataCollector name="Model Data"
+              local_id="graph" graphableListEditable="false"
+              useDefaultToolBar="false" showControlBar="false" displayButtons="0,4,6" title="Number of organisms" restoreScaleOnReset="true">
+              <graphables>
+                <OTDataGraphable connectPoints="true"
+                  color="0x00AA00" drawMarks="false" name="Grass"
+                  xColumn="0" yColumn="1">
+                  <dataProducer>
+                    <OTBiologicaModelDataProducer local_id="dp" lineGraph="true">
+                      <modelHolder>
+                        <object refid="${env-holder}" />
+                      </modelHolder>
+                      <species>
+                        <string>Fast Plants</string>
+                        <string>Rabbits</string>
+                        <string>Hawks</string>
+                        <string>Foxes</string>
+                      </species>
+                  </OTBiologicaModelDataProducer>
+                  </dataProducer>
+                </OTDataGraphable>
+                <OTDataGraphable connectPoints="true"
+                  color="0x9999BB" drawMarks="false" name="Rabbits"
+                  xColumn="0" yColumn="2">
+                  <dataProducer>
+                    <object refid="${dp}" />
+                  </dataProducer>
+                </OTDataGraphable>
+                <OTDataGraphable connectPoints="true"
+                  color="0xA31F05" drawMarks="false" name="Hawks"
+                  xColumn="0" yColumn="3">
+                  <dataProducer>
+                    <object refid="${dp}" />
+                  </dataProducer>
+                </OTDataGraphable>
+                <OTDataGraphable connectPoints="true"
+                  color="0xDEB709" drawMarks="false" name="Foxes"
+                  xColumn="0" yColumn="4">
+                  <dataProducer>
+                    <object refid="${dp}" />
+                  </dataProducer>
+                </OTDataGraphable>
+              </graphables>
+              <xDataAxis>
+                <OTDataAxis min="0" max="15"
+                  label="Time" units="s" local_id="xAxis">
+                </OTDataAxis>
+              </xDataAxis>
+              <yDataAxis>
+                <OTDataAxis min="0" max="200"
+                  label="Number of organisms" local_id="yAxis">
+                </OTDataAxis>
+              </yDataAxis>
+            </OTDataCollector>
+          </documentRefs>
+        </OTCompoundDoc>
+      </root>
+    </OTSystem>
+  </objects>
+</otrunk>
