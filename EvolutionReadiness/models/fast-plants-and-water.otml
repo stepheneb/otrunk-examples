@@ -329,6 +329,7 @@ var env = envHolder.getEnvironment()
 var otEnvHolderController
 var lastEnvChange = 10
 var baseUrl = otEnvHolder.getOTObjectService().getCodebase(otEnvHolder)
+var addedAgents = false;
 
 							var startTime
 							var time
@@ -367,11 +368,21 @@ function setup() {
 	timeText.setText("0");
 	previousTime = 0
 	shownMessage = false;
+	addedAgents = false;
 	
   envHolder.getToolbar().getButton("Run").setEnabled(false);
   
+  var choices = "[drop:most|medium|least]";
+  if (!doneChoices[2]) {
+    choices = "[drop:most|medium|least]";
+  } else if (!doneChoices[1]) {
+    choices = "[drop:medium|least|most]";
+  } else if (!doneChoices[0]) {
+    choices = "[drop:least|medium|most]";
+  }
+  
   envHolder.showPopup("Set rain", "Select an amount of rain to test, and then run the experiment!\n\n\n"+
-                                  "Amount of rain:\n[drop: |most|medium|least]", false, true);
+                                  "Amount of rain:\n"+choices, false, true);
                                   
   var popListener = new EnvironmentChangeListener({
 	  environmentChanged: function(evt){
@@ -431,6 +442,15 @@ var resetHandler= {
 }
 
 function updateTime(){
+  if (!addedAgents) {
+    if (env.getAllAgents().size() > 0) {
+      addedAgents = true;
+      startTime = System.currentTimeMillis()
+    } else {
+       return;
+    }
+  }
+  
 	timeSinceLastStart = System.currentTimeMillis() - startTime;
 	time =  previousTime + timeSinceLastStart;
 	var sec = Math.floor(time / 1000);
@@ -461,8 +481,18 @@ var stepHandler= {
         		shownMessage = true;
         	} else {
         	  envHolder.pauseAction()
-        		envHolder.showPopup("Done one", "Look at the graph. Did any types of grass grow more than 50 plants?\n\nIf so, check the box in the table above.\n\nThen RESET the model to run the experiment again with a different rainfall level.", true)
+        		envHolder.showPopup("Done one", "Look at the graph. Did any types of grass grow more than 50 plants?\n\nIf so, check the box in the table above.\n\nThen press OK to run the next experiment.", true)
 				    shownMessage = true;
+				    var closeListener = new EnvironmentChangeListener({
+                                    environmentChanged: function(evt){
+                                      if (evt.getType() == EnvironmentChangeEvent.USER_CLOSED_POPUP){
+                                          env.removeListener(closeListener);
+                                          envHolder.reset();
+                                      }
+                                    }
+                                  })
+                                  
+                                  env.addChangeListener(closeListener);
 			     }
         }
 	}
