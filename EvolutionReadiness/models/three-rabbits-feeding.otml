@@ -86,7 +86,7 @@
 					</bodyText>
 					<documentRefs>
 						<OTEnvironmentHolder local_id="env-holder"
-							width="590" height="460" toolbar="run,info" useSpeedSlider="false">
+							width="590" height="460" toolbar="run,info,reset" useSpeedSlider="false">
 							<environment>
 								<OTEnvironment local_id="environment"
 									environmentWidth="4" environmentHeight="4" showRunButton="false"
@@ -181,25 +181,29 @@
 												importPackage(Packages.org.concord.biologica.environment);
 
 												function init() {
-													env.removeAllAgents()
-													env.setStepCount(0)
-													envHolder.pauseAction()
-													env.setWrapNorthSouth(false)
-													env.setWrapEastWest(false)
-	
-													var smallRabbit = createRabbit();
-													smallRabbit.setProperty("prey variety value", 1);
-													env.addAgent(smallRabbit)
-	
-													var medRabbit = createRabbit();
-													medRabbit.setProperty("prey variety value", 2);
-													env.addAgent(medRabbit)
-	
-													var bigRabbit = createRabbit();
-													bigRabbit.setProperty("prey variety value", 3);
-													env.addAgent(bigRabbit)
-	
+												  env.addChangeListener(resetListener)
+	                        setup();
 													return true;
+												}
+												
+												function setup() {
+                          env.removeAllAgents()
+                          env.setStepCount(0)
+                          envHolder.pauseAction()
+                          env.setWrapNorthSouth(false)
+                          env.setWrapEastWest(false)
+  
+                          var smallRabbit = createRabbit();
+                          smallRabbit.setProperty("prey variety value", 1);
+                          env.addAgent(smallRabbit)
+  
+                          var medRabbit = createRabbit();
+                          medRabbit.setProperty("prey variety value", 2);
+                          env.addAgent(medRabbit)
+  
+                          var bigRabbit = createRabbit();
+                          bigRabbit.setProperty("prey variety value", 3);
+                          env.addAgent(bigRabbit)
 												}
 
 												function createRabbit() {
@@ -217,6 +221,15 @@
 													newRabbit.setLocation(loc)
 													return newRabbit;
 												}
+												
+												var resetRunHandler= {
+                                    environmentChanged: function(evt){
+                                      if (evt.getType() == EnvironmentChangeEvent.RESET){
+                                        setup();
+                                      }
+                                    }
+                                  }    
+                                var resetListener = new EnvironmentChangeListener(resetRunHandler)
 
 												function save() {
 												  return true;
