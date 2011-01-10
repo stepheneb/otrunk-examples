@@ -16,8 +16,7 @@ class ERActivityHelper
   def title
     header = REXML::Document.new(@root.activity.header.bodyText)
     titleDiv = REXML::XPath.first(header, "//div[@class='title']")
-    if titleDiv.text == nil
-    	titleText = ""
+    if titleDiv.text == nil || titleDiv.text.strip.length < 1
     	@root.activity.header.documentRefs.each do | ref |
 	      if ref.is_a? org.concord.otrunk.udl.document.OTUDLCompoundDoc
 	      	titleText = ref.bodyText.strip
