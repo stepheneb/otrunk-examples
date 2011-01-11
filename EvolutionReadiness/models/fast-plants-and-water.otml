@@ -433,6 +433,7 @@ var resetHandler= {
 	environmentChanged: function(evt){
 		if (evt.getType() == EnvironmentChangeEvent.RESET){
 			setup();
+			envHolder.getToolbar().getButton("Run").setEnabled(true)
 		} else if (evt.getType() == EnvironmentChangeEvent.RUN){
 			startTime = System.currentTimeMillis()
 		} else if (evt.getType() == EnvironmentChangeEvent.PAUSE){
@@ -477,17 +478,18 @@ var stepHandler= {
         	
         	if (doneAll){
             envHolder.pauseAction()
+            envHolder.getToolbar().getButton("Run").setEnabled(false)
 				    envHolder.showPopup("Done all", "Good job! You have experimented with all three rainfall levels.\n\nWhen you have completed the table above, go to the next page!", true);
         		shownMessage = true;
         	} else {
         	  envHolder.pauseAction()
-        		envHolder.showPopup("Done one", "Look at the graph. Did any types of grass grow more than 50 plants?\n\nIf so, check the box in the table above.\n\nThen press OK to run the next experiment.", true)
+        		envHolder.showPopup("Done one", "Look at the graph. Did any types of grass grow more than 50 plants?\n\nIf so, check the box in the table above.\n\nWhen you are finished, reset the model to run the next experiment.", true)
 				    shownMessage = true;
-				    var closeListener = new EnvironmentChangeListener({
+				                var closeListener = new EnvironmentChangeListener({
                                     environmentChanged: function(evt){
                                       if (evt.getType() == EnvironmentChangeEvent.USER_CLOSED_POPUP){
                                           env.removeListener(closeListener);
-                                          envHolder.reset();
+                                          envHolder.getToolbar().getButton("Run").setEnabled(false)
                                       }
                                     }
                                   })
