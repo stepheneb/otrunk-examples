@@ -219,10 +219,12 @@
                                   
                                   var popupText = "Your hypothesis was:\n"+
                                                   "  \""+hypothesis+"\"\n\n"+
-                                                  "If you've been able to discover what happens in the model, you can go on to the next page.\n\n"+
-                                                   "If not, you can keep running the model, or reset it if you want to run a new model.";
+                                                  "Is that what happened in the model?\n\n"+
+                                                   "[drop:  Select an answer...|Yes|No]         \n\n"+
+                                                  "If you want to run the model again, you can reset it.\n\n"+
+                                                  "If you have finished, go on to the next page!";
                                    
-                                  envHolder.showPopup("Run complete?", popupText);
+                                  envHolder.showPopup("Was hypothesis correct?", popupText);
                                   envHolder.pauseAction();
                                   
                                 }
@@ -235,7 +237,7 @@
                                 }
                                 
                                 function checkExtinction() {
-                                  var allRabbits = env.getAgents(rabbit_species);
+                                  var allRabbits = env.getAgents(fox_species);
                                   var allHawks = env.getAgents(hawk_species);
                                    
                                   if (allRabbits.size() &gt; 0){
@@ -254,7 +256,7 @@
                                       if (hawksAreDead &amp;&amp; !hawksRemoved || 
                                             rabbitsAreDead &amp;&amp; !rabbitsRemoved){
                                         var otEnvHolderController = controllerService.getController(otEnvHolder);
-                                        var message = hawksAreDead ? "Hawks went extinct" : "Rabbits went extinct";
+                                        var message = hawksAreDead ? "Hawks went extinct" : "Foxes went extinct";
                                         otEnvHolderController.log(message,null);
                                         envHolder.pauseAction();
                                         showEndMessage();
@@ -262,8 +264,8 @@
                                     }
                                   } else if (addedHawks &amp;&amp; !hawksRemoved) {
                                     if (allHawks.size() === 0){
-                              //        hawksAreDead = true;
-                              //        timeOfExtinction = env.getStepCount();
+                                      hawksAreDead = true;
+                                      timeOfExtinction = env.getStepCount();
                                     }
                                   } else if (addedRabbits) {
                                     if (allRabbits.size() === 0){
