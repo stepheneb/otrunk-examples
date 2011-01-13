@@ -127,6 +127,8 @@
                         var hawk;
                         var lastEnergy;
                         var points;
+                        var whitePoints;
+                        var brownPoints;
                         
                         var startTime
                         var time
@@ -165,6 +167,8 @@
                           }
                           
                           points = 0;
+                          whitePoints = 0;
+                          brownPoints = 0;
                           pointsText.setText("0");
                           
                           plusOnes = [];
@@ -192,6 +196,7 @@
 													newHawk.setProperty("hunger bonus", 50)
 													newHawk.setProperty("calculate drives", false);
                           newHawk.setProperty("current behavior", "WANDERING");
+                          newHawk.addEatingListener(eatListener);
 													addAgent(newHawk);
 													return newHawk;
 												}
@@ -219,6 +224,32 @@
                           agent.setLocation(loc);
                           env.addAgent(agent);
                         }
+                        
+                        var eatHandler= {
+                            environmentChanged: function(evt){
+                              if (evt.getType() == EnvironmentChangeEvent.AGENT_EATEN){
+                                points++;
+                               pointsText.setText(points);
+                               
+                               var plusOne = plus_one.createAgent();
+                               plusOne.setProperty("size", 1.2);
+                               plusOne.setEnvironment(env);
+                               plusOne.setLocation(hawk.getLocation());
+                               env.addAgent(plusOne);
+                               
+                               plusOnes.push(plusOne);
+                               plusOneTimes.push(time);
+                               
+                               var color = evt.getValue().getProperty("color");
+                               if (color == "white") {
+                                  whitePoints++;
+                               } else {
+                                  brownPoints++;
+                               }
+                              }
+                            }
+                          }    
+                        var eatListener = new EnvironmentChangeListener(eatHandler)
 												
 												var mouseHandler =
 					              {
@@ -253,32 +284,23 @@
 					                
                             updateTimer();
                             
-					                  var energy = hawk.getProperty("energy");
-					                  if (energy &gt; lastEnergy){
-					                     points++;
-					                     pointsText.setText(points);
-					                     
-					                     var plusOne = plus_one.createAgent();
-					                     plusOne.setProperty("size", 1.2);
-                               plusOne.setEnvironment(env);
-					                     plusOne.setLocation(hawk.getLocation());
-					                     env.addAgent(plusOne);
-					                     
-					                     plusOnes.push(plusOne);
-					                     plusOneTimes.push(time);
-					                  }
-					                  
 					                  if (plusOnes.length > 0 &amp;&amp; time > plusOneTimes[0] + 1500) {
 					                     env.removeAgent(plusOnes[0]);
 					                     plusOnes.shift();
 					                     plusOneTimes.shift();
 					                  }
 					                  
-					                  
-					                  lastEnergy = energy;
 					                  if (time / 1000 &gt; 30){
-					                   showMessage("Good job! You caught "+points+" rabbits!", env, envHolder);
-                             showMessage("How many white rabbits and how many brown rabbits are left?\nWrite down the number in the table.", env, envHolder);
+					                   if (points &gt; 0){
+					                     if (whitePoints === 0)
+					                       whitePoints = "no";
+					                     if (brownPoints === 0)
+					                       brownPoints = "no";
+					                     showMessage("Good job! You caught "+points+" rabbits!\nYou caught "+whitePoints+" white rabbits and "+brownPoints+" brown rabbits.", env, envHolder);
+                                showMessage("How many white rabbits and how many brown rabbits are left?\nWrite down the number in the table.", env, envHolder);
+                             } else {
+                               showMessage("Oh no, you didn't catch any rabbits!\nPress Reset to try again, and be sure to click on the rabbits to eat them.", env, envHolder);
+                             }
                              envHolder.pauseAction()
                              envHolder.getToolbar().getButton("Run").setEnabled(false)
 					                   
