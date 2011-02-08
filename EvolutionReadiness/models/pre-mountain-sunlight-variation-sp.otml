@@ -1,0 +1,417 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<otrunk id="0953c4cf-e2c4-40a6-8a88-702fc77a390c">
+  <imports>
+    <import class="org.concord.otrunk.OTIncludeRootObject" />
+    <import class="org.concord.otrunk.OTInclude" />
+    <import class="org.concord.otrunk.OTSystem" />
+    <import class="org.concord.otrunk.biologica.OTOrganismPlacement" />
+    <import class="org.concord.otrunk.biologica.OTEnvironment" />
+    <import class="org.concord.otrunk.biologica.OTOrganism" />
+    <import class="org.concord.otrunk.biologica.OTWorld" />
+    <import class="org.concord.otrunk.biologica.agent.OTAgentSpecies" />
+    <import class="org.concord.otrunk.biologica.agent.OTAgentTrait" />
+    <import class="org.concord.otrunk.biologica.agent.OTAgentPropertyImageMap" />
+    <import class="org.concord.otrunk.biologica.environment.OTAddAgentButton" />
+    <import class="org.concord.otrunk.biologica.environment.OTEnvironmentHolder" />
+    <import class="org.concord.otrunk.biologica.rules.OTRule" />
+    <import class="org.concord.otrunk.biologica.rules.OTRuleCondition" />
+    <import class="org.concord.otrunk.biologica.rules.OTRuleConsequence" />
+    <import class="org.concord.otrunk.ui.OTCurriculumUnit" />
+    <import class="org.concord.otrunk.ui.OTPlacement" />
+    <import class="org.concord.otrunk.ui.snapshot.OTSnapshot" />
+    <import class="org.concord.otrunk.ui.snapshot.OTSnapshotButton" />
+    <import class="org.concord.otrunk.ui.snapshot.OTSnapshotAlbum" />
+    <import class="org.concord.otrunk.ui.snapshot.OTSnapshotChooser" />
+    <import class="org.concord.otrunk.view.OTViewEntry" />
+    <import class="org.concord.otrunk.view.OTViewBundle" />
+    <import class="org.concord.otrunk.view.OTViewMode" />
+    <import class="org.concord.otrunk.view.document.OTCompoundDoc" />
+    <import class="org.concord.otrunk.script.ui.OTScriptObject" />
+    <import class="org.concord.otrunk.script.js.OTJavascript" />
+    <import class="org.concord.otrunk.script.OTScriptEngineBundle" />
+    <import class="org.concord.otrunk.script.OTScriptEngineEntry" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariable" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariableComponent" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariableRealObject" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariableView" />
+    <import class="org.concord.otrunk.script.ui.OTScriptButton" />
+    <import class="org.concord.otrunk.ui.OTChoice" />
+    <import class="org.concord.framework.otrunk.view.OTFrame" />
+  </imports>
+  <objects>
+    <OTSystem>
+      <bundles>
+        <object refid="8d880970-c22a-11dc-95ff-0800200c9a66" />
+        <OTScriptEngineBundle>
+          <engines>
+            <OTScriptEngineEntry objectClass="org.concord.otrunk.script.js.OTJavascript" engineClass="org.concord.otrunk.script.js.OTJavascriptEngine" />
+          </engines>
+        </OTScriptEngineBundle>
+      </bundles>
+      <includes>
+        <OTInclude href="../global-imports/er-view-bundle.otml" />
+        <OTInclude href="species/annual-varied-plants.otml" />
+        <OTInclude href="mountain-sunlight-variation.otml" />
+      </includes>
+      <root>
+        <OTCompoundDoc local_id="mountain-model">
+          <bodyText>
+            <table>
+              <tr>
+                <td>
+                  <object refid="${env-holder}" />
+                </td>
+              </tr>
+            </table>
+          </bodyText>
+          <documentRefs>
+            <OTEnvironmentHolder local_id="env-holder" toolbar="run,cursor,reset" useSpeedSlider="true" width="590" height="460" logAddAgents="false">
+              <environment>
+                <OTEnvironment local_id="environment" environmentWidth="15" environmentHeight="15" showRunButton="false" winterLength="14" summerLength="80" orgSizeMultiplier="1.5" backgroundImageSrc="images/mountains1.png">
+                  <world>
+                    <OTWorld local_id="peasimple_world" speciesPath="org/concord/biologica/worlds/peasimple.xml" />
+                  </world>
+                  <rules>
+                    <OTRule description="Leaves 5 are healthy">
+                      <conditions>
+                        <OTRuleCondition property="size of leaves" equalsValue="5.0" />
+                      </conditions>
+                      <consequences>
+                        <OTRuleConsequence property="Health" newValueFloat="1.0" />
+                      </consequences>
+                    </OTRule>
+                    <OTRule description="Leaves not 5 are unhealthy">
+                      <conditions>
+                        <OTRuleCondition property="size of leaves" not="true" equalsValue="5.0" />
+                      </conditions>
+                      <consequences>
+                        <OTRuleConsequence property="Health" newValueFloat="0.95" />
+                      </consequences>
+                    </OTRule>
+                    <OTRule description="No flowers on withered plants!">
+                      <conditions>
+                        <OTRuleCondition property="Health" minValue="0.0" maxValue="0.99" />
+                      </conditions>
+                      <consequences>
+                        <OTRuleConsequence property="Chance of flowering" newValueFloat="0.0" />
+                      </consequences>
+                    </OTRule>
+                    <OTRule description="Healthy and withered plants live through spring">
+                      <conditions>
+                        <OTRuleCondition property="Season" equals="spring" />
+                        <OTRuleCondition property="health" minValue="0.8" maxValue="1.1" />
+                      </conditions>
+                      <consequences>
+                        <OTRuleConsequence property="is immortal" newValueBoolean="true" />
+                        <OTRuleConsequence property="Days to seed" newValueFloat="100.0" />
+                      </consequences>
+                    </OTRule>
+                    <OTRule description="Healthy plants live through summer and flower">
+                      <conditions>
+                        <OTRuleCondition property="Season" equals="summer" />
+                        <OTRuleCondition property="Health" minValue="0.99" maxValue="1.1" />
+                      </conditions>
+                      <consequences>
+                        <OTRuleConsequence property="Is immortal" newValueBoolean="true" />
+                        <OTRuleConsequence property="chance of flowering" newValueFloat="0.3" />
+                        <OTRuleConsequence property="days to seed" newValueFloat="100.0" />
+                      </consequences>
+                    </OTRule>
+                    <OTRule description="Plants die in fall">
+                      <conditions>
+                        <OTRuleCondition property="Season" equals="fall" />
+                      </conditions>
+                      <consequences>
+                        <OTRuleConsequence property="Is immortal" newValueBoolean="false" />
+                        <OTRuleConsequence property="Days to seed" newValueFloat="2.0" />
+                      </consequences>
+                    </OTRule>
+                    <OTRule description="Plants with flowers are immortal">
+                      <conditions>
+                        <OTRuleCondition property="Has flower" equals="true" />
+                      </conditions>
+                      <consequences>
+                        <OTRuleConsequence property="Is immortal" newValueBoolean="true" />
+                      </consequences>
+                    </OTRule>
+                    <OTRule description="All plants die in winter">
+                      <conditions>
+                        <OTRuleCondition property="Season" equals="winter" />
+                      </conditions>
+                      <consequences>
+                        <OTRuleConsequence property="Is immortal" newValueBoolean="false" />
+                        <OTRuleConsequence property="health" newValueFloat="0.0" />
+                      </consequences>
+                    </OTRule>
+                    <OTRule description="Number of offspring">
+                      <conditions>
+                        <OTRuleCondition always="true" />
+                      </conditions>
+                      <consequences>
+                        <OTRuleConsequence property="Min offspring" newValueFloat="3.0" />
+                        <OTRuleConsequence property="Max offspring" newValueFloat="4.0" />
+                        <OTRuleConsequence property="min offspring distance" newValueFloat="10.0" />
+                        <OTRuleConsequence property="max offspring distance" newValueFloat="20.0" />
+                      </consequences>
+                    </OTRule>
+                    <OTRule description="Gen 2 plants immortal, never seed">
+                      <conditions>
+                        <OTRuleCondition property="gen" equalsValue="2.0" />
+                      </conditions>
+                      <consequences>
+                        <OTRuleConsequence property="Is immortal" newValueBoolean="true" />
+                        <OTRuleConsequence property="days to seed" newValueFloat="-1.0" />
+                      </consequences>
+                    </OTRule>
+                    <OTRule description="Gen 2 healthy plants have flower">
+                      <conditions>
+                        <OTRuleCondition property="gen" equalsValue="2.0" />
+                        <OTRuleCondition property="Health" equalsValue="1.0" />
+                      </conditions>
+                      <consequences>
+                        <OTRuleConsequence property="Has flower" newValueBoolean="true" />
+                      </consequences>
+                    </OTRule>
+                    <OTRule description="Gen 2 not healthy plants have no flower">
+                      <conditions>
+                        <OTRuleCondition property="gen" equalsValue="2.0" />
+                        <OTRuleCondition property="Health" maxValue="0.99" />
+                      </conditions>
+                      <consequences>
+                        <OTRuleConsequence property="Has flower" newValueBoolean="false" />
+                      </consequences>
+                    </OTRule>
+                  </rules>
+                  <barriers>
+                    <OTPlacement x="-7" y="0" width="17" height="157" />
+                    <OTPlacement x="139" y="0" width="21" height="150" />
+                  </barriers>
+                </OTEnvironment>
+              </environment>
+              <scripts>
+                <OTScriptObject local_id="setup-script" name="Setup world">
+                  <script>
+                    <OTJavascript src="scripts/gradated-sunlight/setup.js">
+                      <script>importPackage(Packages.java.lang);
+						importPackage(Packages.java.awt);
+						importPackage(Packages.org.concord.biologica.environment);
+						importClass(Packages.javax.swing.JOptionPane);
+						  			
+						function init() {
+							env.removeAllAgents()
+							env.setStepCount(0)
+							envHolder.pauseAction()
+							var world = env.getWorld();
+							env.setWrapNorthSouth(false);
+							env.setWrapEastWest(false);
+							for (var i = 0; i &lt; 15; i++) {
+						        for (var j = 0; j &lt; 15; j++) {
+						        	var envUnit = new EnvironmentUnit(env, null, i, j)
+						        	env.setEnvironmentUnit(envUnit, i, j)
+						        	envUnit.setProperty("sunlight", new Float(0.6))
+						        	var color = new Color(0.3, 0.2, 0.1)
+					        		var terrain = new Terrain(world, "terrain", color)
+					        		envUnit.setTerrain(terrain)
+					            }
+					        }
+						return true;
+						}
+					
+					function save() {
+						return true;
+					}</script>
+                      <scripts>
+                        <OTJavascript src="scripts/common/message.js" />
+                      </scripts>
+                    </OTJavascript>
+                  </script>
+                  <variables>
+                    <OTScriptVariableRealObject name="env">
+                      <reference>
+                        <object refid="${environment}" />
+                      </reference>
+                    </OTScriptVariableRealObject>
+                    <OTScriptVariableRealObject name="envHolder">
+                      <reference>
+                        <object refid="${env-holder}" />
+                      </reference>
+                    </OTScriptVariableRealObject>
+                  </variables>
+                  <scriptState />
+                </OTScriptObject>
+                <OTScriptObject local_id="setup-species-script" name="Setup species">
+                  <script>
+                    <OTJavascript>
+                      <script>function init()
+		      				{
+		      					species.setMutationChance(0.33)
+		      				}</script>
+                    </OTJavascript>
+                  </script>
+                  <variables>
+                    <OTScriptVariableRealObject name="species">
+                      <reference>
+                        <object refid="f5732706-c9c2-4e29-8c99-4c668dda89b0" />
+                      </reference>
+                    </OTScriptVariableRealObject>
+                  </variables>
+                  <scriptState />
+                </OTScriptObject>
+                <OTScriptObject local_id="generations-script" name="Generations script">
+                  <script>
+                    <OTJavascript src="scripts/gradated-sunlight/setup.js">
+                      <script>importPackage(Packages.java.lang);
+						importPackage(Packages.java.awt);
+						importPackage(Packages.org.concord.biologica.environment);
+						importClass(Packages.javax.swing.JOptionPane);
+						
+						var yearCount = 0
+						var startWaiting = false
+						var wait = 0
+						var userAddedAgents = false
+						  			
+						function init() {
+							env.addChangeListener(changeListener)
+							env.addStepListener(stepListener)
+							env.addChangeListener(resetListener)
+							return true;
+						}
+						
+						var changeHandler = {
+							environmentChanged: function(evt){	
+								if (evt.getType() == EnvironmentChangeEvent.SEASON_CHANGE){
+									var season = evt.getValue()
+									if (season == "summer"){
+										yearCount ++
+									}	
+									if (yearCount &gt;= 2){
+										setPropertyOnAllAgents("gen", 2)
+										env.setSummerLength(100000)
+										env.setWinterLength(-1)
+										startWaiting = true
+									}
+								} else if (evt.getType() == EnvironmentChangeEvent.USER_ADDED_AGENTS){
+									userAddedAgents = true
+								}
+							}
+						}
+										
+						var changeListener = new EnvironmentChangeListener(changeHandler)	
+						
+						var stepHandler = {
+							environmentStepped: function(){
+								if (!userAddedAgents){
+									env.setStepCount(0) 	// don't start counting days until a seed is planted
+									return
+								}
+								if (startWaiting){
+									wait++;
+									if (wait == 15) {
+										showMessage("¿Notaste que algunas de las plantas no tienen flores?", env, envHolder)
+									}
+									
+									if (wait == 30) {
+										envHolder.pauseAction()
+										logSuccess(otEnvHolder)
+										showMessage("¿Qué está pasando? Usa la Herramienta de Información para averiguar por qué algunas de las plantas en el campo se han marchitado.\n Luego hazle reset al modelo para plantar más semillas o continuar en la página siguiente.", env, envHolder)
+										envHolder.getToolbar().getButton("Run").setEnabled(false)
+									}
+								}
+							}		
+						}
+									
+						var stepListener = new EnvironmentStepListener(stepHandler)	
+						
+						function setPropertyOnAllAgents(property, value){
+							var agents = env.getAllAgents()
+							for (var i = 0; i &lt; agents.size(); i++) {
+								var agent = agents.get(i)
+								agent.setProperty(property, value)
+							}
+						}
+						
+						var resetHandler= {
+							environmentChanged: function(evt){
+								if (evt.getType() == EnvironmentChangeEvent.RESET){
+									envHolder.getToolbar().getButton("Run").setEnabled(true)
+									envHolder.stop()
+							 		yearCount = 0
+									startWaiting = false
+									wait = 0
+									userAddedAgents = false
+									env.setSummerLength(80)
+									env.setWinterLength(10)
+								}
+							}
+						}
+									
+						var resetListener = new EnvironmentChangeListener(resetHandler)
+					
+					function save() {
+						return true;
+					}</script>
+                      <scripts>
+                        <OTJavascript src="scripts/common/message.js" />
+                      </scripts>
+                    </OTJavascript>
+                  </script>
+                  <variables>
+                    <OTScriptVariableRealObject name="env">
+                      <reference>
+                        <object refid="${environment}" />
+                      </reference>
+                    </OTScriptVariableRealObject>
+                    <OTScriptVariableRealObject name="envHolder">
+                      <reference>
+                        <object refid="${env-holder}" />
+                      </reference>
+                    </OTScriptVariableRealObject>
+                  </variables>
+                  <scriptState />
+                </OTScriptObject>
+              </scripts>
+              <traitsToShow>
+                <string>size of leaves</string>
+              </traitsToShow>
+              <addAgentsButtons>
+                <OTAddAgentButton text="Add Plant A" quantity="10" click="false" limit="40">
+                  <species>
+                    <object refid="f5732706-c9c2-4e29-8c99-4c668dda89b0" />
+                  </species>
+                  <agentTraits>
+                    <OTAgentTrait property="roots">
+                      <defaultValues>
+                        <float>5.0</float>
+                      </defaultValues>
+                    </OTAgentTrait>
+                    <OTAgentTrait property="size of Leaves">
+                      <defaultValues>
+                        <float>5.0</float>
+                      </defaultValues>
+                    </OTAgentTrait>
+                    <OTAgentTrait property="min offspring distance">
+                      <defaultValues>
+                        <int>5</int>
+                      </defaultValues>
+                    </OTAgentTrait>
+                    <OTAgentTrait property="max offspring distance">
+                      <defaultValues>
+                        <int>20</int>
+                      </defaultValues>
+                    </OTAgentTrait>
+                    <OTAgentTrait property="gen">
+                      <defaultValues>
+                        <int>1</int>
+                      </defaultValues>
+                    </OTAgentTrait>
+                  </agentTraits>
+                </OTAddAgentButton>
+              </addAgentsButtons>
+            </OTEnvironmentHolder>
+          </documentRefs>
+        </OTCompoundDoc>
+      </root>
+    </OTSystem>
+  </objects>
+</otrunk>
+

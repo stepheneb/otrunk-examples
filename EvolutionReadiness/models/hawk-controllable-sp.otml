@@ -1,0 +1,439 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<otrunk id="03983021-b94f-4e63-8693-4e71bc26c214">
+	<imports>
+		<import class="org.concord.data.state.OTDataStore" />
+		<import class="org.concord.data.state.OTDataChannelDescription" />
+		<import class="org.concord.data.state.OTDataField" />
+		<import class="org.concord.data.state.OTDataTable" />
+		<import class="org.concord.datagraph.state.OTDataGraph" />
+		<import class="org.concord.datagraph.state.OTDataAxis" />
+		<import class="org.concord.datagraph.state.OTDataGraphable" />
+		<import class="org.concord.datagraph.state.OTDataCollector" />
+		<import class="org.concord.datagraph.state.OTMultiDataGraph" />
+		<import class="org.concord.datagraph.state.OTPluginView" />
+		<import class="org.concord.datagraph.state.OTDataBarGraphable" />
+		<import class="org.concord.otrunk.OTIncludeRootObject" />
+		<import class="org.concord.otrunk.OTInclude" />
+		<import class="org.concord.otrunk.OTSystem" />
+		<import class="org.concord.otrunk.biologica.OTOrganismPlacement" />
+		<import class="org.concord.otrunk.biologica.OTEnvironment" />
+		<import class="org.concord.otrunk.biologica.OTOrganism" />
+		<import class="org.concord.otrunk.biologica.OTWorld" />
+		<import class="org.concord.otrunk.biologica.agent.OTAgentSpecies" />
+		<import class="org.concord.otrunk.biologica.agent.OTAgentTrait" />
+		<import class="org.concord.otrunk.biologica.agent.OTAgentPropertyImageMap" />
+		<import class="org.concord.otrunk.biologica.environment.OTAddAgentButton" />
+		<import class="org.concord.otrunk.biologica.environment.OTEnvironmentHolder" />
+		<import
+			class="org.concord.otrunk.biologica.data.OTBiologicaModelDataProducer" />
+		<import class="org.concord.otrunk.biologica.rules.OTRule" />
+		<import class="org.concord.otrunk.biologica.rules.OTRuleCondition" />
+		<import class="org.concord.otrunk.biologica.rules.OTRuleConsequence" />
+		<import class="org.concord.otrunk.ui.OTCurriculumUnit" />
+		<import class="org.concord.otrunk.ui.OTPlacement" />
+		<import class="org.concord.otrunk.ui.snapshot.OTSnapshot" />
+		<import class="org.concord.otrunk.ui.snapshot.OTSnapshotButton" />
+		<import class="org.concord.otrunk.ui.snapshot.OTSnapshotAlbum" />
+		<import class="org.concord.otrunk.ui.snapshot.OTSnapshotChooser" />
+		<import class="org.concord.otrunk.view.OTViewEntry" />
+		<import class="org.concord.otrunk.view.OTViewBundle" />
+		<import class="org.concord.otrunk.view.OTViewMode" />
+		<import class="org.concord.otrunk.view.document.OTCompoundDoc" />
+		<import class="org.concord.otrunk.script.ui.OTScriptObject" />
+		<import class="org.concord.otrunk.script.js.OTJavascript" />
+		<import class="org.concord.otrunk.script.OTScriptEngineBundle" />
+		<import class="org.concord.otrunk.script.OTScriptEngineEntry" />
+		<import class="org.concord.otrunk.script.ui.OTScriptVariable" />
+		<import class="org.concord.otrunk.script.ui.OTScriptVariableComponent" />
+		<import class="org.concord.otrunk.script.ui.OTScriptVariableRealObject" />
+		<import class="org.concord.otrunk.script.ui.OTScriptVariableView" />
+		<import class="org.concord.otrunk.script.ui.OTScriptButton" />
+		<import class="org.concord.otrunk.ui.OTSlider" />
+		<import class="org.concord.otrunk.ui.OTText" />
+		<import class="org.concord.framework.otrunk.view.OTFrame" />
+		<import class="org.concord.framework.otrunk.wrapper.OTObjectSet" />
+	</imports>
+	<idMap>
+		<idMapping local_id="rabbit-species" id="eec525fc-4ca5-4fa9-be17-e3d9fa44ed24" />
+		<idMapping local_id="plant-species" id="6904840c-03f6-4f2d-b822-bc85aebe70db" />
+    <idMapping local_id="hawk-species" id="8cf33f49-8820-4c6f-9e5f-49fcca68acbd" />
+    <idMapping local_id="plus-one" id="a0b25a0c-9fb6-4bd9-b139-461072420103" />
+	</idMap>
+	<objects>
+		<OTSystem>
+			<bundles>
+				<object refid="8d880970-c22a-11dc-95ff-0800200c9a66" />
+				<OTViewBundle>
+					<frame>
+						<OTFrame useScrollPane="false" openMaximized="false"
+							width="900" height="500" />
+					</frame>
+				</OTViewBundle>
+				<OTScriptEngineBundle>
+					<engines>
+						<OTScriptEngineEntry objectClass="org.concord.otrunk.script.js.OTJavascript"
+							engineClass="org.concord.otrunk.script.js.OTJavascriptEngine" />
+					</engines>
+				</OTScriptEngineBundle>
+			</bundles>
+			<includes>
+				<OTInclude href="../global-imports/er-view-bundle.otml" />
+				<OTInclude href="species/fast-plants-roots.otml" />
+				<OTInclude href="species/white-brown-rabbits.otml" />
+        <OTInclude href="species/hawks.otml" />
+        <OTInclude href="species/plus-one.otml" />
+			</includes>
+			<root>
+				<OTCompoundDoc>
+					<bodyText>
+					 <table>
+					   <tr>
+					     <td>
+                  <object refid="${env-holder}" />
+					     </td>
+					     <td>
+					         <b>Rabbits caught:</b> <br/>
+					         <object refid="${points-text}" viewid="c93a7460-e18a-11dc-95ff-0800200c9a66"/><br/>
+					         <object refid="${graph}"/>
+					     </td>
+					   </tr>
+					 </table>
+					</bodyText>
+					<documentRefs>
+						<OTEnvironmentHolder local_id="env-holder"
+							width="590" height="460" toolbar="run,reset" useSpeedSlider="false">
+							<environment>
+								<OTEnvironment local_id="environment"
+									environmentWidth="10" environmentHeight="10" showRunButton="false"
+									winterLength="5" summerLength="50" showWinterImage="false"
+									orgSizeMultiplier="1" backgroundImageSrc="images/snow.png">
+									<world>
+										<OTWorld local_id="peasimple_world"
+											speciesPath="org/concord/biologica/worlds/peasimple.xml" />
+									</world>
+								</OTEnvironment>
+							</environment>
+							<scripts>
+								<OTScriptObject local_id="setup-script" name="Setup script">
+									<script>
+										<OTJavascript src="scripts/gradated-sunlight-five-blocks/setup.js">
+											<script>
+												importPackage(Packages.java.lang);
+												importPackage(Packages.java.awt);
+                        importPackage(Packages.java.awt.event);
+												importPackage(Packages.org.concord.biologica.environment);
+                        importPackage(Packages.org.concord.biologica.ui);
+ 
+                        var hawk;
+                        var lastEnergy;
+                        var points;
+                        var whitePoints;
+                        var brownPoints;
+                        
+                        var startTime
+                        var time
+                        var previousTime
+                        var isRunning = false
+                        
+                        var plusOnes;
+                        var plusOneTimes;
+                        
+												function init() {
+													env.removeAllAgents()
+													env.setStepCount(0)
+													envHolder.pauseAction()
+													env.setWrapNorthSouth(false)
+													env.setWrapEastWest(false)
+                          
+                          env.addStepListener(stepListener)
+                          env.addChangeListener(resetListener)
+                          
+                          setup();
+                          
+													return true;
+												}
+												
+												function setup() {
+												  hawk = addHawk();
+												  lastEnergy = hawk.getProperty("energy");
+                          
+                          for (var i = 0; i &lt; 10; i++){
+                            addRabbit("white");
+                            addRabbit("brown");
+                          }
+                          
+                          for (var i = 0; i &lt; 50; i++){
+                            addGrass();
+                          }
+                          
+                          points = 0;
+                          whitePoints = 0;
+                          brownPoints = 0;
+                          pointsText.setText("0");
+                          
+                          plusOnes = [];
+                          plusOneTimes = [];
+                          
+                          time = 0
+                          previousTime = 0
+                          
+                          envHolder.getGlassPanel().requestFocus();
+                          envHolder.getGlassPanel().addMouseListener(mouseListener)
+                          envHolder.getGlassPanel().addMouseMotionListener(mouseMotionListener)
+                          
+                          envHolder.setMouseMode(EnvironmentHolder.MOUSE_MODE_INVISIBLE);
+                          
+                          envHolder.getToolbar().getButton("Run").setEnabled(true)
+												}
+
+												function addHawk() {
+													var newHawk = hawk_species.createAgent();
+													newHawk.setAge(50)
+													newHawk.setProperty("is immortal", true)
+                          newHawk.setProperty("speed", 0)
+													newHawk.setProperty("max offspring", 0)
+													newHawk.setProperty("mating desire bonus", -1000)
+													newHawk.setProperty("hunger bonus", 50)
+													newHawk.setProperty("calculate drives", false);
+                          newHawk.setProperty("current behavior", "WANDERING");
+                          newHawk.addEatingListener(eatListener);
+													addAgent(newHawk);
+													return newHawk;
+												}
+												
+												function addRabbit(color) {
+                          var newRabbit = rabbit_species.createAgent();
+                          newRabbit.setAge(10);
+                          newRabbit.setProperty("mating desire bonus", -20);
+                          newRabbit.setProperty("hunger bonus", -10);
+                          newRabbit.setProperty("metabolism", 1);
+                          newRabbit.setProperty("resource consumption rate", 10);
+                          newRabbit.setProperty("color", color);
+                          addAgent(newRabbit);
+                        }
+                        
+                        function addGrass() {
+                          var newGrass = plant_species.createAgent();
+                          newGrass.setProperty("resource consumption rate", 2);
+                          addAgent(newGrass);
+                        }
+                        
+                        function addAgent(agent){
+                          var loc = env.getRandomLocation();
+                          agent.setEnvironment(env);
+                          agent.setLocation(loc);
+                          env.addAgent(agent);
+                        }
+                        
+                        var eatHandler= {
+                            environmentChanged: function(evt){
+                              if (evt.getType() == EnvironmentChangeEvent.AGENT_EATEN){
+                                points++;
+                               pointsText.setText(points);
+                               
+                               var plusOne = plus_one.createAgent();
+                               plusOne.setProperty("size", 1.2);
+                               plusOne.setEnvironment(env);
+                               plusOne.setLocation(hawk.getLocation());
+                               env.addAgent(plusOne);
+                               
+                               plusOnes.push(plusOne);
+                               plusOneTimes.push(time);
+                               
+                               var color = evt.getValue().getProperty("color");
+                               if (color == "white") {
+                                  whitePoints++;
+                               } else {
+                                  brownPoints++;
+                               }
+                              }
+                            }
+                          }    
+                        var eatListener = new EnvironmentChangeListener(eatHandler)
+												
+												var mouseHandler =
+					              {
+												    mousePressed: function(evt)
+                            {
+                               hawk.setProperty("current behavior", "EATING");
+                            },
+												
+												    mouseReleased: function(evt)
+                            {
+                               hawk.setProperty("current behavior", "WANDERING");
+                            }
+					              
+					              }
+					              var mouseListener = new MouseListener(mouseHandler)
+					              
+					              var mouseMotionHandler =
+                        {
+                            mouseMoved: function(e)
+                            {
+                               var p = envHolder.getEnvironmentView().transformViewToWorld(new Point(e.getX(), e.getY()));
+                               hawk.setLocation(p);
+                            }
+                        
+                        }
+                        var mouseMotionListener = new MouseMotionListener(mouseMotionHandler)
+                        
+                        var stepHandler =
+					              {
+					                environmentStepped: function()
+					                {
+					                
+                            updateTimer();
+                            
+					                  if (plusOnes.length > 0 &amp;&amp; time > plusOneTimes[0] + 1500) {
+					                     env.removeAgent(plusOnes[0]);
+					                     plusOnes.shift();
+					                     plusOneTimes.shift();
+					                  }
+					                  
+					                  if (time / 1000 &gt; 30){
+					                   if (points &gt; 0){
+					                     if (whitePoints === 0)
+					                       whitePoints = "no";
+					                     if (brownPoints === 0)
+					                       brownPoints = "no";
+					                     showMessage("¡Buen trabajo! !Atrapaste "+points+" conejos¡\n Atrapaste "+whitePoints+" conejos blancos y "brownPoints+" conejos cafés.", env, envHolder);
+                                showMessage("¿Cuántos conejos blancos y cuántos conejos cafés quedan?\n Anota el número en la tabla.", env, envHolder);
+                             } else {
+                               showMessage("!Oh no, no atrapaste ningún conejo!\nPresiona Reset para intentarlo nuevamente, y asegurate de hacer clic en los conejos para comertelos.", env, envHolder);
+                             }
+                             envHolder.pauseAction()
+                             envHolder.getToolbar().getButton("Run").setEnabled(false)
+					                   
+					                  }
+					                }
+					              }
+					              var stepListener = new EnvironmentStepListener(stepHandler)
+					              
+					              var resetRunHandler= {
+					                  environmentChanged: function(evt){
+					                    if (evt.getType() == EnvironmentChangeEvent.RESET){
+                                isRunning = false
+					                      setup()
+					                    }else if (evt.getType() == EnvironmentChangeEvent.RUN){
+					                      isRunning = true
+					                      startTime = System.currentTimeMillis()
+					                    } else if (evt.getType() == EnvironmentChangeEvent.PAUSE){
+					                      previousTime = time;
+					                    }
+					                  }
+					                }    
+					              var resetListener = new EnvironmentChangeListener(resetRunHandler)
+					              
+					              function updateTimer(){
+					                timeSinceLastStart = System.currentTimeMillis() - startTime;
+					                time =  previousTime + timeSinceLastStart;
+					              }
+
+												function save() {
+												  return true;
+												}
+												</script>
+												<scripts>
+                        <OTJavascript src="scripts/common/message.js" />
+                      </scripts>
+										</OTJavascript>
+									</script>
+									<variables>
+										<OTScriptVariableRealObject name="env">
+											<reference>
+												<object refid="${environment}" />
+											</reference>
+										</OTScriptVariableRealObject>
+										<OTScriptVariableRealObject name="envHolder">
+											<reference>
+												<object refid="${env-holder}" />
+											</reference>
+										</OTScriptVariableRealObject>
+										<OTScriptVariableRealObject name="rabbit_species">
+											<reference>
+												<object refid="${rabbit-species}" />
+											</reference>
+										</OTScriptVariableRealObject>
+                    <OTScriptVariableRealObject name="hawk_species">
+                      <reference>
+                        <object refid="${hawk-species}" />
+                      </reference>
+                    </OTScriptVariableRealObject>
+                    <OTScriptVariableRealObject name="plant_species">
+                      <reference>
+                        <object refid="${plant-species}" />
+                      </reference>
+                    </OTScriptVariableRealObject>
+                    <OTScriptVariableRealObject name="plus_one">
+                      <reference>
+                        <object refid="${plus-one}" />
+                      </reference>
+                    </OTScriptVariableRealObject>
+                    <OTScriptVariable name="pointsText">
+                      <reference>
+                        <object refid="${points-text}" />
+                      </reference>
+                    </OTScriptVariable>
+									</variables>
+									<scriptState />
+								</OTScriptObject>
+							</scripts>
+						</OTEnvironmentHolder>
+						<OTText local_id="points-text" text="0"/>
+						<OTDataCollector name="Model Data"
+              local_id="graph" multipleGraphableEnabled="false"
+              useDefaultToolBar="false" showControlBar="false" displayButtons="0,3,6" restoreScaleOnReset="true">
+              <source>
+                <OTDataGraphable connectPoints="true"
+                  color="0x999999" drawMarks="false" name="Number of rabbits"
+                  xColumn="0" yColumn="1">
+                  <dataProducer>
+                    <OTBiologicaModelDataProducer local_id="dp" lineGraph="true">
+                      <modelHolder>
+                        <object refid="${env-holder}" />
+                      </modelHolder>
+                      <lineRules>
+                        <OTRule name="white rabbits">
+                          <conditions>
+                            <OTRuleCondition property="species name" equals="Mixed Rabbits" />
+                            <OTRuleCondition property="color" equals="white" />
+                          </conditions>
+                        </OTRule>
+                        <OTRule name="brown rabbits">
+                          <conditions>
+                            <OTRuleCondition property="species name" equals="Mixed Rabbits" />
+                            <OTRuleCondition property="color" equals="brown" />
+                          </conditions>
+                        </OTRule>
+                      </lineRules>
+                  </OTBiologicaModelDataProducer>
+                  </dataProducer>
+                </OTDataGraphable>
+              </source>
+              <graphables>
+                <OTDataGraphable connectPoints="true"
+                  color="0x995500" drawMarks="false"
+                  xColumn="0" yColumn="2">
+                  <dataProducer>
+                    <object refid="${dp}" />
+                  </dataProducer>
+                </OTDataGraphable>
+              </graphables>
+              <xDataAxis>
+                <OTDataAxis min="0" max="30"
+                  label="Time" units="s" local_id="xAxis">
+                </OTDataAxis>
+              </xDataAxis>
+              <yDataAxis>
+                <OTDataAxis min="0" max="70"
+                  label="Number of rabbits" local_id="yAxis">
+                </OTDataAxis>
+              </yDataAxis>
+            </OTDataCollector>
+					</documentRefs>
+				</OTCompoundDoc>
+			</root>
+		</OTSystem>
+	</objects>
+</otrunk>
+
