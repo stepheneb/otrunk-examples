@@ -1,0 +1,463 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<otrunk id="3bae6eb4-11bd-421f-a00b-834b57307e47">
+  <imports>
+    <import class="org.concord.data.state.OTDataStore" />
+    <import class="org.concord.data.state.OTDataChannelDescription" />
+    <import class="org.concord.data.state.OTDataField" />
+    <import class="org.concord.data.state.OTDataTable" />
+    <import class="org.concord.datagraph.state.OTDataGraph" />
+    <import class="org.concord.datagraph.state.OTDataAxis" />
+    <import class="org.concord.datagraph.state.OTDataGraphable" />
+    <import class="org.concord.datagraph.state.OTDataCollector" />
+    <import class="org.concord.datagraph.state.OTMultiDataGraph" />
+    <import class="org.concord.datagraph.state.OTPluginView" />
+    <import class="org.concord.datagraph.state.OTDataBarGraphable" />
+    <import class="org.concord.otrunk.OTIncludeRootObject" />
+    <import class="org.concord.otrunk.OTInclude" />
+    <import class="org.concord.otrunk.OTSystem" />
+    <import class="org.concord.otrunk.biologica.OTOrganismPlacement" />
+    <import class="org.concord.otrunk.biologica.OTEnvironment" />
+    <import class="org.concord.otrunk.biologica.OTOrganism" />
+    <import class="org.concord.otrunk.biologica.OTWorld" />
+    <import class="org.concord.otrunk.biologica.agent.OTAgentSpecies" />
+    <import class="org.concord.otrunk.biologica.agent.OTAgentTrait" />
+    <import class="org.concord.otrunk.biologica.agent.OTAgentPropertyImageMap" />
+    <import class="org.concord.otrunk.biologica.environment.OTAddAgentButton" />
+    <import class="org.concord.otrunk.biologica.environment.OTEnvironmentHolder" />
+    <import class="org.concord.otrunk.biologica.data.OTBiologicaModelDataProducer" />
+    <import class="org.concord.otrunk.biologica.rules.OTRule" />
+    <import class="org.concord.otrunk.biologica.rules.OTRuleCondition" />
+    <import class="org.concord.otrunk.biologica.rules.OTRuleConsequence" />
+    <import class="org.concord.otrunk.ui.OTCurriculumUnit" />
+    <import class="org.concord.otrunk.ui.OTPlacement" />
+    <import class="org.concord.otrunk.ui.snapshot.OTSnapshot" />
+    <import class="org.concord.otrunk.ui.snapshot.OTSnapshotButton" />
+    <import class="org.concord.otrunk.ui.snapshot.OTSnapshotAlbum" />
+    <import class="org.concord.otrunk.ui.snapshot.OTSnapshotChooser" />
+    <import class="org.concord.otrunk.view.OTViewEntry" />
+    <import class="org.concord.otrunk.view.OTViewBundle" />
+    <import class="org.concord.otrunk.view.OTViewMode" />
+    <import class="org.concord.otrunk.view.document.OTCompoundDoc" />
+    <import class="org.concord.otrunk.script.ui.OTScriptObject" />
+    <import class="org.concord.otrunk.script.js.OTJavascript" />
+    <import class="org.concord.otrunk.script.OTScriptEngineBundle" />
+    <import class="org.concord.otrunk.script.OTScriptEngineEntry" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariable" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariableComponent" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariableRealObject" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariableView" />
+    <import class="org.concord.otrunk.script.ui.OTScriptButton" />
+    <import class="org.concord.otrunk.ui.OTSlider" />
+    <import class="org.concord.otrunk.ui.OTSliderLabel" />
+    <import class="org.concord.otrunk.ui.OTText" />
+    <import class="org.concord.framework.otrunk.view.OTFrame" />
+  </imports>
+  <idMap> 
+  	<idMapping local_id="rabbit-species" id="f05fc1b1-ea0e-4d6e-a21e-7d089860445a"/>
+  	<idMapping local_id="fox-species" id="c59a7a17-5585-4860-b6a5-803e74ea2dbd"/>
+  </idMap> 
+  <objects>
+    <OTSystem>
+      <bundles>
+        <object refid="8d880970-c22a-11dc-95ff-0800200c9a66" />
+        <OTViewBundle>
+          <frame>
+            <OTFrame useScrollPane="false" openMaximized="false" width="900" height="500" />
+          </frame>
+        </OTViewBundle>
+        <OTScriptEngineBundle>
+          <engines>
+            <OTScriptEngineEntry objectClass="org.concord.otrunk.script.js.OTJavascript" engineClass="org.concord.otrunk.script.js.OTJavascriptEngine" />
+          </engines>
+        </OTScriptEngineBundle>
+      </bundles>
+      <includes>
+        <OTInclude href="../global-imports/er-view-bundle.otml" />
+        <OTInclude href="species/fast-plants.otml" />
+        <OTInclude href="species/fast-plants-thin.otml" />
+        <OTInclude href="species/white-rabbits.otml" />
+        <OTInclude href="species/foxes.otml" />
+      </includes>
+      <root>
+        <OTCompoundDoc>
+          <bodyText>
+            <table width="100%">
+              <tr>
+                <td>
+                  <object refid="${env-holder}" />
+                </td>
+                <td width="5%" />
+                <td>
+                  Time:
+                  <br />
+                  <object refid="${timer}" />
+                  seconds
+                  <br />
+                  <br />
+                  Hunger:
+                  <br />
+                  <br />
+                  <object refid="${slider}" />
+                </td>
+              </tr>
+            </table>
+            <object refid="${graph}"/>
+          </bodyText>
+          <documentRefs>
+          	<OTDataCollector name="Model Data"
+							local_id="graph" multipleGraphableEnabled="false"
+							autoScaleEnabled="false" showControlBar="false" useDefaultToolBar="false" displayButtons="0,3,6">
+							<source>
+								<OTDataGraphable connectPoints="true"
+									color="0x00aa00" drawMarks="false" name="Number of plants in field"
+									xColumn="0" yColumn="1">
+									<dataProducer>
+										<OTBiologicaModelDataProducer local_id="dp" lineGraph="true">
+											<modelHolder>
+                                    			<object refid="${env-holder}" />
+                                  			</modelHolder>
+                                  			<species>
+                                  				<string>Fast Plants</string>
+                                  			</species>
+                                  	</OTBiologicaModelDataProducer>
+									</dataProducer>
+								</OTDataGraphable>
+							</source>
+							<xDataAxis>
+								<OTDataAxis min="0" max="30"
+									label="Time" units="s" local_id="xAxis">
+								</OTDataAxis>
+							</xDataAxis>
+							<yDataAxis>
+								<OTDataAxis min="0" max="50"
+									label="Number of plants" local_id="yAxis">
+								</OTDataAxis>
+							</yDataAxis>
+						</OTDataCollector>
+            <OTText local_id="timer" text="0" columns="2" rows="1" />
+            <OTEnvironmentHolder local_id="env-holder" width="590" height="460" toolbar="run,reset" useSpeedSlider="false">
+              <environment>
+                <OTEnvironment local_id="environment" environmentWidth="4" environmentHeight="4" showRunButton="false" winterLength="5" summerLength="50" showWinterImage="false" orgSizeMultiplier="1.5" backgroundImageSrc="images/grass.jpg">
+                  <world>
+                    <OTWorld local_id="peasimple_world" speciesPath="org/concord/biologica/worlds/peasimple.xml" />
+                  </world>
+                </OTEnvironment>
+              </environment>
+              <scripts>
+                <OTScriptObject local_id="setup-script" name="Setup world">
+                  <script>
+                    <OTJavascript src="scripts/gradated-sunlight/setup.js">
+                      <script>importPackage(Packages.java.lang);
+							importPackage(Packages.java.awt);
+							importPackage(Packages.org.concord.biologica.environment);
+							importClass(Packages.javax.swing.JOptionPane);
+							
+							function init() {
+									setup()
+									env.addChangeListener(resetListener)
+							        
+									return true;
+								}
+								
+								function setup(){
+									env.removeAllAgents()
+									env.setStepCount(0)
+									envHolder.pauseAction()
+									var world = env.getWorld();
+									env.setWrapNorthSouth(false);
+									env.setWrapEastWest(false);
+							        
+							        for (var i = 0; i &lt; 21; i++) {
+							        	var plant = plant_species.createAgent();
+										plant.setProperty("food quantity",100)
+										plant.setProperty("max offspring distance", 20)
+										plant.setProperty("min offspring", 1)
+										plant.setProperty("max offspring", 4)
+                    plant.setProperty("age of maturity", 14)
+										env.addAgent(plant)
+							        }
+								}
+								
+								var resetHandler= {
+									environmentChanged: function(evt){
+										if (evt.getType() == EnvironmentChangeEvent.RESET){
+											setup()
+										}
+									}
+								}
+											
+								var resetListener = new EnvironmentChangeListener(resetHandler)
+						
+						function save() {
+							return true;
+						}</script>
+                      <scripts>
+                        <OTJavascript src="scripts/common/message.js" />
+                      </scripts>
+                    </OTJavascript>
+                  </script>
+                  <variables>
+                    <OTScriptVariableRealObject name="env">
+                      <reference>
+                        <object refid="${environment}" />
+                      </reference>
+                    </OTScriptVariableRealObject>
+                    <OTScriptVariableRealObject name="envHolder">
+                      <reference>
+                        <object refid="${env-holder}" />
+                      </reference>
+                    </OTScriptVariableRealObject>
+                    <OTScriptVariableRealObject name="plant_species">
+                      <reference>
+                        <object refid="8a6918a9-a82b-4627-977f-2215d41395be" />
+                      </reference>
+                    </OTScriptVariableRealObject>
+                  </variables>
+                  <scriptState />
+                </OTScriptObject>
+                <OTScriptObject local_id="rabbit-script" name="Setup world">
+                  <script>
+                    <OTJavascript src="scripts/gradated-sunlight/setup.js">
+                      <script>importPackage(Packages.java.lang);
+							importPackage(Packages.java.awt);
+							importPackage(Packages.java.awt.event);
+							importPackage(Packages.java.swing);
+							importPackage(Packages.java.util);
+							importPackage(Packages.org.concord.biologica.environment);
+							importClass(Packages.javax.swing.JOptionPane);
+							
+							var rabbit
+							var timer
+							var timerTask
+							var isRunning = false
+							var addedRabbits = false
+							  			
+							function init() {
+						        setup()
+								env.addStepListener(stepListener)
+								env.addChangeListener(resetListener)
+								envHolder.getParent().getParent().requestFocus()
+								envHolder.getParent().getParent().addKeyListener(arrowListener)
+						        
+								return true;
+							}
+							
+							function setup(){
+								rabbit = rabbit_species.createAgent();
+						        rabbit.setAge(20)
+								rabbit.setProperty("Speed", 0)
+								rabbit.setProperty("is immortal", true)
+								rabbit.setProperty("max offspring", 0)
+								rabbit.setProperty("calculate drives", false)
+								rabbit.setProperty("current behavior", "WANDERING")
+								rabbit.setProperty("is selected", 1)
+								var loc = env.getRandomLocation(10,10,80,80)
+								rabbit.setEnvironment(env)
+								rabbit.setLocation(loc)
+						        env.addAgent(rabbit)
+						          
+								addedRabbits = false
+								
+								timerText.text = 0
+						        
+						        timer = new Timer();
+						        timerTask = null;
+						        if (envHolder.getToolbar().getButton("Run") != null)
+						        	envHolder.getToolbar().getButton("Run").setEnabled(true)
+						        
+							}
+							
+							var timerTaskHandler =
+							{
+								run: function()
+								{
+								    logSuccess(otEnvHolder)
+										showMessageAndLog("¡Felicidades!\nTu conejito fue capaz de encontrar suficiente comida para vivir!", env, envHolder, otEnvHolder)
+                    envHolder.pauseAction()
+                    envHolder.getToolbar().getButton("Run").setEnabled(false)
+								}
+							}
+							
+							
+							var arrowHandler =
+							{
+							    keyPressed: function(evt)
+							    {
+							    	if (rabbit != null &amp;&amp; isRunning) {
+								    	var keyCode = evt.getKeyCode()
+								    	var loc = rabbit.getLocation()
+								    	var newLoc
+								    	if (keyCode == evt.VK_UP){
+								    		newLoc = new Point(loc.x, loc.y - 3)
+								    	} else if (keyCode == evt.VK_DOWN){
+								    		newLoc = new Point(loc.x, loc.y + 3)
+								    	} else if (keyCode == evt.VK_LEFT){
+								    		newLoc = new Point(loc.x - 3, loc.y)
+								    	} else if (keyCode == evt.VK_RIGHT){
+								    		newLoc = new Point(loc.x + 3, loc.y)
+								    	}
+								    	rabbit.setLocation(newLoc)
+							    	}
+							    }
+							
+							}
+							var arrowListener = new KeyListener(arrowHandler)
+							
+							var stepHandler =
+							{
+								environmentStepped: function()
+								{
+									if (rabbit != null){
+										envHolder.getParent().getParent().requestFocus()
+										var hunger = 100 - rabbit.getProperty("energy").intValue()
+										slider.setValue(hunger)
+										
+										if (hunger &gt; 5){
+											rabbit.setProperty("current behavior", "EATING")
+										} else {
+											rabbit.setProperty("current behavior", "WANDERING")
+										}
+										
+										if (hunger &gt; 70){
+											rabbit.setProperty("show food bubble", true);
+										} else {
+											rabbit.setProperty("show food bubble", false);
+										}
+										
+										if (hunger &gt; 99){
+										  env.removeAgent(rabbit)
+											showMessageAndLog("El conejito murió porque no pudo encontrar suficiente comida para vivir.\ nHaz clic en Reset e ¡intentalo de nuevo!", env, envHolder, otEnvHolder)
+                      envHolder.pauseAction()
+                      envHolder.getToolbar().getButton("Run").setEnabled(false)
+                      rabbit = null;
+										}
+									}
+										
+								}
+							}
+							var stepListener = new EnvironmentStepListener(stepHandler)
+							
+							var timeRemaining = 0
+							var resetRunHandler= {
+									environmentChanged: function(evt){
+										if (evt.getType() == EnvironmentChangeEvent.RESET){
+											isRunning = false
+                      timerTask = null
+                      timerCountdownTask = null
+											setup()
+										} else if (evt.getType() == EnvironmentChangeEvent.RUN){
+											isRunning = true
+											if (timerTask == null){
+												timerTask = new TimerTask(timerTaskHandler)
+						        				timer.schedule(timerTask, 30000);
+						        			} else {
+						        				timer.schedule(timerTask, timeRemaining);
+						        			}
+						        			
+						        			if (timerCountdownTask == null){
+						        				updateEndTime(30000)
+												timerCountdownTask = new TimerTask(timerTaskCountdownHandler)
+						        				timer.schedule(timerCountdownTask, 0, 100);
+						        			} else {
+						        				updateEndTime(timeRemaining)
+						        				timer.schedule(timerCountdownTask, 0, 100);
+						        			}
+										} else if (evt.getType() == EnvironmentChangeEvent.PAUSE){
+											isRunning = false
+											timeRemaining = timerTask.scheduledExecutionTime() - System.currentTimeMillis()
+											if (timer != null)
+												timer.cancel()
+											timer = new Timer();
+											timerTask = new TimerTask(timerTaskHandler)
+											timerCountdownTask = new TimerTask(timerTaskCountdownHandler)
+										}
+									}
+								}
+											
+							var resetListener = new EnvironmentChangeListener(resetRunHandler)
+							
+							var endTime
+							
+							function updateEndTime(timeRemaining){
+								endTime = System.currentTimeMillis() + timeRemaining;
+							}
+							
+							function updateTimer(){
+								timeRemaining = endTime - System.currentTimeMillis();
+								
+								timeRemaining = (timeRemaining &lt; 0) ? 0 : Math.floor(timeRemaining / 1000);
+								timerText.text = 30 - timeRemaining;
+							}
+							
+							var timerCountdownTask;
+							
+							var timerTaskCountdownHandler =
+							{
+								run: function()
+								{
+									updateTimer();
+								}
+							}
+						
+						function save() {
+							return true;
+						}</script>
+                      <scripts>
+                        <OTJavascript src="scripts/common/message.js" />
+                      </scripts>
+                    </OTJavascript>
+                  </script>
+                  <variables>
+                    <OTScriptVariableRealObject name="env">
+                      <reference>
+                        <object refid="${environment}" />
+                      </reference>
+                    </OTScriptVariableRealObject>
+                    <OTScriptVariableRealObject name="envHolder">
+                      <reference>
+                        <object refid="${env-holder}" />
+                      </reference>
+                    </OTScriptVariableRealObject>
+                    <OTScriptVariable name="otEnvHolder">
+                      <reference>
+                        <object refid="${env-holder}" />
+                      </reference>
+                    </OTScriptVariable>
+                    <OTScriptVariableRealObject name="plant_species">
+                      <reference>
+                        <object refid="8a6918a9-a82b-4627-977f-2215d41395be" />
+                      </reference>
+                    </OTScriptVariableRealObject>
+                    <OTScriptVariableRealObject name="rabbit_species">
+                      <reference>
+                        <object refid="f05fc1b1-ea0e-4d6e-a21e-7d089860445a" />
+                      </reference>
+                    </OTScriptVariableRealObject>
+                    <OTScriptVariable name="slider">
+                      <reference>
+                        <object refid="${slider}" />
+                      </reference>
+                    </OTScriptVariable>
+                    <OTScriptVariable name="timerText">
+                      <reference>
+                        <object refid="${timer}" />
+                      </reference>
+                    </OTScriptVariable>
+                  </variables>
+                  <scriptState />
+                </OTScriptObject>
+              </scripts>
+            </OTEnvironmentHolder>
+		        <OTSlider local_id="slider" controllable="false" minimum="0" maximum="100" value="0" numMajorTicks="2" snapToMarks="false" precision="1" length="200" numTicks="0" showTickMarks="false">
+		          <labels>
+                    <OTSliderLabel value="0" label="Not hungry" />
+                    <OTSliderLabel value="100" label="Very hungry" />
+              </labels>
+		        </OTSlider>
+          </documentRefs>
+        </OTCompoundDoc>
+      </root>
+    </OTSystem>
+  </objects>
+</otrunk>
+
