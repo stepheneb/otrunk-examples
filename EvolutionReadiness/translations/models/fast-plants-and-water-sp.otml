@@ -1,0 +1,556 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<otrunk id="04093a11-4ab6-460d-9542-8bd47f7639e7">
+  <imports>
+    <import class="org.concord.data.state.OTDataStore" />
+    <import class="org.concord.data.state.OTDataChannelDescription" />
+    <import class="org.concord.data.state.OTDataField" />
+    <import class="org.concord.data.state.OTDataTable" />
+    <import class="org.concord.datagraph.state.OTDataGraph" />
+    <import class="org.concord.datagraph.state.OTDataAxis" />
+    <import class="org.concord.datagraph.state.OTDataGraphable" />
+    <import class="org.concord.datagraph.state.OTDataCollector" />
+    <import class="org.concord.datagraph.state.OTMultiDataGraph" />
+    <import class="org.concord.datagraph.state.OTPluginView" />
+    <import class="org.concord.datagraph.state.OTDataBarGraphable" />
+    <import class="org.concord.otrunk.OTIncludeRootObject" />
+    <import class="org.concord.otrunk.OTInclude" />
+    <import class="org.concord.otrunk.OTSystem" />
+    <import class="org.concord.otrunk.biologica.OTOrganismPlacement" />
+    <import class="org.concord.otrunk.biologica.OTEnvironment" />
+    <import class="org.concord.otrunk.biologica.OTOrganism" />
+    <import class="org.concord.otrunk.biologica.OTWorld" />
+    <import class="org.concord.otrunk.biologica.agent.OTAgentSpecies" />
+    <import class="org.concord.otrunk.biologica.agent.OTAgentTrait" />
+    <import class="org.concord.otrunk.biologica.agent.OTAgentPropertyImageMap" />
+    <import class="org.concord.otrunk.biologica.environment.OTAddAgentButton" />
+    <import class="org.concord.otrunk.biologica.environment.OTEnvironmentHolder" />
+    <import class="org.concord.otrunk.biologica.data.OTBiologicaModelDataProducer" />
+    <import class="org.concord.otrunk.biologica.rules.OTRule" />
+    <import class="org.concord.otrunk.biologica.rules.OTRuleCondition" />
+    <import class="org.concord.otrunk.biologica.rules.OTRuleConsequence" />
+    <import class="org.concord.otrunk.ui.OTCurriculumUnit" />
+    <import class="org.concord.otrunk.ui.OTImage" />
+    <import class="org.concord.otrunk.ui.OTPlacement" />
+    <import class="org.concord.otrunk.ui.OTProgressBar" />
+    <import class="org.concord.otrunk.ui.OTText" />
+    <import class="org.concord.otrunk.ui.snapshot.OTSnapshot" />
+    <import class="org.concord.otrunk.ui.snapshot.OTSnapshotButton" />
+    <import class="org.concord.otrunk.ui.snapshot.OTSnapshotAlbum" />
+    <import class="org.concord.otrunk.ui.snapshot.OTSnapshotChooser" />
+    <import class="org.concord.otrunk.view.OTViewEntry" />
+    <import class="org.concord.otrunk.view.OTViewBundle" />
+    <import class="org.concord.otrunk.view.OTViewMode" />
+    <import class="org.concord.otrunk.view.document.OTCompoundDoc" />
+    <import class="org.concord.otrunk.script.ui.OTScriptObject" />
+    <import class="org.concord.otrunk.script.js.OTJavascript" />
+    <import class="org.concord.otrunk.script.OTScriptEngineBundle" />
+    <import class="org.concord.otrunk.script.OTScriptEngineEntry" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariable" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariableComponent" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariableRealObject" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariableView" />
+    <import class="org.concord.otrunk.script.ui.OTScriptButton" />
+    <import class="org.concord.otrunk.ui.OTChoice" />
+    <import class="org.concord.framework.otrunk.view.OTFrame" />
+  </imports>
+  <objects>
+    <OTSystem>
+      <bundles>
+        <object refid="8d880970-c22a-11dc-95ff-0800200c9a66" />
+        <OTScriptEngineBundle>
+          <engines>
+            <OTScriptEngineEntry objectClass="org.concord.otrunk.script.js.OTJavascript" engineClass="org.concord.otrunk.script.js.OTJavascriptEngine" />
+          </engines>
+        </OTScriptEngineBundle>
+      </bundles>
+      <includes>
+        <OTInclude href="../global-imports/er-view-bundle.otml" />
+        <OTInclude href="species/fast-plants-roots.otml" />
+      </includes>
+      <root>
+        <OTCompoundDoc local_id="mountain-model">
+          <bodyText>
+            <table>
+              <tr>
+                <td>
+                  <object refid="${env-holder}" />
+                </td>
+                <td>
+                  <table>
+                    <tr>
+                      <td width="150px" align="center">
+                      <b>Amount of rain</b>
+                      <br />
+                      <br/>
+                        Lots of rain
+                        <br/>
+                        <object refid="${water-slider}" />
+                        <br />
+                        Little rain
+                      </td>
+                      <td width="80px" align="center">
+                        <b>Time: </b><br/><object refid="${time-text}" viewid="c93a7460-e18a-11dc-95ff-0800200c9a66"/>
+                      </td>
+                    </tr>
+                  </table>
+                  <object refid="${graph}"/>
+                </td>
+              </tr>
+            </table>
+            <object refid="${slider-script}" />
+          </bodyText>
+          <documentRefs>
+          	<OTDataCollector name="Model Data"
+							local_id="graph" multipleGraphableEnabled="false"
+							autoScaleEnabled="false" showControlBar="false" useDefaultToolBar="false" displayButtons="0,3,6" >
+							<source>
+								<OTDataBarGraphable name="Number of organisms" connectPoints="true" drawMarks="false" lineWidth="10.0" color="192" yColumn="11" xColumn="0" showAllChannels="true" showControlButtons="true" showToolButtons="true" visible="true" showSampleLimit="1">
+                              <dataProducer>
+                                <OTBiologicaModelDataProducer trait="roots">
+                                  <modelHolder>
+                                    <object refid="${env-holder}" />
+                                  </modelHolder>
+                                  <categories>
+                                    <string>Fast Plants</string>
+                                  </categories>
+                                  <channelDescriptions>
+                                    <OTDataChannelDescription name="#1" numericData="true" color="5912564" />
+                                    <OTDataChannelDescription name="#2" numericData="true" color="6830561" />
+                                    <OTDataChannelDescription name="#3" numericData="true" color="7552453" />
+                                  </channelDescriptions>
+                                </OTBiologicaModelDataProducer>
+                              </dataProducer>
+                              <dataStore>
+                                <OTDataStore sampleKeepLimit="10" dt="1.0" numberChannels="11">
+                                  <channelDescriptions>
+                                    <OTDataChannelDescription name="dt" precision="2" numericData="true" />
+                                    <OTDataChannelDescription name="#1" numericData="true" />
+                                    <OTDataChannelDescription name="#2" numericData="true" />
+                                    <OTDataChannelDescription name="#3" numericData="true" />
+                                  </channelDescriptions>
+                                </OTDataStore>
+                              </dataStore>
+                            </OTDataBarGraphable>
+							</source>
+							<xDataAxis>
+								<OTDataAxis max="3.5" min="0.0" label="Plant Type" units="Grass Size" labelFormat="Engineering" locked="true" intervalWorld="1">
+                              <customGridLabels>
+                                <entry key="1.0">
+                                  <string>A::http://otrunk.concord.org/examples/EvolutionReadiness/models/species/images/plants/grass/smallgrass.png</string>
+                                </entry>
+                                <entry key="2.0">
+                                  <string>B::http://otrunk.concord.org/examples/EvolutionReadiness/models/species/images/plants/grass/medgrass.png</string>
+                                </entry>
+                                <entry key="3.0">
+                                  <string>C::http://otrunk.concord.org/examples/EvolutionReadiness/models/species/images/plants/grass/tallgrass.png</string>
+                                </entry>
+                              </customGridLabels>
+                            </OTDataAxis>
+							</xDataAxis>
+							<yDataAxis>
+								<OTDataAxis min="0" max="200"
+									label="Number of plants" local_id="yAxis">
+								</OTDataAxis>
+							</yDataAxis>
+						</OTDataCollector>
+             <OTEnvironmentHolder local_id="env-holder" width="590" height="460" toolbar="run,info,reset">
+          <environment>
+            <OTEnvironment local_id="environment" environmentWidth="9" environmentHeight="9" showRunButton="false" winterLength="2" summerLength="50" showWinterImage="false" orgSizeMultiplier="3.0" backgroundImageSrc="images/green.jpg">
+              <world>
+                <OTWorld local_id="peasimple_world" speciesPath="org/concord/biologica/worlds/peasimple.xml" />
+              </world>
+              <rules>
+                <OTRule description="everyone starts out happy">
+                  <conditions>
+                    <OTRuleCondition property="species name" equals="Fast Plants" />
+                  </conditions>
+                  <consequences>
+                    <OTRuleConsequence property="chance of survival" newValueFloat="0.999" />
+                    <OTRuleConsequence property="growth rate" newValueFloat="0.04" />
+                  </consequences>
+                </OTRule>
+                <OTRule description="roots 1 do poorly with medium water">
+                  <conditions>
+                    <OTRuleCondition property="species name" equals="Fast Plants" />
+                    <OTRuleCondition property="roots" equalsValue="1.0" />
+                    <OTRuleCondition property="rain" maxValue="0.9" />
+                  </conditions>
+                  <consequences>
+                    <OTRuleConsequence property="chance of survival" newValueFloat="0.99" />
+                    <OTRuleConsequence property="growth rate" newValueFloat="0.02" />
+                  </consequences>
+                </OTRule>
+                <OTRule description="roots 1 die with little water">
+                  <conditions>
+                    <OTRuleCondition property="species name" equals="Fast Plants" />
+                    <OTRuleCondition property="roots" equalsValue="1.0" />
+                    <OTRuleCondition property="rain" maxValue="0.5" />
+                  </conditions>
+                  <consequences>
+                    <OTRuleConsequence property="chance of survival" newValueFloat="0.95" />
+                    <OTRuleConsequence property="growth rate" newValueFloat="0.01" />
+                  </consequences>
+                </OTRule>
+                <OTRule description="roots 2 do poorly with little water">
+                  <conditions>
+                    <OTRuleCondition property="species name" equals="Fast Plants" />
+                    <OTRuleCondition property="roots" equalsValue="2.0" />
+                    <OTRuleCondition property="rain" maxValue="0.5" />
+                  </conditions>
+                  <consequences>
+                    <OTRuleConsequence property="chance of survival" newValueFloat="0.99" />
+                    <OTRuleConsequence property="growth rate" newValueFloat="0.02" />
+                  </consequences>
+                </OTRule>
+                <OTRule description="roots 1 are short">
+                  <conditions>
+                    <OTRuleCondition property="roots" equalsValue="1.0" />
+                  </conditions>
+                  <consequences>
+                    <OTRuleConsequence property="variety" newValueString="Short grass" />
+                  </consequences>
+                </OTRule>
+                <OTRule description="roots 2 are medium">
+                  <conditions>
+                    <OTRuleCondition property="roots" equalsValue="2.0" />
+                  </conditions>
+                  <consequences>
+                    <OTRuleConsequence property="variety" newValueString="Medium grass" />
+                  </consequences>
+                </OTRule>
+                <OTRule description="roots 3 are big">
+                  <conditions>
+                    <OTRuleCondition property="roots" equalsValue="3.0" />
+                  </conditions>
+                  <consequences>
+                    <OTRuleConsequence property="variety" newValueString="Big grass" />
+                  </consequences>
+                </OTRule>
+              </rules>
+            </OTEnvironment>
+          </environment>
+              <scripts>
+                <OTScriptObject local_id="setup-script" name="Setup world">
+                  <script>
+                    <OTJavascript src="scripts/gradated-sunlight/setup.js">
+                      <script>importPackage(Packages.java.lang);
+						importPackage(Packages.java.awt);
+						importPackage(Packages.org.concord.biologica.environment);
+						importClass(Packages.javax.swing.JOptionPane);
+						  			
+						function init() {
+							env.removeAllAgents()
+							env.setStepCount(0)
+							envHolder.pauseAction()
+							var world = env.getWorld();
+							env.setWrapNorthSouth(false);
+							env.setWrapEastWest(false);
+							for (var i = 0; i &lt; 9; i++) {
+						        for (var j = 0; j &lt; 9; j++) {
+						        	var envUnit = env.getEnvironmentUnit(i,j);
+						        	var color = new Color(0.3, 0.2, 0.1)
+					        		var terrain = new Terrain(world, "terrain", color)
+					        		envUnit.setTerrain(terrain)
+					        		envUnit.setProperty("food", 20)
+					        		envUnit.setProperty("food full", 20)
+					        		envUnit.setProperty("food regrowth rate", 20)
+					            }
+					        }
+						return true;
+						}
+					
+					function save() {
+						return true;
+					}</script>
+                      <scripts>
+                        <OTJavascript src="scripts/common/message.js" />
+                      </scripts>
+                    </OTJavascript>
+                  </script>
+                  <variables>
+                    <OTScriptVariableRealObject name="env">
+                      <reference>
+                        <object refid="${environment}" />
+                      </reference>
+                    </OTScriptVariableRealObject>
+                    <OTScriptVariableRealObject name="envHolder">
+                      <reference>
+                        <object refid="${env-holder}" />
+                      </reference>
+                    </OTScriptVariableRealObject>
+                  </variables>
+                  <scriptState />
+                </OTScriptObject>
+               </scripts>
+              <traitsToShow>
+                <string>variety</string>
+              </traitsToShow>
+              <addAgentsButtons>
+                <OTAddAgentButton text="Add Plants" quantity="90" click="false" limit="90">
+                  <species>
+                    <object refid="6904840c-03f6-4f2d-b822-bc85aebe70db" />
+                  </species>
+                  <agentTraits>
+                    <OTAgentTrait property="roots">
+                      <possibleValues>
+                        <int>1</int>
+                        <int>2</int>
+                        <int>3</int>
+                      </possibleValues>
+                    </OTAgentTrait>
+                    <OTAgentTrait property="age of maturity">
+                      <defaultValues>
+                        <int>14</int>
+                      </defaultValues>
+                    </OTAgentTrait>
+                    <OTAgentTrait property="resource consumption rate">
+			                 <possibleValues>
+			                   <float>5</float>
+			                 </possibleValues>
+			              </OTAgentTrait>
+                  </agentTraits>
+                  <buttonImage>
+                    <OTImage imageBytes="species/images/plants/grass/multigrass.png"/>
+                  </buttonImage>
+                </OTAddAgentButton>
+              </addAgentsButtons>
+            </OTEnvironmentHolder>
+            <OTScriptObject local_id="slider-script" name="Script object">
+              <script>
+                <OTJavascript local_id="script">
+                  <script>importPackage(Packages.java.lang);
+importPackage(Packages.java.net);
+importPackage(Packages.java.awt.geom);
+importPackage(Packages.javax.swing);
+importPackage(Packages.org.concord.framework.otrunk);
+importPackage(Packages.org.concord.biologica.environment);
+
+var env = envHolder.getEnvironment()
+var otEnvHolderController
+var lastEnvChange = 10
+var baseUrl = otEnvHolder.getOTObjectService().getCodebase(otEnvHolder)
+var addedAgents = false;
+
+							var startTime
+							var time
+							var previousTime
+							var shownMessage
+							var currChoice
+							var doneChoices
+             
+function init() {
+	env.addChangeListener(resetListener)
+	env.addStepListener(stepListener)
+	
+	var url = new URL(baseUrl, "images/green3.png")
+	envHolder.getEnvironmentView().addBackgroundImageUrl(url)
+	url = new URL(baseUrl, "images/green2.png")
+	envHolder.getEnvironmentView().addBackgroundImageUrl(url)
+	url = new URL(baseUrl, "images/green.jpg")
+	envHolder.getEnvironmentView().addBackgroundImageUrl(url)
+	
+	
+	doneChoices = [false, false, false];
+	
+	setProperty("rain", 1.0)
+	
+	setup();
+}
+
+function setup() {
+	
+	otEnvHolderController = controllerService.getController(otEnvHolder)
+	
+	var lastEnvChange = 10
+	setProperty("last environment change", 10)
+	
+	time = 0
+	timeText.setText("0");
+	previousTime = 0
+	shownMessage = false;
+	addedAgents = false;
+	
+  envHolder.getToolbar().getButton("Run").setEnabled(false);
+  
+  var choices = "[drop:cantidad mayor|cantidad mediana|cantidad menor]";
+  if (!doneChoices[2]) {
+    choices = "[drop:cantidad mayor|cantidad mediana|cantidad menor]";
+  } else if (!doneChoices[1]) {
+    choices = "[drop:cantidad mediana|cantidad menor|cantidad mayor]";
+  } else if (!doneChoices[0]) {
+    choices = "[drop:cantidad menor|cantidad mediana|cantidad mayor]";
+  }
+  
+  envHolder.showPopup("Set rain", "Selecciona una cantidad de lluvia para la prueba y lleva a cabo el experimento.\n\n\n"+
+                                  "Cantidad de lluvia:\n"+choices, false, true);
+                                  
+  var popListener = new EnvironmentChangeListener({
+	  environmentChanged: function(evt){
+	    if (evt.getType() == EnvironmentChangeEvent.USER_CLOSED_POPUP){
+	      env.removeListener(popListener);
+	      choices = evt.getValue().toArray();
+	      setRain(choices[1]);
+	    }
+	  }
+	})
+	
+	env.addChangeListener(popListener);
+}
+
+function setRain(rain){
+  System.out.println(rain);
+  var url
+	if (rain.equalsIgnoreCase("cantidad menor")){
+	  var url = new URL(baseUrl, "images/green3.png");
+	  setProperty("rain", 0.0);
+	  waterBar.setValue(0);
+	  currChoice = 0;
+	} else if (rain.equalsIgnoreCase("cantidad mediana")){
+	  var url = new URL(baseUrl, "images/green2.png");
+	  setProperty("rain", 0.6);
+    waterBar.setValue(60);
+    currChoice = 1;
+	} else {
+	  var url = new URL(baseUrl, "images/green.jpg");
+	  setProperty("rain", 1.0);
+    waterBar.setValue(100);
+    currChoice = 2;
+	}
+	envHolder.getEnvironmentView().setBackgroundImageUrl(url)
+}
+
+
+
+function setProperty(prop, val){
+		for (var i = 0; i &lt; 9; i++) {
+			for (var j = 0; j &lt; 9; j++) {
+				env.getEnvironmentUnit(i,j).setProperty(prop, new Float(val))
+			}
+		}
+}
+
+var resetHandler= {
+	environmentChanged: function(evt){
+		if (evt.getType() == EnvironmentChangeEvent.RESET){
+			setup();
+			envHolder.getToolbar().getButton("Run").setEnabled(true)
+		} else if (evt.getType() == EnvironmentChangeEvent.RUN){
+			startTime = System.currentTimeMillis()
+		} else if (evt.getType() == EnvironmentChangeEvent.PAUSE){
+			previousTime = time;
+		}
+	}
+}
+
+function updateTime(){
+  if (!addedAgents) {
+    if (env.getAllAgents().size() > 0) {
+      addedAgents = true;
+      startTime = System.currentTimeMillis()
+    } else {
+       return;
+    }
+  }
+  
+	timeSinceLastStart = System.currentTimeMillis() - startTime;
+	time =  previousTime + timeSinceLastStart;
+	var sec = Math.floor(time / 1000);
+	timeText.setText(sec);
+}
+			
+var resetListener = new EnvironmentChangeListener(resetHandler)
+
+var stepHandler= {
+	environmentStepped: function(evt){
+		lastEnvChange++
+		if (lastEnvChange &lt; 10){
+        	setProperty("last environment change", lastEnvChange)
+        }
+        updateTime();
+        if (!shownMessage &amp;&amp; time &gt; 20000){
+        	doneChoices[currChoice] = true;
+				
+        	var doneAll = true
+        	for (var i = 0; i &lt; 3; i++){
+        		if (!doneChoices[i])
+        			doneAll = false;
+        	}
+        	
+        	if (doneAll){
+            envHolder.pauseAction()
+            envHolder.getToolbar().getButton("Run").setEnabled(false)
+            logSuccess(otEnvHolder)
+				    envHolder.showPopup("Done all", "iBuen trabajo! Haz experimentado con los tres niveles de lluvia.\n\n Cuando hayas completado la tabla de la derecha, ve a la siguiente página.", true);
+        		shownMessage = true;
+        	} else {
+        	  envHolder.pauseAction()
+        		envHolder.showPopup("Done one", "Mira la gráfica. ¿A algúno de los tipos de pasto le crecieron más de 50 plantas? Si es así, marca el cuadro en la tabla a la derecha.\n Cuando termines, haz reset al modelo para llevar a cabo el experimento que sigue.", true)
+				    shownMessage = true;
+				                var closeListener = new EnvironmentChangeListener({
+                                    environmentChanged: function(evt){
+                                      if (evt.getType() == EnvironmentChangeEvent.USER_CLOSED_POPUP){
+                                          env.removeListener(closeListener);
+                                          envHolder.getToolbar().getButton("Run").setEnabled(false)
+                                      }
+                                    }
+                                  })
+                                  
+                                  env.addChangeListener(closeListener);
+			     }
+        }
+	}
+}
+			
+var stepListener = new EnvironmentStepListener(stepHandler)
+
+function save() {
+  return true;
+}
+
+// by putting these urls after "src" we can ensure that the installer will cache
+// the images:
+// src="images/green3.png"
+// src="images/green2.png"
+// src="images/green.jpg"</script>
+                  <scripts>
+                    <OTJavascript src="scripts/common/message.js" />
+                  </scripts>
+                </OTJavascript>
+              </script>
+              <variables>
+                <OTScriptVariable name="otEnvHolder">
+                  <reference>
+                    <object refid="${env-holder}" />
+                  </reference>
+                </OTScriptVariable>
+                <OTScriptVariableRealObject name="envHolder">
+                  <reference>
+                    <object refid="${env-holder}" />
+                  </reference>
+                </OTScriptVariableRealObject>
+                <OTScriptVariable name="choice_0">
+                  <reference>
+                    <object refid="f8f30d75-f5b3-4451-a1d8-76d660b77e8a" />
+                  </reference>
+                </OTScriptVariable>
+                <OTScriptVariable name="waterBar">
+                  <reference>
+                    <object refid="${water-slider}" />
+                  </reference>
+                </OTScriptVariable>
+                <OTScriptVariable name="timeText">
+                  <reference>
+                    <object refid="${time-text}" />
+                  </reference>
+                </OTScriptVariable>
+              </variables>
+            </OTScriptObject>
+            <OTProgressBar local_id="water-slider" minimum="-10" maximum="100" value="100" vertical="true" />
+            <OTText local_id="time-text" text="2010"/>
+          </documentRefs>
+        </OTCompoundDoc>
+      </root>
+    </OTSystem>
+  </objects>
+</otrunk>
+

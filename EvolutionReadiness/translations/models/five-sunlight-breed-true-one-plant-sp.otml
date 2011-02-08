@@ -1,0 +1,402 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<otrunk id="13d3fb4f-123a-425f-9d60-d84e145c0678">
+  <imports>
+    <import class="org.concord.otrunk.OTIncludeRootObject" />
+    <import class="org.concord.otrunk.OTInclude" />
+    <import class="org.concord.otrunk.OTSystem" />
+    <import class="org.concord.otrunk.biologica.OTOrganismPlacement" />
+    <import class="org.concord.otrunk.biologica.OTEnvironment" />
+    <import class="org.concord.otrunk.biologica.OTOrganism" />
+    <import class="org.concord.otrunk.biologica.OTWorld" />
+    <import class="org.concord.otrunk.biologica.agent.OTAgentSpecies" />
+    <import class="org.concord.otrunk.biologica.agent.OTAgentTrait" />
+    <import class="org.concord.otrunk.biologica.agent.OTAgentPropertyImageMap" />
+    <import class="org.concord.otrunk.biologica.environment.OTAddAgentButton" />
+    <import class="org.concord.otrunk.biologica.environment.OTEnvironmentHolder" />
+    <import class="org.concord.otrunk.biologica.rules.OTRule" />
+    <import class="org.concord.otrunk.biologica.rules.OTRuleCondition" />
+    <import class="org.concord.otrunk.biologica.rules.OTRuleConsequence" />
+    <import class="org.concord.otrunk.ui.OTCurriculumUnit" />
+    <import class="org.concord.otrunk.ui.OTPlacement" />
+    <import class="org.concord.otrunk.ui.snapshot.OTSnapshot" />
+    <import class="org.concord.otrunk.ui.snapshot.OTSnapshotButton" />
+    <import class="org.concord.otrunk.ui.snapshot.OTSnapshotAlbum" />
+    <import class="org.concord.otrunk.ui.snapshot.OTSnapshotChooser" />
+    <import class="org.concord.otrunk.view.OTViewEntry" />
+    <import class="org.concord.otrunk.view.OTViewBundle" />
+    <import class="org.concord.otrunk.view.OTViewMode" />
+    <import class="org.concord.otrunk.view.document.OTCompoundDoc" />
+    <import class="org.concord.otrunk.script.ui.OTScriptObject" />
+    <import class="org.concord.otrunk.script.js.OTJavascript" />
+    <import class="org.concord.otrunk.script.OTScriptEngineBundle" />
+    <import class="org.concord.otrunk.script.OTScriptEngineEntry" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariable" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariableComponent" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariableRealObject" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariableView" />
+    <import class="org.concord.otrunk.script.ui.OTScriptButton" />
+    <import class="org.concord.framework.otrunk.view.OTFrame" />
+  </imports>
+  <objects>
+    <OTSystem>
+      <bundles>
+        <object refid="8d880970-c22a-11dc-95ff-0800200c9a66" />
+        <OTScriptEngineBundle>
+          <engines>
+            <OTScriptEngineEntry objectClass="org.concord.otrunk.script.js.OTJavascript" engineClass="org.concord.otrunk.script.js.OTJavascriptEngine" />
+          </engines>
+        </OTScriptEngineBundle>
+      </bundles>
+      <includes>
+        <OTInclude href="../global-imports/er-view-bundle.otml" />
+        <OTInclude href="species/annual-varied-plants.otml" />
+      </includes>
+      <root>
+        <OTEnvironmentHolder local_id="env-holder" width="590" height="460" toolbar="run,reset">
+          <environment>
+            <OTEnvironment local_id="environment" environmentWidth="15" environmentHeight="15" showRunButton="false" winterLength="-1" summerLength="50" orgSizeMultiplier="3.0" backgroundImageSrc="jres:/org/concord/er/resources/images/envs/sun5levels.jpg">
+              <world>
+                <OTWorld local_id="peasimple_world" speciesPath="org/concord/biologica/worlds/peasimple.xml" />
+              </world>
+              <barriers>
+                <OTPlacement x="0" y="0" width="25" height="155" />
+                <OTPlacement x="139" y="0" width="16" height="150" />
+                                <OTPlacement x="25" y="0" width="114" height="17" />
+                                <OTPlacement x="25" y="32" width="114" height="12" />
+                                <OTPlacement x="25" y="59" width="114" height="12" />
+                                <OTPlacement x="25" y="86" width="114" height="11" />
+                                <OTPlacement x="26" y="113" width="112" height="11" />
+                <OTPlacement x="70" y="129" width="0" height="0" />
+                                <OTPlacement x="25" y="137" width="114" height="12" />
+              </barriers>
+              <rules>
+                <OTRule description="Health depends on leaves and sunlight">
+                  <conditions>
+                    <OTRuleCondition always="true" />
+                  </conditions>
+                  <consequences>
+                    <OTRuleConsequence property="Health" ruleScript="var diff = Math.abs((11 - size_of_leaves) - (sunlight*10)); return 1 - (diff /  20)">
+                      <propertyVariables>
+                        <string>size of leaves</string>
+                        <string>sunlight</string>
+                      </propertyVariables>
+                    </OTRuleConsequence>
+                  </consequences>
+                </OTRule>
+                <OTRule description="Immortality rule">
+                  <conditions>
+                    <OTRuleCondition property="Health" minValue="0.87" maxValue="1.0" />
+                  </conditions>
+                  <consequences>
+                    <OTRuleConsequence property="is immortal" newValueBoolean="true" />
+                    <OTRuleConsequence property="Days to seed" newValueFloat="-1.0" />
+                  </consequences>
+                </OTRule>
+                <OTRule description="Flower rule">
+                  <conditions>
+                    <OTRuleCondition property="Health" maxValue="0.95" />
+                  </conditions>
+                  <consequences>
+                    <OTRuleConsequence property="Chance of flowering" newValueFloat="0.0" />
+                  </consequences>
+                </OTRule>
+                <OTRule description="Flower health is 1">
+                  <conditions>
+                    <OTRuleCondition property="Has flower" equals="true" />
+                  </conditions>
+                  <consequences>
+                    <OTRuleConsequence property="Health" newValueFloat="1.0" />
+                  </consequences>
+                </OTRule>
+              </rules>
+            </OTEnvironment>
+          </environment>
+          <traitsToShow>
+            <string>size of leaves</string>
+          </traitsToShow>
+          <addAgentsButtons>
+            <OTAddAgentButton text="Add Plant" limit="20">
+              <species>
+                <object refid="f5732706-c9c2-4e29-8c99-4c668dda89b0" />
+              </species>
+              <agentTraits>
+                <OTAgentTrait property="size of leaves">
+                  <defaultValues>
+                    <float>1.0</float>
+                  </defaultValues>
+                </OTAgentTrait>
+              </agentTraits>
+            </OTAddAgentButton>
+          </addAgentsButtons>
+          <scripts>
+            <OTScriptObject local_id="setup-script" name="Setup script">
+              <script>
+                <OTJavascript src="scripts/gradated-sunlight-five-blocks/setup.js">
+                  <script>importPackage(Packages.java.lang);
+										importPackage(Packages.java.awt);
+										importPackage(Packages.org.concord.biologica.environment);
+
+										function init() {
+										env.removeAllAgents()
+										env.setStepCount(0)
+										envHolder.pauseAction()
+										var world = env.getWorld()
+										env.setColumns(15)
+										env.setRows(15)
+										env.setWrapNorthSouth(false)
+										env.setWrapEastWest(false)
+										for (var i = 0; i &lt; 15; i++) {
+										for (var j = 0; j &lt; 15; j++) {
+										var envUnit = new EnvironmentUnit(env, null, i, j)
+										env.setEnvironmentUnit(envUnit, i, j)
+										if (j &lt; 4)
+										percentSunlight = 1.0
+										else if (j &lt; 6)
+										percentSunlight = 0.8
+										else if (j &lt; 9)
+										percentSunlight = 0.6
+										else if (j &lt; 12)
+										percentSunlight = 0.4
+										else if (j &lt; 15)
+										percentSunlight = 0.2
+
+										envUnit.setProperty("sunlight", new Float(percentSunlight))
+
+										var r = (percentSunlight) * 0.5
+										var g = r * 0.5
+										var b = g * 0.2
+										var color = new Color(r+0.3, g+0.2, b+0.1)
+										var terrain = new Terrain(world, "terrain", color)
+										envUnit.setTerrain(terrain)
+										}
+										}
+										holder.repaint();
+										return true;
+										}
+
+										function save() {
+										return true;
+										}</script>
+                </OTJavascript>
+              </script>
+              <variables>
+                <OTScriptVariableRealObject name="env">
+                  <reference>
+                    <object refid="${environment}" />
+                  </reference>
+                </OTScriptVariableRealObject>
+                <OTScriptVariableRealObject name="envHolder">
+                  <reference>
+                    <object refid="${env-holder}" />
+                  </reference>
+                </OTScriptVariableRealObject>
+                <OTScriptVariableRealObject name="holder">
+                  <reference>
+                    <object refid="${env-holder}" />
+                  </reference>
+                </OTScriptVariableRealObject>
+              </variables>
+              <scriptState />
+            </OTScriptObject>
+            <OTScriptObject local_id="message-script" name="Message script">
+              <script>
+                <OTJavascript>
+                  <script>importPackage(Packages.java.lang);
+										importPackage(Packages.java.awt);
+										importPackage(Packages.org.concord.biologica.environment);
+										
+										var numPlants
+										var plantedBox1
+										var plantedBox2
+										var plantedBox3
+										var plantedBox4
+										var plantedBox5
+										
+										var shownRunOutMessage
+										
+										var triedAllBoxes
+										var shownAMessage
+                    
+										//messages
+										var fullVictory = "iGrandioso! Encontraste la caja de flores correcta para la planta.\nObserva cuanto sol necesita la planta para que le crezca una flor.\nToma una foto y después ve a la siguiente página."
+										var noFlower20 = "Plantaste todas las 20 semillas pero tus plantas no dieron ni una flor.\nHaz clic en el botón de reset para comenzar de nuevo y obtener más semillas.\nIntenta plantar una semilla en cada caja de flores."
+										var noFlowerTime = "Aún no has averiguado cuál es la caja correcta para tu planta.\nIntenta plantar el resto de tus semillas en las otras cajas."
+										var notAllBoxes20 = "iGrandioso! Encontraste la caja de flores correcta para la planta.\n¿Qué sucede si plantas en las otras cajas de flores?\nIntenta plantar en todas las cajas. Haz clic en el botón de reset para comenzar de nuevo y obtener más semillas."
+										var notAllBoxesTime = "iGrandioso! Encontraste la caja de flores correcta para la planta.\n¿Qué sucede si plantas en las otras cajas de flores?\nIntenta plantar el resto de tus semillas en las otras cajas."
+										
+										function init() {
+											env.addStepListener(stepListener)
+											env.addChangeListener(changeListener)
+											setup()
+										}
+										
+										function setup(){
+											numPlants = 0
+											plantedBox1 = false
+											plantedBox2 = false
+											plantedBox3 = false
+											plantedBox4 = false
+											plantedBox5 = false
+											
+											shownRunOutMessage = false
+											
+											triedAllBoxes = false
+											shownAMessage = false
+											timeOfLastAction = System.currentTimeMillis()
+										}
+
+										
+										
+										
+										var changeHandler = {
+											environmentChanged: function(evt){
+												if (evt.getType() == EnvironmentChangeEvent.USER_ADDED_AGENTS){
+													numPlants++
+													
+													var agent = evt.getValue()
+													var y = agent.getLocation().y
+												    if (y &lt; 30)
+												      plantedBox1 = true
+												    else if (y &lt; 60)
+												       plantedBox2 = true
+												    else if (y &lt; 80)
+												       plantedBox3 = true
+												    else if (y &lt; 110)
+												       plantedBox4 = true
+												    else if (y &lt; 140)
+												       plantedBox5 = true
+												       
+												    if (plantedBox1 &amp;&amp; plantedBox2 &amp;&amp; plantedBox3 &amp;&amp; plantedBox4 &amp;&amp; plantedBox5)
+												    	triedAllBoxes = true
+												       
+												    if (!shownRunOutMessage &amp;&amp; numPlants == 20){
+														showMessage("iSe te acabaron las semillas!\nCada paquete de semillas tiene solo 20 semillas.\nPresiona play(jugar) para comenzar el modelo y mira como crecen tus plantas.", env, envHolder)
+														shownRunOutMessage = true
+													}
+													
+													timeOfLastAction = System.currentTimeMillis()
+													shownAMessage = false
+												} else if (evt.getType() == EnvironmentChangeEvent.RESET){
+													setup()
+												}
+											}		
+										}
+										
+										
+										var changeListener = new EnvironmentChangeListener(changeHandler)
+										
+										var stepHandler = {
+											environmentStepped: function(){
+												if (shownAMessage)
+													return
+													
+												if (madeAFlower() &amp;&amp; triedAllBoxes &amp;&amp; allPlantsAreAdults()) {
+													// full-success
+                                                    logSuccess(otEnvHolder)
+													showMessageAndLog(fullVictory, env, envHolder, otEnvHolder)
+													shownAMessage = true
+												}	
+													
+												if (numPlants == 20 &amp;&amp; allPlantsAreAdults()){
+													if (madeAFlower()) {
+														if (triedAllBoxes) {
+															// full-success
+                              logSuccess(otEnvHolder)
+															showMessageAndLog(fullVictory, env, envHolder, otEnvHolder)
+														} else {
+															// yay but not all boxes planted
+															showMessageAndLog(notAllBoxes20, env, envHolder, otEnvHolder)
+														}
+													} else {
+														// no flower and not all boxes planted
+														showMessageAndLog(noFlower20, env, envHolder, otEnvHolder)
+													}
+													shownAMessage = true
+												} else if (System.currentTimeMillis() &gt; (timeOfLastAction + 10000)){
+													if (numPlants > 0) {
+														if (madeAFlower()) {
+															if (triedAllBoxes) {
+																// full-success
+                                logSuccess(otEnvHolder)
+																showMessageAndLog(fullVictory, env, envHolder, otEnvHolder)
+															} else {
+																// yay but not all boxes planted
+																showMessageAndLog(notAllBoxesTime, env, envHolder, otEnvHolder)
+															}
+														} else {
+															// no flower and not all boxes planted
+															showMessageAndLog(noFlowerTime, env, envHolder, otEnvHolder)
+														}
+														shownAMessage = true
+													}
+												}
+											}		
+										}
+										
+										
+										var stepListener = new EnvironmentStepListener(stepHandler)
+										
+										function allPlantsAreAdults(){
+											var allPlants = env.getAllAgents()
+											if (allPlants.size() == 0)
+												return true;
+												
+											var ageOfFlowering = parseInt(allPlants.get(0).getProperty("age of maturity")) + 5
+											for (var i = 0; i &lt; allPlants.size(); i++){
+												var plant = allPlants.get(i)
+												if (plant.getAge() &lt; (ageOfFlowering)){
+													return false;				// not all plants are adult
+												}
+											}
+											return true
+										}
+										
+										function madeAFlower(){
+											var allPlants = env.getAllAgents()
+											
+											for (var i = 0; i &lt; allPlants.size(); i++){
+												var plant = allPlants.get(i)	
+												if (plant.getPropertyValueAsBoolean("has flower")){
+													return true;				// we have at least one flower
+												}
+											}
+											return false
+										}
+										
+										function save() {
+											return true;
+										}</script>
+                  <scripts>
+                    <OTJavascript src="scripts/common/message.js" />
+                  </scripts>
+                </OTJavascript>
+              </script>
+              <variables>
+                <OTScriptVariableRealObject name="env">
+                  <reference>
+                    <object refid="${environment}" />
+                  </reference>
+                </OTScriptVariableRealObject>
+                <OTScriptVariableRealObject name="envHolder">
+                  <reference>
+                    <object refid="${env-holder}" />
+                  </reference>
+                </OTScriptVariableRealObject>
+                <OTScriptVariable name="otEnvHolder">
+                  <reference>
+                    <object refid="${env-holder}" />
+                  </reference>
+                </OTScriptVariable>
+              </variables>
+              <scriptState />
+            </OTScriptObject>
+          </scripts>
+          <logAddedAgentProperties>
+            <string>size of leaves</string>
+          </logAddedAgentProperties>
+        </OTEnvironmentHolder>
+      </root>
+    </OTSystem>
+  </objects>
+</otrunk>
+
