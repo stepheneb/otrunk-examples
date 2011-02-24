@@ -165,6 +165,7 @@ to drag-a-car
             set t2 t2 + dt]]
       ]
     ]    ;;if car-number-dragging is either 1 or 2 then set the car's xcor to the mouse coordinate
+    tick
   ]
   
   [ set car-number-dragging 0
