@@ -317,6 +317,7 @@
                 <OTJavascript src="scripts/gradated-sunlight-five-blocks/setup.js">
                   <script>importPackage(Packages.java.lang);
                         importPackage(Packages.java.awt);
+                        importPackage(Packages.java.util);
                         importPackage(Packages.java.net);
                         importPackage(Packages.org.concord.biologica.environment);
                         importPackage(Packages.org.concord.framework.otrunk);
@@ -335,6 +336,10 @@
                         var recentlyChangedYear;
                         
                         var lastBkgdUrl;
+                        
+                        var plantsExist = false;
+                        
+                        var rand = new Random();
                         
                         
                         var baseUrl = otEnvHolder.getOTObjectService().getCodebase(otEnvHolder)
@@ -433,6 +438,8 @@
                    setPlantGrowthRate();
                    setRabbitGrowthRate();
                    graphRabbits();
+                   if (rand.nextInt(10) == 1)
+                     makeLandFertile();
                 }
               }
               var stepListener = new EnvironmentStepListener(stepHandler)
@@ -548,6 +555,12 @@ function graphRabbits(){
                         
 function setPlantGrowthRate(){
   var allPlants = env.getAgents(plantspecies); 
+  if (allPlants.size() &lt; 1){
+    plantsExist = false;
+    return;
+  } else {
+    plantsExist = true;
+  }
   var varieties = [[], [], [], [], [], []];
   for (var i = 0; i &lt; allPlants.size(); i++){
     var plant = allPlants.get(i);
@@ -575,7 +588,7 @@ function setRabbitGrowthRate(){
   }
   
   for (var i = 0; i &lt; 6; i++){
-    if (i != 3 &amp;&amp; i != 4)
+    //if (i != 3 &amp;&amp; i != 4)
       dontLetRabbitsDie(varieties[i]);
   }
 }
@@ -598,6 +611,12 @@ function setGrowthRateForVariety(plants)
     populationSizeModifier = -0.03;
   } else if (plantSize &lt; 230) {
     populationSizeModifier = -0.05;
+  } else if (plantSize &gt; 230) {
+    for (var i = 0; i &lt; plantSize; i++){
+      if (i % 5 == 0) {
+        env.removeAgent(plants[i]);
+      }
+    }
   }
   
   for (var i = 0; i &lt; plantSize; i++){
@@ -607,48 +626,73 @@ function setGrowthRateForVariety(plants)
 
 function dontLetRabbitsDie(rabbits){
   var rabbitsSize = rabbits.length;
-  var minOffspring = 1;
+  var maxOffspring = 6;
   var matingDistance = 90;
   var resourceConsumptionRate = 15;
   var metabolism = 2;
+  var isImmortal = false;
   
-  if (rabbitsSize &lt; 4) {
-    minOffspring = 5;
+  if (rabbitsSize &lt; 3 &amp;&amp; rabbitsSize &gt; 0 &amp;&amp; rabbits[0].getProperty("prey variety value") == 3 &amp;&amp; plantsExist) {
+    maxOffspring = 12;
+    matingDistance = 250;
+    resourceConsumptionRate = 0;
+    metabolism = 1;
+    age = 30;
+    isImmortal = true;
+  } else if (rabbitsSize &lt; 4 &amp;&amp; rabbitsSize &gt; 0 &amp;&amp; rabbits[0].getProperty("prey variety value") == 3 &amp;&amp; plantsExist) {
+    maxOffspring = 10;
     matingDistance = 170;
     resourceConsumptionRate = 1;
-    metabolism = 0;
-  } else if (rabbitsSize &lt; 5) {
-    minOffspring = 5;
+    metabolism = 1;
+  } else if (rabbitsSize &lt; 5 &amp;&amp; rabbitsSize &gt; 0 &amp;&amp; rabbits[0].getProperty("prey variety value") == 3) {
+    maxOffspring = 9;
     matingDistance = 160;
     resourceConsumptionRate = 4;
     metabolism = 1;
   } else if (rabbitsSize &lt; 6) {
-    minOffspring = 4;
+    maxOffspring = 8;
     matingDistance = 140;
     resourceConsumptionRate = 5;
     metabolism = 1;
   } else if (rabbitsSize &lt; 7) {
-    minOffspring = 3;
+    maxOffspring = 7;
     matingDistance = 130;
     resourceConsumptionRate = 8;
     metabolism = 2;
+  } else if (rabbitsSize &gt; 35) {
+    maxOffspring = 0;
+    resourceConsumptionRate = 18;
+    metabolism = 9;
   } else if (rabbitsSize &gt; 25) {
-    minOffspring = 0;
+    maxOffspring = 2;
     matingDistance = 80;
-    resourceConsumptionRate = 16;
-    metabolism = 4;
+    resourceConsumptionRate = 18;
+    metabolism = 5;
   } else if (rabbitsSize &gt; 20) {
-    minOffspring = 0;
+    maxOffspring = 5;
     matingDistance = 80;
     resourceConsumptionRate = 16;
     metabolism = 3;
   }
   
   for (var i = 0; i &lt; rabbitsSize; i++){
-    rabbits[i].setProperty("minOffspring", minOffspring);
+    rabbits[i].setProperty("is immortal", isImmortal);
+    rabbits[i].setProperty("max offspring", maxOffspring);
     rabbits[i].setProperty("mating distance", matingDistance);
     rabbits[i].setProperty("Resource Consumption Rate", resourceConsumptionRate);
     rabbits[i].setProperty("metabolism", metabolism);
+  }
+}
+
+function makeLandFertile() {
+  env.replenishResources();
+  env.replenishResources();
+  var allPlants = env.getAgents(plantspecies); 
+  for (var i = 0; i &lt; allPlants.size(); i++){
+    var plant = allPlants.get(i);
+    if (plant.getLocation().y &gt; 114 &amp;&amp; plant.getLocation().y &lt; 130) {
+      env.removeAgent(plant);
+    }
   }
 }
 
