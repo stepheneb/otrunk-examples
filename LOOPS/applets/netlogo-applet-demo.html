@@ -8,20 +8,20 @@
       <applet id="applet" code="org.concord.otrunk.applet.OTAppletViewer"
 width="1350" height="700" codebase="http://jnlp.concord.org/dev2/"
 archive="
-org/concord/otrunk-nlogo41/otrunk-nlogo41-0.1.0-20101110.150133-389.jar,
-org/concord/framework/framework-0.1.0-20101014.200309-564.jar,
-org/concord/loader/loader-0.1.0-20101014.200413-318.jar,
-org/concord/data/data-0.2.0-20101018.150600-304.jar,
-org/concord/swing/swing-0.1.0-20101014.200420-393.jar,
-org/concord/otrunk/otrunk-0.3.0-20101108.210204-3.jar,
-org/concord/frameworkview/frameworkview-0.1.0-20101014.200525-408.jar,
-org/concord/apple-support/apple-support-0.1.0-20101014.200304-325.jar,
-org/concord/utilities/response-cache/response-cache-0.1.0-20101014.210344-217.jar,
-org/concord/nlogo/netlogo4/netlogo4-4.1.2b.jar,
-org/concord/datagraph/datagraph-0.2.0-20101108.210354-333.jar,
-org/concord/graphutil/graphutil-0.1.0-20101014.200638-569.jar,
+org/concord/otrunk-nlogo41/otrunk-nlogo41-0.1.0-20110223.200651-425.jar,
+org/concord/framework/framework-0.1.0-20110223.195232-574.jar,
+org/concord/loader/loader-0.1.0-20101111.173746-319.jar,
+org/concord/data/data-0.2.0-20110223.195441-314.jar,
+org/concord/swing/swing-0.1.0-20110101.050037-396.jar,
+org/concord/otrunk/otrunk-0.3.0-20110223.200140-36.jar,
+org/concord/frameworkview/frameworkview-0.1.0-20110223.195340-418.jar,
+org/concord/apple-support/apple-support-0.1.0-20101111.173736-326.jar,
+org/concord/utilities/response-cache/response-cache-0.1.0-20110101.051026-218.jar,
+org/concord/nlogo/netlogo4/netlogo4-4.1.2-20110207b.jar,
+org/concord/datagraph/datagraph-0.2.0-20110223.200414-374.jar,
+org/concord/graphutil/graphutil-0.1.0-20110223.195608-580.jar,
 org/concord/graph/graph-0.1.0-20100914.140203-348.jar,
-org/concord/otrunk-ui/otrunk-ui-0.1.0-20101110.151302-1023.jar,
+org/concord/otrunk-ui/otrunk-ui-0.1.0-20110223.200848-1056.jar,
 asm/asm/asm-3.1.jar,
 asm/asm-commons/asm-commons-3.1.jar,
 asm/asm-tree/asm-tree-3.1.jar,
@@ -56,17 +56,29 @@ org/concord/external/ekit/ekit-1.0.jar
       <script type="text/javascript">
         function how_many() {
         	var applet = document.getElementById("applet"); // returns an OTAppletViewer
+        	
         	// interact with the objects defined by the netlogo-applet.otml file
         	var dataCollector = applet.getOTObject("cefe3fef-5501-11dd-9991-5952f2563061"); // returns an OTDataCollector
-        	var eventLog = dataCollector.getEventLog(); // returns an OTObject, in this case, specifically an OTEventLog object
-        	var events = eventLog.getItems();               // returns an OTObjectList which contains OTEventLogItem objects
+        	var events = dataCollector.getLog(); // returns an OTObjectList which contains OTModelEvent objects     
+        	        
         	var count = 0;
+        	var startTime = 0;
+        	var elapsed = 0;
+        	
         	for (var i = 0; i < events.size(); i++) {
-        		if (events.get(i).getName() === "playback-start") {
+        	    var event = events.get(i);
+        	    var eventType = event.getType().toString();
+        	    var eventTime = event.getTimestamp();
+        	    
+        		if (eventType === "PLAYBACK_START") {
         			count++;
+        			startTime = event.getTimestamp();
+        		} elsif (eventType === "PLAYBACK_STOP") {
+        		    var stopTime = event.getTimestamp();
+        		    elapsed += (eventTime - startTime);
         		}
         	}
-        	alert("Play has been clicked " + count + " times!");
+        	alert("Play has been clicked " + count + " times!\n" + Math.round(elapsed/1000) + " seconds was spent playing back the graph.");
         }
       </script>
       <a href="javascript:how_many();">How many times has "play" been clicked?</a>
