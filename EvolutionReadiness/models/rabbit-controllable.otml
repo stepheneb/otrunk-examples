@@ -108,7 +108,7 @@
 							local_id="graph" multipleGraphableEnabled="false"
 							autoScaleEnabled="false" showControlBar="false" useDefaultToolBar="false" displayButtons="0,3,6">
 							<source>
-								<OTDataGraphable connectPoints="true"
+								<OTDataGraphable connectPoints="true" id="319f881d-5695-4065-bcf6-543baa054351"
 									color="0x00aa00" drawMarks="false" name="Number of plants in field"
 									xColumn="0" yColumn="1">
 									<dataProducer>
@@ -217,7 +217,7 @@
                 </OTScriptObject>
                 <OTScriptObject local_id="rabbit-script" name="Setup world">
                   <script>
-                    <OTJavascript src="scripts/gradated-sunlight/setup.js">
+                    <OTJavascript src="scripts/gradated-sunlight/setup.js" id="9b5333fb-44af-4395-a888-df6f340db1f6">
                       <script>importPackage(Packages.java.lang);
 							importPackage(Packages.java.awt);
 							importPackage(Packages.java.awt.event);
@@ -231,6 +231,7 @@
 							var timerTask
 							var isRunning = false
 							var addedRabbits = false
+							var rabbitDied
 							  			
 							function init() {
 						        setup()
@@ -255,6 +256,9 @@
 								rabbit.setEnvironment(env)
 								rabbit.setLocation(loc)
 						        env.addAgent(rabbit)
+						        
+						        
+                rabbitDied = false
 						          
 								addedRabbits = false
 								
@@ -271,10 +275,12 @@
 							{
 								run: function()
 								{
+								  if (!rabbitDied){
 								    logSuccess(otEnvHolder)
 										showMessageAndLog("Congratulations!\nYour bunny was able to find enough food to live!", env, envHolder, otEnvHolder)
                     envHolder.pauseAction()
                     envHolder.getToolbar().getButton("Run").setEnabled(false)
+                   }
 								}
 							}
 							
@@ -326,10 +332,10 @@
 										
 										if (hunger &gt; 99){
 										  env.removeAgent(rabbit)
-											showMessageAndLog("The bunny died because it was not able to find enough food to live.\nClick Reset and try again!", env, envHolder, otEnvHolder)
                       envHolder.pauseAction()
                       envHolder.getToolbar().getButton("Run").setEnabled(false)
                       rabbit = null;
+                      showMessageAndLog("The bunny died because it was not able to find enough food to live.\nClick Reset and try again!", env, envHolder, otEnvHolder)
 										}
 									}
 										
@@ -450,8 +456,8 @@
             </OTEnvironmentHolder>
 		        <OTSlider local_id="slider" controllable="false" minimum="0" maximum="100" value="0" numMajorTicks="2" snapToMarks="false" precision="1" length="200" numTicks="0" showTickMarks="false">
 		          <labels>
-                    <OTSliderLabel value="0" label="Not hungry" />
-                    <OTSliderLabel value="100" label="Very hungry" />
+                    <OTSliderLabel value="0" label="Not hungry" id="973796a1-3d04-4f19-a3c0-d3c876cfb57f"/>
+                    <OTSliderLabel value="100" label="Very hungry" id="0092c365-4b1d-422b-bbb3-40367dbdbf3d"/>
               </labels>
 		        </OTSlider>
           </documentRefs>
