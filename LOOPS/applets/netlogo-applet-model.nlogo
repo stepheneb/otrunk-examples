@@ -4,19 +4,28 @@
 
 ;;Global variables for communicating motion data:
 ;;  x-car1-world and x-car2-world are the positions of the car1 and car2 in world coordinates
-;;  t2 and t2 are the corresponding times of each position in seconds
+;;  t1 and t2 are the corresponding times of each position in seconds
 ;;  car-number-dragging should be either 1 or 2 depending on which car's position is being updated
-;;   set-car-position [ car-num pos-world ] is a procedure with 2 parameters that moves car [car-num], with value either 1 or 2, to location [pos-world] 
+;;  set-car-position [ car-num pos-world ] is a procedure with 2 parameters that moves car [car-num], with value either 1 or 2, to location [pos-world] 
 
 
 breed [tick-positions tick-position]
+breed [colleges ]
+breed [coffee-shops ]
+breed [houses house]
 breed [cars car]
+
+
 
 cars-own [ car-number ]
 
 globals [
-  ;;left-track-end  ;;now an interface variable
-  ;;right-track-end
+  min-position  ;;can be interface variables if control is given to use through an input box
+  max-position
+  Show-Red
+  Show-Blue
+  xcor-first       ;;the pixel position of the first tick
+  xcor-last        ;;the pixel postion of the last tick
   y-track           ;;height on the screen of the track or road
   mouse-was-up?
   mousex                     ; cumulative motion of the mouse
@@ -29,7 +38,9 @@ globals [
   dt                        ;;the time increment, delta t, set as a millisecond
   t1                        ;;this and the next are the global position variables for exporting the car's time out of OTrunk.
   t2
-  screen-width
+  screen-width              ;;in pixels
+  width-of-ticks            ;;number of pixels from the first marked tick to the last
+  width-world               ;;width from first to last tick postion in world coorndinates
   num-ticks
   tick-width
   car-number-dragging        ;;indicates which car is being dragged.  0 == no car
@@ -37,6 +48,8 @@ globals [
   car2-distance 
   x-car1-world               ;;this and the next are the global position variables for exporting the cars position out to OTrunk
   x-car2-world
+  x-car1-mouse-previous
+  x-car2-mouse-previous
   making-a-graph?
 ]
 
@@ -47,9 +60,13 @@ end
 
 to setup
   ca
+  set min-position 0
+  set max-position 21
+  set Show-Red true
+  set Show-Blue true
   set y-track -1
   set mouse-was-up? true
-  set dt 0.1
+  set dt 0.001
   set t1 0
   set t2 0
   set car1-distance 100000
@@ -60,30 +77,79 @@ to setup
   ask patches 
     [ ifelse pycor = y-track 
       [ set pcolor black ]
-      [ set pcolor green - 1 ] ]
+      [ ifelse (pycor > y-track) [set pcolor sky + 2 ] [set pcolor green + 2 ] ] ]
   set-default-shape tick-positions "line"
-  set-default-shape cars "car"
-  ;;set left-track-end -10
-  ;;set right-track-end 10
-  if left-track-end >= right-track-end [
+  set-default-shape colleges "building institution"
+  set-default-shape coffee-shops "building shop"
+  set-default-shape houses "house bungalow"
+  ;; set-default-shape cars "car right"         ;;
+  ;;set min-position -10
+  ;;set max-position 10
+  if min-position >= max-position [
     user-message ("The left end of the track must be less than the right end.")
   ]
   set screen-width max-pxcor - min-pxcor
-  set num-ticks abs(right-track-end - left-track-end) + 1
+  set num-ticks abs(max-position - min-position) + 1
   set tick-width screen-width / num-ticks
+  set width-of-ticks screen-width - tick-width
+  set width-world abs(max-position - min-position)
   let i 0
   repeat  num-ticks
   [ create-tick-positions 1 [
       set ycor y-track - 1
       set heading 0
       set size 3
-      set color green - 1
-      set label (word (left-track-end + i))
+      set color lime - 2
+      set label (word (min-position + i))
       set xcor min-pxcor + i * tick-width + tick-width / 2  ;;offset by a half tick width to center it
+      if (i = 0) [set xcor-first xcor]
+      if (i = num-ticks) [set xcor-last xcor]
       set i i + 1
   ]]
+  
+ create-colleges 1 [
+   set xcor x-mouse min-position
+   set ycor y-track + 3
+   set size 5
+   set color green
+   set label "College"
+ ]
+ 
+ create-coffee-shops 1 [
+   set xcor xcor-first + (7.5 / 21) * width-of-ticks
+   set ycor y-track + 3
+   set size 4
+   set color orange
+   set label "Coffee Shop"
+ ]
+ 
+ create-houses 1 [
+  set xcor xcor-first + (4 / 21) * width-of-ticks
+  set ycor y-track + 3
+  set size 5
+  set color blue + 1
+  set label "Rita's" 
+ ]
+ 
+  create-houses 1 [
+  set xcor xcor-first + (11 / 21) * width-of-ticks
+  set ycor y-track + 3
+  set size 5
+  set color red + 1
+  set label "Sam's" 
+ ]
+ 
+  create-houses 1 [
+  set xcor xcor-first + width-of-ticks
+  set ycor y-track + 3
+  set size 5
+  set color magenta + 1
+  set label "Melissa's" 
+ ]
+ 
  create-cars 1 [
    set heading 90
+   set shape "car right"
    set ycor y-track + 1
    set size 3
    set car-number 1
@@ -92,14 +158,21 @@ to setup
    set x-car1-world x-world car-x-pos 1
  ]
   create-cars 1 [
-   set heading -90
-   set ycor y-track + 2
+   set heading 270
+   set shape "car left"
+   set ycor y-track + 1.5
    set size 3
    set car-number 2
    set color red
    set-car-position 2 random-x-world
    set x-car2-world x-world car-x-pos 2
  ]
+   set x-car1-mouse-previous car-x-pos 1
+   set x-car2-mouse-previous car-x-pos 2
+   
+   ask cars with [car-number = 1] [ifelse Show-Blue [st][ht] ]   ;;show or hide the cars based on switch postions
+   ask cars with [car-number = 2] [ifelse Show-Red [st][ht] ]
+   
 ;;  loop [
 ;;    handle-mouse
 ;;    drag-a-car
@@ -108,10 +181,29 @@ to setup
   ;inspect one-of cars   ;;for good debugging
 end
 
+ to show-blue-car [state]
+   set Show-Blue state
+     ask cars with [car-number = 1] [ifelse Show-Blue [st][ht] ]  
+ end
+ 
+  to show-red-car [state]
+   set Show-Red state
+     ask cars with [car-number = 2] [ifelse Show-Red [st][ht] ]  
+ end
+ 
+ 
+
+
 to set-initial-positions
-   set making-a-graph? false
-   handle-mouse
-   every dt [ drag-a-car ]
+  if making-a-graph? [
+    set making-a-graph? false
+    stop
+  ]
+  handle-mouse
+  every dt [ drag-a-car ]
+  
+  ask cars with [car-number = 1] [ifelse Show-Blue [st][ht] ]   ;;show or hide the cars based on switch postions
+  ask cars with [car-number = 2] [ifelse Show-Red [st][ht] ]  
 end
 
 to go
@@ -150,21 +242,32 @@ to drag-a-car
         [if car1-distance < 2 [ set car-number-dragging 1 ] ]                             ;;  if it is less than some number (2), set the appropriate car-dragging-number
         [if car2-distance < 2 [ set car-number-dragging 2 ] ] 
     ]
-    [ask cars with [car-number = car-number-dragging] 
-      [set xcor mouse-xcor
-        ifelse car-number-dragging = 1
+    [ask cars with [car-number = car-number-dragging]                                     ;;if car-number-dragging is either 1 or 2 
+      [ set xcor mouse-xcor
+        ifelse car-number-dragging = 1                                                    ;;  then set the car's xcor to the mouse coordinate
           [set x-car1-world x-world car-x-pos 1
-          if making-a-graph?
+            ;;show  xcor - x-car1-mouse-previous                                          ;;debug
+            if xcor - x-car1-mouse-previous < 0 and shape != "car left"                   ;;change direction of car so it is always going forward
+              [set shape "car left"]                                                     ;;with car image for shape the heading DOES NOT WORK, for some mysterious reason
+            if xcor - x-car1-mouse-previous > 0 and shape != "car right"                  ;;instead of changing heading we will change shape
+              [set shape "car right" ]
+            set x-car1-mouse-previous xcor            
+            if making-a-graph?
             [set-current-plot-pen "car1"
-            plotxy t1 x-car1-world
-            set t1 t1 + dt]]
+              plotxy t1 x-car1-world
+              set t1 t1 + dt]]
           [set x-car2-world x-world car-x-pos 2
-          if making-a-graph?
+            if xcor - x-car2-mouse-previous < 0 and heading != "car left"
+              [set shape "car left"]
+            if xcor - x-car2-mouse-previous > 0 and heading != "car right"
+              [set shape "car right" ]
+            set x-car2-mouse-previous xcor                 
+            if making-a-graph?
             [set-current-plot-pen "car2"
-            plotxy t2 x-car2-world
-            set t2 t2 + dt]]
+              plotxy t2 x-car2-world
+              set t2 t2 + dt]]
       ]
-    ]    ;;if car-number-dragging is either 1 or 2 then set the car's xcor to the mouse coordinate
+    ]    
     tick
   ]
   
@@ -187,8 +290,8 @@ to-report car-x-pos [car-num]
 end
 
 to-report x-world [ x-mouse-cor ]   ;;convert-mouse-xcor-to-world
-  let left-edge left-track-end - 0.5   ;;all this stuff could be moved to globals and only computed on Setup, but it makes too many globals
-  let right-edge right-track-end + 0.5
+  let left-edge min-position - 0.5   ;;all this stuff could be moved to globals and only computed on Setup, but it makes too many globals
+  let right-edge max-position + 0.5
   let numerator right-edge - left-edge
   let denominator max-pxcor - min-pxcor
   let slope numerator / denominator
@@ -196,9 +299,9 @@ to-report x-world [ x-mouse-cor ]   ;;convert-mouse-xcor-to-world
   report ( x-mouse-cor * slope ) + intercept
 end 
 
-to-report x-mouse [ x-world-cor ]   ;;concert-world-xcor-to-mouse space
-  let left-edge left-track-end - 0.5
-  let right-edge right-track-end + 0.5
+to-report x-mouse [ x-world-cor ]   ;;convert-world-xcor-to-mouse space
+  let left-edge min-position - 0.5
+  let right-edge max-position + 0.5
   let numerator right-edge - left-edge
   let denominator max-pxcor - min-pxcor
   let slope numerator / denominator
@@ -209,25 +312,33 @@ end
 
 to set-car-position [ car-num pos-world ]
   ask cars [
-    if car-number = car-num [set xcor x-mouse pos-world]
+    if car-number = car-num [
+      set xcor x-mouse pos-world]
   ]
+end
+
+to set-car-position-mouse [ car-num pos-mouse ]
+  ask cars [
+    if car-number = car-num [
+      set xcor pos-mouse 
+    ] ]
 end
 
 ;;reports a random position that is between the ends of the track
 to-report random-x-world
-  let range right-track-end - left-track-end
+  let range max-position - min-position
   let random-number random-float range
-  report random-number - abs(left-track-end)
+  report random-number - abs(min-position)
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
-210
-10
-1000
-245
-32
+6
+7
+645
+213
+30
 8
-12.0
+10.3115
 1
 12
 1
@@ -237,124 +348,14 @@ GRAPHICS-WINDOW
 0
 0
 1
--32
-32
+-30
+30
 -8
 8
 0
 0
 1
 ticks
-
-BUTTON
-17
-24
-191
-57
-Reset Cars and Road 
-setup
-NIL
-1
-T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
-
-INPUTBOX
-18
-63
-93
-123
-left-track-end
--10
-1
-0
-Number
-
-INPUTBOX
-94
-63
-176
-123
-right-track-end
-10
-1
-0
-Number
-
-BUTTON
-23
-231
-166
-265
-Make a Graph
-Go
-T
-1
-T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
-
-PLOT
-1001
-10
-1297
-245
-Position
-Time
-Position
-0.0
-10.0
--10.0
-10.0
-true
-false
-PENS
-"car1" 1.0 0 -13345367 true
-"car2" 1.0 0 -2674135 true
-
-MONITOR
-24
-169
-95
-222
-Red Pos
-x-car2-world 
-2
-1
-13
-
-MONITOR
-104
-169
-173
-222
-Blue Pos
-x-car1-world 
-2
-1
-13
-
-BUTTON
-20
-131
-163
-164
-Set Cars Position
-set-initial-positions
-T
-1
-T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
 
 @#$#@#$#@
 WHAT IS IT?
@@ -411,10 +412,47 @@ true
 0
 Polygon -7500403 true true 150 0 135 15 120 60 120 105 15 165 15 195 120 180 135 240 105 270 120 285 150 270 180 285 210 270 165 240 180 180 285 195 285 165 180 105 180 60 165 15
 
+ambulance
+false
+0
+Rectangle -7500403 true true 30 90 210 195
+Polygon -7500403 true true 296 190 296 150 259 134 244 104 210 105 210 190
+Rectangle -1 true false 195 60 195 105
+Polygon -16777216 true false 238 112 252 141 219 141 218 112
+Circle -16777216 true false 234 174 42
+Circle -16777216 true false 69 174 42
+Rectangle -1 true false 288 158 297 173
+Rectangle -1184463 true false 289 180 298 172
+Rectangle -2674135 true false 29 151 298 158
+Line -16777216 false 210 90 210 195
+Rectangle -16777216 true false 83 116 128 133
+Rectangle -16777216 true false 153 111 176 134
+Line -7500403 true 165 105 165 135
+Rectangle -7500403 true true 14 186 33 195
+Line -13345367 false 45 135 75 120
+Line -13345367 false 75 135 45 120
+Line -13345367 false 60 112 60 142
+
 arrow
 true
 0
 Polygon -7500403 true true 150 0 0 150 105 150 105 293 195 293 195 150 300 150
+
+bank
+false
+0
+Rectangle -7500403 true true 45 135 270 255
+Rectangle -16777216 true false 124 195 187 256
+Rectangle -16777216 true false 60 195 105 240
+Rectangle -16777216 true false 60 150 105 180
+Rectangle -16777216 true false 210 150 255 180
+Line -16777216 false 270 135 270 255
+Polygon -7500403 true true 30 135 285 135 240 90 75 90
+Line -16777216 false 30 135 285 135
+Line -16777216 false 255 105 285 135
+Line -7500403 true 154 195 154 255
+Rectangle -16777216 true false 210 195 255 240
+Rectangle -16777216 true false 135 150 180 180
 
 box
 false
@@ -435,6 +473,51 @@ Circle -7500403 true true 110 75 80
 Line -7500403 true 150 100 80 30
 Line -7500403 true 150 100 220 30
 
+building institution
+false
+0
+Rectangle -7500403 true true 0 60 300 270
+Rectangle -16777216 true false 130 196 168 256
+Rectangle -16777216 false false 0 255 300 270
+Polygon -7500403 true true 0 60 150 15 300 60
+Polygon -16777216 false false 0 60 150 15 300 60
+Circle -1 true false 135 26 30
+Circle -16777216 false false 135 25 30
+Rectangle -16777216 false false 0 60 300 75
+Rectangle -16777216 false false 218 75 255 90
+Rectangle -16777216 false false 218 240 255 255
+Rectangle -16777216 false false 224 90 249 240
+Rectangle -16777216 false false 45 75 82 90
+Rectangle -16777216 false false 45 240 82 255
+Rectangle -16777216 false false 51 90 76 240
+Rectangle -16777216 false false 90 240 127 255
+Rectangle -16777216 false false 90 75 127 90
+Rectangle -16777216 false false 96 90 121 240
+Rectangle -16777216 false false 179 90 204 240
+Rectangle -16777216 false false 173 75 210 90
+Rectangle -16777216 false false 173 240 210 255
+Rectangle -16777216 false false 269 90 294 240
+Rectangle -16777216 false false 263 75 300 90
+Rectangle -16777216 false false 263 240 300 255
+Rectangle -16777216 false false 0 240 37 255
+Rectangle -16777216 false false 6 90 31 240
+Rectangle -16777216 false false 0 75 37 90
+Line -16777216 false 112 260 184 260
+Line -16777216 false 105 265 196 265
+
+building shop
+false
+0
+Rectangle -13840069 true false 15 0 30 195
+Rectangle -13840069 true false 15 165 285 255
+Rectangle -13345367 true false 120 195 180 255
+Line -7500403 true 150 195 150 255
+Rectangle -1 true false 30 180 105 240
+Rectangle -1 true false 195 180 270 240
+Line -16777216 false 0 165 300 165
+Polygon -7500403 true true 0 165 45 135 60 90 240 90 255 135 300 165
+Rectangle -7500403 true true 0 0 75 45
+
 butterfly
 true
 0
@@ -447,7 +530,17 @@ Circle -16777216 true false 135 90 30
 Line -16777216 false 150 105 195 60
 Line -16777216 false 150 105 105 60
 
-car
+car left
+false
+0
+Polygon -7500403 true true 0 180 21 164 39 144 60 135 74 132 87 106 97 84 115 63 141 50 165 50 225 60 300 150 300 165 300 225 0 225 0 180
+Circle -16777216 true false 30 180 90
+Circle -16777216 true false 180 180 90
+Polygon -16777216 true false 138 80 168 78 166 135 91 135 106 105 111 96 120 89
+Circle -7500403 true true 195 195 58
+Circle -7500403 true true 47 195 58
+
+car right
 false
 0
 Polygon -7500403 true true 300 180 279 164 261 144 240 135 226 132 213 106 203 84 185 63 159 50 135 50 75 60 0 150 0 165 0 225 300 225 300 180
@@ -543,13 +636,19 @@ Circle -16777216 true false 113 68 74
 Polygon -10899396 true false 189 233 219 188 249 173 279 188 234 218
 Polygon -10899396 true false 180 255 150 210 105 210 75 240 135 240
 
-house
+house bungalow
 false
 0
-Rectangle -7500403 true true 45 120 255 285
-Rectangle -16777216 true false 120 210 180 285
-Polygon -7500403 true true 15 120 150 15 285 120
-Line -16777216 false 30 120 270 120
+Rectangle -7500403 true true 210 75 225 255
+Rectangle -7500403 true true 90 135 210 255
+Rectangle -16777216 true false 165 195 195 255
+Line -16777216 false 210 135 210 255
+Rectangle -16777216 true false 105 202 135 240
+Polygon -7500403 true true 225 150 75 150 150 75
+Line -16777216 false 75 150 225 150
+Line -16777216 false 195 120 225 150
+Polygon -16777216 false false 165 195 150 195 180 165 210 195
+Rectangle -16777216 true false 135 105 165 135
 
 leaf
 false
@@ -592,6 +691,15 @@ Polygon -7500403 true true 165 180 165 210 225 180 255 120 210 135
 Polygon -7500403 true true 135 105 90 60 45 45 75 105 135 135
 Polygon -7500403 true true 165 105 165 135 225 105 255 45 210 60
 Polygon -7500403 true true 135 90 120 45 150 15 180 45 165 90
+
+police station
+false
+0
+Rectangle -7500403 true true 45 120 255 285
+Rectangle -16777216 true false 120 210 180 285
+Polygon -7500403 true true 15 120 150 15 285 120
+Line -16777216 false 30 120 270 120
+Polygon -1184463 true false 148 125 168 152 197 148 172 169 184 202 155 175 126 199 136 168 103 158 139 152 148 126
 
 sheep
 false
@@ -636,6 +744,14 @@ Circle -7500403 true true 65 21 108
 Circle -7500403 true true 116 41 127
 Circle -7500403 true true 45 90 120
 Circle -7500403 true true 104 74 152
+
+tree pine
+false
+0
+Rectangle -6459832 true false 120 225 180 300
+Polygon -7500403 true true 150 240 240 270 150 135 60 270
+Polygon -7500403 true true 150 75 75 210 150 195 225 210
+Polygon -7500403 true true 150 7 90 157 150 142 210 157 150 7
 
 triangle
 false
@@ -693,7 +809,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 4.1
+NetLogo 4.1.2
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
