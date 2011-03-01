@@ -17,7 +17,7 @@ breed [cars car]
 
 
 
-cars-own [ car-number ]
+cars-own [ car-number x-mouse-previous ]
 
 globals [
   min-position  ;;can be interface variables if control is given to use through an input box
@@ -170,6 +170,9 @@ to setup
    set x-car1-mouse-previous car-x-pos 1
    set x-car2-mouse-previous car-x-pos 2
    
+   ask cars with [car-number = 1] [set x-mouse-previous x-car1-mouse-previous]
+   ask cars with [car-number = 2] [set x-mouse-previous x-car2-mouse-previous]
+   
    ask cars with [car-number = 1] [ifelse Show-Blue [st][ht] ]   ;;show or hide the cars based on switch postions
    ask cars with [car-number = 2] [ifelse Show-Red [st][ht] ]
    
@@ -268,7 +271,6 @@ to drag-a-car
               set t2 t2 + dt]]
       ]
     ]    
-    tick
   ]
   
   [ set car-number-dragging 0
@@ -311,9 +313,19 @@ end
 
 
 to set-car-position [ car-num pos-world ]
+  let new-mouse-pos 0
   ask cars [
     if car-number = car-num [
-      set xcor x-mouse pos-world]
+      set new-mouse-pos x-mouse pos-world
+      set xcor new-mouse-pos 
+      
+      if xcor - x-mouse-previous < 0 and shape != "car left"                   ;;change direction of car so it is always going forward
+              [set shape "car left"]                                           ;;with car image for shape the heading DOES NOT WORK, for some mysterious reason
+      if xcor - x-mouse-previous > 0 and shape != "car right"                  ;;instead of changing heading we will change shape
+              [set shape "car right" ]
+      set x-mouse-previous new-mouse-pos
+      
+      ]
   ]
 end
 
