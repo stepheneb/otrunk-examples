@@ -148,6 +148,10 @@
                           env.addStepListener(stepListener)
                           env.addChangeListener(resetListener)
                           
+                          
+                          envHolder.getGlassPanel().addMouseListener(mouseListener)
+                          envHolder.getGlassPanel().addMouseMotionListener(mouseMotionListener)
+                          
                           setup();
                           
 													return true;
@@ -178,8 +182,6 @@
                           previousTime = 0
                           
                           envHolder.getGlassPanel().requestFocus();
-                          envHolder.getGlassPanel().addMouseListener(mouseListener)
-                          envHolder.getGlassPanel().addMouseMotionListener(mouseMotionListener)
                           
                           envHolder.setMouseMode(EnvironmentHolder.MOUSE_MODE_INVISIBLE);
                           
@@ -193,9 +195,10 @@
                           newHawk.setProperty("speed", 0)
 													newHawk.setProperty("max offspring", 0)
 													newHawk.setProperty("mating desire bonus", -1000)
-													newHawk.setProperty("hunger bonus", 50)
+													newHawk.setProperty("hunger bonus", -1000)
 													newHawk.setProperty("calculate drives", false);
                           newHawk.setProperty("current behavior", "WANDERING");
+                          newHawk.setProperty("wings", 0);
                           newHawk.addEatingListener(eatListener);
 													addAgent(newHawk);
 													return newHawk;
@@ -209,6 +212,7 @@
                           newRabbit.setProperty("metabolism", 1);
                           newRabbit.setProperty("resource consumption rate", 10);
                           newRabbit.setProperty("color", color);
+                          newRabbit.setProperty("fear bonus", -1000);
                           addAgent(newRabbit);
                         }
                         
@@ -255,12 +259,13 @@
 					              {
 												    mousePressed: function(evt)
                             {
-                               hawk.setProperty("current behavior", "EATING");
+                               hawk.setProperty("wings", 1);
+                               eat();
                             },
 												
 												    mouseReleased: function(evt)
                             {
-                               hawk.setProperty("current behavior", "WANDERING");
+                              hawk.setProperty("wings", 0);
                             }
 					              
 					              }
@@ -276,6 +281,45 @@
                         
                         }
                         var mouseMotionListener = new MouseMotionListener(mouseMotionHandler)
+                        
+                        function eat(){
+                          var agents = hawk.getClosestAgent(hawk, "Mixed Rabbits", false, null, 3, false);
+                          if (agents.size() &gt; 0){
+                            var loc = hawk.getLocation();
+                            System.out.println("I'm at "+loc.x+", "+loc.y+", and my beak is at "+loc.x+", "+(loc.y-7));
+                            for (var i = 0; i &lt; agents.size(); i++){
+	                            var prey = agents.get(i).agent;
+	                            var preyLoc = prey.getLocation();
+	                            System.out.println("   there's a prey at "+preyLoc.x+", "+preyLoc.y);
+	                            var distY = (loc.y - preyLoc.y) - 7;
+	                            var distX = loc.x - preyLoc.x;
+	                            
+	                            agents.get(i).distanceSq = ((distY * distY) + (distX * distX));
+                            }
+                            
+                            var minDist = 1000;
+                            var closestPrey = null;
+                            for (var i = 0; i &lt; agents.size(); i++){
+                              var dist = agents.get(i).distanceSq;
+                              if (dist &lt; minDist) {
+                                minDist = dist;
+                                closestPrey = agents.get(i).agent;
+                              }
+                            }
+                            
+                            var preyLoc = closestPrey.getLocation();
+                            var distY = loc.y - preyLoc.y;
+                            var distX = loc.x - preyLoc.x;
+                            
+                            if (distY &gt; 1 &amp;&amp; distY &lt; 14 &amp;&amp;
+                                  distX &gt; -6 &amp;&amp; distX &lt; 6) {
+                                System.out.println(" I'm eating the prey at "+preyLoc.x+", "+preyLoc.y);
+                                hawk.eat(agents.get(0).agent);
+                              } else {
+                                System.out.println(" noone is close enough");
+                              }
+                           }
+                        }
                         
                         var stepHandler =
 					              {
