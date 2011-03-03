@@ -21,7 +21,7 @@ cars-own [ car-number x-mouse-previous ]
 
 globals [
   min-position  ;;can be interface variables if control is given to use through an input box
-  max-position
+  max-position  ;; ditto
   Show-Red
   Show-Blue
   xcor-first       ;;the pixel position of the first tick
@@ -88,7 +88,7 @@ to setup
   if min-position >= max-position [
     user-message ("The left end of the track must be less than the right end.")
   ]
-  set screen-width max-pxcor - min-pxcor
+  set screen-width world-width     ;was: max-pxcor - min-pxcor
   set num-ticks abs(max-position - min-position) + 1
   set tick-width screen-width / num-ticks
   set width-of-ticks screen-width - tick-width
@@ -184,18 +184,6 @@ to setup
   ;inspect one-of cars   ;;for good debugging
 end
 
- to show-blue-car [state]
-   set Show-Blue state
-     ask cars with [car-number = 1] [ifelse Show-Blue [st][ht] ]  
- end
- 
-  to show-red-car [state]
-   set Show-Red state
-     ask cars with [car-number = 2] [ifelse Show-Red [st][ht] ]  
- end
- 
- 
-
 
 to set-initial-positions
   if making-a-graph? [
@@ -214,6 +202,11 @@ to go
    handle-mouse
    every dt [ drag-a-car ]
 end
+
+;to test
+;  set-car-position 1 pos1
+;  set-car-position 2 pos2
+;end
 
 
 to handle-mouse
@@ -311,20 +304,43 @@ to-report x-mouse [ x-world-cor ]   ;;convert-world-xcor-to-mouse space
   report ( x-world-cor - intercept) / slope
 end 
 
+to show-blue-car [state]
+  set Show-Blue state
+  ask cars with [car-number = 1] [ifelse Show-Blue [st][ht] ]  
+end
 
-to set-car-position [ car-num pos-world ]
+to show-red-car [state]
+  set Show-Red state
+  ask cars with [car-number = 2] [ifelse Show-Red [st][ht] ]  
+end
+
+to show-car [ car-num show-state? ]   ;a cars procedure
+    ifelse show-state? [st][ht]
+      ifelse car-num = 1 [set Show-Blue show-state?][set Show-Red show-state?]
+end
+
+
+to set-car-position [ car-num pos-world ]  ;note that pos-world MAY be outside the legal range of the "world"
   let new-mouse-pos 0
-  ask cars [
+  let show-state? (pos-world >= min-position - 0.4) and (pos-world <= max-position + 0.4)  ;test to see if in the legal range
+  ask cars [                                                                               ;  there is a little "extra' space (should be 0.5) on each end
     if car-number = car-num [
       set new-mouse-pos x-mouse pos-world
-      set xcor new-mouse-pos 
       
-      if xcor - x-mouse-previous < 0 and shape != "car left"                   ;;change direction of car so it is always going forward
+      if new-mouse-pos - x-mouse-previous < 0 and shape != "car left"          ;;change direction of car so it is always going forward
               [set shape "car left"]                                           ;;with car image for shape the heading DOES NOT WORK, for some mysterious reason
-      if xcor - x-mouse-previous > 0 and shape != "car right"                  ;;instead of changing heading we will change shape
+      if new-mouse-pos - x-mouse-previous > 0 and shape != "car right"         ;;instead of changing heading we will change shape
               [set shape "car right" ]
       set x-mouse-previous new-mouse-pos
       
+      show-car car-num show-state?
+      
+      ifelse show-state?                   ;;setting xcor actually changes the postion of the car
+        [set xcor new-mouse-pos ]
+        [ifelse pos-world < min-position 
+          [ set xcor x-mouse min-position]
+          [ set xcor x-mouse max-position]
+         ]
       ]
   ]
 end
@@ -366,7 +382,7 @@ GRAPHICS-WINDOW
 8
 0
 0
-1
+0
 ticks
 
 @#$#@#$#@
