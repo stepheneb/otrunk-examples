@@ -112,7 +112,7 @@ to setup
    set ycor y-track + 3
    set size 5
    set color green
-   set label "College"
+   set label "School"
  ]
  
  create-coffee-shops 1 [
