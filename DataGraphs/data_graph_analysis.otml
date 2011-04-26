@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<otrunk id="33754150-b594-11d9-9669-0800200c9a66" >
+
+  <imports>
+    <import class="org.concord.otrunk.OTSystem"/>
+    <import class="org.concord.otrunk.view.OTViewBundle"/>
+    <import class="org.concord.otrunk.view.OTViewEntry"/>
+    
+    <import class="org.concord.otrunk.script.js.OTJavascript" />
+    <import class="org.concord.otrunk.script.OTScriptEngineBundle"/>
+    <import class="org.concord.otrunk.script.OTScriptEngineEntry"/>
+    
+    <import class="org.concord.otrunk.graph.analysis.OTGraphAnalysisService" />
+    
+    <import class="org.concord.datagraph.state.OTDataAxis" />
+    <import class="org.concord.datagraph.state.OTDataGraphable" />
+    <import class="org.concord.datagraph.state.OTDataCollector" />
+    <import class="org.concord.data.state.OTDataStore" />
+    
+    <import class="org.concord.otrunk.view.document.OTCompoundDoc"/>
+    
+    <import class="org.concord.otrunk.script.ui.OTScriptObject" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariable" />
+    <import class="org.concord.otrunk.script.ui.OTScriptVariableComponent" />
+
+    <import class="org.concord.otrunk.ui.OTButton"/>
+  </imports>
+  
+  <objects>
+    <OTSystem>
+      <bundles>
+        <OTViewBundle>
+          <views>
+            <OTViewEntry
+              objectClass="org.concord.otrunk.script.ui.OTScriptObject"
+              viewClass="org.concord.otrunk.script.ui.OTScriptObjectView" />
+            <OTViewEntry
+              viewClass="org.concord.datagraph.state.OTDataCollectorView"
+              objectClass="org.concord.datagraph.state.OTDataCollector" />
+            <OTViewEntry
+              objectClass="org.concord.otrunk.view.document.OTDocument" 
+              viewClass="org.concord.otrunk.view.document.OTDocumentView"/>
+            <OTViewEntry 
+              objectClass="org.concord.otrunk.ui.OTButton"
+              viewClass="org.concord.otrunk.ui.swing.OTButtonView"/>           
+          </views>
+        </OTViewBundle>
+        <OTScriptEngineBundle>
+          <engines>
+            <OTScriptEngineEntry
+              objectClass="org.concord.otrunk.script.js.OTJavascript"
+              engineClass="org.concord.otrunk.script.js.OTJavascriptEngine" />
+          </engines>
+        </OTScriptEngineBundle>
+        <OTGraphAnalysisService />
+      </bundles>
+      
+      <root>
+        <OTCompoundDoc name="Basic Document">
+          <bodyText>
+            <div style="font-weight: bold; font-size: 1.4em;">Draw the following scenario on the graph. Then click the "analyze" button.</div>
+            <div style="font-style: oblique; font-size: 1.2em;">John walked to the mall, which was 2 miles away, in 25 minutes. He spent 15 minutes buying a new PS3 game, and then walked home. It took him 35 minutes on the way back.</div>
+            <br />
+            <div><object refid="${prediction}" /></div>
+            <div><object refid="${analyze_button}" /><object refid="${expected_button}" /><object refid="${interpreted_button}" /><object refid="${drawn_button}" /></div>
+            <div><object refid="${script}" /></div>
+          </bodyText>
+        </OTCompoundDoc>   
+      </root>
+      
+      <library>
+        <OTDataCollector name="prediction" local_id="prediction" multipleGraphableEnabled="false" graphableListEditable="false">
+              <source>
+                <OTDataGraphable name="John's distance from home" local_id="drawn_graphable"
+                  connectPoints="true" controllable="true" yColumn="1"
+                  drawMarks="false" color="0x0000ff" xColumn="0">
+                  <dataStore>
+                    <OTDataStore local_id="drawn_ds" numberChannels="2" />
+                  </dataStore>
+                </OTDataGraphable>
+              </source>
+              <xDataAxis>
+                <OTDataAxis max="4800" units="min" min="0" label="Time" />
+              </xDataAxis>
+              <yDataAxis>
+                <OTDataAxis max="4.0" units="mi" min="0"
+                  label="Distance" />
+              </yDataAxis>
+              <graphables>
+              <OTDataGraphable name="Correct answer" local_id="expected_graphable"
+                  connectPoints="true" controllable="false" yColumn="1"
+                  drawMarks="false" color="0x00ff00" xColumn="0" showToolButtons="false" visible="false" locked="true">
+                  <dataStore>
+                    <OTDataStore local_id="expected_ds" numberChannels="2" />
+                  </dataStore>
+                </OTDataGraphable>
+                <OTDataGraphable name="Evaluated answer" local_id="interpreted_graphable"
+                  connectPoints="true" controllable="false" yColumn="1"
+                  drawMarks="false" color="0x00ffff" xColumn="0" showToolButtons="false" visible="false" locked="true">
+                  <dataStore>
+                    <OTDataStore local_id="interpreted_ds" numberChannels="2" />
+                  </dataStore>
+                </OTDataGraphable>
+              </graphables>
+            </OTDataCollector>
+            <OTScriptObject local_id="script">
+              <variables>
+                <OTScriptVariable name="data_collector" reference="${prediction}" />
+                <OTScriptVariable name="drawn_ds" reference="${drawn_ds}" />
+                <OTScriptVariable name="drawn_graphable" reference="${drawn_graphable}" />
+                <OTScriptVariableComponent name="drawn_button" reference="${drawn_button}" />
+                <OTScriptVariable name="interpreted_ds" reference="${interpreted_ds}" />
+                <OTScriptVariable name="interpreted_graphable" reference="${interpreted_graphable}" />
+                <OTScriptVariableComponent name="interpreted_button" reference="${interpreted_button}" />
+                <OTScriptVariable name="expected_ds" reference="${expected_ds}" />
+                <OTScriptVariable name="expected_graphable" reference="${expected_graphable}" />
+                <OTScriptVariableComponent name="expected_button" reference="${expected_button}" />
+                
+                <OTScriptVariableComponent name="analyze_button" reference="${analyze_button}" />
+              </variables>
+              <script>
+                <OTJavascript src="data_graph_analysis.js"/>
+              </script>
+            </OTScriptObject>
+            <OTButton local_id="analyze_button" text="Analyze"/>
+            <OTButton local_id="interpreted_button" text="Toggle Interpreted"/>
+            <OTButton local_id="expected_button" text="Toggle Expected"/>
+            <OTButton local_id="drawn_button" text="Toggle Drawn"/>
+      </library>
+      
+    </OTSystem>
+  </objects>
+</otrunk>
