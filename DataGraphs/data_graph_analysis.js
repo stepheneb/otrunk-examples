@@ -31,7 +31,9 @@ function highlight_incorrect(results, graph) {
 		var res = results.get(i);
 		var seg = null;
 		if (i < graph.size()) {
-		  seg = expected_graph.get(i);
+	      seg = graph.get(i);
+		} else {
+	      seg = expected_graph.get(i);
 		}
 		
 	    if (res.equals(GraphSegment.EvaluationResult.MATCH)) {
@@ -85,7 +87,7 @@ var analyzeListener = new ActionListener({
 	      }
 	    }
 	    
-	    JOptionPane.showMessageDialog(null, "You scored " + score + " out of 3!");
+	    JOptionPane.showMessageDialog(null, "You scored " + score + " out of " + expected_graph.size() + "!");
 	  }
 	});
 
