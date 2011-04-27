@@ -50,9 +50,9 @@ function highlight_incorrect(results, graph) {
 
     if (res.equals(GraphSegment.EvaluationResult.MISMATCHED_BEGINNING_POINT)) {
       highlight.setText("Wrong starting point.");
-    } else if (res.equals(GraphSegment.EvaluationResult.MISMATCHED_BEGINNING_POINT)) {
-      highlight.setText("Wrong ending point.");
     } else if (res.equals(GraphSegment.EvaluationResult.MISMATCHED_END_POINT)) {
+      highlight.setText("Wrong ending point.");
+    } else if (res.equals(GraphSegment.EvaluationResult.MISMATCHED_SLOPE)) {
       highlight.setText("Wrong slope.");
     } else if (res.equals(GraphSegment.EvaluationResult.SEGMENT_MISSING)) {
       highlight.setText("Missing segment.");
@@ -76,16 +76,7 @@ var analyzeListener = new ActionListener({
 
     highlight_incorrect(results, graph);
 
-    var score = 0;
-    for ( var i = 0; i < results.size(); i++) {
-      var res = results.get(i);
-      if (res.equals(GraphSegment.EvaluationResult.MATCH)) {
-        score += 1;
-      }
-      if (res.equals(GraphSegment.EvaluationResult.SEGMENT_EXTRA)) {
-        score -= 0.2;
-      }
-    }
+    var score = graph_analysis_service.score(results);
 
     JOptionPane.showMessageDialog(null, "You scored " + score + " out of " + expected_graph.size() + "!");
   }
@@ -121,10 +112,7 @@ function init() {
   drawn_button.addActionListener(drawnListener);
 
   // for whatever reason, the graph x axis is always in seconds
-  expected_graph = new Graph();
-  expected_graph.add(new GraphSegment(0, 1500, 0, 2.0 / 1500, 0));
-  expected_graph.add(new GraphSegment(1500, 2400, 0, 0, 2));
-  expected_graph.add(new GraphSegment(2400, 4500, 0, -2.0 / 2100, 30.0 / 7));
+  expected_graph = graph_analysis_service.buildRubric(drawn_graphable.getRubric());
 
   draw_graph(expected_graph, expected_ds);
 
