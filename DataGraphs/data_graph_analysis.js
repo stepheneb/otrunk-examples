@@ -2,6 +2,7 @@ importClass(Packages.java.awt.event.ActionListener);
 importClass(Packages.javax.swing.JOptionPane);
 importClass(Packages.org.concord.otrunk.graph.analysis.Graph);
 importClass(Packages.org.concord.otrunk.graph.analysis.GraphSegment);
+importClass(Packages.org.concord.otrunk.graph.analysis.EvaluationResult);
 importClass(Packages.org.concord.otrunk.graph.analysis.OTGraphAnalysisService);
 importClass(Packages.org.concord.datagraph.state.OTDataRegionLabel);
 importClass(Packages.java.lang.System);
@@ -27,16 +28,18 @@ function draw_graph(graph, datastore) {
 }
 
 function highlight_incorrect(results, graph) {
-  for ( var i = 0; i < results.size(); i++) {
-    var res = results.get(i);
+  var reasons = results.getReasons();
+  for ( var i = 0; i < reasons.size(); i++) {
+    var res = reasons.get(i);
     var seg = null;
-    if (i < graph.size()) {
-      seg = graph.get(i);
+    
+    if (res.getReason().equals(EvaluationResult.Reason.SEGMENT_MISSING)) {
+      seg = res.getExpected();
     } else {
-      seg = expected_graph.get(i);
+      seg = res.getReceived();
     }
 
-    if (res.equals(GraphSegment.EvaluationResult.MATCH)) {
+    if (res.getReason().equals(EvaluationResult.Reason.MATCH)) {
       continue;
     }
     var highlight = drawn_graphable.getOTObjectService().createObject(Class.forName("org.concord.datagraph.state.OTDataRegionLabel"));
@@ -48,20 +51,21 @@ function highlight_incorrect(results, graph) {
     highlight.setX1(seg.getX1());
     highlight.setX2(seg.getX2());
 
-    if (res.equals(GraphSegment.EvaluationResult.MISMATCHED_BEGINNING_POINT)) {
+    if (res.getReason().equals(EvaluationResult.Reason.MISMATCHED_BEGINNING_POINT)) {
       highlight.setText("Wrong starting point.");
-    } else if (res.equals(GraphSegment.EvaluationResult.MISMATCHED_END_POINT)) {
+    } else if (res.getReason().equals(EvaluationResult.Reason.MISMATCHED_END_POINT)) {
       highlight.setText("Wrong ending point.");
-    } else if (res.equals(GraphSegment.EvaluationResult.MISMATCHED_SLOPE)) {
+    } else if (res.getReason().equals(EvaluationResult.Reason.MISMATCHED_SLOPE)) {
       highlight.setText("Wrong slope.");
-    } else if (res.equals(GraphSegment.EvaluationResult.SEGMENT_MISSING)) {
+    } else if (res.getReason().equals(EvaluationResult.Reason.SEGMENT_MISSING)) {
       highlight.setText("Missing segment.");
-    } else if (res.equals(GraphSegment.EvaluationResult.SEGMENT_EXTRA)) {
+    } else if (res.getReason().equals(EvaluationResult.Reason.SEGMENT_EXTRA)) {
       highlight.setText("Extra segment.");
     } else {
       highlight.setText("Unknown problem.");
     }
 
+    System.out.println("Adding label.");
     data_collector.getLabels().add(highlight);
   }
 }
