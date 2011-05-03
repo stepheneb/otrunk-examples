@@ -2,7 +2,8 @@ importClass(Packages.java.awt.event.ActionListener);
 importClass(Packages.javax.swing.JOptionPane);
 importClass(Packages.org.concord.otrunk.graph.analysis.Graph);
 importClass(Packages.org.concord.otrunk.graph.analysis.GraphSegment);
-importClass(Packages.org.concord.otrunk.graph.analysis.EvaluationResult);
+importClass(Packages.org.concord.datagraph.state.rubric.OTGraphSegmentCriterion);
+importClass(Packages.org.concord.otrunk.graph.analysis.rubric.SegmentResult);
 importClass(Packages.org.concord.otrunk.graph.analysis.OTGraphAnalysisService);
 importClass(Packages.org.concord.datagraph.state.OTDataRegionLabel);
 importClass(Packages.java.lang.System);
@@ -31,38 +32,57 @@ function highlight_incorrect(results, graph) {
   var reasons = results.getReasons();
   for ( var i = 0; i < reasons.size(); i++) {
     var res = reasons.get(i);
-    var seg = null;
+    var fails = res.getFailures();
     
-    if (res.getReason().equals(EvaluationResult.Reason.SEGMENT_MISSING)) {
-      seg = res.getExpected();
-    } else {
-      seg = res.getReceived();
-    }
-
-    if (res.getReason().equals(EvaluationResult.Reason.MATCH)) {
+    if (fails.size() == 0 && res.getPoints() > 0) {
+      // correct segment
       continue;
     }
+
+    var seg = res.getReceived();
+    
     var highlight = drawn_graphable.getOTObjectService().createObject(Class.forName("org.concord.datagraph.state.OTDataRegionLabel"));
     highlight.setDataGraphable(drawn_graphable);
 
-    highlight.setX(seg.getX1());
-    highlight.setY(4);
+    if (seg == null) {
+      // missing segment
+      var startX = 0;
+      var endX = 0;
+      
+      for (var j = 0; j < res.getFailures().size(); j++) {
+        var fail = res.getFailures().get(j);
+        if (fail.getProperty().equals(OTGraphSegmentCriterion.Property.BEGINNING_X)) {
+          startX = fail.getExpectedValue();
+        } else if (fail.getProperty().equals(OTGraphSegmentCriterion.Property.BEGINNING_X)) {
+          endX = fail.getExpectedValue();
+        }
+      }
+      
+      highlight.setX(startX);
+      highlight.setY(4);
 
-    highlight.setX1(seg.getX1());
-    highlight.setX2(seg.getX2());
-
-    if (res.getReason().equals(EvaluationResult.Reason.MISMATCHED_BEGINNING_POINT)) {
-      highlight.setText("Wrong starting point.");
-    } else if (res.getReason().equals(EvaluationResult.Reason.MISMATCHED_END_POINT)) {
-      highlight.setText("Wrong ending point.");
-    } else if (res.getReason().equals(EvaluationResult.Reason.MISMATCHED_SLOPE)) {
-      highlight.setText("Wrong slope.");
-    } else if (res.getReason().equals(EvaluationResult.Reason.SEGMENT_MISSING)) {
-      highlight.setText("Missing segment.");
-    } else if (res.getReason().equals(EvaluationResult.Reason.SEGMENT_EXTRA)) {
-      highlight.setText("Extra segment.");
+      highlight.setX1(startX);
+      highlight.setX2(endX);
+      
+      highlight.setText("Missing segment");
     } else {
-      highlight.setText("Unknown problem.");
+      highlight.setX(seg.getX1());
+      highlight.setY(4);
+
+      highlight.setX1(seg.getX1());
+      highlight.setX2(seg.getX2());
+      
+      if (res.getFailedPoints() == 0 && res.getPoints() == 0) {
+        // extra segment
+        highlight.setText("Extra segment");
+      } else {
+        var text = "";
+        for (var j = 0; j < res.getFailures().size(); j++) {
+          var fail = res.getFailures().get(j);
+          text += "Wrong " + fail.getProperty() + "\n";
+        }
+        highlight.setText(text);
+      }
     }
 
     System.out.println("Adding label.");
@@ -80,9 +100,7 @@ var analyzeListener = new ActionListener({
 
     highlight_incorrect(results, graph);
 
-    var score = graph_analysis_service.score(results);
-
-    JOptionPane.showMessageDialog(null, "You scored " + score + " out of " + expected_graph.size() + "!");
+    JOptionPane.showMessageDialog(null, "You scored " + results.getScore() + " out of " + results.getMaxScore() + "!");
   }
 });
 
@@ -111,14 +129,15 @@ function init() {
   controller_service = obj_service.createControllerService();
 
   analyze_button.addActionListener(analyzeListener);
-  expected_button.addActionListener(expectedListener);
+  // expected_button.addActionListener(expectedListener);
+  expected_button.setEnabled(false);
   interpreted_button.addActionListener(interpretedListener);
   drawn_button.addActionListener(drawnListener);
 
   // for whatever reason, the graph x axis is always in seconds
   expected_graph = graph_analysis_service.buildRubric(drawn_graphable.getRubric());
 
-  draw_graph(expected_graph, expected_ds);
+  // draw_graph(expected_graph, expected_ds);
 
   return true;
 }
