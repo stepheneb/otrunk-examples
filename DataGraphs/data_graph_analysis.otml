@@ -10,8 +10,6 @@
     <import class="org.concord.otrunk.script.OTScriptEngineBundle"/>
     <import class="org.concord.otrunk.script.OTScriptEngineEntry"/>
     
-    <import class="org.concord.otrunk.graph.analysis.OTGraphAnalysisService" />
-    
     <import class="org.concord.datagraph.state.OTDataAxis" />
     <import class="org.concord.datagraph.state.OTDataGraphable" />
     <import class="org.concord.datagraph.state.OTDataCollector" />
@@ -39,6 +37,9 @@
             <OTViewEntry
               viewClass="org.concord.datagraph.state.OTDataCollectorView"
               objectClass="org.concord.datagraph.state.OTDataCollector" />
+            <OTViewEntry local_id="dc_author"
+              viewClass="org.concord.otrunk.graph.OTDataCollectorEditView"
+              objectClass="org.concord.datagraph.state.OTDataCollector" />
             <OTViewEntry
               objectClass="org.concord.otrunk.view.document.OTDocument" 
               viewClass="org.concord.otrunk.view.document.OTDocumentView"/>
@@ -54,16 +55,15 @@
               engineClass="org.concord.otrunk.script.js.OTJavascriptEngine" />
           </engines>
         </OTScriptEngineBundle>
-        <OTGraphAnalysisService />
       </bundles>
       
       <root>
         <OTCompoundDoc name="Basic Document">
           <bodyText>
             <div style="font-weight: bold; font-size: 1.4em;">Draw the following scenario on the graph. Then click the "analyze" button.</div>
-            <div style="font-style: oblique; font-size: 1.2em;">John walked to the mall, which was 2 miles away, in 25 minutes. He spent 15 minutes buying a new PS3 game, and then walked home. It took him 35 minutes on the way back.</div>
+            <div style="font-style: oblique; font-size: 1.2em;">John walked to the mall, which was 2 miles away, in 25 minutes. He spent 15 minutes buying a new PS3 game, and then walked home.</div>
             <br />
-            <div><object refid="${prediction}" /></div>
+            <div><object refid="${prediction}" viewid="${dc_author}"/></div>
             <div><object refid="${analyze_button}" /><object refid="${expected_button}" /><object refid="${interpreted_button}" /><object refid="${drawn_button}" /></div>
             <div><object refid="${script}" /></div>
           </bodyText>
@@ -102,9 +102,9 @@
                       <criteria>
                         <OTGraphSegmentCriterion property="BEGINNING_X" operation="EQUAL_TO" expectedValue="40" tolerance="3.75" points="0.2" optional="false" />
                         <OTGraphSegmentCriterion property="BEGINNING_Y" operation="EQUAL_TO" expectedValue="2" tolerance="0.1" points="0.2" optional="false" />
-                        <OTGraphSegmentCriterion property="ENDING_X" operation="EQUAL_TO" expectedValue="75" tolerance="3.75" points="0.2" optional="false" />
+                        <OTGraphSegmentCriterion property="ENDING_X" operation="GREATER_THAN" expectedValue="40" tolerance="0" points="0.2" optional="false" />
                         <OTGraphSegmentCriterion property="ENDING_Y" operation="EQUAL_TO" expectedValue="0" tolerance="0.1" points="0.2" optional="false" />
-                        <OTGraphSegmentCriterion property="SLOPE" operation="EQUAL_TO" expectedValue="-0.0571428" tolerance="0.01" points="0.2" optional="false" />
+                        <OTGraphSegmentCriterion property="SLOPE" operation="LESS_THAN" expectedValue="0" tolerance="0" points="0.2" optional="false" />
                       </criteria>
                     </OTGraphSegment>
                   </rubric>

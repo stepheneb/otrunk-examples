@@ -1,10 +1,10 @@
 importClass(Packages.java.awt.event.ActionListener);
 importClass(Packages.javax.swing.JOptionPane);
-importClass(Packages.org.concord.otrunk.graph.analysis.Graph);
-importClass(Packages.org.concord.otrunk.graph.analysis.GraphSegment);
+importClass(Packages.org.concord.datagraph.analysis.Graph);
+importClass(Packages.org.concord.datagraph.analysis.GraphSegment);
+importClass(Packages.org.concord.datagraph.analysis.rubric.SegmentResult);
+importClass(Packages.org.concord.datagraph.analysis.GraphAnalyzerProvider);
 importClass(Packages.org.concord.datagraph.state.rubric.OTGraphSegmentCriterion);
-importClass(Packages.org.concord.otrunk.graph.analysis.rubric.SegmentResult);
-importClass(Packages.org.concord.otrunk.graph.analysis.OTGraphAnalysisService);
 importClass(Packages.org.concord.datagraph.state.OTDataRegionLabel);
 importClass(Packages.java.lang.System);
 importClass(Packages.java.lang.Class);
@@ -93,6 +93,11 @@ function highlight_incorrect(results, graph) {
 var analyzeListener = new ActionListener({
   actionPerformed: function(evt) {
     System.out.println("Action performed");
+
+    expected_graph = graph_analysis_service.buildRubric(drawn_graphable.getRubric());
+    // drawing disabled for now, since it's not clear how handle it with qualitative criteria (eg starts at 4, ends at 6 and has positive slope)
+    // draw_graph(expected_graph, expected_ds);
+    
     var graph = graph_analysis_service.getSegments(drawn_ds, 0, 1);
     draw_graph(graph, interpreted_ds);
 
@@ -125,7 +130,7 @@ var drawnListener = new ActionListener({
 function init() {
   System.out.println("init called");
   var obj_service = drawn_ds.getOTObjectService();
-  graph_analysis_service = obj_service.getOTrunkService(Class.forName("org.concord.otrunk.graph.analysis.OTGraphAnalysisService"));
+  graph_analysis_service = GraphAnalyzerProvider.findAnalyzer(GraphAnalyzerProvider.Type.ANY);
   controller_service = obj_service.createControllerService();
 
   analyze_button.addActionListener(analyzeListener);
@@ -133,11 +138,6 @@ function init() {
   expected_button.setEnabled(false);
   interpreted_button.addActionListener(interpretedListener);
   drawn_button.addActionListener(drawnListener);
-
-  // for whatever reason, the graph x axis is always in seconds
-  expected_graph = graph_analysis_service.buildRubric(drawn_graphable.getRubric());
-
-  // draw_graph(expected_graph, expected_ds);
 
   return true;
 }
