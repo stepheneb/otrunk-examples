@@ -79,7 +79,10 @@ function highlight_incorrect(results, graph) {
         var text = "";
         for (var j = 0; j < res.getFailures().size(); j++) {
           var fail = res.getFailures().get(j);
-          text += "Wrong " + fail.getProperty() + "\n";
+          if (j != 0) {
+            text += ", ";
+          }
+          text += "Wrong " + fail.getProperty();
         }
         highlight.setText(text);
       }
@@ -91,6 +94,17 @@ function highlight_incorrect(results, graph) {
 }
 
 var analyzeListener = new ActionListener({
+  actionPerformed: function(evt) {
+    System.out.println("Action performed");
+    
+    var graph = graph_analysis_service.getSegments(drawn_ds, 0, 1);
+    draw_graph(graph, interpreted_ds);
+
+    JOptionPane.showMessageDialog(null, "Done!");
+  }
+});
+
+var scoreListener = new ActionListener({
   actionPerformed: function(evt) {
     System.out.println("Action performed");
 
@@ -105,7 +119,9 @@ var analyzeListener = new ActionListener({
 
     highlight_incorrect(results, graph);
 
-    JOptionPane.showMessageDialog(null, "You scored " + results.getScore() + " out of " + results.getMaxScore() + "!");
+    var adjScore = results.getScore() * 10;
+    adjScore = (adjScore - (adjScore % 1))/10.0;
+    JOptionPane.showMessageDialog(null, "You scored " + adjScore + " out of " + results.getMaxScore() + "!");
   }
 });
 
@@ -134,8 +150,8 @@ function init() {
   controller_service = obj_service.createControllerService();
 
   analyze_button.addActionListener(analyzeListener);
+  score_button.addActionListener(scoreListener);
   // expected_button.addActionListener(expectedListener);
-  expected_button.setEnabled(false);
   interpreted_button.addActionListener(interpretedListener);
   drawn_button.addActionListener(drawnListener);
 
