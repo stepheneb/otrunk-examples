@@ -24,21 +24,31 @@
     <import class="org.concord.otrunk.script.ui.OTScriptVariableComponent" />
 
     <import class="org.concord.otrunk.ui.OTButton"/>
+
+    <import class="org.concord.otrunk.view.OTViewMode" />
   </imports>
   
   <objects>
     <OTSystem>
       <bundles>
         <OTViewBundle>
+          <modes>
+            <OTViewMode name="authoring">
+              <map>
+                <entry key="${data_collector_view}">
+                  <OTViewEntry
+              viewClass="org.concord.otrunk.graph.OTDataCollectorEditView"
+              objectClass="org.concord.datagraph.state.OTDataCollector" />
+                </entry>
+              </map>
+            </OTViewMode>
+          </modes>
           <views>
             <OTViewEntry
               objectClass="org.concord.otrunk.script.ui.OTScriptObject"
               viewClass="org.concord.otrunk.script.ui.OTScriptObjectView" />
-            <OTViewEntry
+            <OTViewEntry local_id="data_collector_view"
               viewClass="org.concord.datagraph.state.OTDataCollectorView"
-              objectClass="org.concord.datagraph.state.OTDataCollector" />
-            <OTViewEntry local_id="dc_author"
-              viewClass="org.concord.otrunk.graph.OTDataCollectorEditView"
               objectClass="org.concord.datagraph.state.OTDataCollector" />
             <OTViewEntry
               objectClass="org.concord.otrunk.view.document.OTDocument" 
@@ -63,8 +73,8 @@
             <div style="font-weight: bold; font-size: 1.4em;">Draw the following scenario on the graph. Then click the "analyze" button.</div>
             <div style="font-style: oblique; font-size: 1.2em;">John walked to the mall, which was 2 miles away, in 25 minutes. He spent 15 minutes buying a new PS3 game, and then walked home.</div>
             <br />
-            <div><object refid="${prediction}" viewid="${dc_author}"/></div>
-            <div><object refid="${analyze_button}" /><object refid="${expected_button}" /><object refid="${interpreted_button}" /><object refid="${drawn_button}" /></div>
+            <div><object refid="${prediction}" /></div>
+            <div><object refid="${analyze_button}" /><object refid="${interpreted_button}" /><object refid="${drawn_button}" /></div>
             <div><object refid="${script}" /></div>
           </bodyText>
         </OTCompoundDoc>   
