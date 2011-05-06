@@ -207,20 +207,22 @@ to drag-a-car
             if xcor - x-car1-mouse-previous > 0 and shape != "car right"                  ;;instead of changing heading we will change shape
               [set shape "car right" ]
             set x-car1-mouse-previous xcor            
-            if making-a-graph?
-            [set-current-plot-pen "car1"
-              plotxy t1 x-car1-world
-              set t1 t1 + dt]]
+;            if making-a-graph?
+;            [set-current-plot-pen "car1"
+;              plotxy t1 x-car1-world
+;              set t1 t1 + dt]
+            ]
           [set x-car2-world x-world car-x-pos 2
             if xcor - x-car2-mouse-previous < 0 and heading != "car left"
               [set shape "car left"]
             if xcor - x-car2-mouse-previous > 0 and heading != "car right"
               [set shape "car right" ]
             set x-car2-mouse-previous xcor                 
-            if making-a-graph?
-            [set-current-plot-pen "car2"
-              plotxy t2 x-car2-world
-              set t2 t2 + dt]]
+;            if making-a-graph?
+;            [set-current-plot-pen "car2"
+;              plotxy t2 x-car2-world
+;              set t2 t2 + dt]
+            ]
       ]
     ]    
   ]
@@ -333,7 +335,7 @@ INPUTBOX
 93
 123
 left-track-end
--5
+-10
 1
 0
 Number
@@ -344,44 +346,10 @@ INPUTBOX
 176
 123
 right-track-end
-5
+10
 1
 0
 Number
-
-BUTTON
-23
-231
-166
-265
-Make a Graph
-Go
-T
-1
-T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
-
-PLOT
-1001
-10
-1297
-245
-Position
-Time
-Position
-0.0
-10.0
--10.0
-10.0
-true
-false
-PENS
-"car1" 1.0 0 -13345367 true
-"car2" 1.0 0 -2674135 true
 
 MONITOR
 24
@@ -828,7 +796,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 4.1
+NetLogo 4.1.2
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
