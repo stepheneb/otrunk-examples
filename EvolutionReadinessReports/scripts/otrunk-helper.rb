@@ -7,7 +7,6 @@ include_class 'org.concord.datagraph.state.OTDataCollector'
 include_class 'org.concord.framework.otrunk.OTrunk'
 include_class 'org.concord.framework.otrunk.view.OTUserListService'
 include_class 'org.concord.otrunk.navigation.OTNavigationHistoryService'
-include_class 'org.concord.otrunk.overlay.OTOverlayWrapper'
 include_class 'org.concord.otrunk.ui.menu.OTMenu'
 include_class 'org.concord.otrunk.ui.question.OTQuestion'
 include_class 'org.concord.otrunk.xml.ExporterJDOM'
@@ -127,14 +126,6 @@ class OTrunkHelper
   allModels.each {|m| models << m}
     models
   end
-
-  def getIntrasessionObjects(skipQuestions = false)
-    intras = []
-    allWrappers = @otrunk.getAllObjects(org.concord.otrunk.overlay.OTOverlayWrapper.java_class)
-    allWrappers.each {|w| intras << w.getWrappedObject unless skipQuestions && w.getWrappedObject.is_a?(OTQuestion)}
-    return intras.compact.uniq
-  end
-
 
   # returns an array of numbers, each number representing the index of each level
   # for most activities, this will be [section_num, page_num] or [section_num, page_num, inner_page_num]
