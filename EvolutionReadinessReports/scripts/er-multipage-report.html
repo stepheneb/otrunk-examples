@@ -66,3 +66,44 @@ end
 def createModelReporter(model)
   modelReporterClass(model).new(model)
 end
+
+def getXmlReport
+  report = XmlReport.new('udl', @otrunkHelper)
+  
+  ## Ignoring all sections except pre-test & post-test, for the time being.
+  sections = unitSections.select do |section|
+    section.name.strip =~ /\A(pre|post).*test.*/i
+  end
+
+  sections.each_with_index do |section, i|
+    sectionId = (i+1).to_s
+    report.addSection(section, sectionId)
+    questions = sectionQuestions(section)
+    report.addQuestions(questions, section)
+    
+  end
+
+  unitSections.each do |section|
+    levQuestions = sectionLeveledQuestions(section)
+    levQuestions.each do |lq|
+      report.addQuestionWrapper(XmlReport::LeveledQuestionLevelWrapper.new(lq, section, @otrunkHelper))
+      report.addQuestionWrapper(XmlReport::LeveledQuestionClickedWrapper.new(lq, section, @otrunkHelper))
+    end
+    report.addQuestionWrapper(XmlReport::SectionVisitedWrapper.new(section, @otrunkHelper))
+    report.addQuestionWrapper(XmlReport::SectionTTSUsageWrapper.new(section, @otrunkHelper))
+    report.addQuestionWrapper(XmlReport::SectionCoachUsageWrapper.new(section, @otrunkHelper))
+  end
+
+  glossaryWords().each do |glossWord|
+    report.addQuestionWrapper(XmlReport::GlossaryWordStudentDefWrapper.new(glossWord, @otrunkHelper))
+    report.addQuestionWrapper(XmlReport::GlossaryWordShownCountWrapper.new(glossWord, @otrunkHelper))      
+  end
+
+  report.addQuestionWrapper(XmlReport::LabBookUsageWrapper.new(labBookBundle, @otrunkHelper))
+        
+  @users.each do |user|
+    studentElem = report.addStudent(user)
+  end
+  puts report.getText
+  report.getText
+end
