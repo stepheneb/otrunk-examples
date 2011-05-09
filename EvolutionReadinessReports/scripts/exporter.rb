@@ -18,7 +18,6 @@ class Exporter
   end
   
   def getScript
-    script = "include_class 'org.concord.otrunk.intrasession.util.ExcelExporter'\n"
     script += "include_class 'org.concord.framework.otrunk.OTrunk'\n"
     script += "include_class 'java.util.ArrayList'\n\n"
     script += "@embeddedObjects = #{@embeddedObjects.inspect}\n"

@@ -1,7 +1,5 @@
 include_class 'org.concord.otrunk.ui.OTText'
 include_class 'org.concord.otrunk.ui.question.OTQuestion'
-include_class 'org.concord.otrunk.intrasession.util.IntrasessionHelper'
-include_class 'org.concord.otrunk.intrasession.ui.panels.StudentWorkPanel'
 include_class 'org.concord.otrunk.logging.LogHelper'
 include_class 'org.concord.otrunk.logging.OTModelLogging'
 include_class 'org.concord.otrunk.view.document.OTCompoundDoc'
@@ -14,7 +12,6 @@ include_class 'org.concord.datagraph.ui.DataGraph'
 include_class 'org.concord.otrunk.overlay.CompositeDatabase'
 include_class 'org.concord.otrunk.overlay.OTUserOverlayManager'
 include_class 'org.concord.otrunk.xml.XMLDatabase'
-include_class 'org.concord.otrunk.intrasession.util.ExcelExporter'
 include_class 'org.concord.datagraph.analysis.GraphSegment'
 
 class Reportable
@@ -156,10 +153,7 @@ class ReportableSubmits < ReportableMeta
   end
   
   def _number(user)
-    @numbers ||= {}
-    return @numbers[user] if @numbers[user]
-    @numbers[user] = IntrasessionHelper.getNumberOfSubmits(@overlayManager, @groupListManager.getIntrasessionUser(user), object)
-    return @numbers[user]
+    0
   end
 end
 
@@ -268,7 +262,7 @@ class ReportableSubmission < DefaultSubmission
     @reportable = reportable
     @submissionReportable = submissionReportable
 
-    @timestamp = IntrasessionHelper.getFormattedTimestamp(IntrasessionHelper.getSubmitTime(@submissionReportable.object))
+    @timestamp = 0
     @reportableScore = ReportableScore.new(@submissionReportable) if @submissionReportable.object.is_a?(OTDataCollector) && @submissionReportable.object.source.rubric.size > 0
   end
   
@@ -321,16 +315,6 @@ class ReportableSubmissions
   
   def _initSubmissions
     @submissions = []
-    intraUser = @groupListManager.getIntrasessionUser(@user)
-    if intraUser
-      submissions = @overlayManager.getAllOTObjects(intraUser, @reportable.object)
-      submissions.each do |s|
-        rep = Reportable.new(s, @reportable.questions, @otrunk)
-        @submissions << ReportableSubmission.new(@reportable, rep)
-      end
-    else
-      puts "Couldn't find intrasession user for user: #{@user.getUserId}"
-    end
   end
 end
 

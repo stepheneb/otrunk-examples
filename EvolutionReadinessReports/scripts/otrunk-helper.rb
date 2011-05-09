@@ -119,14 +119,6 @@ class OTrunkHelper
     @questions
   end
 
-  def getIntrasessionObjects(skipQuestions = false)
-    intras = []
-    allWrappers = @otrunk.getAllObjects(org.concord.otrunk.overlay.OTOverlayWrapper.java_class)
-    allWrappers.each {|w| intras << w.getWrappedObject unless skipQuestions && w.getWrappedObject.is_a?(OTQuestion)}
-    return intras.compact.uniq
-  end
-
-
   # returns an array of numbers, each number representing the index of each level
   # for most activities, this will be [section_num, page_num] or [section_num, page_num, inner_page_num]
   def objectLocationInActivity(object)
