@@ -7,6 +7,7 @@ include_class 'org.concord.otrunk.script.ui.OTScriptButton'
 include_class 'org.concord.otrunk.script.jruby.OTJRuby'
 include_class 'org.concord.otrunk.ui.question.OTQuestion'
 
+
 def csvEscape(text)
   return '' if text == nil
   text = text.join(',') if text.is_a? Array
