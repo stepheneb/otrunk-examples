@@ -58,7 +58,6 @@ class XmlReport
     answersElem = studentElem.add_element('answers')
     @questions.each_with_index do |question, index|
       if question == :mw_interaction_log
-        answersElem.add_element(_getMwLogElem(index, user))
       elsif question == :navigation_log
       else
         userQuestion = @otrunkHelper.userObject(question, user)
@@ -124,51 +123,6 @@ class XmlReport
       elem.text = 'UNKNOWN'
       STDERR.puts("getAnswerElem: Unknown question type!")
     end
-    elem
-  end
-  
-  def _getMwLogElem(index, user)
-    modelText = ''
-    
-    @mwModels.each do |model|
-      userModel = @otrunkHelper.userObject(model, user)
-      events = userModel.events
-      
-      actionText = ''
-      events.each do |actionItem|
-        xmlStr = @otrunkHelper.toXmlStr(actionItem)
-        xmlStr.gsub!(/.*(<OTActionItem.*<\/OTActionItem>).*/m, '\1')
-        actionText << xmlStr
-      end
-      
-      modelText << %Q[<OTModelerPage authoredDataURL="#{model.authoredDataURL}"><events>#{actionText}</events></OTModelerPage>]
-    end
-      
-    elem = REXML::Element.new('answer')
-    elem.attributes['questionId'] = (index + 1).to_s
-    elem.text = %Q{"#{modelText}"}
-    elem
-  end
-  
-  def _getNavLogElem(index, user)
-    #navService = @otrunkHelper.otrunk.getService(OTNavigationHistoryService.java_class)
-    #userNavHistory = navService.getNavigationHistory(user)
-                                
-    userNavHistory = @otrunkHelper.userObject(@navHistory, user)
-    text = ''
-    
-    userNavHistory.objects.each do |navigationEvent|
-      xmlStr = @otrunkHelper.toXmlStr(navigationEvent, 0)
-      xmlStr.gsub!(/.*(<OTNavigationEvent.*<\/OTNavigationEvent>).*/m, '\1')
-      text << xmlStr
-    end
-    
-    #puts "svc=#{$otObjectService.getOTrunkService(OTNavigationHistoryService.java_class).inspect}"
-    #puts "svc=#{@otrunkHelper.otrunk.getService(OTNavigationHistoryService.java_class).inspect}"
-
-    elem = REXML::Element.new('answer')
-    elem.attributes['questionId'] = (index + 1).to_s
-    elem.text = %Q{"#{text}"}
     elem
   end
 

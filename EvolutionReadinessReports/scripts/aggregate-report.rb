@@ -124,9 +124,8 @@ end
 
 def getXmlReport
   questions = @otrunkHelper.getQuestions
-  mwModels = @otrunkHelper.getMwModels
   
-  report = XmlReport.new('loops', @otrunkHelper, questions, mwModels, $navigationHistory)
+  report = XmlReport.new('loops', @otrunkHelper, questions, [], $navigationHistory)
   
   users.each do |user|
     studentElem = report.addStudent(user)
