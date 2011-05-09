@@ -4,42 +4,15 @@ include_class 'org.concord.otrunk.logging.LogHelper'
 include_class 'org.concord.otrunk.logging.OTModelLogging'
 include_class 'org.concord.otrunk.view.document.OTCompoundDoc'
 include_class 'org.concord.otrunk.view.OTGroupListManager'
-include_class 'org.concord.datagraph.log.DataGraphLogHelper'
-include_class 'org.concord.datagraph.state.OTDataCollector'
-include_class 'org.concord.datagraph.state.OTDataGraph'
-include_class 'org.concord.datagraph.ui.DataGraph'
 include_class 'org.concord.otrunk.overlay.CompositeDatabase'
 include_class 'org.concord.otrunk.overlay.OTUserOverlayManager'
 include_class 'org.concord.otrunk.xml.XMLDatabase'
-include_class 'org.concord.datagraph.analysis.GraphSegment'
 
 class Reportable
   def initialize(obj, questions, otrunk)
     @object = obj
     @questions = questions
     @otrunk = otrunk
-    
-    _setGraphReadOnly(@object) if @object.is_a?(OTDataGraph)
-    _setGraphReadOnly(@object.input) if @object.is_a?(OTQuestion) && @object.input.is_a?(OTDataGraph)
-  end
-  
-  def _setGraphReadOnly(graph)
-    # make the graph read-only
-    graph.setShowToolbar(false)
-    graph.setShowGraphableList(false)
-    graph.setGraphableListEditable(false)
-    
-#      if (! graph.getUseAspectRatio())
-#          graph.setUseAspectRatio(true);
-#          graph.setAspectRatio(StudentWorkPanel::DEFAULT_ASPECT_RATIO);
-#          graph.setAspectDimension(DataGraph::AspectDimension::HEIGHT);
-#      end
-    
-    if graph.is_a?(OTDataCollector)
-      graph.setShowControlBar(false)
-      graph.setMultipleGraphableEnabled(false)
-      graph.setReadOnlyLabels(true)
-    end
   end
   
   def object
