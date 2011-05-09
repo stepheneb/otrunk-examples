@@ -28,38 +28,6 @@ def getText
   @locationReportableMap = {}
 
   @pageObjectLocations = []
-  intrasessions = @otrunkHelper.getIntrasessionObjects
-  intrasessions.each do |i|
-    reportable = Reportable.new(i, @questions, @otrunkHelper.otrunk)
-    reportableSubmits = ReportableSubmits.new(reportable)
-
-    location = @otrunkHelper.objectLocationInActivity(i)
-
-    # in order to make sure that the submit counts and other info stick to their question,
-    # make sure we make the location info unique
-    count = [0]
-    while @pageObjectLocations.include?(location + count)
-      count = [count[0] + 1]
-    end
-    location += count
-    @pageObjectLocations << location
-
-    @locationReportableMap[reportable] = location + [0]
-    @locationReportableMap[reportableSubmits] = location + [1]
-
-    if i.is_a?(OTModelLogging)
-      reportableCollects = ReportableCollects.new(reportable)
-      @locationReportableMap[reportableCollects] = location + [2]
-
-      reportableTime = ReportableTime.new(reportable)
-      @locationReportableMap[reportableTime] = location + [3]
-    end
-    
-    if i.is_a?(OTDataCollector)
-      reportableScore = ReportableScore.new(reportable)
-      @locationReportableMap[reportableScore] = location + [4]
-    end
-  end
 
   @questions.questions.delete_if{|q| q.prompt == nil || q.input == nil}.each do |q|
     found = @locationReportableMap.keys.detect {|r| r.object.equals(q) }
