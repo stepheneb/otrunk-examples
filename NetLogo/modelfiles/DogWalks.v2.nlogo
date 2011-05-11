@@ -263,7 +263,8 @@ to drag-a-car
               plotxy t2 x-car2-world
               set t2 t2 + dt]]
       ]
-    ]    
+    ]
+    tick
   ]
   
   [ set car-number-dragging 0
