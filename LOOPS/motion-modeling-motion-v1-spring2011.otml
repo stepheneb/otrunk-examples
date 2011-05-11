@@ -49,6 +49,8 @@
     <import class="org.concord.data.state.OTDataInput" />
     <import class="org.concord.data.state.OTTimerDataStoreDataProducer" />
     <import class="org.concord.otrunk.logging.OTModelEvent" />
+    <import class="org.concord.data.state.OTDataChannelProducerFilter" />
+    <import class="org.concord.data.state.OTSingleYPerXProducerFilter" />
   </imports>
   <objects>
     <OTSystem local_id="system">
@@ -121,6 +123,75 @@
                         </div>
                       </bodyText>
                     </OTCompoundDoc>
+                    <OTCompoundDoc id="8fced0ac-7ba9-11e0-b79a-4f8c6e959ca0" name="%8fced0ac-7ba9-11e0-b79a-4f8c6e959ca0" showEditBar="true">
+                      <bodyText>
+                        <div class="buffer">
+                          <div class="border">
+                            <div class="body">
+                              <div class="subtitle">Walking the Dog</div>
+                              Chico the Airedale Terrior often gets walks to the park to play with 
+          his dog friend Angie, a Chesepeake Bay Retriever. The park is in the 
+          center of town. Chico lives five block to the East of the park and 
+          Angie lives three blocks West of the park.
+                              <br />
+                              <br />
+                              Take Chico for a walk!
+                              <br />
+                              <br />
+                              <object refid="7f613a9d-7baa-11e0-b79a-4f8c6e959ca0" />
+                              <br />
+                              <object refid="e44e7a8e-7baa-11e0-b79a-4f8c6e959ca0" />
+                              <br />
+                            </div>
+                          </div>
+                        </div>
+                      </bodyText>
+                      <documentRefs>
+                        <OTNLogoModel id="7f613a9d-7baa-11e0-b79a-4f8c6e959ca0" name="NetLogo model" authoredDataURL="http://otrunk.concord.org/examples/NetLogo/modelfiles/DogWalks.v2.nlogo" startButtonName="Walk the Dog" resetButtonName="Reset" useDt="false">
+                          <variables>
+                            <string>t1</string>
+                            <string>x-car1-world</string>
+                          </variables>
+                          <input>
+                            <OTDataInput>
+                              <channelFunctionMap>
+                                <entry key="1">
+                                  <string>set-car-position 1</string>
+                                </entry>
+                              </channelFunctionMap>
+                              <dataProducer>
+                                <object refid="${timer_producer}" />
+                              </dataProducer>
+                            </OTDataInput>
+                          </input>
+                        </OTNLogoModel>
+                        <OTDataCollector id="e44e7a8e-7baa-11e0-b79a-4f8c6e959ca0" name="Walk the Dog" graphableListEditable="false" title="Chico's Walk - Position vs. Time" tickMode="AUTO" xTickInterval="1.0" yTickInterval="1.0" autoFitMode="0" showLabelCoordinates="true" labelDecimalPlaces="1" useAspectRatio="true" aspectRatio="3.5" showControlBar="true" useDefaultToolBar="false" displayButtons="0," autoScaleEnabled="false">
+                          <xDataAxis>
+                            <OTDataAxis max="20.0" units="mins" min="0.0" label="Time" labelFormat="Engineering" locked="true" />
+                          </xDataAxis>
+                          <yDataAxis>
+                            <OTDataAxis max="5.0" units="blocks" min="-5.0" label="Position" labelFormat="Engineering" locked="true" />
+                          </yDataAxis>
+                          <playbackDataProducer>
+                            <OTTimerDataStoreDataProducer local_id="timer_producer" sampleTime="0.05">
+                              <dataStores>
+                                <object refid="${dog-walk-ds}" />
+                              </dataStores>
+                            </OTTimerDataStoreDataProducer>
+                          </playbackDataProducer>
+                          <source>
+                            <OTDataGraphable name="Dog Walk" connectPoints="true" yColumn="1" drawMarks="false" color="255" xColumn="0" controllable="false">
+                              <dataProducer>
+							     <OTSingleYPerXProducerFilter  source="7f613a9d-7baa-11e0-b79a-4f8c6e959ca0"/>
+                              </dataProducer>
+                              <dataStore>
+                                <OTDataStore local_id="dog-walk-ds" />
+                              </dataStore>
+                            </OTDataGraphable>
+                          </source>
+                        </OTDataCollector>
+                      </documentRefs>
+                    </OTCompoundDoc>
                     <OTCompoundDoc id="8f08c35f-55bb-4983-a1a5-a90b2fd7f35f" name="%8f08c35f-55bb-4983-a1a5-a90b2fd7f35f" showEditBar="true">
                       <bodyText>
                         <div class="buffer">
@@ -146,7 +217,7 @@
                         </div>
                       </bodyText>
                       <documentRefs>
-                        <OTNLogoModel id="7dab0c35-780b-11e0-8d85-b55e5237bf59" name="NetLogo model" authoredDataURL="http://otrunk.concord.org/examples/NetLogo/modelfiles/Tracks.v4.nlogo" >
+                        <OTNLogoModel id="7dab0c35-780b-11e0-8d85-b55e5237bf59" name="NetLogo model" authoredDataURL="http://otrunk.concord.org/examples/NetLogo/modelfiles/Tracks.v4.nlogo">
                           <input>
                             <OTDataInput>
                               <channelFunctionMap>
@@ -156,53 +227,47 @@
                                 <entry key="2">
                                   <string>set-car-position 2</string>
                                 </entry>
-                              <dataProducer>
-                                <object refid="${timer_producer}"/>
-                              </dataProducer>
                               </channelFunctionMap>
+                              <dataProducer>
+                                <object refid="${timer2_producer}" />
+                              </dataProducer>
+                              <channelVariableMap />
                             </OTDataInput>
                           </input>
-                           <savedState>
-                            <OTBlob>
-                              <src>gzb64:H4sIAAAAAAAAAJPv5mCAAAA0N8oCCgAAAA==</src>
-                            </OTBlob>
-                          </savedState>
                         </OTNLogoModel>
-                        <OTDataCollector id="fd6d58ca-780b-11e0-8d85-b55e5237bf59" name="Data graph" title="Car Graph Prediction" tickMode="AUTO" xTickInterval="1.0" yTickInterval="1.0" showLabelCoordinates="true" labelDecimalPlaces="2" useAspectRatio="false" aspectRatio="1.5" showControlBar="true" useDefaultToolBar="true" autoFitMode="0" logGraphOnStart="false" logGraphOnPlaybackStart="true" multipleGraphableEnabled="true">
+                        <OTDataCollector id="fd6d58ca-780b-11e0-8d85-b55e5237bf59" name="Data graph" title="Car Graph Prediction" tickMode="AUTO" xTickInterval="0.5" yTickInterval="5.0" showLabelCoordinates="true" labelDecimalPlaces="2" useAspectRatio="true" aspectRatio="3.0" showControlBar="true" useDefaultToolBar="true" autoFitMode="0" logGraphOnStart="false" logGraphOnPlaybackStart="true" multipleGraphableEnabled="true">
                           <source>
-                            <OTDataGraphable name="Car 1" connectPoints="true" controllable="true" yColumn="1" drawMarks="false" color="16711680" xColumn="0" lineWidth="2.0" showAllChannels="false" visible="true">
+                            <OTDataGraphable name="Car 1" connectPoints="true" controllable="true" yColumn="1" drawMarks="false" color="255" xColumn="0" lineWidth="2.0" showAllChannels="false" visible="true">
                               <dataStore>
                                 <OTDataStore local_id="ds1" numberChannels="2" />
                               </dataStore>
                             </OTDataGraphable>
                           </source>
                           <xDataAxis>
-                            <OTDataAxis max="30.0" units="min" min="0.0" label="Time" labelFormat="Engineering" locked="true">
+                            <OTDataAxis max="15.1" units="minutes" min="0.0" label="Time" labelFormat="Engineering" locked="true">
                               <customGridLabels />
                             </OTDataAxis>
                           </xDataAxis>
                           <yDataAxis>
-                            <OTDataAxis max="10.0" units="m" min="-0.0" label="Position" labelFormat="Engineering" locked="true">
+                            <OTDataAxis max="20.0" units="m" min="-20.0" label="Position" labelFormat="Engineering" locked="true">
                               <customGridLabels />
                             </OTDataAxis>
                           </yDataAxis>
                           <playbackDataProducer>
-                            <OTTimerDataStoreDataProducer local_id="timer_producer" sampleTime="0.05">
+							<OTTimerDataStoreDataProducer local_id="timer2_producer" sampleTime="0.05">
 								<dataStores>
-								<object refid="${ds1}"/>
-								<object refid="${ds2}"/>
+									<object refid="${ds1}"/>
+									<object refid="${ds2}"/>
 								</dataStores>
-						    </OTTimerDataStoreDataProducer>
-                          </playbackDataProducer>
+							</OTTimerDataStoreDataProducer>
+					      </playbackDataProducer>
                           <graphables>
-                            <OTDataGraphable name="Car 2" yColumn="1" drawMarks="false" color="1044480" xColumn="0" lineWidth="2.0" showAllChannels="false" visible="true" connectPoints="true" conrollable="true">
+                            <OTDataGraphable name="Car 2" yColumn="1" drawMarks="false" controllable="true" color="16711680" xColumn="0" lineWidth="2.0" showAllChannels="false" visible="true" connectPoints="true">
                               <dataStore>
                                 <OTDataStore local_id="ds2" numberChannels="2" />
                               </dataStore>
                             </OTDataGraphable>
                           </graphables>
-                          <log>
-                          </log>
                         </OTDataCollector>
                       </documentRefs>
                     </OTCompoundDoc>
@@ -258,14 +323,12 @@
                     </OTCompoundDoc>
                   </cards>
                   <currentCard>
-                    <object refid="8f08c35f-55bb-4983-a1a5-a90b2fd7f35f" />
+                    <object refid="8fced0ac-7ba9-11e0-b79a-4f8c6e959ca0" />
                   </currentCard>
                   <viewedCards>
                     <object refid="82c3d604-39f9-485b-8ee2-9b5452c21053" />
                     <object refid="8f08c35f-55bb-4983-a1a5-a90b2fd7f35f" />
-                    <object refid="f2f1ecf1-9087-42f2-93cc-e20e68089879" />
-                    <object refid="e02ee65f-b198-4464-b1a9-7c03383a2b6e" />
-                    <object refid="e3351842-b785-41e0-a2c8-ea14afbc99f8" />
+                    <object refid="8fced0ac-7ba9-11e0-b79a-4f8c6e959ca0" />
                   </viewedCards>
                 </OTCardContainer>
               </content>
