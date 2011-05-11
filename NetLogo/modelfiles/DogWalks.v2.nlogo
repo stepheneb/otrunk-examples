@@ -251,7 +251,9 @@ to drag-a-car
             if making-a-graph?
             [set-current-plot-pen "car1"
               plotxy t1 x-car1-world
-              set t1 t1 + dt]]
+            ]
+            set t1 t1 + dt
+          ]
           [set x-car2-world x-world car-x-pos 2
             if xcor - x-car2-mouse-previous < 0 and heading != "dog airedale left"
               [set shape "dog airedale left"]
@@ -261,7 +263,9 @@ to drag-a-car
             if making-a-graph?
             [set-current-plot-pen "car2"
               plotxy t2 x-car2-world
-              set t2 t2 + dt]]
+            ]
+            set t2 t2 + dt
+          ]
       ]
     ]
     tick
@@ -892,7 +896,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 4.1.2
+NetLogo 4.1.1
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
