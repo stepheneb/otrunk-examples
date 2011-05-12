@@ -109,7 +109,7 @@ to setup
  ]
  
  create-houses 1 [
-  set xcor x-mouse 1
+  set xcor x-mouse right-track-end / 2
   set ycor y-track + 2.5
   set size 5
   set color yellow 
