@@ -51,6 +51,8 @@
     <import class="org.concord.otrunk.logging.OTModelEvent" />
     <import class="org.concord.data.state.OTDataChannelProducerFilter" />
     <import class="org.concord.data.state.OTSingleYPerXProducerFilter" />
+    <import class="org.concord.datagraph.state.rubric.OTGraphSegment" />
+    <import class="org.concord.datagraph.state.rubric.OTGraphSegmentCriterion" />
   </imports>
   <objects>
     <OTSystem local_id="system">
@@ -129,30 +131,29 @@
                           <div class="border">
                             <div class="body">
                               <div class="subtitle">Walking the Dog</div>
-                              Chico the Airedale Terrior often gets walks to the park to play with 
-          his dog friend Angie, a Chesepeake Bay Retriever. The park is in the 
+                              Chico the Airedale Terrier often gets walks to the park to play with 
+          his dog friend Angie, a Chesapeake Bay Retriever. The park is in the 
           center of town. Chico lives five blocks to the East of the park and 
           Angie lives three blocks West of the park.
                               <br />
                               <br />
                               First, take Chico 
-          for a walk!  Click Take a Walk and use your mouse or pen to walk 
-          Chico along the road and see how his motion is graphed below.  After 
+          for a walk! Click Take a Walk and use your mouse or pen to walk 
+          Chico along the road and see how his motion is graphed below. After 
           you have drawn a graph, you may Play the walk and Reset and Play 
-          again, then Clear it and draw another.  While you are experimenting 
+          again, then Clear it and draw another. While you are experimenting 
           with the system, think about how fast Chico is moving and what 
-          graphs of realistic dog walk speeds look like.  After you have 
+          graphs of realistic dog walk speeds look like. After you have 
           experimented and drawn and played back several dog walks draw the 
           walk below, then answer the question and submit your answer.
                               <br />
-                              Chico is hoping to play with his dog friend and thinks that she may be at the 
-          park.  He leaves his house at 3:00 and trots 3 minutes to the park.  
-          He waits at the park for 2 minutes, then decides to go to Angie's 
-          house to find her.  It takes 3 minutes to reach Angie's house where 
-          he barks for 1 minute, but Angie does not appear.  Dejected, he 
+                              Chico is hoping to play with his dog friend and thinks that she may be at 
+          the park. He leaves his house at 3:00 and trots 3 minutes to the 
+          park. He waits at the park for 2 minutes, then decides to go to 
+          Angie's house to find her. It takes 3 minutes to reach Angie's house 
+          where he barks for 1 minute, but Angie does not appear. Dejected, he 
           returns to the park taking 4 minutes and plays at the park for 10 
-          minutes.  Exhausted after his play, he shuffles home taking 6 
-          minutes.
+          minutes. Exhausted after his play, he shuffles home taking 6 minutes.
                               <br />
                               <br />
                               <br />
@@ -183,7 +184,7 @@
                             </OTDataInput>
                           </input>
                         </OTNLogoModel>
-                        <OTDataCollector id="e44e7a8e-7baa-11e0-b79a-4f8c6e959ca0" name="Walk the Dog" graphableListEditable="false" title="Chico's Walk - Position vs. Time" tickMode="AUTO" xTickInterval="1.0" yTickInterval="10.0" autoFitMode="0" showLabelCoordinates="true" labelDecimalPlaces="1" useAspectRatio="true" aspectRatio="3.5" showControlBar="true" useDefaultToolBar="false" displayButtons="0," autoScaleEnabled="false">
+                        <OTDataCollector id="e44e7a8e-7baa-11e0-b79a-4f8c6e959ca0" name="Walk the Dog" graphableListEditable="false" title="Chico's Walk - Position vs. Time" tickMode="AUTO" xTickInterval="1.0" yTickInterval="20.0" autoFitMode="0" showLabelCoordinates="true" labelDecimalPlaces="1" useAspectRatio="true" aspectRatio="3.5" showControlBar="true" useDefaultToolBar="false" displayButtons="0," autoScaleEnabled="false">
                           <xDataAxis>
                             <OTDataAxis max="20.0" units="mins" min="0.0" label="Time" labelFormat="Engineering" locked="true">
                               <customGridLabels />
@@ -286,6 +287,41 @@
                               <dataStore>
                                 <OTDataStore local_id="ds1" numberChannels="2" />
                               </dataStore>
+                              <rubric>
+                                <OTGraphSegment>
+                                  <criteria>
+                                    <OTGraphSegmentCriterion property="BEGINNING_Y" operation="EQUAL_TO" expectedValue="5.0" tolerance="0.5" />
+                                    <OTGraphSegmentCriterion property="BEGINNING_X" operation="EQUAL_TO" />
+                                    <OTGraphSegmentCriterion property="ENDING_X" operation="EQUAL_TO" expectedValue="6.0" />
+                                    <OTGraphSegmentCriterion property="ENDING_Y" operation="EQUAL_TO" expectedValue="-10.0" tolerance="0.5" />
+                                  </criteria>
+                                </OTGraphSegment>
+                                <OTGraphSegment>
+                                  <criteria>
+                                    <OTGraphSegmentCriterion property="DELTA_X" operation="EQUAL_TO" expectedValue="2.0" />
+                                    <OTGraphSegmentCriterion property="SLOPE" operation="EQUAL_TO" />
+                                  </criteria>
+                                </OTGraphSegment>
+                                <OTGraphSegment optional="false">
+                                  <criteria>
+                                    <OTGraphSegmentCriterion property="ENDING_Y" operation="EQUAL_TO" tolerance="0.5" />
+                                    <OTGraphSegmentCriterion property="SLOPE" operation="GREATER_THAN" expectedValue="2.5" />
+                                    <OTGraphSegmentCriterion property="SLOPE" operation="LESS_THAN" expectedValue="5.0" />
+                                  </criteria>
+                                </OTGraphSegment>
+                                <OTGraphSegment optional="false">
+                                  <criteria>
+                                    <OTGraphSegmentCriterion property="DELTA_X" operation="EQUAL_TO" expectedValue="1.0" />
+                                    <OTGraphSegmentCriterion property="SLOPE" operation="LESS_THAN" expectedValue="-2.5" />
+                                    <OTGraphSegmentCriterion property="SLOPE" operation="GREATER_THAN" expectedValue="-5.0" />
+                                  </criteria>
+                                </OTGraphSegment>
+                                <OTGraphSegment>
+                                  <criteria>
+                                    <OTGraphSegmentCriterion property="SLOPE" operation="EQUAL_TO" />
+                                  </criteria>
+                                </OTGraphSegment>
+                              </rubric>
                             </OTDataGraphable>
                           </source>
                           <xDataAxis>
@@ -373,12 +409,10 @@
                     </OTCompoundDoc>
                   </cards>
                   <currentCard>
-                    <object refid="8f08c35f-55bb-4983-a1a5-a90b2fd7f35f" />
+                    <object refid="82c3d604-39f9-485b-8ee2-9b5452c21053" />
                   </currentCard>
                   <viewedCards>
                     <object refid="82c3d604-39f9-485b-8ee2-9b5452c21053" />
-                    <object refid="8f08c35f-55bb-4983-a1a5-a90b2fd7f35f" />
-                    <object refid="8fced0ac-7ba9-11e0-b79a-4f8c6e959ca0" />
                   </viewedCards>
                 </OTCardContainer>
               </content>
