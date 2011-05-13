@@ -124,9 +124,9 @@ to setup
  
  create-cars 1 [
    set heading 90
-   set shape "car right"
-   set ycor y-track + 1
-   set size 3
+   set shape "car police left"
+   set ycor y-track 
+   set size 6
    set car-number 1
    set color blue
    set xcor x-mouse random-x-world
@@ -211,10 +211,10 @@ to drag-a-car
         ifelse car-number-dragging = 1                                                    ;;  then set the car's xcor to the mouse coordinate
           [set x-car1-world x-world car-x-pos 1
             ;;show  xcor - x-car1-mouse-previous                                          ;;debug
-            if xcor - x-car1-mouse-previous < 0 and shape != "car left"                   ;;change direction of car so it is always going forward
-              [set shape "car left"]                                                     ;;with car image for shape the heading DOES NOT WORK, for some mysterious reason
-            if xcor - x-car1-mouse-previous > 0 and shape != "car right"                  ;;instead of changing heading we will change shape
-              [set shape "car right" ]
+            if xcor - x-car1-mouse-previous < 0 ;and shape != "car left"                   ;;change direction of car so it is always going forward
+              [flip-car-direction shape]                                                     ;;with car image for shape the heading DOES NOT WORK, for some mysterious reason
+            if xcor - x-car1-mouse-previous > 0 ;and shape != "car right"                  ;;instead of changing heading we will change shape
+              [flip-car-direction shape]
             set x-car1-mouse-previous xcor            
 ;            if making-a-graph?
 ;            [set-current-plot-pen "car1"
@@ -223,9 +223,9 @@ to drag-a-car
             ]
           [set x-car2-world x-world car-x-pos 2
             if xcor - x-car2-mouse-previous < 0 and heading != "car left"
-              [set shape "car left"]
+              [flip-car-direction shape]
             if xcor - x-car2-mouse-previous > 0 and heading != "car right"
-              [set shape "car right" ]
+              [flip-car-direction shape]
             set x-car2-mouse-previous xcor                 
 ;            if making-a-graph?
 ;            [set-current-plot-pen "car2"
@@ -298,10 +298,10 @@ to set-car-position [ car-num pos-world ]  ;note that pos-world MAY be outside t
     if car-number = car-num [
       set new-mouse-pos x-mouse pos-world
       
-      if new-mouse-pos - x-mouse-previous < 0 and shape != "car left"          ;;change direction of car so it is always going forward
-              [set shape "car left"]                                           ;;with car image for shape the heading DOES NOT WORK, for some mysterious reason
-      if new-mouse-pos - x-mouse-previous > 0 and shape != "car right"         ;;instead of changing heading we will change shape
-              [set shape "car right" ]
+      if (new-mouse-pos - x-mouse-previous < 0) ;and (not member? "left" shape) ;!= "car left"          ;;change direction of car so it is always going forward
+              [flip-car-direction shape]                                           ;;with car image for shape the heading DOES NOT WORK, for some mysterious reason
+      if (new-mouse-pos - x-mouse-previous > 0) ;and shape != "car right"         ;;instead of changing heading we will change shape
+              [flip-car-direction shape ]
       set x-mouse-previous new-mouse-pos
       
       show-car car-num show-state?
@@ -335,6 +335,14 @@ to-report random-x-world
   let range right-track-end - left-track-end
   let random-number random-float range
   report random-number - abs(left-track-end)
+end
+
+
+to flip-car-direction [ shape-name ]
+  if shape-name = "car left" [set shape "car right"]
+  if shape-name = "car right" [set shape "car left"]
+  if shape-name = "car police left" [set shape "car police right"]
+  if shape-name = "car police right" [set shape "car police left"]
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
@@ -533,7 +541,23 @@ Polygon -16777216 true false 138 80 168 78 166 135 91 135 106 105 111 96 120 89
 Circle -7500403 true true 195 195 58
 Circle -7500403 true true 47 195 58
 
-car police
+car police left
+false
+0
+Polygon -7500403 true true 281 147 289 125 284 105 237 105 201 79 145 79 120 105 57 111 34 129 47 149
+Circle -16777216 true false 215 123 42
+Circle -16777216 true false 64 124 42
+Polygon -16777216 true false 199 87 227 108 129 108 149 87
+Line -8630108 false 179 82 180 108
+Polygon -1 true false 58 121 52 128 34 129 53 115
+Rectangle -16777216 true false 272 131 288 143
+Circle -7500403 true true 222 130 27
+Circle -7500403 true true 71 132 27
+Polygon -7500403 true true 220 115 221 116
+Polygon -1184463 true false 221 116 103 117 120 130 207 130 221 116 222 115
+Polygon -1184463 true false 168 78 167 69 164 67 161 67 155 68 155 71 154 78
+
+car police right
 false
 0
 Polygon -7500403 true true 19 147 11 125 16 105 63 105 99 79 155 79 180 105 243 111 266 129 253 149
