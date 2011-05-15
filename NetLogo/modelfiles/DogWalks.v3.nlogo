@@ -10,22 +10,23 @@
 
 
 breed [tick-positions tick-position]
-breed [banks ]
-breed [police-stations ]
+breed [parks ]
+;breed [coffee-shops ]
 breed [houses house]
 breed [cars car]
 breed [forest tree]
 
 
-cars-own [ car-number x-mouse-previous]
+
+cars-own [ car-number x-mouse-previous ]
 
 globals [
-;  min-position  ;;can be interface variables if control is given to use through an input box
-;  max-position  ;; ditto
-  left-track-end  ;;now an interface variable
-  right-track-end
-  Show-1
-  Show-2
+  min-position  ;;can be interface variables if control is given to use through an input box
+  max-position  ;; ditto
+  Show-Red
+  Show-Blue
+  xcor-first       ;;the pixel position of the first tick
+  xcor-last        ;;the pixel postion of the last tick
   y-track           ;;height on the screen of the track or road
   mouse-was-up?
   mousex                     ; cumulative motion of the mouse
@@ -38,7 +39,9 @@ globals [
   dt                        ;;the time increment, delta t, set as a millisecond
   t1                        ;;this and the next are the global position variables for exporting the car's time out of OTrunk.
   t2
-  screen-width
+  screen-width              ;;in pixels
+  width-of-ticks            ;;number of pixels from the first marked tick to the last
+  width-world               ;;width from first to last tick postion in world coorndinates
   num-ticks
   tick-width
   car-number-dragging        ;;indicates which car is being dragged.  0 == no car
@@ -58,6 +61,10 @@ end
 
 to setup
   ca
+  set min-position -5
+  set max-position 5
+  set Show-Red true
+  set Show-Blue true
   set y-track -1
   set mouse-was-up? true
   set dt 0.001
@@ -71,21 +78,22 @@ to setup
   ask patches 
     [ ifelse pycor = y-track 
       [ set pcolor black ]
-      [ set pcolor lime - 2 ] ]
+      [ ifelse (pycor > y-track) [set pcolor sky + 1 ] [set pcolor green ] ] ]
   set-default-shape tick-positions "line"
-  set-default-shape forest "tree pine"
-  set-default-shape banks "bank"
-  set-default-shape police-stations "police station"
+  set-default-shape parks "flag"
+  ;set-default-shape coffee-shops "building shop"
   set-default-shape houses "house bungalow"
-  ;; set-default-shape cars "car right"         ;;
-  set left-track-end -10
-  set right-track-end 10
-  if left-track-end >= right-track-end [
+  ;set-default-shape cars "dog airedale right"         ;;
+  ;;set min-position -10
+  ;;set max-position 10
+  if min-position >= max-position [
     user-message ("The left end of the track must be less than the right end.")
   ]
-  set screen-width max-pxcor - min-pxcor
-  set num-ticks abs(right-track-end - left-track-end) + 1
+  set screen-width world-width     ;was: max-pxcor - min-pxcor
+  set num-ticks abs(max-position - min-position) + 1
   set tick-width screen-width / num-ticks
+  set width-of-ticks screen-width - tick-width
+  set width-world abs(max-position - min-position)
   let i 0
   repeat  num-ticks
   [ create-tick-positions 1 [
@@ -93,66 +101,93 @@ to setup
       set heading 0
       set size 3
       set color lime - 2
-      set label (word (left-track-end + i))
+      set label (word (min-position + i))
       set xcor min-pxcor + i * tick-width + tick-width / 2  ;;offset by a half tick width to center it
+      if (i = 0) [set xcor-first xcor]
+      if (i = num-ticks) [set xcor-last xcor]
       set i i + 1
   ]]
   
- create-banks 1 [
-   set xcor x-mouse left-track-end
-   set ycor y-track + 2.5
-   set size 6
-   set color gray
-   ;set label "bank"
+ create-parks 1 [
+   set xcor x-mouse 0
+   set ycor y-track + 3.1
+   set size 5
+   set color red
+   set label "Park"
  ]
  
- create-police-stations 1 [
-   set xcor x-mouse right-track-end
-   set ycor y-track + 2.5
-   set size 4
-   set color cyan
-   ;set label "police"
- ]
+; create-coffee-shops 1 [
+;   set xcor xcor-first + (7.5 / 21) * width-of-ticks
+;   set ycor y-track + 3
+;   set size 4
+;   set color orange
+;   set label "Coffee Shop"
+; ]
  
  create-houses 1 [
-  set xcor x-mouse right-track-end / 2
-  set ycor y-track + 2.5
-  set size 5
-  set color yellow 
-  ;set label "robber's house"
+  set xcor xcor-first + (10 / 10) * width-of-ticks
+  set ycor y-track + 3
+  set size 6
+  set color yellow
+  set label "Chico's" 
  ]
  
- create-cars 1 [
-   set heading 90
-   set shape "car left"
-   set ycor y-track + 1.5
-   set size 3
-   set car-number 1
-   set color red
-   set xcor x-mouse random-x-world
-;   set-car-position 1 random-x-world   ;;could use "set random-xcor" but this tests the set-car-position function
-;   set x-car1-world x-world car-x-pos 1
+  create-houses 1 [
+  set xcor xcor-first + (2 / 10) * width-of-ticks
+  set ycor y-track + 3
+  set size 6
+  set color magenta
+  set label "Angie's" 
  ]
-  create-cars 1 [
-   set heading 270
-   set shape "car police left"
-   set ycor y-track
-   set size 6
-   set car-number 2
-   set color blue
-   set xcor x-mouse random-x-world
+ 
+;  create-houses 1 [
+;  set xcor xcor-first + width-of-ticks
+;  set ycor y-track + 3
+;  set size 5
+;  set color magenta + 1
+;  set label "Melissa's" 
+; ]
+ 
+ create-cars 1 [                        ;car 1 is Chico, or the BLUE Car
+;   set heading 90
+   set shape "dog airedale right"
+   set ycor y-track + 1
+   set size 4
+   set car-number 1
+   set color orange
+   set-car-position 1 random-x-world 
+   set x-car1-world x-world car-x-pos 1
+ ]
+ 
+;  create-cars 1 [                       ;car 2 is Angie, or the RED Car
+;   set heading 270
+;   set shape "dog retriever right"
+;   set ycor y-track + 1.5
+;   set size 6
+;   set car-number 2
+;   set color brown
 ;   set-car-position 2 random-x-world
 ;   set x-car2-world x-world car-x-pos 2
- ]
-   set x-car1-mouse-previous car-x-pos 1
-   set x-car2-mouse-previous car-x-pos 2
-   
+; ]
+  
+     
    create-forest 6 [
-     set ycor y-track + 1 + random 3
-     set xcor random 4
+     set shape "tree"
+     set ycor y-track + 2 + random 2
+     set xcor xcor-first - 2 + random 4
      set size 4 + random 2
      set color 52 + random 4
    ]
+  
+   set x-car1-mouse-previous car-x-pos 1
+;   set x-car2-mouse-previous car-x-pos 2
+   
+   ask cars with [car-number = 1] [set x-mouse-previous x-car1-mouse-previous]
+   ask cars with [car-number = 2] [set x-mouse-previous x-car2-mouse-previous]
+   
+   ask cars with [car-number = 1] [ifelse Show-Blue [st][ht] ]   ;;show or hide the cars based on switch postions
+;   ask cars with [car-number = 2] [ifelse Show-Red [st][ht] ]
+   
 ;;  loop [
 ;;    handle-mouse
 ;;    drag-a-car
@@ -161,6 +196,7 @@ to setup
   ;inspect one-of cars   ;;for good debugging
 end
 
+
 to set-initial-positions
   if making-a-graph? [
     set making-a-graph? false
@@ -168,13 +204,21 @@ to set-initial-positions
   ]
   handle-mouse
   every dt [ drag-a-car ]
+  
+  ask cars with [car-number = 1] [ifelse Show-Blue [st][ht] ]   ;;show or hide the cars based on switch postions
+  ask cars with [car-number = 2] [ifelse Show-Red [st][ht] ]  
 end
 
 to go
-   set making-a-graph? true
+   set making-a-graph? false
    handle-mouse
    every dt [ drag-a-car ]
 end
+
+;to test
+;  set-car-position 1 pos1
+;  set-car-position 2 pos2
+;end
 
 
 to handle-mouse
@@ -212,28 +256,27 @@ to drag-a-car
           [set x-car1-world x-world car-x-pos 1
             ;;show  xcor - x-car1-mouse-previous                                          ;;debug
             if xcor - x-car1-mouse-previous < 0 and member? "right" shape                    ;;change direction of car so it is always going forward
-              [flip-car-direction shape]                                                     ;;with car image for shape the heading DOES NOT WORK, for some mysterious reason
-            if xcor - x-car1-mouse-previous > 0 and member? "left" shape                 ;;instead of changing heading we will change shape
-              [flip-car-direction shape]
+              [swap-direction-right-to-left]                                                     ;;with car image for shape the heading DOES NOT WORK, for some mysterious reason
+            if xcor - x-car1-mouse-previous > 0 and member? "left" shape                   ;;instead of changing heading we will change shape
+              [swap-direction-left-to-right ]
             set x-car1-mouse-previous xcor            
-;            if making-a-graph?
-;            [set-current-plot-pen "car1"
-;              plotxy t1 x-car1-world
-;              set t1 t1 + dt]
-            ]
+            if making-a-graph?
+            [set-current-plot-pen "car1"
+              plotxy t1 x-car1-world
+              set t1 t1 + dt]]
           [set x-car2-world x-world car-x-pos 2
-            if xcor - x-car2-mouse-previous < 0 and member? "right" shape
-              [flip-car-direction shape]
-            if xcor - x-car2-mouse-previous > 0 and member? "left" shape
-              [flip-car-direction shape]
+            if xcor - x-car2-mouse-previous < 0 and member?  "right" shape
+              [swap-direction-right-to-left]
+            if xcor - x-car2-mouse-previous > 0 and member?  "left" shape
+              [swap-direction-left-to-right]
             set x-car2-mouse-previous xcor                 
-;            if making-a-graph?
-;            [set-current-plot-pen "car2"
-;              plotxy t2 x-car2-world
-;              set t2 t2 + dt]
-            ]
+            if making-a-graph?
+            [set-current-plot-pen "car2"
+              plotxy t2 x-car2-world
+              set t2 t2 + dt]]
       ]
-    ]    
+    ]
+    tick    
   ]
   
   [ set car-number-dragging 0
@@ -255,8 +298,8 @@ to-report car-x-pos [car-num]
 end
 
 to-report x-world [ x-mouse-cor ]   ;;convert-mouse-xcor-to-world
-  let left-edge left-track-end - 0.5   ;;all this stuff could be moved to globals and only computed on Setup, but it makes too many globals
-  let right-edge right-track-end + 0.5
+  let left-edge min-position - 0.5   ;;all this stuff could be moved to globals and only computed on Setup, but it makes too many globals
+  let right-edge max-position + 0.5
   let numerator right-edge - left-edge
   let denominator max-pxcor - min-pxcor
   let slope numerator / denominator
@@ -264,9 +307,9 @@ to-report x-world [ x-mouse-cor ]   ;;convert-mouse-xcor-to-world
   report ( x-mouse-cor * slope ) + intercept
 end 
 
-to-report x-mouse [ x-world-cor ]   ;;concert-world-xcor-to-mouse space
-  let left-edge left-track-end - 0.5
-  let right-edge right-track-end + 0.5
+to-report x-mouse [ x-world-cor ]   ;;convert-world-xcor-to-mouse space
+  let left-edge min-position - 0.5
+  let right-edge max-position + 0.5
   let numerator right-edge - left-edge
   let denominator max-pxcor - min-pxcor
   let slope numerator / denominator
@@ -274,54 +317,46 @@ to-report x-mouse [ x-world-cor ]   ;;concert-world-xcor-to-mouse space
   report ( x-world-cor - intercept) / slope
 end 
 
-
 to show-blue-car [state]
-  set Show-1 state
-  ask cars with [car-number = 1] [ifelse Show-1 [st][ht] ]  
+  set Show-Blue state
+  ask cars with [car-number = 1] [ifelse Show-Blue [st][ht] ]  
 end
 
 to show-red-car [state]
-  set Show-2 state
-  ask cars with [car-number = 2] [ifelse Show-2 [st][ht] ]  
+  set Show-Red state
+  ask cars with [car-number = 2] [ifelse Show-Red [st][ht] ]  
 end
 
 to show-car [ car-num show-state? ]   ;a cars procedure
     ifelse show-state? [st][ht]
-      ifelse car-num = 1 [set Show-1 show-state?][set Show-2 show-state?]
+      ifelse car-num = 1 [set Show-Blue show-state?][set Show-Red show-state?]
 end
 
 
 to set-car-position [ car-num pos-world ]  ;note that pos-world MAY be outside the legal range of the "world"
   let new-mouse-pos 0
-  let show-state? (pos-world >= left-track-end - 0.4) and (pos-world <= right-track-end + 0.4)  ;test to see if in the legal range
+  let show-state? (pos-world >= min-position - 0.4) and (pos-world <= max-position + 0.4)  ;test to see if in the legal range
   ask cars [                                                                               ;  there is a little "extra' space (should be 0.5) on each end
     if car-number = car-num [
       set new-mouse-pos x-mouse pos-world
       
-      if (new-mouse-pos - x-mouse-previous < 0) and member? "right" shape ;!= "car left"          ;;change direction of car so it is always going forward
-              [flip-car-direction shape]                                           ;;with car image for shape the heading DOES NOT WORK, for some mysterious reason
-      if (new-mouse-pos - x-mouse-previous > 0) and member? "left" shape          ;;instead of changing heading we will change shape
-              [flip-car-direction shape ]
+      if new-mouse-pos - x-mouse-previous < 0 and member? "right" shape          ;;change direction of car so it is always going forward
+              [swap-direction-right-to-left]                                           ;;with car image for shape the heading DOES NOT WORK, for some mysterious reason
+      if new-mouse-pos - x-mouse-previous > 0 and member? "left" shape        ;;instead of changing heading we will change shape
+              [swap-direction-left-to-right ]
       set x-mouse-previous new-mouse-pos
       
       show-car car-num show-state?
       
       ifelse show-state?                   ;;setting xcor actually changes the postion of the car
         [set xcor new-mouse-pos ]
-        [ifelse pos-world < left-track-end 
-          [ set xcor x-mouse left-track-end]
-          [ set xcor x-mouse right-track-end]
+        [ifelse pos-world < min-position 
+          [ set xcor x-mouse min-position]
+          [ set xcor x-mouse max-position]
          ]
       ]
   ]
-  tick
 end
-;to set-car-position [ car-num pos-world ]
-;  ask cars [
-;    if car-number = car-num [
-;      set xcor x-mouse pos-world]
-;  ]
-;end
 
 to set-car-position-mouse [ car-num pos-mouse ]
   ask cars [
@@ -332,24 +367,32 @@ end
 
 ;;reports a random position that is between the ends of the track
 to-report random-x-world
-  let range right-track-end - left-track-end
+  let range max-position - min-position
   let random-number random-float range
-  report random-number - abs(left-track-end)
+  report random-number - abs(min-position)
 end
 
+to swap-direction-right-to-left
+  ifelse member?  "airedale" shape
+    [set shape "dog airedale left"]
+    [set shape "dog retriever left"]
+end
 
-to flip-car-direction [ shape-name ]
-  if shape-name = "car left" [set shape "car right"]
-  if shape-name = "car right" [set shape "car left"]
-  if shape-name = "car police left" [set shape "car police right"]
-  if shape-name = "car police right" [set shape "car police left"]
+to swap-direction-left-to-right
+  ifelse member?   "airedale" shape
+    [set shape "dog airedale right"]
+    [set shape "dog retriever right"]
+end
+
+to-report chico-position
+  report x-car1-world
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
+6
 7
-10
-749
-173
+748
+170
 30
 5
 12.0
@@ -368,15 +411,15 @@ GRAPHICS-WINDOW
 5
 0
 0
-1
+0
 ticks
 
 BUTTON
-9
-176
-79
-209
-NIL
+8
+179
+78
+212
+Setup
 Setup
 NIL
 1
@@ -388,11 +431,11 @@ NIL
 NIL
 
 BUTTON
-188
-176
-289
+90
+179
 209
-Move Cars
+212
+Walk the Dog
 go
 T
 1
@@ -402,6 +445,17 @@ NIL
 NIL
 NIL
 NIL
+
+MONITOR
+222
+179
+324
+232
+Chico's Position
+chico-position
+2
+1
+13
 
 @#$#@#$#@
 WHAT IS IT?
@@ -489,20 +543,16 @@ false
 0
 Rectangle -7500403 true true 45 135 270 255
 Rectangle -16777216 true false 124 195 187 256
-Rectangle -16777216 true false 60 150 105 240
+Rectangle -16777216 true false 60 195 105 240
+Rectangle -16777216 true false 60 150 105 180
 Rectangle -16777216 true false 210 150 255 180
 Line -16777216 false 270 135 270 255
 Polygon -7500403 true true 30 135 285 135 240 90 75 90
 Line -16777216 false 30 135 285 135
 Line -16777216 false 255 105 285 135
 Line -7500403 true 154 195 154 255
-Rectangle -16777216 true false 210 150 255 240
+Rectangle -16777216 true false 210 195 255 240
 Rectangle -16777216 true false 135 150 180 180
-Polygon -1 true false 95 180 93 170 84 167 75 168 71 173 72 179 75 188 79 195 82 194 82 194 91 201 94 208 94 216 90 224 77 226 68 223 65 212 69 210 73 216 81 221 90 212 87 205 82 200 73 195 68 183 65 178 67 166 80 160 89 161 95 166 96 170 97 178
-Rectangle -1 true false 77 154 78 156
-Rectangle -1 true false 78 154 82 236
-Rectangle -1 true false 230 152 234 234
-Polygon -1 true false 246 179 244 169 235 166 226 167 222 172 223 178 226 187 230 194 233 193 233 193 242 200 245 207 245 215 241 223 228 225 219 222 216 211 220 209 224 215 232 220 241 211 238 204 233 199 224 194 219 182 216 177 218 165 231 159 240 160 246 165 247 169 248 177
 
 box
 false
@@ -522,6 +572,51 @@ Circle -7500403 true true 110 127 80
 Circle -7500403 true true 110 75 80
 Line -7500403 true 150 100 80 30
 Line -7500403 true 150 100 220 30
+
+building institution
+false
+0
+Rectangle -7500403 true true 0 60 300 270
+Rectangle -16777216 true false 130 196 168 256
+Rectangle -16777216 false false 0 255 300 270
+Polygon -7500403 true true 0 60 150 15 300 60
+Polygon -16777216 false false 0 60 150 15 300 60
+Circle -1 true false 135 26 30
+Circle -16777216 false false 135 25 30
+Rectangle -16777216 false false 0 60 300 75
+Rectangle -16777216 false false 218 75 255 90
+Rectangle -16777216 false false 218 240 255 255
+Rectangle -16777216 false false 224 90 249 240
+Rectangle -16777216 false false 45 75 82 90
+Rectangle -16777216 false false 45 240 82 255
+Rectangle -16777216 false false 51 90 76 240
+Rectangle -16777216 false false 90 240 127 255
+Rectangle -16777216 false false 90 75 127 90
+Rectangle -16777216 false false 96 90 121 240
+Rectangle -16777216 false false 179 90 204 240
+Rectangle -16777216 false false 173 75 210 90
+Rectangle -16777216 false false 173 240 210 255
+Rectangle -16777216 false false 269 90 294 240
+Rectangle -16777216 false false 263 75 300 90
+Rectangle -16777216 false false 263 240 300 255
+Rectangle -16777216 false false 0 240 37 255
+Rectangle -16777216 false false 6 90 31 240
+Rectangle -16777216 false false 0 75 37 90
+Line -16777216 false 112 260 184 260
+Line -16777216 false 105 265 196 265
+
+building shop
+false
+0
+Rectangle -13840069 true false 15 0 30 195
+Rectangle -13840069 true false 15 165 285 255
+Rectangle -13345367 true false 120 195 180 255
+Line -7500403 true 150 195 150 255
+Rectangle -1 true false 30 180 105 240
+Rectangle -1 true false 195 180 270 240
+Line -16777216 false 0 165 300 165
+Polygon -7500403 true true 0 165 45 135 60 90 240 90 255 135 300 165
+Rectangle -7500403 true true 0 0 75 45
 
 butterfly
 true
@@ -544,38 +639,6 @@ Circle -16777216 true false 180 180 90
 Polygon -16777216 true false 138 80 168 78 166 135 91 135 106 105 111 96 120 89
 Circle -7500403 true true 195 195 58
 Circle -7500403 true true 47 195 58
-
-car police left
-false
-0
-Polygon -7500403 true true 281 147 289 125 284 105 237 105 201 79 145 79 120 105 57 111 34 129 47 149
-Circle -16777216 true false 215 123 42
-Circle -16777216 true false 64 124 42
-Polygon -16777216 true false 199 87 227 108 129 108 149 87
-Line -8630108 false 179 82 180 108
-Polygon -1 true false 58 121 52 128 34 129 53 115
-Rectangle -16777216 true false 272 131 288 143
-Circle -7500403 true true 222 130 27
-Circle -7500403 true true 71 132 27
-Polygon -7500403 true true 220 115 221 116
-Polygon -1184463 true false 221 116 103 117 120 130 207 130 221 116 222 115
-Polygon -1184463 true false 168 78 167 69 164 67 161 67 155 68 155 71 154 78
-
-car police right
-false
-0
-Polygon -7500403 true true 19 147 11 125 16 105 63 105 99 79 155 79 180 105 243 111 266 129 253 149
-Circle -16777216 true false 43 123 42
-Circle -16777216 true false 194 124 42
-Polygon -16777216 true false 101 87 73 108 171 108 151 87
-Line -8630108 false 121 82 120 108
-Polygon -1 true false 242 121 248 128 266 129 247 115
-Rectangle -16777216 true false 12 131 28 143
-Circle -7500403 true true 51 130 27
-Circle -7500403 true true 202 132 27
-Polygon -7500403 true true 80 115 79 116
-Polygon -1184463 true false 79 116 197 117 180 130 93 130 79 116 78 115
-Polygon -1184463 true false 132 78 133 69 136 67 139 67 145 68 145 71 146 78
 
 car right
 false
@@ -612,25 +675,39 @@ Circle -7500403 true true 0 0 300
 
 dog airedale left
 false
-0
-Polygon -955883 true false 9 74 21 55 27 39 46 21 69 23 83 45 94 62 107 82 133 87 172 86 216 92 248 106 267 111 278 79 275 51 270 25 277 17 287 36 290 61 291 91 281 116 258 159 248 186 299 230 291 246 273 241 274 229 236 198 228 186 203 180 197 155 203 141 185 154 159 164 120 164 79 145 53 183 40 199 16 217 7 219 6 205 22 193 52 156 61 134 63 102 60 83 46 82 34 98 15 90 7 81 12 74
+2
+Polygon -955883 true true 9 74 21 55 27 39 46 21 69 23 83 45 94 62 107 82 133 87 172 86 216 92 248 106 267 111 278 79 275 51 270 25 277 17 287 36 290 61 291 91 281 116 258 159 248 186 299 230 291 246 273 241 274 229 236 198 228 186 203 180 197 155 203 141 185 154 159 164 120 164 79 145 53 183 40 199 16 217 7 219 6 205 22 193 52 156 61 134 63 102 60 83 46 82 34 98 15 90 7 81 12 74
 Polygon -6459832 true false 106 83 109 104 120 114 142 120 182 123 213 120 220 110 229 102 226 98 206 91 171 88 140 87 111 87 103 83
 Polygon -16777216 true false 39 44 39 40 47 38 52 42 47 47 41 46 38 44 40 43
 Polygon -6459832 true false 49 24 52 36 60 44 70 42 71 34 69 21 60 17 49 20
-Polygon -955883 true false 94 154 87 166 74 184 53 203 40 210 35 207 55 187 66 171 71 163 77 151 81 146 93 154
-Polygon -955883 true false 199 168 200 184 216 190 228 200 248 220 261 230 259 238 266 239 274 230 259 220 244 206 229 195 225 189 208 183
+Polygon -955883 true true 94 154 87 166 74 184 53 203 40 210 35 207 55 187 66 171 71 163 77 151 81 146 93 154
+Polygon -955883 true true 199 168 200 184 216 190 228 200 248 220 261 230 259 238 266 239 274 230 259 220 244 206 229 195 225 189 208 183
 Polygon -16777216 true false 23 91 25 85 30 77 33 72 31 71 26 78 22 86 19 91 21 93
 
 dog airedale right
 false
-0
-Polygon -955883 true false 291 74 279 55 273 39 254 21 231 23 217 45 206 62 193 82 167 87 128 86 84 92 52 106 33 111 22 79 25 51 30 25 23 17 13 36 10 61 9 91 19 116 42 159 52 186 1 230 9 246 27 241 26 229 64 198 72 186 97 180 103 155 97 141 115 154 141 164 180 164 221 145 247 183 260 199 284 217 293 219 294 205 278 193 248 156 239 134 237 102 240 83 254 82 266 98 285 90 293 81 288 74
+2
+Polygon -955883 true true 291 74 279 55 273 39 254 21 231 23 217 45 206 62 193 82 167 87 128 86 84 92 52 106 33 111 22 79 25 51 30 25 23 17 13 36 10 61 9 91 19 116 42 159 52 186 1 230 9 246 27 241 26 229 64 198 72 186 97 180 103 155 97 141 115 154 141 164 180 164 221 145 247 183 260 199 284 217 293 219 294 205 278 193 248 156 239 134 237 102 240 83 254 82 266 98 285 90 293 81 288 74
 Polygon -6459832 true false 194 83 191 104 180 114 158 120 118 123 87 120 80 110 71 102 74 98 94 91 129 88 160 87 189 87 197 83
 Polygon -16777216 true false 261 44 261 40 253 38 248 42 253 47 259 46 262 44 260 43
 Polygon -6459832 true false 251 24 248 36 240 44 230 42 229 34 231 21 240 17 251 20
-Polygon -955883 true false 206 154 213 166 226 184 247 203 260 210 265 207 245 187 234 171 229 163 223 151 219 146 207 154
-Polygon -955883 true false 101 168 100 184 84 190 72 200 52 220 39 230 41 238 34 239 26 230 41 220 56 206 71 195 75 189 92 183
+Polygon -955883 true true 206 154 213 166 226 184 247 203 260 210 265 207 245 187 234 171 229 163 223 151 219 146 207 154
+Polygon -955883 true true 101 168 100 184 84 190 72 200 52 220 39 230 41 238 34 239 26 230 41 220 56 206 71 195 75 189 92 183
 Polygon -16777216 true false 277 91 275 85 270 77 267 72 269 71 274 78 278 86 281 91 279 93
+
+dog retriever left
+false
+0
+Polygon -7500403 true true 11 112 31 103 34 95 44 89 50 87 67 90 75 97 81 111 84 116 100 124 131 127 173 130 217 133 227 128 240 119 255 111 273 109 285 109 289 109 286 115 278 116 264 120 255 123 249 129 237 136 229 143 222 143 225 156 225 168 222 176 218 186 217 196 218 207 226 217 224 227 222 238 220 243 204 242 206 233 211 225 206 206 200 191 188 177 170 181 154 183 127 186 101 188 94 217 84 235 68 235 71 225 77 221 82 184 72 175 64 159 64 143 53 128 35 127 22 131 12 126 8 116
+Polygon -16777216 true false 37 105 36 105 42 107 45 101 43 99 38 99
+Polygon -16777216 false false 45 90 50 99 56 105 63 105 64 98 62 90 56 91 51 91 48 91
+
+dog retriever right
+false
+0
+Polygon -7500403 true true 289 112 269 103 266 95 256 89 250 87 233 90 225 97 219 111 216 116 200 124 169 127 127 130 83 133 73 128 60 119 45 111 27 109 15 109 11 109 14 115 22 116 36 120 45 123 51 129 63 136 71 143 78 143 75 156 75 168 78 176 82 186 83 196 82 207 74 217 76 227 78 238 80 243 96 242 94 233 89 225 94 206 100 191 112 177 130 181 146 183 173 186 199 188 206 217 216 235 232 235 229 225 223 221 218 184 228 175 236 159 236 143 247 128 265 127 278 131 288 126 292 116
+Polygon -16777216 true false 263 105 264 105 258 107 255 101 257 99 262 99
+Polygon -16777216 false false 255 90 250 99 244 105 237 105 236 98 238 90 244 91 249 91 252 91
 
 dot
 false
@@ -779,22 +856,6 @@ false
 0
 Rectangle -7500403 true true 30 30 270 270
 Rectangle -16777216 true false 60 60 240 240
-
-squirrel
-false
-0
-Polygon -7500403 true true 87 267 106 290 145 292 157 288 175 292 209 292 207 281 190 276 174 277 156 271 154 261 157 245 151 230 156 221 171 209 214 165 231 171 239 171 263 154 281 137 294 136 297 126 295 119 279 117 241 145 242 128 262 132 282 124 288 108 269 88 247 73 226 72 213 76 208 88 190 112 151 107 119 117 84 139 61 175 57 210 65 231 79 253 65 243 46 187 49 157 82 109 115 93 146 83 202 49 231 13 181 12 142 6 95 30 50 39 12 96 0 162 23 250 68 275
-Polygon -16777216 true false 237 85 249 84 255 92 246 95
-Line -16777216 false 221 82 213 93
-Line -16777216 false 253 119 266 124
-Line -16777216 false 278 110 278 116
-Line -16777216 false 149 229 135 211
-Line -16777216 false 134 211 115 207
-Line -16777216 false 117 207 106 211
-Line -16777216 false 91 268 131 290
-Line -16777216 false 220 82 213 79
-Line -16777216 false 286 126 294 128
-Line -16777216 false 193 284 206 285
 
 star
 false
