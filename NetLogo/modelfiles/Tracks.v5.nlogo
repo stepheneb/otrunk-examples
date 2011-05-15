@@ -124,22 +124,22 @@ to setup
  
  create-cars 1 [
    set heading 90
-   set shape "car police left"
-   set ycor y-track 
-   set size 6
+   set shape "car left"
+   set ycor y-track + 1.5
+   set size 3
    set car-number 1
-   set color blue
+   set color red
    set xcor x-mouse random-x-world
 ;   set-car-position 1 random-x-world   ;;could use "set random-xcor" but this tests the set-car-position function
 ;   set x-car1-world x-world car-x-pos 1
  ]
   create-cars 1 [
    set heading 270
-   set shape "car left"
-   set ycor y-track + 1.5
-   set size 3
+   set shape "car police left"
+   set ycor y-track
+   set size 6
    set car-number 2
-   set color red
+   set color blue
    set xcor x-mouse random-x-world
 ;   set-car-position 2 random-x-world
 ;   set x-car2-world x-world car-x-pos 2
@@ -211,9 +211,9 @@ to drag-a-car
         ifelse car-number-dragging = 1                                                    ;;  then set the car's xcor to the mouse coordinate
           [set x-car1-world x-world car-x-pos 1
             ;;show  xcor - x-car1-mouse-previous                                          ;;debug
-            if xcor - x-car1-mouse-previous < 0 ;and shape != "car left"                   ;;change direction of car so it is always going forward
+            if xcor - x-car1-mouse-previous < 0 and member? "right" shape                    ;;change direction of car so it is always going forward
               [flip-car-direction shape]                                                     ;;with car image for shape the heading DOES NOT WORK, for some mysterious reason
-            if xcor - x-car1-mouse-previous > 0 ;and shape != "car right"                  ;;instead of changing heading we will change shape
+            if xcor - x-car1-mouse-previous > 0 and member? "left" shape                 ;;instead of changing heading we will change shape
               [flip-car-direction shape]
             set x-car1-mouse-previous xcor            
 ;            if making-a-graph?
@@ -222,9 +222,9 @@ to drag-a-car
 ;              set t1 t1 + dt]
             ]
           [set x-car2-world x-world car-x-pos 2
-            if xcor - x-car2-mouse-previous < 0 and heading != "car left"
+            if xcor - x-car2-mouse-previous < 0 and member? "right" shape
               [flip-car-direction shape]
-            if xcor - x-car2-mouse-previous > 0 and heading != "car right"
+            if xcor - x-car2-mouse-previous > 0 and member? "left" shape
               [flip-car-direction shape]
             set x-car2-mouse-previous xcor                 
 ;            if making-a-graph?
@@ -298,9 +298,9 @@ to set-car-position [ car-num pos-world ]  ;note that pos-world MAY be outside t
     if car-number = car-num [
       set new-mouse-pos x-mouse pos-world
       
-      if (new-mouse-pos - x-mouse-previous < 0) ;and (not member? "left" shape) ;!= "car left"          ;;change direction of car so it is always going forward
+      if (new-mouse-pos - x-mouse-previous < 0) and member? "right" shape ;!= "car left"          ;;change direction of car so it is always going forward
               [flip-car-direction shape]                                           ;;with car image for shape the heading DOES NOT WORK, for some mysterious reason
-      if (new-mouse-pos - x-mouse-previous > 0) ;and shape != "car right"         ;;instead of changing heading we will change shape
+      if (new-mouse-pos - x-mouse-previous > 0) and member? "left" shape          ;;instead of changing heading we will change shape
               [flip-car-direction shape ]
       set x-mouse-previous new-mouse-pos
       
