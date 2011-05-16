@@ -260,20 +260,15 @@ to drag-a-car
             if xcor - x-car1-mouse-previous > 0 and member? "left" shape                   ;;instead of changing heading we will change shape
               [swap-direction-left-to-right ]
             set x-car1-mouse-previous xcor            
-            if making-a-graph?
-            [set-current-plot-pen "car1"
-              plotxy t1 x-car1-world
-              set t1 t1 + dt]]
+            set t1 t1 + dt]
           [set x-car2-world x-world car-x-pos 2
             if xcor - x-car2-mouse-previous < 0 and member?  "right" shape
               [swap-direction-right-to-left]
             if xcor - x-car2-mouse-previous > 0 and member?  "left" shape
               [swap-direction-left-to-right]
             set x-car2-mouse-previous xcor                 
-            if making-a-graph?
-            [set-current-plot-pen "car2"
-              plotxy t2 x-car2-world
-              set t2 t2 + dt]]
+            set t2 t2 + dt
+            ]
       ]
     ]
     tick    
