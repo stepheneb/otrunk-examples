@@ -28,69 +28,15 @@ function draw_graph(graph, datastore) {
   realstore.setValues(2, values);
 }
 
+var annotations = null;
+
 function highlight_incorrect(results, graph) {
-  var reasons = results.getReasons();
-  for ( var i = 0; i < reasons.size(); i++) {
-    var res = reasons.get(i);
-    var fails = res.getFailures();
-    
-    if (fails.size() == 0 && res.getPoints() > 0) {
-      // correct segment
-      continue;
+  if (annotations != null && annotations.size() > 0) {
+    for (var i = 0; i < annotations.size(); i++) {
+      data_collector.getLabels().remove(annotations.get(i));
     }
-
-    var seg = res.getReceived();
-    
-    var highlight = drawn_graphable.getOTObjectService().createObject(Class.forName("org.concord.datagraph.state.OTDataRegionLabel"));
-    highlight.setDataGraphable(drawn_graphable);
-
-    if (seg == null) {
-      // missing segment
-      var startX = 0;
-      var endX = 0;
-      
-      for (var j = 0; j < res.getFailures().size(); j++) {
-        var fail = res.getFailures().get(j);
-        if (fail.getProperty().equals(OTGraphSegmentCriterion.Property.BEGINNING_X)) {
-          startX = fail.getExpectedValue();
-        } else if (fail.getProperty().equals(OTGraphSegmentCriterion.Property.BEGINNING_X)) {
-          endX = fail.getExpectedValue();
-        }
-      }
-      
-      highlight.setX(startX);
-      highlight.setY(4);
-
-      highlight.setX1(startX);
-      highlight.setX2(endX);
-      
-      highlight.setText("Missing segment");
-    } else {
-      highlight.setX(seg.getX1());
-      highlight.setY(4);
-
-      highlight.setX1(seg.getX1());
-      highlight.setX2(seg.getX2());
-      
-      if (res.getFailedPoints() == 0 && res.getPoints() == 0) {
-        // extra segment
-        highlight.setText("Extra segment");
-      } else {
-        var text = "";
-        for (var j = 0; j < res.getFailures().size(); j++) {
-          var fail = res.getFailures().get(j);
-          if (j != 0) {
-            text += ", ";
-          }
-          text += "Wrong " + fail.getProperty();
-        }
-        highlight.setText(text);
-      }
-    }
-
-    System.out.println("Adding label.");
-    data_collector.getLabels().add(highlight);
   }
+  annotations = graph_analysis_service.annotateResults(data_collector, results);
 }
 
 var analyzeListener = new ActionListener({
@@ -112,7 +58,7 @@ var scoreListener = new ActionListener({
     // drawing disabled for now, since it's not clear how handle it with qualitative criteria (eg starts at 4, ends at 6 and has positive slope)
     // draw_graph(expected_graph, expected_ds);
     
-    var graph = graph_analysis_service.getSegments(drawn_ds, 0, 1);
+    var graph = graph_analysis_service.getSegments(drawn_ds, 0, 1, drawn_graphable.getSegmentingTolerance());
     draw_graph(graph, interpreted_ds);
 
     var results = graph_analysis_service.compareGraphs(expected_graph, graph);
