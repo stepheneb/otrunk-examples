@@ -21,6 +21,11 @@ breed [forest tree]
 cars-own [ car-number x-mouse-previous ]
 
 globals [
+  init-pos-random?      ;these 4 variables should NOT be initialized in the Setup proceedure
+  init-car1-pos         ; they will be initialize externally to NetLogo in the otml (Chico's house = 5)
+  init-car2-pos         ;  (Angie's house = -3)
+  define-car2?          ;  Angie to appear or not -- end of variables that should not be initalized in Setup
+  running?
   min-position  ;;can be interface variables if control is given to use through an input box
   max-position  ;; ditto
   Show-Red
@@ -58,16 +63,24 @@ to startup
   setup
 end
 
+to init-externals  ;to be called for debugging before the model is authored
+   set init-pos-random?  true
+   set init-car1-pos 5
+   set init-car2-pos -3
+   set define-car2? true
+end
+
 
 to setup
   ca
+  set running? false
   set min-position -5
   set max-position 5
   set Show-Red true
   set Show-Blue true
   set y-track -1
   set mouse-was-up? true
-  set dt 0.001
+  set dt 0.005
   set t1 0
   set t2 0
   set car1-distance 100000
@@ -75,6 +88,7 @@ to setup
   set in-mouse-drag? false
   set car-number-dragging 0    ;;indicates which car is being dragged.  0 == no car
   set making-a-graph? false
+;;;;  init-externals
   ask patches 
     [ ifelse pycor = y-track 
       [ set pcolor black ]
@@ -116,14 +130,6 @@ to setup
    set label "Park"
  ]
  
-; create-coffee-shops 1 [
-;   set xcor xcor-first + (7.5 / 21) * width-of-ticks
-;   set ycor y-track + 3
-;   set size 4
-;   set color orange
-;   set label "Coffee Shop"
-; ]
- 
  create-houses 1 [
   set xcor xcor-first + (10 / 10) * width-of-ticks
   set ycor y-track + 3
@@ -140,13 +146,6 @@ to setup
   set label "Angie's" 
  ]
  
-;  create-houses 1 [
-;  set xcor xcor-first + width-of-ticks
-;  set ycor y-track + 3
-;  set size 5
-;  set color magenta + 1
-;  set label "Melissa's" 
-; ]
  
  create-cars 1 [                        ;car 1 is Chico, or the BLUE Car
 ;   set heading 90
@@ -155,20 +154,27 @@ to setup
    set size 4
    set car-number 1
    set color orange
-   set-car-position 1 random-x-world 
+   set label-color yellow
+   ifelse init-pos-random?
+     [set-car-position 1 random-x-world ]
+     [set-car-position 1 init-car1-pos ]
    set x-car1-world x-world car-x-pos 1
  ]
  
-;  create-cars 1 [                       ;car 2 is Angie, or the RED Car
-;   set heading 270
-;   set shape "dog retriever right"
-;   set ycor y-track + 1.5
-;   set size 6
-;   set car-number 2
-;   set color brown
-;   set-car-position 2 random-x-world
-;   set x-car2-world x-world car-x-pos 2
-; ]
+if define-car2? [
+  create-cars 1 [                       ;car 2 is Angie, or the RED Car
+   set heading 270
+   set shape "dog retriever right"
+   set ycor y-track + 1.5
+   set size 6
+   set car-number 2
+   set color brown
+   set label-color yellow
+   ifelse init-pos-random?
+     [set-car-position 2 random-x-world]
+     [set-car-position 2 init-car2-pos ]
+   set x-car2-world x-world car-x-pos 2
+ ]]
   
      
    create-forest 6 [
@@ -188,12 +194,6 @@ to setup
    ask cars with [car-number = 1] [ifelse Show-Blue [st][ht] ]   ;;show or hide the cars based on switch postions
 ;   ask cars with [car-number = 2] [ifelse Show-Red [st][ht] ]
    
-;;  loop [
-;;    handle-mouse
-;;    drag-a-car
-;;    if making-a-graph? [stop]
-;;    ]
-  ;inspect one-of cars   ;;for good debugging
 end
 
 
@@ -210,16 +210,10 @@ to set-initial-positions
 end
 
 to go
-   set making-a-graph? false
-   handle-mouse
-   every dt [ drag-a-car ]
+ set making-a-graph? false
+ handle-mouse
+ every dt [ drag-a-car ]
 end
-
-;to test
-;  set-car-position 1 pos1
-;  set-car-position 2 pos2
-;end
-
 
 to handle-mouse
      if mouse-down? and mouse-inside? [     
@@ -252,6 +246,7 @@ to drag-a-car
     ]
     [ask cars with [car-number = car-number-dragging]                                     ;;if car-number-dragging is either 1 or 2 
       [ set xcor mouse-xcor
+        set label precision (x-world xcor) 1
         ifelse car-number-dragging = 1                                                    ;;  then set the car's xcor to the mouse coordinate
           [set x-car1-world x-world car-x-pos 1
             ;;show  xcor - x-car1-mouse-previous                                          ;;debug
@@ -440,17 +435,6 @@ NIL
 NIL
 NIL
 NIL
-
-MONITOR
-222
-179
-324
-232
-Chico's Position
-chico-position
-2
-1
-13
 
 @#$#@#$#@
 WHAT IS IT?
