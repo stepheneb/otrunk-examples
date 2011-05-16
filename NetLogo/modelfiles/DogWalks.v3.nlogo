@@ -25,7 +25,6 @@ globals [
   init-car1-pos         ; they will be initialize externally to NetLogo in the otml (Chico's house = 5)
   init-car2-pos         ;  (Angie's house = -3)
   define-car2?          ;  Angie to appear or not -- end of variables that should not be initalized in Setup
-  running?
   min-position  ;;can be interface variables if control is given to use through an input box
   max-position  ;; ditto
   Show-Red
@@ -64,16 +63,16 @@ to startup
 end
 
 to init-externals  ;to be called for debugging before the model is authored
-   set init-pos-random?  true
+   set init-pos-random?  false
    set init-car1-pos 5
    set init-car2-pos -3
-   set define-car2? true
+   set define-car2? false
 end
 
 
 to setup
-  ca
-  set running? false
+  ca  
+  init-externals             ;;uncomment for stand-alone testing; set the variables in the procedure
   set min-position -5
   set max-position 5
   set Show-Red true
@@ -88,7 +87,6 @@ to setup
   set in-mouse-drag? false
   set car-number-dragging 0    ;;indicates which car is being dragged.  0 == no car
   set making-a-graph? false
-;;;;  init-externals
   ask patches 
     [ ifelse pycor = y-track 
       [ set pcolor black ]
