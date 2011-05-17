@@ -59,7 +59,7 @@ globals [
 ]
 
 to startup
-  setup
+  ;setup
 end
 
 to init-externals  ;to be called for debugging before the model is authored
@@ -71,7 +71,7 @@ end
 
 
 to setup
-  ca  
+  ct  
   ;init-externals             ;;uncomment for stand-alone testing; set the variables in the procedure
   set min-position -5
   set max-position 5
@@ -244,13 +244,14 @@ to drag-a-car
     ]
     [ask cars with [car-number = car-number-dragging]                                     ;;if car-number-dragging is either 1 or 2 
       [ set xcor mouse-xcor
+        set label precision (x-world xcor) 1
         ;set label precision (x-world xcor) 1
         ifelse car-number-dragging = 1                                                    ;;  then set the car's xcor to the mouse coordinate
           [set x-car1-world x-world car-x-pos 1
             ;;show  xcor - x-car1-mouse-previous                                          ;;debug
-            if xcor - x-car1-mouse-previous < 0 and member? "right" shape                    ;;change direction of car so it is always going forward
-              [swap-direction-right-to-left]                                                     ;;with car image for shape the heading DOES NOT WORK, for some mysterious reason
-            if xcor - x-car1-mouse-previous > 0 and member? "left" shape                   ;;instead of changing heading we will change shape
+            if xcor - x-car1-mouse-previous < 0 and member? "right" shape                 ;;change direction of car so it is always going forward
+              [swap-direction-right-to-left]                                              ;;with car image for shape the heading DOES NOT WORK
+            if xcor - x-car1-mouse-previous > 0 and member? "left" shape                  ;;instead of changing heading we will change shape
               [swap-direction-left-to-right ]
             set x-car1-mouse-previous xcor            
             set t1 t1 + dt]
