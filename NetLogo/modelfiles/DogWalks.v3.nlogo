@@ -16,7 +16,7 @@ breed [houses house]
 breed [cars car]
 breed [forest tree]
 
-
+extensions [ external-support ]
 
 cars-own [ car-number x-mouse-previous ]
 
@@ -71,8 +71,9 @@ end
 
 
 to setup
-  ct  
-  ;init-externals             ;;uncomment for stand-alone testing; set the variables in the procedure
+  ca  
+  init-externals             ;;uncomment for stand-alone testing; set the variables in the procedure
+  external-support:external-customization
   set min-position -5
   set max-position 5
   set Show-Red true
@@ -923,7 +924,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 4.1.2
+NetLogo 4.1.1
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
