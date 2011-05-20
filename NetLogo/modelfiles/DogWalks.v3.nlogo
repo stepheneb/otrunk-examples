@@ -247,7 +247,6 @@ to drag-a-car
     [ask cars with [car-number = car-number-dragging]                                     ;;if car-number-dragging is either 1 or 2 
       [ set xcor mouse-xcor
         set label precision (x-world xcor) 1
-        ;set label precision (x-world xcor) 1
         ifelse car-number-dragging = 1                                                    ;;  then set the car's xcor to the mouse coordinate
           [set x-car1-world x-world car-x-pos 1
             ;;show  xcor - x-car1-mouse-previous                                          ;;debug
@@ -340,11 +339,13 @@ to set-car-position [ car-num pos-world ]  ;note that pos-world MAY be outside t
       show-car car-num show-state?
       
       ifelse show-state?                   ;;setting xcor actually changes the postion of the car
-        [set xcor new-mouse-pos ]
+        [set xcor new-mouse-pos 
+         set label precision (x-world xcor) 1
+        ]
         [ifelse pos-world < min-position 
           [ set xcor x-mouse min-position]
           [ set xcor x-mouse max-position]
-         ]
+        ]
       ]
   ]
   tick
