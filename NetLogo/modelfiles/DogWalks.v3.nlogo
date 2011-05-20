@@ -23,7 +23,7 @@ cars-own [ car-number x-mouse-previous ]
 globals [
   init-pos-random?      ;these 4 variables should NOT be initialized in the Setup proceedure
   init-car1-pos         ; they will be initialize externally to NetLogo in the otml (Chico's house = 5)
-  init-car2-pos         ;  (Angie's house = -3)
+  init-car2-pos         ;  (Angie's house = -3) (Town Forest = -5)
   define-car2?          ;  Angie to appear or not -- end of variables that should not be initalized in Setup
   min-position  ;;can be interface variables if control is given to use through an input box
   max-position  ;; ditto
@@ -154,10 +154,11 @@ to setup
    set car-number 1
    set color orange
    set label-color yellow
+   
    ifelse init-pos-random?
-     [set-car-position 1 random-x-world ]
-     [set-car-position 1 init-car1-pos ]
-   set x-car1-world x-world car-x-pos 1
+     [set xcor x-mouse random-x-world ]
+     [set xcor x-mouse init-car1-pos ]
+   ;set x-car1-world x-world car-x-pos 1
  ]
  
 if define-car2? [
@@ -170,9 +171,9 @@ if define-car2? [
    set color brown
    set label-color yellow
    ifelse init-pos-random?
-     [set-car-position 2 random-x-world]
-     [set-car-position 2 init-car2-pos ]
-   set x-car2-world x-world car-x-pos 2
+     [set xcor x-mouse random-x-world]
+     [set xcor x-mouse init-car1-pos ]
+   ;set x-car2-world x-world car-x-pos 2
  ]]
   
      
@@ -331,8 +332,8 @@ to set-car-position [ car-num pos-world ]  ;note that pos-world MAY be outside t
       set new-mouse-pos x-mouse pos-world
       
       if new-mouse-pos - x-mouse-previous < 0 and member? "right" shape          ;;change direction of car so it is always going forward
-              [swap-direction-right-to-left]                                           ;;with car image for shape the heading DOES NOT WORK, for some mysterious reason
-      if new-mouse-pos - x-mouse-previous > 0 and member? "left" shape        ;;instead of changing heading we will change shape
+              [swap-direction-right-to-left]                                     ;;with car image for shape the heading DOES NOT WORK, for some mysterious reason
+      if new-mouse-pos - x-mouse-previous > 0 and member? "left" shape           ;;instead of changing heading we will change shape
               [swap-direction-left-to-right ]
       set x-mouse-previous new-mouse-pos
       
@@ -346,6 +347,7 @@ to set-car-position [ car-num pos-world ]  ;note that pos-world MAY be outside t
          ]
       ]
   ]
+  tick
 end
 
 to set-car-position-mouse [ car-num pos-mouse ]
@@ -924,7 +926,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 4.1.1
+NetLogo 4.1.2
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
