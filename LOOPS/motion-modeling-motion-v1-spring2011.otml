@@ -569,16 +569,34 @@
                         </div>
                       </bodyText>
                       <documentRefs>
-                        <OTNLogoModel id="e1204bc5-821c-11e0-994f-4983f38d699d" name="NetLogo model" authoredDataURL="../NetLogo/modelfiles/DogWalks.v3.nlogo" startButtonName="Walk the Dog" resetButtonName="Setup" useDt="false" />
+                        <OTNLogoModel id="e1204bc5-821c-11e0-994f-4983f38d699d" name="NetLogo model" authoredDataURL="../NetLogo/modelfiles/DogWalks.v3.nlogo" startButtonName="Walk the Dog" resetButtonName="Setup" useDt="false" >
                         <initScript>set init-pos-random? false
                             set init-car1-pos 5
                             set define-car2? true
-                            set init-car2-pos -5</initScript>
+                            set init-car2-pos -5
+                        </initScript>
+                            <input>
+                            <OTDataInput>
+                              <channelFunctionMap>
+                                <entry key="1">
+                                  <string>set-car-position 1</string>
+                                </entry>
+                                <entry key="2">
+                                  <string>set-car-position 2</string>
+                                </entry>
+                              </channelFunctionMap>
+                              <dataProducer>
+                                <object refid="${angie_timer_producer}" />
+                              </dataProducer>
+                              <channelVariableMap />
+                            </OTDataInput>
+                          </input>
+                        </OTNLogoModel>
                         <OTDataCollector id="a925f680-821b-11e0-994f-4983f38d699d" name="Data graph" title="Angie's Walk" graphableListEditable="false" tickMode="AUTO" xTickInterval="1.0" yTickInterval="1.0" autoFitMode="0" showLabelCoordinates="true" labelDecimalPlaces="2" useAspectRatio="false" aspectRatio="1.5" showControlBar="true" useDefaultToolBar="false" displayButtons="0," multipleGraphableEnabled="true">
                           <source>
                             <OTDataGraphable name="Angie" connectPoints="true" controllable="true" yColumn="1" drawMarks="false" color="16711680" xColumn="0" lineWidth="2.0" showAllChannels="false" visible="true">
                               <dataStore>
-                                <OTDataStore numberChannels="2" />
+                                <OTDataStore local_id="angie-ds1" numberChannels="2" />
                               </dataStore>
                             </OTDataGraphable>
                           </source>
@@ -592,6 +610,23 @@
                               <customGridLabels />
                             </OTDataAxis>
                           </yDataAxis>
+                          
+                          <playbackDataProducer>
+                            <OTTimerDataStoreDataProducer local_id="angie_timer_producer" sampleTime="0.05">
+                              <dataStores>
+                                <object refid="${chico-ds1}" />
+                                <object refid="${angie-ds1}" />
+                              </dataStores>
+                            </OTTimerDataStoreDataProducer>
+                          </playbackDataProducer>
+                          <graphables>
+                            <OTDataGraphable name="Chico" yColumn="1" drawMarks="false" controllable="true" color="255" xColumn="0" lineWidth="2.0" showAllChannels="false" visible="true" connectPoints="true">
+                              <dataStore>
+                                <OTDataStore local_id="chico-ds1" numberChannels="2" />
+                              </dataStore>
+                            </OTDataGraphable>
+                          </graphables>
+                          
                         </OTDataCollector>
                       </documentRefs>
                     </OTCompoundDoc>
