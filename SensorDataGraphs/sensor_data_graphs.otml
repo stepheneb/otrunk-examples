@@ -49,6 +49,12 @@ Sensor Type Ids from SensorConfig
 	public static int QUANTITY_HEART_RATE_SIGNAL=   28;
 	public static int QUANTITY_EKG=                 29;
 	public static int QUANTITY_BLOOD_PRESSURE=      30;	
+    public static int QUANTITY_CONDUCTIVITY=        31;
+    public static int QUANTITY_DISSOLVED_OXYGEN=    32;
+    public static int QUANTITY_COLORIMETER=         33;
+    public static int QUANTITY_HAND_DYNAMOMETER=    34;
+    public static int QUANTITY_UVA_INTENSITY=       35;
+    public static int QUANTITY_UVB_INTENSITY=       36;
 -->
 <otrunk id="3BE522E4-D4AC-45C2-819C-5DD74E54BA8F">
   <imports>
@@ -466,7 +472,23 @@ Sensor Type Ids from SensorConfig
                 <OTDataAxis min="0" max="10" label="Time" units="s"/>
               </xDataAxis>
               <yDataAxis>
-                <OTDataAxis min="0" max="1" label="Current" units="A"/>
+                <OTDataAxis min="-1" max="1" label="Current" units="A"/>
+              </yDataAxis>
+            </OTDataCollector>
+            <OTDataCollector name="Current High">
+              <source>
+                <OTDataGraphable connectPoints="true" color="0xff0000"
+                  drawMarks="false" name="Dataset1" xColumn="0" yColumn="1">
+                  <dataProducer>
+                    <object refid="${current_high_dp}"/>
+                  </dataProducer>
+                </OTDataGraphable>
+              </source>
+              <xDataAxis>
+                <OTDataAxis min="0" max="10" label="Time" units="s"/>
+              </xDataAxis>
+              <yDataAxis>
+                <OTDataAxis min="-10" max="10" label="Current" units="A"/>
               </yDataAxis>
             </OTDataCollector>
             <OTDataCollector name="Force 3N">
@@ -755,6 +777,77 @@ Sensor Type Ids from SensorConfig
                   units="mg/L"/>
               </yDataAxis>
             </OTDataCollector>
+
+            <OTDataCollector name="Colorimeter">
+              <source>
+                <OTDataGraphable connectPoints="true" color="0xff0000"
+                  drawMarks="false" name="Dataset1" xColumn="0" yColumn="1">
+                  <dataProducer>
+                    <object refid="${colorimeter_dp}"/>
+                  </dataProducer>
+                </OTDataGraphable>
+              </source>
+              <xDataAxis>
+                <OTDataAxis min="0" max="30" label="Time" units="s"/>
+              </xDataAxis>
+              <yDataAxis>
+                <OTDataAxis min="0" max="100" label="Colorimeter"
+                  units="%T"/>
+              </yDataAxis>
+            </OTDataCollector>
+            <OTDataCollector name="Hand Dynamometer">
+              <source>
+                <OTDataGraphable connectPoints="true" color="0xff0000"
+                  drawMarks="false" name="Dataset1" xColumn="0" yColumn="1">
+                  <dataProducer>
+                    <object refid="${hand_dynamometer_dp}"/>
+                  </dataProducer>
+                </OTDataGraphable>
+              </source>
+              <xDataAxis>
+                <OTDataAxis min="0" max="30" label="Time" units="s"/>
+              </xDataAxis>
+              <yDataAxis>
+                <OTDataAxis min="0" max="100" label="Hand Dynamometer"
+                  units="N"/>
+              </yDataAxis>
+            </OTDataCollector>
+            <OTDataCollector name="UVA Intensity">
+              <source>
+                <OTDataGraphable connectPoints="true" color="0xff0000"
+                  drawMarks="false" name="Dataset1" xColumn="0" yColumn="1">
+                  <dataProducer>
+                    <object refid="${uva_intensity_dp}"/>
+                  </dataProducer>
+                </OTDataGraphable>
+              </source>
+              <xDataAxis>
+                <OTDataAxis min="0" max="30" label="Time" units="s"/>
+              </xDataAxis>
+              <yDataAxis>
+                <OTDataAxis min="0" max="100" label="UVA Intensity"
+                  units="mW/m^2"/>
+              </yDataAxis>
+            </OTDataCollector>
+            <OTDataCollector name="UVB Intensity">
+              <source>
+                <OTDataGraphable connectPoints="true" color="0xff0000"
+                  drawMarks="false" name="Dataset1" xColumn="0" yColumn="1">
+                  <dataProducer>
+                    <object refid="${uvb_intensity_dp}"/>
+                  </dataProducer>
+                </OTDataGraphable>
+              </source>
+              <xDataAxis>
+                <OTDataAxis min="0" max="30" label="Time" units="s"/>
+              </xDataAxis>
+              <yDataAxis>
+                <OTDataAxis min="0" max="100" label="UVB Intensity"
+                  units="mW/m^2"/>
+              </yDataAxis>
+            </OTDataCollector>
+            
+            
             <OTMultiDataGraph name="Multiple Graphs" rows="2" columns="1">
               <graphs>
                 <OTDataCollector name="Rel Hum C">
@@ -1217,8 +1310,29 @@ Sensor Type Ids from SensorConfig
                           <displayPrecision>-3</displayPrecision>
                           <port>0</port>
                           <unit>A</unit>
-                          <requiredMax>1</requiredMax>
-                          <requiredMin>-1</requiredMin>
+                          <requiredMax>0.6</requiredMax>
+                          <requiredMin>-0.6</requiredMin>
+                        </OTSensorRequest>
+                      </sensorRequests>
+                    </OTExperimentRequest>
+                  </request>
+                </OTSensorDataProxy>
+                <OTSensorDataProxy local_id="current_high_dp">
+                  <name>Current</name>
+                  <request>
+                    <OTExperimentRequest>
+                      <period>0.1</period>
+                      <sensorRequests>
+                        <OTSensorRequest>
+                          <type>10</type>
+                          <!-- type of sensor -->
+                          <stepSize>0.1</stepSize>
+                          <!-- requested resolution -->
+                          <displayPrecision>-2</displayPrecision>
+                          <port>0</port>
+                          <unit>A</unit>
+                          <requiredMax>10</requiredMax>
+                          <requiredMin>-10</requiredMin>
                         </OTSensorRequest>
                       </sensorRequests>
                     </OTExperimentRequest>
@@ -1642,6 +1756,90 @@ Sensor Type Ids from SensorConfig
                           <displayPrecision>-1</displayPrecision>
                           <port>0</port>
                           <unit>mg/L</unit>
+                          <requiredMax>10</requiredMax>
+                          <requiredMin>0</requiredMin>
+                        </OTSensorRequest>
+                      </sensorRequests>
+                    </OTExperimentRequest>
+                  </request>
+                </OTSensorDataProxy>
+                <OTSensorDataProxy local_id="colorimeter_dp">
+                  <name>COLORIMETER</name>
+                  <request>
+                    <OTExperimentRequest>
+                      <period>0.1</period>
+                      <sensorRequests>
+                        <OTSensorRequest>
+                          <!-- type of sensor -->
+                          <type>33</type>
+                          <!-- requested resolution -->
+                          <stepSize>0.1</stepSize>
+                          <displayPrecision>-1</displayPrecision>
+                          <port>0</port>
+                          <unit>%T</unit>
+                          <requiredMax>10</requiredMax>
+                          <requiredMin>0</requiredMin>
+                        </OTSensorRequest>
+                      </sensorRequests>
+                    </OTExperimentRequest>
+                  </request>
+                </OTSensorDataProxy>
+                <OTSensorDataProxy local_id="hand_dynamometer_dp">
+                  <name>HAND_DYNAMOMETER</name>
+                  <request>
+                    <OTExperimentRequest>
+                      <period>0.1</period>
+                      <sensorRequests>
+                        <OTSensorRequest>
+                          <!-- type of sensor -->
+                          <type>34</type>
+                          <!-- requested resolution -->
+                          <stepSize>0.1</stepSize>
+                          <displayPrecision>-1</displayPrecision>
+                          <port>0</port>
+                          <unit>N</unit>
+                          <requiredMax>10</requiredMax>
+                          <requiredMin>0</requiredMin>
+                        </OTSensorRequest>
+                      </sensorRequests>
+                    </OTExperimentRequest>
+                  </request>
+                </OTSensorDataProxy>
+                <OTSensorDataProxy local_id="uva_intensity_dp">
+                  <name>UVA_INTENSITY</name>
+                  <request>
+                    <OTExperimentRequest>
+                      <period>0.1</period>
+                      <sensorRequests>
+                        <OTSensorRequest>
+                          <!-- type of sensor -->
+                          <type>35</type>
+                          <!-- requested resolution -->
+                          <stepSize>0.1</stepSize>
+                          <displayPrecision>-1</displayPrecision>
+                          <port>0</port>
+                          <unit>mW/m^2</unit>
+                          <requiredMax>10</requiredMax>
+                          <requiredMin>0</requiredMin>
+                        </OTSensorRequest>
+                      </sensorRequests>
+                    </OTExperimentRequest>
+                  </request>
+                </OTSensorDataProxy>
+                <OTSensorDataProxy local_id="uvb_intensity_dp">
+                  <name>UVB_INTENSITY</name>
+                  <request>
+                    <OTExperimentRequest>
+                      <period>0.1</period>
+                      <sensorRequests>
+                        <OTSensorRequest>
+                          <!-- type of sensor -->
+                          <type>36</type>
+                          <!-- requested resolution -->
+                          <stepSize>0.1</stepSize>
+                          <displayPrecision>-1</displayPrecision>
+                          <port>0</port>
+                          <unit>mW/m^2</unit>
                           <requiredMax>10</requiredMax>
                           <requiredMin>0</requiredMin>
                         </OTSensorRequest>
