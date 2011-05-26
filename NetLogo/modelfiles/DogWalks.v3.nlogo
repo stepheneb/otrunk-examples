@@ -172,7 +172,7 @@ if define-car2? [
    set label-color yellow
    ifelse init-pos-random?
      [set xcor x-mouse random-x-world]
-     [set xcor x-mouse init-car1-pos ]
+     [set xcor x-mouse init-car2-pos ]
    ;set x-car2-world x-world car-x-pos 2
  ]]
   
