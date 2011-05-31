@@ -21,6 +21,7 @@ extensions [ external-support ]
 cars-own [ car-number x-mouse-previous ]
 
 globals [
+  setup-pressed?             ;flag set true when in the setup proceedure, so that drag-a-car is not reentrant when setup is called.
   init-pos-random?      ;these 4 variables should NOT be initialized in the Setup proceedure
   init-car1-pos         ; they will be initialize externally to NetLogo in the otml (Chico's house = 5)
   init-car2-pos         ;  (Angie's house = -3) (Town Forest = -5)
@@ -72,6 +73,7 @@ end
 
 to setup
   ca  
+  set setup-pressed? true
   init-externals             ;;uncomment for stand-alone testing; set the variables in the procedure
   external-support:external-customization
   set min-position -5
@@ -193,7 +195,6 @@ if define-car2? [
    
    ask cars with [car-number = 1] [ifelse Show-Blue [st][ht] ]   ;;show or hide the cars based on switch postions
 ;   ask cars with [car-number = 2] [ifelse Show-Red [st][ht] ]
-   
 end
 
 
@@ -211,6 +212,9 @@ end
 
 to go
  set making-a-graph? false
+ if setup-pressed? 
+ [set setup-pressed? false
+  stop]
  handle-mouse
  every dt [ drag-a-car ]
 end
@@ -234,20 +238,20 @@ to handle-mouse
 end
 
 to drag-a-car
-  ifelse in-mouse-drag? [
-    ifelse car-number-dragging = 0 [
-      ask cars [
-        if car-number = 1 [set car1-distance distancexy starting-mousex starting-mousey]          
-        if car-number = 2 [set car2-distance distancexy starting-mousex starting-mousey]  
-      ]
-      ifelse car1-distance < car2-distance                                                ;;take the smaller distance and ...
+    ifelse in-mouse-drag? [
+      ifelse car-number-dragging = 0 [
+        ask cars [
+          if car-number = 1 [set car1-distance distancexy starting-mousex starting-mousey]          
+          if car-number = 2 [set car2-distance distancexy starting-mousex starting-mousey]  
+        ]
+        ifelse car1-distance < car2-distance                                                ;;take the smaller distance and ...
         [if car1-distance < 2 [ set car-number-dragging 1 ] ]                             ;;  if it is less than some number (2), set the appropriate car-dragging-number
         [if car2-distance < 2 [ set car-number-dragging 2 ] ] 
-    ]
-    [ask cars with [car-number = car-number-dragging]                                     ;;if car-number-dragging is either 1 or 2 
-      [ set xcor mouse-xcor
-        set label precision (x-world xcor) 1
-        ifelse car-number-dragging = 1                                                    ;;  then set the car's xcor to the mouse coordinate
+      ]
+      [ask cars with [car-number = car-number-dragging]                                     ;;if car-number-dragging is either 1 or 2 
+        [ set xcor mouse-xcor
+          set label precision (x-world xcor) 1
+          ifelse car-number-dragging = 1                                                    ;;  then set the car's xcor to the mouse coordinate
           [set x-car1-world x-world car-x-pos 1
             ;;show  xcor - x-car1-mouse-previous                                          ;;debug
             if xcor - x-car1-mouse-previous < 0 and member? "right" shape                 ;;change direction of car so it is always going forward
@@ -263,18 +267,19 @@ to drag-a-car
               [swap-direction-left-to-right]
             set x-car2-mouse-previous xcor                 
             set t2 t2 + dt
-            ]
+          ]
+        ]
       ]
-    ]
-    tick    
-  ]
-  
-  [ set car-number-dragging 0
-    ask cars [
-      if car-number = 1 [set car1-distance 100000]
-      if car-number = 2 [set car2-distance 200000]
+      tick
     ]   
-  ]                                              ;; else if NOT in-mouse-drag?, set car-number-dragging back to 0
+    
+    [ set car-number-dragging 0
+      ask cars [
+        if car-number = 1 [set car1-distance 100000]
+        if car-number = 2 [set car2-distance 200000]
+      ]   
+    ]
+    ;; else if NOT in-mouse-drag?, set car-number-dragging back to 0
 end
 
 
@@ -384,9 +389,9 @@ end
 GRAPHICS-WINDOW
 6
 7
-586
+626
 148
-28
+30
 5
 10.0
 1
@@ -398,8 +403,8 @@ GRAPHICS-WINDOW
 0
 0
 1
--28
-28
+-30
+30
 -5
 5
 0
@@ -408,10 +413,10 @@ GRAPHICS-WINDOW
 ticks
 
 BUTTON
-8
-179
-78
-212
+6
+151
+76
+184
 Setup
 Setup
 NIL
@@ -424,10 +429,10 @@ NIL
 NIL
 
 BUTTON
-90
-179
-209
-212
+88
+151
+207
+184
 Walk the Dog
 go
 T
