@@ -20,8 +20,7 @@ extensions [ external-support ]
 
 cars-own [ car-number x-mouse-previous ]
 
-globals [
-  setup-pressed?             ;flag set true when in the setup proceedure, so that drag-a-car is not reentrant when setup is called.
+globals [  
   init-pos-random?      ;these 4 variables should NOT be initialized in the Setup proceedure
   init-car1-pos         ; they will be initialize externally to NetLogo in the otml (Chico's house = 5)
   init-car2-pos         ;  (Angie's house = -3) (Town Forest = -5)
@@ -73,7 +72,6 @@ end
 
 to setup
   ca  
-  set setup-pressed? true
   init-externals             ;;uncomment for stand-alone testing; set the variables in the procedure
   external-support:external-customization
   set min-position -5
@@ -212,9 +210,6 @@ end
 
 to go
  set making-a-graph? false
- if setup-pressed? 
- [set setup-pressed? false
-  stop]
  handle-mouse
  every dt [ drag-a-car ]
 end
