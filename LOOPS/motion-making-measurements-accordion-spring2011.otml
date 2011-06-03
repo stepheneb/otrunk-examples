@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<otrunk id="390a9d9d-27c0-46dc-b3bc-a227c8e645c3">
+  <imports>
+    <import class="org.concord.otrunk.OTSystem" />
+    <import class="org.concord.otrunk.OTInclude" />
+    <import class="org.concord.otrunk.overlay.OTOverlay" />
+    <import class="org.concord.otrunk.view.OTViewBundle" />
+    <import class="org.concord.otrunk.script.OTScriptEngineBundle" />
+    <import class="org.concord.otrunk.script.OTScriptEngineEntry" />
+    <import class="org.concord.otrunk.script.js.OTJavascript" />
+    <import class="org.concord.framework.otrunk.view.OTFrame" />
+    <import class="org.concord.otrunk.view.OTViewEntry" />
+    <import class="org.concord.sensor.state.OTInterfaceManager" />
+    <import class="org.concord.sensor.state.OTDeviceConfig" />
+    <import class="org.concord.otrunk.view.document.OTCompoundDoc" />
+    <import class="org.concord.otrunk.view.OTViewChild" />
+    <import class="org.concord.otrunk.ui.menu.OTMenu" />
+    <import class="org.concord.otrunk.ui.OTCardContainer" />
+    <import class="org.concord.otrunk.ui.menu.OTMenuRule" />
+    <import class="org.concord.otrunk.ui.menu.OTNavBar" />
+    <import class="org.concord.otrunk.ui.OTSection" />
+    <import class="org.concord.otrunk.ui.OTUDLContainer" />
+    <import class="org.concord.otrunk.navigation.OTNavigationHistoryService" />
+    <import class="org.concord.framework.otrunk.wrapper.OTObjectSet" />
+    <import class="org.concord.otrunk.intrasession.OTIntrasessionService" />
+  </imports>
+  <objects>  
+    <OTSystem local_id="system">
+      <includes>
+        <OTInclude href="global-imports/loops-view-bundle.otml" />
+        <OTInclude href="motion-making-measurements-spring2011.otml" />
+      </includes>
+      <bundles>
+        <!--  the main view bundle -->
+        <object refid="8d880970-c22a-11dc-95ff-0800200c9a66" />
+        <!-- customized view bundle -->
+        <OTViewBundle showLeftPanel="false">
+          <frame>
+            <OTFrame useScrollPane="false" width="1000" height="700" />
+          </frame>
+          <views>
+            <OTViewEntry local_id="container_view" objectClass="org.concord.otrunk.ui.OTUDLContainer" viewClass="org.concord.otrunk.ui.OTUDLContainerView" />
+            <!--<OTViewEntry objectClass="org.concord.otrunk.ui.OTSection" viewClass="org.concord.otrunk.ui.swing.OTSectionView" />-->
+            <OTViewEntry objectClass="org.concord.otrunk.ui.menu.OTMenu" viewClass="org.concord.otrunk.swingx.OTMenuAccordionSectionView" />
+            <!--<OTViewEntry local_id="section-menu-view" objectClass="org.concord.otrunk.ui.menu.OTMenu" viewClass="org.concord.otrunk.ui.menu.OTMenuPageExpandView" />-->
+            <!--<OTViewEntry objectClass="org.concord.otrunk.view.document.OTDocument" viewClass="org.concord.otrunk.view.document.OTDocumentView" />-->
+            <!--<OTViewEntry objectClass="org.concord.otrunk.ui.OTCardContainer" viewClass="org.concord.otrunk.ui.swing.OTCardContainerView" />-->
+            <!--<OTViewEntry objectClass="org.concord.otrunk.ui.menu.OTNavBar" viewClass="org.concord.otrunk.ui.menu.OTNavBarView" />-->
+          </views>
+        </OTViewBundle>
+        <!-- default settings -->
+        <OTScriptEngineBundle>
+          <engines>
+            <OTScriptEngineEntry objectClass="org.concord.otrunk.script.jruby.OTJRuby" engineClass="org.concord.otrunk.script.jruby.OTJRubyEngine" />
+            <OTScriptEngineEntry objectClass="org.concord.otrunk.script.js.OTJavascript" engineClass="org.concord.otrunk.script.js.OTJavascriptEngine" />
+          </engines>
+        </OTScriptEngineBundle>
+        <OTInterfaceManager>
+          <deviceConfigs>
+            <OTDeviceConfig configString="none" deviceId="10" />
+          </deviceConfigs>
+        </OTInterfaceManager>
+        <OTNavigationHistoryService id="602561d0-6041-4b48-b37c-27d833b2b205">
+          <navigationHistory>
+            <OTObjectSet local_id="nav-history" />
+          </navigationHistory>
+        </OTNavigationHistoryService>
+        <OTIntrasessionService id="88888888-4444-4444-4444-121212121212" />
+      </bundles>
+      <overlays>
+        <object refid="6cc8e2b0-c44e-11dc-95ff-0800200c9a66" />
+        <object refid="b5d8b4a0-db35-11dc-95ff-0800200c9a66" />
+      </overlays>
+      <root>
+        <OTUDLContainer name="LOOPS">
+          <title>
+            <OTCompoundDoc local_id="title" showEditBar="false">
+              <bodyText>
+                <div class="leftpanel">
+                  <img src="images/loops-logo-with-name.png" width="203" height="83" />
+                </div>
+              </bodyText>
+            </OTCompoundDoc>
+          </title>
+          <menu>
+            <OTViewChild useScrollPane="true" scrollPanelHasBorder="false">
+              <object>
+                <object refid="${menu}" />
+              </object>
+            </OTViewChild>
+          </menu>
+          <content>
+            <OTCardContainer local_id="section-card-container" loadViewOnlyOnDemand="true">
+              <currentCard>
+              </currentCard>
+              <cards>
+                <!--  making measurements -->
+                <object refid="c66ef18f-acd7-4e83-87e2-73fac44b1d6d!/section_1" />
+              </cards>
+            </OTCardContainer>
+          </content>
+        </OTUDLContainer>
+      </root>
+      <library>
+        <OTMenu local_id="menu">
+          <cardContainer>
+            <object refid="${section-card-container}" />
+          </cardContainer>
+          <menuRule>
+            <object refid="${section-rule}" />
+          </menuRule>
+        </OTMenu>
+        <OTMenuRule local_id="page-rule" jumpToViewedCard="true" stepAhead="true" />
+        <OTMenuRule local_id="section-rule" jumpToAnyCard="true" />
+        <!--  the slider itself -->
+        <OTNavBar local_id="nav-bar">
+          <menuView>
+            <object refid="dd5e6def-24e0-40e6-b079-fc2446d42434" />
+          </menuView>
+          <cssColor>
+            <object refid="31193bb0-c44f-11dc-95ff-0800200c9a66" />
+          </cssColor>
+        </OTNavBar>
+      </library>
+    </OTSystem>
+  </objects>
+</otrunk>
+
