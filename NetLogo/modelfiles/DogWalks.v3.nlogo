@@ -122,7 +122,7 @@ to setup
   ]]
   
  create-parks 1 [
-   set xcor x-mouse 0
+   set xcor x-world 10
    set ycor y-track + 3.1
    set size 5
    set color red
