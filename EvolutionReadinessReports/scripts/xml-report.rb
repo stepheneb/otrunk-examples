@@ -16,7 +16,7 @@ class XmlReport
   
   def initialize(projectName, otrunkHelper, questions, mwModels, navigationHistory)
     @otrunkHelper = otrunkHelper
-    @questions = questions + [:mw_interaction_log, :navigation_log]
+    @questions = questions
     @mwModels = mwModels
     @navHistory = navigationHistory
     

@@ -93,14 +93,14 @@ end
 def getXmlReport
   questions = @otrunkHelper.getQuestions
   
-  report = XmlReport.new('loops', @otrunkHelper, questions, [], $navigationHistory)
+  report = XmlReport.new('er', @otrunkHelper, questions, [], $navigationHistory)
   
   users.each do |user|
     studentElem = report.addStudent(user)
   end
   
   @xmlText = report.getText
-  #@xmlPrettyText = report.getPrettyText
-  #puts @xmlText
-  #puts @xmlPrettyText
+  @xmlPrettyText = report.getPrettyText
+  # puts @xmlText
+  puts @xmlPrettyText
 end
