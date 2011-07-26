@@ -1,110 +1,45 @@
-<% section = $model %>
-
-<div class="menu">
-  <table>
+<div id="content">
+  <h2><%= @activity.title %></h2>
+  
+  <h3>Questions</h3>
+  <table class="report_table">
+    <% question_correct = {}; question_answered = {}; num_users = 0; gradable_questions = 0 %>
+      
     <tr>
-      <td><div class="menu_item"><%= linkToUnitPage "Unit Summary" %></div></td>
-	  <td><div class="menu_item"><%= linkToObject sectionTitle, section, $section_view %></div></td>
+      <th>User</th>
+      <% questions = @activity.sectionQuestions(activityRoot.activity) %>
+      <% questions.each do |question| %>
+          <% gradable_questions += 1 if @questionHelper.gradable?(question) %>
+          <% question_correct[question] = 0; question_answered[question] = 0 %>
+        <th><%= Util.truncate(@questionHelper.plainPromptText(question), 60) %></th>
+        <th>Score</th>  
+      <% end %>
     </tr>
+    <% line_toggle = true %>
+    <% @otrunkHelper.users.each do |user| %>
+      <% num_users += 1 %>
+      <tr BGCOLOR = <%= line_toggle ? ROWCOLOR1 : ROWCOLOR2 %>>
+        <% line_toggle = !line_toggle %>
+        <td><%= user.name %></td>
+        <% user_correct = 0; user_answered = 0 %>
+        <% questions.each do |question| %>
+          <% question_score = 0 %>
+          <% userQuestion = @otrunkHelper.userObject(question, user) %>
+          <% if @questionHelper.questionFirstChoiceCorrect(userQuestion) 
+               question_score = 1
+               user_correct += 1 
+               question_correct[question] += 1
+             end 
+             
+             if @questionHelper.questionAnswered(userQuestion) and @questionHelper.gradable?(question)
+               user_answered += 1
+               question_answered[question] += 1
+             end
+             %>
+          <td><%= @questionHelper.questionFirstAnswerHtml(userQuestion) %></td>
+          <td><%= question_score %></td>
+        <% end %> 
+      </tr>
+    <% end %>      
   </table>
 </div>
-
-<hr />
-
-<% sep = '|' %> <!--field separator-->
-
-<% text1 = '' %>
-<% text2 = '' %> 
-<% text3 = '' %> 
-<% questions = basicSectionQuestions %>
-
-<!-- Build first table: users/answers --> 
-<!-- Header 1 -->
-<% text1 += sep %>
-<% questions.size.times do |i| %>
-  <% text1 += (i+1).to_s + sep %>
-  <% if not isChoiceQuestion(questions[i]) %>
-    <% text1 += sep %>
-  <% end %>
-<% end %>
-<% text1 += "\n" %>
-
-<!-- Header 2 -->
-<% text1 += 'User' + sep %>
-<% questions.each do |question| %>
-  <% text1 += truncate(promptText(question), 16) + sep %>
-  <% if not isChoiceQuestion(question) %>
-    <% text1 += sep %>
-  <% end %>
-<% end %>
-<% text1 += "\n" %>
-
-<% @users.each do |user| %>
-  <% text1 += user.name + sep %>
-  <% questions.each do |question| %>
-    <% userQuestion = userObject(question, user) %>
-    <% text1 += answerLabel(userQuestion) + sep %>
-    <% if not isChoiceQuestion(userQuestion) %>
-      <% text1 += sep %>
-    <% end %>
-  <% end %>
-  <% text1 += "\n" %>        
-<% end %>
-
-<!-- last row: activity references -->
-<% if preOrPost? %>
-  <% text1 += 'Activity References' + sep %>
-  <% questions.each do |question| %>
-    <% text1 += activityRefString(question) + sep %>
-    <% if not isChoiceQuestion(question) %>
-      <% text1 += sep %>
-    <% end %>
-  <% end %>
-  <% text1 += "\n" %>
-<% end %>
-
-<!-- Build second table: questions/question attributes -->
-<!-- Header -->
-<% text2 += 'Index' + sep + 'Prompt' + sep + 'Correct Answer' + sep + 'Choice 1' + sep + 'Choice 2' + sep + 'Choice 3' + sep + 'Choice 4' + "\n" %>
-    
-<% questions.size.times do |i| %>
-  <% text2 += (i+1).to_s + sep %>
-  <% text2 += promptText(questions[i]) + sep %>
-  <% text2 += correctAnswerLabel(questions[i]) + sep %>
-  <% if isChoiceQuestion(questions[i]) %>
-    <% choices = questions[i].input.choices %>
-    <% choices.size.times do |i| %>
-      <% text2 += toPlainText(choices.get(i)) + sep %>
-    <% end %>
-  <% end %>  
-  <% text2 += "\n" %>
-<% end %>
-
-<!-- Build third table: activity index -->
-<% if preOrPost? %>
-  <% unitSections.size.times do |i| %>
-    <% text3 += i.to_s + sep %>
-  <% end %>
-  <% text3 += "\n" %> 
-  <% unitSections.each do |s| %>
-    <% text3 += s.getName + sep %>
-  <% end %>
-<% end %>
-
-<h2>Section: <%= sectionTitle %></h2>
-<p/>
-<h3>Student/Questions</h3>
-<pre>
-<%=text1%>
-</pre>
-<h3>Question Details</h3>
-<pre>
-<%=text2%>
-</pre>
-
-<% if preOrPost? %>
-  <h3>Activity Index</h3>
-  <pre>
-<%=text3%>
-  </pre>
-<% end %>
